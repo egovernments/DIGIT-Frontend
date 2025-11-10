@@ -46,8 +46,8 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
         }
   
         acc[department].options.push({
-          code: `${employee.user?.name} (${department})`,
-          name: `${employee.user?.name} (${department})`,
+          code: employee.user?.name,
+          name: employee.user?.name,
           uuid: uuid,
           userServiceUUID: userServiceUUID,
           mobileNumber: employee.user?.mobileNumber,

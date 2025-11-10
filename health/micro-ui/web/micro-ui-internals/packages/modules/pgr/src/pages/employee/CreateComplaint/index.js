@@ -22,29 +22,12 @@ import { useLocation } from "react-router-dom";
 
 const CreateComplaint = () => {
   const { t } = useTranslation();
-  const [hierarchySelected, setHierarchySelected] = useState(null);
-
-  // Get HierarchySelection component
-  const HierarchySelection = Digit?.ComponentRegistryService?.getComponent("PGRHierarchySelection");
 
   // Get current ULB tenant ID
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // Manage form session state using sessionStorage under key "COMPLAINT_CREATE"
   const CreateComplaintSession = Digit.Hooks.useSessionStorage("COMPLAINT_CREATE", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = CreateComplaintSession;
-
-  // Check if hierarchy was already selected in session storage
-  useEffect(() => {
-    const storedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
-    if (storedHierarchy) {
-      setHierarchySelected(storedHierarchy);
-    }
-
-    // Cleanup: Clear hierarchy selection when component unmounts
-    return () => {
-      Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
-    };
-  }, []);
 
   // Fetch MDMS config for Create Complaint screen (RAINMAKER-PGR.CreateComplaintConfig)
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
@@ -71,19 +54,7 @@ const CreateComplaint = () => {
 
   // Show loader while fetching MDMS config
   if (isLoading || !configs) {
-    return <Loader />;
-  }
-
-  // Show HierarchySelection if not selected yet
-  if (!hierarchySelected) {
-    return (
-      <HierarchySelection
-        onHierarchyChosen={(hier) => {
-          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
-          setHierarchySelected(hier);
-        }}
-      />
-    );
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;;
   }
 
   return (

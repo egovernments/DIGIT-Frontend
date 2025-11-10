@@ -118,7 +118,7 @@ const HierarchySelection = ({onHierarchyChosen}) => {
     }
   }, [boundaryData, selectedHierarchy]);
 
-  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) return <Loader />;
+  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) return  <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
 
   return (
     <div className="container">

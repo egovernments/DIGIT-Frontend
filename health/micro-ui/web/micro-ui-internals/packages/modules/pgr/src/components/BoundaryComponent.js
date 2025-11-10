@@ -23,6 +23,16 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
     }
   }, [childrenData]);
 
+  // Effect to reset to country level when formData.locality is cleared (Clear All is pressed)
+  useEffect(() => {
+    if (!formData?.locality && childrenData && childrenData.length > 0) {
+      // Reset to initial state - only show country level
+      const firstBoundaryType = childrenData[0]?.boundary[0].boundaryType;
+      setValue({ [firstBoundaryType]: [childrenData[0]?.boundary[0]] });
+      setSelectedValues({});
+    }
+  }, [formData?.locality, childrenData]);
+
   /**
    * Handle dropdown selection.
    * - Stores the selected boundary.
@@ -64,7 +74,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
    */
 
   if (isBoundaryLoading) {
-    return <Loader />;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />
   }
 
   return (

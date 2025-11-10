@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.9.0]  [07-November-2025]
+-Citizen side api changes to /health-individual for user registration
+-Forgot password ui changes from mobile number to username
+
 ## [1.9.0]  [28-October-2025]
 
 ### 🚀 Major Feature Release - Enhanced Authentication & Multi-Tenant Support

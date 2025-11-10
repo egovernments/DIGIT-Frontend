@@ -97,7 +97,10 @@ const PGRSearchInbox = () => {
    * Show loader until necessary data is available
    */
   if (isLoading || !pageConfig || serviceDefs?.length === 0) {
-    return <Loader />;
+    return (
+         <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+     
+    );
   }
 
   
