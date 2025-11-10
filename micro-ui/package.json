@@ -1,7 +1,7 @@
 {
-  "name": "property-tax-ui",
+  "name": "mseva-ui",
   "version": "1.0.0",
-  "description": "Property Tax Micro UI for DIGIT",
+  "description": "Mseva UI",
   "author": "Developer",
   "license": "MIT"
 }

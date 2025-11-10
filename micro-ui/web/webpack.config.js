@@ -1,80 +1,279 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const dotenv = require("dotenv");
+const fs = require("fs");
 
-module.exports = (env) => {
-  const isProduction = env === 'production';
+// Load package.json to get the homepage/publicPath
+const packageJson = require("./package.json");
+const publicPath = packageJson.homepage || "/";
 
-  return {
-    mode: isProduction ? 'production' : 'development',
-    entry: './src/index.js',
-    output: {
-      path: path.resolve(__dirname, 'build'),
-      filename: isProduction ? '[name].[contenthash].js' : '[name].js',
-      publicPath: '/mseva-ui/',
-    },
-    resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      alias: {
-        '@': path.resolve(__dirname, 'src'),
+// Load .env variables
+const envFile = dotenv.config().parsed || {};
+
+// Make DefinePlugin-compatible keys
+const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
+  acc[`process.env.${key}`] = JSON.stringify(val);
+  return acc;
+}, {});
+
+module.exports = {
+  mode: process.env.NODE_ENV === "production" ? "production" : "development",
+  entry: path.resolve(__dirname, "src/index.js"),
+  devtool: process.env.NODE_ENV === "production" ? false : "source-map",
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react',
+            ],
+          },
+        },
       },
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react',
-              ],
-            },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[path][name].[ext]',
           },
         },
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
-        },
-        {
-          test: /\.(png|jpe?g|gif|svg)$/,
-          use: {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-            },
+      },
+    ],
+  },
+  output: {
+    filename: "[name].[contenthash:8].bundle.js",
+    chunkFilename: "[name].[contenthash:8].chunk.js",
+    path: path.resolve(__dirname, "build"),
+    clean: true, // Clean the output directory before emit
+    publicPath: publicPath,
+  },
+  optimization: {
+    minimize: process.env.NODE_ENV === "production",
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: process.env.NODE_ENV === "production",
+            drop_debugger: true,
+            pure_funcs: process.env.NODE_ENV === "production" ? ["console.log", "console.info"] : [],
           },
+          mangle: true,
         },
-      ],
-    },
-    plugins: [
-      new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({
-        template: './public/index.html',
-        filename: 'index.html',
-        inject: 'body',
       }),
     ],
-    devServer: {
-      static: path.join(__dirname, 'build'),
-      compress: true,
-      port: 3000,
-      historyApiFallback: true,
-      hot: true,
-      open: true,
-    },
-    optimization: {
-      splitChunks: {
-      chunks: 'all',
-      minSize:20000,
-      maxSize:50000,
-      enforceSizeThreshold:50000,
-      minChunks:1,
-      maxAsyncRequests:30,
-      maxInitialRequests:30
+    usedExports: true,
+    sideEffects: false,
+    splitChunks: {
+      chunks: "all",
+      minSize: 20000,
+      maxSize: 150000, // Reduced for better caching
+      enforceSizeThreshold: 150000,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 8, // Reduced to limit initial requests
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+          maxSize: 150000,
+        },
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+          priority: 20,
+          enforce: true,
+          maxSize: 150000,
+        },
+        digitUI: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui/,
+          name: 'digit-ui',
+          chunks: 'all',
+          priority: 15,
+          maxSize: 150000,
+        },
+
+        workbench: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
+          name: 'workbench-module',
+          chunks: 'async', // Load workbench module asynchronously
+          priority: 5,
+          maxSize: 150000,
+        },
+        // Separate heavy dependencies into their own chunks
+        excel: {
+          test: /[\\/]node_modules[\\/](xlsx|exceljs)[\\/]/,
+          name: 'excel-libs',
+          chunks: 'async',
+          priority: 20,
+          enforce: true,
+        },
+        maps: {
+          test: /[\\/]node_modules[\\/](leaflet|proj4|geojson)[\\/]/,
+          name: 'map-libs',
+          chunks: 'async',
+          priority: 20,
+          enforce: true,
+        },
+        forms: {
+          test: /[\\/]node_modules[\\/](@rjsf|ajv|react-hook-form)[\\/]/,
+          name: 'form-libs',
+          chunks: 'async',
+          priority: 18,
+          enforce: true,
+        },
+        tables: {
+          test: /[\\/]node_modules[\\/](react-table|react-data-table)[\\/]/,
+          name: 'table-libs',
+          chunks: 'async',
+          priority: 18,
+          enforce: true,
+        },
+      },
     },
   },
-  };
+  plugins: [
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
+    new webpack.DefinePlugin(envKeys), // <-- Add this
+    // new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "public/index.html",
+      publicPath: publicPath,
+      templateParameters: {
+        REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+      },
+    }),
+  ],
+  resolve: {
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    preferRelative: true,
+    alias: {
+      // Fix case sensitivity issues with React
+      "React": path.resolve(__dirname, "node_modules/react"),
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "ReactDOM": path.resolve(__dirname, "node_modules/react-dom"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
+    },
+    fallback: {
+      process: require.resolve("process/browser"),
+    },
+  },
+  devServer: {
+    static: path.join(__dirname, "dist"),
+    compress: true,
+    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
+    hot: true,
+    open: true,
+    historyApiFallback: {
+      index: `${publicPath}index.html`,
+      rewrites: [
+        { from: new RegExp(`^${publicPath}`), to: `${publicPath}index.html` }
+      ]
+    },
+    proxy: [
+      {
+        context: [
+          "/egov-mdms-service",
+          "/egov-location",
+          "/localization",
+          "/egov-workflow-v2",
+          "/pgr-services",
+          "/filestore",
+          "/egov-hrms",
+          "/user-otp",
+          "/user",
+          "/fsm",
+          "/billing-service",
+          "/collection-services",
+          "/pdf-service",
+          "/pg-service",
+          "/vehicle",
+          "/vendor",
+          "/property-services",
+          "/fsm-calculator/v1/billingSlab/_search",
+          "/muster-roll",
+          "/property-services/property/_search",
+          "/egov-location/location/v11/boundarys/_search",
+          "/filestore/v1/files/id",
+          "/access/v1/actions/mdms",
+          "/mdms-v2",
+          "/egov-idgen",
+          "/estimate",
+          "/pt-calculator-v2",
+          "/dashboard-analytics",
+          "/echallan-services",
+          "/egov-searcher/bill-genie/mcollectbills/_get",
+          "/egov-searcher/bill-genie/billswithaddranduser/_get",
+          "/egov-searcher/bill-genie/waterbills/_get",
+          "/egov-searcher/bill-genie/seweragebills/_get",
+          "/egov-pdf/download/UC/mcollect-challan",
+          "/egov-hrms/employees/_count",
+          "/tl-services/v1/_create",
+          "/tl-services/v1/_search",
+          "/egov-url-shortening/shortener",
+          "/inbox/v1/_search",
+          "/inbox/v2/_search",
+          "/tl-services",
+          "/tl-calculator",
+          "/org-services",
+          "/edcr",
+          "/bpa-services",
+          "/noc-services",
+          "/egov-user-event",
+          "/egov-document-uploader",
+          "/egov-pdf",
+          "/egov-survey-services",
+          "/ws-services",
+          "/sw-services",
+          "/ws-calculator",
+          "/sw-calculator/",
+          "/egov-searcher",
+          "/report",
+          "/inbox/v1/dss/_search",
+          "/loi-service",
+          "/project/v1/",
+          "/estimate-service",
+          "/loi-service",
+          "/works-inbox-service/v2/_search",
+          "/egov-pdf/download/WORKSESTIMATE/estimatepdf",
+          "/individual",
+          "/mdms-v2",
+          "/hcm-moz-impl",
+          "/project",
+          "/project/staff/v1/_search",
+          "/project/v1/_search",
+          "/facility/v1/_search",
+          "/product/v1/_search",
+          "/product/variant/v1/_search",
+          "/hcm-bff/bulk/_transform",
+          "/hcm-bff/hcm/_processmicroplan",
+          "/health-hrms",
+          "/mdms-v2/v2/_create",
+          "/pb-egov-assets",
+        ],
+        target: envFile.REACT_APP_PROXY_API,
+        changeOrigin: true,
+        secure: false,
+      },
+    ],
+  },
 };

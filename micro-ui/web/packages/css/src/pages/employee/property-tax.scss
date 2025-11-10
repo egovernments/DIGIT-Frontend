@@ -1,0 +1,9 @@
+/* Print styles for property assessment form */
+@media print {
+  .property-assessment-form {
+    .stepper-container,
+    .form-container .form-composer-actions {
+      display: hidden;
+    }
+  }
+}

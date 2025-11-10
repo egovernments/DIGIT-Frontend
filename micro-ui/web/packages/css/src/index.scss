@@ -1,0 +1,29 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
+#logo-img-container {
+  display: none !important;
+  position: unset !important;
+}
+
+.transfer-ownership-card {
+  .digit-label-field-pair {
+    background: none !important;
+  }
+}
+
+.assessment-form-card {
+  .digit-label-field-pair {
+    margin-bottom: 0px;
+  }
+
+  .digit-checkbox-container {
+      margin-bottom: 0px;
+  }
+}
+
+/* Import Property Tax Module Styles */
+@import "components/property-tax";
+@import "pages/employee/property-tax";
