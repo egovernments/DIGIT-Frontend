@@ -855,7 +855,6 @@
 
 .tooltiptextrm {
   position: absolute;
-  bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
