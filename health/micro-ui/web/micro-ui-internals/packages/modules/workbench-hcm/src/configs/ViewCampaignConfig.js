@@ -172,23 +172,23 @@ export const data = (project) => {
           },
         ],
       },
-      {
-        navigationKey: "card23",
-        sections: [
-          {
-            navigationKey: "card23",
+      // {
+      //   navigationKey: "card23",
+      //   sections: [
+      //     {
+      //       navigationKey: "card23",
 
-            type: "COMPONENT",
-            component: "RegistrationComponent",
-            props: { 
-              projectId: project?.Project?.[0]?.id,
-              boundaryType: project?.Project?.[0]?.address?.boundaryType,
-              boundaryCode: project?.Project?.[0]?.address?.boundary,
-              dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
-            },
-          },
-        ],
-      },
+      //       type: "COMPONENT",
+      //       component: "RegistrationComponent",
+      //       props: { 
+      //         projectId: project?.Project?.[0]?.id,
+      //         boundaryType: project?.Project?.[0]?.address?.boundaryType,
+      //         boundaryCode: project?.Project?.[0]?.address?.boundary,
+      //         dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
+      //       },
+      //     },
+      //   ],
+      // },
       
       {
         navigationKey: "card10",
@@ -283,11 +283,11 @@ export const data = (project) => {
           active: true,
           code: "MAP_VIEW",
         },
-             {
-          name: "card23",
-          active: true,
-          code: "HouseholdComponent",
-        },
+        //      {
+        //   name: "card23",
+        //   active: true,
+        //   code: "HouseholdComponent",
+        // },
         
       
          {
