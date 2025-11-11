@@ -8,6 +8,7 @@ import NewDraggableField from "./NewDraggableField";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
+import NewNavigationLogicWrapper from "./NewNavigationLogicWrapper";
 
 // Wrapper for footer label to avoid hook-in-loop violation
 const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t }) => {
@@ -246,6 +247,17 @@ function NewAppFieldScreenWrapper() {
           </Fragment>
         );
       })}
+
+      {currentCard?.type !== "template" && (
+        <>
+          <Divider className="app-config-drawer-action-divider" />
+          <div className="app-config-drawer-subheader">
+            <div>{t("NAVIGATION_LOGIC")}</div>
+            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
+          </div>
+          <NewNavigationLogicWrapper t={t} />
+        </>
+      )}
       {currentCard?.type !== "template" && currentCard?.config?.enableSectionAddition && (
         <Button
           className={"app-config-add-section"}

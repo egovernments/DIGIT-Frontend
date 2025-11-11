@@ -364,6 +364,7 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
         pages: flowPages,
         roles: flow.roles || [],
         project: project,
+        type: flow.screenType?.toLowerCase() || "form",
         indexRoute: flowPages[0]?.name || null,
       });
     }
