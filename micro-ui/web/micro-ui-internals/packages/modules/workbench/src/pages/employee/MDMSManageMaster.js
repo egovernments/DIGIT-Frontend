@@ -1,9 +1,10 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown, Card } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Header, Card, CardHeader, CardText, CardSubHeader, TextInput } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
+import { Loader ,Button} from "@egovernments/digit-ui-components";
 
 
 
@@ -31,16 +32,15 @@ const MDMSManageMaster = () => {
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
   
   const [availableSchemas, setAvailableSchemas] = useState([]);
-  const [currentSchema, setCurrentSchema] = useState(null);
-  const [masterName, setMasterName] = useState(null); //for dropdown
-  const [moduleName, setModuleName] = useState(null); //for dropdown
+  const [selectedModule, setSelectedModule] = useState(null);
   const [masterOptions,setMasterOptions] = useState([])
   const [moduleOptions,setModuleOptions] = useState([])
-  const [updatedConfig,setUpdatedConfig] = useState(null)
+  const [showModules, setShowModules] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
   const SchemaDefCriteria = {
     tenantId:tenantId ,
-    limit:200
+    limit:500
   }
   if(master && modulee ) {
     SchemaDefCriteria.codes = [`${master}.${modulee}`] 
@@ -77,7 +77,7 @@ const MDMSManageMaster = () => {
         const obj = {
           mastersAvailable: [],
         };
-        schemas.forEach((schema, idx) => {
+        schemas.forEach((schema) => {
           const { code } = schema;
           const splittedString = code.split(".");
           const [master, mod] = splittedString;
@@ -97,21 +97,48 @@ const MDMSManageMaster = () => {
 
   useEffect(() => {
     setMasterOptions(dropdownData?.mastersAvailable)
+    if(master && modulee) {
+      setSelectedModule(dropdownData?.mastersAvailable?.find(m => m.name === master))
+      setModuleOptions(sortByKey(dropdownData?.[master],'translatedValue'))
+      setShowModules(false)
+    }
   }, [dropdownData])
 
-  useEffect(() => {
-    if(dropdownData?.[masterName?.name]?.length>0){
-    setModuleOptions(sortByKey(dropdownData?.[masterName?.name],'translatedValue'))
-    }
-  }, [masterName])
+  const handleModuleSelect = (module) => {
+    setSelectedModule(module)
+    setModuleOptions(sortByKey(dropdownData?.[module.name],'translatedValue'))
+    setShowModules(false)
+  }
 
-  useEffect(() => {
-    //here set current schema based on module and master name
-    if(masterName?.name && moduleName?.name){
-    setCurrentSchema(availableSchemas.filter(schema => schema.code === `${masterName?.name}.${moduleName?.name}`)?.[0])
-    history.push(`/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${masterName.name}&masterName=${moduleName.name}`)
-    }
-  }, [moduleName])
+  const handleMasterSelect = (master) => {
+    history.push(`/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${selectedModule.name}&masterName=${master.name}`)
+  }
+
+  const handleBackToModules = () => {
+    setSelectedModule(null)
+    setModuleOptions([])
+    setShowModules(true)
+    setSearchQuery("")
+  }
+
+  // Filter logic for modules and masters
+  const filteredModules = useMemo(() => {
+    if (!searchQuery) return masterOptions
+    return masterOptions?.filter(module => 
+      (module.translatedValue || module.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    )
+  }, [masterOptions, searchQuery])
+
+  const filteredMasters = useMemo(() => {
+    if (!searchQuery) return moduleOptions
+    return moduleOptions?.filter(master => 
+      (master.translatedValue || master.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    )
+  }, [moduleOptions, searchQuery])
   
   // useEffect(() => {
   //   if (currentSchema) {
@@ -158,44 +185,97 @@ const MDMSManageMaster = () => {
   //   }
   // }, [currentSchema]);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
+  
   return (
     <React.Fragment>
-        <Header className="works-header-search">{t(Config?.label)}</Header>
+      <Header className="works-header-search">{t(Config?.label)}</Header>
       <div className="jk-header-btn-wrapper">
-        <Card className="manage-master-wrapper">
-        <Dropdown
-          option={masterOptions}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master) : masterName}
-          select={(e) => {
-            setMasterName(e);
-            setModuleName(null)
-            setUpdatedConfig(null)
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MODULE_NAME")}
-          
-          disable={master ? true : false}
-        />
-        <Dropdown
-          option={moduleOptions}
-          style={{marginRight:"auto" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master,modulee) : moduleName}
-          select={(e) => {
-            setModuleName(e);
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MASTER_NAME")}
-          
-          disable = {modulee ? true : false}
-        />
-        </Card>
+        {showModules ? (
+          <div className="module-cards-container">
+            <div className="module-cards-header">
+              <CardHeader>{t("WBH_SELECT_MODULE")}</CardHeader>
+              <div className="mdms-search-bar-container">
+                <TextInput
+                  type="text"
+                  placeholder={t("WBH_SEARCH_MODULES")}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="mdms-search-input"
+                  style={{ marginTop: "1rem" }}
+                />
+              </div>
+            </div>
+            <div className="module-cards-grid">
+              {filteredModules?.length > 0 ? (
+                filteredModules.map((module, index) => (
+                <Card 
+                  key={index} 
+                  className="module-card clickable"
+                  onClick={() => handleModuleSelect(module)}
+                >
+                  <CardSubHeader className="employee-card-sub-header">
+                    {module?.translatedValue?.startsWith("WBH_MDMS_") ? module?.name : module?.translatedValue}
+                  </CardSubHeader>
+                  <CardText>
+                    {t("WBH_CLICK_TO_VIEW_MASTERS")}
+                  </CardText>
+                </Card>
+                ))
+              ) : (
+                <div className="no-results-message">
+                  <CardText>{t("WBH_NO_MODULES_FOUND")}</CardText>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="master-details-container">
+              <Button 
+                type="button" 
+                label={t("WBH_BACK_TO_MODULES")}
+                variation={"secondary"}
+                onClick={handleBackToModules}
+                style={{marginBottom: "1rem"}}
+              />
+            <div className="master-details-header">
+            
+              <CardHeader>{selectedModule?.translatedValue || selectedModule?.name} - {t("WBH_MASTERS")}</CardHeader>
+              <div className="mdms-search-bar-container">
+                <TextInput
+                  type="text"
+                  placeholder={t("WBH_SEARCH_MASTERS")}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="mdms-search-input"
+                  style={{ marginTop: "1rem" }}
+                />
+              </div>
+            </div>
+            <div className="master-cards-grid">
+              {filteredMasters?.length > 0 ? (
+                filteredMasters.map((master, index) => (
+                <Card 
+                  key={index} 
+                  className="master-card clickable"
+                  onClick={() => handleMasterSelect(master)}
+                >
+                  <CardSubHeader className="employee-card-sub-header">
+                    {master?.translatedValue?.startsWith("WBH_MDMS_") ? master?.name : master?.translatedValue}
+                  </CardSubHeader>
+                  <CardText>
+                    {t("WBH_CLICK_TO_MANAGE")}
+                  </CardText>
+                </Card>
+                ))
+              ) : (
+                <div className="no-results-message">
+                  <CardText>{t("WBH_NO_MASTERS_FOUND")}</CardText>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );

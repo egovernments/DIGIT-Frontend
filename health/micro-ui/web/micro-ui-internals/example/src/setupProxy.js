@@ -111,6 +111,10 @@ module.exports = function (app) {
     "/health-individual",
     "/health-hrms/employees",
     "/inbox/v2/_search",
+    // attendee delete
+    "/health-attendance/attendee/v1/_delete",
+    "/health-attendance/attendee/v1/_create",
+    "/health-hrms/employees/_search",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

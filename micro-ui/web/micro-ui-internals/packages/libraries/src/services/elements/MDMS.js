@@ -54,7 +54,7 @@ const initRequestBody = (tenantId) => ({
       },
       {
         moduleName: "tenant",
-        masterDetails: [{ name: "tenants" }, { name: "citymodule" }],
+        masterDetails: [{ name: "tenants" }, { name: "citymodule" },{name:"cities"}],
       },
       {
         moduleName: "DIGIT-UI",
@@ -142,8 +142,8 @@ const getBillsGenieKey = (tenantId, moduleCode) => ({
         masterDetails: [{ name: "tenants" }, { name: "citymodule" }],
       },
       {
-      moduleName: "common-masters",
-      masterDetails: [{name: "uiCommonPay"}]
+        moduleName: "common-masters",
+        masterDetails: [{ name: "uiCommonPay" }]
       }
     ],
   },
@@ -638,32 +638,32 @@ const getGenderTypeList = (tenantId, moduleCode, type) => ({
 });
 
 const getMeterStatusTypeList = (tenantId) => ({
-    moduleDetails: [
-      {
-        moduleName: "ws-services-calculation",
-        masterDetails: [
-          {
-            name: "MeterStatus",
-            filter: `$.*.name`
-          },
-        ],
-      },
-    ],
+  moduleDetails: [
+    {
+      moduleName: "ws-services-calculation",
+      masterDetails: [
+        {
+          name: "MeterStatus",
+          filter: `$.*.name`
+        },
+      ],
+    },
+  ],
 
 });
 
 const getBillingPeriodValidation = (tenantId) => ({
-    moduleDetails: [
-      {
-        moduleName: "ws-services-masters",
-        masterDetails: [
-          {
-            name: "billingPeriod",
-            filter: "*"
-          },
-        ],
-      },
-    ],
+  moduleDetails: [
+    {
+      moduleName: "ws-services-masters",
+      masterDetails: [
+        {
+          name: "billingPeriod",
+          filter: "*"
+        },
+      ],
+    },
+  ],
 });
 
 const getDssDashboardCriteria = (tenantId, moduleCode) => ({
@@ -915,53 +915,53 @@ const getWSTaxHeadMasterCritera = (tenantId, moduleCode, type) => ({
 });
 
 const getHowItWorksJSON = (tenantId) => ({
-      moduleDetails: [
-      {
-        moduleName: "common-masters",
-        masterDetails: [
-          {
-            name: "howItWorks",
-          },
-        ],
-      },
-    ],
+  moduleDetails: [
+    {
+      moduleName: "common-masters",
+      masterDetails: [
+        {
+          name: "howItWorks",
+        },
+      ],
+    },
+  ],
 });
 
 const getFAQsJSON = (tenantId) => ({
   moduleDetails: [
-  {
-    moduleName: "common-masters",
-    masterDetails: [
-      {
-        name: "faqs",
-      },
-    ],
-  },
-],
+    {
+      moduleName: "common-masters",
+      masterDetails: [
+        {
+          name: "faqs",
+        },
+      ],
+    },
+  ],
 });
 const getDSSFAQsJSON = (tenantId) => ({
   moduleDetails: [
-  {
-    moduleName: "dss-dashboard",
-    masterDetails: [
-      {
-        name: "FAQs",
-      },
-    ],
-  },
-],
+    {
+      moduleName: "dss-dashboard",
+      masterDetails: [
+        {
+          name: "FAQs",
+        },
+      ],
+    },
+  ],
 });
 const getDSSAboutJSON = (tenantId) => ({
   moduleDetails: [
-  {
-    moduleName: "dss-dashboard",
-    masterDetails: [
-      {
-        name: "About",
-      },
-    ],
-  },
-],
+    {
+      moduleName: "dss-dashboard",
+      masterDetails: [
+        {
+          name: "About",
+        },
+      ],
+    },
+  ],
 });
 
 const getStaticData = () => ({
@@ -1028,30 +1028,30 @@ const GetVehicleMakeModel = (MdmsRes) =>
         ...vehicleDetails,
         i18nKey: `COMMON_MASTER_VEHICLE_${vehicleDetails.code}`,
       };
-  });
+    });
 
 const GetSlumLocalityMapping = (MdmsRes, tenantId) =>
   MdmsRes["FSM"].Slum.filter((type) => type.active).reduce((prev, curr) => {
     return prev[curr.locality]
       ? {
-          ...prev,
-          [curr.locality]: [
-            ...prev[curr.locality],
-            {
-              ...curr,
-              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
-            },
-          ],
-        }
+        ...prev,
+        [curr.locality]: [
+          ...prev[curr.locality],
+          {
+            ...curr,
+            i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
+          },
+        ],
+      }
       : {
-          ...prev,
-          [curr.locality]: [
-            {
-              ...curr,
-              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
-            },
-          ],
-        };
+        ...prev,
+        [curr.locality]: [
+          {
+            ...curr,
+            i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
+          },
+        ],
+      };
   }, {});
 
 const GetPropertyOwnerShipCategory = (MdmsRes) =>
@@ -1503,7 +1503,7 @@ export const MdmsService = {
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
     const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
     const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
-    PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
+    PersistantStorage.set(key, responseValue, Digit.Utils.getMultiRootTenant() ? 0 : cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {
@@ -1720,7 +1720,7 @@ export const MdmsService = {
   getDSSFAQsJSONData: (tenantId) => {
     return MdmsService.call(tenantId, getDSSFAQsJSON(tenantId));
   },
-  
+
   getDSSAboutJSONData: (tenantId) => {
     return MdmsService.call(tenantId, getDSSAboutJSON(tenantId));
   },

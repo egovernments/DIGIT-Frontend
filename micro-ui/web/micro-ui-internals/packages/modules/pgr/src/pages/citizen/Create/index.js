@@ -79,7 +79,7 @@ export const CreateComplaint = () => {
       const data = {
         ...values,
         complaintType: subType.key,
-        cityCode,
+        cityCode:Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : cityCode,
         city,
         description: details,
         district: city,
@@ -92,6 +92,7 @@ export const CreateComplaint = () => {
 
       await dispatch(createComplaint(data));
       await client.refetchQueries(["complaintsList"]);
+      clearParams();
       history.push(`${match.path}/response`);
     }
   };

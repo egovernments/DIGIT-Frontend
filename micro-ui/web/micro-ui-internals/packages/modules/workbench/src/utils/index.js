@@ -1,3 +1,6 @@
+import _ from "lodash";
+
+
 const CONFIGS_TEMPLATE = {
   string: {
     inline: true,
@@ -179,16 +182,16 @@ const updateTitleToLocalisationCodeForObject = (definition, schemaCode) => {
   Object.keys(definition?.properties).map((key) => {
     const title = Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${key}`);
     definition.properties[key] = { ...definition.properties[key], title: title };
-    if (definition.properties[key]?.type == "object") {
-      updateTitleToLocalisationCodeForObject(definition.properties[key], schemaCode);
+    if (definition?.properties?.[key]?.type == "object") {
+      Object.keys(definition?.properties?.[key]||{}).length>2&&updateTitleToLocalisationCodeForObject(definition?.properties?.[key], schemaCode);
     }
-    if (definition.properties[key]?.type == "array" && definition.properties[key]?.items?.type == "object") {
-      updateTitleToLocalisationCodeForObject(definition.properties[key]?.items, schemaCode);
+    if (definition?.properties?.[key]?.type == "array" && definition?.properties?.[key]?.items?.type == "object") {
+      Object.keys(definition?.properties?.[key]?.items||{}).length>2&& updateTitleToLocalisationCodeForObject(definition?.properties?.[key]?.items, schemaCode);
     }
   });
   return definition;
 };
-const formatDates = (value, type) => {
+const formatDates = (value, type, key) => {
   if (type != "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
   }
@@ -198,7 +201,14 @@ const formatDates = (value, type) => {
     case "datetime":
       return new Date(value).toISOString();
     case "EPOC":
-      return String(new Date(value)?.getTime());
+      const date = new Date(value);
+      if(key==="validTo" || key==="effectiveTo") {
+        date.setHours(23, 59, 59, 999);
+      }
+      else{
+        date.setHours(0, 0, 0, 0);
+      }
+      return String(date?.getTime());
   }
 };
 
@@ -218,10 +228,10 @@ const generateId = async (format, tenantId = Digit.ULBService.getCurrentTenantId
   return response?.idResponses?.[0]?.id;
 };
 
-const formatData = (value, type, schema) => {
+const formatData = (value, type, schema, key) => {
   switch (type) {
     case "EPOC":
-      return formatDates(value, type);
+      return formatDates(value, type, key);
     case "REVERT-EPOC":
       return formatDates(typeof value == "string" && value?.endsWith?.("Z") ? value : parseInt(value), schema?.["ui:widget"]);
     case "REVERT-EPOC":
@@ -242,7 +252,7 @@ const preProcessData = async (data = {}, schema = {}) => {
         autoGenerateFormat = schema?.[key]?.autogenerate;
         fieldKey = key;
       } else {
-        data[key] = formatData(data?.[key], schema?.[key]?.formatType, schema?.[key]);
+        data[key] = formatData(data?.[key], schema?.[key]?.formatType, schema?.[key],key);
       }
     }
   });
@@ -252,7 +262,9 @@ const preProcessData = async (data = {}, schema = {}) => {
   return { ...data };
 };
 
-/*  postprocess the data received from mdms search api to the form */
+/*  postprocess the data received from mdms search api to the form
+    Digit.Utils.workbench.postProcessData(formData, inputUiSchema)
+*/
 const postProcessData = (data = {}, schema = {}) => {
   Object.keys(schema).map((key) => {
     if (
@@ -262,7 +274,7 @@ const postProcessData = (data = {}, schema = {}) => {
       schema?.[key]?.formatType &&
       data[key]
     ) {
-      data[key] = formatData(data?.[key], `REVERT-${schema?.[key]?.formatType}`, schema?.[key]);
+      data[key] = formatData(data?.[key], `REVERT-${schema?.[key]?.formatType}`, schema?.[key], key);
     }
   });
   return { ...data };
@@ -277,7 +289,223 @@ const getMDMSActionURL = (moduleName, masterName, action) => {
   return url;
 }
 
+const getValueByPath = (obj, path) => {
+  const result = [];
+
+  const traverseObject = (currentObj, keys) => {
+    const key = keys.shift();
+
+    if (!key) {
+      // End of the path, add the current object to the result
+      result.push(currentObj);
+      return;
+    }
+
+    if (key === '*') {
+      // Handle wildcard '*' case
+      for (const prop in currentObj) {
+        traverseObject(currentObj[prop], keys.slice());
+      }
+    } else if (currentObj.hasOwnProperty(key)) {
+      // Move to the next level in the object
+      traverseObject(currentObj[key], keys.slice());
+    }
+  };
+
+  const keys = path.split('.');
+  traverseObject(obj, keys);
+
+  return result;
+};
+
+const get = (path = "") => {
+  let tempPath = path;
+  if (!tempPath?.includes(".")) {
+    return tempPath;
+  }
+  if (tempPath?.includes(".*.")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".*.", "_ARRAY_OBJECT_");
+  }
+  if (tempPath?.includes(".*")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".*", "_ARRAY_");
+  }
+  if (tempPath?.includes(".")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".", "_OBJECT_");
+  }
+  let updatedPath = Digit.Utils.locale.stringReplaceAll(tempPath, "_ARRAY_OBJECT_", ".items.properties.");
+  updatedPath = Digit.Utils.locale.stringReplaceAll(updatedPath, "_ARRAY_", ".items");
+  updatedPath = Digit.Utils.locale.stringReplaceAll(updatedPath, "_OBJECT_", ".properties.");
+  return updatedPath;
+};
 
 
 
-export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData,getMDMSActionURL };
+
+/**
+ * Custom function to get the CriteriaForSelectData
+ *
+ * @author jagankumar-egov
+ *
+ * @example
+ *   Digit.Utils.workbench.getCriteriaForSelectData(allProps)
+ *
+ * @returns schema object
+ */
+const getCriteriaForSelectData = (allProps) => {
+  const { configs, updateConfigs, updateSchema, schema: formSchema, formData } = Digit.Hooks.workbench.useWorkbenchFormContext();
+
+  const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+
+  const { schema } = allProps;
+  const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
+  const reqCriteriaForData = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    params: {},
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: schemaCode,
+        limit: 100,
+        offset: 0,
+      },
+    },
+    config: {
+      enabled: schemaCode && schemaCode?.length > 0,
+      select: (data) => {
+        const respData = data?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
+        const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+        if (_.has(allProps, finalJSONPath)) {
+          _.set(
+            allProps,
+            finalJSONPath,
+            respData?.map((e) => e.value)
+          );
+          const path = `definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+          const newSchema = _.cloneDeep(formSchema);
+          _.set(
+            newSchema,
+            path,
+            respData?.map((e) => e.value)
+          );
+          updateSchema(newSchema);
+        }
+        return respData;
+      },
+    },
+    changeQueryName: `data-${schemaCode}`,
+  };
+  if (schemaCode === "CUSTOM" && configs?.customUiConfigs?.custom?.length > 0) {
+    const customConfig = configs?.customUiConfigs?.custom?.filter((data) => data?.fieldPath == fieldPath)?.[0] || {};
+    reqCriteriaForData.url = customConfig?.dataSource?.API;
+    reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody);
+    reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.requestParams);
+    reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}`;
+
+    /*  It has dependency Fields*/
+    if (customConfig?.dataSource?.dependentPath?.length > 0) {
+      // const dependentValue=customConfig?.dataSource?.dependentPath?.length>0?:true;
+      customConfig?.dataSource?.dependentPath?.every((obj) => obj.fieldPath && _.get(formData, obj.fieldPath));
+      const dependencyObj = customConfig?.dataSource?.dependentPath?.reduce((acc, curr) => {
+        acc[curr.depdendentKey] = _.get(formData, curr.fieldPath);
+        return acc;
+      }, {});
+      const isEnabled = Object.keys(dependencyObj).every((key) => dependencyObj?.[key]);
+      reqCriteriaForData.config.enabled = isEnabled;
+      if (isEnabled) {
+        let newQuery = "";
+        Object.keys(dependencyObj).map((key) => {
+          const dependencyConfig = customConfig?.dataSource?.dependentPath?.filter(obj => obj.depdendentKey == key)?.[0];
+          if (dependencyConfig?.dependencyFor == "REQ_BODY" || dependencyConfig?.dependencyFor == "BOTH") {
+            reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody?.replace(key, dependencyObj?.[key]));
+          }
+          if (dependencyConfig?.dependencyFor == "REQ_PARAM" || dependencyConfig?.dependencyFor == "BOTH") {
+            reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.params?.replace(key, dependencyObj?.[key]));
+          }
+          newQuery += `-${dependencyObj?.[key]}`;
+        });
+        reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}${newQuery}`;
+      }
+    }
+
+    reqCriteriaForData.config.select = (data) => {
+      let respData = [];
+      if (data) {
+        respData = data;
+      }
+      if (customConfig?.dataSource?.responseJSON) {
+        respData = _.get(data, customConfig?.dataSource?.responseJSON, []);
+      }
+      if (customConfig?.dataSource?.customFunction) {
+        const customFun = Digit.Utils.createFunction(customConfig?.dataSource?.customFunction);
+        respData = customFun?.(data);
+      }
+      const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+      /* enahanced to support both string values and object label value*/
+      const keyValuePairs=  respData?.map((item) => ({ label: item?.label|| item, value: item?.value||item }))
+      if (_.has(allProps, finalJSONPath)) {
+        _.set(
+          allProps,
+          finalJSONPath,
+          keyValuePairs
+        );
+        const path = `definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+        const newSchema = _.cloneDeep(formSchema);
+        _.set(
+          newSchema,
+          path,
+          keyValuePairs?.map((item) => item.value)
+        );
+        updateSchema(newSchema);
+      }
+      return keyValuePairs;
+    };
+  }
+  return reqCriteriaForData;
+
+}
+const getParent = (boundaryCode, type, data) => {
+  return data.find((e) => e[type] === boundaryCode);
+};
+
+const generateDynamicParentType = (data) => {
+  const dynamicParentType = {};
+  for (const entry of data) {
+    const keys = Object.keys(entry);
+    for (let i = 1; i < keys.length; i++) {
+      dynamicParentType[keys[i]] = keys[i - 1];
+    }
+  }
+  return dynamicParentType;
+};
+
+const getParentType = (type, dynamicParentType) => {
+  return dynamicParentType[type] || null;
+};
+
+const transformBoundary = (boundary, dynamicParentType) => {
+  const transformedResult = {};
+
+  boundary.forEach((entry) => {
+    Object.keys(entry).forEach((key) => {
+      const values = Array.from(new Set(boundary.map((e) => e[key])));
+      transformedResult[key] = values.map((val) => {
+        const parentType = getParentType(key, dynamicParentType);
+        const parentEntry = parentType && val ? getParent(val, key, boundary) : null;
+        const parent = parentEntry ? parentEntry[parentType] : null;
+
+        return {
+          code: val,
+          parent: parent,
+        };
+      });
+    });
+  });
+
+  return transformedResult;
+};
+
+export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData, getValueByPath, getCriteriaForSelectData,
+  getParent,
+  generateDynamicParentType,
+  getParentType,
+  transformBoundary,getMDMSActionURL };

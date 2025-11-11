@@ -14,7 +14,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
   const [searchQuery, setSearchQuery] = useState("");
   const { value } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const history = useHistory();
 
   const getInitialRange = () => {
@@ -41,7 +41,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     visualizationType: "table",
     queryType: "",
     requestDate: requestDate,
-    filters: {campaignId: campaignId },
+    filters: {campaignNumber: campaignNumber },
     aggregationFactors: null,
   };
   const { isLoading:isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
@@ -105,7 +105,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
           t={t}
           onClick={() => {
             history.push(
-              `/${window.contextPath}/employee/dss/level-two/${redirectUrl}?campaignId=${campaignId}&boundaryType=${boundaryType}&boundaryValue=${rowData?.name}`,
+              `/${window.contextPath}/employee/dss/level-two/${redirectUrl}?campaignNumber=${campaignNumber}&boundaryType=${boundaryType}&boundaryValue=${rowData?.name}`,
               {}
             );
           }}

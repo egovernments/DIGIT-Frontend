@@ -1,4 +1,4 @@
-import { AppContainer, BackButton, Toast } from "@egovernments/digit-ui-react-components";
+import { AppContainer, BackLink, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
@@ -10,10 +10,13 @@ import SelectOtp from "./SelectOtp";
 const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
 const DEFAULT_USER = "digit-user";
-const DEFAULT_REDIRECT_URL = `/${window?.contextPath}/citizen`;
+let DEFAULT_REDIRECT_URL = `/${window?.contextPath || window?.globalConfigs?.getConfig("CONTEXT_PATH")}/citizen`;
 
 /* set citizen details to enable backward compatiable */
 const setCitizenDetail = (userObject, token, tenantId) => {
+  if (Digit.Utils.getMultiRootTenant()) {
+    return;
+  }
   let locale = JSON.parse(sessionStorage.getItem("Digit.initData"))?.value?.selectedLanguage;
   localStorage.setItem("Citizen.tenant-id", tenantId);
   localStorage.setItem("tenant-id", tenantId);
@@ -46,6 +49,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const [canSubmitOtp, setCanSubmitOtp] = useState(true);
   const [canSubmitNo, setCanSubmitNo] = useState(true);
 
+  // Check if individual service context path is configured
+  const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+
   useEffect(() => {
     let errorTimeout;
     if (error) {
@@ -71,7 +77,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     Digit.UserService.setUser(user);
     setCitizenDetail(user?.info, user?.access_token, stateCode);
     const redirectPath = location.state?.from || DEFAULT_REDIRECT_URL;
-    if (!Digit.ULBService.getCitizenCurrentTenant(true)) {
+    if (!Digit.ULBService.getCitizenCurrentTenant()) {
       history.replace(`/${window?.contextPath}/citizen/select-location`, {
         redirectBackTo: redirectPath,
       });
@@ -93,7 +99,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     )
   );
 
-  const getUserType = () => Digit.UserService.getType();
+  const getUserType = () => "citizen" || Digit.UserService.getType();
 
   const handleOtpChange = (otp) => {
     setParmas({ ...params, otp });
@@ -104,6 +110,11 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     setParmas({ ...params, mobileNumber: value });
   };
 
+  const handleEmailChange = (event) => {
+    const { value } = event.target;
+    setParmas({ ...params, userName: value });
+  };
+
   const selectMobileNumber = async (mobileNumber) => {
     setCanSubmitNo(false);
     setParmas({ ...params, ...mobileNumber });
@@ -112,16 +123,24 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       tenantId: stateCode,
       userType: getUserType(),
     };
+    
     if (isUserRegistered) {
+      // LOGIN FLOW: Send OTP
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
       if (!err) {
         setCanSubmitNo(true);
-        history.replace(`${path}/otp`, { from: getFromLocation(location.state, searchParams), role: location.state?.role });
+        history.replace(`${path}/otp`, { 
+          from: getFromLocation(location.state, searchParams), 
+          role: location.state?.role 
+        });
         return;
       } else {
         setCanSubmitNo(true);
         if (!(location.state && location.state.role === "FSM_DSO")) {
-          history.push(`/${window?.contextPath}/citizen/register/name`, { from: getFromLocation(location.state, searchParams), data: data });
+          history.push(`/${window?.contextPath}/citizen/register/name`, { 
+            from: getFromLocation(location.state, searchParams), 
+            data: data 
+          });
         }
       }
       if (location.state?.role) {
@@ -129,31 +148,96 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         setError(location.state?.role === "FSM_DSO" ? t("ES_ERROR_DSO_LOGIN") : "User not registered.");
       }
     } else {
-      const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
-      if (!err) {
+      // REGISTER FLOW
+      if (individualServicePath) {
+        // NEW FLOW: Go directly to name screen
         setCanSubmitNo(true);
-        history.replace(`${path}/otp`, { from: getFromLocation(location.state, searchParams) });
-        return;
+        history.replace(`${path}/name`, { 
+          from: getFromLocation(location.state, searchParams),
+          data: data 
+        });
+      } else {
+        // OLD FLOW: Send OTP first
+        const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
+        if (!err) {
+          setCanSubmitNo(true);
+          history.replace(`${path}/otp`, { 
+            from: getFromLocation(location.state, searchParams) 
+          });
+          return;
+        }
+        setCanSubmitNo(true);
       }
-      setCanSubmitNo(true);
     }
   };
 
   const selectName = async (name) => {
-    const data = {
+    setCanSubmitName(true);
+    
+    const userData = {
       ...params,
-      tenantId: stateCode,
-      userType: getUserType(),
       ...name,
     };
-    setParmas({ ...params, ...name });
-    setCanSubmitName(true);
-    const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
-    if (res) {
-      setCanSubmitName(false);
-      history.replace(`${path}/otp`, { from: getFromLocation(location.state, searchParams) });
+    
+    setParmas(userData);
+    
+    if (!isUserRegistered && individualServicePath) {
+      // NEW FLOW: Call the custom register API using Digit.CustomService
+      const registerURL = `${individualServicePath}/v1/_register`;
+      
+      const requestData = {
+        IndividualRegister: {
+          tenantId: stateCode,
+          name: userData.name,
+          emailId: userData.userName || "",
+          mobileNumber: userData.mobileNumber || "",
+          requestType: "Register"
+        }
+      };
+
+      try {
+        const registerResponse = await Digit.CustomService.getResponse({
+          url: registerURL,
+          body: requestData,
+          useCache: false,
+          method: "POST",
+          userService: false,
+          auth: false,
+          params: {}
+        });
+
+        if (!registerResponse) {
+          throw new Error("Registration API failed");
+        }
+        
+        setCanSubmitName(false);
+        // After registration, go to OTP screen
+        history.replace(`${path}/otp`, { 
+          from: getFromLocation(location.state, searchParams) 
+        });
+        
+      } catch (err) {
+        console.error("Registration error:", err);
+        setCanSubmitName(false);
+        setError(t("REGISTRATION_FAILED") || "Registration failed. Please try again.");
+      }
     } else {
-      setCanSubmitName(false);
+      // OLD FLOW: Send OTP
+      const data = {
+        ...params,
+        tenantId: stateCode,
+        userType: getUserType(),
+        ...name,
+      };
+      const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
+      if (res) {
+        setCanSubmitName(false);
+        history.replace(`${path}/otp`, { 
+          from: getFromLocation(location.state, searchParams) 
+        });
+      } else {
+        setCanSubmitName(false);
+      }
     }
   };
 
@@ -161,14 +245,17 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     try {
       setIsOtpValid(true);
       setCanSubmitOtp(false);
-      const { mobileNumber, otp, name } = params;
-      if (isUserRegistered) {
+      const { mobileNumber, otp, name, userName } = params;
+      
+      if (isUserRegistered || individualServicePath) {
+        // LOGIN FLOW or NEW REGISTER FLOW: Authenticate with OTP
         const requestData = {
-          username: mobileNumber,
+          username: mobileNumber || userName,
           password: otp,
           tenantId: stateCode,
           userType: getUserType(),
         };
+        
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
 
         if (location.state?.role) {
@@ -179,44 +266,61 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             return;
           }
         }
+        
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
           info.tenantId = Digit.ULBService.getStateId();
         }
 
         setUser({ info, ...tokens });
-      } else if (!isUserRegistered) {
+      } else {
+        // OLD REGISTER FLOW: Register user with OTP
         const requestData = {
           name,
-          username: mobileNumber,
+          username: mobileNumber || userName,
           otpReference: otp,
           tenantId: stateCode,
         };
-
+        
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.registerUser(requestData, stateCode);
-
+        
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
           info.tenantId = Digit.ULBService.getStateId();
         }
 
         setUser({ info, ...tokens });
       }
+      
     } catch (err) {
       setCanSubmitOtp(true);
       setIsOtpValid(false);
+      setError(t("INVALID_OTP") || "Invalid OTP");
     }
   };
 
   const resendOtp = async () => {
-    const { mobileNumber } = params;
+    const { mobileNumber, userName } = params;
     const data = {
       mobileNumber,
+      userName,
       tenantId: stateCode,
       userType: getUserType(),
     };
-    if (!isUserRegistered) {
+    
+    if (!isUserRegistered && individualServicePath) {
+      // NEW REGISTER FLOW: Cannot resend
+      setError(t("PLEASE_COMPLETE_REGISTRATION") || "Please enter the OTP sent during registration.");
+    } else if (!isUserRegistered) {
+      // OLD REGISTER FLOW: Resend OTP
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
-    } else if (isUserRegistered) {
+      if (err) {
+        setError(t("OTP_RESEND_ERROR") || "Failed to resend OTP");
+      }
+    } else {
+      // LOGIN FLOW: Resend OTP
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
+      if (err) {
+        setError(t("OTP_RESEND_ERROR") || "Failed to resend OTP");
+      }
     }
   };
 
@@ -233,13 +337,15 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     <div className="citizen-form-wrapper">
       <Switch>
         <AppContainer>
-          <BackButton />
+          {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()}/>}
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}
               config={stepItems[0]}
               mobileNumber={params.mobileNumber || ""}
+              emailId={params.userName || ""}
               onMobileChange={handleMobileChange}
+              onEmailChange={handleEmailChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
               t={t}
@@ -247,7 +353,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           </Route>
           <Route path={`${path}/otp`}>
             <SelectOtp
-              config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
+              config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params.mobileNumber || params.userName || ""}` } }}
               onOtpChange={handleOtpChange}
               onResend={resendOtp}
               onSelect={selectOtp}
@@ -260,7 +366,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           <Route path={`${path}/name`}>
             <SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />
           </Route>
-          {error && <Toast error={true} label={error} onClose={() => setError(null)} />}
+          {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
         </AppContainer>
       </Switch>
     </div>

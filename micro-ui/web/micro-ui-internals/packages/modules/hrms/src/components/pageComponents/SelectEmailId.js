@@ -10,7 +10,9 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
       label: "HR_EMAIL_LABEL",
       type: "email",
       name: "emailId",
+      isMandatory: true,
       validation: {
+        isRequired: true,
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
     },

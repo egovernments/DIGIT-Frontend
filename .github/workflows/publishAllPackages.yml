@@ -1,17 +1,10 @@
-# name: Node.js Publish Health UI Packages
-name: Node.js Publish Health UI CSS Packages
+name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'develop','console', 'master']
+    branches: [  'console', 'master']
     paths:
-      - 'health/micro-ui/web/micro-ui-internals/packages/css/**'
-      # - 'health/micro-ui/web/micro-ui-internals/**' disabling main since we target only for css
-    
-  pull_request:
-    branches: 
-      - 'dev-hcm'
-      # Push events to branches matching refs/heads/mona/octocat
+      - 'health/micro-ui/web/micro-ui-internals/**'
 
 jobs:
   build:

@@ -1,29 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-// import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
+// import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common"
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-// import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
-import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
-import { PGRReducers , initPGRComponents} from "@egovernments/digit-ui-module-pgr";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
-import { pgrCustomizations } from "./pgr";
+import { pgrCustomizations, overrideComponents } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
 
-const enabledModules = [ "DSS", "HRMS",
-"Workbench"
-,"PGR"
-//  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  // "Utilities",
-//added to check fsm
-// "FSM"
+const enabledModules = [
+  "DSS",
+  "HRMS",
+  "Workbench",
+  "Utilities",
+  "PGR",
+  "Sandbox",
+  "OpenPayment",
 ];
 
 const initTokens = (stateCode) => {
@@ -44,7 +46,6 @@ const initTokens = (stateCode) => {
   if (userType !== "CITIZEN") {
     window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
   } else {
-    // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
   }
 
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);
@@ -52,34 +53,59 @@ const initTokens = (stateCode) => {
   if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
 };
 
-const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+const initDigitUI = async() => {
+  const { DigitUI, initCoreComponents } = await import("@egovernments/digit-ui-module-core");
+  const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+
+  if (isMultiRootTenant) {
+    const pathname = window.location.pathname;
+    const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+    const start = pathname.indexOf(context) + context.length + 1;
+    const employeeIndex = pathname.indexOf("employee");
+    const citizenIndex = pathname.indexOf("citizen");
+    const end = (employeeIndex !== -1) ? employeeIndex : (citizenIndex !== -1) ? citizenIndex : -1;
+    const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
+    window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") + `${tenant ? `/${tenant}` : ""}` || "digit-ui";
+    window.globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  } else {
+    window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  }
+
   window.Digit.Customizations = {
     PGR: pgrCustomizations,
-    commonUiConfig: UICustomizations
+    commonUiConfig: UICustomizations,
   };
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
-
-  initDSSComponents();
-
   initEngagementComponents();
-  // initUtilitiesComponents();
+
+  window?.Digit.ComponentRegistryService.setupRegistry({
+    ...overrideComponents,
+  
+  });
+  initCoreComponents();
+  initDSSComponents();
+  initHRMSComponents();
+  initUtilitiesComponents();
   initWorkbenchComponents();
   initPGRComponents();
+  initOpenPaymentComponents();
 
-
-  const moduleReducers = (initData) =>  ({
+  const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
   });
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = Digit?.ULBService?.getStateId?.() || window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
 
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  ReactDOM.render(
+    <DigitUI
+      stateCode={stateCode}
+      enabledModules={enabledModules}
+      defaultLanding="employee"
+      allowedUserTypes={["employee","citizen"]}
+      moduleReducers={moduleReducers}
+    />,
+    document.getElementById("root")
+  );
 };
 
 initLibraries().then(() => {

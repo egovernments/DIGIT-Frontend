@@ -1,4 +1,4 @@
-import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { CardText, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const ChangeCity = (prop) => {
   const history = useHistory();
   const isDropdown = prop.dropdown || false;
   let selectedCities = [];
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
   const handleChangeCity = (city) => {
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
@@ -54,6 +55,10 @@ const ChangeCity = (prop) => {
   // if (isDropdown) {
   return (
     <div style={prop?.mobileView ? { color: "#767676" } : {}}>
+      {
+        (isMultiRootTenant && selectCityData.length==1) ? 
+        <CardText style={{color:"#363636"}}>{selectCityData?.[0]?.value}</CardText>
+        :
       <Dropdown
         t={prop?.t}
         option={selectCityData}
@@ -67,6 +72,7 @@ const ChangeCity = (prop) => {
           </label>
         }
       />
+}
     </div>
   );
   // } else {

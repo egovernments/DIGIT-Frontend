@@ -14,7 +14,8 @@ const SelectComplaintType = ({ t, config, onSelect, value }) => {
 
   const textParams = config.texts;
 
-  const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: Digit.ULBService.getCurrentTenantId() });
+  const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId() ;
+  const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: stateId });
 
   function selectedValue(value) {
     setComplaintType(value);

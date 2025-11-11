@@ -1,11 +1,11 @@
 import { useQuery, useQueryClient } from "react-query";
+import { useMemo } from "react";
 import { CustomService } from "../services/elements/CustomService";
 
 /**
- * Custom hook which can make api call and format response
+ * Custom hook which can make an API call and format the response.
  *
  * @author jagankumar-egov
- *
  *
  * @example
  * 
@@ -29,18 +29,43 @@ import { CustomService } from "../services/elements/CustomService";
  * @returns {Object} Returns the object which contains data and isLoading flag
  */
 
-
-const useCustomAPIHook = ({ url, params, body, config = {}, plainAccessRequest,changeQueryName="Random" }) => {
+const useCustomAPIHook = ({
+  url,
+  params = {},
+  body = {},
+  config = {},
+  headers = {},
+  method = "POST",
+  plainAccessRequest,
+  changeQueryName = "Random",
+  options = {},
+}) => {
   const client = useQueryClient();
 
-  const { isLoading, data, isFetching,refetch } = useQuery(
-    [url,changeQueryName].filter((e) => e),
-    () => CustomService.getResponse({ url, params, body, plainAccessRequest }),
-    {
-      cacheTime:0,
-      ...config,
+  // Memoize body to prevent unnecessary re-fetching
+  const stableBody = useMemo(() => JSON.stringify(body), [body]);
+
+  const queryKey = useMemo(() => [url, changeQueryName, stableBody], [url, changeQueryName, stableBody]);
+
+  // Fetch function with error handling
+  const fetchData = async () => {
+    try {
+      const response = await CustomService.getResponse({ url, params, body, plainAccessRequest, headers, method, ...options });
+      return response || null; // Ensure it never returns undefined
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // React Query will handle retries if needed
     }
-  );
+  };
+
+  const { isLoading, data, isFetching, refetch } = useQuery(queryKey, fetchData, {
+    cacheTime: options?.cacheTime || 1000, 
+    staleTime: options?.staleTime || 5000,
+    keepPreviousData: true, 
+    retry: 2,
+    refetchOnWindowFocus: false,
+    ...config,
+  });
 
   return {
     isLoading,
@@ -48,7 +73,9 @@ const useCustomAPIHook = ({ url, params, body, config = {}, plainAccessRequest,c
     data,
     refetch,
     revalidate: () => {
-      data && client.invalidateQueries({ queryKey: [url].filter((e) => e) });
+      if (data) {
+        client.invalidateQueries(queryKey);
+      }
     },
   };
 };

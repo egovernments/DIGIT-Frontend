@@ -1,5 +1,6 @@
 .multi-select-dropdown-wrap{
     @apply relative text-form-field text-text-primary w-full;
+    max-width: 540px;
     .master, .master-active{
         @apply relative border border-solid border-input-border h-10 w-full;
         input[type=text]{

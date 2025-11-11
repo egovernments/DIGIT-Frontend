@@ -21,18 +21,34 @@ const PGRCard = () => {
     <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z" fill="white"></path>
   </svg>
 
-  let propsForCSR =[
-    {
-      label: t("ES_PGR_NEW_COMPLAINT"),
-      link: `/${window?.contextPath}/employee/pgr/complaint/create`,
-      role: "CSR"
-    }
-  ]
+  let role = ["CSR"];
 
-  propsForCSR = propsForCSR.filter(link => link.role && Digit.Utils.didEmployeeHasRole(link.role) );
+if (Digit.Utils.getMultiRootTenant()) {
+  role.push("SUPERUSER");
+}
 
+let propsForCSR = [
+  {
+    label: t("ES_PGR_NEW_COMPLAINT"),
+    link: `/${window?.contextPath}/employee/pgr/complaint/create`,
+    roles: role
+  }
+];
+
+
+let propsForSandbox = [
+  {
+    label: t("CONFIGURE_MASTER"),
+    link: `/${window?.contextPath}/employee/sandbox/application-management/setup-master?module=PGR&key=about`,
+    isOutsideModule : true,
+    roles: role
+  }
+];
+
+  propsForCSR = propsForCSR.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
+  propsForSandbox = propsForSandbox.filter(link => link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true );
   const propsForModuleCard = {
-    Icon: <Icon />,
+    Icon: "File",
     moduleName: t("ES_PGR_HEADER_COMPLAINT"),
     kpis: [
         {
@@ -49,7 +65,8 @@ const PGRCard = () => {
         label: t("ES_PGR_INBOX"),
         link: `/${window?.contextPath}/employee/pgr/inbox`
     },
-    ...propsForCSR
+    ...propsForCSR,
+    ...propsForSandbox
     ]
 }
 

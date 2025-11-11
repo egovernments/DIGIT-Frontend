@@ -1,8 +1,10 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { ArrowDown, CheckSvg } from "./svgindex";
 import { useTranslation } from "react-i18next";
+import { COLOR_FILL } from "./contants";
 import RemoveableTag from "./RemoveableTag";
-const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "",BlockNumber=1,isOBPSMultiple=false,props={},isPropsNeeded=false,ServerStyle={}, config}) => {
+
+const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "",BlockNumber=1,isOBPSMultiple=false,props={},isPropsNeeded=false,ServerStyle={}, isSurvey=false,placeholder, disable=false,config}) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
   const [optionIndex, setOptionIndex] = useState(-1);
@@ -14,11 +16,9 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
       case "ADD_TO_SELECTED_EVENT_QUEUE":
         return [...state, {[optionsKey]: action.payload?.[1]?.[optionsKey], propsData: action.payload} ] 
       case "REMOVE_FROM_SELECTED_EVENT_QUEUE":
-        const newState = state.filter(
-          (e) => e?.[optionsKey] !== action.payload?.[1]?.[optionsKey]
-        );
-        onSelect(newState.map((e) => e.propsData), props); // Update the form state here
-        return newState;
+        const newState =  state.filter( e => e?.[optionsKey] !== action.payload?.[1]?.[optionsKey]) 
+        onSelect(newState.map((e) => e.propsData), props);
+        return newState
       case "REPLACE_COMPLETE_STATE":
         return action.payload
       default:
@@ -28,7 +28,7 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
 
   useEffect(() => {
     dispatch({type: "REPLACE_COMPLETE_STATE", payload: fnToSelectOptionThroughProvidedSelection(selected) })
-  },[selected?.length])
+  },[selected?.length, selected?.[0]?.code])
 
   function fnToSelectOptionThroughProvidedSelection(selected){
     return selected?.map( e => ({[optionsKey]: e?.[optionsKey], propsData: [null, e]}))
@@ -84,16 +84,17 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
   }
 
   const MenuItem = ({ option, index }) => (
-    <div key={index} style={isOBPSMultiple ? (index%2 !== 0 ?{background : "#EEEEEE"}:{}):{}}>
+    <div key={index} className={`${option.isDisabled ? "disabled" : ""}`}style={isOBPSMultiple ? (index%2 !== 0 ?{background : "#EEEEEE"}:{}):{}}>
       <input
         type="checkbox"
         value={option[optionsKey]}
         checked={alreadyQueuedSelectedState.find((selectedOption) => selectedOption[optionsKey] === option[optionsKey]) ? true : false}
         onChange={(e) => isPropsNeeded?onSelectToAddToQueue(e, option,props):isOBPSMultiple?onSelectToAddToQueue(e, option,BlockNumber):onSelectToAddToQueue(e, option)}
         style={{minWidth: "24px", width: "100%"}}
+        disabled={option.isDisabled || false}
       />
       <div className="custom-checkbox">
-        <CheckSvg style={{innerWidth: "24px", width: "24px"}}/>
+        <CheckSvg style={{innerWidth: "24px", width: "24px"}} fill={option.isDisabled ? "#505050" : COLOR_FILL} />
       </div>
       <p className="label" style={index === optionIndex ? {
                     opacity: 1,
@@ -110,12 +111,12 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
 
   return (
     <div>
-    <div className="multi-select-dropdown-wrap" ref={dropdownRef} style={{marginBottom: '24px'}}>
-      <div className={`master${active ? `-active` : ``}`}>
-        <input className="cursorPointer"  style={{opacity: 0}} type="text" onKeyDown={keyChange} onFocus={() => setActive(true)} value={searchQuery} onChange={onSearch} />
+    <div className={`multi-select-dropdown-wrap ${disable ? "disabled" : ""}`} ref={dropdownRef}>
+      <div className={`master${active ? `-active` : ``} ${disable ? "disabled" : ""}`}>
+        <input className="cursorPointer" type="text" onKeyDown={keyChange} onFocus={() => setActive(true)} value={searchQuery} onChange={onSearch} placeholder={t(placeholder)} />
         <div className="label">
-          <p>{alreadyQueuedSelectedState.length > 0 ? `${alreadyQueuedSelectedState.length} ${defaultUnit}` : defaultLabel}</p>
-          <ArrowDown />
+          <p>{alreadyQueuedSelectedState.length > 0 ? `${isSurvey? alreadyQueuedSelectedState?.filter((ob) => ob?.i18nKey !== undefined).length : alreadyQueuedSelectedState.length} ${defaultUnit}` : defaultLabel}</p>
+          <ArrowDown disable={disable} />
         </div>
       </div>
       {active ? (
@@ -123,7 +124,7 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
           <Menu />
         </div>
       ) : null}
-
+      
     </div>
     {config?.isDropdownWithChip ? <div className="tag-container">
               {alreadyQueuedSelectedState.length > 0 &&

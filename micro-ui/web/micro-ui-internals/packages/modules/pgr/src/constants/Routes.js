@@ -32,6 +32,7 @@ export const Employee = {
   CreateComplaint: PGR_EMPLOYEE_CREATE_COMPLAINT,
   Response: "/response",
   Home: `/${window?.contextPath}/employee`,
+  InboxV2 : "/inbox-v2"
 };
 
 export const getRoute = (match, route) => `${match.path}${route}`;

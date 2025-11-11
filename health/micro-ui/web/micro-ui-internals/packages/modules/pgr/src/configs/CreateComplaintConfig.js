@@ -34,8 +34,8 @@ export const CreateComplaintConfig = {
               },
               populators: {
                 name: "ComplaintDate",
-                required: true,
                 validation:{
+                  required: true,
                   max: "currentDate"
                 },
                 error: "CORE_COMMON_REQUIRED_ERRMSG"
@@ -49,6 +49,10 @@ export const CreateComplaintConfig = {
               label: "Boundary",
               populators: {
                 name: "SelectedBoundary",
+                error: "CORE_COMMON_REQUIRED_ERRMSG",
+                validation: {
+                  required: true
+                }
               },
             }
           ],
@@ -66,8 +70,14 @@ export const CreateComplaintConfig = {
                 name: "complaintUser",
                 optionsKey: "name",
                 styles : {
-                  maxWidth : "37.5rem"
+                  maxWidth : "18.5rem",
+                  gap: "2.5rem",
+                  flexDirection: "row"
                   },
+                innerStyles: {
+                  display: "flex",
+                  gap: "2.5rem"
+                },
                 validation: {
                   required: true,
                 },
@@ -96,7 +106,8 @@ export const CreateComplaintConfig = {
                 name: "ComplainantName",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 validation: {
-                  pattern: /^[A-Za-z]+$/i,
+                  required: true,
+                  pattern: /^[A-Za-z0-9-_]+$/i,
                   error: "CORE_COMMON_REQUIRED_ERRMSG"
                 }
               },
@@ -105,18 +116,21 @@ export const CreateComplaintConfig = {
               inline: true,
               label: "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
               isMandatory: true,
-              type: "number",
+              type: "mobileNumber",
               disable: false,
               populators: {
                 name: "ComplainantContactNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
-                componentInFront: "+91",
+                hideSpan: true,
+                maxLength: 10,
                 validation: {
-                  minLength: 10,
-                  maxLength: 10,
-                  min: 6000000000,
-                  max: 9999999999
-                }, // 10-digit phone number validation
+                  required: true,
+                  pattern: /^[0-9]{10}$/,
+                  validate: (value) => {
+                    if (!value || value === "") return false; // Required field
+                    return /^[0-9]{10}$/.test(value); // Must be exactly 10 digits
+                  }
+                }
               },
             },
             {
@@ -129,7 +143,7 @@ export const CreateComplaintConfig = {
                 name: "SupervisorName",
                 error: "CORE_COMMON_APPLICANT_NAME_INVALID",
                 validation: {
-                  pattern: /^[A-Za-z]+$/i,
+                  pattern: "^[A-Za-z ]+$",
                   error: "CORE_COMMON_APPLICANT_NAME_INVALID"
                 }
               },
@@ -138,18 +152,20 @@ export const CreateComplaintConfig = {
               inline: true,
               label: "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
               isMandatory: false,
-              type: "number",
+              type: "mobileNumber",
               disable: false,
               populators: {
                 name: "SupervisorContactNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
-                componentInFront: "+91",
+                hideSpan: true,
+                maxLength: 10,
                 validation: {
-                  minLength: 0,
-                  min: 6000000000,
-                  max: 9999999999,
-                  error: "CORE_COMMON_MOBILE_ERROR",
-                }, // 10-digit phone number validation
+                  pattern: /^[0-9]{10}$/,
+                  validate: (value) => {
+                    if (!value || value === "") return true; // Allow empty since not mandatory
+                    return /^[0-9]{10}$/.test(value); // Must be exactly 10 digits if provided
+                  }
+                }
               },
             }
           ],
@@ -170,6 +186,14 @@ export const CreateComplaintConfig = {
                 },
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
+            },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
             },
           ],
         },
@@ -221,7 +245,7 @@ export const CreateComplaintConfig = {
                 name: "postalCode",
                 maxlength: 6,
                 validation: {
-                  pattern: /^[1-9][0-9]{5}$/i,
+                  pattern: "^[1-9][0-9]{5}$",
                 },
               },
             }

@@ -54,7 +54,7 @@ const CreateComplaint = () => {
 
   // Show loader while fetching MDMS config
   if (isLoading || !configs) {
-    return <Loader />;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;;
   }
 
   return (

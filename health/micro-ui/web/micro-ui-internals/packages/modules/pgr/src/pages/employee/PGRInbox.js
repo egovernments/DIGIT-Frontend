@@ -29,17 +29,45 @@ import { useLocation } from "react-router-dom";
 const PGRSearchInbox = () => {
   const { t } = useTranslation();
 
+
   // Detect if the user is on a mobile device
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   // Get current ULB tenant ID
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  // Get state tenant ID for localization
+  const stateTenantId = Digit.ULBService.getStateId();
+
+  // Get current language for localization
+  const language = Digit.StoreData.getCurrentLanguage();
+
   // Local state to hold the inbox page configuration (filter/search UI structure)
   const [pageConfig, setPageConfig] = useState(null);
 
   // Used to detect route/location changes to trigger config reset
   const location = useLocation();
+
+  // Get selected hierarchy from session storage
+  // Get selected hierarchy from session storage
+  const [selectedHierarchy, setSelectedHierarchy] = useState(
+  Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || null
+  );
+
+  // Construct module code for localization fetch
+  const moduleCode = selectedHierarchy
+    ? [`boundary-${selectedHierarchy?.hierarchyType?.toLowerCase()}`]
+    : [];
+
+  // Fetch localization data for the selected hierarchy
+  // This loads boundary localizations from the module: hcm-boundary-{hierarchyType}
+  const { isLoading: isLocalizationLoading } = Digit.Services.useStore({
+    stateCode: stateTenantId,
+    moduleCode,
+    language,
+    modulePrefix: "hcm",
+    config: { enabled: !!selectedHierarchy && moduleCode.length > 0 },
+  });
 
   // Fetch MDMS config for inbox screen (RAINMAKER-PGR.SearchInboxConfig)
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
@@ -56,7 +84,8 @@ const PGRSearchInbox = () => {
   );
 
   // Fallback to static config if MDMS is not available
-  const configs = mdmsData || PGRSearchInboxConfig();
+  const configs = PGRSearchInboxConfig();
+
 
   // Fetch the list of service definitions (e.g., complaint types) for current tenant
   const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
@@ -82,6 +111,8 @@ const PGRSearchInbox = () => {
     [pageConfig, serviceDefs]
   );
 
+ 
+
   /**
    * Reset or refresh config when the route changes
    */
@@ -92,9 +123,14 @@ const PGRSearchInbox = () => {
   /**
    * Show loader until necessary data is available
    */
-  if (isLoading || !pageConfig || serviceDefs?.length === 0) {
-    return <Loader />;
+  if (isLoading || isLocalizationLoading || !pageConfig || serviceDefs?.length === 0) {
+    return (
+         <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+
+    );
   }
+
+  
 
   return (
     <div style={{ marginBottom: "80px" }}>
@@ -116,7 +152,7 @@ const PGRSearchInbox = () => {
       </div>
 
       {/* Complaint search and filter interface */}
-      <div className="digit-inbox-search-wrapper">
+      <div className="digit-inbox-search-wrapper pgr-inbox-wrapper">
         <InboxSearchComposer configs={updatedConfig} />
       </div>
     </div>

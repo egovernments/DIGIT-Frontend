@@ -1,3 +1,10 @@
+import { Add } from "./svg/Add";
+import { Profile } from "./svg/Profile";
+import { PdfIcon } from "./svg/PdfIcon";
+import { DocIcon } from "./svg/DocIcon";
+import { XlsxIcon } from "./svg/XlsxIcon";
+import { PngIcon } from "./svg/PngIcon";
+import { JpgIcon } from "./svg/JpgIcon";
 import { Rotation3D } from "./svg/Rotation3D";
 import { SixFtApart } from "./svg/SixFtApart";
 import { Rotate360 } from "./svg/Rotate360";
@@ -725,6 +732,7 @@ import { TrendingUp } from "./svg/TrendingUp";
 import { TripOrigin } from "./svg/TripOrigin";
 import { TurnedIn } from "./svg/TurnedIn";
 import { TurnedInNot } from "./svg/TurnedInNot";
+import { TutorialGuide } from "./svg/TutorialGuide";
 import { TwoWheeler } from "./svg/TwoWheeler";
 import { UnfoldLess } from "./svg/UnfoldLess";
 import { UnfoldMore } from "./svg/UnfoldMore";
@@ -780,8 +788,59 @@ import { ZoomOutMap } from "./svg/ZoomOutMap";
 import { InfoBannerIcon } from "./svg/InfoBannerIcon";
 import { Success } from "./svg/Success";
 import { TickMark } from "./svg/TickMark";
+import { Facilities } from "./svg/Facilities";
+import { WareHouses } from "./svg/WareHouses";
+import { Warehouse } from "./svg/Warehouse";
+import { BarChart } from "./svg/BarChart";
+import { TickMarkBackgroundFilled } from "./svg/TickMarkBackgroundFilled";
+import { Excel } from "./svg/Excel";
+import { SpatialDocument } from "./svg/SpatialDocument";
+import { Trash } from "./svg/Trash";
+import { PaginationFirst } from "./svg/PaginationFirst"
+import { PaginationLast } from "./svg/PaginationLast"
+import { PaginationNext } from "./svg/PaginationNext"
+import { PaginationPrevious } from "./svg/PaginationPrevious"
+import { NorthArrow } from "./svg/NorthArrow"
+import { MapLayerIcon } from "./svg/MapLayerIcon"
+import { Church } from "./svg/Church"
+import { HealthFacility } from "./svg/HealthFacility"
+import { SchoolBuilding } from "./svg/SchoolBuilding"
+import { ContractIcon } from "./svg/ContractIcon";
+import { MeasurementMuktaIcon } from "./svg/MeasurementMuktaIcon";
+import { HRIcon } from "./svg/HRIcon";
+import { ShpIcon } from "./svg/ShpIcon";
+import { MyMicroplanSvg } from "./svg/MyMicroplanSvg";
+import { UserManagementSvg } from "./svg/UserManagementSvg";
+import { OpenMicroplanSvg } from "./svg/OpenMicroplanSvg";
+import { SetUpMicroplanSvg } from "./svg/SetUpMicroplanSvg";
+import { AddCircle } from "./svg/AddCircle";
+import { GlobeLocationPin } from "./svg/GlobeLocationPin";
+import { NewWindow } from "./svg/NewWindow";
+import { OutpatientMed } from "./svg/OutpatientMed";
+import { AdUnits } from "./svg/AdUnits";
+import { ListAltCheck } from "./svg/ListAltCheck";
+import { UploadCloud } from "./svg/UploadCloud";
+import { BarsChart } from "./svg/BarsChart";
+import { Calculate } from "./svg/Calculate";
+import { Employee } from "./svg/Employee";
+import { FeatureSearch } from "./svg/FeatureSearch";
+import { HierarchyGraph } from "./svg/HierarchyGraph";
+import { MobileWrench } from "./svg/MobileWrench";
+
 
 export {
+  AddCircle,
+  SetUpMicroplanSvg,
+  MyMicroplanSvg,
+  OpenMicroplanSvg,
+  UserManagementSvg,
+  Add,
+  Profile,
+  PdfIcon,
+  DocIcon,
+  XlsxIcon,
+  JpgIcon,
+  PngIcon,
   Success,
   TickMark,
   Rotation3D,
@@ -1408,6 +1467,7 @@ export {
   ShoppingBasket,
   ShoppingCart,
   ShopAlt,
+  ShpIcon,
   Sick,
   SingleBed,
   SmartButton,
@@ -1564,4 +1624,37 @@ export {
   ZoomIn,
   ZoomOut,
   ZoomOutMap,
+  Facilities,
+  WareHouses,
+  BarChart,
+  TickMarkBackgroundFilled,
+  Excel,
+  SpatialDocument,
+  Trash,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationLast,
+  PaginationFirst,
+  NorthArrow,
+  MapLayerIcon,
+  Church,
+  HealthFacility,
+  SchoolBuilding,
+  Warehouse,
+  ContractIcon,
+  HRIcon,
+  MeasurementMuktaIcon,
+  GlobeLocationPin,
+  NewWindow,
+  OutpatientMed,
+  AdUnits,
+  ListAltCheck,
+  UploadCloud,
+  TutorialGuide,
+  BarsChart,
+  Calculate,
+  Employee,
+  FeatureSearch,
+  HierarchyGraph,
+  MobileWrench
 };

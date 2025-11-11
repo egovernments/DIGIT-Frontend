@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-health-payments",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Payments Module UI",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -17,9 +17,10 @@
     "react": "17.0.2",
     "react-router-dom": "5.3.0"
   },
+  
   "dependencies": {
     "@egovernments/digit-ui-react-components": "1.8.14",
-    "@egovernments/digit-ui-components": "0.0.2-beta.58",
+    "@egovernments/digit-ui-components":  "0.2.0-beta.58",
     "react": "17.0.2",
     "react-date-range": "^1.4.0",
     "react-dom": "17.0.2",

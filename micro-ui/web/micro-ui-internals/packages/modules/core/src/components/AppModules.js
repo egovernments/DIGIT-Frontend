@@ -10,7 +10,7 @@ const getTenants = (codes, tenants) => {
   return tenants.filter((tenant) => codes?.map?.((item) => item.code).includes(tenant.code));
 };
 
-export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
+export const AppModules = ({ stateCode, userType, modules, appTenants, additionalComponent }) => {
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const { path } = useRouteMatch();
   const location = useLocation();
@@ -21,7 +21,7 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
     return <Redirect to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }} />;
   }
 
-  const appRoutes = modules.map(({ code, tenants }, index) => {
+  const appRoutes = modules?.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
     return Module ? (
       <Route key={index} path={`${path}/${code.toLowerCase()}`}>
@@ -35,9 +35,12 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
       </Route>
     );
   });
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+   const hideClass =
+    location.pathname.includes(`${path}/productDetailsPage/`);
 
   return (
-    <div className="ground-container">
+    <div className={isSuperUserWithMultipleRootTenant ? "" : "ground-container digit-home-ground"}>
       <Switch>
         {appRoutes}
         <Route path={`${path}/login`}>
@@ -50,7 +53,7 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
           <ChangePassword />
         </Route>
         <Route>
-          <AppHome userType={userType} modules={modules} />
+          <AppHome userType={userType} modules={modules} additionalComponent={additionalComponent} />
         </Route>
         {/* <Route path={`${path}/user-profile`}> <UserProfile /></Route> */}
       </Switch>

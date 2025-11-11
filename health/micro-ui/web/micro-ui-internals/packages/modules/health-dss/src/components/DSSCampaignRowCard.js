@@ -43,7 +43,7 @@ const getActionButtons = (rowData, tabData, history, t, boundaryCodeResponse, ca
     size: "medium",
     onClick: () =>
       history.push(
-        `/${window?.contextPath}/employee/dss/view-dashboard?campaignId=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType?.toLowerCase()}&boundaryValue=${boundaryValue}`,
+        `/${window?.contextPath}/employee/dss/view-dashboard?campaignNumber=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType?.toLowerCase()}&boundaryValue=${boundaryValue}`,
         {
           project: rowData,
           boundaryCodeResponse: boundaryCodeResponse

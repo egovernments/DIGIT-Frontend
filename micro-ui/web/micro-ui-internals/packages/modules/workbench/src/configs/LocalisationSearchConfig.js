@@ -2,7 +2,7 @@ export const Config = {
   label: "WBH_LOCALISATION_SEARCH_HEADER",
   type: "search",
   actionLabel: "WBH_ADD_LOCALISATION",
-  actionRole: "LOC_ADMIN",
+  actionRoles: ["LOC_ADMIN"],
   actionLink: "workbench/localisation-add",
   apiDetails: {
     serviceName: "/localization/messages/v1/_search",
@@ -102,6 +102,7 @@ export const Config = {
       label: "",
       uiConfig: {
         tableClassName:"table-fixed-last-column table",
+        resultsWrapperClassName:"localization-search-table",
         columns: [
           {
             label: "WBH_LOC_HEADER_CODE",
@@ -126,7 +127,7 @@ export const Config = {
             svg:"EditIcon",
           },
         ],
-        enableGlobalSearch: false,
+        enableGlobalSearch: true,
         enableColumnSort: true,
         resultsJsonPath: "messages",
         manualPagination:false

@@ -1,35 +1,34 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Loader, SearchIcon } from "@egovernments/digit-ui-react-components";
+import { SideNav, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import Sidebar from "./SideBar";
+import { useHistory } from "react-router-dom";
+import MediaQuery from 'react-responsive';
 
-const checkMatch = (path = "", searchCriteria = "") => path.toLowerCase().includes(searchCriteria.toLowerCase());
+
+
 
 const EmployeeSideBar = () => {
-  const sidebarRef = useRef(null);
   const { isLoading, data } = Digit.Hooks.useAccessControl();
-  const [search, setSearch] = useState("");
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
-  const [subNav, setSubNav] = useState(false);
+  const history = useHistory();
+  const tenantId = Digit.ULBService.getStateId();
 
-  useEffect(() => {
-    if (isLoading) {
-      return <Loader />;
+  function extractLeftIcon(data = {}) {
+    for (const key in data) {
+      const item = data[key];
+      if (key === "item" && item?.leftIcon !== "") {
+        return item?.leftIcon;
+      }
+      if (typeof data[key] === "object" && !Array.isArray(data[key])) {
+        const subResult = extractLeftIcon(data[key]);
+        if (subResult) {
+          return subResult;
+        }
+      }
     }
-    sidebarRef.current.style.cursor = "pointer";
-    collapseNav();
-  }, [isLoading]);
-
-  const expandNav = () => {
-    sidebarRef.current.style.width = "260px";
-    // sidebarRef.current.style.overflow = "auto";
-    setSubNav(true);
-  };
-  const collapseNav = () => {
-    sidebarRef.current.style.width = "60px";
-    sidebarRef.current.style.overflow = "hidden";
-    setSubNav(false);
-  };
+    return null;
+  }
 
   function mergeObjects(obj1, obj2) {
     for (const key in obj2) {
@@ -53,34 +52,16 @@ const EmployeeSideBar = () => {
     .filter((e) => e.url === "url")
     .forEach((item) => {
       let index = item?.path?.split(".")?.[0] || "";
-      if (search == "" && item.path !== "") {
-        const keys = item.path.split(".");
+      if (item?.path !== "") {
+        const keys = item?.path?.split(".");
         let hierarchicalMap = {};
 
         keys.reduce((acc, key, index) => {
           if (index === keys.length - 1) {
-            // If it's the last key, set the value to an empty object or whatever you need.
-            acc[key] = { item }; // You can set the value to any other value or object.
+            acc[key] = { item };
           } else {
             acc[key] = {};
-            return acc[key]; // Return the nested object for the next iteration.
-          }
-        }, hierarchicalMap);
-        mergeObjects(configEmployeeSideBar, hierarchicalMap);
-      } else if (
-        checkMatch(t(`ACTION_TEST_${index?.toUpperCase()?.replace(/[ -]/g, "_")}`), search) ||
-        checkMatch(t(Digit.Utils.locale.getTransformedLocale(`ACTION_TEST_${item?.displayName}`)), search)
-      ) {
-        const keys = item.path.split(".");
-        let hierarchicalMap = {};
-
-        keys.reduce((acc, key, index) => {
-          if (index === keys.length - 1) {
-            // If it's the last key, set the value to an empty object or whatever you need.
-            acc[key] = { item }; // You can set the value to any other value or object.
-          } else {
-            acc[key] = {};
-            return acc[key]; // Return the nested object for the next iteration.
+            return acc[key];
           }
         }, hierarchicalMap);
         mergeObjects(configEmployeeSideBar, hierarchicalMap);
@@ -89,65 +70,120 @@ const EmployeeSideBar = () => {
 
   const splitKeyValue = (configEmployeeSideBar) => {
     const objectArray = Object.entries(configEmployeeSideBar);
-
-    // Sort the array based on the 'orderNumber' or the length of the object if 'orderNumber' is not present
-    // sort logic updated to sort the parent item by alphabetical
     objectArray.sort((a, b) => {
-      if (a[0] < b[0]) { return -1; }
-      if (a[0] > b[0]) { return 1; }
+      if (a[0] < b[0]) {
+        return -1;
+      }
+      if (a[0] > b[0]) {
+        return 1;
+      }
       return 0;
-      // const orderNumberA = a[1].item
-      //   ? a[1].item.orderNumber || Object.keys(configEmployeeSideBar).length + 1
-      //   : Object.keys(configEmployeeSideBar).length + 1;
-      // const orderNumberB = b[1].item
-      //   ? b[1].item.orderNumber || Object.keys(configEmployeeSideBar).length + 1
-      //   : Object.keys(configEmployeeSideBar).length + 1;
-      // return orderNumberA - orderNumberB;
     });
     const sortedObject = Object.fromEntries(objectArray);
     configEmployeeSideBar = sortedObject;
-    return <Sidebar data={configEmployeeSideBar} />;
+    return configEmployeeSideBar;
   };
 
+  const navigateToRespectiveURL = (history = {}, url = "") => {
+    if (url == "/") {
+      return;
+    } 
+    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
+      const hostUrl = window.location.origin;
+      let updatedUrl=null;
+      if(isMultiRootTenant){
+        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+        updatedUrl = url;
+        history.push(updatedUrl);
+      }
+      else{
+        updatedUrl = hostUrl + url;
+        window.location.href = updatedUrl;
+      }
+    } else {
+      history.push(url);
+    } 
+  };
+
+  const onItemSelect = ({ item, index, parentIndex }) => {
+    if (item?.navigationUrl) {
+      navigateToRespectiveURL(history, item?.navigationUrl);
+    } else {
+      return;
+    } 
+  };
+
+  function transformData(data) {
+    const transformItem = (key, value) => {
+      if (value.item) {
+        return {
+          label: t(value.item.displayName),
+          icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
+          navigationUrl: value.item.navigationURL,
+          orderNumber:value.item.orderNumber,
+        };
+      }
+      const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
+      const iconKey = extractLeftIcon(value);
+      return {
+        label: t(key),
+        icon: { icon: iconKey, width: "1.5rem", height: "1.5rem" },
+        children: children,
+      };
+    };
+    return Object.keys(data).map((key) => transformItem(key, data[key]));
+  }
+
+  const sortDataByOrderNumber = (data) => {
+    // Sort the current level of data by orderNumber, handling cases where orderNumber might be missing
+    data.sort((a, b) => {
+      const aOrder = a.orderNumber !== undefined ? a.orderNumber : Infinity; // Use Infinity if orderNumber is missing
+      const bOrder = b.orderNumber !== undefined ? b.orderNumber : Infinity; // Use Infinity if orderNumber is missing
+      return aOrder - bOrder;
+    });
+  
+    // Recursively sort the children if they exist
+    data.forEach((item) => {
+      if (item.children && item.children.length > 0) {
+        sortDataByOrderNumber(item.children);
+      }
+    });
+  
+    return data;
+  };
+
+  const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
+  const sortedTransformedData= sortDataByOrderNumber(transformedData);
   if (isLoading) {
     return <Loader />;
   }
+
   if (!configEmployeeSideBar) {
     return "";
   }
-
-  const renderSearch = () => {
-    return (
-      <div className="">
-        <div className="sidebar-link">
-          {subNav ? (
-            <div className="actions search-icon-wrapper">
-              <input
-                className="employee-search-input nav-bar"
-                type="text"
-                placeholder={t(`ACTION_TEST_SEARCH`)}
-                name="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <SearchIcon className="search-icon" />
-            </div>
-          ) : (
-            <div className="actions search-icon-wrapper-new">
-              <SearchIcon className="search-icon" />
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
+  
   return (
-    <div className="sidebar" ref={sidebarRef} onMouseOver={expandNav} onMouseLeave={collapseNav}>
-      {renderSearch()}
-      {splitKeyValue(configEmployeeSideBar)}
-    </div>
+    <MediaQuery minWidth={768}>
+      <SideNav
+        items={sortedTransformedData}
+        hideAccessbilityTools={true}
+        onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
+        theme={"dark"}
+        variant={"primary"}
+        transitionDuration={""}
+        className=""
+        styles={{}}
+        expandedWidth=""
+        collapsedWidth=""
+        onBottomItemClick={() => { }}
+      />
+    </MediaQuery>
   );
 };
 
 export default EmployeeSideBar;
+
+
+
+
+

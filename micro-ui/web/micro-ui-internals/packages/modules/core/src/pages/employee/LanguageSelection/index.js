@@ -1,14 +1,23 @@
-import { Card, CustomButton, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Button, Card, SubmitBar, Loader } from "@egovernments/digit-ui-components";
+import { CustomButton } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import Background from "../../../components/Background";
+import ImageComponent from "../../../components/ImageComponent";
 
+const DEFAULT_LOCALE=Digit?.Utils?.getDefaultLanguage?.();
+
+const defaultLanguage = { label: "English", value:  DEFAULT_LOCALE};
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
   const history = useHistory();
   const { languages, stateInfo } = storeData || {};
+  let defaultLanguages = languages;
+  if (!defaultLanguages || defaultLanguages?.length == 0) {
+    defaultLanguages = [defaultLanguage];
+  }
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [selected, setselected] = useState(selectedLanguage);
   const handleChangeLanguage = (language) => {
@@ -16,26 +25,36 @@ const LanguageSelection = () => {
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 
-  const handleSubmit = (event) => {
-    history.push(`/${window?.contextPath}/employee/user/login`);
+  function getContextPath(contextPath) {
+    if (!contextPath || typeof contextPath !== "string") return "";
+    return contextPath.split("/")[0];
+  }
+  const hasMultipleLanguages = languages?.length > 1;
+
+  const handleSubmit = (event) => {    
+    history.push(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
   };
 
-  if (isLoading) return null;
+  if (isLoading) return <Loader />;
+
+  if (!hasMultipleLanguages) {
+    return <Redirect to={`/${window?.contextPath}/employee/user/login`} />;
+  }
 
   return (
     <Background>
-      <Card className="bannerCard removeBottomMargin">
+      <Card className={"bannerCard removeBottomMargin languageSelection"}>
         <div className="bannerHeader">
-          <img className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit" />
+          <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit Banner Image" />
 
-          <p>{t(`TENANT_TENANTS_${stateInfo?.code.toUpperCase()}`)}</p>
+          <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
         <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
-          {languages.map((language, index) => (
+          {defaultLanguages.map((language, index) => (
             <div className="language-button-container" key={index}>
               <CustomButton
                 selected={language.value === selected}
-                text={language.label}
+                text={t(language.label)}
                 onClick={() => handleChangeLanguage(language)}
               ></CustomButton>
             </div>
@@ -44,7 +63,7 @@ const LanguageSelection = () => {
         <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit} />
       </Card>
       <div className="EmployeeLoginFooter">
-        <img
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

@@ -1,6 +1,8 @@
 import _ from "lodash";
 import axios from "axios";
 import { CustomisedHooks } from "../hooks";
+import { UICustomizations } from "../configs/UIcustomizations";
+import { downloadPdfWithCustomName } from "./downloadPDF";
 
 
 
@@ -40,7 +42,7 @@ const setupLibraries = (Library, service, method) => {
 
 /* To Overide any existing config/middlewares  we need to use similar method */
 export const updateCustomConfigs = () => {
-  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig });
+  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations});
   // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
 };
 
@@ -53,7 +55,7 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
     document.body.append(link);
     link.click();
     link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   };
 
   if (fileStoreId) {
@@ -161,7 +163,8 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
     "type": "EMPLOYEE",
     "tenantId": tenantId,
   } : user;
-  const additionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
+  const safeAdditionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
+  const additionalDetail= JSON.stringify(safeAdditionalDetail);
   const timestamp = Date.now();
   let complaint = {
     "service": {
@@ -184,7 +187,7 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
         },
         "geoLocation": {}
       },
-      "additionalDetail": JSON.stringify(additionalDetail),
+      "additionalDetail": additionalDetail,
       "auditDetails": {
         "createdBy": user?.uuid,
         "createdTime": timestamp,
@@ -196,11 +199,14 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
       "action": "CREATE",
       "assignes": [],
       "hrmsAssignes": [],
-      "comments": ""
+      "comments": "",
+      // Include documents array if complaint file is provided
+      "verificationDocuments": formData?.complaintFile ? [formData.complaintFile] : null
     }
   }
 
   return complaint;
 };
+
 
 export default {};

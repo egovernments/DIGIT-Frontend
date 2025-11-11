@@ -5,22 +5,24 @@ const createProxy = createProxyMiddleware({
   // target: process.env.REACT_APP_PROXY_API || "https://qa.digit.org",
   target: process.env.REACT_APP_PROXY_API || "https://works-dev.digit.org",
   changeOrigin: true,
-  secure:false
+  secure: false
 });
 const assetsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "https://works-dev.digit.org",
   changeOrigin: true,
-  secure:false
+  secure: false
 });
 const mdmsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "http://localhost:8080",
   changeOrigin: true,
-  secure:false
+  secure: false
 });
 module.exports = function (app) {
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
   [
     "/access/v1/actions/mdms",
+    "/tenant-management",
+    "/user-otp",
     "/egov-mdms-service",
     "/mdms-v2",
     "/egov-idgen",
@@ -55,10 +57,12 @@ module.exports = function (app) {
     "/egov-url-shortening/shortener",
     "/inbox/v1/_search",
     "/inbox/v2/_search",
+    "/inbox-v2/v2/_search",
     "/tl-services",
     "/tl-calculator",
     "/org-services",
     "/edcr",
+    "/hcm-moz-impl",
     "/bpa-services",
     "/noc-services",
     "/egov-user-event",
@@ -69,6 +73,7 @@ module.exports = function (app) {
     "/sw-services",
     "/ws-calculator",
     "/sw-calculator/",
+    "/audit-service/",
     "/egov-searcher",
     "/report",
     "/inbox/v1/dss/_search",
@@ -81,7 +86,15 @@ module.exports = function (app) {
     "/muster-roll",
     "/individual",
     "/mdms-v2",
-    "/service-request"
+    "/facility/v1/_search",
+    "/project/staff/v1/_create",
+    "/product/v1/_create",
+    "/boundary-service",
+    "/project-factory",
+    "/project-factory/v1/data/_autoGenerateBoundaryCode",
+    "/billing-service/bill/v2/_fetchbill",
+    "/tenant-management",
+    "/default-data-handler"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
