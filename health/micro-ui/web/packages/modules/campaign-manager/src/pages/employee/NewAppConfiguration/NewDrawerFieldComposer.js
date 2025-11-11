@@ -787,11 +787,11 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   // Get the translated value using useCustomT (skip if prefixText/suffixText)
   const translatedValue = shouldSkipLocalization ? fieldValue : useCustomT(fieldValue);
 
-  const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue || "");
+  const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
   const conditionalDebounceRef = useRef(null);
 
   useEffect(() => {
-    setConditionalLocalValue(translatedValue || "");
+    setConditionalLocalValue(translatedValue === true ? "" : translatedValue || "");
   }, [translatedValue]);
 
   const handleConditionalChange = useCallback(
@@ -1001,6 +1001,9 @@ function NewDrawerFieldComposer() {
   const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
   // Local state for tabs
   const [activeTab, setActiveTab] = useState("content");
+  // State to track validation errors
+  const [validationErrors, setValidationErrors] = useState([]);
+
   // Get panel configuration - using fixed key 'drawerPanelConfig'
   const panelConfig = panelProperties?.drawerPanelConfig || {};
   const tabs = Object.keys(panelConfig);
@@ -1029,9 +1032,91 @@ function NewDrawerFieldComposer() {
     });
   }, [currentTabProperties, fieldType]);
 
+  // Function to collect all validation errors from group fields
+  const checkValidationErrors = useCallback(() => {
+    const errors = [];
+
+    // Check all tabs for group fields with validation
+    Object.keys(panelConfig).forEach((tabKey) => {
+      const tabProperties = panelConfig[tabKey] || [];
+
+      tabProperties.forEach((panelItem) => {
+        // Only check group fields with validation expressions
+        if (panelItem.fieldType === "group" && panelItem.validationExpression) {
+          // Check if this field is visible for current field type
+          const isVisible =
+            !panelItem?.visibilityEnabledFor ||
+            panelItem.visibilityEnabledFor.length === 0 ||
+            panelItem.visibilityEnabledFor.includes(fieldType);
+
+          if (!isVisible) return;
+
+          try {
+            const expression = panelItem.validationExpression;
+            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
+            const paramValues = Object.values(plainFieldCopy);
+            const func = new Function(...paramNames, `return ${expression}`);
+            const result = func(...paramValues);
+
+            if (!result) {
+              errors.push({
+                fieldLabel: panelItem.label,
+                message: panelItem.validationMessage,
+                tab: tabKey,
+              });
+            }
+          } catch (error) {
+            console.error("Validation expression error:", error);
+          }
+        }
+      });
+    });
+
+    setValidationErrors(errors);
+    return errors;
+  }, [panelConfig, selectedField, fieldType]);
+
+  // Update validation errors when selectedField changes
+  useEffect(() => {
+    if (selectedField) {
+      checkValidationErrors();
+    }
+  }, [selectedField, checkValidationErrors]);
+
+  // Expose validation check function via window object
+  useEffect(() => {
+    window.__appConfig_hasValidationErrors = () => {
+      const errors = checkValidationErrors();
+      return errors.length > 0 ? errors : null;
+    };
+
+    return () => {
+      delete window.__appConfig_hasValidationErrors;
+    };
+  }, [checkValidationErrors]);
+
   // Handle field changes
   const handleFieldChange = (updatedField) => {
     dispatch(updateSelectedField(updatedField));
+  };
+
+  // Handle tab change with validation
+  const handleTabChange = (newTab) => {
+    const errors = checkValidationErrors();
+    if (errors.length > 0) {
+      // Show toast error and prevent tab switch
+      const errorMessage = errors.map((err) => t(err.message)).join(", ");
+      // Show toast via window callback if available
+      if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
+        window.__appConfig_showToast({
+          key: "error",
+          label: errorMessage,
+        });
+      }
+      return;
+    }
+    setActiveTab(newTab);
   };
 
   // Don't render if no field selected
@@ -1051,7 +1136,7 @@ function NewDrawerFieldComposer() {
       <Divider />
 
       {/* Tabs */}
-      <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+      <Tabs tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Tab Description */}
       <TextBlock

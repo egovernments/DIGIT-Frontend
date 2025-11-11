@@ -79,7 +79,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         {data?.footer?.length > 0 && (
           <div style={{
             position: "absolute",
-            bottom: 60,
+            bottom: 0,
             left: 0,
             right: 0,
             backgroundColor: "#fff",
