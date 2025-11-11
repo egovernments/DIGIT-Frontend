@@ -10,6 +10,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
 
+  
   const [newdata, setNewData] = useState(
     typeOfOperation === "edit" ? Object.fromEntries(columns.map((column) => [column.name, curData[column.name]])) : []
   );
