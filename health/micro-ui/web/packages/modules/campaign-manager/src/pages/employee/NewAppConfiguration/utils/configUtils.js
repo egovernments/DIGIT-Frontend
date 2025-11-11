@@ -49,3 +49,31 @@ export const getAllPagesForFlow = (fullParentConfig, flow) => {
   const targetFlow = fullParentConfig?.flows?.find((flowObj) => flowObj.id === flow);
   return targetFlow?.pages || [];
 };
+
+/**
+ * Check for validation errors and show toast if errors exist
+ * @param {Function} setShowToast - Function to set toast state
+ * @param {Function} t - Translation function
+ * @returns {boolean} - Returns true if validation errors exist, false otherwise
+ */
+export const checkValidationErrorsAndShowToast = (setShowToast, t) => {
+  // Check if validation error checking function exists on window
+  if (window.__appConfig_hasValidationErrors && typeof window.__appConfig_hasValidationErrors === "function") {
+    const errors = window.__appConfig_hasValidationErrors();
+
+    if (errors && errors.length > 0) {
+      // Create error message from all validation errors
+      const errorMessage = errors.map((err) => t(err.message)).join(", ");
+
+      // Show toast error
+      setShowToast({
+        key: "error",
+        label: errorMessage
+      });
+
+      return true; // Validation errors exist
+    }
+  }
+
+  return false; // No validation errors
+};

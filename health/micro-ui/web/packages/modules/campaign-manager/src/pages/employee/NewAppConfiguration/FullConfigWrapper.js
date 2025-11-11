@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AppConfigurationStore from "./AppConfigurationStore";
-import { Loader, Button } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
+import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const FullConfigWrapper = () => {
@@ -20,6 +21,7 @@ const FullConfigWrapper = () => {
   const [flowConfig, setFlowConfig] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showToast, setShowToast] = useState(null);
 
   // Fetch flow configuration from MDMS
   useEffect(() => {
@@ -77,6 +79,11 @@ const FullConfigWrapper = () => {
   }, [flowConfig, selectedFlow, selectedPageName]);
 
   const handleFlowClick = async (flow) => {
+    // Check for validation errors before switching
+    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+      return;
+    }
+
     // Call MDMS update for current screen before switching
     if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
       await window.__appConfig_onNext();
@@ -91,6 +98,11 @@ const FullConfigWrapper = () => {
   };
 
   const handlePageClick = async (page) => {
+    // Check for validation errors before switching
+    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+      return;
+    }
+
     // Call MDMS update for current screen before switching page
     if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
       await window.__appConfig_onNext();
@@ -100,6 +112,11 @@ const FullConfigWrapper = () => {
   };
 
   const saveToAppConfig = async () => {
+    // Check for validation errors before saving
+    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+      return;
+    }
+
     try {
       // Step 1: Fetch NewFormConfig data and transform it
       const response = await Digit.CustomService.getResponse({
@@ -156,14 +173,21 @@ const FullConfigWrapper = () => {
           url: `/${mdmsContext}/v2/_update/HCM-ADMIN-CONSOLE.FormConfig`,
           body: updatePayload,
         });
+
+        // Show success toast
+        setShowToast({ key: "success", label: "APP_CONFIG_SAVED_SUCCESSFULLY_REDIRECTING_TO_MODULE_SCREEN" });
+
+        // Navigate after 5 seconds
+        setTimeout(() => {
+          navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+        }, 5000);
       } else {
         console.error("No existing NewApkConfig found for campaignNumber and flow");
+        setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
       }
-
-      // Navigate to new-app-modules after successful API calls
-      navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     } catch (error) {
       console.error("Error in saveToAppConfig:", error);
+      setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
     }
   };
   // Show loader while fetching data
@@ -287,6 +311,7 @@ const FullConfigWrapper = () => {
       zIndex: 1,
     },
     previewArea: {
+      backgroundColor: "#FFFFFF",
       flex: 1,
       display: "flex",
       alignItems: "center",
@@ -415,6 +440,11 @@ const FullConfigWrapper = () => {
             }}
             onClick={async () => {
               if (nextRoute) {
+                // Check for validation errors before navigating
+                if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+                  return;
+                }
+
                 // Call MDMS update if available
                 if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
                   await window.__appConfig_onNext();
@@ -453,6 +483,11 @@ const FullConfigWrapper = () => {
           }}
         />
       </div>
+
+      {/* Toast Notification */}
+      {showToast && (
+        <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
+      )}
     </div>
   );
 };

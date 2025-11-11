@@ -15,7 +15,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
   const flows = mdmsData.data.flows;
   const moduleName = mdmsData.data.name; // Overall module name like "REGISTRATION-DELIVERY"
 
-  flows.forEach((flow) => {
+  flows.forEach((flow, flowIndex) => {
     const project = flow.project || mdmsData.data.project;
     const version = flow.version || mdmsData.data.version || 1;
     const flowName = flow.name;
@@ -33,7 +33,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
         flow: flowName,
         page: flow.name,
         type: "template",
-        order: flow.order || 1,
+        order: flow.order !== undefined ? flow.order : flowIndex + 1,
         footer: transformFooter(flow.footer),
         header: transformHeader(flow.header),
         heading: flow.heading,
@@ -62,7 +62,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           flow: flowName,
           page: page.page,
           type: page.type || "object",
-          order: page.order || pageIndex + 1,
+          order: page.order !== undefined ? page.order : pageIndex + 1,
           footer: transformActionLabelToFooter(page.actionLabel, page.navigateTo),
           heading: page.label,
           project: project,
@@ -313,14 +313,14 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
   // Process each flow separately to maintain flow-wise next/previous routes
   const flowConfigs = [];
 
-  flows.forEach((flow) => {
+  flows.forEach((flow, flowIndex) => {
     const flowPages = [];
 
     // Handle TEMPLATE screenType - single page flows
     if (flow.screenType === "TEMPLATE") {
       flowPages.push({
         name: flow.name,
-        order: flow.order || 1,
+        order: flow.order !== undefined ? flow.order : flowIndex + 1,
         nextRoute: flow.nextRoute || null,
         previousRoute: flow.previousRoute || null,
       });
@@ -331,7 +331,7 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
       flow.pages.forEach((page, pageIndex) => {
         flowPages.push({
           name: page.name || `${flow.name}.${page.page}`,
-          order: page.order || pageIndex + 1,
+          order: page.order !== undefined ? page.order : pageIndex + 1,
           nextRoute: page.nextRoute || null,
           previousRoute: page.previousRoute || null,
         });
@@ -360,7 +360,7 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
       flowConfigs.push({
         id: flow.name,
         name: flow.name,
-        order: flow.order || 1,
+        order: flow.order !== undefined ? flow.order : flowIndex + 1,
         pages: flowPages,
         roles: flow.roles || [],
         project: project,
@@ -369,6 +369,9 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
       });
     }
   });
+
+  // Sort flows by order to maintain consistent ordering
+  flowConfigs.sort((a, b) => a.order - b.order);
 
   return flowConfigs;
 };

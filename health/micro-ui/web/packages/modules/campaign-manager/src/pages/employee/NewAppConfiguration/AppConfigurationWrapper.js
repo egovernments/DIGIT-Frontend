@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
@@ -55,12 +55,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           const code = item?.code;
           const message = item?.[currentLocale];
           // Only accept string values for code and message
-          return (
-            typeof code === "string" &&
-            code.trim() !== "" &&
-            typeof message === "string" &&
-            message.trim() !== ""
-          );
+          return typeof code === "string" && code.trim() !== "" && typeof message === "string" && message.trim() !== "";
         })
         .map((item) => ({
           code: item.code,
@@ -249,6 +244,17 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     }
   }, [showToast]);
 
+  // Expose showToast function via window object for child components
+  useEffect(() => {
+    window.__appConfig_showToast = (toastData) => {
+      setShowToast(toastData);
+    };
+
+    return () => {
+      delete window.__appConfig_showToast;
+    };
+  }, []);
+
   if (isLoadingPageConfig || !currentData || (localeModule && localizationStatus === "loading")) {
     return <Loader />;
   }
@@ -296,9 +302,9 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             width: "32rem",
           }}
         >
-          <div style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <>
             <LabelFieldPair>
-              <span style={{ fontWeight: "600" }}>
+              <span style={{ fontWeight: "600", width: "33%" }}>
                 {t("FIELD_LABEL")} <span style={{ color: "red" }}>*</span>
               </span>
               <TextInput
@@ -310,7 +316,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             </LabelFieldPair>
 
             <LabelFieldPair>
-              <span style={{ fontWeight: "600" }}>
+              <span style={{ fontWeight: "600", width: "33%" }}>
                 {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
               </span>
               <Dropdown
@@ -353,7 +359,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 onClick={handleAddNewField}
               />
             </div>
-          </div>
+          </>
         </PopUp>
       )}
       {showToast && (
