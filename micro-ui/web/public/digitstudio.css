@@ -1277,6 +1277,6 @@ textarea.light-placeholder::placeholder {
 }
 
 .digit-field .digit-privacy-checkbox{
-    margin-bottom : 0rem !important
-    margin-top: 0rem !important
+    margin-bottom : 0rem !important;
+    margin-top: 0rem !important;
 }
