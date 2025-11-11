@@ -28,6 +28,10 @@ const AttendanceInboxComponent = () => {
   const [childrenDataLoading, setChildrenDataLoading] = useState(false);
   const [childrenData, setchildrenData] = useState([]);
 
+  const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
+
+  const pId = selectedPeriod?.id;
+
   // API hook for fetching attendance registers
   const fetchRegisters = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${attendanceContextPath}/v1/_search`,
@@ -62,6 +66,7 @@ const AttendanceInboxComponent = () => {
                 : filterData?.code,
             reviewStatus: status == undefined ? selectedStatus : status,
             isChildrenRequired: true,
+            billingPeriodId: pId,
           },
         },
         {
@@ -73,16 +78,16 @@ const AttendanceInboxComponent = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                  return {
-                    id: item?.registerNumber,
-                    registerId: item?.id,
-                    name: selectedProject?.name,
-                    boundary: item?.localityCode,
-                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                    markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
-                    approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
-                  };
-                })
+                    return {
+                      id: item?.registerNumber,
+                      registerId: item?.id,
+                      name: selectedProject?.name,
+                      boundary: item?.localityCode,
+                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                      markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
+                      approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
+                    };
+                  })
                 : [];
             setChildrenDataLoading(false);
             setCard(true);
@@ -191,22 +196,23 @@ const AttendanceInboxComponent = () => {
 
   return (
     <div>
-      <div className="custom-register-inbox-screen" style={{
-        // "minHeight":"20%",
-        // "maxHeight":"30%"
-      }}>
+      <div
+        className="custom-register-inbox-screen"
+        style={
+          {
+            // "minHeight":"20%",
+            // "maxHeight":"30%"
+          }
+        }
+      >
         <div className="inner-div-row-section">
           <div className="custom-inbox-filter-section">
             <div className="custom-inbox-inner-filter-section" style={{ height: "60vh" }}>
-              <CustomFilter
-                resetTable={resetTable}
-                isRequired={ScreenTypeEnum.REGISTER}
-                onFilterChange={handleFilterUpdate}
-              ></CustomFilter>
+              <CustomFilter resetTable={resetTable} isRequired={ScreenTypeEnum.REGISTER} onFilterChange={handleFilterUpdate}></CustomFilter>
             </div>
           </div>
 
-          <div className="custom-inbox-outer-table-section" >
+          <div className="custom-inbox-outer-table-section">
             <div className="inner-table-section" style={{ height: "60vh" }}>
               {card == false ? (
                 <Card className="card-overide">

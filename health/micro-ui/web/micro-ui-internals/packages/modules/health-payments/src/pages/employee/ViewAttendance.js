@@ -78,6 +78,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     params: {
       tenantId: tenantId,
       registerNumber: registerNumber,
+      billingPeriodId: pId,
     },
     config: {
       enabled: registerNumber ? true : false,
@@ -634,6 +635,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               label={t(`HCM_AM_GO_BACK`)}
               title={t(`HCM_AM_GO_BACK`)}
               onClick={() => {
+                
                 fromCampaignSupervisor
                   ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
                       fromViewScreen: true,

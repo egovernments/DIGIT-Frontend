@@ -225,7 +225,6 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         setSelectedPeriod(null);
         return;
       }
-      debugger;
       setLoadingPeriods(true);
       try {
         const body = {
@@ -270,14 +269,17 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
           }
 
           setPeriods(periodOptions);
+          Digit.SessionStorage.set("projectPeriods", periodOptions);
         } else {
           setPeriods([]);
+          Digit.SessionStorage.del("projectPeriods");
           setSelectedPeriod(null);
           setBillingConfigData(null);
         }
       } catch (error) {
         console.error("Error fetching billing periods:", error);
         setPeriods([]);
+        Digit.SessionStorage.del("projectPeriods");
         setSelectedPeriod(null);
         setBillingConfigData(null);
       } finally {
@@ -289,7 +291,6 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
 
   // Fetch periods when project is selected
   useEffect(() => {
-    debugger;
     if (selectedProject?.referenceID || selectedProject?.id) {
       fetchBillingPeriods(selectedProject.referenceID || selectedProject.id);
     }
