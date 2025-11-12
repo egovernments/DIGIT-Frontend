@@ -113,14 +113,35 @@ export const UICustomizations = {
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
-          return value && value?.length>0
-            ? <span>{t(`WF_INBOX_${value}`)}</span>: <span>{t("NA")}</span>;
+          return value && value?.length > 0 ? <span>{t(`WF_INBOX_${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
-          return value ? <span>{value}</span> : <span>{t("NA")}</span>;
+          return <span>{value?.assignes?.[0]?.name || t("NA")}</span>; // simplified and tightened
 
         case "WF_INBOX_HEADER_CREATED_DATE":
-          const dateLabel = Number.isFinite(value) && value > 0 ? new Date(value).toLocaleDateString() : t("ES_COMMON_NA");
+          const formatDate = (epochTime) => {
+            if (!Number.isFinite(epochTime) || epochTime <= 0) return t("ES_COMMON_NA");
+            const date = new Date(epochTime);
+            const day = date.getDate();
+            const monthNames = [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ];
+            const month = monthNames[date.getMonth()];
+            const year = date.getFullYear().toString().slice(-2);
+            return `${day} ${month} ${year}`;
+          };
+          const dateLabel = formatDate(value);
           return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
         default:
           return t("ES_COMMON_NA");

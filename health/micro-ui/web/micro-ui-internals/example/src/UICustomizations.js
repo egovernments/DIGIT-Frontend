@@ -1774,9 +1774,31 @@ export const UICustomizations = {
         case "WF_INBOX_HEADER_CURRENT_OWNER":
           return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
-        case "WF_INBOX_HEADER_CREATED_DATE":
-          const dateLabel = value ? Digit.DateUtils.ConvertEpochToDate(value) : "NA";
-          return <Tag label={t(dateLabel)} showIcon={false} type={value ? "success" : "error"} />;
+          case "WF_INBOX_HEADER_CREATED_DATE":
+            const formatDate = (epochTime) => {
+              if (!Number.isFinite(epochTime) || epochTime <= 0) return t("ES_COMMON_NA");
+              const date = new Date(epochTime);
+              const day = date.getDate();
+              const monthNames = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ];
+              const month = monthNames[date.getMonth()];
+              const year = date.getFullYear().toString().slice(-2);
+              return `${day} ${month} ${year}`;
+            };
+            const dateLabel = formatDate(value);
+            return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
         default:
           return t("ES_COMMON_NA");
       }
