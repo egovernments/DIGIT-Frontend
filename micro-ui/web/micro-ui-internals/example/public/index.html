@@ -126,7 +126,10 @@
     (function () {
       var u = window?.globalConfigs?.getConfig("MATOMO_URL") || "https://unified-demo.digit.org/matomo/";
       _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      // For SANDBOX DASHBOARD IN MATOMO
       _paq.push(['setSiteId', '2']);
+      // FOR UNIFIED-DEMO DASHBOARD IN MATOMO(HAS BOTH UNIFIED-DEMO AND SANDBOX)
+      _paq.push(['addTracker', u + 'matomo.php', 1]);
       var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
       g.async = true; g.src = u + 'matomo.js';
       s.parentNode.insertBefore(g, s);
