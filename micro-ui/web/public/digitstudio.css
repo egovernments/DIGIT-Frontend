@@ -128,7 +128,9 @@
   background-color: #fff;
   font-family: Arial, sans-serif;
   margin: 10px;
-  height: 15rem;
+  height: 17.5rem;
+  min-height: 17.5rem;
+  position: relative;
 }
 
 .service-icon {
@@ -137,6 +139,9 @@
 
 .service-card-body {
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 40%);
 }
 
 .service-title {
@@ -144,17 +149,53 @@
   font-weight: 600;
   margin: 0 0 8px 0;
   color: #333;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  line-height: 1.4;
+  max-height: 2.8em;
+  word-break: break-word;
+  width: 100%;
 }
 
 .service-description {
   font-size: 14px;
   color: #555;
   margin-bottom: 12px;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  line-height: 1.4;
+  max-height: 2.8em;
+  word-break: break-word;
+  width: 100%;
 }
 
 .service-created-date {
   font-size: 13px;
   color: #555;
+  margin-top: auto;
+}
+
+.service-tooltip {
+  position: fixed;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: center;
+  pointer-events: none;
 }
 
 .slider-bg-active {
@@ -319,7 +360,6 @@
 
 .canvas-container {
   width: 100%;
-  //min-height: 100vh;
   height: inherit;
   background-color: #f9fafb;
   display: flex;
@@ -721,6 +761,20 @@
       @extend .typography.body-s !optional;
       color: #666;
     }
+
+      &.switch-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        .digit-switch {
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+
+        .digit-switch-label {
+          color: #999;
+        }
+      }
     }
     .drawer-toggle-conditional-field {
       display: flex;
@@ -1253,6 +1307,7 @@ textarea.light-placeholder::placeholder {
 
 /* Workflow page - Make button in left panel sticky at bottom */
 .Workflow-card .slider-body.with-sections .section-divider-wrapper:last-child {
+  position: sticky;
   bottom: 0;
   z-index: 10;
   background: #fafafa;
@@ -1286,3 +1341,4 @@ textarea.light-placeholder::placeholder {
     margin-bottom : 0rem !important;
     margin-top: 0rem !important;
 }
+
