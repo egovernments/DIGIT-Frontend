@@ -906,7 +906,8 @@ tbody {
 
 .digit-landing-page-wrapper {
   .digit-landing-page-card {
-    min-width: fit-content;
+    min-width: 19rem;
+    min-height: 18rem;
   }
 }
 /* APP CONFIG CSS REDESIGN */
@@ -953,6 +954,7 @@ tbody {
   background-color: #ffffff;
   .slider-content {
     .slider-footer {
+      padding: 0;
       margin-bottom: 5rem;
     }
   }
@@ -1262,6 +1264,7 @@ tbody {
 .mobile-bezel-flexContainer {
   display: flex;
   flex-direction: row-reverse;
+  height: 20rem;
   .mobile-bezel-zoom-container {
     display: none;
     height: fit-content;

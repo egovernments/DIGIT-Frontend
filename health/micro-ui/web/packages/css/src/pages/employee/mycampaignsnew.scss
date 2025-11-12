@@ -91,7 +91,11 @@
     }
   }
 }
-
+.digit-viewcard-field-pair.inline {
+  .digit-viewcard-label {
+    width: 60%;
+  }
+}
 .digit-viewcard-field-pair {
   &.digit-results-status-card-field-pair {
     align-items: center;

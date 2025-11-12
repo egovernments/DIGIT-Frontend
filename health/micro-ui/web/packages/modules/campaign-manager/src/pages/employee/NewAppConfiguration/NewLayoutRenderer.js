@@ -56,6 +56,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
       }}>
         <Card className="app-card" style={{
           // flex: 1,
+          backgroundColor: "#eee",
           overflow: "auto",
           paddingBottom: data?.footer?.length > 0 ? "80px" : "0"
         }}>

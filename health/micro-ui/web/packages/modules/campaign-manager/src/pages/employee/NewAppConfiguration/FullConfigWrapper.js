@@ -247,7 +247,7 @@ const FullConfigWrapper = () => {
     container: {
       marginLeft: "-1.5rem",
       display: "flex",
-      height: "calc(100vh - 136px)", // Subtract header bar (64px) and bottom nav height (72px)
+      height: "calc(100vh - 200px)", // Subtract header bar (64px) and bottom nav height (72px)
       overflow: "hidden",
       position: "relative",
       transition: "all 0.3s ease-out",
@@ -385,7 +385,7 @@ const FullConfigWrapper = () => {
       display: "flex",
       flexDirection: "column",
       overflow: "hidden",
-      maxWidth: "75rem",
+      maxWidth: "76rem",
       transition: "all 0.3s ease-out",
     },
     flowTag: {

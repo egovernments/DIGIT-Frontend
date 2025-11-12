@@ -540,7 +540,7 @@ const CampaignDetails = () => {
   return (
     <>
       <div className="campaign-details-header">
-        <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", marginBottom: "1rem" }}>
           <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
           {campaignData?.status !== "created" && (
             <div
