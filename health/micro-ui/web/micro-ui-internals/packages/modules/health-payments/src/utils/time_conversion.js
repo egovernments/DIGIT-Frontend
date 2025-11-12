@@ -6,24 +6,14 @@ const toLocalDate = (epoch) => {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   // Force the epoch to interpret in the detected local timezone
-  return new Date(
-    new Date(epoch).toLocaleString("en-US", { timeZone })
-  );
+  return new Date(new Date(epoch).toLocaleString("en-US", { timeZone }));
 };
 
 /**
  * Helper: Create a new Date using local time (no UTC shift)
  */
 const setLocalTime = (baseDate, hours, minutes, seconds = 0) => {
-  return new Date(
-    baseDate.getFullYear(),
-    baseDate.getMonth(),
-    baseDate.getDate(),
-    hours,
-    minutes,
-    seconds,
-    0
-  );
+  return new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hours, minutes, seconds, 0);
 };
 
 /**
@@ -99,4 +89,40 @@ export const disableTimeWithSession = (sessionType, disableEpoch) => {
   }
 
   return effectiveDate.getTime();
+};
+
+/**
+ * Returns all period objects that overlap with the given date range.
+ *
+ * @param {Array} periods - List of period objects with `periodStartDate` and `periodEndDate` (epoch ms)
+ * @param {number} startDate - Start date in epoch milliseconds
+ * @param {number} endDate - End date in epoch milliseconds
+ * @returns {Array} - List of overlapping period objects
+ */
+// function findAllOverlappingPeriods(periods, startDate, endDate) {
+//   if (!Array.isArray(periods) || !startDate || !endDate) return [];
+
+//   return periods.filter((period) => {
+//     const periodStart = period.periodStartDate;
+//     const periodEnd = period.periodEndDate;
+
+//     // Overlap logic: true if ranges intersect at all
+//     return !(endDate < periodStart || startDate > periodEnd);
+//   });
+// }
+
+export const findAllOverlappingPeriods = ( startDate, endDate) => {
+
+   const periods= Digit.SessionStorage.get("projectPeriods");
+
+
+  if (!Array.isArray(periods) || !startDate || !endDate) return [];
+
+  return periods.filter((period) => {
+    const periodStart = period.periodStartDate;
+    const periodEnd = period.periodEndDate;
+
+    // Overlap logic: true if ranges intersect at all
+    return !(endDate < periodStart || startDate > periodEnd);
+  });
 };

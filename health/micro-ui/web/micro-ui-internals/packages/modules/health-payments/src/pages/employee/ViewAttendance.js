@@ -97,7 +97,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       setAttendanceDuration(
         Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
       );
-      if (AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED") {
+      if (AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED") {
         setDisabledAction(true);
       }
       if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
@@ -635,7 +635,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
               label={t(`HCM_AM_GO_BACK`)}
               title={t(`HCM_AM_GO_BACK`)}
               onClick={() => {
-                
                 fromCampaignSupervisor
                   ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
                       fromViewScreen: true,

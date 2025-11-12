@@ -304,6 +304,13 @@ const PaymentSetUpPage = () => {
     return projectOptions;
   }, [projectOptions]);
 
+  // Derived flag: check if selected campaign already started
+  const isCampaignStarted = useMemo(() => {
+    if (!selectedCampaign?.startDate) return false;
+    const now = new Date().getTime();
+    return now >= selectedCampaign.startDate;
+  }, [selectedCampaign]);
+
   // Billing Cycle Selection Handler
   const handleBillingCycleSelect = useCallback((value) => {
     setBillingCycle(value);
@@ -638,9 +645,15 @@ const PaymentSetUpPage = () => {
         <Button
           style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "12rem" }}
           variation="primary"
-          label={edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
-          title={edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
+          label={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
+          title={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
           onClick={() => {
+            if (isCampaignStarted) {
+              // If campaign already started → navigate to home
+              history.push(`/${window.contextPath}/employee`);
+              return;
+            }
+
             if (edit) {
               // setEdit(false);
               // setUpdate(true);
