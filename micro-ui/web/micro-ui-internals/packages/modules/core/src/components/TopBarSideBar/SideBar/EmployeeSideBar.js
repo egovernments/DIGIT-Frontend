@@ -97,12 +97,13 @@ const EmployeeSideBar = () => {
   }
 
   //Internal navigation logic
-  if (url.indexOf(`/${window?.contextPath}`) === -1) {
+  if (!url.includes(`/${window?.contextPath}`)) {
     const hostUrl = window.location.origin;
-    let updatedUrl = null;
+    let updatedUrl;
 
     if (isMultiRootTenant) {
-      url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+      const contextPath = window?.contextPath || "sandbox-ui";
+      url = url.replace(`/${contextPath}/employee`, `/${contextPath}/${tenantId}/employee`);
       updatedUrl = url;
       history.push(updatedUrl);
     } else {
