@@ -19,6 +19,106 @@
     var _paq = window._paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     _paq.push(["setExcludedQueryParams", ["account", "accountnum", "address", "address1", "address2", "address3", "addressline1", "addressline2", "adres", "adresse", "age", "alter", "auth", "authpw", "bic", "billingaddress", "billingaddress1", "billingaddress2", "calle", "cardnumber", "cc", "ccc", "cccsc", "cccvc", "cccvv", "ccexpiry", "ccexpmonth", "ccexpyear", "ccname", "ccnumber", "cctype", "cell", "cellphone", "city", "clientid", "clientsecret", "company", "consumerkey", "consumersecret", "contrasenya", "contrase\u00f1a", "creditcard", "creditcardnumber", "cvc", "cvv", "dateofbirth", "debitcard", "direcci\u00f3n", "dob", "domain", "ebost", "email", "emailaddress", "emailadresse", "epos", "epost", "eposta", "exp", "familyname", "firma", "firstname", "formlogin", "fullname", "gender", "geschlecht", "gst", "gstnumber", "handynummer", "has\u0142o", "heslo", "iban", "ibanaccountnum", "ibanaccountnumber", "id", "identifier", "indirizzo", "kartakredytowa", "kennwort", "keyconsumerkey", "keyconsumersecret", "konto", "kontonr", "kontonummer", "kredietkaart", "kreditkarte", "kreditkort", "lastname", "login", "mail", "mobiili", "mobile", "mobilne", "nachname", "name", "nickname", "osoite", "parole", "pass", "passord", "password", "passwort", "pasword", "paswort", "paword", "phone", "pin", "plz", "postalcode", "postcode", "postleitzahl", "privatekey", "publickey", "pw", "pwd", "pword", "pwrd", "rue", "secret", "secretq", "secretquestion", "shippingaddress", "shippingaddress1", "shippingaddress2", "socialsec", "socialsecuritynumber", "socsec", "sokak", "ssn", "steuernummer", "strasse", "street", "surname", "swift", "tax", "taxnumber", "tel", "telefon", "telefonnr", "telefonnummer", "telefono", "telephone", "token", "token_auth", "tokenauth", "t\u00e9l\u00e9phone", "ulica", "user", "username", "vat", "vatnumber", "via", "vorname", "wachtwoord", "wagwoord", "webhooksecret", "website", "zip", "zipcode"]]);
+    // Function to get page title based on URL
+    function getPageTitle(url) {
+      try {
+        const pathname = new URL(url).pathname;
+        const path = pathname.replace(/^\/+|\/+$/g, ''); // Remove leading/trailing slashes
+        // Define URL → Page Title mappings
+        const pageTitleMap = {
+          // Sandbox User Journeys
+          "user/sign-up": "Sandbox Sign Up Page",
+          "sandbox-ui/login": "Sandbox Login Page",
+          "user/login": "Sandbox Login Page",
+          "user/otp": "Sandbox OTP Page",
+          "employee/user/language-selection": "Sandbox Language Page",
+          "setup": "Sandbox Setup Page",
+          "landing": "Sandbox Landing Page",
+          "employee/user/profile": "Sandbox User Profile Page",
+          "employee/sandbox/tenant-management/config/upload": "Sandbox Personalization",
+          "error": "Error Page",
+          "user/invalid-url": "Sandbox Invalid URL",
+          // Sandbox Product Pages
+          "productPage": "Sandbox Product Page",
+          "productDetailsPage/TL": "Business License Product Page",
+          "productDetailsPage/PT": "Property Tax Product Page",
+          "productDetailsPage/OBPS": "Building Permits Product Page",
+          "productDetailsPage/mCollect": "mCollect Product Page",
+          "productDetailsPage/Finance": "Finance Product Page",
+          "productDetailsPage/WS": "Water and Sewerage Product Page",
+          "productDetailsPage/BND": "Birth and Death Certificate Product Page",
+          "productDetailsPage/Firenoc": "Firenoc Product Page",
+          "productDetailsPage/SURVEY": "Survey Product Page",
+          "productDetailsPage/FSM": "Faecal Sludge Product Page",
+          "productDetailsPage/PGR": "Complaints Product Page",
+          // Citizen Complaints (PGR)
+          "citizen/login": "Citizen Login Page (Complaints)",
+          "citizen/register/name": "Citizen Register Name (Complaints)",
+          "citizen/register/otp": "Citizen OTP Page (Complaints)",
+          "citizen/select-location": "Citizen Select Location (Complaints)",
+          "citizen/all-services": "Citizen Landing Page (Complaints)",
+          "sandbox-ui/.*/citizen": "Citizen Landing Page (PGR)",
+          "citizen/pgr/create-complaint": "Citizen Create Complaint (Complaints)",
+          "citizen/pgr/complaints": "Citizen My Complaints (Complaints)",
+          // Employee Complaints (PGR)
+          "employee/pgr/create-complaint": "Employee Create Complaint (Complaints)",
+          "employee/dss/dashboard/pgr": "Employee Dashboard (Complaints)",
+          "sandbox-ui/.*/employee": "Employee Landing Page (Complaints)",
+          "employee/pgr/inbox": "Employee Complaints Inbox (Complaints)",
+          "employee/pgr/complaint/details/": "Employee View Complaint Description (Complaints)",
+          // Employee Sandbox Configurations
+          "employee/sandbox/application-management/setup-master?module=PGR&key=about": "Employee Configure (Complaints)",
+          "employee/sandbox/application-management/setup-master?module=PGR&key=masterDetail": "Employee Configure Masters (Complaints)",
+          "employee/sandbox/application-management/module?module=PGR": "Employee Edit Masters (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&from=sandbox&module=PGR": "Employee Edit Complaint Category (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=RAINMAKER-PGR&masterName=ServiceDefs&from=sandbox": "Employee Add Complaint Category (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=common-masters&masterName=Department&from=sandbox&module=PGR": "Employee Edit Department (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Department&from=sandbox": "Employee Add Department (Complaints)",
+          // Employee HRMS (Sandbox)
+          "employee/hrms/create": "Employee Add Employee (Complaints)",
+          "employee/hrms/inbox": "Employee Search Employee (Complaints)",
+          "employee/sandbox/application-management/setup-master?module=HRMS&key=about": "Employee Configure Employee (Complaints)",
+          "employee/sandbox/application-management/setup-master?module=HRMS&key=masterDetail": "Employee View Masters Employee Management (Complaints)",
+          "employee/sandbox/application-management/module?module=HRMS": "Employee Edit Masters Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=common-masters&masterName=Department&from=sandbox&module=HRMS": "Employee View Departments Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Department&from=sandbox": "Employee Add Departments Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=common-masters&masterName=Designation&from=sandbox&module=HRMS": "Employee View Designation Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Designation&from=sandbox": "Employee Add Designation Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=common-masters&masterName=GenderType&from=sandbox&module=HRMS": "Employee View Gender Type Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=GenderType&from=sandbox": "Employee Add Gender Type Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=egov-hrms&masterName=Specalization&from=sandbox&module=HRMS": "Employee View Specialization Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=egov-hrms&masterName=Specalization&from=sandbox": "Employee Add Specialization Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=egov-hrms&masterName=EmployeeType&from=sandbox&module=HRMS": "Employee View Employment Type Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=egov-hrms&masterName=EmployeeType&from=sandbox": "Employee Add Employment Type Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=egov-hrms&masterName=EmployeeStatus&from=sandbox&module=HRMS": "Employee View Employment Status Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=egov-hrms&masterName=EmployeeStatus&from=sandbox": "Employee Add Employment Status Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=egov-hrms&masterName=EmployeeDepartment&from=sandbox&module=HRMS": "Employee View Employee Department Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=egov-hrms&masterName=EmployeeDepartment&from=sandbox": "Employee Add Employee Department Employee Management (Complaints)",
+          "employee/workbench/mdms-search-v2?moduleName=egov-hrms&masterName=DeactivationReason&from=sandbox&module=HRMS": "Employee View Deactivation Reasons Employee Management (Complaints)",
+          "employee/workbench/mdms-add-v2?moduleName=egov-hrms&masterName=DeactivationReason&from=sandbox": "Employee Add Deactivation Reasons Employee Management (Complaints)"
+        };
+        // Exact match first
+        if (pageTitleMap[path]) {
+          return pageTitleMap[path];
+        }
+        // Partial match fallback (for dynamic routes / queries)
+        for (const key in pageTitleMap) {
+          if (path.includes(key)) {
+            return pageTitleMap[key];
+          }
+        }
+        // Default fallback
+        return "DIGIT";
+
+      } catch (e) {
+        console.error("Error getting page title:", e);
+        return "DIGIT";
+      }
+    }
+    // Set initial page title and track
+    const initialPageTitle = getPageTitle(location.href);
+    document.title = initialPageTitle;
+    _paq.push(['setDocumentTitle', initialPageTitle]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function () {
@@ -31,16 +131,136 @@
     })();
     (function () {
       let lastUrl = location.href;
-
+      let lastPageTitle = getPageTitle(location.href);
+      // Store flow in closure variable as backup (won't be lost when sessionStorage is cleared)
+      let userFlow = [];
+      // Get user flow from sessionStorage (tab-specific, isolated per tab)
+      function getUserFlow() {
+        try {
+          const flow = sessionStorage.getItem('matomoUserFlow');
+          return flow ? JSON.parse(flow) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+      // Save user flow to BOTH sessionStorage AND closure variable
+      function saveUserFlow(flow) {
+        try {
+          userFlow = flow; // Save to closure variable (backup)
+          sessionStorage.setItem('matomoUserFlow', JSON.stringify(flow));
+        } catch (e) {
+          console.error('Failed to save user flow:', e);
+        }
+      }
+      // Send complete journey summary using backup flow
+      function sendCompleteFlow(reason) {
+        if (userFlow.length > 1) {
+          const journeySummary = userFlow.join(' → ');
+          // Send final journey as event
+          _paq.push([
+            'trackEvent',
+            'User Journey',
+            reason || 'Session End',
+            journeySummary,
+            userFlow.length
+          ]);
+          // Clear both storage and backup
+          try {
+            sessionStorage.removeItem('matomoUserFlow');
+            userFlow = [];
+          } catch (e) {
+            console.error('Failed to clear user flow:', e);
+          }
+        } else {
+          console.error('[Matomo] Flow too short (length=' + userFlow.length + '), not sending. Flow needs at least 2 pages.');
+        }
+      }
       function trackUrlChange() {
         const url = location.href;
         if (url !== lastUrl) {
-          lastUrl = url;
+          const pageTitle = getPageTitle(url);
+          // Add new page to flow
+          const flow = getUserFlow();
+          flow.push(pageTitle);
+          saveUserFlow(flow);
+          // Track individual navigation step
+          _paq.push([
+            'trackEvent',
+            'User Flow',
+            'Navigation',
+            `${lastPageTitle} → ${pageTitle}`
+          ]);
+          // Update Matomo with new page view
+          document.title = pageTitle;
+          _paq.push(['setReferrerUrl', lastUrl]);
           _paq.push(['setCustomUrl', url]);
+          _paq.push(['setDocumentTitle', pageTitle]);
           _paq.push(['trackPageView']);
+          // Update tracking variables
+          lastUrl = url;
+          lastPageTitle = pageTitle;
         }
       }
-
+      // Load initial flow from sessionStorage and save to backup
+      userFlow = getUserFlow();
+      if (userFlow.length === 0 || userFlow[userFlow.length - 1] !== lastPageTitle) {
+        userFlow.push(lastPageTitle);
+        saveUserFlow(userFlow);
+      } else {
+        console.error('[Matomo] Initial page already in flow:', userFlow);
+      }
+      // Expose function for manual trigger (e.g., on logout)
+      // This WILL clear the flow when called explicitly
+      window.sendMatomoUserFlow = function (reason) {
+        sendCompleteFlow(reason || 'Manual Trigger');
+      };
+      // Expose function to manually clear the flow without sending
+      window.clearMatomoUserFlow = function () {
+        try {
+          sessionStorage.removeItem('matomoUserFlow');
+        } catch (e) {
+          console.error('[Matomo] Failed to clear user flow:', e);
+        }
+      };
+      // Send and clear flow on tab close
+      window.addEventListener('beforeunload', function () {
+        sendCompleteFlow('Tab Close');
+      });
+      // Send flow when tab visibility changes (user switches tabs)
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          if (userFlow.length > 1) {
+            sendCompleteFlow('Tab Switch');
+          } else {
+            console.error('[Matomo] Flow not sent on tab switch - flow too short (length=' + userFlow.length + ')');
+          }
+        }
+      });
+      // Monitor access token changes (logout detection)
+      let lastAccessToken = null;
+      let isInitialCheck = true;
+      setInterval(function() {
+        try {
+          const currentToken = window.Digit?.UserService?.getUser()?.access_token;
+          // Skip initial check to set baseline
+          if (isInitialCheck) {
+            lastAccessToken = currentToken;
+            isInitialCheck = false;
+            return;
+          }
+          // Detect token removal (logout) - send the stored flow
+          if (lastAccessToken && !currentToken) {
+            sendCompleteFlow('Logout - Token Removed');
+          }
+          // Detect token change (new login after logout)
+          else if (lastAccessToken && currentToken && lastAccessToken !== currentToken) {
+            sendCompleteFlow('Logout - Token Changed');
+          }
+          lastAccessToken = currentToken;
+        } catch (e) {
+          console.error('[Matomo] Error checking access token:', e);
+        }
+      }, 500); // Check every 500ms for faster detection
       // Wrap pushState
       history.pushState = (function (original) {
         return function pushState() {
@@ -49,7 +269,6 @@
           return result;
         };
       })(history.pushState);
-
       // Wrap replaceState
       history.replaceState = (function (original) {
         return function replaceState() {
@@ -58,11 +277,9 @@
           return result;
         };
       })(history.replaceState);
-
       // Listen for back/forward
       window.addEventListener('popstate', trackUrlChange);
     })();
-
     // Track clicks on buttons & links
     (function () {
       document.addEventListener("click", function (e) {
@@ -81,12 +298,13 @@
           const id = target.id || 'no-id';
           const classes = target.className || 'no-class';
           const href = target.getAttribute('href') || '';
+          const pageTitle = getPageTitle(location.href);
 
           _paq.push([
             'trackEvent',
             'UI Interaction',            // Category
             `${elementType} click`,      // Action
-            `Text: ${text}, ID: ${id}, Class: ${classes}, Href: ${href}`
+            `Text: ${text}, Page: ${pageTitle}, ID: ${id}, Class: ${classes}, Href: ${href}`
           ]);
         }
       });
