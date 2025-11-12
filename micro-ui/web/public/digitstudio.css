@@ -1276,6 +1276,12 @@ textarea.light-placeholder::placeholder {
   line-height: 1.4em;
 }
 
+.digit-card-component .digit-card-component{
+    text-align: center !important;
+}
+.digit-privacy-checkbox .digit-button-link{
+    margin-bottom: 0rem !important:
+}
 .digit-field .digit-privacy-checkbox{
     margin-bottom : 0rem !important;
     margin-top: 0rem !important;
