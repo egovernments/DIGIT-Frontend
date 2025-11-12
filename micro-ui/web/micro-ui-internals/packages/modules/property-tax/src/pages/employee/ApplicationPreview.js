@@ -7,7 +7,11 @@ import {
   HeaderComponent,
   SummaryCard,
   Footer,
-  Accordion
+  Accordion,
+  ActionBar,
+  PopUp,
+  TextArea,
+  CardLabel
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
@@ -25,6 +29,11 @@ const ApplicationPreview = () => {
   const [applicationData, setApplicationData] = useState(null);
   const [toast, setToast] = useState(null);
   const [workflowHistory, setWorkflowHistory] = useState([]);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [comments, setComments] = useState("");
+  const [isSubmittingAction, setIsSubmittingAction] = useState(false);
+  const [availableActions, setAvailableActions] = useState([]);
 
   // API hook for fetching application details
   const { isLoading, data: applicationResponse, error } = applicationNumber && tenantId
@@ -181,6 +190,12 @@ const ApplicationPreview = () => {
       });
 
       setWorkflowHistory(formattedHistory);
+
+      // Get available actions from the latest workflow state
+      const latestProcess = workflowResponse[0];
+      if (latestProcess && latestProcess.state && latestProcess.state.actions) {
+        setAvailableActions(latestProcess.state.actions);
+      }
     }
   }, [workflowResponse, t]);
 
@@ -194,6 +209,79 @@ const ApplicationPreview = () => {
       });
     }
   }, [error, t]);
+
+  const handleActionClick = (action) => {
+    setSelectedAction(action);
+    setShowActionModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowActionModal(false);
+    setComments("");
+    setSelectedAction(null);
+  };
+
+  const handleSubmitAction = async () => {
+    if (!selectedAction) return;
+
+    // Validate comments for certain actions
+    if (!comments || comments.trim() === "") {
+      setToast({
+        label: t("PT_COMMENTS_REQUIRED"),
+        type: "error"
+      });
+      return;
+    }
+
+    setIsSubmittingAction(true);
+    try {
+      // Get the business service from workflow response
+      const businessService = workflowResponse?.[0]?.businessService || "PT.CREATE";
+
+      const workflowPayload = {
+        ProcessInstances: [{
+          tenantId: tenantId,
+          businessService: businessService,
+          businessId: applicationNumber,
+          action: selectedAction.action,
+          comment: comments,
+          moduleName: "PT",
+          assignes: workflowResponse?.[0]?.assignes || []
+        }]
+      };
+
+      const response = await Digit.CustomService.getResponse({
+        url: "/egov-workflow-v2/egov-wf/process/_transition",
+        method: "POST",
+        body: workflowPayload,
+      });
+
+      if (response && response.ProcessInstances && response.ProcessInstances.length > 0) {
+        setToast({
+          label: t("PT_ACTION_SUCCESS"),
+          type: "success"
+        });
+
+        // Close modal and reset
+        handleCloseModal();
+
+        // Redirect back to search page after 2 seconds
+        setTimeout(() => {
+          history.push(`/${window?.contextPath}/employee/pt/search-application?tenantId=${tenantId}`);
+        }, 2000);
+      } else {
+        throw new Error("Action failed");
+      }
+    } catch (error) {
+      console.error("Action error:", error);
+      setToast({
+        label: error?.response?.data?.Errors?.[0]?.message || t("PT_ACTION_FAILED"),
+        type: "error"
+      });
+    } finally {
+      setIsSubmittingAction(false);
+    }
+  };
 
   const handleBack = () => {
     history.goBack();
@@ -675,13 +763,15 @@ const ApplicationPreview = () => {
       {/* Footer Actions */}
       <Footer
         actionFields={[
-          <Button
-            key="back"
-            label={t("PT_BACK")}
-            variation="secondary"
-            size="medium"
-            onClick={handleBack}
-          />
+          ...availableActions.map((action) => (
+            <Button
+              key={action.action}
+              label={t(`WF_PT_${action.action}`)}
+              variation={action.action === "APPROVE" ? "primary" : "secondary"}
+              size="medium"
+              onClick={() => handleActionClick(action)}
+            />
+          ))
         ]}
         setactionFieldsToRight={true}
       />
@@ -692,6 +782,49 @@ const ApplicationPreview = () => {
           type={toast.type}
           onClose={() => setToast(null)}
         />
+      )}
+
+      {/* Action Popup */}
+      {showActionModal && selectedAction && (
+        <PopUp
+          type="default"
+          heading={t("PT_TAKE_ACTION")}
+          onClose={handleCloseModal}
+          footerChildren={[
+            <Button
+              key="cancel"
+              label={t("PT_CANCEL")}
+              variation="secondary"
+              size="medium"
+              onClick={handleCloseModal}
+            />,
+            <Button
+              key="submit"
+              label={isSubmittingAction ? t("PT_SUBMITTING") : t("PT_SUBMIT")}
+              variation="primary"
+              size="medium"
+              onClick={handleSubmitAction}
+              isDisabled={isSubmittingAction}
+            />
+          ]}
+          className="pt-action-popup"
+          style={{ maxWidth: "40rem" }}
+        >
+          <div>
+            <CardLabel>{t("PT_ACTION")}</CardLabel>
+            <div style={{ padding: "0.5rem", backgroundColor: "#F5F5F5", borderRadius: "4px", marginBottom: "1rem" }}>
+              {selectedAction && t(`WF_PT_${selectedAction.action}`)}
+            </div>
+
+            <CardLabel>{t("PT_COMMENTS")} *</CardLabel>
+            <TextArea
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              placeholder={t("PT_ENTER_COMMENTS")}
+              rows={4}
+            />
+          </div>
+        </PopUp>
       )}
     </div>
   );
