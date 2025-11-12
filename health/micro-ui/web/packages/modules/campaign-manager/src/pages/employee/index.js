@@ -312,6 +312,24 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
     };
   }, []);
 
+  useEffect(() => {
+    // Remove footer element when URL contains "new-app-configuration-redesign"
+    if (window.location.pathname.includes("new-app-configuration-redesign")) {
+      const footerElement = document.querySelector(".employee-home-footer");
+      if (footerElement) {
+        footerElement.style.display = "none";
+      }
+    }
+
+    return () => {
+      // Restore footer when navigating away
+      const footerElement = document.querySelector(".employee-home-footer");
+      if (footerElement) {
+        footerElement.style.display = "";
+      }
+    };
+  }, [location.pathname]);
+
   return (
     <React.Fragment>
       <div className="wbh-header-container">

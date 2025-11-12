@@ -191,7 +191,6 @@ const HouseHoldDetailsCard = (props) => {
               overflowX: "hidden",
               display: "flex",
               alignItems: "center",
-              minWidth: "100vh",
               paddingBottom: "1rem",
             }}
             key={index}
