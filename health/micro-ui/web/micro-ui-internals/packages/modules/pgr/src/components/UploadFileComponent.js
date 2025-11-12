@@ -14,6 +14,29 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   const user = Digit.UserService.getUser();
   const timestamp = new Date().getTime();
 
+  // Fetch max file size from MDMS v2
+  const { isLoading: isMaxFileSizeLoading, data: maxFileSizeData } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "PGR",
+    [{ name: "MaxFileSize" }],
+    {
+      select: (data) => {
+        console.log("MDMS v2 Response:", data);
+        // Extract maxFileSize from MDMS v2 response
+        const maxFileSize = data?.PGR?.MaxFileSize?.[0]?.maxFileSize;
+        return maxFileSize ? parseInt(maxFileSize) : 5242880; // Default to 5MB if not found
+      },
+    },
+    {
+      schemaCode: "PGR.MaxFileSize",
+      limit: 10,
+      offset: 0
+    }
+  );
+
+  const maxFileSize = maxFileSizeData || 5242880; // Default to 5MB (5242880 bytes)
+  const maxFileSizeMB = (maxFileSize / 1048576).toFixed(0); // Convert bytes to MB for display
+
   useEffect(() => {
     (async () => {
       setError(null);
@@ -25,8 +48,8 @@ const UploadedFileComponent = ({ config, onSelect }) => {
           return;
         }
 
-        if (file.size >= 5242880) {
-          setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: 5 MB)`);
+        if (file.size >= maxFileSize) {
+          setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`);
         } else {
           try {
             // Convert JPEG/JPG to PDF before uploading
@@ -61,7 +84,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
         }
       }
     })();
-  }, [file]);
+  }, [file, maxFileSize]);
 
   function selectFile(e) {
     setFile(e.target.files[0]);

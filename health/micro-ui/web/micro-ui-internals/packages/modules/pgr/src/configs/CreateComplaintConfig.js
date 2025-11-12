@@ -104,11 +104,11 @@ export const CreateComplaintConfig = {
               disable: false,
               populators: {
                 name: "ComplainantName",
-                error: "CORE_COMMON_REQUIRED_ERRMSG",
+                error: "CORE_COMMON_APPLICANT_NAME_INVALID",
                 validation: {
                   required: true,
-                  pattern: /^[A-Za-z0-9-_]+$/i,
-                  error: "CORE_COMMON_REQUIRED_ERRMSG"
+                  pattern: /^[A-Za-z0-9\s\-_]+$/i,
+                  error: "CORE_COMMON_APPLICANT_NAME_INVALID"
                 }
               },
             },

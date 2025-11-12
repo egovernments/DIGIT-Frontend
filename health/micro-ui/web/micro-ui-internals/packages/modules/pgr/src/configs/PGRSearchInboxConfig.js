@@ -44,7 +44,8 @@ const PGRSearchInboxConfig = () => {
                 minReqFields: 1,
                 defaultValues: {
                   complaintNumber: "",
-                  mobileNumber: ""
+                  mobileNumber: "",
+                  range: ""
                 },
                 fields: [
                     {
