@@ -85,25 +85,35 @@ const EmployeeSideBar = () => {
   };
 
   const navigateToRespectiveURL = (history = {}, url = "") => {
-    if (url == "/") {
-      return;
-    } 
-    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
-      const hostUrl = window.location.origin;
-      let updatedUrl=null;
-      if(isMultiRootTenant){
-        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
-        updatedUrl = url;
-        history.push(updatedUrl);
-      }
-      else{
-        updatedUrl = hostUrl + url;
-        window.location.href = updatedUrl;
-      }
+  if (!url || url === "/") return;
+
+  //Detect if it's an external link (starts with http or https)
+  const isExternal = /^https?:\/\//i.test(url);
+
+  if (isExternal) {
+    //Open external links in a new tab
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  //Internal navigation logic
+  if (!url.includes(`/${window?.contextPath}`)) {
+    const hostUrl = window.location.origin;
+    let updatedUrl;
+
+    if (isMultiRootTenant) {
+      const contextPath = window?.contextPath || "sandbox-ui";
+      url = url.replace(`/${contextPath}/employee`, `/${contextPath}/${tenantId}/employee`);
+      updatedUrl = url;
+      history.push(updatedUrl);
     } else {
-      history.push(url);
-    } 
-  };
+      updatedUrl = hostUrl + url;
+      window.location.href = updatedUrl;
+    }
+  } else {
+    history.push(url);
+  }
+};
 
   const onItemSelect = ({ item, index, parentIndex }) => {
     if (item?.navigationUrl) {
