@@ -929,5 +929,176 @@
                         }
                     ]
                 }
+            },
+          {
+            "id": "6c0a9e43-3b3b-498b-ac09-d7ad6c852d23",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-Schisto",
+            "data": {
+                "title": "target-Schisto",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_1",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age less than 5 and height less than 94",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age equal or more than 5 and height equal or more than 94",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "Total Households",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1757832119283,
+                "lastModifiedTime": 1757832119283
             }
+        },
+        {
+            "id": "f8fbd514-9a36-4edf-b54d-efc063e17c8b",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-Oncho",
+            "data": {
+                "title": "target-Oncho",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_1",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age less than 5 and height less than 94",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age equal or more than 5 and height equal or more than 94",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "Total Households",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1757832083261,
+                "lastModifiedTime": 1757832083261
+            }
+        },
+        {
+            "id": "50d7a84d-b435-4f4b-aac8-9245f4c9cbc8",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-NTD1",
+            "data": {
+                "title": "target-NTD1",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_1",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age less than 5 and height less than 94",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age equal or more than 5 and height equal or more than 94",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "Total Households",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756978231817,
+                "lastModifiedTime": 1757484530396
+            }
+        }
     ]
