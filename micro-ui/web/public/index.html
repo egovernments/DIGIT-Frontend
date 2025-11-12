@@ -192,9 +192,10 @@
           ]);
           // Update Matomo with new page view
           document.title = pageTitle;
-          _paq.push(['setReferrerUrl', lastUrl]);
           _paq.push(['setCustomUrl', url]);
           _paq.push(['setDocumentTitle', pageTitle]);
+          // _paq.push(['setReferrerUrl', lastUrl]);
+          _paq.push(['deleteCustomVariables', 'page']);
           _paq.push(['trackPageView']);
           // Update tracking variables
           lastUrl = url;
