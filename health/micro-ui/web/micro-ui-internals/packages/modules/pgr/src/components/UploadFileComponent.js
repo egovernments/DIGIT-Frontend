@@ -21,7 +21,6 @@ const UploadedFileComponent = ({ config, onSelect }) => {
     [{ name: "MaxFileSize" }],
     {
       select: (data) => {
-        console.log("MDMS v2 Response:", data);
         // Extract maxFileSize from MDMS v2 response
         const maxFileSize = data?.PGR?.MaxFileSize?.[0]?.maxFileSize;
         return maxFileSize ? parseInt(maxFileSize) : 5242880; // Default to 5MB if not found
