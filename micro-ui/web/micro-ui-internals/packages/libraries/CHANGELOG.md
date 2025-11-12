@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.9.1] [12-November-2025]
+
+### Bug fix
+ - Fixed the logout redirection issue
+
 ## [1.9.0] [28-October-2025]
 
 ### 🚀 Enhanced Libraries & Core Utilities

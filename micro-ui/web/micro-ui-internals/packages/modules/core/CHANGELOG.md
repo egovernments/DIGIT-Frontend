@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.9.2]  [12-November-2025]
+-New feature added for external URLs in employeeSidebar
+
 ## [1.9.0]  [07-November-2025]
 -Citizen side api changes to /health-individual for user registration
 -Forgot password ui changes from mobile number to username
