@@ -3,3 +3,4 @@ accelerators/frontend/micro-ui-internals/node_modules/*
 .idea
 index.lock
 utilities/
+micro-ui/web/micro-ui-internals/NUL

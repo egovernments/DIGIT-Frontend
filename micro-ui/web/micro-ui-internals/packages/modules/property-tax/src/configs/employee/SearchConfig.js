@@ -35,7 +35,7 @@ export const SearchConfig = {
             primaryLabelVariation: "teritiary",
             primaryLabelIcon: "FilterListAlt",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-            minReqFields: 0,
+            minReqFields: 1,
             defaultValues: {
               ulbCity: "",
               ownerMobNo: "",
@@ -49,7 +49,7 @@ export const SearchConfig = {
               {
                 label: "ULB_CITY",
                 type: "apidropdown",
-                isMandatory: false,
+                isMandatory: true,
                 disable: false,
                 populators: {
                   name: "ulbCity",
@@ -58,7 +58,11 @@ export const SearchConfig = {
                   masterName: "commonUiConfig",
                   moduleName: "PropertySearchConfig",
                   customfn: "populateULBCityOptions",
-                  error: "PT_ULB_CITY_VALIDATION",
+                  error: "CORE_COMMON_REQUIRED_ERRMSG",
+                  required: true,
+                  validation: {
+                    required: true,
+                  },
                   style: {
                     marginBottom: "0px",
                   },

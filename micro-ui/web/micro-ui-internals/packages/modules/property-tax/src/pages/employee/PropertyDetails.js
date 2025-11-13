@@ -348,26 +348,33 @@ const PropertyDetails = () => {
   };
 
   const handleMakeActive = async () => {
-    if (propertyResponse.status === "INACTIVE") {
+    if (propertyResponse?.[0]?.status === "INACTIVE") {
       const confirmActivation = window.confirm(t("PT_CONFIRM_MAKE_PROPERTY_ACTIVE"));
       if (confirmActivation) {
         try {
           const propertyToUpdate = {
             ...propertyResponse[0],
-            status: "ACTIVATE"
+            status: "ACTIVATE",
+            creationReason: "STATUS",
+            isactive: true,
+            isinactive: false,
+            additionalDetails: {
+              ...propertyResponse[0].additionalDetails,
+              propertytobestatus: "ACTIVE"
+            },
+            workflow: {
+              businessService: "PT.CREATE",
+              action: "OPEN",
+              moduleName: "PT"
+            }
           };
 
-          const result = await Digit.CustomService.getResponse({
-            url: "/property-services/property/_update",
-            method: "POST",
-            body: {
+          const result = await Digit.PTService.update(
+            {
               Property: propertyToUpdate
             },
-            params: {
-              propertyIds: propertyResponse?.[0]?.propertyId,
-              tenantId: Digit.ULBService.getCurrentTenantId()
-            }
-          });
+            tenantId
+          );
 
           if (result?.Properties && result.Properties.length > 0) {
             setToast({
@@ -400,26 +407,33 @@ const PropertyDetails = () => {
   };
 
   const handleMakeInactive = async () => {
-    if (propertyResponse.status === "ACTIVE") {
+    if (propertyResponse?.[0]?.status === "ACTIVE") {
       const confirmDeactivation = window.confirm(t("PT_CONFIRM_MAKE_PROPERTY_INACTIVE"));
       if (confirmDeactivation) {
         try {
           const propertyToUpdate = {
             ...propertyResponse[0],
-            status: "INACTIVATE"
+            status: "INACTIVATE",
+            creationReason: "STATUS",
+            isactive: false,
+            isinactive: true,
+            additionalDetails: {
+              ...propertyResponse[0].additionalDetails,
+              propertytobestatus: "INACTIVE"
+            },
+            workflow: {
+              businessService: "PT.CREATE",
+              action: "OPEN",
+              moduleName: "PT"
+            }
           };
 
-          const result = await Digit.CustomService.getResponse({
-            url: "/property-services/property/_update",
-            method: "POST",
-            body: {
+          const result = await Digit.PTService.update(
+            {
               Property: propertyToUpdate
             },
-            params: {
-              propertyIds: propertyResponse?.[0]?.propertyId,
-              tenantId: Digit.ULBService.getCurrentTenantId()
-            }
-          });
+            tenantId
+          );
 
           if (result?.Properties && result.Properties.length > 0) {
             setToast({
