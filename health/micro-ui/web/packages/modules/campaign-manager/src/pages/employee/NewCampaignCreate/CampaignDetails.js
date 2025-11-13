@@ -382,7 +382,9 @@ const CampaignDetails = () => {
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
               type: "primary",
               type: "primary",
-              icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
+              icon: (
+                <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+              ),
               disabled: false,
             },
           },
@@ -402,7 +404,9 @@ const CampaignDetails = () => {
               navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
               // navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
-              icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
+              icon: (
+                <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+              ),
               disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
             },
           },
@@ -475,17 +479,20 @@ const CampaignDetails = () => {
       },
       {
         onSuccess: async (data) => {
-          navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`, {
-            state: {
-              message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-              text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-              info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-              actionLabel: "ES_CAMPAIGN_HOME",
-              actionLink: `/${window.contextPath}/employee`,
-              secondaryActionLabel: "MY_CAMPAIGNS",
-              secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
-            },
-          });
+          navigate(
+            `/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`,
+            {
+              state: {
+                message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+                text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+                info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                actionLabel: "ES_CAMPAIGN_HOME",
+                actionLink: `/${window.contextPath}/employee`,
+                secondaryActionLabel: "MY_CAMPAIGNS",
+                secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+              },
+            }
+          );
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
@@ -540,13 +547,15 @@ const CampaignDetails = () => {
   return (
     <>
       <div className="campaign-details-header">
-        <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
           <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
           {campaignData?.status !== "created" && (
             <div
               className="hover"
               onClick={() => {
-                navigate(`/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
+                navigate(
+                  `/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
+                );
               }}
             >
               <Edit />
@@ -566,7 +575,7 @@ const CampaignDetails = () => {
           )}
         </div>
       </div>
-      <div style={{ display: "flex", gap: "1rem" }}>
+      <div style={{ display: "flex", gap: "1rem", marginBottom: "0.5rem" }}>
         <div className="dates">{week}</div>
         <div
           className="hover"
@@ -581,7 +590,9 @@ const CampaignDetails = () => {
                 `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
               );
             } else {
-              navigate(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
+              navigate(
+                `/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
+              );
             }
           }}
         >
@@ -628,7 +639,9 @@ const CampaignDetails = () => {
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
       {showToast && (
         <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          type={
+            showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+          }
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}
