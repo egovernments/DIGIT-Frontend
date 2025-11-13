@@ -123,21 +123,21 @@ export const UICustomizations = {
             if (!Number.isFinite(epochTime) || epochTime <= 0) return t("ES_COMMON_NA");
             const date = new Date(epochTime);
             const day = date.getDate();
-            const monthNames = [
-              "January",
-              "February",
-              "March",
-              "April",
-              "May",
-              "June",
-              "July",
-              "August",
-              "September",
-              "October",
-              "November",
-              "December",
+            const monthKeys = [
+              "JANUARY",
+              "FEBRUARY",
+              "MARCH",
+              "APRIL",
+              "MAY",
+              "JUNE",
+              "JULY",
+              "AUGUST",
+              "SEPTEMBER",
+              "OCTOBER",
+              "NOVEMBER",
+              "DECEMBER",
             ];
-            const month = monthNames[date.getMonth()];
+            const month = t(`PGR_INBOX_${monthKeys[date.getMonth()]}`);
             const year = date.getFullYear().toString().slice(-2);
             return `${day} ${month} ${year}`;
           };
