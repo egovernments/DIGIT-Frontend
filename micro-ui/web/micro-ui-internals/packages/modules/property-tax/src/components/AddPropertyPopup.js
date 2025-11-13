@@ -174,13 +174,6 @@ const AddPropertyPopup = ({ isOpen, onClose, onProceed, onPrint }) => {
 
   const footerButtons = [
     <Button
-      key="cancel"
-      type="button"
-      variation="secondary"
-      onClick={onClose}
-      label={t("CS_COMMON_CANCEL")}
-    />,
-    <Button
       key="print"
       type="button"
       variation="secondary"
