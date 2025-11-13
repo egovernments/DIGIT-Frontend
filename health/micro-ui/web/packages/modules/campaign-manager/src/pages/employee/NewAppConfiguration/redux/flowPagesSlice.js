@@ -15,6 +15,7 @@ export const fetchFlowPages = createAsyncThunk(
             schemaCode: `${moduleName}.${masterName}`,
             filters: {
               project: campaignNumber, 
+              name: flowId
             },
             isActive: true,
           },

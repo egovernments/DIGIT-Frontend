@@ -24,10 +24,11 @@ function NewDraggableField({
 }) {
   const ref = useRef(null);
   const localizedLabel = useCustomT(label);
+   const isDragEnabled = typeof moveField === 'function';
   const [, drop] = useDrop({
     accept: FIELD_TYPE,
     hover: (draggedItem) => {
-      if (draggedItem.index !== fieldIndex) {
+      if (isDragEnabled && draggedItem.index !== fieldIndex) {
         moveField(draggedItem.index, fieldIndex, cardIndex);
         draggedItem.index = fieldIndex;
       }
