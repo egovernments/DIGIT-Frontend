@@ -12,7 +12,7 @@ import {
     CheckBox,
 } from "@egovernments/digit-ui-components";
 import ReactDOM from "react-dom";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { fetchFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
@@ -66,14 +66,14 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
 }
 
 function NewDependentFieldWrapper({ t }) {
-    const useT = useCustomT();
+    const useT = useCustomTranslate();
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
 
     // Get data from Redux
     const selectedField = useSelector((state) => state.remoteConfig.selectedField);
     const currentData = useSelector((state) => state.remoteConfig.currentData);
-    
+
     // FIXED: Access pages directly from state.flowPages.pages
     const flowPages = useSelector((state) => state.flowPages.pages);
     const flowPagesStatus = useSelector((state) => state.flowPages.status);
@@ -83,7 +83,7 @@ function NewDependentFieldWrapper({ t }) {
     const masterName = "AppFlowConfig";
 
     const flowId = currentData?.flow || "REGISTRATION";
-    const campaignNumber = currentData?.project || ""; 
+    const campaignNumber = currentData?.project || "";
     const currentPageName = currentData?.page;
 
     // Fetch flows on mount or when campaign changes
@@ -112,21 +112,43 @@ function NewDependentFieldWrapper({ t }) {
         }
     }, [dispatch, currentPageName, flowId, campaignNumber, pageConfigs, pageFieldsLoading, tenantId]);
 
-    // Pre-fetch all pages in the flow for better UX
     useEffect(() => {
-        if (flowId && campaignNumber && flowPages.length > 0) {
-            flowPages.forEach(page => {
-                if (!pageConfigs[page.name] && !pageFieldsLoading[page.name]) {
+        if (!flowId || !campaignNumber || !currentFlowPages.length || !currentPageName) return;
+
+        // Find current page order
+        const currentPageFullName = currentPageName?.includes('.')
+            ? currentPageName
+            : `${flowId}.${currentPageName}`;
+
+        const currentPage = currentFlowPages.find(p =>
+            p.name === currentPageFullName ||
+            p.name === currentPageName ||
+            p.name.endsWith(`.${currentPageName}`)
+        );
+
+        const currentPageOrder = currentPage?.order || Number.MAX_VALUE;
+
+
+        // Only fetch pages with order <= current page order
+        currentFlowPages
+            .filter(page => page.order <= currentPageOrder)
+            .forEach(page => {
+                // Extract page code (remove flow prefix if present)
+                const pageCode = page.name.includes('.')
+                    ? page.name.split('.').pop()
+                    : page.name;
+
+
+                if (!pageConfigs[pageCode] && !pageFieldsLoading[pageCode]) {
                     dispatch(fetchPageFields({
                         tenantId,
                         flow: flowId,
                         campaignNumber,
-                        pageName: page.name,
+                        pageName: pageCode, // Use code without flow prefix
                     }));
                 }
             });
-        }
-    }, [dispatch, flowId, campaignNumber, flowPages, pageConfigs, pageFieldsLoading, tenantId]);
+    }, [dispatch, flowId, campaignNumber, currentFlowPages, currentPageName, pageConfigs, pageFieldsLoading, tenantId]);
 
     // ---------- labels ----------
     const displayLogicLabel = t("DISPLAY_LOGIC") || "Display Logic";
@@ -155,11 +177,11 @@ function NewDependentFieldWrapper({ t }) {
         { code: "||", name: t("OR") || "OR" },
     ];
     const ALL_OPERATOR_OPTIONS = [
-        { code: "==", name: "EQUALS_TO"},
+        { code: "==", name: "EQUALS_TO" },
         { code: "!=", name: "NOT_EQUALS_TO" },
         { code: ">=", name: "GREATER_THAN_OR_EQUALS_TO" },
-        { code: "<=", name: "LESS_THAN_OR_EQUALS_TO"},
-        { code: ">", name: "GREATER_THAN"},
+        { code: "<=", name: "LESS_THAN_OR_EQUALS_TO" },
+        { code: ">", name: "GREATER_THAN" },
         { code: "<", name: "LESS_THAN" },
     ];
     const PARSE_OPERATORS = useMemo(
@@ -179,22 +201,54 @@ function NewDependentFieldWrapper({ t }) {
         return "";
     };
 
-    // Build page options from flowPages directly
+    // Find the current flow from flowPages
+    const currentFlow = useMemo(() => {
+        if (!flowPages || !flowId) return null;
+        return flowPages.find(flow => flow.name === flowId || flow.flowId === flowId);
+    }, [flowPages, flowId]);
+
+    // Extract pages from the current flow
+    const currentFlowPages = useMemo(() => {
+        if (!currentFlow || !currentFlow.pages) return [];
+        return currentFlow.pages;
+    }, [currentFlow]);
+
+    // REPLACE the existing pageOptions useMemo (around line 120) with this:
     const pageOptions = useMemo(() => {
-        // Get current page index
-        const currentPageIndex = flowPages.findIndex((p) => p?.name === currentPageName);
+        if (!currentFlowPages.length || !currentPageName) return [];
 
-        // Only show pages up to and including current page
-        const availablePages = currentPageIndex >= 0
-            ? flowPages.slice(0, currentPageIndex + 1)
-            : flowPages;
+        // Find current page order
+        // currentPageName might be with or without flow prefix
+        const currentPageFullName = currentPageName?.includes('.')
+            ? currentPageName
+            : `${flowId}.${currentPageName}`;
 
-        return availablePages.map((p) => ({
-            code: p.name,
-            name: p.name,
-            order: p.order
-        }));
-    }, [flowPages, currentPageName]);
+        const currentPage = currentFlowPages.find(p =>
+            p.name === currentPageFullName ||
+            p.name === currentPageName ||
+            p.name.endsWith(`.${currentPageName}`)
+        );
+
+        const currentPageOrder = currentPage?.order || Number.MAX_VALUE;
+
+        // Only show pages up to and including current page order
+        const availablePages = currentFlowPages.filter(p => p.order <= currentPageOrder);
+
+        return availablePages.map((p) => {
+            // Extract code from name (part after the dot, or full name if no dot)
+            const code = p.name.includes('.')
+                ? p.name.split('.').pop()
+                : p.name;
+
+            return {
+                code: code,
+                name: p.name, // Keep full name for reference
+                displayName: Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${p.name}`), // Use short name for display
+                order: p.order
+            };
+        });
+    }, [currentFlowPages, currentPageName, flowId]);
+
 
     // Updated getPageObj to use fetched page configs
     const getPageObj = (pageCode) => {
@@ -257,13 +311,16 @@ function NewDependentFieldWrapper({ t }) {
             return;
         }
 
+        // pageCode should be without flow prefix (e.g., "stockDetails" not "RECORDSTOCK.stockDetails")
+        const cleanPageCode = pageCode.includes('.') ? pageCode.split('.').pop() : pageCode;
+
         // Fetch fields for the selected page if not already cached
-        if (!pageConfigs[pageCode] && !pageFieldsLoading[pageCode]) {
+        if (!pageConfigs[cleanPageCode] && !pageFieldsLoading[cleanPageCode]) {
             dispatch(fetchPageFields({
                 tenantId,
                 flow: flowId,
                 campaignNumber,
-                pageName: pageCode,
+                pageName: cleanPageCode,
             }));
         }
     }, [dispatch, pageConfigs, pageFieldsLoading, tenantId, flowId, campaignNumber]);
@@ -307,13 +364,13 @@ function NewDependentFieldWrapper({ t }) {
     const isDobLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        return tpe === "datepicker" && fmt === "dob";
+        return fmt === "dob";
     };
 
     const isDatePickerNotDob = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        return tpe === "datepicker" && fmt !== "dob";
+        return fmt === "date";
     };
 
     const isSelectLike = (field) => {
@@ -329,10 +386,13 @@ function NewDependentFieldWrapper({ t }) {
     };
 
     const toDDMMYYYY = (iso) => {
-        if (!iso) return "";
-        const [y, m, d] = String(iso).split("-");
+        const dateOnly = String(iso).split("T")[0];  // "2025-11-11"
+
+        const [y, m, d] = dateOnly.split("-");
+
         if (!y || !m || !d) return "";
-        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+
+        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`
     };
 
     const toISOFromDDMMYYYY = (ddmmyyyy) => {
@@ -730,6 +790,7 @@ function NewDependentFieldWrapper({ t }) {
                                                         option={LOGICALS}
                                                         optionKey="name"
                                                         name={`joiner-new`}
+                                                        optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
                                                         t={t}
                                                         select={(e) =>
                                                             setDraftRule((prev) => ({
@@ -751,9 +812,10 @@ function NewDependentFieldWrapper({ t }) {
                                                     <div className="digit-field" style={{ width: "100%" }}>
                                                         <Dropdown
                                                             option={pageOptions}
-                                                            optionKey="code"
+                                                            optionKey="displayName"
+                                                             optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
                                                             name={`page-editor`}
-                                                            t={useT}
+                                                            t={t}
                                                             select={(e) => {
                                                                 handlePageSelection(e.code);
                                                                 setDraftRule((prev) => ({
@@ -787,6 +849,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     : []
                                                             }
                                                             optionKey="label"
+                                                             optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
                                                             name={`field-editor`}
                                                             t={useT}
                                                             select={(e) => {
@@ -914,12 +977,16 @@ function NewDependentFieldWrapper({ t }) {
                                                                 return (
                                                                     <TextInput
                                                                         type="date"
-                                                                        populators={{ name: `date-editor` }}
+                                                                        populators={{
+                                                                            newDateFormat: true,
+
+                                                                            name: `date-editor`
+                                                                        }}
                                                                         value={iso}
-                                                                        onChange={(event) =>
+                                                                        onChange={(d) =>
                                                                             setDraftRule((prev) => ({
                                                                                 ...prev,
-                                                                                fieldValue: toDDMMYYYY(event?.target?.value),
+                                                                                fieldValue: toDDMMYYYY(d),
                                                                             }))
                                                                         }
                                                                         disabled={!draftRule?.selectedField?.code}
@@ -941,13 +1008,14 @@ function NewDependentFieldWrapper({ t }) {
                                                                         (draftRule.fieldValue
                                                                             ? { code: String(draftRule.fieldValue), name: String(draftRule.fieldValue) }
                                                                             : undefined);
+                                                                   
                                                                     return (
                                                                         <Dropdown
                                                                             option={enumOptions}
                                                                             optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
-                                                                            optionKey="code"
+                                                                            optionKey="name"
                                                                             name={`val-editor`}
-                                                                            t={useT}
+                                                                            t={t}
                                                                             select={(e) =>
                                                                                 setDraftRule((prev) => ({ ...prev, fieldValue: e.code }))
                                                                             }
