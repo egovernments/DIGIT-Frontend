@@ -2,9 +2,22 @@ export const InboxConfig = {
     headerLabel: "PT_PROPERTY_TAX_INBOX",
     type: "inbox",
     apiDetails: {
-        serviceName: "/property-services/property/_search",
-        requestParam: {},
-        requestBody: {},
+        serviceName: "/egov-workflow-v2/egov-wf/process/_search",
+        requestParam: {
+            offset: 0,
+            limit: 10
+        },
+        requestBody: {
+            RequestInfo: {
+                apiId: "Rainmaker",
+                ver: ".01",
+                ts: "",
+                action: "_search",
+                did: "1",
+                key: "",
+                msgId: "20170310130900|en_IN"
+            }
+        },
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
         masterName: "commonUiConfig",
@@ -24,7 +37,8 @@ export const InboxConfig = {
                 primaryLabelVariation: "teritiary",
                 primaryLabelIcon: "FilterListAlt",
                 secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-                minReqFields: 1,
+                minReqFields: 0,
+                showFormInstantly: false,
                 defaultValues: {
                     ulbCity: "",
                     ownerMobNo: "",
@@ -182,7 +196,7 @@ export const InboxConfig = {
             label: "",
             labelMobile: "ES_COMMON_SEARCH",
             children: {},
-            show: true
+            show: false
         },
         links: {
             uiConfig: {
@@ -213,7 +227,52 @@ export const InboxConfig = {
                 },
             },
             children: {},
-            show: true,
+            show: false,
+        },
+            searchResult: {
+            uiConfig: {
+                resultsJsonPath: "ProcessInstances",
+                totalCountJsonPath: "totalCount",
+                tableClassName: "table inbox-table",
+                enableGlobalSearch: true,
+                enableColumnSort: true,
+                defaultSortAsc: true,
+                isPaginationRequired: true,
+                paginationParams: {
+                    limit: 10,
+                    offset: 0,
+                    pageSizeOptions: [10, 25, 50, 100]
+                },
+                columns: [
+                    {
+                        label: "PT_COMMON_TABLE_COL_APP_NO",
+                        jsonPath: "businessId",
+                        additionalCustomization: true,
+                    },
+                    {
+                        label: "WF_INBOX_HEADER_STATUS",
+                        jsonPath: "state.state",
+                        additionalCustomization: true,
+                    },
+                    {
+                        label: "PT_LOCALITY_MOHALLA",
+                        jsonPath: "locality",
+                        additionalCustomization: true,
+                    },
+                    {
+                        label: "WF_INBOX_HEADER_ASSIGNED_TO",
+                        jsonPath: "assignee.name",
+                        additionalCustomization: true,
+                    },
+                    {
+                        label: "WF_INBOX_HEADER_SLA_DAYS_REMAINING",
+                        jsonPath: "businesssServiceSla",
+                        additionalCustomization: true,
+                    },
+                ],
+            },
+            children: {},
+            show: true, // boolean flag to show or hide the search results
         },
         filter: {
             uiConfig: {
@@ -221,9 +280,11 @@ export const InboxConfig = {
                 label: "", // Custom Filter Card Header
                 primaryLabel: "Apply Filters", // label for filter button
                 secondaryLabel: "Clear Filters",  // label for clear button
-                minReqFields: 1,
+                minReqFields: 0,
                 defaultValues: {
                     propertyMohalla: "",
+                    status: "",
+                    assignedToMe: "ASSIGNED_TO_ALL",
                 },
                 fields: [
                     {
@@ -243,6 +304,50 @@ export const InboxConfig = {
                             },
                         },
                     },
+                    {
+                        label: "WF_INBOX_HEADER_STATUS",
+                        type: "apidropdown",
+                        isMandatory: false,
+                        disable: false,
+                        populators: {
+                            name: "status",
+                            optionsKey: "code",
+                            allowMultiSelect: false,
+                            masterName: "commonUiConfig",
+                            moduleName: "PropertyInboxConfig",
+                            customfn: "populateStatusOptions",
+                            style: {
+                                marginBottom: "0px",
+                            },
+                        },
+                    },
+                    {
+                        label: "ES_INBOX_ASSIGNED_TO_ME",
+                        type: "radio",
+                        isMandatory: false,
+                        disable: false,
+                        populators: {
+                            name: "assignedToMe",
+                            options: [
+                                {
+                                    code: "ASSIGNED_TO_ME",
+                                    name: "ES_INBOX_ASSIGNED_TO_ME",
+                                },
+                                {
+                                    code: "ASSIGNED_TO_ALL",
+                                    name: "ES_INBOX_ASSIGNED_TO_ALL",
+                                },
+                            ],
+                            optionsKey: "name",
+                            innerStyles: {
+                                display: "flex",
+                                flexDirection: "row",
+                            },
+                            style: {
+                                marginBottom: "0px",
+                            },
+                        },
+                    },
                 ],
             },
             show: true, // boolean flag to show or hide the filters section
@@ -250,61 +355,6 @@ export const InboxConfig = {
         sort: { // Introduced Sort action to show in the mobile view
             show: true,
         },
-        searchResult: {
-            uiConfig: {
-                totalCountJsonPath: "count",
-                enableGlobalSearch: true,
-                enableColumnSort: true,
-                resultsJsonPath: "Properties",
-                tableClassName: "table inbox-table",
-                columns: [
-                    {
-                        label: "PT_COMMON_TABLE_COL_PT_ID",
-                        jsonPath: "propertyId",
-                        additionalCustomization: true,
-                    },
-                    {
-                        label: "PT_COMMON_TABLE_COL_OWNER_NAME",
-                        jsonPath: "owners[0].name",
-                    },
-                    {
-                        label: "PT_GUARDIAN_NAME",
-                        jsonPath: "owners[0].fatherOrHusbandName",
-                    },
-                    {
-                        label: "PT_COMMON_COL_EXISTING_PROP_ID",
-                        jsonPath: "oldPropertyId",
-                    },
-                    {
-                        label: "PT_COMMON_COL_ADDRESS",
-                        jsonPath: "address",
-                        additionalCustomization: true,
-                    },
-                    {
-                        label: "PT_COMMON_TABLE_COL_STATUS_LABEL",
-                        jsonPath: "status",
-                        additionalCustomization: true,
-                    },
-                    {
-                        label: "PT_COMMON_TABLE_COL_APP_NO",
-                        jsonPath: "acknowldgementNumber",
-                        additionalCustomization: true,
-                    },
-                    {
-                        label: "PT_COMMON_TABLE_COL_APP_TYPE",
-                        jsonPath: "creationReason",
-                        additionalCustomization: true,
-                    },
-                ],
-                enableGlobalSearch: true,
-                enableColumnSort: true,
-                resultsJsonPath: "Properties",
-                totalCountJsonPath: "count",
-                defaultSortAsc: true,
-                isPaginationRequired: true,
-            },
-            children: {},
-            show: true, // boolean flag to show or hide the search results 
-        },
+    
     },
 };
