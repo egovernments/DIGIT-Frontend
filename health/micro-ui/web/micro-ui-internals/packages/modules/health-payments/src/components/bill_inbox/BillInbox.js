@@ -486,8 +486,6 @@
 
 // export default BillInboxComponent;
 
-
-
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
@@ -527,10 +525,10 @@ const BillInboxComponent = () => {
   const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
   const [selectedLevel, setSelectedLevel] = useState(() => Digit.SessionStorage.get("selectedLevel") || null);
   const [selectedBoundaryCode, setSelectedBoundaryCode] = useState(() => Digit.SessionStorage.get("selectedBoundaryCode") || null);
-  
+
   // FIX: Make selectedPeriod a state variable
   const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
-  
+
   const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
@@ -543,7 +541,7 @@ const BillInboxComponent = () => {
     limit: rowsPerPage,
     offset: (currentPage - 1) * rowsPerPage,
   });
-  
+
   const project = Digit?.SessionStorage.get("staffProjects");
   const [billGenerationStatus, setBillGenerationStatus] = useState(null);
   const [openAlertPopUp, setOpenAlertPopUp] = useState(false);
@@ -691,11 +689,22 @@ const BillInboxComponent = () => {
   const handleFilterUpdate = (boundaryCode, isDistrictSelected, period) => {
     setSelectedBoundaryCode(boundaryCode);
     Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
-    
+    // Update period in session storage and state
     if (period) {
       setSelectedPeriod(period);
       Digit.SessionStorage.set("selectedPeriod", period);
+    } else if (period === null) {
+      setSelectedPeriod(null);
+      Digit.SessionStorage.del("selectedPeriod");
     }
+
+    //setSelectedBoundaryCode(boundaryCode);
+    // Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
+
+    // if (period) {
+    //   setSelectedPeriod(period);
+    //   Digit.SessionStorage.set("selectedPeriod", period);
+    // }
   };
 
   // FIX: Update resetBoundaryFilter to clear period
@@ -888,7 +897,9 @@ const BillInboxComponent = () => {
                     />
                   )}
                   {tableData && (
-                    <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? (infoDescription ? "60vh" : "74vh") : "30vh" }}>
+                    <div
+                      style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? (infoDescription ? "60vh" : "74vh") : "30vh" }}
+                    >
                       <Card>
                         <BillInboxTable
                           isFetching={isFetching}
@@ -900,6 +911,7 @@ const BillInboxComponent = () => {
                           totalCount={totalCount}
                           status={activeLink.code}
                           infoDescription={infoDescription}
+                          selectedPeriod={selectedPeriod}
                         />
                       </Card>
                     </div>

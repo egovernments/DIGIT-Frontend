@@ -165,8 +165,8 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
   const [resetFilters, setResetFilters] = useState(false);
 
   // Billing period state
-  const [periods, setPeriods] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [periods, setPeriods] = useState(() => Digit.SessionStorage.get("projectPeriods") || []);
+  const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
   const [loadingPeriods, setLoadingPeriods] = useState(false);
   const [billingConfigData, setBillingConfigData] = useState(null);
 
@@ -197,6 +197,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
 
   // Clears all applied filters and resets the component state.
   const handleClearFilter = () => {
+    setSelectedPeriod(null);
     setResetFilters(true);
     setBoundary(""); // Clear the boundary value
     setBoundaryKey((prevKey) => prevKey + 1); // Increment the key to re-render BoundaryComponent
@@ -255,17 +256,24 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
           // Sort by period number
           periodOptions.sort((a, b) => a.periodNumber - b.periodNumber);
 
-          // ✅ Auto-select current or next period
+          //  Auto-select current or next period
           const currentTimestamp = Date.now();
           const currentPeriod =
             periodOptions.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
             periodOptions.find((p) => currentTimestamp < p.periodStartDate);
 
-          if (currentPeriod) {
-            setSelectedPeriod(currentPeriod);
-            Digit.SessionStorage.set("selectedPeriod", currentPeriod);
+          const sPeriod = Digit.SessionStorage.get("selectedPeriod", currentPeriod);
+
+          if (sPeriod) {
+            setSelectedPeriod(sPeriod);
+            Digit.SessionStorage.set("selectedPeriod", sPeriod);
           } else {
-            setSelectedPeriod(null);
+            if (currentPeriod) {
+              setSelectedPeriod(currentPeriod);
+              Digit.SessionStorage.set("selectedPeriod", currentPeriod);
+            } else {
+              setSelectedPeriod(null);
+            }
           }
 
           setPeriods(periodOptions);
@@ -291,8 +299,10 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
 
   // Fetch periods when project is selected
   useEffect(() => {
-    if (selectedProject?.referenceID || selectedProject?.id) {
-      fetchBillingPeriods(selectedProject.referenceID || selectedProject.id);
+    if (periods.length == 0) {
+      if (selectedProject?.referenceID || selectedProject?.id) {
+        fetchBillingPeriods(selectedProject.referenceID || selectedProject.id);
+      }
     }
   }, [selectedProject, fetchBillingPeriods]);
 
@@ -376,7 +386,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         )}
 
         {/* Display Billing Config Info */}
-        {billingConfigData && (
+        {/* {billingConfigData && (
           <div style={{ marginTop: "1rem", padding: "0.5rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
             <div style={{ fontSize: "12px", color: "#666" }}>
               <strong>{t("Billing Frequency")}:</strong> {billingConfigData.billingFrequency}
@@ -387,7 +397,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
               </div>
             )}
           </div>
-        )}
+        )} */}
       </div>
       <div
         style={{

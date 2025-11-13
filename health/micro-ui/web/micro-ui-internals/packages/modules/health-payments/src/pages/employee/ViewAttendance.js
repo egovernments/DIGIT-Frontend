@@ -40,7 +40,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
 
   // State variables
-  const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
+  const { registerNumber, boundaryCode, periodDurationInDays } = Digit.Hooks.useQueryParams();
   const { fromCampaignSupervisor } = location.state || false;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [attendanceDuration, setAttendanceDuration] = useState(null);
@@ -276,7 +276,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
             // Delay the navigation for 3 seconds
             setTimeout(() => {
               setUpdateDisabled(false);
-              history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
+              history.push(
+                `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`
+              );
             }, 2000);
           },
           onError: (error) => {
@@ -535,7 +537,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <AttendanceManagementTable
             data={attendanceSummary}
             setAttendanceSummary={setAttendanceSummary}
-            duration={attendanceDuration}
+            duration={parseInt(periodDurationInDays ? periodDurationInDays : "0", 10) || 0}
             editAttendance={editAttendance}
           />
         </Card>
@@ -583,7 +585,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
           submitLabel={t(`HCM_AM_PROCEED`)}
           cancelLabel={t(`HCM_AM_CANCEL`)}
           onPrimaryAction={() => {
-            history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
+            history.push(
+              `/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`
+            );
           }}
         />
       )}

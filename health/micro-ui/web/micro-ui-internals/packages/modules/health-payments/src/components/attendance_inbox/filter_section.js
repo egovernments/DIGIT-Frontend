@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "../BoundaryComponent";
@@ -19,8 +18,8 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const [projectSelected, setProjectSelected] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
 
   // Billing period state
-  const [periods, setPeriods] = useState([]);
-  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [periods, setPeriods] = useState(() => Digit.SessionStorage.get("projectPeriods") || []);
+  const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
   const [loadingPeriods, setLoadingPeriods] = useState(false);
   const [billingConfigData, setBillingConfigData] = useState(null);
 
@@ -85,18 +84,24 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
           // ✅ Auto-select current or next period
           const currentTimestamp = Date.now();
           const currentPeriod =
-            periodOptions.find(
-              (p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate
-            ) || periodOptions.find((p) => currentTimestamp < p.periodStartDate);
+            periodOptions.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
+            periodOptions.find((p) => currentTimestamp < p.periodStartDate);
+          const sPeriod = Digit.SessionStorage.get("selectedPeriod", currentPeriod);
 
-          if (currentPeriod) {
-            setSelectedPeriod(currentPeriod);
-            Digit.SessionStorage.set("selectedPeriod", currentPeriod);
+          if (sPeriod) {
+            setSelectedPeriod(sPeriod);
+            Digit.SessionStorage.set("selectedPeriod", sPeriod);
           } else {
-            setSelectedPeriod(null);
+            if (currentPeriod) {
+              setSelectedPeriod(currentPeriod);
+              Digit.SessionStorage.set("selectedPeriod", currentPeriod);
+            } else {
+              setSelectedPeriod(null);
+            }
           }
 
           setPeriods(periodOptions);
+          Digit.SessionStorage.set("projectPeriods", periodOptions);
         } else {
           setPeriods([]);
           setSelectedPeriod(null);
@@ -151,8 +156,10 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   // Fetch periods when project is selected
   useEffect(() => {
-    if (projectSelected?.referenceID || projectSelected?.id) {
-      fetchBillingPeriods(projectSelected.referenceID || projectSelected.id);
+    if (periods.length == 0) {
+      if (projectSelected?.referenceID || projectSelected?.id) {
+        fetchBillingPeriods(projectSelected.referenceID || projectSelected.id);
+      }
     }
   }, [projectSelected, fetchBillingPeriods]);
 
@@ -193,10 +200,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             <span className="custom-inbox-filter-heading">{t("HCM_AM_FILTER")}</span>
           </div>
 
-          <span
-            onClick={() => setReset(true)}
-            style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px", cursor: "pointer" }}
-          >
+          <span onClick={() => setReset(true)} style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px", cursor: "pointer" }}>
             <SVG.AutoRenew width={"24px"} height={"24px"} fill={"#c84c0e"} />
           </span>
         </div>
@@ -229,18 +233,9 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
                 <Loader />
               </div>
             ) : periods.length > 0 ? (
-              <Dropdown
-                style={{ width: "100%" }}
-                t={t}
-                option={periods}
-                optionKey="name"
-                selected={selectedPeriod}
-                select={handlePeriodSelect}
-              />
+              <Dropdown style={{ width: "100%" }} t={t} option={periods} optionKey="name" selected={selectedPeriod} select={handlePeriodSelect} />
             ) : (
-              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>
-                {t("No billing periods available for this project")}
-              </div>
+              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
             )}
           </div>
         )}
@@ -262,12 +257,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
       {/* Submit Button */}
       <div style={{ justifyContent: "center", marginTop: "auto", paddingTop: "16px" }}>
-        <SubmitBar
-          onSubmit={handleApplyFilter}
-          className="w-fullwidth"
-          label={t("HCM_AM_COMMON_APPLY")}
-          disabled={!boundary}
-        />
+        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} disabled={!boundary} />
       </div>
     </Card>
   );
