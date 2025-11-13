@@ -1,7 +1,12 @@
 # Changelog
 
-## [1.9.1] [12-November-2025]
+## [1.9.2] [13-November-2025]
+### Bug fix
+ - Fixed the logout redirection issue
+ - added back the support for LOGOUT_REDIRECT_URL config 
 
+
+## [1.9.1] [12-November-2025]
 ### Bug fix
  - Fixed the logout redirection issue
 
