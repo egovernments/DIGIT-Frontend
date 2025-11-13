@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
+import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 
 const MyBills = () => {
   const { t } = useTranslation();
@@ -71,6 +72,72 @@ const MyBills = () => {
     setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   };
+
+  // Format date for display
+  const formatDate = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // Fetch billing config and periods
+  const fetchBillingPeriods = useCallback(
+    async (projectId) => {
+      try {
+        const body = {
+          searchCriteria: {
+            tenantId: tenantId,
+            campaignNumber: projectId,
+            includePeriods: true,
+          },
+        };
+
+        const response = await PaymentSetUpService.billingConfigSearchByProjectId({ body });
+
+        if (response && response.periods && response.periods.length > 0) {
+          // Transform periods into dropdown options
+          const periodOptions = response.periods.map((period) => ({
+            code: period.id,
+            name: `Period ${period.periodNumber} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
+            periodNumber: period.periodNumber,
+            periodStartDate: period.periodStartDate,
+            periodEndDate: period.periodEndDate,
+            status: period.status,
+            billingFrequency: period.billingFrequency,
+            ...period,
+          }));
+
+          // Sort by period number
+          periodOptions.sort((a, b) => a.periodNumber - b.periodNumber);
+
+          Digit.SessionStorage.set("projectPeriods", periodOptions);
+        } else {
+          Digit.SessionStorage.del("projectPeriods");
+        }
+      } catch (error) {
+        console.error("Error fetching billing periods:", error);
+
+        Digit.SessionStorage.del("projectPeriods");
+      }
+    },
+    [tenantId]
+  );
+
+  // Fetch periods when project is selected
+  useEffect(() => {
+    const periodsCheck = Digit.SessionStorage.get("projectPeriods") || [];
+    if (periodsCheck.length == 0) {
+      debugger;
+
+      if (project?.[0]?.referenceID || project?.[0]?.id) {
+        fetchBillingPeriods(project?.[0]?.referenceID || project?.[0]?.id);
+      }
+    }
+  }, [fetchBillingPeriods]);
 
   useEffect(() => {
     if (BillData) {

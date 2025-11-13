@@ -137,7 +137,7 @@
 // };
 // export default BillBoundaryFilter;
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckBox, SubmitBar, Loader, Dropdown } from "@egovernments/digit-ui-components";
 import BoundaryComponent from "../BoundaryComponent";
@@ -169,6 +169,27 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
   const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
   const [loadingPeriods, setLoadingPeriods] = useState(false);
   const [billingConfigData, setBillingConfigData] = useState(null);
+
+  // const hasRun = useRef(false);
+
+  // useEffect(() => {
+  //   if (hasRun.current) return;
+  //   hasRun.current = true;
+
+  //   const periods = Digit.SessionStorage.get("projectPeriods") || [];
+
+  //   if (periods.length > 0) {
+  //     const currentTimestamp = Date.now();
+  //     const currentPeriod =
+  //       periods.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
+  //       periods.find((p) => currentTimestamp < p.periodStartDate);
+
+  //     if (currentPeriod) {
+  //       setSelectedPeriod(currentPeriod);
+  //       Digit.SessionStorage.set("selectedPeriod", currentPeriod);
+  //     }
+  //   }
+  // }, []);
 
   /**
    * Applies the selected boundary filter.

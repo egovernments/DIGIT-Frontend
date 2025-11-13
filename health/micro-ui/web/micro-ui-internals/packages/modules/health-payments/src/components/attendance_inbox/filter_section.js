@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, SubmitBar, Dropdown, Loader } from "@egovernments/digit-ui-components";
@@ -30,6 +30,27 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
       setIsDistrictSelected(true);
     }
   };
+
+  // const hasRun = useRef(false);
+
+  // useEffect(() => {
+  //   if (hasRun.current) return;
+  //   hasRun.current = true;
+
+  //   const periods = Digit.SessionStorage.get("projectPeriods") || [];
+
+  //   if (periods.length > 0) {
+  //     const currentTimestamp = Date.now();
+  //     const currentPeriod =
+  //       periods.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
+  //       periods.find((p) => currentTimestamp < p.periodStartDate);
+
+  //     if (currentPeriod) {
+  //       setSelectedPeriod(currentPeriod);
+  //       Digit.SessionStorage.set("selectedPeriod", currentPeriod);
+  //     }
+  //   }
+  // }, []);
 
   // Format date for display
   const formatDate = (timestamp) => {
@@ -81,12 +102,12 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
           // Sort by period number
           periodOptions.sort((a, b) => a.periodNumber - b.periodNumber);
 
-          // ✅ Auto-select current or next period
+          //  Auto-select current or next period
           const currentTimestamp = Date.now();
           const currentPeriod =
             periodOptions.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
             periodOptions.find((p) => currentTimestamp < p.periodStartDate);
-          const sPeriod = Digit.SessionStorage.get("selectedPeriod", currentPeriod);
+          const sPeriod = Digit.SessionStorage.get("selectedPeriod");
 
           if (sPeriod) {
             setSelectedPeriod(sPeriod);
@@ -166,7 +187,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   // Handle reset
   useEffect(() => {
     if (reset === true) {
-      setPeriods([]);
+      //setPeriods([]);
       setSelectedPeriod(null);
       setBillingConfigData(null);
       resetTable();
@@ -241,7 +262,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         )}
 
         {/* Display Billing Config Info */}
-        {billingConfigData && (
+        {/* {billingConfigData && (
           <div style={{ marginTop: "1rem", padding: "0.5rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
             <div style={{ fontSize: "12px", color: "#666" }}>
               <strong>{t("Billing Frequency")}:</strong> {billingConfigData.billingFrequency}
@@ -252,7 +273,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
               </div>
             )}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Submit Button */}
