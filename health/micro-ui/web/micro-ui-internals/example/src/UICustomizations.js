@@ -1775,7 +1775,7 @@ export const UICustomizations = {
           return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
           case "WF_INBOX_HEADER_CREATED_DATE":
-            if (!Number.isFinite(value) || value <= 0) {
+            if (!value || value <= 0) {
               return <Tag label={t("ES_COMMON_NA")} showIcon={false} type="error" />;
             }
             const createdDate = new Date(value);
