@@ -118,7 +118,7 @@ export const UICustomizations = {
         case "WF_INBOX_HEADER_CURRENT_OWNER":
           return <span>{value?.assignes?.[0]?.name || t("NA")}</span>; // simplified and tightened
 
-        case "WF_INBOX_HEADER_CREATED_DATE":
+        case "WF_INBOX_HEADER_CREATED_DATE":{
           const formatDate = (epochTime) => {
             if (!Number.isFinite(epochTime) || epochTime <= 0) return t("ES_COMMON_NA");
             const date = new Date(epochTime);
@@ -143,6 +143,7 @@ export const UICustomizations = {
           };
           const dateLabel = formatDate(value);
           return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
+        }
         default:
           return t("ES_COMMON_NA");
       }
