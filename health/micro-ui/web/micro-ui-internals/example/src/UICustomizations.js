@@ -1774,18 +1774,9 @@ export const UICustomizations = {
         case "WF_INBOX_HEADER_CURRENT_OWNER":
           return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
-          case "WF_INBOX_HEADER_CREATED_DATE":
-            if (!value || value <= 0) {
-              return <Tag label={t("ES_COMMON_NA")} showIcon={false} type="error" />;
-            }
-            const createdDate = new Date(value);
-            const createdDay = createdDate.getDate();
-            const createdMonthKeys = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
-            const createdMonth = t(`PGR_INBOX_${createdMonthKeys[createdDate.getMonth()]}`);
-            const createdYear = createdDate.getFullYear().toString().slice(-2);
-            const createdDateLabel = `${createdDay} ${createdMonth} ${createdYear}`;
-            return <Tag label={createdDateLabel} showIcon={false} type="success" />;
-  
+        case "WF_INBOX_HEADER_CREATED_DATE":
+          const dateLabel = value ? Digit.DateUtils.ConvertEpochToDate(value) : "NA";
+          return <Tag label={t(dateLabel)} showIcon={false} type={value ? "success" : "error"} />;
         default:
           return t("ES_COMMON_NA");
       }
