@@ -118,32 +118,18 @@ export const UICustomizations = {
         case "WF_INBOX_HEADER_CURRENT_OWNER":
           return <span>{value?.assignes?.[0]?.name || t("NA")}</span>; // simplified and tightened
 
-        case "WF_INBOX_HEADER_CREATED_DATE":{
-          const formatDate = (epochTime) => {
-            if (!Number.isFinite(epochTime) || epochTime <= 0) return t("ES_COMMON_NA");
-            const date = new Date(epochTime);
-            const day = date.getDate();
-            const monthKeys = [
-              "JANUARY",
-              "FEBRUARY",
-              "MARCH",
-              "APRIL",
-              "MAY",
-              "JUNE",
-              "JULY",
-              "AUGUST",
-              "SEPTEMBER",
-              "OCTOBER",
-              "NOVEMBER",
-              "DECEMBER",
-            ];
-            const month = t(`PGR_INBOX_${monthKeys[date.getMonth()]}`);
-            const year = date.getFullYear().toString().slice(-2);
-            return `${day} ${month} ${year}`;
-          };
-          const dateLabel = formatDate(value);
-          return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
-        }
+        case "WF_INBOX_HEADER_CREATED_DATE":
+          if (!Number.isFinite(value) || value <= 0) {
+            return <Tag label={t("ES_COMMON_NA")} showIcon={false} type="error" />;
+          }
+          const createdDate = new Date(value);
+          const createdDay = createdDate.getDate();
+          const createdMonthKeys = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+          const createdMonth = t(`PGR_INBOX_${createdMonthKeys[createdDate.getMonth()]}`);
+          const createdYear = createdDate.getFullYear().toString().slice(-2);
+          const createdDateLabel = `${createdDay} ${createdMonth} ${createdYear}`;
+          return <Tag label={createdDateLabel} showIcon={false} type="success" />;
+
         default:
           return t("ES_COMMON_NA");
       }
