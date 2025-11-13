@@ -202,6 +202,13 @@ const PGRDetails = () => {
     }
   }, [toast?.show]);
 
+  // Reload assignment_status when modal closes
+  useEffect(() => {
+    if (!openModal) {
+      pgrSearchRevalidate();
+    }
+  }, [openModal]);
+
   const handleToastClose = () => {
     setToast({ show: false, label: "", type: "" });
   };

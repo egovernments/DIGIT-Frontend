@@ -34,6 +34,32 @@ const CreateComplaintForm = ({
 
   const user = Digit.UserService.getUser();
 
+  // Get state tenant ID for localization
+  const stateTenantId = Digit.ULBService.getStateId();
+
+  // Get current language for localization
+  const language = Digit.StoreData.getCurrentLanguage();
+
+  // Get selected hierarchy from session storage
+  const [selectedHierarchy, setSelectedHierarchy] = useState(
+    Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || null
+  );
+
+  // Construct module code for localization fetch
+  const moduleCode = selectedHierarchy
+    ? [`boundary-${selectedHierarchy?.hierarchyType?.toLowerCase()}`]
+    : [];
+
+  // Fetch localization data for the selected hierarchy
+  // This loads boundary localizations from the module: hcm-boundary-{hierarchyType}
+  const { isLoading: isLocalizationLoading } = Digit.Services.useStore({
+    stateCode: stateTenantId,
+    moduleCode,
+    language,
+    modulePrefix: "hcm",
+    config: { enabled: !!selectedHierarchy && moduleCode.length > 0 },
+  });
+
   // Hook for creating a complaint
   const { mutate: CreateComplaintMutation } = Digit.Hooks.pgr.useCreateComplaint(tenantId);
 
