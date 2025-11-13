@@ -18,7 +18,8 @@ const CustomInboxTable = ({
   customHandlePaginationChange,
   totalCount,
   statusCount,
-  selectedProject
+  selectedProject,
+  selectedPeriod,
 }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -43,7 +44,8 @@ const CustomInboxTable = ({
         {
           params: {
             tenantId: tenantId,
-            registerId: attendanceId
+            registerId: attendanceId,
+            billingPeriodId: selectedPeriod?.id,
           },
         },
         {
@@ -52,7 +54,7 @@ const CustomInboxTable = ({
           },
           onError: (error) => {
             setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
-          }
+          },
         }
       );
     } catch (error) {
@@ -86,7 +88,7 @@ const CustomInboxTable = ({
                 const currentDate = Date.now();
                 if (!(currentDate <= endDate)) {
                   history.push(
-                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
                   );
                 } else {
                   history.push(
@@ -96,7 +98,7 @@ const CustomInboxTable = ({
               } else {
                 console.warn("No endDate found in session storage");
                 history.push(
-                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
                 );
               }
             }}
@@ -111,23 +113,12 @@ const CustomInboxTable = ({
     {
       name: (
         <div className="custom-inbox-table-row">
-          {activeLink?.code === "PENDINGFORAPPROVAL"
-            ? t("HCM_AM_ATTENDANCE_MARKED_BY")
-            : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
+          {activeLink?.code === "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
         </div>
       ),
       selector: (row) => (
-        <div
-          className="ellipsis-cell"
-          title={
-            activeLink?.code === "PENDINGFORAPPROVAL"
-              ? row?.markby
-              : row?.approvedBy || t("NA")
-          }
-        >
-          {activeLink?.code === "PENDINGFORAPPROVAL"
-            ? row?.markby
-            : row?.approvedBy || t("NA")}
+        <div className="ellipsis-cell" title={activeLink?.code === "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}>
+          {activeLink?.code === "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
         </div>
       ),
     },
@@ -167,7 +158,6 @@ const CustomInboxTable = ({
   }
 
   const handleRowClick = (row) => {
-
     const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
     const endDate = existingPaymentInbox?.selectedProject?.endDate;
 
@@ -175,7 +165,7 @@ const CustomInboxTable = ({
       const currentDate = Date.now();
       if (!(currentDate <= endDate)) {
         history.push(
-          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
         );
       } else {
         history.push(
@@ -185,7 +175,7 @@ const CustomInboxTable = ({
     } else {
       console.warn("No endDate found in session storage");
       history.push(
-        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
       );
     }
 
@@ -209,7 +199,6 @@ const CustomInboxTable = ({
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-
             {/* Fixed Tab Section */}
             <div
               style={{
@@ -296,11 +285,7 @@ const CustomInboxTable = ({
       </Card>
 
       {commentLogs && (
-        <CommentPopUp
-          onClose={onCommentLogClose}
-          businessId={data?.musterRollNumber}
-          heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
-        />
+        <CommentPopUp onClose={onCommentLogClose} businessId={data?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
       )}
       {showToast && (
         <Toast
