@@ -120,12 +120,12 @@ export const StoreService = {
         stateInfo: {
           code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
           name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
-          logoUrl: tenantConfigFetch ? logoUrl?.data?.fileStoreIds?.[0]?.url ? logoUrl?.data?.fileStoreIds?.[0]?.url?.split('?')[0] : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
+          logoUrl: tenantConfigFetch ? logoUrl?.data?.fileStoreIds?.[0]?.url ? logoUrl?.data?.fileStoreIds?.[0]?.url : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
           statelogo: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "statelogo")?.url : stateInfo.statelogo,
           logoUrlWhite: tenantConfigFetch
             ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrlWhite")?.url
             : stateInfo.logoUrlWhite,
-          bannerUrl: tenantConfigFetch ? bannerUrl?.data?.fileStoreIds?.[0]?.url  ? bannerUrl?.data?.fileStoreIds?.[0]?.url?.split('?')[0] : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
+          bannerUrl: tenantConfigFetch ? bannerUrl?.data?.fileStoreIds?.[0]?.url  ? bannerUrl?.data?.fileStoreIds?.[0]?.url : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
         },
         localizationModules: stateInfo.localizationModules,
         modules:
