@@ -37,6 +37,9 @@
                         "mandatory": "false",
                         "additionalField": "true"
                     }
+                ],
+                "modules": [
+                    "INVENTORY"
                 ]
             },
             {
@@ -44,57 +47,116 @@
                 "labelFields": [
                     {
                         "name": "HOUSEHOLD_HEAD_NAME",
-                        "fieldKey": "givenName",
+                        "fieldKey": "headName",
                         "jsonPath": "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
                         "mandatory": "false"
                     },
+                     {
+                        "name": "ID_TYPE",
+                        "fieldKey": "idType",
+                        "jsonPath": "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierType}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "NAME_OF_INDIVIDUAL",
+                        "fieldKey": "givenName",
+                        "jsonPath": "{{contextData.0.individuals.IndividualModel.name.givenName}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "ID_NUMBER",
+                        "fieldKey": "idNumber",
+                        "jsonPath": "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierId}}",
+                        "mandatory": "false"
+                    },
+                      {
+                        "name": "AGE",
+                        "fieldKey": "age",
+                        "jsonPath": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}",
+                        "mandatory": "false"
+                    },
                     {
-                        "name":  "LOCALITY",
-                        "fieldKey": "receiverId",
+                        "name": "GENDER",
+                        "fieldKey": "gender",
+                        "jsonPath": "{{contextData.0.individuals.IndividualModel.gender}}",
+                        "mandatory": "false"
+                    },
+                    {
+                        "name": "DATE_OF_REGISTRATION",
+                        "fieldKey": "dateOfRegistration",
+                        "jsonPath": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}",
+                        "mandatory": "false"
+                    }
+                    
+                                 
+                ],
+                "modules": [
+                    "REGISTRATION"
+                ]
+            },
+              {
+                "entity": "HouseholdModel",
+                "labelFields": [
+                      {
+                        "name":  "HOUSEHOLD_LOCALITY",
+                        "fieldKey": "locality",
                         "jsonPath": "{{contextData.0.household.HouseholdModel.address.locality.code}}",
                         "mandatory": "false"
                     },
                     {
                         "name": "MEMBER_COUNT",
-                        "fieldKey": "mrnNumber",
+                        "fieldKey": "memberCount",
                         "jsonPath": "{{contextData.0.household.HouseholdModel.memberCount}}",
+                        "mandatory": "false"
+                    }          
+                ],
+                "modules": [
+                    "REGISTRATION"
+                ]
+            },
+             {
+                "entity": "ComplaintModel",
+                "labelFields": [
+                    {
+                        "name": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
+                        "fieldKey": "inboxComplaintNumber",
+                        "jsonPath": "{{item.PgrServiceModel.serviceRequestId}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "COMPLAINT_INBOX_COMPLAINT_TYPE",
+                        "fieldKey": "inboxComplaintType",
+                        "jsonPath": "{{item.PgrServiceModel.serviceCode}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "COMPLAINT_INBOX_COMPLAINT_DATE",
+                        "fieldKey": "complaintDate",
+                        "jsonPath": "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "COMPLAINT_INBOX_COMPLAINT_AREA",
+                        "fieldKey": "complaintArea",
+                        "jsonPath": "{{item.PgrServiceModel.address.locality.code}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "COMPLAINT_INBOX_COMPLAINT_STATUS",
+                        "fieldKey": "complaintStatus",
+                        "jsonPath": "{{item.PgrServiceModel.applicationStatus}}",
                         "mandatory": "false"
                     },
                     {
-                        "name": "WAYBILL_NUMBER",
-                        "fieldKey": "wayBillNumber",
-                        "jsonPath": "{{item.wayBillNumber}}",
-                        "mandatory": "false",
-                        "additionalField": "true"
-                    },
-                     {
-                        "name": "BATCH_NUMBER",
-                        "fieldKey": "batchNumber",
-                        "jsonPath":  "{{item.additionalFields.fields.batchNumber}}",
-                        "mandatory": "false",
-                        "additionalField": "true"
-                    },
-                     {
-                        "name": "STOCK_EXPIRY",
-                        "fieldKey": "expiry",
-                        "jsonPath": "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}",
-                        "mandatory": "false",
-                        "additionalField": "true"
-                    },
-                     {
-                        "name": "QUANTITY_RECEIVED",
-                        "fieldKey": "quantityReceived",
-                        "jsonPath": "{{item.quantity}}",
-                        "mandatory": "false",
-                        "additionalField": "true"
-                    },
-                     {
-                        "name": "COMMENTS",
-                        "fieldKey": "comments",
-                        "jsonPath": "{{item.additionalFields.fields.comments}}",
-                        "mandatory": "false",
-                        "additionalField": "true"
+                        "name": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+                        "fieldKey": "complaintStatus",
+                        "jsonPath": "{{item.PgrServiceModel.user.mobileNumber}}",
+                        "mandatory": "false"
                     }
+                                 
+                ],
+                "modules": [
+                    "COMPLAINTS"
                 ]
             }
 ]

@@ -31,7 +31,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
-  const { pageType } = useSelector((state) => state.remoteConfig);
+  const { pageType, currentData } = useSelector((state) => state.remoteConfig);
+
+  console.log("Current Data FLow: ", {currentData});
 
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState("");
@@ -492,7 +494,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const switchRef = useRef(null);
 
         // Fetch labelPairConfig from Redux
-        const labelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
+        const allLabelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
+
+           const labelPairConfig = allLabelPairConfig.filter(item => 
+          item.modules?.includes(currentData?.flow)
+        );
 
         // Get currently selected data from selectedField.data
         const selectedData = selectedField?.data || [];
@@ -574,6 +580,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                       }
 
                       return {
+                        ...option,
                         key: option.name,
                         value: option.jsonPath,
                       };
@@ -616,7 +623,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(entityName || 'ENTITY')} - ${item.key}`}
+                        label={`${t(entityName || 'ENTITY')} - ${t(item.key)}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
@@ -1031,6 +1038,8 @@ function NewDrawerFieldComposer() {
       return panelItem.visibilityEnabledFor.includes(fieldType);
     });
   }, [currentTabProperties, fieldType]);
+
+  console.log("Rendering NewDrawerFieldComposer - Selected Field:", {selectedField, visibleTabProperties, fieldType});
 
   // Function to collect all validation errors from group fields
   const checkValidationErrors = useCallback(() => {
