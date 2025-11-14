@@ -6,13 +6,13 @@ const path = require("path");
 module.exports = merge(common, {
   mode: "development",
   devtool: "eval-source-map",
-  
+
   output: {
     filename: "[name].bundle.js",
     chunkFilename: "[name].chunk.js",
     publicPath: "/workbench-ui/",
   },
-  
+
   devServer: {
     static: {
       directory: path.join(__dirname, "public"),
@@ -83,6 +83,7 @@ module.exports = merge(common, {
           "/health-project",
           "/fsm-calculator",
           "/product",
+          "/health-service-request",
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
         changeOrigin: true,
@@ -90,14 +91,14 @@ module.exports = merge(common, {
       },
     ],
   },
-  
+
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
   ],
-  
+
   optimization: {
     runtimeChunk: "single",
     splitChunks: {
@@ -116,7 +117,7 @@ module.exports = merge(common, {
       },
     },
   },
-  
+
   performance: {
     hints: false,
   },

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
@@ -7,11 +8,13 @@ import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
+import { deselectField } from "./redux/remoteConfigSlice";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const FullConfigWrapper = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber") || "CMP-2025-08-04-004846";
   const flowModule = searchParams.get("flow");
@@ -118,6 +121,9 @@ const FullConfigWrapper = () => {
       await window.__appConfig_onNext();
     }
 
+    // Reset selected field when switching flows
+    dispatch(deselectField());
+
     setSelectedFlow(flow.id);
     // Set index route or first page as default when flow is clicked
     const defaultPage = flow.indexRoute || (flow.pages && flow.pages.length > 0 ? flow.pages[0].name : null);
@@ -136,6 +142,9 @@ const FullConfigWrapper = () => {
     if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
       await window.__appConfig_onNext();
     }
+
+    // Reset selected field when switching pages
+    dispatch(deselectField());
 
     setSelectedPageName(page.name);
   };
@@ -381,6 +390,8 @@ const FullConfigWrapper = () => {
               }`}
               onClick={() => {
                 if (previousRoute) {
+                  // Reset selected field when navigating backwards
+                  dispatch(deselectField());
                   setSelectedPageName(previousRoute);
                 }
               }}
@@ -415,6 +426,10 @@ const FullConfigWrapper = () => {
                   if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
                     await window.__appConfig_onNext();
                   }
+
+                  // Reset selected field when navigating forward
+                  dispatch(deselectField());
+
                   // Navigate to next page
                   setSelectedPageName(nextRoute);
                 }

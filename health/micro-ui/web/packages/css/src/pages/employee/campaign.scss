@@ -629,13 +629,13 @@
   margin-top: 0.8rem;
   font-weight: bold;
   text-wrap: nowrap;
-  width: 3.125rem;
+  width: 33%;
 }
 .date-container-popUp {
   margin-top: 0.8rem;
   font-weight: bold;
   text-wrap: nowrap;
-  width: 3.125rem;
+  width: 33%;
 }
 .pop-display {
   display: flex;
@@ -648,7 +648,7 @@
   margin-top: 0.8rem;
   font-weight: bold;
   text-wrap: nowrap;
-  width: 3.125rem;
+  width: 33%;
 }
 
 .app-config-version-tags {
@@ -835,4 +835,9 @@
 }
 .campaign-name-code {
   margin-left: 0.5rem !important;
+}
+.clonecampaign-popup-field {
+  .label-container {
+    font-weight: 700;
+  }
 }

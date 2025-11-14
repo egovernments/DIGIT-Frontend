@@ -1,6 +1,6 @@
 import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { Dropdown, Toast, Button, PopUp, Footer } from "@egovernments/digit-ui-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
@@ -19,10 +19,6 @@ const SearchChecklist = () => {
   const [campaignName, setCampaignName] = useState(searchParams.get("name"));
 
   const stateData = window.history.state;
-
-  useEffect(() => {
-    setCampaignName(campaignName);
-  }, campaignName);
 
   //   TODO.. CHANGE WHAT HAPPENS ON CLICING SEARCH RESULT ROW
   const onClickRow = (row) => {
@@ -112,9 +108,15 @@ const SearchChecklist = () => {
     setShowToast(null);
   };
 
-  checklistSearchConfig[0].sections.search.uiConfig.fields[0].populators.options = codesopt;
-  checklistSearchConfig[0].sections.search.uiConfig.fields[1].populators.options = listsopt;
-  checklistSearchConfig[0].additionalDetails = { campaignName };
+  const configWithOptions = useMemo(() => {
+    if (!checklistSearchConfig[0]) return null;
+
+    const config = JSON.parse(JSON.stringify(checklistSearchConfig[0]));
+    config.sections.search.uiConfig.fields[0].populators.options = codesopt;
+    config.sections.search.uiConfig.fields[1].populators.options = listsopt;
+    config.additionalDetails = { campaignName };
+    return config;
+  }, [codesopt, listsopt, campaignName]);
 
   if (isFetching) return <div></div>;
   else {
@@ -225,15 +227,17 @@ const SearchChecklist = () => {
           </div> */}
           <div className="inbox-search-wrapper card-container1" style={{ width: "100%" }}>
             {/* Pass defaultValues as props to InboxSearchComposer */}
-            <InboxSearchComposer
-              configs={checklistSearchConfig?.[0]}
-              // defaultValues={defaultValues}
-              additionalConfig={{
-                resultsTable: {
-                  onClickRow,
-                },
-              }}
-            ></InboxSearchComposer>
+            {configWithOptions && (
+              <InboxSearchComposer
+                configs={configWithOptions}
+                // defaultValues={defaultValues}
+                additionalConfig={{
+                  resultsTable: {
+                    onClickRow,
+                  },
+                }}
+              ></InboxSearchComposer>
+            )}
           </div>
         </div>
         <Footer
