@@ -111,10 +111,8 @@ export const disableTimeWithSession = (sessionType, disableEpoch) => {
 //   });
 // }
 
-export const findAllOverlappingPeriods = ( startDate, endDate) => {
-
-   const periods= Digit.SessionStorage.get("projectPeriods");
-
+export const findAllOverlappingPeriods = (startDate, endDate) => {
+  const periods = Digit.SessionStorage.get("projectPeriods");
 
   if (!Array.isArray(periods) || !startDate || !endDate) return [];
 
@@ -125,4 +123,38 @@ export const findAllOverlappingPeriods = ( startDate, endDate) => {
     // Overlap logic: true if ranges intersect at all
     return !(endDate < periodStart || startDate > periodEnd);
   });
+};
+
+export const getValidPeriods = (periods) => {
+  if (!Array.isArray(periods) || periods.length === 0) return [];
+
+  const now = Date.now();
+
+  // Remove future periods
+  const validPeriods = periods.filter((p) => p.periodStartDate <= now);
+
+  if (validPeriods.length === 0) return [];
+
+  // Sort by start date (ascending)
+  validPeriods.sort((a, b) => a.periodStartDate - b.periodStartDate);
+
+  // Find current period (where now is between start and end)
+  const current = validPeriods.find((p) => now >= p.periodStartDate && now <= p.periodEndDate);
+
+  // Find previous period (the one before the current one)
+  let previous = null;
+  if (current) {
+    const index = validPeriods.findIndex((p) => p.id === current.id);
+    if (index > 0) previous = validPeriods[index - 1];
+  } else {
+    // If no current, take the last past period as previous
+    previous = validPeriods[validPeriods.length - 1];
+  }
+
+  // Return filtered list (previous + current if exists)
+  const result = [];
+  if (previous) result.push(previous);
+  if (current) result.push(current);
+
+  return result;
 };

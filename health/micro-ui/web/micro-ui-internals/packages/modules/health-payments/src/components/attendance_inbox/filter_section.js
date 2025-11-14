@@ -4,6 +4,7 @@ import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, SubmitBar, Dropdown, Loader } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
+import { getValidPeriods } from "../../utils/time_conversion";
 
 const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const { t } = useTranslation();
@@ -254,7 +255,14 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
                 <Loader />
               </div>
             ) : periods.length > 0 ? (
-              <Dropdown style={{ width: "100%" }} t={t} option={periods} optionKey="name" selected={selectedPeriod} select={handlePeriodSelect} />
+              <Dropdown
+                style={{ width: "100%" }}
+                t={t}
+                option={getValidPeriods(periods)}
+                optionKey="name"
+                selected={selectedPeriod}
+                select={handlePeriodSelect}
+              />
             ) : (
               <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
             )}

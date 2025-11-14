@@ -143,6 +143,7 @@ import { CheckBox, SubmitBar, Loader, Dropdown } from "@egovernments/digit-ui-co
 import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, Toast } from "@egovernments/digit-ui-components";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
+import { getValidPeriods } from "../../utils/time_conversion";
 
 /**
  * BillBoundaryFilter component allows users to filter boundaries
@@ -399,7 +400,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                 <Loader />
               </div>
             ) : periods.length > 0 ? (
-              <Dropdown style={{ width: "100%" }} t={t} option={periods} optionKey="name" selected={selectedPeriod} select={handlePeriodSelect} />
+              <Dropdown style={{ width: "100%" }} t={t} option={getValidPeriods(periods)} optionKey="name" selected={selectedPeriod} select={handlePeriodSelect} />
             ) : (
               <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
             )}

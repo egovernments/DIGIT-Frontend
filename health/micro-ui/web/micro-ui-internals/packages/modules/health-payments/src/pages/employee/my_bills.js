@@ -131,8 +131,6 @@ const MyBills = () => {
   useEffect(() => {
     const periodsCheck = Digit.SessionStorage.get("projectPeriods") || [];
     if (periodsCheck.length == 0) {
-      debugger;
-
       if (project?.[0]?.referenceID || project?.[0]?.id) {
         fetchBillingPeriods(project?.[0]?.referenceID || project?.[0]?.id);
       }
