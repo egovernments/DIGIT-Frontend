@@ -1354,6 +1354,17 @@ tbody {
     position: absolute;
     z-index: 999;
   }
+
+  .digit-label-field-pair{
+    &.digit-inbox-search-composer-label-pair{
+      &.vertical{
+        .filter-label{
+          display: none ;;
+        }
+      }
+    }
+
+  }
 }
 
 /* Boundary dropdown container - increased row gap between dropdowns */
