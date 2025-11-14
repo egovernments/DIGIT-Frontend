@@ -107,7 +107,7 @@ export const CreateComplaintConfig = {
                 error: "CORE_COMMON_APPLICANT_NAME_INVALID",
                 validation: {
                   required: true,
-                  pattern: /^[A-Za-z0-9\s\-_]+$/i,
+                  pattern: /^[\p{L}\p{M}](?:[\p{L}\p{M}\p{Nd}'’\-.\s,]{0,98}[\p{L}\p{M}\p{Nd}])?$/u,
                   error: "CORE_COMMON_APPLICANT_NAME_INVALID"
                 }
               },

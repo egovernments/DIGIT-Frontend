@@ -1341,6 +1341,30 @@ tbody {
   .digit-date-range-label-field {
     gap: 0.25rem !important;
   }
+
+  .digit-employee-select-wrap {
+    margin-bottom: 0;
+  }
+
+  .digit-checkbox-container {
+    margin-bottom: 0rem;
+  }
+
+  .rdrCalendarWrapper.rdrDateRangeWrapper.pickerShadow {
+    position: absolute;
+    z-index: 999;
+  }
+
+  .digit-label-field-pair{
+    &.digit-inbox-search-composer-label-pair{
+      &.vertical{
+        .filter-label{
+          display: none ;;
+        }
+      }
+    }
+
+  }
 }
 
 /* Boundary dropdown container - increased row gap between dropdowns */
