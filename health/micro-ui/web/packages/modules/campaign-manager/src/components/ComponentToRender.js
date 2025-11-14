@@ -42,6 +42,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         component={component}
         config={{
           step: "",
+           customProps: {
+            field: field,
+            t: customT,
+          }
         }}
         description={field?.isMdms ? t(field?.helpText) : customT(field?.helpText) || null}
         error={field?.isMdms ? t(field?.errorMessage) : customT(field?.errorMessage) || null}
