@@ -58,6 +58,10 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const componentRef = useRef(null);
 
+  const expr = config?.visibilityCondition?.expression;
+  const isDependent =
+    typeof expr === "string" && expr.trim().length > 0;
+
   return (
     <div
       ref={componentRef}
@@ -70,9 +74,17 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
     >
       <LabelFieldPair className={`appConfigLabelField`}>
         <div className="appConfigLabelField-label-container">
+          {isDependent &&
+
+            <div className="appConfigLabelField-label">
+              <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
+            </div>
+
+          }
           <div className="appConfigLabelField-label">
             <span>{label}</span>
           </div>
+
           <Tag
             icon=""
             label={t(

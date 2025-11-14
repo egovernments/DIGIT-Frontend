@@ -10,9 +10,10 @@ import {
     Tag,
     SVG,
     CheckBox,
+    FieldV1,
 } from "@egovernments/digit-ui-components";
 import ReactDOM from "react-dom";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updatePageConditionalNav } from "./redux/remoteConfigSlice";
 import { fetchFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
@@ -65,7 +66,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
 }
 
 function NewNavigationLogicWrapper({ t }) {
-    const customT = useCustomT();
+    const customT = useCustomTranslate();
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
 
@@ -189,20 +190,23 @@ function NewNavigationLogicWrapper({ t }) {
     const isDobLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        return tpe === "datepicker" && fmt === "dob";
+        return fmt === "dob";
     };
 
     const isDatePickerNotDob = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        return tpe === "datepicker" && fmt !== "dob";
+        return (fmt === "date" || fmt === "datepicker") && fmt !== "dob";
     };
 
     const toDDMMYYYY = (iso) => {
-        if (!iso) return "";
-        const [y, m, d] = String(iso).split("-");
-        if (!y || !m || !d) return "";
-        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+    const dateOnly = String(iso).split("T")[0];  // "2025-11-11"
+    
+    const [y, m, d] = dateOnly.split("-");
+    
+    if (!y || !m || !d) return "";
+    
+    return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`
     };
 
     const toISOFromDDMMYYYY = (ddmmyyyy) => {
@@ -507,7 +511,7 @@ function NewNavigationLogicWrapper({ t }) {
         });
 
     // ----- condition operations -----
-    const updateCond = (ruleIdx, condIdx, patch) =>
+    const updateCond = (ruleIdx, condIdx, patch) =>{
         setRules((prev) =>
             prev.map((r, i) =>
                 i !== ruleIdx
@@ -515,6 +519,8 @@ function NewNavigationLogicWrapper({ t }) {
                     : { ...r, conds: r.conds.map((c, j) => (j === condIdx ? { ...c, ...patch } : c)) }
             )
         );
+    
+    }
 
     const changeJoiner = (ruleIdx, condIdx, joinCode) =>
         setRules((prev) =>
@@ -837,11 +843,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                     const isCk = isCheckboxField(e);
                                                                                     updateCond(editorIndex, idx, {
                                                                                         selectedField: e,
-                                                                                        fieldValue: isCk
-                                                                                            ? (["true", "false"].includes(String(cond.fieldValue).toLowerCase())
-                                                                                                ? cond.fieldValue
-                                                                                                : "false")
-                                                                                            : "",
+                                                                                        ...(isCk && { fieldValue: ["true", "false"].includes(String(cond.fieldValue).toLowerCase()) ? cond.fieldValue : "false" }),
                                                                                         comparisonType: canKeep
                                                                                             ? cond.comparisonType
                                                                                             : (isCk ? nextOps.find((o) => o.code === "==") : {}),
@@ -868,7 +870,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                 name={`op-${editorIndex}-${idx}`}
                                                                                 t={t}
                                                                                 select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
-                                                                                disabled={!cond?.selectedField?.code}
+                                                                                // disabled={!cond?.selectedField?.code}
                                                                                 selected={selectedOperator}
                                                                             />
                                                                         </div>
@@ -921,13 +923,18 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                     return (
                                                                                         <TextInput
                                                                                             type="date"
+                                                                                            name={`date-${editorIndex}-${idx}`}
                                                                                             className="appConfigLabelField-Input"
-                                                                                            name={""}
                                                                                             value={iso}
-                                                                                            onChange={(event) =>
+                                                                                            populators={{
+                                                                                                 newDateFormat: true,
+                                                                                            }}
+                                                                                            onChange={(d) => {
+
                                                                                                 updateCond(editorIndex, idx, {
-                                                                                                    fieldValue: toDDMMYYYY(event?.target?.value),
+                                                                                                    fieldValue: toDDMMYYYY(d),
                                                                                                 })
+                                                                                            }
                                                                                             }
                                                                                         />
                                                                                     );
@@ -953,9 +960,9 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                         return (
                                                                                             <Dropdown
                                                                                                 option={enumOptions}
-                                                                                                optionKey="code"
+                                                                                                optionKey="name"
                                                                                                 name={`val-${editorIndex}-${idx}`}
-                                                                                                t={customT}
+                                                                                                t={t}
                                                                                                 select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
                                                                                                 disabled={!cond?.selectedField?.code}
                                                                                                 selected={selectedEnum}

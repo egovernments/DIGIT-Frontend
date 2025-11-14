@@ -2,7 +2,8 @@ import { FieldV1 } from "@egovernments/digit-ui-components";
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { getFieldTypeFromMasterData, getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers";
+import { getFieldTypeFromMasterData,getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers";
+import { getFieldTypeFromMasterData2 } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
 
 const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
@@ -13,10 +14,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
   // Get the field type
-  const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
+  const fieldType = getFieldTypeFromMasterData2(field, fieldTypeMasterData);
 
   // Get component from fieldTypeMasterData, fallback to null
-  const component = fieldType === "component" ? getComponentFromMasterData(field, fieldTypeMasterData) : null;
+  const component = fieldType === "component" ? getFieldTypeFromMasterData2(field, fieldTypeMasterData) : null;
 
   // Check if this field is selected
   const isFieldSelected =
@@ -53,8 +54,16 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           suffix: field?.suffixText || null,
           t: null,
           fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
+          mdmsConfig: field?.isMdms
+                          ? {
+                              moduleName: field?.schemaCode?.split(".")[0],
+                              masterName: field?.schemaCode?.split(".")[1],
+                            }
+                          : null,
+          options: field?.isMdms ? null : field?.dropDownOptions,
+          optionsKey: field?.isMdms ? "code" : "name",
         }}
-        required={getFieldTypeFromMasterData(field) === "custom" ? null : field?.required}
+        required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
         type={fieldType}
         value={field?.value === true ? "" : field?.value || ""}
         disabled={field?.readOnly || false}
