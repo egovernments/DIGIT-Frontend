@@ -37,11 +37,11 @@ export const SignUpConfig = [
           error: "ERR_EMAIL_REQUIRED",
         },
       },
-      {isMandatory: false,
-        key: "PrivacyComponent",
-         key: "check",
+      {
+        isMandatory: false,
+        key: "emailWithLink",
         type: "component",
-        component: "LoginSignupSelector",
+        component: "EmailWithLinkComponent",
         withoutLabel: true,
         disable: false,
         customProps: {
@@ -49,7 +49,7 @@ export const SignUpConfig = [
         },
         populators: {
           required: false,
-          name: "check",
+          name: "emailWithLink",
         },
       },
       {

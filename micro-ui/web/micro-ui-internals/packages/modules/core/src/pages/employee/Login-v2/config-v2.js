@@ -20,19 +20,19 @@ export const SignUpConfig = [
           error: "ERR_ACCOUNT_NAME_REQUIRED",
         },
       },
-      {isMandatory: false,
-        key: "PrivacyComponent",
-         key: "check",
+      {
+        isMandatory: false,
+        key: "accountNameWithLink",
         type: "component",
-        component: "ForgotOrganizationTooltip",
+        component: "AccountNameWithLinkComponent",
         withoutLabel: true,
         disable: false,
         customProps: {
-          module: "SandboxSignUp",
+          module: "SandboxLogin",
         },
         populators: {
           required: false,
-          name: "check",
+          name: "accountNameWithLink",
         },
       },
       {
@@ -50,19 +50,19 @@ export const SignUpConfig = [
           error: "ERR_EMAIL_REQUIRED",
         },
       },
-      {isMandatory: false,
-        key: "PrivacyComponent",
-         key: "check",
+      {
+        isMandatory: false,
+        key: "emailWithSignUpLink",
         type: "component",
-        component: "LoginSignupSelector",
+        component: "EmailWithSignUpLinkComponent",
         withoutLabel: true,
         disable: false,
         customProps: {
-          module: "SandboxSignUp",
+          module: "SandboxLogin",
         },
         populators: {
           required: false,
-          name: "check",
+          name: "emailWithSignUpLink",
         },
       },
       // {
