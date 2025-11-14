@@ -159,7 +159,19 @@ const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t, module, perm
     </div>
 );
 
-const RoleContent = ({ role, cards, config, t, module, permalink }) => (
+const RoleContent = ({ role, cards, config, t, module, permalink }) => {
+    // Determine userType from role (Citizens -> citizen, Employee -> employee, Stakeholder -> stakeholder)
+    const getUserType = (roleText) => {
+        const roleLower = roleText?.toLowerCase() || '';
+        if (roleLower.includes('citizen')) return 'citizen';
+        if (roleLower.includes('employee')) return 'employee';
+        if (roleLower.includes('stakeholder')) return 'stakeholder';
+        return 'employee'; // default fallback
+    };
+    
+    const userType = getUserType(role);
+    
+    return (
     <div className="cs-left">
         <h2 className="cs-title">{role}</h2>
         {cards.map(({ icon, text }, idx) => {
@@ -216,9 +228,12 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
             onClick={() => {
                 try {
                     if (config.isExternal) {
-                        window.open(config?.action, "_blank");
+                        // Handle external URLs - append from=sandbox, module, and userType parameters
+                        const separator = config?.action?.includes('?') ? '&' : '?';
+                        const externalUrl = config?.action + `${separator}from=sandbox&module=${module}&userType=${userType}`;
+                        window.open(externalUrl, "_blank");
                     } else {
-                        handleButtonClick(config?.action);
+                        handleButtonClick(config?.action, module, userType);
                     }
                 } catch (error) {
                     console.error("Error navigating to URL:", error);
@@ -244,7 +259,8 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
                 e.target.style.background = '#C84C0E';
             }}> {t(config.title)} ➔</button>
     </div>
-);
+    );
+};
 
 // const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citizenWTLink, stakeholderWTLink, module }) => {
 //     const iframeSrc = activeTab === "citizen"
@@ -407,8 +423,15 @@ const content = {
     }
 };
 
-const handleButtonClick = (action) => {
-    const url = '/' + window.contextPath + action + "?from=sandbox";
+const handleButtonClick = (action, module, userType) => {
+    // Check if action is a full URL or relative path
+    const isFullUrl = action?.startsWith('http://') || action?.startsWith('https://');
+    const baseUrl = isFullUrl ? action : '/' + window.contextPath + action;
+    
+    // Append from=sandbox, module, and userType parameters
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    const url = baseUrl + `${separator}from=sandbox&module=${module}&userType=${userType}`;
+    
     window.open(url, "_blank");
 };
 
