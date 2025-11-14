@@ -230,16 +230,6 @@
       window.addEventListener('beforeunload', function () {
         sendCompleteFlow('Tab Close');
       });
-      // Send flow when tab visibility changes (user switches tabs)
-      document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-          if (userFlow.length > 1) {
-            sendCompleteFlow('Tab Switch');
-          } else {
-            console.error('[Matomo] Flow not sent on tab switch - flow too short (length=' + userFlow.length + ')');
-          }
-        }
-      });
       // Monitor access token changes (logout detection)
       let lastAccessToken = null;
       let isInitialCheck = true;
