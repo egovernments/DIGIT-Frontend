@@ -53,19 +53,19 @@ export const SignUpConfig = [
         },
       },
       {
-        isMandatory: false,
+        isMandatory: true,
         key: "check",
         type: "component",
         component: "PrivacyComponent",
         withoutLabel: true,
         disable: false,
-        required:false,
+        required: true,
         customProps: {
           module: "SandboxSignUp",
         },
         populators: {
           name: "check",
-          required:false,
+          required: true,
         },
       },
     ],

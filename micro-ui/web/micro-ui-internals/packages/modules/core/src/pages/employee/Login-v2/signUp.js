@@ -91,7 +91,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-    const keys = config[0].body.map((field) => field.key);
+    // Filter out component fields that are not actual inputs (like links)
+    const keys = config[0].body
+      .filter((field) => field.isMandatory || (field.type !== "component"))
+      .map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
