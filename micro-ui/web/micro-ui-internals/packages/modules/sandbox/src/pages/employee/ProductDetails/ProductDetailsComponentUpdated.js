@@ -167,24 +167,48 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
             const isOBPSStakeholderFeature2 = module === 'OBPS' && text === t('OBPS_STAKEHOLDER_FEATURE2');
             
             return (
-                <div key={idx} className="cs-card">
-                    <IconComponent className="cs-icon" />
-                    <span>{text}</span>
-                    {isOBPSStakeholderFeature2 && permalink && (
-                        <a 
-                            href={permalink} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            style={{ 
-                                marginLeft: '8px', 
-                                color: '#C84C0E', 
-                                textDecoration: 'underline',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            (Link)
-                        </a>
-                    )}
+                <div key={idx} className="cs-card" style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    minHeight: '44px'
+                }}>
+                    <div style={{
+                        width: '20px',
+                        minWidth: '20px',
+                        height: '20px',
+                        marginRight: '12px',
+                        flexShrink: 0,
+                        marginTop: '0px'
+                    }}>
+                        <IconComponent className="cs-icon" style={{ width: '20px', height: '20px' }} />
+                    </div>
+                    <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        minHeight: '20px'
+                    }}>
+                        <span style={{ wordBreak: 'break-word', lineHeight: '1.4' }}>
+                            {text}
+                        </span>
+                        {isOBPSStakeholderFeature2 && permalink && (
+                            <a
+                                href={permalink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    marginLeft: '8px',
+                                    color: '#C84C0E',
+                                    textDecoration: 'underline',
+                                    fontWeight: 'bold',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                (Link)
+                            </a>
+                        )}
+                    </div>
                 </div>
             );
         })}
