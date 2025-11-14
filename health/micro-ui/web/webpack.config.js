@@ -279,6 +279,7 @@ module.exports = {
           "/default-data-handler",
           "/facility/v1/_create",
           "/product",
+          "/health-service-request"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,

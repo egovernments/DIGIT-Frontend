@@ -62,11 +62,13 @@ const CreateChecklist = () => {
 
   useEffect(() => {
     setServiceCode(`${campaignName}.${checklistType}.${role}`);
-  }, []);
+  }, [campaignName, checklistType, role]);
 
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
   useEffect(() => {
+    if (!serviceCode) return;
+
     const callSearch = async () => {
       const res = await Digit.CustomService.getResponse({
         url: `/${mdms_context_path}/v2/_search`,
@@ -100,7 +102,7 @@ const CreateChecklist = () => {
       } catch (error) {}
     };
     fetchData();
-  }, [serviceCode]);
+  }, [serviceCode, mdms_context_path, tenantId, role, checklistType]);
 
   useEffect(() => {
     const currentTime = new Date();
@@ -117,7 +119,8 @@ const CreateChecklist = () => {
 
   useEffect(() => {
     if (showToast) {
-      setTimeout(closeToast, 5000);
+      const timer = setTimeout(closeToast, 5000);
+      return () => clearTimeout(timer);
     }
   }, [showToast]);
 
@@ -210,6 +213,9 @@ const CreateChecklist = () => {
   }
 
   const LocalisationCodeUpdate = (temp) => {
+    if (!temp || temp === undefined || temp === null) {
+      return "";
+    }
     return temp.toUpperCase().replace(/ /g, "_");
   };
 
@@ -630,7 +636,7 @@ const CreateChecklist = () => {
                     const { local: generatedLocal } = generateCodes(processed);
                     const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
                     setLocalisationData(currentLocalisationData);
-                    if (enabledModules > 1) {
+                    if (enabledModules && enabledModules.length > 1) {
                       setShowLocalisationPopup(true);
                       setShowPopUp(false);
                     } else {
@@ -744,4 +750,5 @@ const CreateChecklist = () => {
   );
 };
 
-export { temp_data, CreateChecklist };
+export { temp_data };
+export default CreateChecklist;

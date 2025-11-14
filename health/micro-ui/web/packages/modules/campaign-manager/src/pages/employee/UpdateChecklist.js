@@ -80,20 +80,22 @@ const UpdateChecklist = () => {
       },
       includeDeleted: true,
     },
-    config: {
-      select: (res) => {
-        if (res?.ServiceDefinitions?.[0]?.attributes) {
-          setCurActive(res?.ServiceDefinitions?.[0].isActive);
-          setHelpText(res?.ServiceDefinitions?.[0]?.additionalFields?.fields?.[0]?.value?.helpText);
-          let temp_data = res?.ServiceDefinitions?.[0]?.attributes;
-          let formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
-          let nvd = formatted_data.filter((value, index, self) => index === self.findIndex((t) => t.id === value.id));
-          return nvd;
-        }
-      },
-    },
   };
-  const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(res);
+  const { isLoading, data: rawData, isFetching } = Digit.Hooks.useCustomAPIHook(res);
+
+  // Process the raw data and set state in useEffect
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (rawData?.ServiceDefinitions?.[0]?.attributes) {
+      setCurActive(rawData?.ServiceDefinitions?.[0].isActive);
+      setHelpText(rawData?.ServiceDefinitions?.[0]?.additionalFields?.fields?.[0]?.value?.helpText);
+      let temp_data = rawData?.ServiceDefinitions?.[0]?.attributes;
+      let formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
+      let nvd = formatted_data.filter((value, index, self) => index === self.findIndex((t) => t.id === value.id));
+      setData(nvd);
+    }
+  }, [rawData]);
 
   useEffect(() => {
     if (data) {
@@ -180,6 +182,9 @@ const UpdateChecklist = () => {
   }
 
   const LocalisationCodeUpdate = (temp) => {
+    if (!temp || temp === undefined || temp === null) {
+      return "";
+    }
     return temp.toUpperCase().replace(/ /g, "_");
   };
 

@@ -31,6 +31,12 @@ const remoteConfigSlice = createSlice({
         state.pageType = dummyConfig?.type || "object";
         state.responseData = null;
       }
+      // Clear field selection state when initializing new page config
+      state.selectedField = null;
+      state.selectedFieldPath = { cardIndex: null, fieldIndex: null };
+      state.currentScreen = null;
+      state.currentCard = null;
+      state.isFieldSelected = false;
     },
     setRemoteData(state, action) {
       state.remoteData = action.payload;

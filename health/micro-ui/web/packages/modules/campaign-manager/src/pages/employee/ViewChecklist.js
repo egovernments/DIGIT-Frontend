@@ -44,20 +44,22 @@ const ViewChecklist = () => {
       },
       includeDeleted: true,
     },
-    config: {
-      select: (res) => {
-        if (res?.ServiceDefinitions?.[0]?.attributes) {
-          setServiceDefId(res?.ServiceDefinitions?.[0]?.id);
-          setHelpText(res?.ServiceDefinitions?.[0]?.additionalFields?.fields?.[0]?.value?.helpText);
-          const temp_data = res?.ServiceDefinitions?.[0]?.attributes;
-          const formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
-          const nvd = formatted_data.filter((value, index, self) => index === self.findIndex((t) => t.id === value.id));
-          return nvd;
-        }
-      },
-    },
   };
-  const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(res);
+  const { isLoading, data: rawData, isFetching } = Digit.Hooks.useCustomAPIHook(res);
+
+  // Process the raw data and set state in useEffect
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (rawData?.ServiceDefinitions?.[0]?.attributes) {
+      setServiceDefId(rawData?.ServiceDefinitions?.[0]?.id);
+      setHelpText(rawData?.ServiceDefinitions?.[0]?.additionalFields?.fields?.[0]?.value?.helpText);
+      const temp_data = rawData?.ServiceDefinitions?.[0]?.attributes;
+      const formatted_data = temp_data.map((item) => item.additionalFields?.fields?.[0]?.value);
+      const nvd = formatted_data.filter((value, index, self) => index === self.findIndex((t) => t.id === value.id));
+      setData(nvd);
+    }
+  }, [rawData]);
 
   useEffect(() => {
     if (data) {
@@ -85,26 +87,6 @@ const ViewChecklist = () => {
             serviceDefIds: [serviceDefId],
           },
         },
-        config: {
-          select: (res) => {
-            if (res?.Services?.[0]?.auditDetails) {
-              const lastModifiedTime = res?.Services?.[0]?.auditDetails?.lastModifiedTime;
-              if (lastModifiedTime) {
-                const modifiedDate = new Date(lastModifiedTime);
-                const today = new Date();
-                const isToday =
-                  modifiedDate.getDate() === today.getDate() &&
-                  modifiedDate.getMonth() === today.getMonth() &&
-                  modifiedDate.getFullYear() === today.getFullYear();
-
-                if (isToday) {
-                  setUpdateDisable(true);
-                }
-              }
-            }
-            return res;
-          },
-        },
       });
     }
   }, [serviceDefId, tenantId]);
@@ -113,6 +95,25 @@ const ViewChecklist = () => {
   const { isLoading: secondLoading, data: secondData } = Digit.Hooks.useCustomAPIHook(
     serviceResponseParam || {} // Provide an empty object if params are not set
   );
+
+  // Handle the update disable logic in a separate useEffect
+  useEffect(() => {
+    if (secondData?.Services?.[0]?.auditDetails) {
+      const lastModifiedTime = secondData?.Services?.[0]?.auditDetails?.lastModifiedTime;
+      if (lastModifiedTime) {
+        const modifiedDate = new Date(lastModifiedTime);
+        const today = new Date();
+        const isToday =
+          modifiedDate.getDate() === today.getDate() &&
+          modifiedDate.getMonth() === today.getMonth() &&
+          modifiedDate.getFullYear() === today.getFullYear();
+
+        if (isToday) {
+          setUpdateDisable(true);
+        }
+      }
+    }
+  }, [secondData]);
   function organizeQuestions(questions) {
     // Deep clone the questions to avoid mutating the original tempFormData
     const clonedQuestions = JSON.parse(JSON.stringify(questions));

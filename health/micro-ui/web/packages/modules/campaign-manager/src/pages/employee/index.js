@@ -26,7 +26,7 @@ const ConfigureApp = lazyWithFallback(
 
 const CreateChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "create-checklist" */ "./CreateChecklist"),
-  () => require("./CreateChecklist").CreateChecklist,
+  () => require("./CreateChecklist").default,
   { loaderText: "Loading Create Checklist..." }
 );
 

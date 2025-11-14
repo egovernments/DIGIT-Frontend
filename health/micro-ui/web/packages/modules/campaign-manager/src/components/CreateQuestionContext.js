@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useReducer, createContext, act } from "react";
 import CreateQuestion from "./CreateQuestion";
-import { temp_data, CreateChecklist } from "../pages/employee/CreateChecklist";
 import data_hook from "../hooks/data_hook";
 const QuestionContext = createContext();
 
