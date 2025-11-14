@@ -113,15 +113,23 @@ export const UICustomizations = {
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
-          return value && value?.length>0
-            ? <span>{t(`WF_INBOX_${value}`)}</span>: <span>{t("NA")}</span>;
+          return value && value?.length > 0 ? <span>{t(`WF_INBOX_${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
-          return value ? <span>{value}</span> : <span>{t("NA")}</span>;
+          return <span>{value?.assignes?.[0]?.name || t("NA")}</span>; // simplified and tightened
 
         case "WF_INBOX_HEADER_CREATED_DATE":
-          const dateLabel = Number.isFinite(value) && value > 0 ? new Date(value).toLocaleDateString() : t("ES_COMMON_NA");
-          return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
+          if (!value || value <= 0) {
+            return <Tag label={t("ES_COMMON_NA")} showIcon={false} type="error" />;
+          }
+          const createdDate = new Date(value);
+          const createdDay = createdDate.getDate();
+          const createdMonthKeys = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+          const createdMonth = t(`PGR_INBOX_${createdMonthKeys[createdDate.getMonth()]}`);
+          const createdYear = createdDate.getFullYear().toString().slice(-2);
+          const createdDateLabel = `${createdDay} ${createdMonth} ${createdYear}`;
+          return <Tag label={createdDateLabel} showIcon={false} type="success" />;
+
         default:
           return t("ES_COMMON_NA");
       }

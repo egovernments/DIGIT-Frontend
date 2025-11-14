@@ -1382,4 +1382,19 @@ tbody {
     margin-top: 0.5rem;
     margin-bottom: 0;
   }
+
+  .selector-button-border{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tag-container .tag .text {
+    cursor: default;
+  }
+}
+
+.pgr-inbox-wrapper .digit-inbox-search-links-header {
+  position: relative;
+  right: 2.3rem;
 }
