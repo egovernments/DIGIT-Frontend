@@ -235,28 +235,46 @@ const ApplicationPreview = () => {
 
     setIsSubmittingAction(true);
     try {
-      // Get the business service from workflow response
-      const businessService = workflowResponse?.[0]?.businessService || "PT.CREATE";
+      // Fetch the latest property details first
+      const propertySearchResponse = await Digit.CustomService.getResponse({
+        url: "/property-services/property/_search",
+        method: "POST",
+        params: {
+          tenantId,
+          acknowledgementIds: applicationNumber
+        },
+        body: {}
+      });
 
-      const workflowPayload = {
-        ProcessInstances: [{
-          tenantId: tenantId,
-          businessService: businessService,
-          businessId: applicationNumber,
-          action: selectedAction.action,
-          comment: comments,
-          moduleName: "PT",
-          assignes: workflowResponse?.[0]?.assignes || []
-        }]
+      if (!propertySearchResponse?.Properties || propertySearchResponse.Properties.length === 0) {
+        throw new Error("Property not found");
+      }
+
+      const propertyData = propertySearchResponse.Properties[0];
+
+      // Remove workflow field from propertyData (if it exists)
+      const { workflow, ...propertyDataWithoutWorkflow } = propertyData;
+
+      // Create the property update payload matching production format
+      // Production only uses indexed workflow data (0: {comment, assignee})
+      // NO separate workflow object
+      const propertyUpdatePayload = {
+        Property: {
+          0: {
+            comment: comments,
+            assignee: []
+          },
+          ...propertyDataWithoutWorkflow
+        }
       };
 
       const response = await Digit.CustomService.getResponse({
-        url: "/egov-workflow-v2/egov-wf/process/_transition",
+        url: "/property-services/property/_update",
         method: "POST",
-        body: workflowPayload,
+        body: propertyUpdatePayload,
       });
 
-      if (response && response.ProcessInstances && response.ProcessInstances.length > 0) {
+      if (response && response.Properties && response.Properties.length > 0) {
         setToast({
           label: t("PT_ACTION_SUCCESS"),
           type: "success"
