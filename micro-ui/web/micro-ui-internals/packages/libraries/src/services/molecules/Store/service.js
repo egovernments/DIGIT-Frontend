@@ -5,24 +5,14 @@ import { ApiCacheService } from "../../atoms/ApiCacheService";
 import { TenantConfigSearch } from "../../elements/TenantConfigService";
 
 const getImgUrl = (url, fallbackUrl) => {
-  console.log("getImgUrl called with:", url);
 
   if (!url && fallbackUrl) {
-    console.log("getImgUrl returning fallback:", fallbackUrl);
     return fallbackUrl;
-  }
-  // If URL has S3 signed parameters (X-Amz-*), return as-is without transformation
-  if (url?.includes("X-Amz-")) {
-    console.log("getImgUrl - URL has signed params, returning as-is:", url);
-    return url;
   }
   if (url?.includes("s3.ap-south-1.amazonaws.com")) {
     const baseDomain = window?.location?.origin;
-    const transformed = url.replace("https://s3.ap-south-1.amazonaws.com", baseDomain);
-    console.log("getImgUrl - Transforming URL from:", url, "to:", transformed);
-    return transformed;
+    return url.replace("https://s3.ap-south-1.amazonaws.com", baseDomain);
   }
-  console.log("getImgUrl - Returning URL unchanged:", url);
   return url;
 };
 const addLogo = (id, url, fallbackUrl = "") => {
@@ -120,78 +110,22 @@ export const StoreService = {
         .filter(doc => doc.type === "bannerUrl")
         .map(doc => doc.fileStoreId);
       const logoUrl = await Digit.UploadServices.Filefetch(logoArray, tenantConfigSearch?.[0]?.code);
-      const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code);
-
-      console.log("=== FILESTORE API RESPONSE ===");
-      console.log("Full logoUrl Response:", logoUrl);
-      console.log("logoUrl.data:", logoUrl?.data);
-      console.log("logoUrl.data.fileStoreIds:", logoUrl?.data?.fileStoreIds);
-      console.log("logoUrl.data.fileStoreIds[0]:", logoUrl?.data?.fileStoreIds?.[0]);
-      console.log("EXTRACTED URL from logoUrl.data.fileStoreIds[0].url:", logoUrl?.data?.fileStoreIds?.[0]?.url);
-      console.log("Full bannerUrl Response:", bannerUrl);
-      console.log("EXTRACTED URL from bannerUrl.data.fileStoreIds[0].url:", bannerUrl?.data?.fileStoreIds?.[0]?.url);
-      console.log("=== END FILESTORE API RESPONSE ===");
-
+      const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code)
       const formattedLanguages = tenantConfigSearch?.[0]?.languages?.map(lang => ({
         label: lang,
         value: lang
       })) || [];
-
-      const extractedLogoUrl = logoUrl?.data?.fileStoreIds?.[0]?.url;
-      const extractedBannerUrl = bannerUrl?.data?.fileStoreIds?.[0]?.url;
-      const fallbackLogoUrl = tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url;
-      const fallbackBannerUrl = tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url;
-
-      // Get fileStore IDs for constructing proxy URLs if needed
-      const logoFileStoreId = logoUrl?.data?.fileStoreIds?.[0]?.id;
-      const bannerFileStoreId = bannerUrl?.data?.fileStoreIds?.[0]?.id;
-
-      // Transform unsigned S3 URLs to use filestore service as proxy
-      const transformS3Url = (url, fileStoreId) => {
-        if (!url) return url;
-
-        // If URL has signed parameters (X-Amz-*), use it as-is - it will work
-        if (url.includes("X-Amz-")) {
-          console.log("URL has signed params, using as-is:", url);
-          return url;
-        }
-
-        // If URL is unsigned S3 URL and we have fileStoreId, use filestore service as proxy
-        if (url.includes(".s3.ap-south-1.amazonaws.com/") && fileStoreId) {
-          const tenantId = tenantConfigSearch?.[0]?.code;
-          const proxyUrl = `/filestore/v1/files/id?tenantId=${tenantId}&fileStoreId=${fileStoreId}`;
-          console.log("Transforming unsigned S3 URL to filestore proxy:", url, "->", proxyUrl);
-          return proxyUrl;
-        }
-
-        console.log("Returning URL unchanged:", url);
-        return url;
-      };
-
-      const rawLogoUrl = tenantConfigFetch ? extractedLogoUrl ? extractedLogoUrl : fallbackLogoUrl : stateInfo.logoUrl;
-      const rawBannerUrl = tenantConfigFetch ? extractedBannerUrl ? extractedBannerUrl : fallbackBannerUrl : stateInfo.bannerUrl;
-
-      const finalLogoUrl = transformS3Url(rawLogoUrl, logoFileStoreId);
-      const finalBannerUrl = transformS3Url(rawBannerUrl, bannerFileStoreId);
-
-      console.log("=== FINAL URLs ===");
-      console.log("finalLogoUrl to be set:", finalLogoUrl);
-      console.log("finalBannerUrl to be set:", finalBannerUrl);
-      console.log("Has X-Amz in logoUrl?", finalLogoUrl?.includes("X-Amz-"));
-      console.log("Has X-Amz in bannerUrl?", finalBannerUrl?.includes("X-Amz-"));
-      console.log("=== END FINAL URLs ===");
-
       return {
         languages: tenantConfigSearch?.[0]?.languages? formattedLanguages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
         stateInfo: {
           code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
           name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
-          logoUrl: finalLogoUrl,
+          logoUrl: tenantConfigFetch ? logoUrl?.data?.fileStoreIds?.[0]?.url ? logoUrl?.data?.fileStoreIds?.[0]?.url : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
           statelogo: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "statelogo")?.url : stateInfo.statelogo,
           logoUrlWhite: tenantConfigFetch
             ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrlWhite")?.url
             : stateInfo.logoUrlWhite,
-          bannerUrl: finalBannerUrl,
+          bannerUrl: tenantConfigFetch ? bannerUrl?.data?.fileStoreIds?.[0]?.url  ? bannerUrl?.data?.fileStoreIds?.[0]?.url : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
         },
         localizationModules: stateInfo.localizationModules,
         modules:
