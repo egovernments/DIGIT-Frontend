@@ -252,19 +252,36 @@ const ApplicationPreview = () => {
 
       const propertyData = propertySearchResponse.Properties[0];
 
-      // Remove workflow field from propertyData (if it exists)
-      const { workflow, ...propertyDataWithoutWorkflow } = propertyData;
+      // Get workflow from latest workflow response
+      const businessService = workflowResponse?.[0]?.businessService || "PT.CREATE";
 
-      // Create the property update payload matching production format
-      // Production only uses indexed workflow data (0: {comment, assignee})
-      // NO separate workflow object
+      // Update the workflow object with the action
+      const updatedWorkflow = {
+        id: null,
+        tenantId: tenantId,
+        businessService: businessService,
+        businessId: applicationNumber,
+        action: selectedAction.action,
+        moduleName: "PT",
+        state: null,
+        comment: null,
+        documents: null,
+        assignes: null
+      };
+
+      // Create the property update payload matching production format exactly
+      // Production uses:
+      // 1. Property with indexed "0" for comments
+      // 2. workflow object with action inside Property
+      // NOTE: RequestInfo will be automatically added by Digit.CustomService.getResponse
       const propertyUpdatePayload = {
         Property: {
           0: {
             comment: comments,
             assignee: []
           },
-          ...propertyDataWithoutWorkflow
+          ...propertyData,
+          workflow: updatedWorkflow
         }
       };
 
