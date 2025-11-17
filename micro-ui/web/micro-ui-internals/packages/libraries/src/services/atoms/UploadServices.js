@@ -39,13 +39,26 @@ export const UploadServices = {
     let tenantInfo=window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")?`?tenantId=${tenantId}`:"";
     var config = {
       method: "get",
-      url:`${Urls.FileFetch}${tenantInfo}`, 
+      url:`${Urls.FileFetch}${tenantInfo}`,
       params: {
         tenantId: tenantId,
         fileStoreIds: filesArray?.join(","),
       },
     };
+    console.log("=== UploadServices.Filefetch REQUEST ===");
+    console.log("Request URL:", `${Urls.FileFetch}${tenantInfo}`);
+    console.log("Request params:", config.params);
+    console.log("Full request config:", config);
+
     const res = await Axios(config);
+
+    console.log("=== UploadServices.Filefetch RESPONSE ===");
+    console.log("Response status:", res.status);
+    console.log("Response data:", res.data);
+    console.log("First URL in response:", res.data?.fileStoreIds?.[0]?.url);
+    console.log("Has X-Amz in first URL?", res.data?.fileStoreIds?.[0]?.url?.includes("X-Amz-"));
+    console.log("=== END UploadServices.Filefetch ===");
+
     return res;
   },
 };

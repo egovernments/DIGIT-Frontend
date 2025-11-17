@@ -34,28 +34,34 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
     <Provider store={data}>
       <Router>
         <BodyContainer>
-          {Digit.Utils.getMultiRootTenant() ? (
-            <DigitAppWrapper
-              initData={initData}
-              stateCode={stateCode}
-              modules={initData?.modules}
-              appTenants={initData.tenants}
-              logoUrl={initData?.stateInfo?.logoUrl}
-              logoUrlWhite={initData?.stateInfo?.logoUrlWhite}
-              defaultLanding={defaultLanding}
-              allowedUserTypes={allowedUserTypes}
-            />
-          ) : (
-            <DigitApp
-              initData={initData}
-              stateCode={stateCode}
-              modules={initData?.modules}
-              appTenants={initData.tenants}
-              logoUrl={initData?.stateInfo?.logoUrl}
-              defaultLanding={defaultLanding}
-              allowedUserTypes={allowedUserTypes}
-            />
-          )}
+          {(() => {
+            console.log("=== Module.js - Passing URLs to Components ===");
+            console.log("initData.stateInfo.logoUrl:", initData?.stateInfo?.logoUrl);
+            console.log("initData.stateInfo.logoUrlWhite:", initData?.stateInfo?.logoUrlWhite);
+            console.log("=== END Module.js URLs ===");
+            return Digit.Utils.getMultiRootTenant() ? (
+              <DigitAppWrapper
+                initData={initData}
+                stateCode={stateCode}
+                modules={initData?.modules}
+                appTenants={initData.tenants}
+                logoUrl={initData?.stateInfo?.logoUrl}
+                logoUrlWhite={initData?.stateInfo?.logoUrlWhite}
+                defaultLanding={defaultLanding}
+                allowedUserTypes={allowedUserTypes}
+              />
+            ) : (
+              <DigitApp
+                initData={initData}
+                stateCode={stateCode}
+                modules={initData?.modules}
+                appTenants={initData.tenants}
+                logoUrl={initData?.stateInfo?.logoUrl}
+                defaultLanding={defaultLanding}
+                allowedUserTypes={allowedUserTypes}
+              />
+            );
+          })()}
         </BodyContainer>
       </Router>
     </Provider>
