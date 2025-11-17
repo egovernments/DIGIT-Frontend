@@ -40,7 +40,7 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
       ? { startDate: "", endDate: "", title: "" } // Empty dateRange if start and end are the same
       : dateRange;
 
-    onSubmit(billID, finalDateRange);
+    onSubmit(billID, finalDateRange, selectedBillType);
   };
 
   const handleClear = () => {
@@ -86,7 +86,7 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
           optionKey="name"
           selected={selectedBillType}
           select={(value) => {
-            if (value.code === "AGGREGATEBILL") {
+            if (value.code === "FINAL_AGGREGATE") {
               setIsDisabled(true);
               setDateRange({ startDate: "", endDate: "", title: "" });
             } else {

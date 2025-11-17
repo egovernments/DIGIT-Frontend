@@ -87,10 +87,16 @@ const BillInboxTable = ({ ...props }) => {
         return (
           <Button
             label={t(`${row.id}`)}
-            onClick={() =>
-              history.push(`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`, {
-                fromCampaignSupervisor: true,
-              })
+            onClick={
+              props?.selectedPeriod?.id === "AGGREGATE"
+                ? () => {}
+                : () =>
+                    history.push(
+                      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`,
+                      {
+                        fromCampaignSupervisor: true,
+                      }
+                    )
             }
             title={t(`${row.id}`)}
             variation="link"
@@ -189,7 +195,7 @@ const BillInboxTable = ({ ...props }) => {
           paginationServer
           customStyles={tableCustomStyle(true)}
           paginationDefaultPage={props?.currentPage}
-          onRowClicked={handleRowClick}
+          onRowClicked={props?.selectedPeriod?.id === "AGGREGATE" ? () => {} : handleRowClick}
           pointerOnHover
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handlePerRowsChange}

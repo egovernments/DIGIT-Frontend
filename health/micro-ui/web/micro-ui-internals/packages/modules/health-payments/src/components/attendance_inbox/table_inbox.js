@@ -81,8 +81,11 @@ const CustomInboxTable = ({
           <Button
             label={t(`${row.id}`)}
             onClick={() => {
-              const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
-              const endDate = existingPaymentInbox?.selectedProject?.endDate;
+              // const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+              // const endDate = existingPaymentInbox?.selectedProject?.endDate;
+
+              const selectedP = Digit.SessionStorage.get("selectedPeriod");
+              const endDate = selectedP?.periodEndDate;
 
               if (endDate) {
                 const currentDate = Date.now();
@@ -158,8 +161,11 @@ const CustomInboxTable = ({
   }
 
   const handleRowClick = (row) => {
-    const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
-    const endDate = existingPaymentInbox?.selectedProject?.endDate;
+    // const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+    // const endDate = existingPaymentInbox?.selectedProject?.endDate;
+
+    const selectedP = Digit.SessionStorage.get("selectedPeriod");
+    const endDate = selectedP?.periodEndDate;
 
     if (endDate) {
       const currentDate = Date.now();
@@ -217,7 +223,7 @@ const CustomInboxTable = ({
                 itemStyle={{ width: "290px" }}
                 configNavItems={[
                   {
-                    code: "PENDINGFORAPPROVAL",
+                    code: "PENDING",
                     name: `${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`,
                   },
                   {

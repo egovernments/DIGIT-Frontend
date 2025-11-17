@@ -18,6 +18,7 @@ const MyBills = () => {
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
 
   // State Variables
+  const [periodType, setPeriodType] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [billID, setBillID] = useState(null);
   const [dateRange, setDateRange] = useState({
@@ -46,10 +47,21 @@ const MyBills = () => {
           limit: limitAndOffset.limit,
           offset: limitAndOffset.offset,
         },
-        billingPeriodId: findAllOverlappingPeriods(
-          dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
-          dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
-        ).map((x) => x?.id),
+        billingPeriodId:
+          periodType && periodType?.code == "FINAL_AGGREGATE"
+            ? []
+            : findAllOverlappingPeriods(
+                dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
+                dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+              ).map((x) => x?.id),
+        // TODO: need to add here
+
+        ...(periodType && periodType?.code == "FINAL_AGGREGATE"
+          ? {
+              isAggregate: periodType != null ? true : false,
+              billingType: periodType?.code,
+            }
+          : {}),
       },
     },
     config: {
@@ -146,16 +158,18 @@ const MyBills = () => {
 
   useEffect(() => {
     refetchBill();
-  }, [billID, dateRange, limitAndOffset]);
+  }, [billID, dateRange, limitAndOffset, periodType]);
 
-  const onSubmit = (billID, dateRange) => {
+  const onSubmit = (billID, dateRange, selectedBillType) => {
     setBillID(billID);
     setDateRange(dateRange);
+    setPeriodType(selectedBillType);
   };
 
   const onClear = () => {
     setDateRange({ startDate: "", endDate: "", title: "" });
     setBillID("");
+    setPeriodType(null);
   };
 
   if (isBillLoading) {

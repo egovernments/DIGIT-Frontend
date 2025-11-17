@@ -499,7 +499,6 @@ import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
 import { renderProjectPeriod } from "../../utils/time_conversion";
 
-
 /**
  * @returns {React.ReactElement} BillInboxComponent
  * @description
@@ -578,7 +577,8 @@ const BillInboxComponent = () => {
       offset: limitAndOffset?.offset,
       referenceId: selectedProject == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
       localityCode: selectedBoundaryCode,
-      reviewStatus: activeLink.code,
+      //reviewStatus: activeLink.code,
+      registerPeriodStatus: activeLink.code,
       isChildrenRequired: selectedLevel != null && selectedLevel?.code === lowestLevelBoundaryType ? true : false,
       billingPeriodId: pId,
     },
@@ -610,7 +610,9 @@ const BillInboxComponent = () => {
         tenantId: tenantId,
         localityCode: selectedBoundaryCode,
         referenceIds: [project?.[0]?.id],
-        billingPeriodId: pId,
+        billingPeriodId: [pId],
+        // TODO: need to add here
+        ...(pId === "AGGREGATE" ? { isAggregate: pId === "AGGREGATE" ? true : false, billingType: pId } : {}),
       },
     },
     config: {
@@ -745,6 +747,7 @@ const BillInboxComponent = () => {
               localityCode: selectedBoundaryCode,
               referenceId: selectedProject.id,
               billingPeriodId: pId,
+              //billingType: pId === "FINAL_AGGREGATE" ? "FINAL_AGGREGATE" : "INTERMEDIATE",
             },
           },
         },
@@ -878,7 +881,7 @@ const BillInboxComponent = () => {
                           name: `${`${t(`HCM_AM_APPROVED_REGISTER`)} (${approvalCount})`}`,
                         },
                         {
-                          code: "PENDINGFORAPPROVAL",
+                          code: "PENDING",
                           name: `${`${t(`HCM_AM_PENDING_REGISTER`)} (${pendingApprovalCount})`}`,
                         },
                       ]}

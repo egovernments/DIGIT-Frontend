@@ -325,7 +325,8 @@ const AttendanceInboxComponent = () => {
                   ? Digit.SessionStorage.get("paymentInbox").code
                   : filterCriteria?.code
                 : filterData?.code,
-            reviewStatus: status == undefined ? selectedStatus : status,
+            // reviewStatus: status == undefined ? selectedStatus : status,
+            registerPeriodStatus:status == undefined ? selectedStatus : status,
             isChildrenRequired: true,
             billingPeriodId: periodId, // Use the latest period ID
           },

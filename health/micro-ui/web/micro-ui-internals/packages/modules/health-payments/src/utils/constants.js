@@ -1,5 +1,6 @@
 export const StatusEnum = Object.freeze({
-  PENDING_FOR_APPROVAL: "PENDINGFORAPPROVAL",
+  // PENDING_FOR_APPROVAL: "PENDINGFORAPPROVAL",
+  PENDING_FOR_APPROVAL: "PENDING",
   APPROVED: "APPROVED",
 });
 
@@ -19,6 +20,7 @@ export const defaultPaginationValuesForEditAttendee = [5, 10, 15, 20, 25];
 // For type of Bill
 
 export const billTypeOptions = [
-  { name: "ES_INDIVIDUAL_BILL", code: "INDIVIDUALBILL" },
-  { name: "ES_AGGREGATE_BILL", code: "AGGREGATEBILL" },
+  { name: "ES_INDIVIDUAL_BILL", code: "INTERMEDIATE" },
+  { name: "ES_AGGREGATE_BILL", code: "FINAL_AGGREGATE" },
 ];
+//FINAL_AGGREGATE,INTERMEDIATE

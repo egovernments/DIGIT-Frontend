@@ -98,13 +98,15 @@ export const findAllOverlappingPeriods = (startDate, endDate) => {
 
   if (!Array.isArray(periods) || !startDate || !endDate) return [];
 
-  return periods.filter((period) => {
+  const rdata = periods.filter((period) => {
     const periodStart = period.periodStartDate;
     const periodEnd = period.periodEndDate;
 
     // Overlap logic: true if ranges intersect at all
     return !(endDate < periodStart || startDate > periodEnd);
   });
+
+  return rdata;
 };
 
 // export const getValidPeriods = (periods) => {
