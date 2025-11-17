@@ -1422,3 +1422,33 @@ tbody {
   position: relative;
   right: 2.3rem;
 }
+
+/* PGR Response ActionBar Button Styling */
+.pgr-response-btn {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  gap: 0.5rem;
+  width: 20.813rem;
+  height: 2.5rem;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 0.5rem;
+}
+
+.create-complaint-btn {
+  background: #FFFFFF;
+  border: 1px solid #C84C0E;
+}
+
+.back-btn {
+  background: #C84C0E;
+  border: 1px solid #C84C0E;
+  margin-right: 6rem;
+}
+
+/* PGR Response ActionBar Styling - buttons at opposite ends */
