@@ -114,22 +114,49 @@ export const StoreService = {
         .filter(doc => doc.type === "bannerUrl")
         .map(doc => doc.fileStoreId);
       const logoUrl = await Digit.UploadServices.Filefetch(logoArray, tenantConfigSearch?.[0]?.code);
-      const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code)
+      const bannerUrl = await Digit.UploadServices.Filefetch(bannerArray, tenantConfigSearch?.[0]?.code);
+
+      console.log("=== FILESTORE API RESPONSE ===");
+      console.log("Full logoUrl Response:", logoUrl);
+      console.log("logoUrl.data:", logoUrl?.data);
+      console.log("logoUrl.data.fileStoreIds:", logoUrl?.data?.fileStoreIds);
+      console.log("logoUrl.data.fileStoreIds[0]:", logoUrl?.data?.fileStoreIds?.[0]);
+      console.log("EXTRACTED URL from logoUrl.data.fileStoreIds[0].url:", logoUrl?.data?.fileStoreIds?.[0]?.url);
+      console.log("Full bannerUrl Response:", bannerUrl);
+      console.log("EXTRACTED URL from bannerUrl.data.fileStoreIds[0].url:", bannerUrl?.data?.fileStoreIds?.[0]?.url);
+      console.log("=== END FILESTORE API RESPONSE ===");
+
       const formattedLanguages = tenantConfigSearch?.[0]?.languages?.map(lang => ({
         label: lang,
         value: lang
       })) || [];
+
+      const extractedLogoUrl = logoUrl?.data?.fileStoreIds?.[0]?.url;
+      const extractedBannerUrl = bannerUrl?.data?.fileStoreIds?.[0]?.url;
+      const fallbackLogoUrl = tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url;
+      const fallbackBannerUrl = tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url;
+
+      const finalLogoUrl = tenantConfigFetch ? extractedLogoUrl ? extractedLogoUrl : fallbackLogoUrl : stateInfo.logoUrl;
+      const finalBannerUrl = tenantConfigFetch ? extractedBannerUrl ? extractedBannerUrl : fallbackBannerUrl : stateInfo.bannerUrl;
+
+      console.log("=== FINAL URLs ===");
+      console.log("finalLogoUrl to be set:", finalLogoUrl);
+      console.log("finalBannerUrl to be set:", finalBannerUrl);
+      console.log("Has X-Amz in logoUrl?", finalLogoUrl?.includes("X-Amz-"));
+      console.log("Has X-Amz in bannerUrl?", finalBannerUrl?.includes("X-Amz-"));
+      console.log("=== END FINAL URLs ===");
+
       return {
         languages: tenantConfigSearch?.[0]?.languages? formattedLanguages : [{ label: "ENGLISH", value: Digit.Utils.getDefaultLanguage() }],
         stateInfo: {
           code: tenantConfigFetch ? tenantConfigSearch?.[0]?.code : stateInfo.code,
           name: tenantConfigFetch ? tenantConfigSearch?.[0]?.name : stateInfo.name,
-          logoUrl: tenantConfigFetch ? logoUrl?.data?.fileStoreIds?.[0]?.url ? logoUrl?.data?.fileStoreIds?.[0]?.url : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrl")?.url : stateInfo.logoUrl,
+          logoUrl: finalLogoUrl,
           statelogo: tenantConfigFetch ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "statelogo")?.url : stateInfo.statelogo,
           logoUrlWhite: tenantConfigFetch
             ? tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "logoUrlWhite")?.url
             : stateInfo.logoUrlWhite,
-          bannerUrl: tenantConfigFetch ? bannerUrl?.data?.fileStoreIds?.[0]?.url  ? bannerUrl?.data?.fileStoreIds?.[0]?.url : tenantConfigSearch?.[0]?.documents?.find((item) => item.type === "bannerUrl")?.url : stateInfo.bannerUrl,
+          bannerUrl: finalBannerUrl,
         },
         localizationModules: stateInfo.localizationModules,
         modules:
