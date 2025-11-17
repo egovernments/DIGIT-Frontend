@@ -9,6 +9,10 @@ const getImgUrl = (url, fallbackUrl) => {
   if (!url && fallbackUrl) {
     return fallbackUrl;
   }
+  // If URL has S3 signed parameters (X-Amz-*), return as-is without transformation
+  if (url?.includes("X-Amz-")) {
+    return url;
+  }
   if (url?.includes("s3.ap-south-1.amazonaws.com")) {
     const baseDomain = window?.location?.origin;
     return url.replace("https://s3.ap-south-1.amazonaws.com", baseDomain);

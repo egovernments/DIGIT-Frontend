@@ -22,12 +22,16 @@
     // Function to get page title based on URL
     function getPageTitle(url) {
       try {
+        // Check for exact full URL matches first
+        if (url === "https://sandbox-prod.digit.org/sandbox-ui/" || url === "https://sandbox-prod.digit.org/sandbox-ui") {
+          return "Sandbox Sign Up Page";
+        }
+
         const pathname = new URL(url).pathname;
         const path = pathname.replace(/^\/+|\/+$/g, ''); // Remove leading/trailing slashes
         // Define URL → Page Title mappings
         const pageTitleMap = {
           // Sandbox User Journeys
-          "sandbox-ui": "Sandbox Sign Up Page",
           "user/sign-up": "Sandbox Sign Up Page",
           "sandbox-ui/login": "Sandbox Login Page",
           "user/login": "Sandbox Login Page",
