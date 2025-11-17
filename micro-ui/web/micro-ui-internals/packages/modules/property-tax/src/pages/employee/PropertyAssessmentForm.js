@@ -987,11 +987,6 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         noOfFloors: parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1,
         landArea: String(parseFloat(conditionalFields.plotSize) || 0),
         superBuiltUpArea: null,
-        workflow: {
-          businessService: "PT.CREATE",
-          action: isUpdateMode ? "OPEN" : "OPEN",
-          moduleName: "PT"
-        },
         additionalDetails: {
           yearConstruction: propertyAddress.yearOfCreation?.code || propertyAddress.yearOfCreation || null,
           vasikaNo: assessmentInfo.vasikaNo || null,
