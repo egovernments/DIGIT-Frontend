@@ -16,7 +16,7 @@
   "dependencies": {
     "@egovernments/digit-ui-module-health-hrms":"0.0.1",
     "@egovernments/digit-ui-module-health-pgr": "0.0.2",
-    "@egovernments/digit-ui-libraries": "1.9.0",
+    "@egovernments/digit-ui-libraries": "1.9.2",
     "@egovernments/digit-ui-module-core": "1.9.0",
     "@egovernments/digit-ui-module-utilities": "1.1.0",
     "@egovernments/digit-ui-react-components": "1.9.0",

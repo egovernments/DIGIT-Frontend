@@ -202,6 +202,13 @@ const PGRDetails = () => {
     }
   }, [toast?.show]);
 
+  // Reload assignment_status when modal closes
+  useEffect(() => {
+    if (!openModal) {
+      pgrSearchRevalidate();
+    }
+  }, [openModal]);
+
   const handleToastClose = () => {
     setToast({ show: false, label: "", type: "" });
   };
@@ -325,6 +332,7 @@ const PGRDetails = () => {
   // Display loader until required data loads
   if (isLoading || isMDMSLoading || isWorkflowLoading) return <Loader />;
 
+
   return (
     <React.Fragment>
       {/* Header */}
@@ -368,8 +376,8 @@ const PGRDetails = () => {
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
-                    value: pgrData?.ServiceWrappers?.[0]?.workflow?.assignes?.length > 0
-                    ? t("WF_INBOX_ASSIGNED") : t("WF_INBOX_PENDING_ASSIGNMENT")
+                    value: pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus
+                    ? t(`WF_INBOX_${pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus}`) : t("WF_INBOX_PENDING_ASSIGNMENT")
                   },
                   {
                     inline: true,

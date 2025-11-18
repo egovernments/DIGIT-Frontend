@@ -56,8 +56,7 @@ export const UserService = {
     finally {
       window.localStorage.clear();
       window.sessionStorage.clear();
-      window.location.replace(`/${logoutRedirectURL}`);
-      
+      window.location.replace(`${window.location.origin}/${logoutRedirectURL}`);
     }
   },
   sendOtp: (details, stateCode) =>

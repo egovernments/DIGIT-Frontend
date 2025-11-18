@@ -70,8 +70,14 @@ export const CreateComplaintConfig = {
                 name: "complaintUser",
                 optionsKey: "name",
                 styles : {
-                  maxWidth : "37.5rem"
+                  maxWidth : "18.5rem",
+                  gap: "2.5rem",
+                  flexDirection: "row"
                   },
+                innerStyles: {
+                  display: "flex",
+                  gap: "2.5rem"
+                },
                 validation: {
                   required: true,
                 },
@@ -98,11 +104,11 @@ export const CreateComplaintConfig = {
               disable: false,
               populators: {
                 name: "ComplainantName",
-                error: "CORE_COMMON_REQUIRED_ERRMSG",
+                error: "CORE_COMMON_APPLICANT_NAME_INVALID",
                 validation: {
                   required: true,
-                  pattern: /^[A-Za-z0-9-_]+$/i,
-                  error: "CORE_COMMON_REQUIRED_ERRMSG"
+                  pattern: /^[\p{L}\p{M}](?:[\p{L}\p{M}\p{Nd}'’\-.\s,]{0,98}[\p{L}\p{M}\p{Nd}])?$/u,
+                  error: "CORE_COMMON_APPLICANT_NAME_INVALID"
                 }
               },
             },

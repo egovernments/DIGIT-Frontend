@@ -24,13 +24,7 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description)}
-        footerChildren={[
-          <Button label={t(`PGR_CREATE_ANOTHER_COMPLAIN`)} onClick={
-            () => {
-              history.push(`/${window.contextPath}/employee/pgr/create-complaint`);
-            }
-          } variation="teritiary" icon="ArrowForward" isSuffix />
-        ]}
+        footerChildren={[]}
         footerStyles={{}}
         iconFill=""
         info={t(state?.info)}
@@ -43,12 +37,22 @@ const Response = () => {
         style={{}}
         type={state?.state}
       ></PanelCard>
-      <ActionBar className="mc_back">
+      <ActionBar className="pgr-response-actionbar" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
         <Button
-          style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
+          className="pgr-response-btn create-complaint-btn"
+          variation="secondary"
+          label={t(`PGR_CREATE_ANOTHER_COMPLAIN`)}
+          icon={"Add"}
+          isSuffix
+          onClick={() => {
+            history.push(`/${window.contextPath}/employee/pgr/create-complaint`);
+          }}
+        />
+        <Button
+          className="pgr-response-btn back-btn"
           variation="primary"
-          label={t(back)}
-          icon={"ArrowBack"}
+          label={t("PGR_BACK_TO_HOME")}
+          icon={"ExitToApp"}
           onClick={() => {
             const backlink = state?.backlink || `/${window.contextPath}/employee/`;
             history.push(backlink);

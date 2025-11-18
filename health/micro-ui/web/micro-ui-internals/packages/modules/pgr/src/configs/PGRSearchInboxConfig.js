@@ -44,7 +44,8 @@ const PGRSearchInboxConfig = () => {
                 minReqFields: 1,
                 defaultValues: {
                   complaintNumber: "",
-                  mobileNumber: ""
+                  mobileNumber: "",
+                  range: ""
                 },
                 fields: [
                     {
@@ -106,13 +107,13 @@ const PGRSearchInboxConfig = () => {
               },
               {
                 label: "WF_INBOX_HEADER_CURRENT_OWNER",
-                jsonPath: "ProcessInstance.assigner.name",
+                jsonPath: "ProcessInstance",
                 additionalCustomization: true,
                 key: "assignee",
               },
               {
                 label: "WF_INBOX_HEADER_CREATED_DATE",
-                jsonPath: "businessObject.service.auditDetails.createdTime",
+                jsonPath: "businessObject.auditDetails.createdTime",
                 additionalCustomization: true,
                 key: "state",
               },
@@ -134,11 +135,7 @@ const PGRSearchInboxConfig = () => {
                 hyperlink: true,
               },
                 ],
-                label: "CS_COMMON_HOME_COMPLAINTS",
-                logoIcon: {
-                    component: "ReceiptInboxIcon",
-                    customClass: "inbox-search-icon--projects"
-                }
+                label: "CS_COMMON_HOME_COMPLAINTS"
             },
             children: {},
             show: true

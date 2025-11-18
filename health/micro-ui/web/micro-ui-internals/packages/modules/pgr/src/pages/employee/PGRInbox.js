@@ -28,7 +28,7 @@ import { useLocation } from "react-router-dom";
 
 const PGRSearchInbox = () => {
   const { t } = useTranslation();
- 
+
 
   // Detect if the user is on a mobile device
   const isMobile = window.Digit.Utils.browser.isMobile();
@@ -36,11 +36,38 @@ const PGRSearchInbox = () => {
   // Get current ULB tenant ID
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  // Get state tenant ID for localization
+  const stateTenantId = Digit.ULBService.getStateId();
+
+  // Get current language for localization
+  const language = Digit.StoreData.getCurrentLanguage();
+
   // Local state to hold the inbox page configuration (filter/search UI structure)
   const [pageConfig, setPageConfig] = useState(null);
 
   // Used to detect route/location changes to trigger config reset
   const location = useLocation();
+
+  // Get selected hierarchy from session storage
+  // Get selected hierarchy from session storage
+  const [selectedHierarchy, setSelectedHierarchy] = useState(
+  Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || null
+  );
+
+  // Construct module code for localization fetch
+  const moduleCode = selectedHierarchy
+    ? [`boundary-${selectedHierarchy?.hierarchyType?.toLowerCase()}`]
+    : [];
+
+  // Fetch localization data for the selected hierarchy
+  // This loads boundary localizations from the module: hcm-boundary-{hierarchyType}
+  const { isLoading: isLocalizationLoading } = Digit.Services.useStore({
+    stateCode: stateTenantId,
+    moduleCode,
+    language,
+    modulePrefix: "hcm",
+    config: { enabled: !!selectedHierarchy && moduleCode.length > 0 },
+  });
 
   // Fetch MDMS config for inbox screen (RAINMAKER-PGR.SearchInboxConfig)
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(
@@ -96,10 +123,10 @@ const PGRSearchInbox = () => {
   /**
    * Show loader until necessary data is available
    */
-  if (isLoading || !pageConfig || serviceDefs?.length === 0) {
+  if (isLoading || isLocalizationLoading || !pageConfig || serviceDefs?.length === 0) {
     return (
          <Loader variant={"PageLoader"} className={"digit-center-loader"} />
-     
+
     );
   }
 
@@ -117,7 +144,7 @@ const PGRSearchInbox = () => {
         {
           <HeaderComponent
             className="digit-inbox-search-composer-header"
-            styles={{ marginBottom: "1.5rem" }}
+            styles={{ marginBottom: "1.5rem",position:"relative",right:"0.5rem" }}
           >
             {t("PGR_SEARCH_RESULTS_HEADING")}
           </HeaderComponent>
