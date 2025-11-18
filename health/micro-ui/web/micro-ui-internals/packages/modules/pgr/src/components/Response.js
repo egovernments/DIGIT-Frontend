@@ -43,7 +43,6 @@ const Response = () => {
           variation="secondary"
           label={t(`PGR_CREATE_ANOTHER_COMPLAIN`)}
           icon={"Add"}
-          isSuffix
           onClick={() => {
             history.push(`/${window.contextPath}/employee/pgr/create-complaint`);
           }}
