@@ -10,6 +10,7 @@ import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
+import ConsoleTooltip from "../../../components/ConsoleToolTip";
 
 // Utility functions for date conversion
 const convertEpochToDateString = (epoch) => {
@@ -1140,7 +1141,10 @@ function NewDrawerFieldComposer() {
   return (
     <Fragment>
       <div className="app-config-drawer-subheader">
-        <div>{t("APPCONFIG_PROPERTIES")}</div>
+        <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_PROPERTIES")}</div>
+        <span className="icon-wrapper new">
+          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
+        </span>
       </div>
       <Divider />
 
