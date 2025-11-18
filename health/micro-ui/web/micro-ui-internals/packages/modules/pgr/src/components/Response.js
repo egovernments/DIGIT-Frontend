@@ -51,7 +51,7 @@ const Response = () => {
         <Button
           className="pgr-response-btn back-btn"
           variation="primary"
-          label={t(back)}
+          label={t("PGR_BACK_TO_HOME")}
           icon={"ExitToApp"}
           onClick={() => {
             const backlink = state?.backlink || `/${window.contextPath}/employee/`;
