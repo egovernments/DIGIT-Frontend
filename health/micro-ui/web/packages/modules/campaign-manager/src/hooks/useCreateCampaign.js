@@ -3,9 +3,9 @@ import createCampaignService from "./services/createCampaignService";
 
 const useCreateCampaign = (tenantId) => {
   return useMutation({
-   mutaionFn: (reqData) => {
-    return createCampaignService(reqData, tenantId);
-  }
+    mutationFn: (reqData) => {
+      return createCampaignService(reqData, tenantId);
+    }
   });
 };
 

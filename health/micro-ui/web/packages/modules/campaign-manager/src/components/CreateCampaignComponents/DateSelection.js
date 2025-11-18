@@ -46,12 +46,12 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
 
   return (
     <Card>
-      <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">
+      <HeaderComponent styles={{}} className="digit-header-content digit-card-section-header titleStyle date-selection ">
         {t(`HCM_CAMPAIGN_DATES_HEADER`)}
       </HeaderComponent>
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
-      <LabelFieldPair className={"boldLabel"}>
-        <div className="digit-header-content label " style={{ display: "flex" ,alignItems:"center" , marginTop: "0.5rem" }} >
+      <LabelFieldPair className={"boldLabel"} style={{}} vertical={false} removeMargin={false}>
+        <div className="digit-header-content label " style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
           <div>{t(`HCM_CAMPAIGN_DATES`)}</div>
           <span className="mandatory-date">*</span>
         </div>
@@ -73,8 +73,8 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
               localDate.setHours(0, 0, 0, 0); // Local midnight
               // Add 5.5 hours so UTC becomes local midnight
               const adjustedDate = new Date(localDate.getTime() + 19800000);
-              const isoString = adjustedDate.toISOString(); 
-              setStartDate(isoString); 
+              const isoString = adjustedDate.toISOString();
+              setStartDate(isoString);
             }}
           />
           <FieldV1
@@ -91,11 +91,11 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
             onChange={(d) => {
               setStartValidation(true);
-               const localDate = new Date(d);
+              const localDate = new Date(d);
               localDate.setHours(0, 0, 0, 0); // Local midnight
               // Add 5.5 hours so UTC becomes local midnight
               const adjustedDate = new Date(localDate.getTime() + 19800000);
-              const isoString = adjustedDate.toISOString(); 
+              const isoString = adjustedDate.toISOString();
               setEndDate(isoString);
             }}
           />

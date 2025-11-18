@@ -263,7 +263,15 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
   const [showQRPopUp, setShowQRPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, navigate, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp, handleRetryLogic);
+  const actionButtons = getActionButtons(
+    rowData,
+    tabData,
+    navigate,
+    setShowErrorPopUp,
+    setShowCreatingPopUp,
+    setShowQRPopUp,
+    handleRetryLogic
+  );
   const actionTags = getActionTags(rowData);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
@@ -378,7 +386,12 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           />
         )}
         {cloneCampaign && (
-          <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign} />
+          <CloneCampaignWrapper
+            row={rowData}
+            campaignId={rowData?.id}
+            campaignName={rowData?.campaignName}
+            setCampaignCopying={setCloneCampaign}
+          />
         )}
         <div style={{ display: "flex", alignItems: "center" }}>
           {actionTags && Object.keys(actionTags).length > 0 && (

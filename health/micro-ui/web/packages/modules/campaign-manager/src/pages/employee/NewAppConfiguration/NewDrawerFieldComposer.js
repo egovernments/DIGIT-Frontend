@@ -34,8 +34,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const { pageType, currentData } = useSelector((state) => state.remoteConfig);
 
-  console.log("Current Data FLow: ", {currentData});
-
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState("");
   // Local state for toggles to control UI without forcing Redux writes
@@ -497,9 +495,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Fetch labelPairConfig from Redux
         const allLabelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
 
-           const labelPairConfig = allLabelPairConfig.filter(item => 
-          item.modules?.includes(currentData?.flow)
-        );
+        const labelPairConfig = allLabelPairConfig.filter((item) => item.modules?.includes(currentData?.flow));
 
         // Get currently selected data from selectedField.data
         const selectedData = selectedField?.data || [];
@@ -537,9 +533,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           <>
             <div ref={switchRef} className="drawer-container-tooltip">
               <div style={{ display: "flex" }}>
-                <label>
-                  {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-                </label>
+                <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
                 <span className="mandatory-span">*</span>
               </div>
 
@@ -553,11 +547,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 selectAllLabel={t("SELECT_ALL")}
                 clearLabel={t("CLEAR_ALL")}
                 config={{ isDropdownWithChip: true }}
-                selected={selectedOptions}  // Pass actual option objects directly
-                onSelect={(selectedArray) => {
-                }}
+                selected={selectedOptions} // Pass actual option objects directly
+                onSelect={(selectedArray) => {}}
                 onClose={(selectedArray) => {
-
                   // Extract options from the array pairs: [null, [category, option]] -> option
                   const extractedOptions = selectedArray?.map((arr) => arr?.[1]) || [];
 
@@ -624,7 +616,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(entityName || 'ENTITY')} - ${t(item.key)}`}
+                        label={`${t(entityName || "ENTITY")} - ${t(item.key)}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
@@ -647,9 +639,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           <>
             <div className="drawer-container-tooltip">
               <div style={{ display: "flex", marginBottom: "12px" }}>
-                <label>
-                  {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-                </label>
+                <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
               </div>
 
               {/* Display header localization inputs for each column */}
@@ -670,9 +660,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               )}
 
               {columns.length === 0 && (
-                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>
-                  {t("NO_TABLE_COLUMNS_FOUND")}
-                </div>
+                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>{t("NO_TABLE_COLUMNS_FOUND")}</div>
               )}
             </div>
           </>
@@ -1039,8 +1027,6 @@ function NewDrawerFieldComposer() {
       return panelItem.visibilityEnabledFor.includes(fieldType);
     });
   }, [currentTabProperties, fieldType]);
-
-  console.log("Rendering NewDrawerFieldComposer - Selected Field:", {selectedField, visibleTabProperties, fieldType});
 
   // Function to collect all validation errors from group fields
   const checkValidationErrors = useCallback(() => {
