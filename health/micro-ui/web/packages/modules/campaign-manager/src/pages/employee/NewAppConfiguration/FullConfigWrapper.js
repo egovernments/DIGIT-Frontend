@@ -64,7 +64,7 @@ const FullConfigWrapper = () => {
           url: `/${mdmsContext}/v2/_search`,
           body: {
             MdmsCriteria: {
-              tenantId: "mz",
+              tenantId: tenantId,
               schemaCode: "HCM-ADMIN-CONSOLE.AppFlowConfig",
               filters: {
                 project: campaignNumber,
