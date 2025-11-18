@@ -1,3 +1,5 @@
+import Urls from "../urls";
+
 export const PaymentSetUpService = {
   // Context path variable from globalConfigs
   projectContextPath: window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project",
@@ -23,9 +25,11 @@ export const PaymentSetUpService = {
 
   // info:: for fetching the rates given by user
   mdmsSkillWageRatesSearch: async ({ body, params }) => {
+    // `/egov-mdms-service/v2/_search
+    const mdmsPath = window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
     try {
       const response = await Digit.CustomService.getResponse({
-        url: `/egov-mdms-service/v2/_search`,
+        url: `/${mdmsPath}/v2/_search`,
         useCache: false,
         method: "POST",
         userService: true,
@@ -41,20 +45,21 @@ export const PaymentSetUpService = {
       throw new Error("An unknown error occurred");
     }
   },
-
 
   // info:: for creating the rates given by user
   mdmsSkillWageRatesCreate: async ({ body, params }) => {
     try {
+      ///egov-mdms-service/v2/_create/HCM.WORKER_RATES
       const response = await Digit.CustomService.getResponse({
-        url: `/egov-mdms-service/v2/_create/HCM.WORKER_RATES`,
+        url: `${Urls.MDMS}/_create/HCM.WORKER_RATES`,
+
         useCache: false,
         method: "POST",
         userService: true,
         body,
         params,
       });
-
+      debugger;
       return response?.mdms;
     } catch (error) {
       if (error?.response?.data?.Errors) {
@@ -64,12 +69,12 @@ export const PaymentSetUpService = {
     }
   },
 
-
-   // info:: for updating the rates given by user
+  // info:: for updating the rates given by user
   mdmsSkillWageRatesUpdate: async ({ body, params }) => {
     try {
+      // /egov-mdms-service/v2/_update/HCM.WORKER_RATES
       const response = await Digit.CustomService.getResponse({
-        url: `/egov-mdms-service/v2/_update/HCM.WORKER_RATES`,
+        url: `${Urls.MDMS}/_update/HCM.WORKER_RATES`,
         useCache: false,
         method: "POST",
         userService: true,

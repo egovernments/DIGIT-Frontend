@@ -1,3 +1,5 @@
+import Urls from "../urls";
+
 export const ProjectService = {
   // Context path variable from globalConfigs
   projectContextPath: window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project",
@@ -43,7 +45,7 @@ export const ProjectService = {
   mdmsSkillWageSearch: async ({ body, params }) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: `/egov-mdms-service/v1/_search`,
+        url:  Urls.MDMS,
         useCache: false,
         method: "POST",
         userService: true,
