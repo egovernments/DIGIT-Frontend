@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, CustomSVG } from "@egovernments/digit-ui-components";
 
-const QRScanner = ({ field, t, fieldTypeMasterData }) => {
+const QRScanner = ({ field, t, fieldTypeMasterData, props }) => {
+  console.log("QRScanner field:", {field, props});
   // Get variation and icon from field with fallback to defaults
 
-  return <Button variation={"secondary"} label={""} onClick={() => {}} className="app-preview-action-button" icon={"QrCodeScanner"} />;
+  return <Button variation={"secondary"} label={t(field?.label || props?.field?.label || "")} onClick={() => {}} className="app-preview-action-button" icon={"QrCodeScanner"} />;
 };
 
 export default QRScanner;

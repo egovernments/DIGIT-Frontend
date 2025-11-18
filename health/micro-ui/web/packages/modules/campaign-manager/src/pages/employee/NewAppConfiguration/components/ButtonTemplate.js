@@ -17,6 +17,8 @@ const ButtonTemplate = ({ field, t, fieldTypeMasterData }) => {
       label={t(field?.label) || "Button"}
       onClick={() => {}}
       className="app-preview-action-button"
+      style={variation === "tertiary" ? { color: "#c84c0e", height: "1.5rem", width: "fit-content" } : null}
+      textStyles={variation === "tertiary" ? { color: "#c84c0e", fontSize: "0.875rem" } : null}
       icon={iconName}
     />
   );

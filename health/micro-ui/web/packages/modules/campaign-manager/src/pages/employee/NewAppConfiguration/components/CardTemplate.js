@@ -20,9 +20,6 @@ const CardTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldCli
         padding: "4px",
         marginBottom: "4px",
         width: "100%",
-        backgroundColor: "#ffffffff",
-        border: cardType === "secondary" ? "1px solid #e0e0e0" : "none",
-        boxShadow: cardType === "primary" ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
       }}
     >
       {children.map((child, index) => {
