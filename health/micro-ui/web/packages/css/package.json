@@ -28,7 +28,7 @@
   "dependencies": {
     "react-date-picker": "^12.0.1",
     "react-date-range": "^2.0.1",
-    "react-datepicker": "4.8.0"
+    "react-datepicker": "^8.7.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

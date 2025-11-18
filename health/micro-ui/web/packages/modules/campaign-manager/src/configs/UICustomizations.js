@@ -127,7 +127,9 @@ export const UICustomizations = {
           );
         case "CHECKLIST_LAST_UPDATE":
           const lastModDate =
-            row?.ServiceRequest?.length !== 0 ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime : row?.auditDetails?.lastModifiedTime;
+            row?.ServiceRequest?.length !== 0
+              ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime
+              : row?.auditDetails?.lastModifiedTime;
           return Digit.DateUtils.ConvertEpochToDate(lastModDate);
         case "HCM_CHECKLIST_ACTION":
           const role_code = row?.data?.role;
@@ -285,7 +287,9 @@ export const UICustomizations = {
           };
           return (
             <>
-              {showToast && <Toast type={String(showToast?.type)} label={t(showToast?.label)} isDleteBtn={"true"} onClose={() => closeToast()} />}
+              {showToast && (
+                <Toast type={String(showToast?.type)} label={t(showToast?.label)} isDleteBtn={"true"} onClose={() => closeToast()} />
+              )}
               <Button
                 type={"button"}
                 size={"medium"}
@@ -505,7 +509,9 @@ export const UICustomizations = {
                 variation="secondary"
                 label={"Action"}
                 options={[
-                  ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
+                  ...(row?.status === "created"
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
+                    : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                   { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
@@ -529,7 +535,12 @@ export const UICustomizations = {
                 </PopUp>
               )}
               {campainCopying && (
-                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying} />
+                <CloneCampaignWrapper
+                  row={row}
+                  campaignId={row?.id}
+                  campaignName={row?.campaignName}
+                  setCampaignCopying={setCampaignCopying}
+                />
               )}
             </>
           );
@@ -678,7 +689,12 @@ export const UICustomizations = {
               )}
 
               {campainCopying && (
-                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying} />
+                <CloneCampaignWrapper
+                  row={row}
+                  campaignId={row?.id}
+                  campaignName={row?.campaignName}
+                  setCampaignCopying={setCampaignCopying}
+                />
               )}
             </>
           );
@@ -850,7 +866,9 @@ export const UICustomizations = {
                 variation="secondary"
                 label={"Action"}
                 options={[
-                  ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
+                  ...(row?.status === "created"
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
+                    : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                   { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
@@ -874,7 +892,12 @@ export const UICustomizations = {
                 </PopUp>
               )}
               {campainCopying && (
-                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying} />
+                <CloneCampaignWrapper
+                  row={row}
+                  campaignId={row?.id}
+                  campaignName={row?.campaignName}
+                  setCampaignCopying={setCampaignCopying}
+                />
               )}
             </>
           );

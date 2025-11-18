@@ -28,8 +28,6 @@ import useUpdateAppConfig from "./useUpdateAppConfig";
 import useUpdateAppConfigForFeatures from "./useUpdateAppConfigForFeatures";
 import { useProcessData } from "./useProcessData";
 
-import useCloneCampaign from "./useCloneCampaign";
-
 const UserService = {};
 
 const workbench = {};
@@ -65,7 +63,6 @@ const campaign = {
   useUpdateAppConfig,
   useUpsertSchemaConfig,
   useUpdateAppConfigForFeatures,
-  useCloneCampaign,
   useProcessData
 };
 
