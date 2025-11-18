@@ -49,9 +49,10 @@ export const PaymentSetUpService = {
   // info:: for creating the rates given by user
   mdmsSkillWageRatesCreate: async ({ body, params }) => {
     try {
+      const mdmsPath = window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
       ///egov-mdms-service/v2/_create/HCM.WORKER_RATES
       const response = await Digit.CustomService.getResponse({
-        url: `${Urls.MDMS}/_create/HCM.WORKER_RATES`,
+        url: `/${mdmsPath}/v2/_create/HCM.WORKER_RATES`,
 
         useCache: false,
         method: "POST",
@@ -59,7 +60,7 @@ export const PaymentSetUpService = {
         body,
         params,
       });
-      debugger;
+
       return response?.mdms;
     } catch (error) {
       if (error?.response?.data?.Errors) {
@@ -72,9 +73,10 @@ export const PaymentSetUpService = {
   // info:: for updating the rates given by user
   mdmsSkillWageRatesUpdate: async ({ body, params }) => {
     try {
+      const mdmsPath = window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
       // /egov-mdms-service/v2/_update/HCM.WORKER_RATES
       const response = await Digit.CustomService.getResponse({
-        url: `${Urls.MDMS}/_update/HCM.WORKER_RATES`,
+        url: `${mdmsPath}/v2/_update/HCM.WORKER_RATES`,
         useCache: false,
         method: "POST",
         userService: true,
