@@ -252,8 +252,30 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     }
   }, [propertyResponse, isUpdateMode, isReassessMode, isAssessMode, isPropertyDataLoaded]);
 
+  // Clear adhoc values and existing assessment on component mount for new assessments (assess mode with assessmentId=0)
+  // This must run BEFORE config is created to prevent PropertySummary from initializing with stale values
+  useEffect(() => {
+    // Reset adhoc values when loading a fresh assessment page (assessmentId = 0)
+    const isNewAssessmentPage = isAssessMode && (!assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0);
+
+    if (isNewAssessmentPage) {
+      // Clear state values immediately
+      setAdhocPenalty(0);
+      setAdhocRebate(0);
+      setExistingAssessment(null);
+    }
+  }, [isAssessMode, assessmentIdFromUrl]); // Run when component mounts or URL params change
+
   // Load existing assessment data in reassess or assess mode
   useEffect(() => {
+    // Skip loading assessment data if this is a new assessment (assessmentId=0)
+    const isNewAssessment = isAssessMode && (!assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0);
+
+    if (isNewAssessment) {
+      // Don't load any assessment data for new assessments
+      return;
+    }
+
     if (assessmentResponse && assessmentResponse.length > 0 && (isReassessMode || isAssessMode)) {
       const assessment = assessmentResponse[0];
       setExistingAssessment(assessment);
@@ -263,13 +285,9 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         setAdhocPenalty(assessment.additionalDetails.adhocPenalty || 0);
         setAdhocRebate(assessment.additionalDetails.adhocExemption || 0);
       }
-      // In assess mode, start fresh with 0 values for new financial year
-      else if (isAssessMode) {
-        setAdhocPenalty(0);
-        setAdhocRebate(0);
-      }
+      // In assess mode with existing assessment, keep values at 0 (already set above)
     }
-  }, [assessmentResponse, isReassessMode, isAssessMode]);
+  }, [assessmentResponse, isReassessMode, isAssessMode, assessmentIdFromUrl]);
 
   // Fetch Important Dates from MDMS
   useEffect(() => {
@@ -540,80 +558,138 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         const finalAdhocPenalty = typeof summaryCustomProps.adhocPenalty !== 'undefined' ? summaryCustomProps.adhocPenalty : adhocPenalty;
         const finalAdhocRebate = typeof summaryCustomProps.adhocRebate !== 'undefined' ? summaryCustomProps.adhocRebate : adhocRebate;
 
-        // First, fetch the latest assessment data (matching mono-ui)
-        const assessmentSearchResponse = await Digit.CustomService.getResponse({
-          url: "/property-services/assessment/_search",
-          method: "POST",
-          params: {
-            tenantId: tenantId,
-            assessmentNumbers: assessmentIdFromUrl
-          },
-          body: {}
-        });
+        // Check if this is a new assessment (assessmentId is 0 or null) or reassessment of existing assessment
+        const isNewAssessment = !assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0;
 
-        if (!assessmentSearchResponse?.Assessments || assessmentSearchResponse.Assessments.length === 0) {
-          setToast({
-            label: t("PT_ASSESSMENT_NOT_FOUND"),
-            type: "error"
-          });
-          setLoading(false);
-          return;
-        }
-
-        const existingAssessmentData = assessmentSearchResponse.Assessments[0];
-
-        // Update the assessment with new adhoc values (matching mono-ui)
-        const assessmentUpdatePayload = {
-          Assessment: {
-            ...existingAssessmentData,
-            assessmentDate: Date.now(),
-            status: "ACTIVE",
-            additionalDetails: {
-              ...existingAssessmentData.additionalDetails,
-              adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
-              adhocExemption: parseFloat(finalAdhocRebate) || 0
+        if (isNewAssessment) {
+          // CREATE new assessment (matching old UI flow)
+          const assessmentCreatePayload = {
+            Assessment: {
+              tenantId: tenantId,
+              propertyId: propertyIdFromUrl,
+              financialYear: financialYearFromUrl,
+              assessmentDate: Date.now(),
+              source: "MUNICIPAL_RECORDS",
+              channel: "COUNTER",
+              status: "ACTIVE",
+              additionalDetails: {
+                adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
+                adhocExemption: parseFloat(finalAdhocRebate) || 0
+              }
             }
+          };
+
+          const assessmentCreateResponse = await Digit.CustomService.getResponse({
+            url: "/property-services/assessment/_create",
+            method: "POST",
+            body: assessmentCreatePayload,
+            params: { tenantId: tenantId }
+          });
+
+          if (assessmentCreateResponse?.Assessments && assessmentCreateResponse.Assessments.length > 0) {
+            const createdAssessment = assessmentCreateResponse.Assessments[0];
+
+            // Clear session storage
+            Digit.SessionStorage.set(sessionKey, null);
+            Digit.SessionStorage.set(popupSeenKey, null);
+
+            // Redirect to acknowledgment page matching old UI pattern
+            const params = new URLSearchParams({
+              purpose: 'assess',
+              status: 'success',
+              propertyId: propertyIdFromUrl,
+              tenantId: tenantId,
+              secondNumber: createdAssessment.assessmentNumber,
+              FY: financialYearFromUrl
+            });
+
+            const contextPath = isCitizen ? "citizen" : "employee";
+            history.push(
+              `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+            );
+          } else {
+            setToast({
+              label: assessmentCreateResponse?.Errors?.[0]?.message || t("PT_ASSESSMENT_FAILED"),
+              type: "error"
+            });
           }
-        };
-
-        const assessmentUpdateResponse = await Digit.CustomService.getResponse({
-          url: "/property-services/assessment/_update",
-          method: "POST",
-          body: assessmentUpdatePayload,
-          params: { tenantId: tenantId }
-        });
-
-        if (assessmentUpdateResponse?.Assessments && assessmentUpdateResponse.Assessments.length > 0) {
-          // Clear session storage
-          Digit.SessionStorage.set(sessionKey, null);
-          Digit.SessionStorage.set(popupSeenKey, null);
-
-          // Redirect to acknowledgment page matching mono-ui pattern
-          const params = new URLSearchParams({
-            purpose: 'reassess',
-            status: 'success',
-            propertyId: propertyIdFromUrl,
-            tenantId: tenantId,
-            secondNumber: assessmentIdFromUrl,
-            FY: financialYearFromUrl
-          });
-
-          const contextPath = isCitizen ? "citizen" : "employee";
-          history.push(
-            `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
-          );
         } else {
-          setToast({
-            label: assessmentUpdateResponse?.Errors?.[0]?.message || t("PT_REASSESSMENT_FAILED"),
-            type: "error"
+          // UPDATE existing assessment (for reassessment with valid assessment ID)
+          // First, fetch the latest assessment data (matching mono-ui)
+          const assessmentSearchResponse = await Digit.CustomService.getResponse({
+            url: "/property-services/assessment/_search",
+            method: "POST",
+            params: {
+              tenantId: tenantId,
+              assessmentNumbers: assessmentIdFromUrl
+            },
+            body: {}
           });
+
+          if (!assessmentSearchResponse?.Assessments || assessmentSearchResponse.Assessments.length === 0) {
+            setToast({
+              label: t("PT_ASSESSMENT_NOT_FOUND"),
+              type: "error"
+            });
+            setLoading(false);
+            return;
+          }
+
+          const existingAssessmentData = assessmentSearchResponse.Assessments[0];
+
+          // Update the assessment with new adhoc values (matching mono-ui)
+          const assessmentUpdatePayload = {
+            Assessment: {
+              ...existingAssessmentData,
+              assessmentDate: Date.now(),
+              status: "ACTIVE",
+              additionalDetails: {
+                ...existingAssessmentData.additionalDetails,
+                adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
+                adhocExemption: parseFloat(finalAdhocRebate) || 0
+              }
+            }
+          };
+
+          const assessmentUpdateResponse = await Digit.CustomService.getResponse({
+            url: "/property-services/assessment/_update",
+            method: "POST",
+            body: assessmentUpdatePayload,
+            params: { tenantId: tenantId }
+          });
+
+          if (assessmentUpdateResponse?.Assessments && assessmentUpdateResponse.Assessments.length > 0) {
+            // Clear session storage
+            Digit.SessionStorage.set(sessionKey, null);
+            Digit.SessionStorage.set(popupSeenKey, null);
+
+            // Redirect to acknowledgment page matching mono-ui pattern
+            const params = new URLSearchParams({
+              purpose: 'reassess',
+              status: 'success',
+              propertyId: propertyIdFromUrl,
+              tenantId: tenantId,
+              secondNumber: assessmentIdFromUrl,
+              FY: financialYearFromUrl
+            });
+
+            const contextPath = isCitizen ? "citizen" : "employee";
+            history.push(
+              `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+            );
+          } else {
+            setToast({
+              label: assessmentUpdateResponse?.Errors?.[0]?.message || t("PT_REASSESSMENT_FAILED"),
+              type: "error"
+            });
+          }
         }
 
         setLoading(false);
       } catch (error) {
-        console.error("Reassessment error:", error);
+        console.error("Assessment error:", error);
         setToast({
-          label: error?.response?.data?.Errors?.[0]?.message || t("PT_REASSESSMENT_FAILED"),
+          label: error?.response?.data?.Errors?.[0]?.message || (isAssessMode ? t("PT_ASSESSMENT_FAILED") : t("PT_REASSESSMENT_FAILED")),
           type: "error"
         });
         setLoading(false);
