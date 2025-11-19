@@ -104,7 +104,7 @@ const MultipleChoice = ({
       {!dis && <div style={{marginTop: "0.8rem"}}>
         <Button
           // disabled={"true"}
-          className="custom-class"
+          className="width-auto"
           icon="AddIcon"
           iconFill=""
           label={`${t("ADD_OPTIONS")} ${questionNumber}`}
