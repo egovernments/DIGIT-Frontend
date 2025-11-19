@@ -45,7 +45,7 @@ export const ProjectService = {
   mdmsSkillWageSearch: async ({ body, params }) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url:  Urls.MDMS,
+        url: Urls.MDMS,
         useCache: false,
         method: "POST",
         userService: true,
