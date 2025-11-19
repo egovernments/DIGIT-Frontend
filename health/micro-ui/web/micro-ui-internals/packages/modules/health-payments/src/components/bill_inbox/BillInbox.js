@@ -578,7 +578,7 @@ const BillInboxComponent = () => {
       referenceId: selectedProject == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
       localityCode: selectedBoundaryCode,
       //reviewStatus: activeLink.code,
-      registerPeriodStatus: activeLink.code,
+      registerPeriodStatus: activeLink.code === "APPROVED" ? activeLink.code : pId === "AGGREGATE" ? "PENDINGFORAPPROVAL" : activeLink.code,
       isChildrenRequired: selectedLevel != null && selectedLevel?.code === lowestLevelBoundaryType ? true : false,
       billingPeriodId: pId,
     },

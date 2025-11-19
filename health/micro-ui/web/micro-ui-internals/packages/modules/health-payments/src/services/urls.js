@@ -61,8 +61,8 @@ const Urls = {
     //enrollAttendee:`/${healthAttendanceContextPath}/attendee/v1/_create`,
     create: `/health-expense-calculator/billing-config/v1/_create`,
     update: `/health-expense-calculator/billing-config/v1/_update`,
-    mdmsRatesCreate: `${mdmsPath}/v2/_create/HCM.WORKER_RATES`,
-    mdmsRatesUpdate: `${mdmsPath}/v2/_update/HCM.WORKER_RATES`,
+    mdmsRatesCreate: `/${mdmsPath}/v2/_create/HCM.WORKER_RATES`,
+    mdmsRatesUpdate: `/${mdmsPath}/v2/_update/HCM.WORKER_RATES`,
   },
 };
 
