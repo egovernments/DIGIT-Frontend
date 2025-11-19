@@ -351,7 +351,9 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS"),
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.campaignName} ${t(
+                "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
+              )}`,
               message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
@@ -398,7 +400,9 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS"),
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.campaignName} ${t(
+                "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
+              )}`,
               message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
@@ -532,7 +536,10 @@ const PaymentSetUpPage = () => {
   const renderLabelPair = useCallback(
     (heading, content) => (
       <div className="label-pair" style={{ alignContent: "center", alignItems: "center" }}>
-        <span className="view-label-heading">{t(heading)}</span>
+        <span className="view-label-heading comment-label">
+          {t(heading)}
+          <span className="required comment-label"> *</span>
+        </span>
         <span className="view-label-text">{content}</span>
       </div>
     ),
@@ -559,14 +566,15 @@ const PaymentSetUpPage = () => {
       <Card type="primary" className="bottom-gap-card-payment">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <HeaderComponent>{t("HCM_AM_PAYEMENT_SETUP_HEAD")}</HeaderComponent>
-          <Button
+          {/* { TODO:: commenting temporarily . will be integrated when API will be available} */}
+          {/* {<Button
             label={t("HCM_AM_PAYEMENT_SETUP_VIEW_AUDIT")}
             onButtonClick={(e) => {
               e.stopPropagation();
             }}
             variation="link"
             style={{ whiteSpace: "nowrap", width: "auto" }}
-          />
+          />} */}
         </div>
 
         <CardText>{t("HCM_AM_PAYEMENT_SETUP_SUB_HEAD")}</CardText>
