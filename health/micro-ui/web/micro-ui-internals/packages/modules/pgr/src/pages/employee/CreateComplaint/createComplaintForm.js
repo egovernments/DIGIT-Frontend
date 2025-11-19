@@ -250,17 +250,14 @@ const CreateComplaintForm = ({
   const handleResponseForCreateComplaint = async (payload) => {
     await CreateComplaintMutation(payload, {
       onError: async () => {
-        console.log("999 Create complaint errors 3 ");
         setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
         setIsSubmitting(false);
       },
       onSuccess: async (responseData) => {
         if (responseData?.ResponseInfo?.Errors) {
-          console.log("999 Create complaint errors", responseData?.ResponseInfo?.Errors);
           setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
           setIsSubmitting(false);
         } else {
-          console.log("999 Create complaint errors 2 ", responseData?.ResponseInfo?.Errors);
           sendDataToResponsePage(
             "CS_COMMON_COMPLAINT_SUBMITTED",
             "CS_COMMON_TRACK_COMPLAINT_TEXT",
