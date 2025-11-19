@@ -1307,7 +1307,6 @@ textarea.light-placeholder::placeholder {
 
 /* Workflow page - Make button in left panel sticky at bottom */
 .Workflow-card .slider-body.with-sections .section-divider-wrapper:last-child {
-  position: sticky;
   bottom: 0;
   z-index: 10;
   background: #fafafa;
