@@ -152,7 +152,6 @@ const PGRDetails = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = Digit.ULBService.getStateId();
-  const language = Digit.StoreData.getCurrentLanguage();
   const history = useHistory();
   const { id } = useParams();
   const [selectedAction, setSelectedAction] = useState(null);

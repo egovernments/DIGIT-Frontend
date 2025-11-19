@@ -166,7 +166,6 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
   // Extract localityCode (last part after the dot) from the full boundary code path
   // If code is "Country.State.City", we want just "City"
   const boundaryCode = formData?.SelectedBoundary?.code;
-  console.log("999 boundaryCode", boundaryCode);
   const localityCode = boundaryCode?.includes('.')
     ? boundaryCode.split('.').pop()
     : boundaryCode;
