@@ -58,9 +58,22 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
     newSelectedValues[boundaryType] = selectedBoundary;
     setSelectedValues(newSelectedValues);
     setValue(newValue);
-    // always sending the last selected boundary code
 
-    onSelect(config.key, selectedBoundary);
+    // Build hierarchical boundary code path (Country_code.Next_child_code.Next_next_child_code)
+    const boundaryCodePath = boundaryHierarchy
+      .slice(0, index + 1)
+      .map(type => newSelectedValues[type]?.code)
+      .filter(code => code)
+      .join('.');
+
+    // Create modified boundary object with full path and original code
+    const boundaryWithPath = {
+      ...selectedBoundary,
+      code: boundaryCodePath,
+      localityCode: selectedBoundary.code // Store original code for extraction
+    };
+
+    onSelect(config.key, boundaryWithPath);
 
     // Load child boundaries
     if (selectedBoundary.children && selectedBoundary.children.length > 0) {
