@@ -76,6 +76,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
                 <PrivateRoute path={`${path}/property-tax/assess`} component={AssessmentForm} />
                 <PrivateRoute path={`${path}/assessment-form`} component={() => <PropertyAssessmentForm />} />
                 <PrivateRoute path={`${path}/pt-acknowledgment`} component={() => <PTAcknowledgmentEmployee />} />
+                <PrivateRoute path={`${path}/acknowledgement`} component={() => <PTAcknowledgmentEmployee />} />
                 <PrivateRoute path={`${path}/pt-mutation/apply`} component={TransferOwnership} />
                 <PrivateRoute path={`${path}/application-preview`} component={ApplicationPreview} />
                 <PrivateRoute path={`${path}/property/:propertyId`} component={PropertyDetails} />

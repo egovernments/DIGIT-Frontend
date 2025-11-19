@@ -477,7 +477,7 @@ const TransferOwnership = () => {
         });
 
         setTimeout(() => {
-          history.push(`/${window.contextPath}/employee/pt/acknowledgement?acknowledgementNumber=${acknowledgementNumber}&tenantId=${tenantId}&purpose=apply&status=success`);
+          history.push(`/${window.contextPath}/employee/pt/acknowledgement?acknowledgementNumber=${acknowledgementNumber}&tenantId=${tenantId}&propertyId=${consumerCode}&purpose=apply&status=success`);
         }, 2000);
       } else {
         console.error("Invalid response structure:", response);
