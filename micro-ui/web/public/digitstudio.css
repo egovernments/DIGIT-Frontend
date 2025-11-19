@@ -1340,4 +1340,7 @@ textarea.light-placeholder::placeholder {
     margin-bottom : 0rem !important;
     margin-top: 0rem !important;
 }
+.mandatory-span-popup{
+  color: #B91900 !important;
+}
 
