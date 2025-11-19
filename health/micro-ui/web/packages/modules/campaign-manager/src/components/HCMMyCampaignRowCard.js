@@ -419,7 +419,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               {Object.entries(actionButtons)?.map(([key, btn]) => (
                 <Button
                   key={key}
-                  className={btn.className || "custom-class"}
+                  className={btn.className || "width-auto"}
                   icon={btn.icon || ""}
                   iconFill={btn.iconFill || ""}
                   label={t(btn.label)}

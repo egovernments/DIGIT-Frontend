@@ -1266,7 +1266,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             return (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem" }}>
                 <Button
-                  className="custom-class"
+                  className="width-auto"
                   variation={"secondary"}
                   label={t("MAPPING_ADD_DATA")}
                   onClick={() => {
