@@ -214,6 +214,7 @@ const PaymentSetUpPage = () => {
   // Main Campaign Selection Handler with Sequential API Calls
   const handleCampaignSelect = useCallback(
     async (value) => {
+     
       setSelectedCampaign(value);
       setSkillsData(null);
       setBillingConfigData(null);
@@ -351,7 +352,7 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.campaignName} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.name} ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
@@ -400,7 +401,7 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.campaignName} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.name} ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
