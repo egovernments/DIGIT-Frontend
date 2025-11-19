@@ -224,7 +224,7 @@ const PGRDetails = () => {
       },
     },
     config: {
-      enabled: showMore && !!selectedHierarchy?.hierarchyType && !!boundaryCode,
+      enabled: showMore && !!stateId && !!selectedHierarchy?.hierarchyType && !!boundaryCode,
       select: (data) => data?.BoundaryHierarchy?.[0] || null,
     },
   });
