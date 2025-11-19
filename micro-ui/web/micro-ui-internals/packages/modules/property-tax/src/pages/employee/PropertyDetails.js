@@ -354,7 +354,7 @@ const PropertyDetails = () => {
         try {
           const propertyToUpdate = {
             ...propertyResponse[0],
-            status: "ACTIVATE",
+            status: "ACTIVE",
             creationReason: "STATUS",
             isactive: true,
             isinactive: false,
@@ -369,31 +369,46 @@ const PropertyDetails = () => {
             }
           };
 
-          const result = await Digit.PTService.update(
-            {
-              Property: propertyToUpdate
+          // Prepare request body with proper RequestInfo
+          const requestBody = {
+            RequestInfo: {
+              apiId: "Mihy",
+              ver: ".01",
+              action: "_update",
+              did: "1",
+              key: "",
+              msgId: "20170310130900|en_IN",
+              requesterId: "",
+              authToken: Digit.UserService.getUser()?.access_token
             },
-            tenantId
-          );
+            Property: propertyToUpdate
+          };
 
-          if (result?.Properties && result.Properties.length > 0) {
-            setToast({
-              label: t("PT_PROPERTY_ACTIVATION_INITIATED"),
-              type: "success"
-            });
+          // Make API call using CustomService with query parameters
+          const result = await Digit.CustomService.getResponse({
+            url: "/property-services/property/_update",
+            method: "POST",
+            body: requestBody,
+            params: {
+              tenantId: tenantId,
+              propertyIds: propertyId
+            }
+          });
+
+          if (result && result.Errors) {
+            alert(result.Errors[0]?.message || "Some error occurred!! please try again.");
+          } else if (result?.Properties && result.Properties.length > 0) {
+            alert("Property is now in INWORKFLOW state. Please approve it!");
             setTimeout(() => {
               window.location.reload();
             }, 2000);
           } else {
-            setToast({
-              label: t("PT_ACTIVATION_FAILED"),
-              type: "error"
-            });
+            alert("Some error occurred!! please try again.");
           }
         } catch (error) {
           console.error("Make active error:", error);
           setToast({
-            label: t("PT_ACTIVATION_FAILED"),
+            label: error?.response?.data?.Errors?.[0]?.message || t("PT_ACTIVATION_FAILED"),
             type: "error"
           });
         }
@@ -413,7 +428,7 @@ const PropertyDetails = () => {
         try {
           const propertyToUpdate = {
             ...propertyResponse[0],
-            status: "INACTIVATE",
+            status: "INACTIVE",
             creationReason: "STATUS",
             isactive: false,
             isinactive: true,
@@ -428,31 +443,46 @@ const PropertyDetails = () => {
             }
           };
 
-          const result = await Digit.PTService.update(
-            {
-              Property: propertyToUpdate
+          // Prepare request body with proper RequestInfo
+          const requestBody = {
+            RequestInfo: {
+              apiId: "Mihy",
+              ver: ".01",
+              action: "_update",
+              did: "1",
+              key: "",
+              msgId: "20170310130900|en_IN",
+              requesterId: "",
+              authToken: Digit.UserService.getUser()?.access_token
             },
-            tenantId
-          );
+            Property: propertyToUpdate
+          };
 
-          if (result?.Properties && result.Properties.length > 0) {
-            setToast({
-              label: t("PT_PROPERTY_INACTIVATION_INITIATED"),
-              type: "success"
-            });
+          // Make API call using CustomService with query parameters
+          const result = await Digit.CustomService.getResponse({
+            url: "/property-services/property/_update",
+            method: "POST",
+            body: requestBody,
+            params: {
+              tenantId: tenantId,
+              propertyIds: propertyId
+            }
+          });
+
+          if (result && result.Errors) {
+            alert(result.Errors[0]?.message || "Some error occurred!! please try again.");
+          } else if (result?.Properties && result.Properties.length > 0) {
+            alert("Property is now in INWORKFLOW state. Please approve it!");
             setTimeout(() => {
               window.location.reload();
             }, 2000);
           } else {
-            setToast({
-              label: t("PT_INACTIVATION_FAILED"),
-              type: "error"
-            });
+            alert("Some error occurred!! please try again.");
           }
         } catch (error) {
-          console.error("Make inactive error:", error);
+          console.log(error);
           setToast({
-            label: t("PT_INACTIVATION_FAILED"),
+            label: "Clear Pending dues before De-Enumerating the property",
             type: "error"
           });
         }
