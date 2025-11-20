@@ -12,6 +12,7 @@ import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { getFieldTypeFromMasterData2 } from "./helpers/getFieldTypeFromMasterData";
 
 // Utility functions for date conversion
 const convertEpochToDateString = (epoch) => {
@@ -1014,7 +1015,7 @@ function NewDrawerFieldComposer() {
     if (!selectedField || !fieldTypeMaster?.fieldTypeMappingConfig) {
       return selectedField?.type || "textInput";
     }
-    return getFieldTypeFromMasterData(selectedField, fieldTypeMaster.fieldTypeMappingConfig);
+    return getFieldTypeFromMasterData2(selectedField, fieldTypeMaster.fieldTypeMappingConfig);
   }, [selectedField, fieldTypeMaster]);
 
   // Filter properties based on field type visibility
