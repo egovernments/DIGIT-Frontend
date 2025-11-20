@@ -45,7 +45,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 
   const { data: hierarchies,
     isLoading: isHierarchyLoading,
-  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, config:{refetchKey: HierarchySelectedForPGR} });
+  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, config:{refetchKey: HierarchySelectedForPGR, enabled: !!HierarchySelectedForPGR} });
 
   // Set hierarchy in SessionStorage when both hierarchies and HierarchySelectedForPGR are available
   useEffect(() => {
