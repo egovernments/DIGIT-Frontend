@@ -14,10 +14,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
   // Get the field type
-  const fieldType = getFieldTypeFromMasterData2(field, fieldTypeMasterData);
+  const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
 
   // Get component from fieldTypeMasterData, fallback to null
-  const component = fieldType === "component" ? getFieldTypeFromMasterData2(field, fieldTypeMasterData) : null;
+  const component = fieldType === "component" ? getComponentFromMasterData(field, fieldTypeMasterData) : null;
 
   // Check if this field is selected
   const isFieldSelected =

@@ -67,13 +67,50 @@ export const transformMdmsToAppConfig = (fullData) => {
 const transformTemplate = (screenData) => {
 
 
- const transformedFields = (screenData.body?.[0]?.fields || []).map(field => {
-    if (field.format === "textTemplate") {
+  const transformedFields = (screenData.body?.[0]?.fields || []).map(field => {
+
+    if (field.format === "panelCard") {
       return {
         ...field,
-        format: "text"
-      };
+        primaryAction: {
+          ...field?.primaryAction,
+          label: primaryActionLabel
+        },
+        secondaryAction: {
+          ...field?.secondaryAction,
+          label: secondaryActionLabel
+        },
+      }
     }
+
+    if (field.format === "scanner" || field.format === "qrscanner") {
+      const validations = [];
+
+      validations.push({
+        type: "scanLimit",
+        value: field.scanLimit || 1,
+        message: field["scanLimit.message"]
+      });
+
+      validations.push({
+        type: "isGS1",
+        value: field.isGS1 || false,
+      });
+
+      if (field["pattern.message"] !== undefined && field["pattern.message"] !== null && field["pattern.message"] !== "") {
+        validations.push({
+          type: "pattern",
+          value: field.pattern,
+          message: field["pattern.message"]
+        });
+      }
+
+      return {
+        ...field,
+        validations
+      }
+    }
+
     return field;
   });
 
@@ -87,7 +124,7 @@ const transformTemplate = (screenData) => {
   if (screenData.heading) template.heading = screenData.heading;
   if (screenData.screenType) template.screenType = screenData.screenType;
   if (screenData.description) template.description = screenData.description;
-  if (screenData.footer) template.footer = screenData.footer;
+  if (screenData.footer) template.footer = transformFooter(screenData.footer);
   if (screenData.header) template.header = screenData.header;
   if (screenData.navigateTo !== undefined) template.navigateTo = screenData.navigateTo;
   if (screenData.initActions) template.initActions = screenData.initActions;
@@ -100,6 +137,43 @@ const transformTemplate = (screenData) => {
 
   return template;
 };
+
+const transformFooter = (footer) => {
+  if (!footer || !Array.isArray(footer)) return [];
+
+  const updatedFooter = footer.map(foo => {
+    if (foo.format === "scanner" || foo.format === "qrscanner") {
+      const validations = [];
+
+      validations.push({
+        type: "scanLimit",
+        value: foo.scanLimit || 1,
+        message: foo["scanLimit.message"]
+      });
+
+      validations.push({
+        type: "isGS1",
+        value: foo.isGS1 || false,
+      });
+
+      if (foo["pattern.message"] !== undefined && foo["pattern.message"] !== null && foo["pattern.message"] !== "") {
+        validations.push({
+          type: "pattern",
+          value: foo.pattern,
+          message: foo["pattern.message"]
+        });
+      }
+
+      return {
+        ...foo,
+        validations
+      };
+    }
+    return foo;
+  });
+
+  return updatedFooter;
+}
 
 /**
  * Transform a form page from MDMS format
@@ -227,6 +301,22 @@ const buildValidations = (field) => {
       value: field.max,
       message: field["max.message"] || `Maximum value is ${field.max}`
     });
+  }
+
+  if (field.isGS1) {
+    validations.push({
+      type: "isGS1",
+      value: field.isGS1 === true ? true : false,
+    })
+  }
+
+
+  if (field.scanLimit) {
+    validations.push({
+      type: "scanLimit",
+      value: field?.scanLimit,
+      message: field["scanLimit.message"]
+    })
   }
 
   return validations;
