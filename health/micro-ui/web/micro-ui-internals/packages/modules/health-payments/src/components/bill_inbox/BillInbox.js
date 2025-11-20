@@ -603,6 +603,7 @@ const BillInboxComponent = () => {
   /**
    * Query to fetch the bill data
    */
+
   const BillSearchCri = {
     url: `/${expenseContextPath}/bill/v1/_search`,
     body: {

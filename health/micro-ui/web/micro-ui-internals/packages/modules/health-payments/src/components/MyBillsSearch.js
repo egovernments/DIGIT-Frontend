@@ -89,6 +89,8 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
             if (value.code === "FINAL_AGGREGATE") {
               setIsDisabled(true);
               setDateRange({ startDate: "", endDate: "", title: "" });
+              setBillID("");
+              setKey((prevKey) => prevKey + 1);
             } else {
               setIsDisabled(false);
             }
