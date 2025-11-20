@@ -63,33 +63,43 @@ export const UICustomizations = {
 
       delete data.body.inbox.moduleSearchCriteria.locality;
       let rawLocality = data?.state?.filterForm?.locality;
+      console.log("PGR Inbox Filter - Raw Locality:", rawLocality);
       let localityArray = [];
       if (rawLocality) {
         if (Array.isArray(rawLocality)) {
           localityArray = rawLocality.map((loc) => {
             // Extract last segment from dot-separated code (e.g., "MICROPLAN_MO_16_FCT__ABUJA_STATE.MICROPLAN_MO_16_01_FCT__ABUJA.MICROPLAN_MO_16_01_01_ABAJI.MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI" -> "MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI")
             const code = loc?.code;
-            if (code && code.includes('.')) {
+            if (code && typeof code === 'string' && code.includes('.')) {
               const segments = code.split('.');
-              return segments[segments.length - 1];
+              const lastSegment = segments[segments.length - 1];
+              console.log("PGR Inbox Filter - Extracted from code:", code, "=>", lastSegment);
+              return lastSegment || null;
             }
-            return code;
+            return code || null;
           }).filter(Boolean);
-        } else if (rawLocality.code) {
+        } else if (rawLocality?.code) {
           // Extract last segment for single locality
           const code = rawLocality.code;
-          if (code && code.includes('.')) {
-            const segments = code.split('.');
-            localityArray = [segments[segments.length - 1]];
-          } else {
-            localityArray = [code];
+          if (code && typeof code === 'string') {
+            if (code.includes('.')) {
+              const segments = code.split('.');
+              const lastSegment = segments[segments.length - 1];
+              if (lastSegment) {
+                console.log("PGR Inbox Filter - Extracted from single code:", code, "=>", lastSegment);
+                localityArray = [lastSegment];
+              }
+            } else {
+              localityArray = [code];
+            }
           }
         }
       }
 
-      if (localityArray.length > 0) {
+      if (Array.isArray(localityArray) && localityArray.length > 0) {
         delete data.body.inbox.moduleSearchCriteria.locality;
         data.body.inbox.moduleSearchCriteria.area = localityArray;
+        console.log("PGR Inbox Filter - Final area array:", localityArray);
       } else {
         delete data.body.inbox.moduleSearchCriteria.area;
       }
