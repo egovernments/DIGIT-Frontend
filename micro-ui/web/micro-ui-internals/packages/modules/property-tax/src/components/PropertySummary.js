@@ -51,6 +51,16 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   const ownershipDetails = ownershipInfo?.ownershipDetails || {};
   const documentInfo = sessionData["document-info"] || {};
 
+  // Debug logging
+  console.log("=== PropertySummary DEBUG ===");
+  console.log("sessionData:", sessionData);
+  console.log("propertyAddress:", propertyAddress);
+  console.log("propertyAddress.surveyId:", propertyAddress.surveyId);
+  console.log("assessmentInfo:", assessmentInfo);
+  console.log("ownershipInfo:", ownershipInfo);
+  console.log("ownershipDetails:", ownershipDetails);
+  console.log("============================");
+
   // Property Address Section
   const propertyAddressSections = [
     {
