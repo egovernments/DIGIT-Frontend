@@ -63,7 +63,6 @@ export const UICustomizations = {
 
       delete data.body.inbox.moduleSearchCriteria.locality;
       let rawLocality = data?.state?.filterForm?.locality;
-      console.log("PGR Inbox Filter - Raw Locality:", rawLocality);
       let localityArray = [];
       if (rawLocality) {
         if (Array.isArray(rawLocality)) {
@@ -73,7 +72,6 @@ export const UICustomizations = {
             if (code && typeof code === 'string' && code.includes('.')) {
               const segments = code.split('.');
               const lastSegment = segments[segments.length - 1];
-              console.log("PGR Inbox Filter - Extracted from code:", code, "=>", lastSegment);
               return lastSegment || null;
             }
             return code || null;
@@ -86,7 +84,6 @@ export const UICustomizations = {
               const segments = code.split('.');
               const lastSegment = segments[segments.length - 1];
               if (lastSegment) {
-                console.log("PGR Inbox Filter - Extracted from single code:", code, "=>", lastSegment);
                 localityArray = [lastSegment];
               }
             } else {
@@ -99,7 +96,6 @@ export const UICustomizations = {
       if (Array.isArray(localityArray) && localityArray.length > 0) {
         delete data.body.inbox.moduleSearchCriteria.locality;
         data.body.inbox.moduleSearchCriteria.area = localityArray;
-        console.log("PGR Inbox Filter - Final area array:", localityArray);
       } else {
         delete data.body.inbox.moduleSearchCriteria.area;
       }
