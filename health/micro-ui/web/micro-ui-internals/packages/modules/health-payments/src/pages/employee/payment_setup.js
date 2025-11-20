@@ -1031,6 +1031,7 @@ const PaymentSetUpPage = () => {
           setBillingCycle(cy);
 
           setBillingConfigData(billingConfigResponse?.billingConfig);
+          setCustomDays(String(billingConfigResponse?.billingConfig?.customFrequencyDays || 3));
 
           // Step 2: Fetch default MDMS skills
           const defaultSkills = await fetchDefaultSkillsData(value.projectType);
@@ -1415,6 +1416,8 @@ const PaymentSetUpPage = () => {
               placeholder={t("HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS")}
               type="text"
               inputMode="numeric"
+              disabled={edit ? true : false}
+              allowNegativeValues={false}
             />
           )}
       </Card>

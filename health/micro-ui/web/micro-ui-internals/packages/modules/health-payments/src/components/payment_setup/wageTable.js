@@ -574,7 +574,7 @@ const RoleWageTable = ({
       const role = {
         id: index + 1,
         code: skill.code,
-        role: skill.name,
+        role: t(skill.code),
         total: 0,
       };
 
@@ -739,14 +739,14 @@ const RoleWageTable = ({
 
     rateColumns.forEach((column) => {
       cols.push({
-        name: <div style={{ textAlign: "start" }}>{t(column.label)} </div>,
+        name: <div style={{ textAlign: "start" }}>{t(`HCM_AM_${column.label.toUpperCase()}`)} </div>,
         selector: (row) => renderNumericInput(row, column.fieldName),
         grow: 1,
       });
     });
 
     cols.push({
-      name: <div style={{ textAlign: "start" }}>{t("Total_Wage")}</div>,
+      name: <div style={{ textAlign: "start" }}>{t("HCM_AM_TOTAL_WAGE")}</div>,
       selector: (row) => (
         <div title={row.total.toFixed(2)} style={{ fontWeight: 500 }}>
           {row.total.toFixed(2)}
