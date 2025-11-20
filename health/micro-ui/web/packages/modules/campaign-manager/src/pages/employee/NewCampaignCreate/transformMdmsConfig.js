@@ -204,9 +204,12 @@ const transformPropertiesToFields = (properties) => {
       field.enums = prop.enums;
     }
 
-    // Add schemaCode if present
+    // Add schemaCode if present and set isMdms accordingly
     if (prop.schemaCode) {
       field.schemaCode = prop.schemaCode;
+      field.isMdms = true;
+    } else {
+      field.isMdms = false;
     }
 
       // Transform validations to flat keys
