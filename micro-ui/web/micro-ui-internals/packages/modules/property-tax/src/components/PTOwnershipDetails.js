@@ -14,6 +14,9 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
   // Get complete formData (including all steps) - check both locations
   const completeFormData = allFormData || config?.customProps?.allFormData || {};
 
+  // Extract isDisabled prop from config
+  const isDisabled = config?.customProps?.isDisabled || false;
+
   // Get saved data from ownershipDetails key
   const savedData = formData?.ownershipDetails || {};
 
@@ -360,7 +363,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
       if (!guardianName || guardianName.trim() === "") missingFields.push(t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME"));
       if (!relationship || !relationship.code) missingFields.push(t("PT_FORM3_RELATIONSHIP"));
       if (!specialCategory || !specialCategory.code) missingFields.push(t("PT_FORM3_SPECIAL_CATEGORY"));
-      if (!ownershipPercentage || ownershipPercentage.trim() === "") missingFields.push(t("PT_SEARCHPROPERTY_TABEL_OWNERSHIPPERCENTAGE"));
+      if (!ownershipPercentage || String(ownershipPercentage).trim() === "") missingFields.push(t("PT_SEARCHPROPERTY_TABEL_OWNERSHIPPERCENTAGE"));
 
       // Check document fields if special category is not NONE
       if (showDocumentFields) {
@@ -398,7 +401,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
           if (!owner.guardianName || owner.guardianName.trim() === "") missingFields.push(`${prefix} - ${t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME")}`);
           if (!owner.relationship || !owner.relationship.code) missingFields.push(`${prefix} - ${t("PT_FORM3_RELATIONSHIP")}`);
           if (!owner.specialCategory || !owner.specialCategory.code) missingFields.push(`${prefix} - ${t("PT_FORM3_SPECIAL_CATEGORY")}`);
-          if (!owner.ownershipPercentage || owner.ownershipPercentage.trim() === "") missingFields.push(`${prefix} - ${t("PT_SEARCHPROPERTY_TABEL_OWNERSHIPPERCENTAGE")}`);
+          if (!owner.ownershipPercentage || String(owner.ownershipPercentage).trim() === "") missingFields.push(`${prefix} - ${t("PT_SEARCHPROPERTY_TABEL_OWNERSHIPPERCENTAGE")}`);
 
           // Check document fields if special category is not NONE
           if (owner.specialCategory && owner.specialCategory.code && owner.specialCategory.code !== "NONE") {
@@ -540,6 +543,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 if (!isMultipleOwners) validateField("ownerName", e.target.value);
               }}
               placeholder={t("PT_FORM3_OWNER_NAME_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {!isMultipleOwners && fieldErrors.ownerName && (
               <ErrorMessage message={fieldErrors.ownerName} showIcon={true} />
@@ -562,6 +566,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             selectedOption={ownerData?.gender}
             onSelect={(value) => updateField("gender", value)}
             style={{ gap: "8px", marginBottom: "0px" }}
+            disabled={isDisabled}
           />
         </LabelFieldPair>
 
@@ -582,6 +587,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 if (!isMultipleOwners) validateField("mobileNumber", e.target.value);
               }}
               placeholder={t("PT_FORM3_MOBILE_NO_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {!isMultipleOwners && fieldErrors.mobileNumber && (
               <ErrorMessage message={fieldErrors.mobileNumber} showIcon={true} />
@@ -603,6 +609,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               value={ownerData?.guardianName || ""}
               onChange={(e) => updateField("guardianName", e.target.value)}
               placeholder={t("PT_FORM3_GUARDIAN_PLACEHOLDER")}
+              disabled={isDisabled}
             />
           </div>
         </LabelFieldPair>
@@ -622,6 +629,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             selected={ownerData?.relationship}
             select={(value) => updateField("relationship", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
+            disable={isDisabled}
           />
         </LabelFieldPair>
 
@@ -640,6 +648,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             selected={ownerData?.specialCategory}
             select={(value) => updateField("specialCategory", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
+            disable={isDisabled}
           />
         </LabelFieldPair>
 
@@ -659,6 +668,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               selected={ownerData?.documentIdType}
               select={(value) => updateField("documentIdType", value)}
               placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
+              disable={isDisabled}
             />
           </LabelFieldPair>
         )}
@@ -681,6 +691,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                   if (!isMultipleOwners) validateField("documentId", e.target.value);
                 }}
                 placeholder={t("PT_FORM3_DOCUMENT_ID_NO_PLACEHOLDER")}
+                disabled={isDisabled}
               />
             </div>
           </LabelFieldPair>
@@ -702,6 +713,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 if (!isMultipleOwners) validateField("emailId", e.target.value);
               }}
               placeholder={t("PT_FORM3_EMAIL_ID_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {!isMultipleOwners && fieldErrors.emailId && (
               <ErrorMessage message={fieldErrors.emailId} showIcon={true} />
@@ -727,6 +739,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 if (!isMultipleOwners) validateField("ownershipPercentage", e.target.value);
               }}
               placeholder={t("PT_FORM3_OWNERPERCENTAGE_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {!isMultipleOwners && fieldErrors.ownershipPercentage && (
               <ErrorMessage message={fieldErrors.ownershipPercentage} showIcon={true} />
@@ -750,7 +763,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 if (!isMultipleOwners) validateField("correspondenceAddress", e.target.value);
               }}
               placeholder={t("PT_FORM3_CORRESPONDENCE_ADDRESS_PLACEHOLDER")}
-              disabled={ownerData?.sameAsPropertyAddress || false}
+              disabled={ownerData?.sameAsPropertyAddress || isDisabled}
             />
             {!isMultipleOwners && fieldErrors.correspondenceAddress && (
               <ErrorMessage message={fieldErrors.correspondenceAddress} showIcon={true} />
@@ -767,6 +780,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               const isChecked = e?.target?.checked !== undefined ? e.target.checked : e;
               updateField("sameAsPropertyAddress", isChecked);
             }}
+            disabled={isDisabled}
           />
         </LabelFieldPair>
       </>
@@ -791,6 +805,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               value={institutionName}
               onChange={(e) => handleFieldChange("institutionName", e.target.value)}
               placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
+              disabled={isDisabled}
             />
           </div>
         </LabelFieldPair>
@@ -809,6 +824,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             selected={institutionType}
             select={(value) => handleFieldChange("institutionType", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
+            disable={isDisabled}
           />
         </LabelFieldPair>
 
@@ -833,6 +849,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 validateField("ownerName", e.target.value);
               }}
               placeholder={t("PT_FORM3_OWNER_NAME_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {fieldErrors.ownerName && (
               <ErrorMessage message={fieldErrors.ownerName} showIcon={true} />
@@ -857,6 +874,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 validateField("mobileNumber", e.target.value);
               }}
               placeholder={t("PT_FORM3_MOBILE_NO_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {fieldErrors.mobileNumber && (
               <ErrorMessage message={fieldErrors.mobileNumber} showIcon={true} />
@@ -880,6 +898,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 validateField("emailId", e.target.value);
               }}
               placeholder={t("PT_FORM3_EMAIL_ID_PLACEHOLDER")}
+              disabled={isDisabled}
             />
             {fieldErrors.emailId && (
               <ErrorMessage message={fieldErrors.emailId} showIcon={true} />
@@ -901,6 +920,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               value={designation}
               onChange={(e) => handleFieldChange("designation", e.target.value)}
               placeholder={t("TL_NEW_OWNER_DESIG_PLACEHOLDER")}
+              disabled={isDisabled}
             />
           </div>
         </LabelFieldPair>
@@ -922,6 +942,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 validateField("altContactNumber", e.target.value);
               }}
               placeholder={t("PT_LANDLINE_NUMBER_HINT_TEXT")}
+              disabled={isDisabled}
             />
             {fieldErrors.altContactNumber && (
               <ErrorMessage message={fieldErrors.altContactNumber} showIcon={true} />
@@ -946,7 +967,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 validateField("correspondenceAddress", e.target.value);
               }}
               placeholder={t("PT_FORM3_CORRESPONDENCE_ADDRESS_PLACEHOLDER")}
-              disabled={sameAsPropertyAddress}
+              disabled={sameAsPropertyAddress || isDisabled}
             />
             {fieldErrors.correspondenceAddress && (
               <ErrorMessage message={fieldErrors.correspondenceAddress} showIcon={true} />
@@ -963,6 +984,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               const isChecked = e?.target?.checked !== undefined ? e.target.checked : e;
               handleFieldChange("sameAsPropertyAddress", isChecked);
             }}
+            disabled={isDisabled}
           />
         </LabelFieldPair>
       </>
@@ -996,6 +1018,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                     variation="secondary"
                     size="small"
                     onClick={() => handleRemoveOwner(ownerIndex)}
+                    isDisabled={isDisabled}
                   />
                 )}
               </div>
@@ -1007,6 +1030,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             label={t("PT_COMMON_ADD_OWNER") || "+ ADD OWNER"}
             variation="secondary"
             onClick={handleAddOwner}
+            isDisabled={isDisabled}
           />
         </div>
       )}

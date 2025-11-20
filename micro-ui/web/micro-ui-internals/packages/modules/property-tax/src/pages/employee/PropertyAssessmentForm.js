@@ -1,1266 +1,1583 @@
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useLocation, useHistory } from "react-router-dom";
-import { FormComposerV2, Stepper, HeaderComponent, Loader, Toast } from "@egovernments/digit-ui-components";
-import { PropertyRegistrationConfig } from "../../configs/employee/PropertyRegistrationConfig";
-import AddPropertyPopup from "../../components/AddPropertyPopup";
+  import React, { useState, useEffect } from "react";
+  import { useTranslation } from "react-i18next";
+  import { useLocation, useHistory } from "react-router-dom";
+  import { FormComposerV2, Stepper, HeaderComponent, Loader, Toast } from "@egovernments/digit-ui-components";
+  import { PropertyRegistrationConfig } from "../../configs/employee/PropertyRegistrationConfig";
+  import AddPropertyPopup from "../../components/AddPropertyPopup";
 
-const PropertyAssessmentForm = ({ userType = "employee" }) => {
-  const { t } = useTranslation();
-  const location = useLocation();
-  const history = useHistory();
-  const searchParams = new URLSearchParams(location.search);
-  const stepFromUrl = searchParams.get('step');
-  const purpose = searchParams.get('purpose') || 'create'; // 'create', 'update', or 'reassess'
-  const propertyIdFromUrl = searchParams.get('propertyId');
-  const tenantIdFromUrl = searchParams.get('tenantId');
-  const assessmentIdFromUrl = searchParams.get('assessmentId');
-  const financialYearFromUrl = searchParams.get('FY');
-  const tenantId = tenantIdFromUrl || Digit?.ULBService?.getCurrentTenantId();
+  const PropertyAssessmentForm = ({ userType = "employee" }) => {
+    const { t } = useTranslation();
+    const location = useLocation();
+    const history = useHistory();
+    const searchParams = new URLSearchParams(location.search);
+    const stepFromUrl = searchParams.get('step');
+    const purpose = searchParams.get('purpose') || 'create'; // 'create', 'update', or 'reassess'
+    const propertyIdFromUrl = searchParams.get('propertyId');
+    const tenantIdFromUrl = searchParams.get('tenantId');
+    const assessmentIdFromUrl = searchParams.get('assessmentId');
+    const financialYearFromUrl = searchParams.get('FY');
+    const tenantId = tenantIdFromUrl || Digit?.ULBService?.getCurrentTenantId();
 
-  const isUpdateMode = !!(purpose === 'update' && propertyIdFromUrl);
-  const isReassessMode = !!(purpose === 'reassess' && propertyIdFromUrl && assessmentIdFromUrl);
-  const isAssessMode = !!(purpose === 'assess' && propertyIdFromUrl); // New assessment for existing property
-  const isCitizen = userType === "citizen";
+    const isUpdateMode = !!(purpose === 'update' && propertyIdFromUrl);
+    const isReassessMode = !!(purpose === 'reassess' && propertyIdFromUrl && assessmentIdFromUrl);
+    const isAssessMode = !!(purpose === 'assess' && propertyIdFromUrl); // New assessment for existing property
+    const isCitizen = userType === "citizen";
 
-  // Session storage key for this form
-  const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${(isUpdateMode || isReassessMode || isAssessMode) ? propertyIdFromUrl : 'new'}`;
-  const popupSeenKey = `PT_POPUP_SEEN_${tenantId}`;
+    // Session storage key for this form
+    const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${(isUpdateMode || isReassessMode || isAssessMode) ? propertyIdFromUrl : 'new'}`;
+    const popupSeenKey = `PT_POPUP_SEEN_${tenantId}`;
 
-  // Initialize state from URL or session storage
-  const getInitialState = () => {
-    try {
-      // In reassess or assess mode, always start at step 4 (summary) unless step is specified
-      if (isReassessMode || isAssessMode) {
-        const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 4; // Default to summary step
-        return {
-          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 4,
-          formData: {},
-        };
-      }
+    // Initialize state from URL or session storage
+    const getInitialState = () => {
+      try {
+        // In reassess or assess mode, always start at step 4 (summary) unless step is specified
+        if (isReassessMode || isAssessMode) {
+          const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 4; // Default to summary step
+          return {
+            currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 4,
+            formData: {},
+          };
+        }
 
-      // In update mode, don't load from session storage initially - let API data load first
-      if (isUpdateMode) {
-        const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 0;
-        return {
-          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
-          formData: {},
-        };
-      }
+        // In update mode, check if this is a fresh navigation from property details
+        if (isUpdateMode) {
+          const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 0;
 
-      // Check if coming from a fresh URL without any referrer context
-      // If user navigates directly to assessment-form (not from within the app flow),
-      // clear any stale session data
-      const isDirectNavigation = !document.referrer ||
-                                  !document.referrer.includes('assessment-form') ||
-                                  document.referrer.includes('pt-acknowledgment');
+          // Check session storage first to see if we already have form data in progress
+          const savedData = Digit.SessionStorage.get(sessionKey);
+          const dataLoadedKey = `PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`;
+          const hasLoadedData = Digit.SessionStorage.get(dataLoadedKey);
 
-      const savedData = Digit.SessionStorage.get(sessionKey);
+          // Check if saved data has actual property data (not empty)
+          const hasValidFormData = savedData?.formData && Object.keys(savedData.formData).length > 0;
 
-      // Clear stale data if user is coming from acknowledgment page or direct navigation to step 1
-      if (isDirectNavigation && (!stepFromUrl || stepFromUrl === '1')) {
-        Digit.SessionStorage.del(sessionKey);
-        Digit.SessionStorage.del(popupSeenKey);
-        return {
-          currentStep: 0,
-          formData: {},
-        };
-      }
+          // Clear session data if:
+          // 1. On step 1 AND
+          // 2. Either no saved data exists OR saved data is empty (even if loaded flag is set)
+          // This handles both fresh loads and stale session scenarios
+          const shouldClearSession = (!stepFromUrl || stepFromUrl === '1') && !hasValidFormData;
 
-      // If URL has step parameter, use it
-      if (stepFromUrl) {
-        const stepNumber = parseInt(stepFromUrl) - 1; // Convert to 0-based index
-        return {
-          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
-          formData: savedData?.formData || {},
-        };
-      }
-
-      // If no URL parameter but session data exists, use session data
-      if (savedData) {
-        return {
-          currentStep: savedData.currentStep || 0,
-          formData: savedData.formData || {},
-        };
-      }
-    } catch (e) {
-      console.error("Error loading session data:", e);
-    }
-    return {
-      currentStep: 0,
-      formData: {},
-    };
-  };
-
-  const initialState = getInitialState();
-
-  // Check if popup has been shown before
-  const hasSeenPopup = () => {
-    try {
-      return Digit.SessionStorage.get(popupSeenKey) === true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  const [currentStep, setCurrentStep] = useState(initialState.currentStep);
-  const [formData, setFormData] = useState(initialState.formData);
-  const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState(null);
-  const [showRequiredDocsPopup, setShowRequiredDocsPopup] = useState(!isUpdateMode && !isReassessMode && !isAssessMode && !hasSeenPopup());
-  const [submitTrigger, setSubmitTrigger] = useState(false);
-  const [propertyData, setPropertyData] = useState(null);
-  const [fetchedPropertyData, setFetchedPropertyData] = useState(null);
-  const [isPropertyDataLoaded, setIsPropertyDataLoaded] = useState(false);
-  const [existingAssessment, setExistingAssessment] = useState(null);
-  const [taxCalculation, setTaxCalculation] = useState(null);
-  const [adhocPenalty, setAdhocPenalty] = useState(0);
-  const [adhocRebate, setAdhocRebate] = useState(0);
-  const [importantDates, setImportantDates] = useState(null);
-  const [billingSlabs, setBillingSlabs] = useState([]);
-
-  // Citizen-specific state for declaration
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [termsError, setTermsError] = useState("");
-
-  const config = PropertyRegistrationConfig(t, formData, loading, {
-    isReassessMode: isReassessMode || isAssessMode, // Treat assess mode same as reassess for config
-    taxCalculation,
-    existingAssessment,
-    financialYear: financialYearFromUrl,
-    assessmentId: assessmentIdFromUrl,
-    importantDates,
-    billingSlabs,
-    isCitizen,
-    termsAccepted,
-    termsError,
-    onTermsChange: (checked) => {
-      setTermsAccepted(checked);
-      if (checked) {
-        setTermsError("");
-      }
-    },
-    allFormData: formData // Pass entire formData for components that need data from other steps
-  });
-  const currentConfig = config[currentStep];
-
-  // API hook for fetching property details in update, reassess, or assess mode
-  const { isLoading: isFetchingProperty, data: propertyResponse } = (isUpdateMode || isReassessMode || isAssessMode)
-    ? Digit.Hooks.useCustomAPIHook({
-        url: "/property-services/property/_search",
-        params: {
-          tenantId: tenantId,
-          propertyIds: propertyIdFromUrl,
-          audit: false
-        },
-        config: {
-          enabled: !!((isUpdateMode || isReassessMode || isAssessMode) && propertyIdFromUrl && tenantId),
-          select: (data) => data?.Properties || [],
-        },
-      })
-    : { isLoading: false, data: null };
-
-  // API hook for fetching existing assessment in reassess mode
-  // In reassess mode: fetch specific assessment by assessment number
-  // In assess mode: fetch all assessments for the property to get latest one for reference
-  const { isLoading: isFetchingAssessment, data: assessmentResponse } = (isReassessMode && assessmentIdFromUrl) || (isAssessMode && propertyIdFromUrl)
-    ? Digit.Hooks.useCustomAPIHook({
-        url: "/property-services/assessment/_search",
-        params: isReassessMode
-          ? {
-              tenantId: tenantId,
-              assessmentNumbers: assessmentIdFromUrl
-            }
-          : {
-              tenantId: tenantId,
-              propertyIds: propertyIdFromUrl
-            },
-        config: {
-          enabled: !!((isReassessMode && assessmentIdFromUrl && tenantId) || (isAssessMode && propertyIdFromUrl && tenantId)),
-          select: (data) => {
-            const assessments = data?.Assessments || [];
-            // In assess mode, get the most recent active assessment for reference
-            if (isAssessMode && assessments.length > 0) {
-              const activeAssessments = assessments.filter(a => a.status === 'ACTIVE');
-              // Sort by date to get latest
-              return activeAssessments.sort((a, b) => {
-                const dateA = a.assessmentDate || a.auditDetails?.createdTime || 0;
-                const dateB = b.assessmentDate || b.auditDetails?.createdTime || 0;
-                return new Date(dateB) - new Date(dateA);
-              });
-            }
-            return assessments;
-          },
-        },
-      })
-    : { isLoading: false, data: null };
-
-  // API hook for property creation
-  const { isLoading: isCreating, data: createResponse, revalidate: createProperty } = Digit.Hooks.useCustomAPIHook({
-    url: "/property-services/property/_create",
-    params: {},
-    body: propertyData,
-    config: {
-      enabled: submitTrigger && !!propertyData && !isUpdateMode,
-      select: (data) => data,
-    },
-  });
-
-  // API hook for property update
-  const { isLoading: isUpdating, data: updateResponse, revalidate: updateProperty } = Digit.Hooks.useCustomAPIHook({
-    url: "/property-services/property/_update",
-    params: {},
-    body: propertyData,
-    config: {
-      enabled: submitTrigger && !!propertyData && isUpdateMode,
-      select: (data) => data,
-    },
-  });
-
-  // API hook for tax calculation/estimation in reassess or assess mode
-  const { isLoading: isFetchingTaxCalculation, data: taxCalculationResponse } = (isReassessMode || isAssessMode) && propertyIdFromUrl && financialYearFromUrl
-    ? Digit.Hooks.useCustomAPIHook({
-        url: "/pt-calculator-v2/propertytax/v2/_estimate",
-        params: {
-          tenantId: tenantId
-        },
-        body: {
-          Assessment: {
-            financialYear: financialYearFromUrl,
-            propertyId: propertyIdFromUrl,
-            tenantId: tenantId,
-            source: "MUNICIPAL_RECORDS",
-            channel: "CFC_COUNTER"
-          }
-        },
-        config: {
-          enabled: !!((isReassessMode || isAssessMode) && propertyIdFromUrl && tenantId && financialYearFromUrl && isPropertyDataLoaded),
-          select: (data) => data?.Calculation?.[0] || null,
-        },
-      })
-    : { isLoading: false, data: null };
-
-  // Load property data in update, reassess, or assess mode
-  useEffect(() => {
-    if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded) {
-      const property = propertyResponse[0];
-      setFetchedPropertyData(property);
-      // Transform property data to form data format
-      const transformedFormData = transformPropertyToFormData(property);
-      setFormData(transformedFormData);
-      setIsPropertyDataLoaded(true);
-    }
-  }, [propertyResponse, isUpdateMode, isReassessMode, isAssessMode, isPropertyDataLoaded]);
-
-  // Clear adhoc values and existing assessment on component mount for new assessments (assess mode with assessmentId=0)
-  // This must run BEFORE config is created to prevent PropertySummary from initializing with stale values
-  useEffect(() => {
-    // Reset adhoc values when loading a fresh assessment page (assessmentId = 0)
-    const isNewAssessmentPage = isAssessMode && (!assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0);
-
-    if (isNewAssessmentPage) {
-      // Clear state values immediately
-      setAdhocPenalty(0);
-      setAdhocRebate(0);
-      setExistingAssessment(null);
-    }
-  }, [isAssessMode, assessmentIdFromUrl]); // Run when component mounts or URL params change
-
-  // Load existing assessment data in reassess or assess mode
-  useEffect(() => {
-    // Skip loading assessment data if this is a new assessment (assessmentId=0)
-    const isNewAssessment = isAssessMode && (!assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0);
-
-    if (isNewAssessment) {
-      // Don't load any assessment data for new assessments
-      return;
-    }
-
-    if (assessmentResponse && assessmentResponse.length > 0 && (isReassessMode || isAssessMode)) {
-      const assessment = assessmentResponse[0];
-      setExistingAssessment(assessment);
-
-      // Initialize adhoc penalty and rebate from existing assessment (only for reassess of same year)
-      if (isReassessMode && assessment.additionalDetails) {
-        setAdhocPenalty(assessment.additionalDetails.adhocPenalty || 0);
-        setAdhocRebate(assessment.additionalDetails.adhocExemption || 0);
-      }
-      // In assess mode with existing assessment, keep values at 0 (already set above)
-    }
-  }, [assessmentResponse, isReassessMode, isAssessMode, assessmentIdFromUrl]);
-
-  // Fetch Important Dates from MDMS
-  useEffect(() => {
-    const fetchImportantDates = async () => {
-      if ((isReassessMode || isAssessMode) && tenantId && financialYearFromUrl) {
-        try {
-          const mdmsResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["Rebate", "Penalty", "Interest", "FireCess"]);
-
-          if (mdmsResponse?.PropertyTax) {
-            const { Rebate, Penalty, Interest, FireCess } = mdmsResponse.PropertyTax;
-
-            // Find correct dates for the financial year (same as mono-ui)
-            const findCorrectDateObj = (fyear, data) => {
-              if (!data || !Array.isArray(data)) return null;
-              return data.find(item => item.fromFY === fyear);
+          if (shouldClearSession) {
+            Digit.SessionStorage.del(sessionKey);
+            Digit.SessionStorage.del(dataLoadedKey);
+            return {
+              currentStep: 0,
+              formData: {}, // Empty formData - will be populated by API call
             };
-
-            const rebate = findCorrectDateObj(financialYearFromUrl, Rebate);
-            const penalty = findCorrectDateObj(financialYearFromUrl, Penalty);
-            const interest = findCorrectDateObj(financialYearFromUrl, Interest);
-            const fireCess = findCorrectDateObj(financialYearFromUrl, FireCess);
-
-            setImportantDates({ rebate, penalty, interest, fireCess });
           }
-        } catch (error) {
-          console.error("Important dates fetch error:", error);
+
+          // If we have valid saved data, use it for step navigation
+          return {
+            currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
+            formData: savedData?.formData || {}, // Load from session if available
+          };
         }
+
+        // Check if coming from a fresh URL without any referrer context
+        // If user navigates directly to assessment-form (not from within the app flow),
+        // clear any stale session data
+        const isDirectNavigation = !document.referrer ||
+                                    !document.referrer.includes('assessment-form') ||
+                                    document.referrer.includes('pt-acknowledgment');
+
+        const savedData = Digit.SessionStorage.get(sessionKey);
+
+        // Clear stale data if user is coming from acknowledgment page or direct navigation to step 1
+        if (isDirectNavigation && (!stepFromUrl || stepFromUrl === '1')) {
+          Digit.SessionStorage.del(sessionKey);
+          Digit.SessionStorage.del(popupSeenKey);
+          return {
+            currentStep: 0,
+            formData: {},
+          };
+        }
+
+        // If URL has step parameter, use it
+        if (stepFromUrl) {
+          const stepNumber = parseInt(stepFromUrl) - 1; // Convert to 0-based index
+          return {
+            currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
+            formData: savedData?.formData || {},
+          };
+        }
+
+        // If no URL parameter but session data exists, use session data
+        if (savedData) {
+          return {
+            currentStep: savedData.currentStep || 0,
+            formData: savedData.formData || {},
+          };
+        }
+      } catch (e) {
+        console.error("Error loading session data:", e);
+      }
+      return {
+        currentStep: 0,
+        formData: {},
+      };
+    };
+
+    const initialState = getInitialState();
+
+    // Check if popup has been shown before
+    const hasSeenPopup = () => {
+      try {
+        return Digit.SessionStorage.get(popupSeenKey) === true;
+      } catch (e) {
+        return false;
       }
     };
 
-    fetchImportantDates();
-  }, [isReassessMode, isAssessMode, tenantId, financialYearFromUrl]);
 
-  // Process tax calculation response
-  useEffect(() => {
-    const fetchBillingSlabs = async (calculation) => {
-      if (calculation?.billingSlabIds && calculation.billingSlabIds.length > 0) {
-        try {
-          const billingSlabResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["PropertyTaxSlabs"]);
+    const [currentStep, setCurrentStep] = useState(initialState.currentStep);
+    const [formData, setFormData] = useState(initialState.formData);
 
-          if (billingSlabResponse?.PropertyTax?.PropertyTaxSlabs) {
-            const allSlabs = billingSlabResponse.PropertyTax.PropertyTaxSlabs;
+    const [loading, setLoading] = useState(false);
+    const [toast, setToast] = useState(null);
+    const [showRequiredDocsPopup, setShowRequiredDocsPopup] = useState(!isUpdateMode && !isReassessMode && !isAssessMode && !hasSeenPopup());
+    const [submitTrigger, setSubmitTrigger] = useState(false);
+    const [propertyData, setPropertyData] = useState(null);
+    const [fetchedPropertyData, setFetchedPropertyData] = useState(null);
+    const [isPropertyDataLoaded, setIsPropertyDataLoaded] = useState(false);
+    const [existingAssessment, setExistingAssessment] = useState(null);
+    const [taxCalculation, setTaxCalculation] = useState(null);
+    const [adhocPenalty, setAdhocPenalty] = useState(0);
+    const [adhocRebate, setAdhocRebate] = useState(0);
+    const [importantDates, setImportantDates] = useState(null);
+    const [billingSlabs, setBillingSlabs] = useState([]);
 
-            // Match billing slab IDs with actual slab data
-            const matchedSlabs = calculation.billingSlabIds.map(slabId => {
-              const id = slabId.split("|")[0]; // Extract ID before pipe
-              return allSlabs.find(slab => slab.id === id);
-            }).filter(Boolean);
+    // Citizen-specific state for declaration
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [termsError, setTermsError] = useState("");
 
-            setBillingSlabs(matchedSlabs);
-          }
-        } catch (slabError) {
-          console.error("Billing slab fetch error:", slabError);
+    const config = PropertyRegistrationConfig(t, formData, loading, {
+      isReassessMode: isReassessMode || isAssessMode, // Treat assess mode same as reassess for config
+      taxCalculation,
+      existingAssessment,
+      financialYear: financialYearFromUrl,
+      assessmentId: assessmentIdFromUrl,
+      importantDates,
+      billingSlabs,
+      isCitizen,
+      termsAccepted,
+      termsError,
+      onTermsChange: (checked) => {
+        setTermsAccepted(checked);
+        if (checked) {
+          setTermsError("");
         }
+      },
+      allFormData: formData, // Pass entire formData for components that need data from other steps
+      isUpdateMode: isUpdateMode // Pass update mode flag to config
+    });
+    const currentConfig = config[currentStep];
+
+    console.log(formData,"1: formData");
+    
+
+    // API hook for fetching property details in update, reassess, or assess mode
+    const { isLoading: isFetchingProperty, data: propertyResponse } = (isUpdateMode || isReassessMode || isAssessMode)
+      ? Digit.Hooks.useCustomAPIHook({
+          url: "/property-services/property/_search",
+          params: {
+            tenantId: tenantId,
+            propertyIds: propertyIdFromUrl,
+            audit: false
+          },
+          config: {
+            enabled: !!((isUpdateMode || isReassessMode || isAssessMode) && propertyIdFromUrl && tenantId),
+            select: (data) => data?.Properties || [],
+          },
+        })
+      : { isLoading: false, data: null };
+
+      console.log(propertyResponse,"1: propertyResponse");
+      
+
+    // API hook for fetching existing assessment in reassess mode
+    // In reassess mode: fetch specific assessment by assessment number
+    // In assess mode: fetch all assessments for the property to get latest one for reference
+    const { isLoading: isFetchingAssessment, data: assessmentResponse } = (isReassessMode && assessmentIdFromUrl) || (isAssessMode && propertyIdFromUrl)
+      ? Digit.Hooks.useCustomAPIHook({
+          url: "/property-services/assessment/_search",
+          params: isReassessMode
+            ? {
+                tenantId: tenantId,
+                assessmentNumbers: assessmentIdFromUrl
+              }
+            : {
+                tenantId: tenantId,
+                propertyIds: propertyIdFromUrl
+              },
+          config: {
+            enabled: !!((isReassessMode && assessmentIdFromUrl && tenantId) || (isAssessMode && propertyIdFromUrl && tenantId)),
+            select: (data) => {
+              const assessments = data?.Assessments || [];
+              // In assess mode, get the most recent active assessment for reference
+              if (isAssessMode && assessments.length > 0) {
+                const activeAssessments = assessments.filter(a => a.status === 'ACTIVE');
+                // Sort by date to get latest
+                return activeAssessments.sort((a, b) => {
+                  const dateA = a.assessmentDate || a.auditDetails?.createdTime || 0;
+                  const dateB = b.assessmentDate || b.auditDetails?.createdTime || 0;
+                  return new Date(dateB) - new Date(dateA);
+                });
+              }
+              return assessments;
+            },
+          },
+        })
+      : { isLoading: false, data: null };
+
+    // API hook for property creation
+    const { isLoading: isCreating, data: createResponse, revalidate: createProperty } = Digit.Hooks.useCustomAPIHook({
+      url: "/property-services/property/_create",
+      params: {},
+      body: propertyData,
+      config: {
+        enabled: submitTrigger && !!propertyData && !isUpdateMode,
+        select: (data) => data,
+      },
+    });
+    
+
+    // API hook for property update
+    const { isLoading: isUpdating, data: updateResponse, revalidate: updateProperty } = Digit.Hooks.useCustomAPIHook({
+      url: "/property-services/property/_update",
+      params: {},
+      body: propertyData,
+      config: {
+        enabled: submitTrigger && !!propertyData && isUpdateMode,
+        select: (data) => data,
+      },
+    });
+
+    // API hook for tax calculation/estimation in reassess or assess mode
+    const { isLoading: isFetchingTaxCalculation, data: taxCalculationResponse } = (isReassessMode || isAssessMode) && propertyIdFromUrl && financialYearFromUrl
+      ? Digit.Hooks.useCustomAPIHook({
+          url: "/pt-calculator-v2/propertytax/v2/_estimate",
+          params: {
+            tenantId: tenantId
+          },
+          body: {
+            Assessment: {
+              financialYear: financialYearFromUrl,
+              propertyId: propertyIdFromUrl,
+              tenantId: tenantId,
+              source: "MUNICIPAL_RECORDS",
+              channel: "CFC_COUNTER"
+            }
+          },
+          config: {
+            enabled: !!((isReassessMode || isAssessMode) && propertyIdFromUrl && tenantId && financialYearFromUrl && isPropertyDataLoaded),
+            select: (data) => data?.Calculation?.[0] || null,
+          },
+        })
+      : { isLoading: false, data: null };
+
+    // Load property data in update, reassess, or assess mode
+    // IMPORTANT: Only load ONCE when component first receives API data
+    useEffect(() => {
+      // Check if we've already loaded data in this session using sessionStorage
+      const dataLoadedKey = `PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`;
+      const hasLoadedInSession = Digit.SessionStorage.get(dataLoadedKey);
+
+      // Only load property data if:
+      // 1. We have property response from API
+      // 2. We're in update/reassess/assess mode
+      // 3. We haven't loaded it yet (both flag and session check)
+      if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded && !hasLoadedInSession) {
+        const property = propertyResponse[0];
+        setFetchedPropertyData(property);
+        // Transform property data to form data format
+        const transformedFormData = transformPropertyToFormData(property);
+
+        // Store original property metadata for update operations
+        // This ensures IDs, UUIDs, and audit details are preserved in session storage
+        transformedFormData._propertyMetadata = {
+          id: property.id,
+          propertyId: property.propertyId,
+          accountId: property.accountId,
+          oldPropertyId: property.oldPropertyId,
+          status: property.status,
+          acknowldgementNumber: property.acknowldgementNumber,
+          auditDetails: property.auditDetails,
+          address: {
+            id: property.address?.id
+          },
+          owners: property.owners?.map(owner => ({
+            uuid: owner.uuid,
+            ownerInfoUuid: owner.ownerInfoUuid,
+            status: owner.status
+          })) || [],
+          units: property.units?.map(unit => ({
+            id: unit.id,
+            constructionDetail: {
+              id: unit.constructionDetail?.id
+            }
+          })) || []
+        };
+
+        setFormData(transformedFormData);
+        setIsPropertyDataLoaded(true);
+        // Mark as loaded in session storage to prevent reloading
+        Digit.SessionStorage.set(dataLoadedKey, true);
       }
-    };
+    }, [propertyResponse, isUpdateMode, isReassessMode, isAssessMode, isPropertyDataLoaded, tenantId, propertyIdFromUrl]);
 
-    if (taxCalculationResponse) {
-      setTaxCalculation(taxCalculationResponse);
-      fetchBillingSlabs(taxCalculationResponse);
-    }
-  }, [taxCalculationResponse, tenantId]);
+    // Clear adhoc values and existing assessment on component mount for new assessments (assess mode with assessmentId=0)
+    // This must run BEFORE config is created to prevent PropertySummary from initializing with stale values
+    useEffect(() => {
+      // Reset adhoc values when loading a fresh assessment page (assessmentId = 0)
+      const isNewAssessmentPage = isAssessMode && (!assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0);
 
-  // Handle create API response
-  useEffect(() => {
-    if (createResponse && submitTrigger) {
-      // API returns Properties array or direct array
-      const propertiesArray = createResponse?.Properties || (Array.isArray(createResponse) ? createResponse : null);
-
-      if (propertiesArray && propertiesArray.length > 0) {
-        const createdProperty = propertiesArray[0];
-
-        // Clear session storage on successful submission
-        Digit.SessionStorage.set(sessionKey, null);
-        Digit.SessionStorage.set(popupSeenKey, null);
-
-        // Redirect to acknowledgment page
-        const params = new URLSearchParams({
-          purpose: 'create',
-          status: 'success',
-          propertyId: createdProperty.propertyId,
-          tenantId: createdProperty.tenantId,
-          secondNumber: createdProperty.acknowldgementNumber
-        });
-
-        const contextPath = isCitizen ? "citizen" : "employee";
-        history.push(
-          `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
-        );
-      } else {
-        setToast({
-          label: createResponse?.Errors?.[0]?.message || t("PT_PROPERTY_REGISTRATION_ERROR"),
-          type: "error"
-        });
+      if (isNewAssessmentPage) {
+        // Clear state values immediately
+        setAdhocPenalty(0);
+        setAdhocRebate(0);
+        setExistingAssessment(null);
       }
+    }, [isAssessMode, assessmentIdFromUrl]); // Run when component mounts or URL params change
 
-      setLoading(false);
-      setSubmitTrigger(false);
-    }
-  }, [createResponse, submitTrigger, t]);
+    // Load existing assessment data in reassess or assess mode
+    useEffect(() => {
+      // Skip loading assessment data if this is a new assessment (assessmentId=0)
+      const isNewAssessment = isAssessMode && (!assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0);
 
-  // Handle update API response
-  useEffect(() => {
-    if (!submitTrigger || isUpdating) return;
-
-    if (updateResponse) {
-      // Check for errors first
-      if (updateResponse?.Errors && updateResponse.Errors.length > 0) {
-        setToast({
-          label: updateResponse.Errors[0].message || t("PT_PROPERTY_UPDATE_ERROR"),
-          type: "error"
-        });
-        setLoading(false);
-        setSubmitTrigger(false);
+      if (isNewAssessment) {
+        // Don't load any assessment data for new assessments
         return;
       }
 
-      // API returns Properties array or direct array
-      const propertiesArray = updateResponse?.Properties || (Array.isArray(updateResponse) ? updateResponse : null);
+      if (assessmentResponse && assessmentResponse.length > 0 && (isReassessMode || isAssessMode)) {
+        const assessment = assessmentResponse[0];
+        setExistingAssessment(assessment);
 
-      if (propertiesArray && propertiesArray.length > 0) {
-        const updatedProperty = propertiesArray[0];
-
-        // Clear session storage on successful submission
-        Digit.SessionStorage.set(sessionKey, null);
-        Digit.SessionStorage.set(popupSeenKey, null);
-
-        // Redirect to acknowledgment page
-        const params = new URLSearchParams({
-          purpose: 'update',
-          status: 'success',
-          propertyId: updatedProperty.propertyId,
-          tenantId: updatedProperty.tenantId,
-          secondNumber: updatedProperty.acknowldgementNumber
-        });
-
-        const contextPath = isCitizen ? "citizen" : "employee";
-        history.push(
-          `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
-        );
-      } else {
-        setToast({
-          label: t("PT_PROPERTY_UPDATE_ERROR"),
-          type: "error"
-        });
-      }
-
-      setLoading(false);
-      setSubmitTrigger(false);
-    }
-  }, [updateResponse, submitTrigger, isUpdating, t, history, sessionKey, popupSeenKey]);
-
-  // Handle API loading state
-  useEffect(() => {
-    if (isCreating || isUpdating) {
-      setLoading(true);
-    } else if (isFetchingProperty || isFetchingAssessment) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [isCreating, isUpdating, isFetchingProperty, isFetchingAssessment]);
-
-  // Save form data to session storage whenever it changes
-  useEffect(() => {
-    try {
-      const dataToSave = {
-        currentStep,
-        formData,
-      };
-      Digit.SessionStorage.set(sessionKey, dataToSave);
-    } catch (e) {
-      console.error("Error saving to session storage:", e);
-    }
-  }, [currentStep, formData, sessionKey]);
-
-  // Update URL with current step
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(location.search);
-    newSearchParams.set('step', (currentStep + 1).toString()); // Convert to 1-based for URL
-    const newUrl = `${location.pathname}?${newSearchParams.toString()}`;
-
-    // Only update if URL actually changed to avoid infinite loops
-    if (location.search !== `?${newSearchParams.toString()}`) {
-      history.replace(newUrl);
-    }
-  }, [currentStep, location.pathname, location.search, history]);
-
-  const stepLabels = [
-    "PT_PROPERTY_ADDRESS_SUB_HEADER",
-    "PT_ASSESMENT_INFO_SUB_HEADER",
-    "PT_OWNERSHIP_INFO_SUB_HEADER",
-    "PT_DOCUMENT_INFO",
-    "PT_COMMON_SUMMARY"
-  ];
-
-  const handleFormSubmit = (data) => {
-    const currentStepKey = currentConfig.key;
-
-    // Validate declaration for citizens on the summary step (Step 5)
-    if (isCitizen && currentStepKey === "summary" && !termsAccepted) {
-      setTermsError("PT_PLEASE_ACCEPT_DECLARATION");
-
-      // Show alert
-      alert(t("PT_PLEASE_ACCEPT_DECLARATION") || "Please check the declaration box to proceed further");
-
-      // Scroll to declaration section
-      setTimeout(() => {
-        const declarationElement = document.querySelector(".declaration-container");
-        if (declarationElement) {
-          declarationElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Initialize adhoc penalty and rebate from existing assessment (only for reassess of same year)
+        if (isReassessMode && assessment.additionalDetails) {
+          setAdhocPenalty(assessment.additionalDetails.adhocPenalty || 0);
+          setAdhocRebate(assessment.additionalDetails.adhocExemption || 0);
         }
-      }, 100);
-      return; // Don't proceed if declaration is not accepted
-    }
-
-    // Validate assessment details (Step 2) before proceeding
-    if (currentStepKey === "assessment-info") {
-      const assessmentConfig = currentConfig.body.find(field => field.component === "PTAssessmentDetails");
-      if (assessmentConfig?.populators?.validation?.validateAssessmentDetails) {
-        const isValid = assessmentConfig.populators.validation.validateAssessmentDetails();
-        if (!isValid) {
-          return; // Don't proceed if validation fails
-        }
+        // In assess mode with existing assessment, keep values at 0 (already set above)
       }
-    }
+    }, [assessmentResponse, isReassessMode, isAssessMode, assessmentIdFromUrl]);
 
-    // Validate ownership details (Step 3) before proceeding
-    if (currentStepKey === "ownership-info") {
-      const ownershipConfig = currentConfig.body.find(field => field.component === "PTOwnershipDetails");
-      if (ownershipConfig?.populators?.validation?.validateOwnershipDetails) {
-        const isValid = ownershipConfig.populators.validation.validateOwnershipDetails();
-        if (!isValid) {
-          return; // Don't proceed if validation fails
-        }
-      } else {
-        console.error("Validation function not found!");
-      }
-    }
+    // Fetch Important Dates from MDMS
+    useEffect(() => {
+      const fetchImportantDates = async () => {
+        if ((isReassessMode || isAssessMode) && tenantId && financialYearFromUrl) {
+          try {
+            const mdmsResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["Rebate", "Penalty", "Interest", "FireCess"]);
 
-    setFormData(prev => ({
-      ...prev,
-      [currentStepKey]: {
-        ...prev[currentStepKey],
-        ...data
-      }
-    }));
+            if (mdmsResponse?.PropertyTax) {
+              const { Rebate, Penalty, Interest, FireCess } = mdmsResponse.PropertyTax;
 
-    if (currentStep < config.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      handleFinalSubmit();
-    }
-  };
+              // Find correct dates for the financial year (same as mono-ui)
+              const findCorrectDateObj = (fyear, data) => {
+                if (!data || !Array.isArray(data)) return null;
+                return data.find(item => item.fromFY === fyear);
+              };
 
-  const handleFinalSubmit = async () => {
-    // Transform form data to API format
-    const apiPayload = transformFormDataToAPIFormat(formData);
+              const rebate = findCorrectDateObj(financialYearFromUrl, Rebate);
+              const penalty = findCorrectDateObj(financialYearFromUrl, Penalty);
+              const interest = findCorrectDateObj(financialYearFromUrl, Interest);
+              const fireCess = findCorrectDateObj(financialYearFromUrl, FireCess);
 
-    // For reassessment or new assessment, create/update assessment (matching mono-ui flow)
-    if (isReassessMode || isAssessMode) {
-      try {
-        setLoading(true);
-
-        // Get adhoc values from config (may have been updated through popup)
-        const currentConfig = config.find(step => step.key === "summary");
-        const summaryCustomProps = (currentConfig && currentConfig.body && currentConfig.body[0] && currentConfig.body[0].customProps) || {};
-        const finalAdhocPenalty = typeof summaryCustomProps.adhocPenalty !== 'undefined' ? summaryCustomProps.adhocPenalty : adhocPenalty;
-        const finalAdhocRebate = typeof summaryCustomProps.adhocRebate !== 'undefined' ? summaryCustomProps.adhocRebate : adhocRebate;
-
-        // Check if this is a new assessment (assessmentId is 0 or null) or reassessment of existing assessment
-        const isNewAssessment = !assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0;
-
-        if (isNewAssessment) {
-          // CREATE new assessment (matching old UI flow)
-          const assessmentCreatePayload = {
-            Assessment: {
-              tenantId: tenantId,
-              propertyId: propertyIdFromUrl,
-              financialYear: financialYearFromUrl,
-              assessmentDate: Date.now(),
-              source: "MUNICIPAL_RECORDS",
-              channel: "COUNTER",
-              status: "ACTIVE",
-              additionalDetails: {
-                adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
-                adhocExemption: parseFloat(finalAdhocRebate) || 0
-              }
+              setImportantDates({ rebate, penalty, interest, fireCess });
             }
-          };
+          } catch (error) {
+            console.error("Important dates fetch error:", error);
+          }
+        }
+      };
 
-          const assessmentCreateResponse = await Digit.CustomService.getResponse({
-            url: "/property-services/assessment/_create",
-            method: "POST",
-            body: assessmentCreatePayload,
-            params: { tenantId: tenantId }
+      fetchImportantDates();
+    }, [isReassessMode, isAssessMode, tenantId, financialYearFromUrl]);
+
+    // Process tax calculation response
+    useEffect(() => {
+      const fetchBillingSlabs = async (calculation) => {
+        if (calculation?.billingSlabIds && calculation.billingSlabIds.length > 0) {
+          try {
+            const billingSlabResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["PropertyTaxSlabs"]);
+
+            if (billingSlabResponse?.PropertyTax?.PropertyTaxSlabs) {
+              const allSlabs = billingSlabResponse.PropertyTax.PropertyTaxSlabs;
+
+              // Match billing slab IDs with actual slab data
+              const matchedSlabs = calculation.billingSlabIds.map(slabId => {
+                const id = slabId.split("|")[0]; // Extract ID before pipe
+                return allSlabs.find(slab => slab.id === id);
+              }).filter(Boolean);
+
+              setBillingSlabs(matchedSlabs);
+            }
+          } catch (slabError) {
+            console.error("Billing slab fetch error:", slabError);
+          }
+        }
+      };
+
+      if (taxCalculationResponse) {
+        setTaxCalculation(taxCalculationResponse);
+        fetchBillingSlabs(taxCalculationResponse);
+      }
+    }, [taxCalculationResponse, tenantId]);
+
+    // Handle create API response
+    useEffect(() => {
+      if (createResponse && submitTrigger) {
+        // API returns Properties array or direct array
+        const propertiesArray = createResponse?.Properties || (Array.isArray(createResponse) ? createResponse : null);
+
+        if (propertiesArray && propertiesArray.length > 0) {
+          const createdProperty = propertiesArray[0];
+
+          // Clear session storage on successful submission
+          Digit.SessionStorage.set(sessionKey, null);
+          Digit.SessionStorage.set(popupSeenKey, null);
+
+          // Redirect to acknowledgment page
+          const params = new URLSearchParams({
+            purpose: 'create',
+            status: 'success',
+            propertyId: createdProperty.propertyId,
+            tenantId: createdProperty.tenantId,
+            secondNumber: createdProperty.acknowldgementNumber
           });
 
-          if (assessmentCreateResponse?.Assessments && assessmentCreateResponse.Assessments.length > 0) {
-            const createdAssessment = assessmentCreateResponse.Assessments[0];
+          const contextPath = isCitizen ? "citizen" : "employee";
+          history.push(
+            `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+          );
+        } else {
+          setToast({
+            label: createResponse?.Errors?.[0]?.message || t("PT_PROPERTY_REGISTRATION_ERROR"),
+            type: "error"
+          });
+        }
 
-            // Clear session storage
-            Digit.SessionStorage.set(sessionKey, null);
-            Digit.SessionStorage.set(popupSeenKey, null);
+        setLoading(false);
+        setSubmitTrigger(false);
+      }
+    }, [createResponse, submitTrigger, t]);
 
-            // Redirect to acknowledgment page matching old UI pattern
-            const params = new URLSearchParams({
-              purpose: 'assess',
-              status: 'success',
-              propertyId: propertyIdFromUrl,
-              tenantId: tenantId,
-              secondNumber: createdAssessment.assessmentNumber,
-              FY: financialYearFromUrl
-            });
+    // Handle update API response
+    useEffect(() => {
+      if (!submitTrigger || isUpdating) return;
 
-            const contextPath = isCitizen ? "citizen" : "employee";
-            history.push(
-              `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
-            );
-          } else {
-            setToast({
-              label: assessmentCreateResponse?.Errors?.[0]?.message || t("PT_ASSESSMENT_FAILED"),
-              type: "error"
-            });
+      if (updateResponse) {
+        // Check for errors first
+        if (updateResponse?.Errors && updateResponse.Errors.length > 0) {
+          setToast({
+            label: updateResponse.Errors[0].message || t("PT_PROPERTY_UPDATE_ERROR"),
+            type: "error"
+          });
+          setLoading(false);
+          setSubmitTrigger(false);
+          return;
+        }
+
+        // API returns Properties array or direct array
+        const propertiesArray = updateResponse?.Properties || (Array.isArray(updateResponse) ? updateResponse : null);
+
+        if (propertiesArray && propertiesArray.length > 0) {
+          const updatedProperty = propertiesArray[0];
+
+          // Clear session storage on successful submission
+          Digit.SessionStorage.set(sessionKey, null);
+          Digit.SessionStorage.set(popupSeenKey, null);
+          Digit.SessionStorage.set(`PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`, null);
+
+          // Redirect to acknowledgment page
+          const params = new URLSearchParams({
+            purpose: 'update',
+            status: 'success',
+            propertyId: updatedProperty.propertyId,
+            tenantId: updatedProperty.tenantId,
+            secondNumber: updatedProperty.acknowldgementNumber
+          });
+
+          const contextPath = isCitizen ? "citizen" : "employee";
+          history.push(
+            `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+          );
+        } else {
+          setToast({
+            label: t("PT_PROPERTY_UPDATE_ERROR"),
+            type: "error"
+          });
+        }
+
+        setLoading(false);
+        setSubmitTrigger(false);
+      }
+    }, [updateResponse, submitTrigger, isUpdating, t, history, sessionKey, popupSeenKey]);
+
+    // Handle API loading state
+    useEffect(() => {
+      if (isCreating || isUpdating) {
+        setLoading(true);
+      } else if (isFetchingProperty || isFetchingAssessment) {
+        setLoading(true);
+      } else {
+        setLoading(false);
+      }
+    }, [isCreating, isUpdating, isFetchingProperty, isFetchingAssessment]);
+
+    // Save form data to session storage whenever it changes
+    useEffect(() => {
+      try {
+        const dataToSave = {
+          currentStep,
+          formData,
+        };
+
+        Digit.SessionStorage.set(sessionKey, dataToSave);
+      } catch (e) {
+        console.error("Error saving to session storage:", e);
+      }
+    }, [currentStep, formData, sessionKey]);
+
+    // Update URL with current step
+    useEffect(() => {
+      const newSearchParams = new URLSearchParams(location.search);
+      newSearchParams.set('step', (currentStep + 1).toString()); // Convert to 1-based for URL
+      const newUrl = `${location.pathname}?${newSearchParams.toString()}`;
+
+      // Only update if URL actually changed to avoid infinite loops
+      if (location.search !== `?${newSearchParams.toString()}`) {
+        history.replace(newUrl);
+      }
+    }, [currentStep, location.pathname, location.search, history]);
+
+    const stepLabels = [
+      "PT_PROPERTY_ADDRESS_SUB_HEADER",
+      "PT_ASSESMENT_INFO_SUB_HEADER",
+      "PT_OWNERSHIP_INFO_SUB_HEADER",
+      "PT_DOCUMENT_INFO",
+      "PT_COMMON_SUMMARY"
+    ];
+
+    // Function to check if there are any changes between original and current form data
+    const checkForChanges = (originalProperty, currentFormData) => {
+      if (!originalProperty || !currentFormData) {
+        return true; // Assume changes if data is missing
+      }
+
+      try {
+        // Transform original property to form data format for comparison
+        const originalFormData = transformPropertyToFormData(originalProperty);
+
+        // Deep comparison function for nested objects
+        const deepEqual = (obj1, obj2) => {
+          // Handle null/undefined cases
+          if (obj1 === obj2) return true;
+          if (!obj1 || !obj2) return false;
+          if (typeof obj1 !== 'object' || typeof obj2 !== 'object') return obj1 === obj2;
+
+          // Handle arrays
+          if (Array.isArray(obj1) && Array.isArray(obj2)) {
+            if (obj1.length !== obj2.length) return false;
+            return obj1.every((item, index) => deepEqual(item, obj2[index]));
+          }
+          if (Array.isArray(obj1) !== Array.isArray(obj2)) return false;
+
+          // Compare object keys and values
+          const keys1 = Object.keys(obj1);
+          const keys2 = Object.keys(obj2);
+
+          // Check if all keys match
+          if (keys1.length !== keys2.length) return false;
+
+          return keys1.every(key => {
+            // Skip metadata fields in comparison
+            if (key === '_propertyMetadata') return true;
+            return deepEqual(obj1[key], obj2[key]);
+          });
+        };
+
+        // Compare each step's data
+        const hasPropertyAddressChanges = !deepEqual(
+          originalFormData['property-address'],
+          currentFormData['property-address']
+        );
+
+        const hasAssessmentInfoChanges = !deepEqual(
+          originalFormData['assessment-info'],
+          currentFormData['assessment-info']
+        );
+
+        const hasOwnershipInfoChanges = !deepEqual(
+          originalFormData['ownership-info'],
+          currentFormData['ownership-info']
+        );
+
+        const hasDocumentInfoChanges = !deepEqual(
+          originalFormData['document-info'],
+          currentFormData['document-info']
+        );
+
+        const hasChanges = hasPropertyAddressChanges || hasAssessmentInfoChanges ||
+                          hasOwnershipInfoChanges || hasDocumentInfoChanges;
+
+        console.log("=== CHANGE DETECTION DEBUG ===");
+        console.log("Property Address Changes:", hasPropertyAddressChanges);
+        console.log("Assessment Info Changes:", hasAssessmentInfoChanges);
+        console.log("Ownership Info Changes:", hasOwnershipInfoChanges);
+        console.log("Document Info Changes:", hasDocumentInfoChanges);
+        console.log("Has Changes:", hasChanges);
+        console.log("==============================");
+
+        return hasChanges;
+      } catch (error) {
+        console.error("Error in change detection:", error);
+        // If comparison fails, assume changes exist to be safe
+        return true;
+      }
+    };
+
+    const handleFormSubmit = async (data) => {
+      const currentStepKey = currentConfig.key;
+
+      // Validate declaration for citizens on the summary step (Step 5)
+      if (isCitizen && currentStepKey === "summary" && !termsAccepted) {
+        setTermsError("PT_PLEASE_ACCEPT_DECLARATION");
+
+        // Show alert
+        alert(t("PT_PLEASE_ACCEPT_DECLARATION") || "Please check the declaration box to proceed further");
+
+        // Scroll to declaration section
+        setTimeout(() => {
+          const declarationElement = document.querySelector(".declaration-container");
+          if (declarationElement) {
+            declarationElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 100);
+        return; // Don't proceed if declaration is not accepted
+      }
+
+      // Validate assessment details (Step 2) before proceeding
+      if (currentStepKey === "assessment-info") {
+        const assessmentConfig = currentConfig.body.find(field => field.component === "PTAssessmentDetails");
+        if (assessmentConfig?.populators?.validation?.validateAssessmentDetails) {
+          const isValid = assessmentConfig.populators.validation.validateAssessmentDetails();
+          if (!isValid) {
+            return; // Don't proceed if validation fails
+          }
+        }
+      }
+
+      // Validate ownership details (Step 3) before proceeding
+      if (currentStepKey === "ownership-info") {
+        const ownershipConfig = currentConfig.body.find(field => field.component === "PTOwnershipDetails");
+        if (ownershipConfig?.populators?.validation?.validateOwnershipDetails) {
+          const isValid = ownershipConfig.populators.validation.validateOwnershipDetails();
+          if (!isValid) {
+            return; // Don't proceed if validation fails
           }
         } else {
-          // UPDATE existing assessment (for reassessment with valid assessment ID)
-          // First, fetch the latest assessment data (matching mono-ui)
-          const assessmentSearchResponse = await Digit.CustomService.getResponse({
-            url: "/property-services/assessment/_search",
-            method: "POST",
-            params: {
-              tenantId: tenantId,
-              assessmentNumbers: assessmentIdFromUrl
-            },
-            body: {}
-          });
+          console.error("Validation function not found!");
+        }
+      }
 
-          if (!assessmentSearchResponse?.Assessments || assessmentSearchResponse.Assessments.length === 0) {
-            setToast({
-              label: t("PT_ASSESSMENT_NOT_FOUND"),
-              type: "error"
-            });
+      // Merge the new data
+      const newFormData = {
+        ...formData,
+        [currentStepKey]: {
+          ...formData[currentStepKey],
+          ...data
+        }
+      };
+
+      // Save to sessionStorage IMMEDIATELY before state update (prevents loss on remount)
+      const dataToSave = {
+        currentStep: currentStep < config.length - 1 ? currentStep + 1 : currentStep,
+        formData: newFormData,
+      };
+
+      Digit.SessionStorage.set(sessionKey, dataToSave);
+
+      // Now update state (this will trigger remount due to URL change)
+      setFormData(newFormData);
+
+      // AUTO-SAVE: For update mode, trigger API call on each step navigation (except last step)
+      if (isUpdateMode && currentStep < config.length - 1) {
+        try {
+          setLoading(true);
+
+          // CHANGE DETECTION: Compare original fetched data with new form data
+          const hasChanges = checkForChanges(fetchedPropertyData, newFormData);
+
+          if (!hasChanges) {
+            // No changes detected, skip API call and proceed to next step
+            console.log("No changes detected, skipping auto-save API call");
             setLoading(false);
+            setCurrentStep(currentStep + 1);
             return;
           }
 
-          const existingAssessmentData = assessmentSearchResponse.Assessments[0];
+          // Transform form data to API format
+          const apiPayload = transformFormDataToAPIFormat(newFormData);
 
-          // Update the assessment with new adhoc values (matching mono-ui)
-          const assessmentUpdatePayload = {
-            Assessment: {
-              ...existingAssessmentData,
-              assessmentDate: Date.now(),
-              status: "ACTIVE",
-              additionalDetails: {
-                ...existingAssessmentData.additionalDetails,
-                adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
-                adhocExemption: parseFloat(finalAdhocRebate) || 0
-              }
-            }
-          };
-
-          const assessmentUpdateResponse = await Digit.CustomService.getResponse({
-            url: "/property-services/assessment/_update",
+          // Call the update API
+          const updateResult = await Digit.CustomService.getResponse({
+            url: "/property-services/property/_update",
             method: "POST",
-            body: assessmentUpdatePayload,
+            body: apiPayload,
             params: { tenantId: tenantId }
           });
 
-          if (assessmentUpdateResponse?.Assessments && assessmentUpdateResponse.Assessments.length > 0) {
-            // Clear session storage
-            Digit.SessionStorage.set(sessionKey, null);
-            Digit.SessionStorage.set(popupSeenKey, null);
-
-            // Redirect to acknowledgment page matching mono-ui pattern
-            const params = new URLSearchParams({
-              purpose: 'reassess',
-              status: 'success',
-              propertyId: propertyIdFromUrl,
-              tenantId: tenantId,
-              secondNumber: assessmentIdFromUrl,
-              FY: financialYearFromUrl
-            });
-
-            const contextPath = isCitizen ? "citizen" : "employee";
-            history.push(
-              `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
-            );
-          } else {
+          if (updateResult?.Errors && updateResult.Errors.length > 0) {
             setToast({
-              label: assessmentUpdateResponse?.Errors?.[0]?.message || t("PT_REASSESSMENT_FAILED"),
+              label: updateResult.Errors[0].message || t("PT_PROPERTY_UPDATE_ERROR"),
               type: "error"
             });
+            setLoading(false);
+            return; // Don't proceed to next step if update fails
           }
-        }
 
-        setLoading(false);
-      } catch (error) {
-        console.error("Assessment error:", error);
-        setToast({
-          label: error?.response?.data?.Errors?.[0]?.message || (isAssessMode ? t("PT_ASSESSMENT_FAILED") : t("PT_REASSESSMENT_FAILED")),
-          type: "error"
-        });
-        setLoading(false);
-      }
-    } else {
-      // For create/update mode, use the existing flow
-      setPropertyData(apiPayload);
-      setSubmitTrigger(true);
-      setLoading(true);
-    }
-  };
+          if (updateResult?.Properties && updateResult.Properties.length > 0) {
+            // Successfully updated - show success toast
+            setToast({
+              label: t("PT_PROPERTY_UPDATED_SUCCESSFULLY") || "Property updated successfully",
+              type: "success"
+            });
 
-  // Transform property API data to form data format (for update mode)
-  const transformPropertyToFormData = (property) => {
-    // Extract property type parts (e.g., "BUILTUP.INDEPENDENTPROPERTY")
-    const propertyTypeParts = property.propertyType?.split('.') || [];
-    const propertyTypeMajor = propertyTypeParts.length > 1 ? propertyTypeParts[0] : null;
-    const propertyTypeCode = propertyTypeParts.length > 1 ? propertyTypeParts[1] : property.propertyType;
-
-    // Map property type code to name
-    const propertyTypeMap = {
-      "VACANT": "Vacant Land",
-      "INDEPENDENTPROPERTY": "Independent Building",
-      "SHAREDPROPERTY": "Flat/Part of the building"
-    };
-
-    // Extract usage category parts (e.g., "RESIDENTIAL" or "NONRESIDENTIAL.OTHERS")
-    const usageCategoryParts = property.usageCategory?.split('.') || [];
-    let usageCategoryMajor, usageCategoryMinor;
-
-    if (usageCategoryParts.length > 1) {
-      usageCategoryMajor = usageCategoryParts[0];
-      usageCategoryMinor = usageCategoryParts[1];
-    } else {
-      // If no dot, it's a major category only (like "RESIDENTIAL")
-      usageCategoryMajor = usageCategoryParts[0];
-      usageCategoryMinor = null;
-    }
-
-    // Map usage category to name
-    const usageCategoryMap = {
-      "RESIDENTIAL": "Residential",
-      "NONRESIDENTIAL": "Non Residential",
-      "OTHERS": "Others",
-      "COMMERCIAL": "Commercial",
-      "INDUSTRIAL": "Industrial"
-    };
-
-    // Extract ownership category parts (e.g., "INDIVIDUAL.SINGLEOWNER")
-    const ownershipParts = property.ownershipCategory?.split('.') || [];
-    const ownershipType = ownershipParts.length > 1 ? ownershipParts[1] : ownershipParts[0];
-
-    // Map ownership type to name
-    const ownershipTypeMap = {
-      "SINGLEOWNER": "Single Owner",
-      "MULTIPLEOWNERS": "Multiple Owners",
-      "INSTITUTIONALPRIVATE": "Institutional Private",
-      "INSTITUTIONALGOVERNMENT": "Institutional Government"
-    };
-
-    // Map gender to name
-    const genderMap = {
-      "MALE": "Male",
-      "FEMALE": "Female",
-      "TRANSGENDER": "Transgender"
-    };
-
-    // Map relationship to name
-    const relationshipMap = {
-      "FATHER": "Father",
-      "HUSBAND": "Husband"
-    };
-
-    // Transform owners data
-    const owners = property.owners || [];
-    const firstOwner = owners[0] || {};
-    const isInstitutional = firstOwner.ownerType === "INSTITUTIONAL";
-    const isMultipleOwners = owners.length > 1;
-
-    let ownershipDetails = {};
-    if (isInstitutional) {
-      ownershipDetails = {
-        ownerName: firstOwner.name,
-        mobileNumber: firstOwner.mobileNumber,
-        ...(firstOwner.emailId ? { emailId: firstOwner.emailId } : {}),
-        ...(firstOwner.altContactNumber ? { altContactNumber: firstOwner.altContactNumber } : {}),
-        ...(firstOwner.permanentAddress ? { correspondenceAddress: firstOwner.permanentAddress } : {}),
-        sameAsPropertyAddress: false, // Not available in API response
-        ...(firstOwner.institutionId ? { institutionType: firstOwner.institutionId } : {}),
-        ...(firstOwner.designation ? { designation: firstOwner.designation } : {}),
-        ...(firstOwner.documents?.[0]?.fileStoreId ? { documentId: firstOwner.documents[0].fileStoreId } : {}),
-        ...(firstOwner.documents?.[0]?.documentType ? { documentIdType: firstOwner.documents[0].documentType } : {})
-      };
-    } else if (isMultipleOwners) {
-      ownershipDetails = {
-        owners: owners.map(owner => ({
-          ownerName: owner.name,
-          mobileNumber: owner.mobileNumber,
-          ...(owner.emailId ? { emailId: owner.emailId } : {}),
-          ...(owner.fatherOrHusbandName ? { guardianName: owner.fatherOrHusbandName } : {}),
-          ...(owner.gender ? {
-            gender: [{
-              code: owner.gender.toUpperCase(),
-              name: genderMap[owner.gender.toUpperCase()] || owner.gender,
-              active: true
-            }]
-          } : {}),
-          ...(owner.permanentAddress ? { correspondenceAddress: owner.permanentAddress } : {}),
-          sameAsPropertyAddress: false, // Not available in API response
-          ownershipPercentage: parseFloat(owner.ownerShipPercentage) || 0,
-          specialCategory: owner.ownerType === "NONE" ? "NONE" : owner.ownerType,
-          ...(owner.relationship ? {
-            relationship: [{
-              code: owner.relationship.toUpperCase(),
-              name: relationshipMap[owner.relationship.toUpperCase()] || owner.relationship,
-              active: true
-            }]
-          } : {}),
-          ...(owner.documents?.[0]?.fileStoreId ? { documentId: owner.documents[0].fileStoreId } : {}),
-          ...(owner.documents?.[0]?.documentType ? { documentIdType: owner.documents[0].documentType } : {})
-        }))
-      };
-    } else {
-      ownershipDetails = {
-        ownerName: firstOwner.name,
-        mobileNumber: firstOwner.mobileNumber,
-        ...(firstOwner.emailId ? { emailId: firstOwner.emailId } : {}),
-        ...(firstOwner.fatherOrHusbandName ? { guardianName: firstOwner.fatherOrHusbandName } : {}),
-        ...(firstOwner.gender ? {
-          gender: [{
-            code: firstOwner.gender.toUpperCase(),
-            name: genderMap[firstOwner.gender.toUpperCase()] || firstOwner.gender,
-            active: true
-          }]
-        } : {}),
-        ...(firstOwner.permanentAddress ? { correspondenceAddress: firstOwner.permanentAddress } : {}),
-        sameAsPropertyAddress: false, // Not available in API response
-        ownershipPercentage: parseFloat(firstOwner.ownerShipPercentage) || 100,
-        specialCategory: firstOwner.ownerType === "NONE" ? "NONE" : firstOwner.ownerType,
-        ...(firstOwner.relationship ? {
-          relationship: [{
-            code: firstOwner.relationship.toUpperCase(),
-            name: relationshipMap[firstOwner.relationship.toUpperCase()] || firstOwner.relationship,
-            active: true
-          }]
-        } : {}),
-        ...(firstOwner.documents?.[0]?.fileStoreId ? { documentId: firstOwner.documents[0].fileStoreId } : {}),
-        ...(firstOwner.documents?.[0]?.documentType ? { documentIdType: firstOwner.documents[0].documentType } : {})
-      };
-    }
-
-    // Group units by floor
-    const units = property.units || [];
-    const floorMap = new Map();
-    units.forEach(unit => {
-      const floorNo = String(unit.floorNo || 0);
-      if (!floorMap.has(floorNo)) {
-        floorMap.set(floorNo, {
-          floorNo: floorNo,
-          units: []
-        });
-      }
-      floorMap.get(floorNo).units.push({
-        usageType: unit.unitType || unit.usageCategory,
-        subUsageType: unit.usageCategory,
-        occupancy: unit.occupancyType === "SELFOCCUPIED" ? "OWNER" : unit.occupancyType,
-        builtUpArea: unit.constructionDetail?.builtUpArea || 0,
-        arv: parseFloat(unit.arv) || 0,
-        usageForDueMonths: unit.additionalDetails?.usageForDueMonths || "UNOCCUPIED",
-        rentedForMonths: unit.additionalDetails?.rentedformonths || null
-      });
-    });
-
-    const floors = Array.from(floorMap.values());
-
-    return {
-      "property-address": {
-        tenantId: property.tenantId,
-        ...(property.address?.doorNo && property.address.doorNo !== "" ? { doorNo: property.address.doorNo } : {}),
-        ...(property.address?.buildingName && property.address.buildingName !== "" ? { buildingName: property.address.buildingName } : {}),
-        ...(property.address?.street && property.address.street !== "" ? { street: property.address.street } : {}),
-        ...(property.address?.locality?.code ? {
-          locality: [{
-            code: property.address.locality.code,
-            name: property.address.locality.name,
-            area: property.address.locality.area
-          }]
-        } : {}),
-        ...(property.address?.pincode && property.address.pincode !== "" ? { pincode: property.address.pincode } : {}),
-        ...(property.oldPropertyId && property.oldPropertyId !== "" ? { existingPropertyId: property.oldPropertyId || property.propertyId || "" } : {}),
-        ...(property.surveyId && property.surveyId !== "" ? { surveyId: property.surveyId } : {}),
-        ...(property.additionalDetails?.yearConstruction ? {
-          yearOfCreation: {
-            code: property.additionalDetails.yearConstruction,
-            name: property.additionalDetails.yearConstruction,
-            i18nKey: property.additionalDetails.yearConstruction
+            // Continue to next step
+            setLoading(false);
+            setCurrentStep(currentStep + 1);
+          } else {
+            setToast({
+              label: t("PT_PROPERTY_UPDATE_ERROR"),
+              type: "error"
+            });
+            setLoading(false);
+            return; // Don't proceed if update failed
           }
-        } : {})
-      },
-      "assessment-info": {
-        propertyType: [{
-          name: propertyTypeMap[propertyTypeCode] || propertyTypeCode,
-          code: propertyTypeCode,
-          active: true,
-          ...(propertyTypeMajor ? { propertyType: propertyTypeMajor } : {})
-        }],
-        usageCategory: usageCategoryMinor ? [{
-          code: usageCategoryMinor,
-          usageCategoryMajor: usageCategoryMajor,
-          name: usageCategoryMinor,
-          active: true
-        }] : [{
-          code: usageCategoryMajor,
-          name: usageCategoryMap[usageCategoryMajor] || usageCategoryMajor,
-          active: true
-        }],
-        ...(property.additionalDetails?.vasikaNo ? { vasikaNo: property.additionalDetails.vasikaNo } : {}),
-        ...(property.additionalDetails?.vasikaDate ? { vasikaDate: property.additionalDetails.vasikaDate } : {}),
-        ...(property.additionalDetails?.allotmentNo ? { allotmentNo: property.additionalDetails.allotmentNo } : {}),
-        ...(property.additionalDetails?.allotmentDate ? { allotmentDate: property.additionalDetails.allotmentDate } : {}),
-        ...(property.additionalDetails?.businessName ? { businessName: property.additionalDetails.businessName } : {}),
-        ...(property.additionalDetails?.remarks ? { remarks: property.additionalDetails.remarks } : {}),
-        inflammableMaterial: property.additionalDetails?.inflammable || false,
-        heightOfProperty: property.additionalDetails?.heightAbove36Feet || false,
-        conditionalFields: {
-          plotSize: parseFloat(property.landArea) || 0,
-          noOfFloors: {
-            code: property.noOfFloors,
-            name: String(property.noOfFloors)
-          },
-          floors: floors,
-          units: units.map(unit => ({
-            floorNo: String(unit.floorNo || 0),
-            usageType: unit.unitType || unit.usageCategory,
-            subUsageType: unit.usageCategory,
-            occupancy: unit.occupancyType === "SELFOCCUPIED" ? "OWNER" : unit.occupancyType,
-            builtUpArea: unit.constructionDetail?.builtUpArea || 0,
-            arv: parseFloat(unit.arv) || 0,
-            usageForDueMonths: unit.additionalDetails?.usageForDueMonths || "UNOCCUPIED",
-            ...(unit.additionalDetails?.rentedformonths ? { rentedForMonths: unit.additionalDetails.rentedformonths } : {})
-          }))
+        } catch (error) {
+          console.error("Auto-save error:", error);
+          setToast({
+            label: error?.response?.data?.Errors?.[0]?.message || t("PT_PROPERTY_UPDATE_ERROR"),
+            type: "error"
+          });
+          setLoading(false);
+          return; // Don't proceed if error occurred
         }
-      },
-      "ownership-info": {
-        ownershipType: [{
-          code: ownershipType,
-          name: ownershipTypeMap[ownershipType] || ownershipType,
-          active: true
-        }],
-        ownershipDetails: ownershipDetails
-      },
-      "document-info": {
-        documents: property.documents?.map(doc => ({
-          documentType: doc.documentType,
-          fileStoreId: doc.fileStoreId
-        })) || []
+      } else {
+        // For non-update mode OR final step, use the original flow
+        if (currentStep < config.length - 1) {
+          setCurrentStep(currentStep + 1);
+        } else {
+          handleFinalSubmit();
+        }
       }
     };
-  };
 
-  const transformFormDataToAPIFormat = (formData) => {
-    const propertyAddress = formData["property-address"] || {};
-    const assessmentInfo = formData["assessment-info"] || {};
-    const ownershipInfo = formData["ownership-info"] || {};
-    const ownerDetails = ownershipInfo.ownershipDetails || {};
-    const documentInfo = formData["document-info"] || {};
-    // Get conditional fields data
-    const conditionalFields = assessmentInfo.conditionalFields || {};
-    const tenantId = Digit?.ULBService?.getCurrentTenantId() || "mz";
+    const handleFinalSubmit = async () => {
+      // Transform form data to API format
+      const apiPayload = transformFormDataToAPIFormat(formData);
 
-    // Get property type - handle both string and object
-    let propertyTypeCode = assessmentInfo.propertyType;
-    let propertyTypeMajor = null;
+      // For reassessment or new assessment, create/update assessment (matching mono-ui flow)
+      if (isReassessMode || isAssessMode) {
+        try {
+          setLoading(true);
 
-    if (Array.isArray(assessmentInfo.propertyType)) {
-      const propertyTypeObj = assessmentInfo.propertyType[0];
-      propertyTypeCode = propertyTypeObj?.code || propertyTypeObj;
-      propertyTypeMajor = propertyTypeObj?.propertyType; // Get major category if available
-    } else if (typeof assessmentInfo.propertyType === 'object' && assessmentInfo.propertyType !== null) {
-      propertyTypeCode = assessmentInfo.propertyType.code || assessmentInfo.propertyType.value;
-      propertyTypeMajor = assessmentInfo.propertyType.propertyType;
-    }
+          // Get adhoc values from config (may have been updated through popup)
+          const currentConfig = config.find(step => step.key === "summary");
+          const summaryCustomProps = (currentConfig && currentConfig.body && currentConfig.body[0] && currentConfig.body[0].customProps) || {};
+          const finalAdhocPenalty = typeof summaryCustomProps.adhocPenalty !== 'undefined' ? summaryCustomProps.adhocPenalty : adhocPenalty;
+          const finalAdhocRebate = typeof summaryCustomProps.adhocRebate !== 'undefined' ? summaryCustomProps.adhocRebate : adhocRebate;
 
-    // Construct full property type
-    // VACANT is standalone, others are under BUILTUP
-    let propertyTypeFull;
-    if (propertyTypeCode?.includes('.')) {
-      // Already has dot notation
-      propertyTypeFull = propertyTypeCode;
-    } else if (propertyTypeCode === 'VACANT') {
-      // VACANT is standalone, not under BUILTUP
-      propertyTypeFull = 'VACANT';
-    } else {
-      // Use propertyTypeMajor if available, otherwise default to BUILTUP
-      const majorCategory = propertyTypeMajor || 'BUILTUP';
-      propertyTypeFull = `${majorCategory}.${propertyTypeCode}`;
-    }
+          // Check if this is a new assessment (assessmentId is 0 or null) or reassessment of existing assessment
+          const isNewAssessment = !assessmentIdFromUrl || assessmentIdFromUrl === '0' || assessmentIdFromUrl === 0;
 
-    // Extract usage category - combine major and minor parts
-    const usageCategoryObj = assessmentInfo.usageCategory?.[0] || assessmentInfo.usageCategory || {};
-    let usageCategoryMinor, usageCategoryMajor, usageCategoryCode;
-
-    if (typeof usageCategoryObj === 'string') {
-      // It's a plain string like "RESIDENTIAL"
-      usageCategoryCode = usageCategoryObj;
-      const parts = usageCategoryCode.split('.');
-      if (parts.length > 1) {
-        usageCategoryMajor = parts[0];
-        usageCategoryMinor = parts[1];
-      } else {
-        usageCategoryMajor = usageCategoryCode;
-        usageCategoryMinor = null;
-      }
-    } else {
-      // It's an object with code and usageCategoryMajor
-      usageCategoryMinor = usageCategoryObj.code || usageCategoryObj.value;
-      usageCategoryMajor = usageCategoryObj.usageCategoryMajor;
-
-      // Construct full usage category code
-      if (usageCategoryMajor && usageCategoryMinor) {
-        usageCategoryCode = `${usageCategoryMajor}.${usageCategoryMinor}`;
-      } else if (usageCategoryMinor) {
-        usageCategoryCode = usageCategoryMinor;
-      } else if (usageCategoryMajor) {
-        usageCategoryCode = usageCategoryMajor;
-      } else {
-        usageCategoryCode = null;
-      }
-    }
-    // Get ownership category with proper prefix
-    const ownershipTypeCode = ownershipInfo.ownershipType?.[0]?.code || ownershipInfo.ownershipType?.code || ownershipInfo.ownershipType;
-    let ownershipCategory = ownershipTypeCode;
-    if (ownershipTypeCode === "SINGLEOWNER") {
-      ownershipCategory = "INDIVIDUAL.SINGLEOWNER";
-    } else if (ownershipTypeCode === "MULTIPLEOWNERS") {
-      ownershipCategory = "INDIVIDUAL.MULTIPLEOWNERS";
-    } else if (ownershipTypeCode === "INSTITUTIONALPRIVATE") {
-      ownershipCategory = "INSTITUTIONAL.PRIVATE";
-    } else if (ownershipTypeCode === "INSTITUTIONALGOVERNMENT") {
-      ownershipCategory = "INSTITUTIONAL.GOVERNMENT";
-    }
-
-    // Helper function to capitalize first letter
-    const capitalizeFirst = (str) => {
-      if (!str) return str;
-      if (typeof str !== 'string') return str;
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    };
-
-    return {
-      Property: {
-        ...(isUpdateMode && fetchedPropertyData ? {
-          id: fetchedPropertyData.id,
-          propertyId: fetchedPropertyData.propertyId,
-          accountId: fetchedPropertyData.accountId,
-          oldPropertyId: fetchedPropertyData.oldPropertyId,
-          status: fetchedPropertyData.status,
-          acknowldgementNumber: fetchedPropertyData.acknowldgementNumber,
-          auditDetails: fetchedPropertyData.auditDetails
-        } : {}),
-        tenantId: tenantId,
-        surveyId: propertyAddress.surveyId || null,
-        propertyType: propertyTypeFull,
-        usageCategory: usageCategoryCode,
-        usageCategoryMajor: usageCategoryMajor || null,
-        usageCategoryMinor: usageCategoryMinor || null,
-        ownershipCategory: ownershipCategory,
-        source: "MUNICIPAL_RECORDS",
-        channel: "CFC_COUNTER",
-        creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "UPDATE" : "CREATE"),
-        noOfFloors: parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1,
-        landArea: String(parseFloat(conditionalFields.plotSize) || 0),
-        superBuiltUpArea: null,
-        additionalDetails: {
-          yearConstruction: propertyAddress.yearOfCreation?.code || propertyAddress.yearOfCreation || null,
-          vasikaNo: assessmentInfo.vasikaNo || null,
-          vasikaDate: assessmentInfo.vasikaDate || null,
-          allotmentNo: assessmentInfo.allotmentNo || null,
-          allotmentDate: assessmentInfo.allotmentDate || null,
-          businessName: assessmentInfo.businessName || null,
-          remarks: assessmentInfo.remarks || null,
-          inflammable: assessmentInfo.inflammableMaterial || false,
-          heightAbove36Feet: assessmentInfo.heightOfProperty || false
-        },
-        address: {
-          ...(isUpdateMode && fetchedPropertyData?.address?.id ? { id: fetchedPropertyData.address.id } : {}),
-          city: (() => {
-            // Get city name from tenant
-            const cityCode = tenantId.split('.').pop();
-            return capitalizeFirst(cityCode);
-          })(),
-          doorNo: propertyAddress.doorNo || null,
-          buildingName: propertyAddress.buildingName || null,
-          street: propertyAddress.street || null,
-          locality: {
-            code: propertyAddress.locality?.[0]?.code || propertyAddress.locality?.code || propertyAddress.locality,
-            area: propertyAddress.locality?.[0]?.area || propertyAddress.locality?.[0]?.name || propertyAddress.locality?.area || propertyAddress.locality?.name || "AREA1"
-          },
-          pincode: propertyAddress.pincode || null
-        },
-        owners: (() => {
-          const ownershipTypeCode = ownershipInfo.ownershipType?.[0]?.code || ownershipInfo.ownershipType?.code || "";
-          const isInstitutional = ownershipTypeCode?.includes("INSTITUTIONAL");
-          const isMultipleOwners = ownershipTypeCode === "MULTIPLEOWNERS";
-
-          // Get existing owners for update mode
-          const existingOwners = isUpdateMode && fetchedPropertyData ? fetchedPropertyData.owners || [] : [];
-
-          if (isInstitutional) {
-            // Institutional ownership
-            const existingOwner = existingOwners[0] || {};
-            const owner = {
-              ...(isUpdateMode && existingOwner.uuid ? {
-                uuid: existingOwner.uuid,
-                ownerInfoUuid: existingOwner.ownerInfoUuid,
-                status: existingOwner.status
-              } : {}),
-              name: ownerDetails.ownerName,
-              mobileNumber: ownerDetails.mobileNumber,
-              emailId: ownerDetails.emailId || null,
-              altContactNumber: ownerDetails.altContactNumber || null,
-              permanentAddress: ownerDetails.correspondenceAddress || null,
-              ownerShipPercentage: "100",
-              ownerType: "INSTITUTIONAL",
-              institutionId: ownerDetails.institutionType?.code || ownerDetails.institutionType,
-              designation: ownerDetails.designation || null,
-              relationship: null,
-              isCorrespondenceAddress: ownerDetails.sameAsPropertyAddress || null
+          if (isNewAssessment) {
+            // CREATE new assessment (matching old UI flow)
+            const assessmentCreatePayload = {
+              Assessment: {
+                tenantId: tenantId,
+                propertyId: propertyIdFromUrl,
+                financialYear: financialYearFromUrl,
+                assessmentDate: Date.now(),
+                source: "MUNICIPAL_RECORDS",
+                channel: "COUNTER",
+                status: "ACTIVE",
+                additionalDetails: {
+                  adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
+                  adhocExemption: parseFloat(finalAdhocRebate) || 0
+                }
+              }
             };
 
-            // Add documents if documentId exists
-            if (ownerDetails.documentId && ownerDetails.documentIdType) {
-              owner.documents = [{
-                documentType: ownerDetails.documentIdType?.code || ownerDetails.documentIdType || "IDENTITYPROOF",
-                fileStoreId: ownerDetails.documentId,
-                documentUid: ownerDetails.documentId
-              }];
+            const assessmentCreateResponse = await Digit.CustomService.getResponse({
+              url: "/property-services/assessment/_create",
+              method: "POST",
+              body: assessmentCreatePayload,
+              params: { tenantId: tenantId }
+            });
+
+            if (assessmentCreateResponse?.Assessments && assessmentCreateResponse.Assessments.length > 0) {
+              const createdAssessment = assessmentCreateResponse.Assessments[0];
+
+              // Clear session storage
+              Digit.SessionStorage.set(sessionKey, null);
+              Digit.SessionStorage.set(popupSeenKey, null);
+
+              // Redirect to acknowledgment page matching old UI pattern
+              const params = new URLSearchParams({
+                purpose: 'assess',
+                status: 'success',
+                propertyId: propertyIdFromUrl,
+                tenantId: tenantId,
+                secondNumber: createdAssessment.assessmentNumber,
+                FY: financialYearFromUrl
+              });
+
+              const contextPath = isCitizen ? "citizen" : "employee";
+              history.push(
+                `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+              );
+            } else {
+              setToast({
+                label: assessmentCreateResponse?.Errors?.[0]?.message || t("PT_ASSESSMENT_FAILED"),
+                type: "error"
+              });
+            }
+          } else {
+            // UPDATE existing assessment (for reassessment with valid assessment ID)
+            // First, fetch the latest assessment data (matching mono-ui)
+            const assessmentSearchResponse = await Digit.CustomService.getResponse({
+              url: "/property-services/assessment/_search",
+              method: "POST",
+              params: {
+                tenantId: tenantId,
+                assessmentNumbers: assessmentIdFromUrl
+              },
+              body: {}
+            });
+
+            if (!assessmentSearchResponse?.Assessments || assessmentSearchResponse.Assessments.length === 0) {
+              setToast({
+                label: t("PT_ASSESSMENT_NOT_FOUND"),
+                type: "error"
+              });
+              setLoading(false);
+              return;
             }
 
-            return [owner];
-          } else if (isMultipleOwners && ownerDetails.owners) {
-            // Multiple owners
-            return ownerDetails.owners.map((owner, index) => {
-              const existingOwner = existingOwners[index] || {};
+            const existingAssessmentData = assessmentSearchResponse.Assessments[0];
 
-              // Extract relationship - handle array or object
-              let relationshipCode;
-              if (Array.isArray(owner.relationship)) {
-                relationshipCode = owner.relationship[0]?.code || owner.relationship[0] || "FATHER";
-              } else if (typeof owner.relationship === 'object' && owner.relationship !== null) {
-                relationshipCode = owner.relationship.code || "FATHER";
-              } else {
-                relationshipCode = owner.relationship || "FATHER";
+            // Update the assessment with new adhoc values (matching mono-ui)
+            const assessmentUpdatePayload = {
+              Assessment: {
+                ...existingAssessmentData,
+                assessmentDate: Date.now(),
+                status: "ACTIVE",
+                additionalDetails: {
+                  ...existingAssessmentData.additionalDetails,
+                  adhocPenalty: parseFloat(finalAdhocPenalty) || 0,
+                  adhocExemption: parseFloat(finalAdhocRebate) || 0
+                }
               }
+            };
 
-              // Extract gender - handle array or object
-              let genderCode;
-              if (Array.isArray(owner.gender)) {
-                genderCode = owner.gender[0]?.code || owner.gender[0];
-              } else if (typeof owner.gender === 'object' && owner.gender !== null) {
-                genderCode = owner.gender.code;
-              } else {
-                genderCode = owner.gender;
-              }
+            const assessmentUpdateResponse = await Digit.CustomService.getResponse({
+              url: "/property-services/assessment/_update",
+              method: "POST",
+              body: assessmentUpdatePayload,
+              params: { tenantId: tenantId }
+            });
 
-              const ownerObj = {
+            if (assessmentUpdateResponse?.Assessments && assessmentUpdateResponse.Assessments.length > 0) {
+              // Clear session storage
+              Digit.SessionStorage.set(sessionKey, null);
+              Digit.SessionStorage.set(popupSeenKey, null);
+
+              // Redirect to acknowledgment page matching mono-ui pattern
+              const params = new URLSearchParams({
+                purpose: 'reassess',
+                status: 'success',
+                propertyId: propertyIdFromUrl,
+                tenantId: tenantId,
+                secondNumber: assessmentIdFromUrl,
+                FY: financialYearFromUrl
+              });
+
+              const contextPath = isCitizen ? "citizen" : "employee";
+              history.push(
+                `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+              );
+            } else {
+              setToast({
+                label: assessmentUpdateResponse?.Errors?.[0]?.message || t("PT_REASSESSMENT_FAILED"),
+                type: "error"
+              });
+            }
+          }
+
+          setLoading(false);
+        } catch (error) {
+          console.error("Assessment error:", error);
+          setToast({
+            label: error?.response?.data?.Errors?.[0]?.message || (isAssessMode ? t("PT_ASSESSMENT_FAILED") : t("PT_REASSESSMENT_FAILED")),
+            type: "error"
+          });
+          setLoading(false);
+        }
+      } else {
+        // For create/update mode, use the existing flow
+        setPropertyData(apiPayload);
+        setSubmitTrigger(true);
+        setLoading(true);
+      }
+    };
+
+    // Transform property API data to form data format (for update mode)
+    const transformPropertyToFormData = (property) => {
+      // Extract property type parts (e.g., "BUILTUP.INDEPENDENTPROPERTY")
+      const propertyTypeParts = property.propertyType?.split('.') || [];
+      const propertyTypeMajor = propertyTypeParts.length > 1 ? propertyTypeParts[0] : null;
+      const propertyTypeCode = propertyTypeParts.length > 1 ? propertyTypeParts[1] : property.propertyType;
+
+      // Map property type code to name
+      const propertyTypeMap = {
+        "VACANT": "Vacant Land",
+        "INDEPENDENTPROPERTY": "Independent Building",
+        "SHAREDPROPERTY": "Flat/Part of the building"
+      };
+
+      // Extract usage category parts (e.g., "RESIDENTIAL" or "NONRESIDENTIAL.OTHERS")
+      const usageCategoryParts = property.usageCategory?.split('.') || [];
+      let usageCategoryMajor, usageCategoryMinor;
+
+      if (usageCategoryParts.length > 1) {
+        usageCategoryMajor = usageCategoryParts[0];
+        usageCategoryMinor = usageCategoryParts[1];
+      } else {
+        // If no dot, it's a major category only (like "RESIDENTIAL")
+        usageCategoryMajor = usageCategoryParts[0];
+        usageCategoryMinor = null;
+      }
+
+      // Map usage category to name
+      const usageCategoryMap = {
+        "RESIDENTIAL": "Residential",
+        "NONRESIDENTIAL": "Non Residential",
+        "OTHERS": "Others",
+        "COMMERCIAL": "Commercial",
+        "INDUSTRIAL": "Industrial"
+      };
+
+      // Extract ownership category parts (e.g., "INDIVIDUAL.SINGLEOWNER")
+      const ownershipParts = property.ownershipCategory?.split('.') || [];
+      const ownershipType = ownershipParts.length > 1 ? ownershipParts[1] : ownershipParts[0];
+
+      // Map ownership type to name
+      const ownershipTypeMap = {
+        "SINGLEOWNER": "Single Owner",
+        "MULTIPLEOWNERS": "Multiple Owners",
+        "INSTITUTIONALPRIVATE": "Institutional Private",
+        "INSTITUTIONALGOVERNMENT": "Institutional Government"
+      };
+
+      // Map gender to name
+      const genderMap = {
+        "MALE": "Male",
+        "FEMALE": "Female",
+        "TRANSGENDER": "Transgender"
+      };
+
+      // Map relationship to name
+      const relationshipMap = {
+        "FATHER": "Father",
+        "HUSBAND": "Husband"
+      };
+
+      // Transform owners data
+      const owners = property.owners || [];
+      const firstOwner = owners[0] || {};
+      const isInstitutional = firstOwner.ownerType === "INSTITUTIONAL";
+      const isMultipleOwners = owners.length > 1;
+
+      let ownershipDetails = {};
+      if (isInstitutional) {
+        ownershipDetails = {
+          ownerName: firstOwner.name,
+          mobileNumber: firstOwner.mobileNumber,
+          ...(firstOwner.emailId ? { emailId: firstOwner.emailId } : {}),
+          ...(firstOwner.altContactNumber ? { altContactNumber: firstOwner.altContactNumber } : {}),
+          ...(firstOwner.permanentAddress ? { correspondenceAddress: firstOwner.permanentAddress } : {}),
+          sameAsPropertyAddress: false, // Not available in API response
+          ...(firstOwner.institutionId ? { institutionType: firstOwner.institutionId } : {}),
+          ...(firstOwner.designation ? { designation: firstOwner.designation } : {}),
+          ...(firstOwner.documents?.[0]?.fileStoreId ? { documentId: firstOwner.documents[0].fileStoreId } : {}),
+          ...(firstOwner.documents?.[0]?.documentType ? { documentIdType: firstOwner.documents[0].documentType } : {})
+        };
+      } else if (isMultipleOwners) {
+        ownershipDetails = {
+          owners: owners.map(owner => ({
+            ownerName: owner.name,
+            mobileNumber: owner.mobileNumber,
+            ...(owner.emailId ? { emailId: owner.emailId } : {}),
+            ...(owner.fatherOrHusbandName ? { guardianName: owner.fatherOrHusbandName } : {}),
+            ...(owner.gender ? {
+              gender: [{
+                code: owner.gender.toUpperCase(),
+                name: genderMap[owner.gender.toUpperCase()] || owner.gender,
+                active: true
+              }]
+            } : {}),
+            ...(owner.permanentAddress ? { correspondenceAddress: owner.permanentAddress } : {}),
+            sameAsPropertyAddress: false, // Not available in API response
+            ownershipPercentage: parseFloat(owner.ownerShipPercentage) || 0,
+            specialCategory: owner.ownerType === "NONE" ? "NONE" : owner.ownerType,
+            ...(owner.relationship ? {
+              relationship: [{
+                code: owner.relationship.toUpperCase(),
+                name: relationshipMap[owner.relationship.toUpperCase()] || owner.relationship,
+                active: true
+              }]
+            } : {}),
+            ...(owner.documents?.[0]?.fileStoreId ? { documentId: owner.documents[0].fileStoreId } : {}),
+            ...(owner.documents?.[0]?.documentType ? { documentIdType: owner.documents[0].documentType } : {})
+          }))
+        };
+      } else {
+        ownershipDetails = {
+          ownerName: firstOwner.name,
+          mobileNumber: firstOwner.mobileNumber,
+          ...(firstOwner.emailId ? { emailId: firstOwner.emailId } : {}),
+          ...(firstOwner.fatherOrHusbandName ? { guardianName: firstOwner.fatherOrHusbandName } : {}),
+          ...(firstOwner.gender ? {
+            gender: [{
+              code: firstOwner.gender.toUpperCase(),
+              name: genderMap[firstOwner.gender.toUpperCase()] || firstOwner.gender,
+              active: true
+            }]
+          } : {}),
+          ...(firstOwner.permanentAddress ? { correspondenceAddress: firstOwner.permanentAddress } : {}),
+          sameAsPropertyAddress: false, // Not available in API response
+          ownershipPercentage: parseFloat(firstOwner.ownerShipPercentage) || 100,
+          specialCategory: firstOwner.ownerType === "NONE" ? "NONE" : firstOwner.ownerType,
+          ...(firstOwner.relationship ? {
+            relationship: [{
+              code: firstOwner.relationship.toUpperCase(),
+              name: relationshipMap[firstOwner.relationship.toUpperCase()] || firstOwner.relationship,
+              active: true
+            }]
+          } : {}),
+          ...(firstOwner.documents?.[0]?.fileStoreId ? { documentId: firstOwner.documents[0].fileStoreId } : {}),
+          ...(firstOwner.documents?.[0]?.documentType ? { documentIdType: firstOwner.documents[0].documentType } : {})
+        };
+      }
+
+      // Group units by floor
+      const units = property.units || [];
+      const floorMap = new Map();
+      units.forEach(unit => {
+        const floorNo = String(unit.floorNo || 0);
+        if (!floorMap.has(floorNo)) {
+          floorMap.set(floorNo, {
+            floorNo: floorNo,
+            units: []
+          });
+        }
+        floorMap.get(floorNo).units.push({
+          usageType: unit.unitType || unit.usageCategory,
+          subUsageType: unit.usageCategory,
+          occupancy: unit.occupancyType === "SELFOCCUPIED" ? "OWNER" : unit.occupancyType,
+          builtUpArea: unit.constructionDetail?.builtUpArea || 0,
+          arv: parseFloat(unit.arv) || 0,
+          usageForDueMonths: unit.additionalDetails?.usageForDueMonths || "UNOCCUPIED",
+          rentedForMonths: unit.additionalDetails?.rentedformonths || null
+        });
+      });
+
+      const floors = Array.from(floorMap.values());
+
+      return {
+        "property-address": {
+          tenantId: property.tenantId,
+          ...(property.address?.doorNo && property.address.doorNo !== "" ? { doorNo: property.address.doorNo } : {}),
+          ...(property.address?.buildingName && property.address.buildingName !== "" ? { buildingName: property.address.buildingName } : {}),
+          ...(property.address?.street && property.address.street !== "" ? { street: property.address.street } : {}),
+          ...(property.address?.locality?.code ? {
+            locality: [{
+              code: property.address.locality.code,
+              name: property.address.locality.name,
+              area: property.address.locality.area
+            }]
+          } : {}),
+          ...(property.address?.pincode && property.address.pincode !== "" ? { pincode: property.address.pincode } : {}),
+          ...(property.oldPropertyId && property.oldPropertyId !== "" ? { existingPropertyId: property.oldPropertyId || property.propertyId || "" } : {}),
+          ...(property.surveyId && property.surveyId !== "" ? { surveyId: property.surveyId } : {}),
+          ...(property.additionalDetails?.yearConstruction ? {
+            yearOfCreation: {
+              code: property.additionalDetails.yearConstruction,
+              name: property.additionalDetails.yearConstruction,
+              i18nKey: property.additionalDetails.yearConstruction
+            }
+          } : {})
+        },
+        "assessment-info": {
+          propertyType: [{
+            name: propertyTypeMap[propertyTypeCode] || propertyTypeCode,
+            code: propertyTypeCode,
+            active: true,
+            ...(propertyTypeMajor ? { propertyType: propertyTypeMajor } : {})
+          }],
+          usageCategory: usageCategoryMinor ? [{
+            code: usageCategoryMinor,
+            usageCategoryMajor: usageCategoryMajor,
+            name: usageCategoryMinor,
+            active: true
+          }] : [{
+            code: usageCategoryMajor,
+            name: usageCategoryMap[usageCategoryMajor] || usageCategoryMajor,
+            active: true
+          }],
+          ...(property.additionalDetails?.vasikaNo ? { vasikaNo: property.additionalDetails.vasikaNo } : {}),
+          ...(property.additionalDetails?.vasikaDate ? { vasikaDate: property.additionalDetails.vasikaDate } : {}),
+          ...(property.additionalDetails?.allotmentNo ? { allotmentNo: property.additionalDetails.allotmentNo } : {}),
+          ...(property.additionalDetails?.allotmentDate ? { allotmentDate: property.additionalDetails.allotmentDate } : {}),
+          ...(property.additionalDetails?.businessName ? { businessName: property.additionalDetails.businessName } : {}),
+          ...(property.additionalDetails?.remarks ? { remarks: property.additionalDetails.remarks } : {}),
+          inflammableMaterial: property.additionalDetails?.inflammable || false,
+          heightOfProperty: property.additionalDetails?.heightAbove36Feet || false,
+          conditionalFields: {
+            plotSize: parseFloat(property.landArea) || 0,
+            noOfFloors: {
+              code: property.noOfFloors,
+              name: String(property.noOfFloors)
+            },
+            floors: floors,
+            units: units.map(unit => ({
+              floorNo: String(unit.floorNo || 0),
+              usageType: unit.unitType || unit.usageCategory,
+              subUsageType: unit.usageCategory,
+              occupancy: unit.occupancyType === "SELFOCCUPIED" ? "OWNER" : unit.occupancyType,
+              builtUpArea: unit.constructionDetail?.builtUpArea || 0,
+              arv: parseFloat(unit.arv) || 0,
+              usageForDueMonths: unit.additionalDetails?.usageForDueMonths || "UNOCCUPIED",
+              ...(unit.additionalDetails?.rentedformonths ? { rentedForMonths: unit.additionalDetails.rentedformonths } : {})
+            }))
+          }
+        },
+        "ownership-info": {
+          ownershipType: [{
+            code: ownershipType,
+            name: ownershipTypeMap[ownershipType] || ownershipType,
+            active: true
+          }],
+          ownershipDetails: ownershipDetails
+        },
+        "document-info": {
+          documents: property.documents?.map(doc => ({
+            documentType: doc.documentType,
+            fileStoreId: doc.fileStoreId
+          })) || []
+        }
+      };
+    };
+
+    const transformFormDataToAPIFormat = (formData) => {
+      const propertyAddress = formData["property-address"] || {};
+      const assessmentInfo = formData["assessment-info"] || {};
+      const ownershipInfo = formData["ownership-info"] || {};
+      const ownerDetails = ownershipInfo.ownershipDetails || {};
+      const documentInfo = formData["document-info"] || {};
+      // Get conditional fields data
+      const conditionalFields = assessmentInfo.conditionalFields || {};
+      const tenantId = Digit?.ULBService?.getCurrentTenantId() || "mz";
+
+      // Get property metadata from formData (persisted in session storage) or fallback to state
+      const propertyMetadata = formData._propertyMetadata || (fetchedPropertyData ? {
+        id: fetchedPropertyData.id,
+        propertyId: fetchedPropertyData.propertyId,
+        accountId: fetchedPropertyData.accountId,
+        oldPropertyId: fetchedPropertyData.oldPropertyId,
+        status: fetchedPropertyData.status,
+        acknowldgementNumber: fetchedPropertyData.acknowldgementNumber,
+        auditDetails: fetchedPropertyData.auditDetails,
+        address: {
+          id: fetchedPropertyData.address?.id
+        },
+        owners: fetchedPropertyData.owners?.map(owner => ({
+          uuid: owner.uuid,
+          ownerInfoUuid: owner.ownerInfoUuid,
+          status: owner.status
+        })) || [],
+        units: fetchedPropertyData.units?.map(unit => ({
+          id: unit.id,
+          constructionDetail: {
+            id: unit.constructionDetail?.id
+          }
+        })) || []
+      } : null);
+
+      // Debug logging
+      console.log("=== transformFormDataToAPIFormat DEBUG ===");
+      console.log("isUpdateMode:", isUpdateMode);
+      console.log("propertyMetadata:", propertyMetadata);
+      console.log("propertyMetadata exists:", !!propertyMetadata);
+      if (propertyMetadata) {
+        console.log("propertyMetadata.id:", propertyMetadata.id);
+        console.log("propertyMetadata.propertyId:", propertyMetadata.propertyId);
+      }
+      console.log("=========================================");
+
+      // Get property type - handle both string and object
+      let propertyTypeCode = assessmentInfo.propertyType;
+      let propertyTypeMajor = null;
+
+      if (Array.isArray(assessmentInfo.propertyType)) {
+        const propertyTypeObj = assessmentInfo.propertyType[0];
+        propertyTypeCode = propertyTypeObj?.code || propertyTypeObj;
+        propertyTypeMajor = propertyTypeObj?.propertyType; // Get major category if available
+      } else if (typeof assessmentInfo.propertyType === 'object' && assessmentInfo.propertyType !== null) {
+        propertyTypeCode = assessmentInfo.propertyType.code || assessmentInfo.propertyType.value;
+        propertyTypeMajor = assessmentInfo.propertyType.propertyType;
+      }
+
+      // Construct full property type
+      // VACANT is standalone, others are under BUILTUP
+      let propertyTypeFull;
+      if (propertyTypeCode?.includes('.')) {
+        // Already has dot notation
+        propertyTypeFull = propertyTypeCode;
+      } else if (propertyTypeCode === 'VACANT') {
+        // VACANT is standalone, not under BUILTUP
+        propertyTypeFull = 'VACANT';
+      } else {
+        // Use propertyTypeMajor if available, otherwise default to BUILTUP
+        const majorCategory = propertyTypeMajor || 'BUILTUP';
+        propertyTypeFull = `${majorCategory}.${propertyTypeCode}`;
+      }
+
+      // Extract usage category - combine major and minor parts
+      const usageCategoryObj = assessmentInfo.usageCategory?.[0] || assessmentInfo.usageCategory || {};
+      let usageCategoryMinor, usageCategoryMajor, usageCategoryCode;
+
+      if (typeof usageCategoryObj === 'string') {
+        // It's a plain string like "RESIDENTIAL"
+        usageCategoryCode = usageCategoryObj;
+        const parts = usageCategoryCode.split('.');
+        if (parts.length > 1) {
+          usageCategoryMajor = parts[0];
+          usageCategoryMinor = parts[1];
+        } else {
+          usageCategoryMajor = usageCategoryCode;
+          usageCategoryMinor = null;
+        }
+      } else {
+        // It's an object with code and usageCategoryMajor
+        usageCategoryMinor = usageCategoryObj.code || usageCategoryObj.value;
+        usageCategoryMajor = usageCategoryObj.usageCategoryMajor;
+
+        // Construct full usage category code
+        if (usageCategoryMajor && usageCategoryMinor) {
+          usageCategoryCode = `${usageCategoryMajor}.${usageCategoryMinor}`;
+        } else if (usageCategoryMinor) {
+          usageCategoryCode = usageCategoryMinor;
+        } else if (usageCategoryMajor) {
+          usageCategoryCode = usageCategoryMajor;
+        } else {
+          usageCategoryCode = null;
+        }
+      }
+      // Get ownership category with proper prefix
+      const ownershipTypeCode = ownershipInfo.ownershipType?.[0]?.code || ownershipInfo.ownershipType?.code || ownershipInfo.ownershipType;
+      let ownershipCategory = ownershipTypeCode;
+      if (ownershipTypeCode === "SINGLEOWNER") {
+        ownershipCategory = "INDIVIDUAL.SINGLEOWNER";
+      } else if (ownershipTypeCode === "MULTIPLEOWNERS") {
+        ownershipCategory = "INDIVIDUAL.MULTIPLEOWNERS";
+      } else if (ownershipTypeCode === "INSTITUTIONALPRIVATE") {
+        ownershipCategory = "INSTITUTIONAL.PRIVATE";
+      } else if (ownershipTypeCode === "INSTITUTIONALGOVERNMENT") {
+        ownershipCategory = "INSTITUTIONAL.GOVERNMENT";
+      }
+
+      // Helper function to capitalize first letter
+      const capitalizeFirst = (str) => {
+        if (!str) return str;
+        if (typeof str !== 'string') return str;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      };
+
+      // Log form data BEFORE constructing payload
+      console.log("=== PAYLOAD CONSTRUCTION DEBUG ===");
+      console.log("propertyAddress:", propertyAddress);
+      console.log("propertyAddress.surveyId:", propertyAddress.surveyId);
+      console.log("assessmentInfo:", assessmentInfo);
+      console.log("assessmentInfo.businessName:", assessmentInfo.businessName);
+      console.log("ownershipInfo:", ownershipInfo);
+      console.log("ownerDetails:", ownerDetails);
+      console.log("ownerDetails.ownerName:", ownerDetails.ownerName);
+      console.log("==================================");
+
+      const payloadToReturn = {
+        Property: {
+          ...(isUpdateMode && propertyMetadata ? {
+            id: propertyMetadata.id,
+            propertyId: propertyMetadata.propertyId,
+            accountId: propertyMetadata.accountId,
+            oldPropertyId: propertyMetadata.oldPropertyId,
+            status: propertyMetadata.status,
+            acknowldgementNumber: propertyMetadata.acknowldgementNumber,
+            auditDetails: propertyMetadata.auditDetails
+          } : {}),
+          tenantId: tenantId,
+          surveyId: propertyAddress.surveyId || null,
+          propertyType: propertyTypeFull,
+          usageCategory: usageCategoryCode,
+          usageCategoryMajor: usageCategoryMajor || null,
+          usageCategoryMinor: usageCategoryMinor || null,
+          ownershipCategory: ownershipCategory,
+          source: "MUNICIPAL_RECORDS",
+          channel: "CFC_COUNTER",
+          creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "UPDATE" : "CREATE"),
+          noOfFloors: parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1,
+          landArea: String(parseFloat(conditionalFields.plotSize) || 0),
+          superBuiltUpArea: null,
+          additionalDetails: {
+            yearConstruction: propertyAddress.yearOfCreation?.code || propertyAddress.yearOfCreation || null,
+            vasikaNo: assessmentInfo.vasikaNo || null,
+            vasikaDate: assessmentInfo.vasikaDate || null,
+            allotmentNo: assessmentInfo.allotmentNo || null,
+            allotmentDate: assessmentInfo.allotmentDate || null,
+            businessName: assessmentInfo.businessName || null,
+            remarks: assessmentInfo.remarks || null,
+            inflammable: assessmentInfo.inflammableMaterial || false,
+            heightAbove36Feet: assessmentInfo.heightOfProperty || false
+          },
+          address: {
+            ...(isUpdateMode && propertyMetadata?.address?.id ? { id: propertyMetadata.address.id } : {}),
+            city: (() => {
+              // Get city name from tenant
+              const cityCode = tenantId.split('.').pop();
+              return capitalizeFirst(cityCode);
+            })(),
+            doorNo: propertyAddress.doorNo || null,
+            buildingName: propertyAddress.buildingName || null,
+            street: propertyAddress.street || null,
+            locality: {
+              code: propertyAddress.locality?.[0]?.code || propertyAddress.locality?.code || propertyAddress.locality,
+              area: propertyAddress.locality?.[0]?.area || propertyAddress.locality?.[0]?.name || propertyAddress.locality?.area || propertyAddress.locality?.name || "AREA1"
+            },
+            pincode: propertyAddress.pincode || null
+          },
+          owners: (() => {
+            const ownershipTypeCode = ownershipInfo.ownershipType?.[0]?.code || ownershipInfo.ownershipType?.code || "";
+            const isInstitutional = ownershipTypeCode?.includes("INSTITUTIONAL");
+            const isMultipleOwners = ownershipTypeCode === "MULTIPLEOWNERS";
+
+            // Get existing owners for update mode
+            const existingOwners = isUpdateMode && propertyMetadata ? propertyMetadata.owners || [] : [];
+
+            if (isInstitutional) {
+              // Institutional ownership
+              const existingOwner = existingOwners[0] || {};
+              const owner = {
                 ...(isUpdateMode && existingOwner.uuid ? {
                   uuid: existingOwner.uuid,
                   ownerInfoUuid: existingOwner.ownerInfoUuid,
                   status: existingOwner.status
                 } : {}),
-                name: owner.ownerName,
-                mobileNumber: owner.mobileNumber,
-                emailId: owner.emailId || null,
-                fatherOrHusbandName: owner.guardianName || null,
-                gender: capitalizeFirst(genderCode),
-                permanentAddress: owner.correspondenceAddress || null,
-                ownerShipPercentage: String(parseFloat(owner.ownershipPercentage) || 0),
-                ownerType: owner.specialCategory?.code || owner.specialCategory || "NONE",
-                relationship: capitalizeFirst(relationshipCode),
-                isCorrespondenceAddress: owner.sameAsPropertyAddress || null
+                name: ownerDetails.ownerName,
+                mobileNumber: ownerDetails.mobileNumber,
+                emailId: ownerDetails.emailId || null,
+                altContactNumber: ownerDetails.altContactNumber || null,
+                permanentAddress: ownerDetails.correspondenceAddress || null,
+                ownerShipPercentage: "100",
+                ownerType: "INSTITUTIONAL",
+                institutionId: ownerDetails.institutionType?.code || ownerDetails.institutionType,
+                designation: ownerDetails.designation || null,
+                relationship: null,
+                isCorrespondenceAddress: ownerDetails.sameAsPropertyAddress || null
               };
 
-              // Add documents if special category is not NONE and documentId exists
-              const specialCategoryCode = owner.specialCategory?.code || owner.specialCategory;
-              if (specialCategoryCode && specialCategoryCode !== "NONE" && owner.documentId && owner.documentIdType) {
-                ownerObj.documents = [{
-                  documentType: owner.documentIdType?.code || owner.documentIdType || "SPECIALCATEGORYPROOF",
-                  fileStoreId: owner.documentId,
-                  documentUid: owner.documentId
+              // Add documents if documentId exists
+              if (ownerDetails.documentId && ownerDetails.documentIdType) {
+                owner.documents = [{
+                  documentType: ownerDetails.documentIdType?.code || ownerDetails.documentIdType || "IDENTITYPROOF",
+                  fileStoreId: ownerDetails.documentId,
+                  documentUid: ownerDetails.documentId
                 }];
               }
 
-              return ownerObj;
-            });
-          } else {
-            // Single owner
-            const existingOwner = existingOwners[0] || {};
+              return [owner];
+            } else if (isMultipleOwners && ownerDetails.owners) {
+              // Multiple owners
+              return ownerDetails.owners.map((owner, index) => {
+                const existingOwner = existingOwners[index] || {};
 
-            // Extract relationship - handle array or object
-            let relationshipCode;
-            if (Array.isArray(ownerDetails.relationship)) {
-              relationshipCode = ownerDetails.relationship[0]?.code || ownerDetails.relationship[0] || "FATHER";
-            } else if (typeof ownerDetails.relationship === 'object' && ownerDetails.relationship !== null) {
-              relationshipCode = ownerDetails.relationship.code || "FATHER";
+                // Extract relationship - handle array or object
+                let relationshipCode;
+                if (Array.isArray(owner.relationship)) {
+                  relationshipCode = owner.relationship[0]?.code || owner.relationship[0] || "FATHER";
+                } else if (typeof owner.relationship === 'object' && owner.relationship !== null) {
+                  relationshipCode = owner.relationship.code || "FATHER";
+                } else {
+                  relationshipCode = owner.relationship || "FATHER";
+                }
+
+                // Extract gender - handle array or object
+                let genderCode;
+                if (Array.isArray(owner.gender)) {
+                  genderCode = owner.gender[0]?.code || owner.gender[0];
+                } else if (typeof owner.gender === 'object' && owner.gender !== null) {
+                  genderCode = owner.gender.code;
+                } else {
+                  genderCode = owner.gender;
+                }
+
+                const ownerObj = {
+                  ...(isUpdateMode && existingOwner.uuid ? {
+                    uuid: existingOwner.uuid,
+                    ownerInfoUuid: existingOwner.ownerInfoUuid,
+                    status: existingOwner.status
+                  } : {}),
+                  name: owner.ownerName,
+                  mobileNumber: owner.mobileNumber,
+                  emailId: owner.emailId || null,
+                  fatherOrHusbandName: owner.guardianName || null,
+                  gender: capitalizeFirst(genderCode),
+                  permanentAddress: owner.correspondenceAddress || null,
+                  ownerShipPercentage: String(parseFloat(owner.ownershipPercentage) || 0),
+                  ownerType: owner.specialCategory?.code || owner.specialCategory || "NONE",
+                  relationship: capitalizeFirst(relationshipCode),
+                  isCorrespondenceAddress: owner.sameAsPropertyAddress || null
+                };
+
+                // Add documents if special category is not NONE and documentId exists
+                const specialCategoryCode = owner.specialCategory?.code || owner.specialCategory;
+                if (specialCategoryCode && specialCategoryCode !== "NONE" && owner.documentId && owner.documentIdType) {
+                  ownerObj.documents = [{
+                    documentType: owner.documentIdType?.code || owner.documentIdType || "SPECIALCATEGORYPROOF",
+                    fileStoreId: owner.documentId,
+                    documentUid: owner.documentId
+                  }];
+                }
+
+                return ownerObj;
+              });
             } else {
-              relationshipCode = ownerDetails.relationship || "FATHER";
+              // Single owner
+              const existingOwner = existingOwners[0] || {};
+
+              // Extract relationship - handle array or object
+              let relationshipCode;
+              if (Array.isArray(ownerDetails.relationship)) {
+                relationshipCode = ownerDetails.relationship[0]?.code || ownerDetails.relationship[0] || "FATHER";
+              } else if (typeof ownerDetails.relationship === 'object' && ownerDetails.relationship !== null) {
+                relationshipCode = ownerDetails.relationship.code || "FATHER";
+              } else {
+                relationshipCode = ownerDetails.relationship || "FATHER";
+              }
+
+              // Extract gender - handle array or object
+              let genderCode;
+              if (Array.isArray(ownerDetails.gender)) {
+                genderCode = ownerDetails.gender[0]?.code || ownerDetails.gender[0];
+              } else if (typeof ownerDetails.gender === 'object' && ownerDetails.gender !== null) {
+                genderCode = ownerDetails.gender.code;
+              } else {
+                genderCode = ownerDetails.gender;
+              }
+
+              const owner = {
+                ...(isUpdateMode && existingOwner.uuid ? {
+                  uuid: existingOwner.uuid,
+                  ownerInfoUuid: existingOwner.ownerInfoUuid,
+                  status: existingOwner.status
+                } : {}),
+                name: ownerDetails.ownerName,
+                mobileNumber: ownerDetails.mobileNumber,
+                emailId: ownerDetails.emailId || null,
+                fatherOrHusbandName: ownerDetails.guardianName || null,
+                gender: capitalizeFirst(genderCode),
+                permanentAddress: ownerDetails.correspondenceAddress || null,
+                ownerShipPercentage: String(parseFloat(ownerDetails.ownershipPercentage) || 100),
+                ownerType: ownerDetails.specialCategory?.code || ownerDetails.specialCategory || "NONE",
+                relationship: capitalizeFirst(relationshipCode),
+                isCorrespondenceAddress: ownerDetails.sameAsPropertyAddress || null
+              };
+
+              // Add documents if special category is not NONE and documentId exists
+              const specialCategoryCode = ownerDetails.specialCategory?.code || ownerDetails.specialCategory;
+              if (specialCategoryCode && specialCategoryCode !== "NONE" && ownerDetails.documentId && ownerDetails.documentIdType) {
+                owner.documents = [{
+                  documentType: ownerDetails.documentIdType?.code || ownerDetails.documentIdType || "SPECIALCATEGORYPROOF",
+                  fileStoreId: ownerDetails.documentId,
+                  documentUid: ownerDetails.documentId
+                }];
+              }
+
+              return [owner];
             }
+          })(),
+          units: (() => {
+            const existingUnits = isUpdateMode && propertyMetadata ? propertyMetadata.units || [] : [];
 
-            // Extract gender - handle array or object
-            let genderCode;
-            if (Array.isArray(ownerDetails.gender)) {
-              genderCode = ownerDetails.gender[0]?.code || ownerDetails.gender[0];
-            } else if (typeof ownerDetails.gender === 'object' && ownerDetails.gender !== null) {
-              genderCode = ownerDetails.gender.code;
-            } else {
-              genderCode = ownerDetails.gender;
-            }
+            // Try floors first (for INDEPENDENTPROPERTY), then units (for SHAREDPROPERTY)
+            let newUnits = [];
 
-            const owner = {
-              ...(isUpdateMode && existingOwner.uuid ? {
-                uuid: existingOwner.uuid,
-                ownerInfoUuid: existingOwner.ownerInfoUuid,
-                status: existingOwner.status
-              } : {}),
-              name: ownerDetails.ownerName,
-              mobileNumber: ownerDetails.mobileNumber,
-              emailId: ownerDetails.emailId || null,
-              fatherOrHusbandName: ownerDetails.guardianName || null,
-              gender: capitalizeFirst(genderCode),
-              permanentAddress: ownerDetails.correspondenceAddress || null,
-              ownerShipPercentage: String(parseFloat(ownerDetails.ownershipPercentage) || 100),
-              ownerType: ownerDetails.specialCategory?.code || ownerDetails.specialCategory || "NONE",
-              relationship: capitalizeFirst(relationshipCode),
-              isCorrespondenceAddress: ownerDetails.sameAsPropertyAddress || null
-            };
+            if (conditionalFields.floors && conditionalFields.floors.length > 0) {
+              // INDEPENDENTPROPERTY: map from floors
+              newUnits = conditionalFields.floors.flatMap((floor) =>
+                (floor.units || []).map((unit, unitIndex) => {
+                  // Try to find matching existing unit by floor and index
+                  const existingUnit = existingUnits.find(eu =>
+                    eu.floorNo === String(parseInt(floor.floorNo?.code || floor.floorNo) || 0)
+                  ) || existingUnits[unitIndex] || {};
 
-            // Add documents if special category is not NONE and documentId exists
-            const specialCategoryCode = ownerDetails.specialCategory?.code || ownerDetails.specialCategory;
-            if (specialCategoryCode && specialCategoryCode !== "NONE" && ownerDetails.documentId && ownerDetails.documentIdType) {
-              owner.documents = [{
-                documentType: ownerDetails.documentIdType?.code || ownerDetails.documentIdType || "SPECIALCATEGORYPROOF",
-                fileStoreId: ownerDetails.documentId,
-                documentUid: ownerDetails.documentId
-              }];
-            }
+                  const occupancy = unit.occupancy?.code || unit.occupancy || "OWNER";
 
-            return [owner];
-          }
-        })(),
-        units: (() => {
-          const existingUnits = isUpdateMode && fetchedPropertyData ? fetchedPropertyData.units || [] : [];
+                  // Extract unitType and usageCategory from subUsageType (full hierarchical path)
+                  // subUsageType.code = "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL"
+                  // unitType should be "RETAIL" (last segment)
+                  // usageCategory should be full path "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL"
+                  let finalUnitType, finalUsageCategory;
 
-          // Try floors first (for INDEPENDENTPROPERTY), then units (for SHAREDPROPERTY)
-          let newUnits = [];
+                  if (unit.subUsageType) {
+                    const subUsageCode = unit.subUsageType?.code || unit.subUsageType;
+                    finalUsageCategory = subUsageCode;
+                    // Extract last segment for unitType
+                    const pathParts = subUsageCode.split('.');
+                    finalUnitType = pathParts[pathParts.length - 1];
+                  } else {
+                    // Fallback: use property-level usageCategory
+                    finalUsageCategory = usageCategoryCode;
+                    finalUnitType = usageCategoryCode;
+                  }
 
-          if (conditionalFields.floors && conditionalFields.floors.length > 0) {
-            // INDEPENDENTPROPERTY: map from floors
-            newUnits = conditionalFields.floors.flatMap((floor) =>
-              (floor.units || []).map((unit, unitIndex) => {
-                // Try to find matching existing unit by floor and index
-                const existingUnit = existingUnits.find(eu =>
-                  eu.floorNo === String(parseInt(floor.floorNo?.code || floor.floorNo) || 0)
-                ) || existingUnits[unitIndex] || {};
-
+                  return {
+                    ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
+                    floorNo: String(parseInt(floor.floorNo?.code || floor.floorNo) || 0),
+                    unitType: finalUnitType,
+                    usageCategory: finalUsageCategory,
+                    occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
+                    additionalDetails: {
+                      usageForDueMonths: unit.usageForDueMonths?.code || unit.usageForDueMonths || "UNOCCUPIED",
+                      rentedformonths: parseInt(unit.rentedForMonths) || null
+                    },
+                    arv: String(parseFloat(unit.arv) || 0),
+                    constructionDetail: {
+                      ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
+                      builtUpArea: parseFloat(unit.builtUpArea) || 0
+                    }
+                  };
+                })
+              ).filter(Boolean);
+            } else if (conditionalFields.units && conditionalFields.units.length > 0) {
+              // SHAREDPROPERTY: map from units directly
+              newUnits = conditionalFields.units.map((unit, unitIndex) => {
+                const existingUnit = existingUnits[unitIndex] || {};
                 const occupancy = unit.occupancy?.code || unit.occupancy || "OWNER";
 
                 // Extract unitType and usageCategory from subUsageType (full hierarchical path)
-                // subUsageType.code = "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL"
-                // unitType should be "RETAIL" (last segment)
-                // usageCategory should be full path "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL"
                 let finalUnitType, finalUsageCategory;
 
                 if (unit.subUsageType) {
@@ -1277,7 +1594,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
 
                 return {
                   ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
-                  floorNo: String(parseInt(floor.floorNo?.code || floor.floorNo) || 0),
+                  floorNo: String(parseInt(unit.floorNo?.code || unit.floorNo) || 0),
                   unitType: finalUnitType,
                   usageCategory: finalUsageCategory,
                   occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
@@ -1291,174 +1608,153 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
                     builtUpArea: parseFloat(unit.builtUpArea) || 0
                   }
                 };
-              })
-            ).filter(Boolean);
-          } else if (conditionalFields.units && conditionalFields.units.length > 0) {
-            // SHAREDPROPERTY: map from units directly
-            newUnits = conditionalFields.units.map((unit, unitIndex) => {
-              const existingUnit = existingUnits[unitIndex] || {};
-              const occupancy = unit.occupancy?.code || unit.occupancy || "OWNER";
+              }).filter(Boolean);
+            }
 
-              // Extract unitType and usageCategory from subUsageType (full hierarchical path)
-              let finalUnitType, finalUsageCategory;
+            return newUnits;
+          })(),
+          documents: (() => {
+            if (!documentInfo) return [];
 
-              if (unit.subUsageType) {
-                const subUsageCode = unit.subUsageType?.code || unit.subUsageType;
-                finalUsageCategory = subUsageCode;
-                // Extract last segment for unitType
-                const pathParts = subUsageCode.split('.');
-                finalUnitType = pathParts[pathParts.length - 1];
-              } else {
-                // Fallback: use property-level usageCategory
-                finalUsageCategory = usageCategoryCode;
-                finalUnitType = usageCategoryCode;
-              }
+            // Handle nested documents structure
+            let docs = [];
 
-              return {
-                ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
-                floorNo: String(parseInt(unit.floorNo?.code || unit.floorNo) || 0),
-                unitType: finalUnitType,
-                usageCategory: finalUsageCategory,
-                occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
-                additionalDetails: {
-                  usageForDueMonths: unit.usageForDueMonths?.code || unit.usageForDueMonths || "UNOCCUPIED",
-                  rentedformonths: parseInt(unit.rentedForMonths) || null
-                },
-                arv: String(parseFloat(unit.arv) || 0),
-                constructionDetail: {
-                  ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
-                  builtUpArea: parseFloat(unit.builtUpArea) || 0
-                }
-              };
-            }).filter(Boolean);
-          }
+            if (documentInfo.documents?.documents && Array.isArray(documentInfo.documents.documents)) {
+              docs = documentInfo.documents.documents;
+            } else if (Array.isArray(documentInfo.documents)) {
+              docs = documentInfo.documents;
+            } else if (Array.isArray(documentInfo)) {
+              docs = documentInfo;
+            }
 
-          return newUnits;
-        })(),
-        documents: (() => {
-          if (!documentInfo) return [];
+            // Filter only documents with fileStoreId
+            return docs
+              .filter(doc => doc && doc.fileStoreId)
+              .map(doc => ({
+                documentType: doc.documentType,
+                fileStoreId: doc.fileStoreId
+              }));
+          })(),
+          // Add workflow object for update operations (matching old UI)
+          ...(isUpdateMode ? {
+            workflow: {
+              businessService: "PT.CREATE",
+              action: "OPEN",
+              moduleName: "PT"
+            }
+          } : {})
+        }
+      };
 
-          // Handle nested documents structure
-          let docs = [];
+      // Log final payload AFTER construction
+      console.log("=== FINAL PAYLOAD DEBUG ===");
+      console.log("payloadToReturn.Property.surveyId:", payloadToReturn.Property.surveyId);
+      console.log("payloadToReturn.Property.additionalDetails.businessName:", payloadToReturn.Property.additionalDetails.businessName);
+      console.log("payloadToReturn.Property.owners[0].name:", payloadToReturn.Property.owners[0]?.name);
+      console.log("Full Property Payload:", JSON.stringify(payloadToReturn.Property, null, 2));
+      console.log("===========================");
 
-          if (documentInfo.documents?.documents && Array.isArray(documentInfo.documents.documents)) {
-            docs = documentInfo.documents.documents;
-          } else if (Array.isArray(documentInfo.documents)) {
-            docs = documentInfo.documents;
-          } else if (Array.isArray(documentInfo)) {
-            docs = documentInfo;
-          }
+      return payloadToReturn;
+    };
 
-          // Filter only documents with fileStoreId
-          return docs
-            .filter(doc => doc && doc.fileStoreId)
-            .map(doc => ({
-              documentType: doc.documentType,
-              fileStoreId: doc.fileStoreId
-            }));
-        })()
+    const handleStepClick = (stepIndex) => {
+      if (stepIndex < currentStep) {
+        setCurrentStep(stepIndex);
       }
     };
-  };
 
-  const handleStepClick = (stepIndex) => {
-    if (stepIndex < currentStep) {
-      setCurrentStep(stepIndex);
-    }
-  };
+    const handlePopupProceed = () => {
+      // Mark popup as seen in session storage
+      Digit.SessionStorage.set(popupSeenKey, true);
+      setShowRequiredDocsPopup(false);
+    };
 
-  const handlePopupProceed = () => {
-    // Mark popup as seen in session storage
-    Digit.SessionStorage.set(popupSeenKey, true);
-    setShowRequiredDocsPopup(false);
-  };
-
-  const handlePopupClose = () => {
-    // Clear session storage when leaving the form
-    Digit.SessionStorage.del(sessionKey);
-    Digit.SessionStorage.del(popupSeenKey);
-    setShowRequiredDocsPopup(false);
-    window.history.back();
-  };
-
-  const onSecondaryActionClick = () => {
-    if (currentStep === 0) {
-      // Clear session storage when leaving the form from first step
+    const handlePopupClose = () => {
+      // Clear session storage when leaving the form
       Digit.SessionStorage.del(sessionKey);
       Digit.SessionStorage.del(popupSeenKey);
-      history.goBack();
-      return;
+      setShowRequiredDocsPopup(false);
+      window.history.back();
+    };
+
+    const onSecondaryActionClick = () => {
+      if (currentStep === 0) {
+        // Clear session storage when leaving the form from first step
+        Digit.SessionStorage.del(sessionKey);
+        Digit.SessionStorage.del(popupSeenKey);
+        history.goBack();
+        return;
+      }
+
+      setCurrentStep((prev) => prev - 1);
+    };
+
+    const textStyles = {
+      color: "#0B4B66",
+      fontWeight: "700",
+      fontSize: "32px",
+      marginBottom: "1.5rem"
     }
 
-    setCurrentStep((prev) => prev - 1);
-  };
+    const defaultValues = {
+      "tenantId": t(Digit?.ULBService?.getCurrentTenantId())
+    }
 
-  const textStyles = {
-    color: "#0B4B66",
-    fontWeight: "700",
-    fontSize: "32px",
-    marginBottom: "1.5rem"
-  }
+    return (
+      <div className="property-assessment-form">
+        <HeaderComponent styles={textStyles}>
+          <div styles={textStyles}>
+            {isReassessMode ? t("PT_REASSESSMENT") : isAssessMode ? t("PT_ASSESSMENT") : (isUpdateMode ? t("PT_PROPERTY_UPDATE") : t("PT_PROPERTY_REGISTRATION"))}
+          </div>
+        </HeaderComponent>
 
-  const defaultValues = {
-    "tenantId": t(Digit?.ULBService?.getCurrentTenantId())
-  }
-
-  return (
-    <div className="property-assessment-form">
-      <HeaderComponent styles={textStyles}>
-        <div styles={textStyles}>
-          {isReassessMode ? t("PT_REASSESSMENT") : isAssessMode ? t("PT_ASSESSMENT") : (isUpdateMode ? t("PT_PROPERTY_UPDATE") : t("PT_PROPERTY_REGISTRATION"))}
+        {/* Stepper */}
+        <div className="stepper-container">
+          <Stepper
+            customSteps={stepLabels}
+            currentStep={currentStep + 1}
+            onStepClick={handleStepClick}
+            style={{ marginBottom: "24px" }}
+          />
         </div>
-      </HeaderComponent>
+        <div style={{ fontWeight: "400", color: "#505a5f", fontSize: "16px", fontFamily: "Roboto", marginBottom: "24px" }}>{t(currentConfig?.message)}</div>
+        {currentConfig && (
+          <FormComposerV2
+            key={`${currentConfig.key}-${currentStep}-${(isUpdateMode || isReassessMode || isAssessMode) ? isPropertyDataLoaded : 'create'}`}
+            config={[currentConfig]}
+            onSubmit={handleFormSubmit}
+            defaultValues={formData[currentConfig.key] || defaultValues}
+            showSecondaryLabel={currentStep > 0 ? true : false}
+            secondaryLabel={t("PT_BACK")}
+            secondaryActionIcon={"ArrowBack"}
+            onSecondayActionClick={onSecondaryActionClick}
+            label={currentStep === config.length - 1 ? (isReassessMode ? t("PT_SUBMIT_REASSESSMENT") : isAssessMode ? t("PT_ASSESS_PROPERTY") : t("PT_SUBMIT")) : t("PT_NEXT")}
+            isSubmitting={loading}
+            className="assessment-form"
+            cardClassName="assessment-form-card"
+            showFormInCard={true}
+            actionClassName="actionBarClass assessment-form-actionbar"
+          />
+        )}
 
-      {/* Stepper */}
-      <div className="stepper-container">
-        <Stepper
-          customSteps={stepLabels}
-          currentStep={currentStep + 1}
-          onStepClick={handleStepClick}
-          style={{ marginBottom: "24px" }}
+        {/* Loading and Toast */}
+        {loading && <Loader />}
+        {toast && (
+          <Toast
+            label={toast.label}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
+
+        {/* Required Documents Popup - Only show on first step */}
+        <AddPropertyPopup
+          isOpen={showRequiredDocsPopup && currentStep === 0}
+          onClose={handlePopupClose}
+          onProceed={handlePopupProceed}
         />
       </div>
-      <div style={{ fontWeight: "400", color: "#505a5f", fontSize: "16px", fontFamily: "Roboto", marginBottom: "24px" }}>{t(currentConfig?.message)}</div>
-      {currentConfig && (
-        <FormComposerV2
-          key={`${currentConfig.key}-${currentStep}-${(isUpdateMode || isReassessMode || isAssessMode) ? isPropertyDataLoaded : 'create'}`}
-          config={[currentConfig]}
-          onSubmit={handleFormSubmit}
-          defaultValues={formData[currentConfig.key] || defaultValues}
-          showSecondaryLabel={currentStep > 0 ? true : false}
-          secondaryLabel={t("PT_BACK")}
-          secondaryActionIcon={"ArrowBack"}
-          onSecondayActionClick={onSecondaryActionClick}
-          label={currentStep === config.length - 1 ? (isReassessMode ? t("PT_SUBMIT_REASSESSMENT") : isAssessMode ? t("PT_ASSESS_PROPERTY") : t("PT_SUBMIT")) : t("PT_NEXT")}
-          isSubmitting={loading}
-          className="assessment-form"
-          cardClassName="assessment-form-card"
-          showFormInCard={true}
-          actionClassName="actionBarClass assessment-form-actionbar"
-        />
-      )}
+    );
+  };
 
-      {/* Loading and Toast */}
-      {loading && <Loader />}
-      {toast && (
-        <Toast
-          label={toast.label}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
-
-      {/* Required Documents Popup - Only show on first step */}
-      <AddPropertyPopup
-        isOpen={showRequiredDocsPopup && currentStep === 0}
-        onClose={handlePopupClose}
-        onProceed={handlePopupProceed}
-      />
-    </div>
-  );
-};
-
-export default PropertyAssessmentForm;
+  export default PropertyAssessmentForm;

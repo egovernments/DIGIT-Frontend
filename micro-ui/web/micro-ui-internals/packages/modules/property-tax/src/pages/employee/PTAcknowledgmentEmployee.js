@@ -113,10 +113,12 @@ const PTAcknowledgmentEmployee = () => {
     if (tenantId && propertyId) {
       const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${purpose === 'create' ? 'new' : propertyId}`;
       const popupSeenKey = `PT_POPUP_SEEN_${tenantId}`;
+      const dataLoadedKey = `PT_DATA_LOADED_${tenantId}_${propertyId}`;
 
       // Clear the session storage to ensure fresh form on next visit
       Digit.SessionStorage.del(sessionKey);
       Digit.SessionStorage.del(popupSeenKey);
+      Digit.SessionStorage.del(dataLoadedKey);
     }
   }, [tenantId, propertyId, purpose]);
   const handleViewProperty = () => {
