@@ -1029,7 +1029,8 @@ const PaymentSetUpPage = () => {
           const cy = billingCycleOptions.find((x) => x.code === billingConfigResponse?.billingConfig?.billingFrequency) || null;
 
           setBillingCycle(cy);
-          setBillingConfigData(billingConfigResponse?.billingFrequency);
+
+          setBillingConfigData(billingConfigResponse?.billingConfig);
 
           // Step 2: Fetch default MDMS skills
           const defaultSkills = await fetchDefaultSkillsData(value.projectType);
