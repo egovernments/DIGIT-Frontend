@@ -22,9 +22,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
     Digit.SessionStorage.del("filtersForInbox");
   }, []);
 
-  const { data: hierarchies,
-    isLoading: isHierarchyLoading,
-  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, refetchKey: HierarchySelectedForPGR });
+ 
 
   // Fetch hierarchy type from MDMS v2
   const { isLoading: isMDMSLoading, data: HierarchySelectedForPGR } = Digit.Hooks.useCustomMDMS(
@@ -44,6 +42,10 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
       offset: 0
     }
   );
+
+  const { data: hierarchies,
+    isLoading: isHierarchyLoading,
+  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, refetchKey: HierarchySelectedForPGR });
 
   // Set hierarchy in SessionStorage when both hierarchies and HierarchySelectedForPGR are available
   useEffect(() => {
