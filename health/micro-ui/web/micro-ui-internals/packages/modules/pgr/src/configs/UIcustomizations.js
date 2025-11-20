@@ -47,9 +47,9 @@ export const UICustomizations = {
         data.body.inbox.moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
       }
 
-      if(data?.state?.filterForm){
-        window.Digit.SessionStorage.set("filtersForInbox",data?.state?.filterForm); 
-      }
+      // if(data?.state?.filterForm){
+      //   window.Digit.SessionStorage.set("filtersForInbox",data?.state?.filterForm); 
+      // }
 
       // --- Handle serviceCode ---
       let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
@@ -66,13 +66,34 @@ export const UICustomizations = {
       let localityArray = [];
       if (rawLocality) {
         if (Array.isArray(rawLocality)) {
-          localityArray = rawLocality.map((loc) => loc?.code).filter(Boolean);
-        } else if (rawLocality.code) {
-          localityArray = [rawLocality.code];
+          localityArray = rawLocality.map((loc) => {
+            // Extract last segment from dot-separated code (e.g., "MICROPLAN_MO_16_FCT__ABUJA_STATE.MICROPLAN_MO_16_01_FCT__ABUJA.MICROPLAN_MO_16_01_01_ABAJI.MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI" -> "MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI")
+            const code = loc?.code;
+            if (code && typeof code === 'string' && code.includes('.')) {
+              const segments = code.split('.');
+              const lastSegment = segments[segments.length - 1];
+              return lastSegment || null;
+            }
+            return code || null;
+          }).filter(Boolean);
+        } else if (rawLocality?.code) {
+          // Extract last segment for single locality
+          const code = rawLocality.code;
+          if (code && typeof code === 'string') {
+            if (code.includes('.')) {
+              const segments = code.split('.');
+              const lastSegment = segments[segments.length - 1];
+              if (lastSegment) {
+                localityArray = [lastSegment];
+              }
+            } else {
+              localityArray = [code];
+            }
+          }
         }
       }
 
-      if (localityArray.length > 0) {
+      if (Array.isArray(localityArray) && localityArray.length > 0) {
         delete data.body.inbox.moduleSearchCriteria.locality;
         data.body.inbox.moduleSearchCriteria.area = localityArray;
       } else {
