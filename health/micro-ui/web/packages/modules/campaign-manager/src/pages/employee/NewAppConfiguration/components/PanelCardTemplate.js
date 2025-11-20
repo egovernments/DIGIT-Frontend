@@ -13,7 +13,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
   const footerChildren = [];
 
   // Add secondary action first (will appear above primary)
-  if (field?.secondaryAction) {
+  if (field?.secondaryAction && !(field?.secondaryAction?.hidden) ) {
     const secondaryActionWithId = {
       ...field?.secondaryAction,
       id: field?.secondaryAction.id || field?.secondaryAction.fieldName || `${field?.fieldName}-secondary-action`,
@@ -43,7 +43,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
   }
 
   // Add primary action last (will appear at bottom)
-  if (field?.primaryAction) {
+  if (field?.primaryAction && !(field?.primaryAction?.hidden) ) {
     const primaryActionWithId = {
       ...field?.primaryAction,
       id: field?.primaryAction.id || field?.primaryAction.fieldName || `${field?.fieldName}-primary-action`,

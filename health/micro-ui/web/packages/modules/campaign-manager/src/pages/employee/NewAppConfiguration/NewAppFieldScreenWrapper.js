@@ -91,6 +91,7 @@ function NewAppFieldScreenWrapper() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentData } = useSelector((state) => state.remoteConfig);
+  const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
   const currentCard = currentData;
@@ -159,6 +160,16 @@ function NewAppFieldScreenWrapper() {
     return [];
   };
 
+    const isFieldEditable = (field) => {
+    
+    const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);    
+    // If no config found, default to editable
+    if (!fieldConfig) return true;
+    
+    // Check if editable is explicitly set to false
+    return fieldConfig.editable !== false ;
+  };
+
 
   if (!currentCard) {
     return (
@@ -204,15 +215,31 @@ function NewAppFieldScreenWrapper() {
       </div>
       {currentCard?.body?.map((section, index, card) => {
 
-        const fields =
+        const bodyFields =
           currentCard?.type === "template"
             ? extractTemplateFields(section?.fields)
             : section?.fields || [];
 
+        const footerFields =
+          currentCard?.type === "template" && currentCard?.footer
+            ? extractTemplateFields(currentCard.footer)
+            : [];
+
+          // Filter editable fields only
+        const editableBodyFields = bodyFields.filter(isFieldEditable);
+        const editableFooterFields = footerFields.filter(isFieldEditable);
+        // Combine editable body and footer fields
+        const fields = [...editableBodyFields, ...editableFooterFields];
+        const bodyFieldsCount = editableBodyFields.length;
+
+
 
         return (
           <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag,fieldName, ...rest }, i, c) => {
+            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, ...rest }, i, c) => {
+              const isFooterField = i >= bodyFieldsCount;
+              const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
+              const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
               return (
                 <NewDraggableField
                   type={type}
@@ -220,19 +247,20 @@ function NewAppFieldScreenWrapper() {
                   active={active}
                   required={required}
                   isDelete={deleteFlag === true ? true : false}
-                  onDelete={() => handleDeleteField(i, index)}
-                  onHide={() => handleHideField(fieldName, index)}
-                  onSelectField={() => handleSelectField(c[i], currentCard, card[index], index, i)}
+                  onDelete={() => handleDeleteField(actualFieldIndex, actualCardIndex)}
+                  onHide={() => handleHideField(fieldName, actualCardIndex)}
+                  onSelectField={() => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}
                   rest={rest}
                   index={i}
-                  fieldIndex={i}
-                  cardIndex={index}
+                  fieldIndex={actualFieldIndex}
+                  cardIndex={actualCardIndex}
                   indexOfCard={index}
                   moveField={type !== "template" ? moveField : null}
                   key={`field-${i}`}
                   fields={c}
+                  // isFooterField={isFooterField}
                 />
               );
             })}
@@ -270,10 +298,11 @@ function NewAppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-      <div className="app-config-drawer-subheader">
-        <div>{t(LOCALIZATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(LOCALIZATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
-      </div>
+      {currentCard?.footer?.length > 0 && (
+        <div className="app-config-drawer-subheader">
+          <div>{t(LOCALIZATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+          <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(LOCALIZATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
+        </div>)}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
         currentCard?.footer?.map(({ label }, index) => (

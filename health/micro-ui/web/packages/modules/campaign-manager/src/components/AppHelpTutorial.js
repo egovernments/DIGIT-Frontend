@@ -51,7 +51,7 @@ const checkCurrentScreenVisible = (config, pathVar) => {
   const listOfEnabledScreens = config?.flat();
   return listOfEnabledScreens?.includes(pathVar);
 };
-const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="TutorialGuide" }) => {
+const AppHelpTutorial = ({ appPath, location, buttonLabel = "HELP", buttonIcon = "TutorialGuide" }) => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
@@ -91,7 +91,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tut
     <>
       {checkCurrentScreenVisible(selectedFeatureConfigs, pathVar) && (
         <Button
-          className={`custom-class camp-help-button-${pathVar}`}
+          className={`width-auto camp-help-button-${pathVar}`}
           icon={buttonIcon}
           label={t(buttonLabel)}
           onClick={(e) => {
@@ -102,17 +102,23 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tut
           title="Help"
           variation="secondary"
           size={"medium"}
-          style={{borderRadius: "0.25rem"}}
+          style={{ borderRadius: "0.25rem" }}
         />
       )}
 
       {visible && (
-        <AppHelpDrawer closing={closing} handleClose={handleClose} module={module} pathVar={pathVar} SampleHelpContent={SampleHelpContent} />
+        <AppHelpDrawer
+          closing={closing}
+          handleClose={handleClose}
+          module={module}
+          pathVar={pathVar}
+          SampleHelpContent={SampleHelpContent}
+        />
       )}
     </>
   );
 };
-//TODO @bhavya @jagan move this component to ui-component repo 
+//TODO @bhavya @jagan move this component to ui-component repo
 const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
   const { t } = useTranslation();
 
@@ -127,7 +133,7 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
             <TutorialGuide />
             {t(LOCALIZATION.EXPLORE_TUTORIALS)}
           </span>
-          <Close className="tutorial-close"  height="32" width="32" fill="#0B0C0C" onClick={handleClose}  />
+          <Close className="tutorial-close" height="32" width="32" fill="#0B0C0C" onClick={handleClose} />
         </div>
         <div className="tutorial-row">
           <AppHelpContent module={module} pathVar={pathVar} />
@@ -147,7 +153,7 @@ export const AppHelpCard = ({ helpContent = {}, index }) => {
       className="tutorial-card"
       onClick={() => window.open(helpContent?.url, "_blank")}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           window.open(helpContent?.url, "_blank");
         }
@@ -160,20 +166,14 @@ export const AppHelpCard = ({ helpContent = {}, index }) => {
         className="tutorial-card-image"
         style={{
           display: "flex",
-          ...(helpContent?.iconBackground
-            ? { backgroundColor: helpContent.iconBackground }
-            : {}),
+          ...(helpContent?.iconBackground ? { backgroundColor: helpContent.iconBackground } : {}),
         }}
       >
-        {helpContent?.icon && (
-          <img src={helpContent.icon} alt={t(helpContent.title)} />
-        )}
+        {helpContent?.icon && <img src={helpContent.icon} alt={t(helpContent.title)} />}
       </div>
       <div className="tutorial-card-content">
         <div className="tutorial-card-title">{t(helpContent.title)}</div>
-        {helpContent?.subtitle && (
-          <div className="tutorial-card-subtext">{t(helpContent.subtitle)}</div>
-        )}
+        {helpContent?.subtitle && <div className="tutorial-card-subtext">{t(helpContent.subtitle)}</div>}
         {helpContent?.cta && (
           <div className="tutorial-card-link">
             {t(helpContent.cta)} <span className="arrow">→</span>
@@ -215,18 +215,14 @@ export const AppHelpContent = ({ helpContentList = [], module, pathVar }) => {
   return (
     <div className="tutorial-wrapper">
       <div className="tutorial-row">
-     <div className="tutorial-wrapper">
-       <div className="tutorial-row">
-        {isSelectedFeatureLoading && <Loader></Loader>}
-         {helpContents.map((item, index) => (
-        <AppHelpCard
-           key={`help-card-${index}`}
-           helpContent={item}
-            index={index}
-          />
-         ))}
-       </div>
-     </div>
+        <div className="tutorial-wrapper">
+          <div className="tutorial-row">
+            {isSelectedFeatureLoading && <Loader></Loader>}
+            {helpContents.map((item, index) => (
+              <AppHelpCard key={`help-card-${index}`} helpContent={item} index={index} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

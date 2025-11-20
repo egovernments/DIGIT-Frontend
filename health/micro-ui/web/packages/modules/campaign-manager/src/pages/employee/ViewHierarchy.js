@@ -250,64 +250,6 @@ const ViewHierarchy = () => {
     }
   };
 
-  // const pollForStatusCompletion = async (id, typeOfData) => {
-  //   const pollInterval = 1000; // Poll every 1 second
-  //   const maxRetries = 100; // Maximum number of retries
-  //   let retries = 0;
-
-  //   return new Promise((resolve, reject) => {
-  //     const poll = async () => {
-  //       try {
-
-  //         if (retries >= maxRetries) {
-  //           setDataCreationGoing(false);
-  //           reject(new Error("Max retries reached"));
-  //           return;
-  //         }
-
-  //         const searchResponse = await Digit.CustomService.getResponse({
-  //           url: "/project-factory/v1/data/_search",
-  //           params: {},
-  //           body: {
-  //             SearchCriteria: {
-  //               id: [id],
-  //               tenantId: tenantId,
-  //               type: typeOfData
-  //             }
-  //           },
-  //         });
-
-  //         const status = searchResponse?.ResourceDetails?.status;
-
-  //         if (status === "completed") {
-  //           setShowToast({ label: `${t(LOCALIZATION.WBH_HIERARCHY_STATUS_COMPLETED)}`, isError: "success" });
-  //           setDataCreationGoing(false);
-  //           resolve(true);
-  //         } else if (status === "failed") {
-  //           reject(new Error("Operation failed"));
-  //         } else {
-  //           retries++;
-  //           setTimeout(poll, pollInterval);
-  //         }
-  //       } catch (error) {
-  //         setDataCreationGoing(false);
-  //         reject(error);
-  //       }
-  //     };
-
-  //     // Start the polling
-  //     poll().catch(reject);
-
-  //     // Set a timeout for the entire polling operation
-  //     const timeoutDuration = (maxRetries + 1) * pollInterval;
-  //     setTimeout(() => {
-  //       if (retries < maxRetries) {  // Only reject if not already resolved
-  //         setDataCreationGoing(false);
-  //         reject(new Error("Polling timeout"));
-  //       }
-  //     }, timeoutDuration);
-  //   });
-  // };
   const pollForStatusCompletion = async (id, typeOfData) => {
     // const pollInterval = 2000; // Poll every 1 second
     const maxRetries = 20; // Maximum number of retries
@@ -363,16 +305,6 @@ const ViewHierarchy = () => {
 
       // Start the polling
       poll().catch(reject);
-
-      // Set a timeout for the entire polling operation
-      // const timeoutDuration = (maxRetries + 1) * pollInterval;
-      // setTimeout(() => {
-      //   if (retries < maxRetries) {
-      //     // Only reject if not already resolved
-      //     setDataCreationGoing(false);
-      //     reject(new Error("Polling timeout"));
-      //   }
-      // }, timeoutDuration);
     });
   };
 
@@ -391,7 +323,7 @@ const ViewHierarchy = () => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   if (!viewState || isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   } else {
     return (
       <React.Fragment>
@@ -412,14 +344,7 @@ const ViewHierarchy = () => {
                       <div>
                         <div className="hierarchy-boundary-sub-heading2">{trimming(hierItem?.boundaryType)}</div>
                         <div style={{ height: "1rem" }}></div>
-                        {/* <Card type={"primary"} variant={"form"} className={"question-card-container"} >
-                                                    <div style={{display:"flex", gap:"2rem"}}>
-                                                    <Svgicon />
-                                                    <div style={{display:"flex", alignItems:"center", fontWeight:"600", fontFamily:"Roboto"}}>
-                                                    {`${t(( hierarchyType + "_" + hierItem?.boundaryType).toUpperCase())}-geojson.json`}
-                                                    </div>
-                                                    </div>
-                                                </Card> */}
+
                         <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                       </div>
                     );
@@ -428,14 +353,6 @@ const ViewHierarchy = () => {
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
                           <div className="hierarchy-boundary-sub-heading2">{trimming(hierItem?.boundaryType)}</div>
-                          {/* <input
-                                                ref={inputRef}
-                                                type="file"
-                                                style={{ display: "none" }}
-@@ -485,232 +483,280 @@ const ViewHierarchy = () => {
-                                                title=""
-                                                variation="secondary"
-                                              /> */}
                         </div>
                         <div style={{ height: "1rem" }}></div>
                         <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
@@ -447,33 +364,6 @@ const ViewHierarchy = () => {
                     <div>
                       <div style={{ display: "flex", justifyContent: "space-between" }} key={index}>
                         <div className="hierarchy-boundary-sub-heading2">{trimming(hierItem?.boundaryType)}</div>
-                        {/* <Uploader
-                                                        onUpload={() => {}}
-                                                        showAsTags
-                                                        uploadedFiles={[]}
-                                                        variant="uploadFile"
-                                                        style={{width:"50rem"}}
-                                                    /> */}
-                        {/* <input
-                                            ref={inputRef}
-                                            type="file"
-                                            style={{ display: "none" }}
-                                            onChange={handleFileChange} // Trigger file upload when a file is selected
-                                          />
-                                          <Button
-                                            className="custom-class"
-                                            icon="Upload"
-                                            iconFill=""
-                                            label={t(LOCALIZATION.UPLOAD_GEOJSONS)}
-                                            onClick={handleUpload}
-                                            options={[]}
-                                            optionsKey=""
-                                            size="large"
-                                            style={{}}
-                                            title=""
-                                            isDisabled={true}
-                                            variation="secondary"
-                                          /> */}
                       </div>
                       <div style={{ height: "1rem" }}></div>
                       <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
@@ -487,7 +377,7 @@ const ViewHierarchy = () => {
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div className="hierarchy-boundary-heading">{t(LOCALIZATION.UPLOAD_EXCEL)}</div>
                 <Button
-                  className="custom-class"
+                  className="width-auto"
                   icon="DownloadIcon"
                   iconFill=""
                   label={t(LOCALIZATION.DOWNLOAD_EXCEL_TEMPLATE)}
@@ -513,7 +403,7 @@ const ViewHierarchy = () => {
                       onChange={handleFileChange} // Trigger file upload when a file is selected
                     />
                     <Button
-                      className="custom-class"
+                      className="width-auto"
                       icon="Upload"
                       iconFill=""
                       label={t(LOCALIZATION.UPLOAD_EXCEL)}
@@ -633,7 +523,7 @@ const ViewHierarchy = () => {
                 }}
               />
             )}
-            {dataCreationGoing &&<Loader page={true} variant={"PageLoader"}/>}
+            {dataCreationGoing && <Loader page={true} variant={"PageLoader"} />}
             <Footer
               actionFields={[
                 <Button

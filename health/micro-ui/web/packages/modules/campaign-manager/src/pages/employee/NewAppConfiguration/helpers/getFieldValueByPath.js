@@ -7,12 +7,37 @@
  */
 export const getFieldValueByPath = (source, path, defaultValue = "") => {
   if (!path || typeof path !== "string") return defaultValue;
-  if (!path.includes(".")) return source?.[path] || defaultValue;
-  const keys = path.split(".");
-  let value = source;
-  for (const key of keys) {
-    value = value?.[key];
-    if (value === undefined || value === null) return defaultValue;
+  
+  // Check if path is "hidden" or contains ".hidden"
+  const isHiddenField = path === "hidden" || path.includes(".hidden");
+  
+  // Get the actual value from the source
+  let value;
+  if (!path.includes(".")) {
+    value = source?.[path];
+  } else {
+    const keys = path.split(".");
+    value = source;
+    for (const key of keys) {
+      value = value?.[key];
+      if (value === undefined || value === null) {
+        value = defaultValue;
+        break;
+      }
+    }
   }
+  
+  // Handle undefined/null values
+  if (value === undefined || value === null) {
+    value = defaultValue;
+  }
+  
+  // For hidden fields, invert the boolean value
+  // hidden: true → return false (toggle OFF)
+  // hidden: false → return true (toggle ON)
+  if (isHiddenField && typeof value === "boolean") {
+    return !value;
+  }
+  
   return value;
 };

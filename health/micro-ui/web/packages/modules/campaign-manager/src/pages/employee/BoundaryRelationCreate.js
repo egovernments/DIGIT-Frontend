@@ -504,7 +504,7 @@ const BoundaryRelationCreate = () => {
                     </div>
                   ))}
                   <Button
-                    className="custom-class"
+                    className="width-auto"
                     icon="Add"
                     iconFill=""
                     label={t(LOCALIZATION.ADD_HIERARCHY_LEVEL)}
@@ -610,7 +610,7 @@ const BoundaryRelationCreate = () => {
                     </div>
                   ))}
                   <Button
-                    className="custom-class"
+                    className="width-auto"
                     icon="Add"
                     iconFill=""
                     label={t(LOCALIZATION.ADD_HIERARCHY_LEVEL)}

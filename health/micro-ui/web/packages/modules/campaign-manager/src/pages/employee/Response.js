@@ -70,6 +70,7 @@ const Response = () => {
             label={state?.actionLabel ? t(state?.actionLabel) : t(LOCALIZATION.ES_CAMPAIGN_RESPONSE_ACTION)}
             onClick={() => navigation(state?.actionLink)}
             type="button"
+            variation="secondary"
           />,
         ]}
         className=""

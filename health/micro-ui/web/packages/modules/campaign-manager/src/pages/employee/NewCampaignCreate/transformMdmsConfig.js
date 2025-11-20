@@ -102,28 +102,59 @@ const transformBodyForTemplate = (body) => {
   if (!body || !Array.isArray(body)) return [];
 
   return body.map((item) => {
-    // If it's already in field format, wrap it
-    if (item.fields) {
-      return item;
-    }
-
-    // Transform different template body types
-    const transformed = {
-      ...item,
-    };
-
+    // Transform the item and its nested structures
+    const transformed = transformField(item);
+    
     // Handle listView with child elements
     if (item.format === "listView" && item.child) {
-      transformed.child = item.child;
+      transformed.child = transformField(item.child);
     }
 
-    // Handle card elements
+    // Handle card elements with children
     if (item.format === "card" && item.children) {
-      transformed.children = transformChildren(item.children);
+      transformed.children = item.children.map(child => transformField(child));
     }
 
     return transformed;
   });
+};
+
+
+/**
+ * Helper function to transform a single field (handles nested children)
+ * @param {Object} field - Field object to transform
+ * @returns {Object} - Transformed field
+ */
+const transformField = (field) => {
+  if (!field || typeof field !== 'object') return field;
+  
+  const transformed = { ...field };
+  
+  // Transform validations if present
+  if (field.validations && Array.isArray(field.validations)) {
+    const validationProps = transformValidations(field.validations);
+    Object.assign(transformed, validationProps);
+    // Optionally remove the original validations array
+    // delete transformed.validations;
+  }
+  
+  // Extract action labels for panelCard format
+  if (field.format === 'panelCard') {
+    const actionLabels = extractActionLabels(field);
+    Object.assign(transformed, actionLabels);
+  }
+  
+  // Recursively transform child
+  if (field.child) {
+    transformed.child = transformField(field.child);
+  }
+  
+  // Recursively transform children array
+  if (field.children && Array.isArray(field.children)) {
+    transformed.children = field.children.map(child => transformField(child));
+  }
+  
+  return transformed;
 };
 
 /**
@@ -178,27 +209,40 @@ const transformPropertiesToFields = (properties) => {
       field.schemaCode = prop.schemaCode;
     }
 
-    // Transform validations to required format
+      // Transform validations to flat keys
     if (prop.validations && Array.isArray(prop.validations)) {
-      prop.validations.forEach((validation) => {
-        if (validation.type === "required" && validation.value === true) {
-          field.required = true;
-          field["required.message"] = validation.message || "";
-        } else if (validation.type === "minLength") {
-          field["minLength"] = validation.value;
-          field["minLength.message"] = validation.message || "";
-        } else if (validation.type === "maxLength") {
-          field["maxLength"] = validation.value;
-          field["maxLength.message"] = validation.message || "";
-        } else if (validation.type === "min") {
-          field["min"] = validation.value;
-          field["min.message"] = validation.message || "";
-        } else if (validation.type === "max") {
-          field["max"] = validation.value;
-          field["max.message"] = validation.message || "";
-        }
-      });
+      const validationProps = transformValidations(prop.validations);
+      Object.assign(field, validationProps);
     }
+
+    // // Transform validations to required format
+    // if (prop.validations && Array.isArray(prop.validations)) {
+    //   prop.validations.forEach((validation) => {
+    //     if (validation.type === "required" && validation.value === true) {
+    //       field.required = true;
+    //       field["required.message"] = validation.message || "";
+    //     } else if (validation.type === "minLength") {
+    //       field["minLength"] = validation.value;
+    //       field["minLength.message"] = validation.message || "";
+    //     } else if (validation.type === "maxLength") {
+    //       field["maxLength"] = validation.value;
+    //       field["maxLength.message"] = validation.message || "";
+    //     } else if (validation.type === "min") {
+    //       field["min"] = validation.value;
+    //       field["min.message"] = validation.message || "";
+    //     } else if (validation.type === "max") {
+    //       field["max"] = validation.value;
+    //       field["max.message"] = validation.message || "";
+    //     }
+    //     else if (validation.type === "isGS1") {
+    //       field["isGS1"] = validation.value;
+    //     }
+    //     else if (validation.type === "scanLimit") {
+    //       field["scanLimit"] = validation.value;
+    //       field["scanLimit.message"] = validation.message || "";
+    //     }
+    //   });
+    // }
 
     // Add visibility condition if present
     if (prop.visibilityCondition) {
@@ -255,8 +299,11 @@ const transformActionLabelToFooter = (actionLabel, navigateTo) => {
  */
 const transformFooter = (footer) => {
   if (!footer || !Array.isArray(footer)) return [];
-  return footer;
+  
+  // Apply field transformation to each footer item
+  return footer.map(item => transformField(item));
 };
+
 
 /**
  * Transform header array
@@ -264,6 +311,40 @@ const transformFooter = (footer) => {
 const transformHeader = (header) => {
   if (!header || !Array.isArray(header)) return [];
   return header;
+};
+
+const transformValidations = (validations) => {
+  if (!validations || !Array.isArray(validations)) return {};
+  
+  const validationProps = {};
+  
+  validations.forEach((validation) => {
+    const { type, value, message } = validation;
+    
+    if (type && value !== undefined) {
+      validationProps[type] = value;
+      
+      if (message) {
+        validationProps[`${type}.message`] = message;
+      }
+    }
+  });
+  
+  return validationProps;
+};
+
+const extractActionLabels = (field) => {
+  const actionLabels = {};
+  
+  if (field.primaryAction?.label) {
+    actionLabels.primaryActionLabel = field.primaryAction.label;
+  }
+  
+  if (field.secondaryAction?.label) {
+    actionLabels.secondaryActionLabel = field.secondaryAction.label;
+  }
+  
+  return actionLabels;
 };
 
 /**

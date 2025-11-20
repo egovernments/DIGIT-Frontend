@@ -32,7 +32,7 @@ const Dropdowns = ({
   typeOfCall,
   parentNumber,
   questionNumber,
-  maxDepth
+  maxDepth,
 }) => {
   let dis = typeOfCall === "view" ? true : false;
   return (
@@ -64,51 +64,53 @@ const Dropdowns = ({
             parentNumber={parentNumber}
             maxDepth={maxDepth}
           />
-          {item.optionComment && <FieldV1
-            // className="example"
-            // disabled={dis}
-            nonEditable={dis}
-            type={"textarea"}
-            populators={{
-              resizeSmart: true
-            }}
-            // props={{ fieldStyle: example }}
-            name="Short Answer"
-            value={item.comment || ""}
-            onChange={(event) => addComment({ value: event.target.value, target: "value", id: item.key, parentId: field.id })}
-            placeholder={""}
-          />}
-          {item.optionDependency && <CreateQuestion
-            className={subQclassName}
-            level={subQlevel}
-            parent={subQparent}
-            // parentId={subQparentId}
-            parentId={item.id}
-            initialQuestionData={subQinitialQuestionData}
-            optionId={item.id}
-            typeOfCall={typeOfCall}
-            parentNumber={parentNumber}
-          />
-          }
-          {
-            <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
-          }
+          {item.optionComment && (
+            <FieldV1
+              // className="example"
+              // disabled={dis}
+              nonEditable={dis}
+              type={"textarea"}
+              populators={{
+                resizeSmart: true,
+              }}
+              // props={{ fieldStyle: example }}
+              name="Short Answer"
+              value={item.comment || ""}
+              onChange={(event) => addComment({ value: event.target.value, target: "value", id: item.key, parentId: field.id })}
+              placeholder={""}
+            />
+          )}
+          {item.optionDependency && (
+            <CreateQuestion
+              className={subQclassName}
+              level={subQlevel}
+              parent={subQparent}
+              // parentId={subQparentId}
+              parentId={item.id}
+              initialQuestionData={subQinitialQuestionData}
+              optionId={item.id}
+              typeOfCall={typeOfCall}
+              parentNumber={parentNumber}
+            />
+          )}
+          {<hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />}
         </>
       ))}
-      {!dis && <div style={{marginTop: "0.8rem"}}>
-        <Button
-          className="custom-class"
-          icon="AddIcon"
-          iconFill=""
-          label={`${t(LOCALIZATION.ADD_OPTIONS)} ${questionNumber}`}
-          onClick={() => addOption()}
-          size="medium"
-          title=""
-          variation="link"
-          textStyles={{ width: 'unset' }}
-
-        />
-      </div>}
+      {!dis && (
+        <div style={{ marginTop: "0.8rem" }}>
+          <Button
+            className="width-auto"
+            icon="AddIcon"
+            iconFill=""
+            label={`${t(LOCALIZATION.ADD_OPTIONS)} ${questionNumber}`}
+            onClick={() => addOption()}
+            size="medium"
+            title=""
+            variation="link"
+            textStyles={{ width: "unset" }}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -138,7 +140,7 @@ const DropdownOption = ({
   t,
   typeOfCall,
   subQlevel,
-  maxDepth
+  maxDepth,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -152,9 +154,7 @@ const DropdownOption = ({
 
   useEffect(() => {
     if (optionInputRef.current) {
-      setIsOverflowing(
-        optionInputRef.current.scrollWidth > optionInputRef.current.clientWidth
-      );
+      setIsOverflowing(optionInputRef.current.scrollWidth > optionInputRef.current.clientWidth);
     }
   }, [title]);
 
@@ -164,11 +164,11 @@ const DropdownOption = ({
       const inputRect = optionInputRef.current.getBoundingClientRect();
 
       // Center the tooltip above the input
-      const inputCenter = inputRect.left + (inputRect.width / 2);
+      const inputCenter = inputRect.left + inputRect.width / 2;
 
       return {
-        position: 'fixed',
-        left: `${inputCenter - (Math.min(200, tooltipRect.width) / 2)}px`, // Center tooltip or limit width
+        position: "fixed",
+        left: `${inputCenter - Math.min(200, tooltipRect.width) / 2}px`, // Center tooltip or limit width
         top: `${inputRect.top - tooltipRect.height - 8}px`, // 8px spacing
       };
     }
@@ -178,11 +178,12 @@ const DropdownOption = ({
   return (
     <div>
       <div key={index} className="optioncheckboxwrapper" style={{ justifyContent: "space-between", height: "2rem" }}>
-        <div style={{ display: "flex", position: "relative" }}
+        <div
+          style={{ display: "flex", position: "relative" }}
           ref={inputContainerRef}
           onMouseEnter={() => setShowTooltip(isOverflowing)}
           onMouseLeave={() => setShowTooltip(false)}
-          >
+        >
           <TextInput
             // style={{ maxWidth: "40rem" }}
             // disabled={dis}
@@ -201,28 +202,27 @@ const DropdownOption = ({
               ref={tooltipRef}
               content={title}
               style={{
-                position: 'absolute',
-                backgroundColor: '#363636',
-                color: '#ffffff',
-                padding: '1rem',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
+                position: "absolute",
+                backgroundColor: "#363636",
+                color: "#ffffff",
+                padding: "1rem",
+                borderRadius: "4px",
+                fontSize: "1rem",
+                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
                 zIndex: 9999,
-                width: 'auto',
-                maxWidth: '20rem', // Limit tooltip width
-                wordWrap: 'break-word', // Enable word wrapping
-                whiteSpace: 'normal', // Allow text to wrap
-                lineHeight: '1.4', // Improve readability of wrapped text
-                textAlign: 'center', // Center the text
-                ...adjustTooltipPosition()
+                width: "auto",
+                maxWidth: "20rem", // Limit tooltip width
+                wordWrap: "break-word", // Enable word wrapping
+                whiteSpace: "normal", // Allow text to wrap
+                lineHeight: "1.4", // Improve readability of wrapped text
+                textAlign: "center", // Center the text
+                ...adjustTooltipPosition(),
               }}
             />
           )}
-
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          {commentsEnabled && !dis &&
+          {commentsEnabled && !dis && (
             <>
               <CheckBox
                 key={field.key}
@@ -237,30 +237,22 @@ const DropdownOption = ({
                 index={field.key}
               />
             </>
-          }
-          {!dis &&
+          )}
+          {!dis && (
             <>
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionComment ? true : false || subQlevel>=maxDepth+1}
-                // styles={{ margin: "0px 0px 0px", maxWidth: "70%",  }}
-                // className={"digit-checkbox-containe  r"}
+                disabled={optionComment ? true : false || subQlevel >= maxDepth + 1}
                 label={t(LOCALIZATION.LINK_NESTED_CHECKLIST)}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}
-                // isLabelFirst={true}
                 index={field.key}
               />
             </>
-          }
+          )}
           {!dis && !disableDelete && (
-            // <div className="pointer"  onClick={() => removeOption(index)}>
-            //   <DustbinIcon />
-            //   {t(LOCALIZATION.CAMPAIGN_DELETE_ROW_TEXT)}
-            // </div>
             <Button
-              // className="custom-class"
               icon="Delete"
               iconFill=""
               label={t(LOCALIZATION.DELETE)}
