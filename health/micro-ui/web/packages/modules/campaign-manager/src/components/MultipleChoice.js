@@ -3,6 +3,7 @@ import { CheckBox, Tooltip } from "@egovernments/digit-ui-components";
 import CreateQuestion from "./CreateQuestion";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { FieldV1, Button } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const MultipleChoice = ({
   t,
@@ -107,7 +108,7 @@ const MultipleChoice = ({
           className="custom-class"
           icon="AddIcon"
           iconFill=""
-          label={`${t("ADD_OPTIONS")} ${questionNumber}`}
+          label={`${t(LOCALIZATION.ADD_OPTIONS)} ${questionNumber}`}
           onClick={() => addOption()}
           size="medium"
           title=""
@@ -246,8 +247,8 @@ export const RadioButtonOption = ({
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionDependency ? true : false }  
-                label={t("ADD_COMMENT_(OR)")}
+                disabled={optionDependency ? true : false }
+                label={t(LOCALIZATION.ADD_COMMENT_OR)}
                 checked={optionComment}
                 onChange={(event) => handleOptionComment(optionId)}
                 index={field.key}
@@ -260,7 +261,7 @@ export const RadioButtonOption = ({
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
                 disabled={optionComment ? true : false || subQlevel>=maxDepth+1}
-                label={t("LINK_NESTED_CHECKLIST")}
+                label={t(LOCALIZATION.LINK_NESTED_CHECKLIST)}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}
                 index={field.key}
@@ -271,7 +272,7 @@ export const RadioButtonOption = ({
             <Button
               icon="Delete"
               iconFill=""
-              label={t(`DELETE`)}
+              label={t(LOCALIZATION.DELETE)}
               onClick={() => removeOption(index)}
               size="medium"
               title=""

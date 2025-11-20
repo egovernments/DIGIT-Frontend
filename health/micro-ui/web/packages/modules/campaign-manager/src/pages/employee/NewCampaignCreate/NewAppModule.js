@@ -1,5 +1,6 @@
 import { Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
@@ -35,14 +36,14 @@ const NewAppModule = () => {
   };
 
   if (isLoading) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING")} />;
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t(LOCALIZATION.LOADING)} />;
   }
 
   return (
     <>
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
-          {t(`HCM_CHOOSE_MODULE`)}
+          {t(LOCALIZATION.HCM_CHOOSE_MODULE)}
         </HeaderComponent>
       </div>
       <EqualHeightWrapper deps={[mdmsData]}>

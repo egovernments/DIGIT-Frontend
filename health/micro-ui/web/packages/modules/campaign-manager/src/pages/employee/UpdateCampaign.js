@@ -7,6 +7,7 @@ import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } from "../../utils/setupCampaignHelpers";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 /**
  * The `UpdateCampaign` function in JavaScript handles the Updating of campaign details,
@@ -310,10 +311,10 @@ const UpdateCampaign = ({ hierarchyData }) => {
                     `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
                     {
                       state: {
-                        message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                        text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                        info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                        actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
+                        message: t(LOCALIZATION.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE),
+                        text: t(LOCALIZATION.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT),
+                        info: t(LOCALIZATION.ES_CAMPAIGN_SUCCESS_INFO_TEXT),
+                        actionLabel: t(LOCALIZATION.HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION),
                         actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
                       },
                     }
@@ -534,12 +535,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
           const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
           const missedType = recursiveParentFind(formData?.boundaryType?.selectedData);
           if (!validateBoundary) {
-            setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
+            setShowToast({ key: "error", label: t(LOCALIZATION.HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY) });
             return false;
           } else if (recursiveParentFind(formData?.boundaryType?.selectedData).length > 0) {
             setShowToast({
               key: "error",
-              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
+              label: `${t(LOCALIZATION.HCM_CAMPAIGN_FOR)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
                 `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
               )}`,
             });
@@ -554,18 +555,18 @@ const UpdateCampaign = ({ hierarchyData }) => {
           // setRefetchGenerate(checkEqual === false ? true : false);
           return true;
         } else {
-          setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+          setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_SELECT_BOUNDARY)}` });
           return false;
         }
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+          setShowToast({ key: "info", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
           if (formData?.uploadBoundary?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
-          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION)}` });
           return false;
         } else {
           setShowToast(null);
@@ -574,12 +575,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
       case "uploadFacility":
         if (formData?.uploadFacility?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+          setShowToast({ key: "info", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadFacility?.isError) {
           if (formData?.uploadFacility?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
-          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION)}` });
           return false;
         } else {
           setShowToast(null);
@@ -587,12 +588,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
         }
       case "uploadUser":
         if (formData?.uploadUser?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+          setShowToast({ key: "info", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadUser?.isError) {
           if (formData?.uploadUser?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
-          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION)}` });
           return false;
         } else {
           setShowToast(null);
@@ -611,7 +612,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 target: [
                   {
                     name: `target`,
-                    error: t(`TARGET_FILE_MISSING`),
+                    error: t(LOCALIZATION.TARGET_FILE_MISSING),
                   },
                 ],
               };
@@ -625,7 +626,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 facility: [
                   {
                     name: `facility`,
-                    error: t(`FACILITY_FILE_MISSING`),
+                    error: t(LOCALIZATION.FACILITY_FILE_MISSING),
                   },
                 ],
               };
@@ -639,7 +640,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 user: [
                   {
                     name: `user`,
-                    error: t(`USER_FILE_MISSING`),
+                    error: t(LOCALIZATION.USER_FILE_MISSING),
                   },
                 ],
               };
@@ -898,13 +899,13 @@ const UpdateCampaign = ({ hierarchyData }) => {
         onSubmit={onSubmit}
         isDisabled={isDataCreating}
         showSecondaryLabel={true}
-        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
+        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t(LOCALIZATION.HCM_BACK) : noAction === "false" ? null : t(LOCALIZATION.HCM_BACK)}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_UPDATE") : t("HCM_NEXT")}
+        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t(LOCALIZATION.HCM_UPDATE) : t(LOCALIZATION.HCM_NEXT)}
       />
       {showToast && (
         <Toast

@@ -14,6 +14,7 @@ import {
 import React, { Fragment, useEffect, useReducer, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { tableCustomStyle } from "./tableCustomStyle";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import MultiSelectDropdown from "./MultiSelectDropdown";
@@ -163,7 +164,7 @@ const reducer = (state, action) => {
               const BoundaryLoc = action?.schemas?.find((i) => i.description === "Boundary Code")?.name;
               const facilityCode = item?.["HCM_ADMIN_CONSOLE_FACILITY_CODE"];
               const facilityName = item?.[action?.schemas?.find((i) => i.description === "Facility Name")?.name];
-              // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              // if (item?.[action.t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITY_CODE)] === action?.payload?.row?.[action.t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITY_CODE)]) {
               //   return {
               //     ...item,
               //     [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
@@ -215,7 +216,7 @@ const reducer = (state, action) => {
               const ActiveLoc = action?.schemas?.find((i) => i.description === "Facility usage")?.name;
               const facilityCode = item?.["HCM_ADMIN_CONSOLE_FACILITY_CODE"];
               const facilityName = item?.[action?.schemas?.find((i) => i.description === "Facility Name")?.name];
-              // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              // if (item?.[action.t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITY_CODE)] === action?.payload?.row?.[action.t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITY_CODE)]) {
               //   return {
               //     ...item,
               //     [ActiveLoc]: action?.payload?.selectedStatus?.code,
@@ -483,7 +484,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     tenantId: tenantId,
     fileStoreId: getFileStoreId(),
     currentCategories: currentCategories,
-    sheetNameToFetch: currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("HCM_ADMIN_CONSOLE_FACILITIES") : t("HCM_ADMIN_CONSOLE_USER_LIST"),
+    sheetNameToFetch: currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITIES) : t(LOCALIZATION.HCM_ADMIN_CONSOLE_USER_LIST),
     schemas: Schemas,
     t: t,
     config: {
@@ -618,7 +619,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     const roles = data[roleKey];
     // Role max limit validation (if it's an array)
     if (typeof roles === "string" && roles.split(",").length > 5) {
-      setShowToast({ label: t("HCM_MORE_USER"), isError: "error" });
+      setShowToast({ label: t(LOCALIZATION.HCM_MORE_USER), isError: "error" });
       return;
     }
     // Phone Number conversion
@@ -641,13 +642,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
     const boundaryCodeFac = Schemas?.find((i) => i.description === "Boundary Code")?.name;
     if (data[boundaryCodeFac]?.trim()?.length === 0) {
-      setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
+      setShowToast({ label: t(LOCALIZATION.HCM_MAPPING_NO_BOUNDARY_ERROR), isError: "error" });
       return;
     }
 
     const boundaryCode = Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name;
     if (data[boundaryCode]?.trim()?.length === 0) {
-      setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
+      setShowToast({ label: t(LOCALIZATION.HCM_MAPPING_NO_BOUNDARY_ERROR), isError: "error" });
       return;
     }
 
@@ -665,24 +666,24 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             .map((error) => {
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (error.instancePath === "/Phone Number (Mandatory)") {
-                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
+                return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${t(LOCALIZATION.HCM_IN_COLUMN)}  ${t(LOCALIZATION.HCM_DATA_SHOULD_BE_10_DIGIT)}`;
               }
               if (instancePath.startsWith("/")) {
                 instancePath = instancePath.slice(1);
               }
               if (error.keyword === "required") {
                 const missingProperty = error.params?.missingProperty || "";
-                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(missingProperty)} ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+                return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${t(LOCALIZATION.HCM_IN_COLUMN)} ${t(missingProperty)} ${t(LOCALIZATION.HCM_DATA_SHOULD_NOT_BE_EMPTY)}`;
               }
               if (error.keyword === "type" && error.message === "must be string") {
-                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t("HCM_IS_INVALID")}`;
+                return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${t(LOCALIZATION.HCM_IN_COLUMN)} ${t(instancePath)} ${t(LOCALIZATION.HCM_IS_INVALID)}`;
               }
-              let formattedError = `${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t(error.message)}`;
+              let formattedError = `${t(LOCALIZATION.HCM_IN_COLUMN)} ${t(instancePath)} ${t(error.message)}`;
 
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+                formattedError += `${t(LOCALIZATION.HCM_DATA_ALLOWED_VALUES_ARE)} ${error.params.allowedValues.join("/ ")}`;
               }
-              return `${t("HCM_DATA_AT_ROW")} ${t(formattedError)}`;
+              return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${t(formattedError)}`;
             })
             .join(", ");
           return formattedErrors;
@@ -697,7 +698,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       // return true;
       return {
         isValid: true,
-        message: t("NA"),
+        message: t(LOCALIZATION.NA),
       };
     }
   };
@@ -720,11 +721,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           if (typeof userName === "string") {
             const hasAlphabet = /[a-zA-Z]/.test(userName);
             if (!hasAlphabet) {
-              setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
+              setShowToast({ label: t(LOCALIZATION.HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR), isError: "error" });
               return false;
             }
           } else {
-            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
+            setShowToast({ label: t(LOCALIZATION.HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR), isError: "error" });
             return false;
           }
         }
@@ -733,11 +734,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           if (typeof facilityName === "string") {
             const hasAlphabet = /[a-zA-Z]/.test(facilityName);
             if (!hasAlphabet) {
-              setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
+              setShowToast({ label: t(LOCALIZATION.HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR), isError: "error" });
               return false;
             }
           } else {
-            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
+            setShowToast({ label: t(LOCALIZATION.HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR), isError: "error" });
             return false;
           }
         }
@@ -761,7 +762,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             });
           }
 
-          setShowToast({ label: t("HCM_MAPPING_ADDED"), isError: "success" });
+          setShowToast({ label: t(LOCALIZATION.HCM_MAPPING_ADDED), isError: "success" });
           return true;
         } else {
           setShowToast({ label: validationResult?.message, isError: "error" });
@@ -794,24 +795,24 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     currentCategories === "HCM_UPLOAD_USER_MAPPING"
       ? [
           {
-            name: t("NAME_OF_PERSON"),
+            name: t(LOCALIZATION.NAME_OF_PERSON),
             selector: (row) => {
-              return row?.[Schemas?.find((i) => i.description === "User Name")?.name] || t("NA");
+              return row?.[Schemas?.find((i) => i.description === "User Name")?.name] || t(LOCALIZATION.NA);
             },
             sortable: true,
           },
           {
-            name: t("PHONE_NUMBER"),
-            selector: (row) => row?.[Schemas?.find((i) => i.description === "Phone Number")?.name] || t("NA"),
+            name: t(LOCALIZATION.PHONE_NUMBER),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Phone Number")?.name] || t(LOCALIZATION.NA),
             sortable: true,
           },
           {
-            name: t("ROLE"),
-            selector: (row) => row?.[Schemas?.find((i) => i.description === "User Role")?.name] || t("NA"),
+            name: t(LOCALIZATION.ROLE),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "User Role")?.name] || t(LOCALIZATION.NA),
             sortable: true,
             cell: (row) => {
               const baseName = Schemas?.find((i) => i.description === "User Role")?.name;
-              if (!baseName) return t("NA");
+              if (!baseName) return t(LOCALIZATION.NA);
 
               // 1. grab only the keys that start with `${baseName}_MULTISELECT_`
               // 2. filter out any null/undefined values
@@ -821,7 +822,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 .map((key) => t(row[key]));
               return (
                 <div
-                  title={row?.[Schemas?.find((i) => i.description === "User Role")?.name] || t("NA")}
+                  title={row?.[Schemas?.find((i) => i.description === "User Role")?.name] || t(LOCALIZATION.NA)}
                   style={{
                     whiteSpace: "nowrap",
                     overflow: "hidden",
@@ -829,20 +830,20 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     maxWidth: "150px",
                   }}
                 >
-                  {values?.join(",") || t("NA")}
+                  {values?.join(",") || t(LOCALIZATION.NA)}
                 </div>
               );
             },
           },
           {
-            name: t("EMPLOYEMENT_TYPE"),
-            selector: (row) => row?.[Schemas?.find((i) => i.description === "Employement Type")?.name] || t("NA"),
+            name: t(LOCALIZATION.EMPLOYEMENT_TYPE),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Employement Type")?.name] || t(LOCALIZATION.NA),
             sortable: true,
           },
           {
-            name: t("ACTIVE_STATUS"),
+            name: t(LOCALIZATION.ACTIVE_STATUS),
             cell: (row) => {
-              // row?.["Active / Inactive"] || t("NA")
+              // row?.["Active / Inactive"] || t(LOCALIZATION.NA)
               const a = [
                 {
                   code: "Active",
@@ -876,7 +877,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           },
           {
-            name: t("BOUNDARY"),
+            name: t(LOCALIZATION.BOUNDARY),
             cell: (row) => {
               const listOfBoundaries = row?.[Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name]?.split(",") || [];
               return (
@@ -887,7 +888,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     ))}
                     {listOfBoundaries?.length > 2 && (
                       <Button
-                        label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        label={`+${listOfBoundaries?.length - 2} ${t(LOCALIZATION.ES_MORE)}`}
                         onClick={() => setChipPopUpRowId(listOfBoundaries)}
                         variation="link"
                         style={{
@@ -914,7 +915,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                     variation="link"
-                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(LOCALIZATION.CHANGE_BOUNDARY) : t(LOCALIZATION.ADD_BOUNDARY)}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -924,7 +925,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           },
           {
-            name: t("MAPPING_EDIT"),
+            name: t(LOCALIZATION.MAPPING_EDIT),
             cell: (row) => {
               return (
                 <Button
@@ -933,8 +934,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
                   icon={"Edit"}
-                  // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
-                  label={t("MAPPING_EDIT")}
+                  // label={listOfBoundaries?.length > 0 ? t(LOCALIZATION.CHANGE_BOUNDARY) : t("ADD _BOUNDARY")}
+                  label={t(LOCALIZATION.MAPPING_EDIT)}
                   onClick={() => {
                     setShowEditPopUp(row);
                   }}
@@ -943,7 +944,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           },
           {
-            name: t("MAPPING_DELETE"),
+            name: t(LOCALIZATION.MAPPING_DELETE),
             cell: (row) => {
               return (
                 <Button
@@ -952,7 +953,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
                   icon={"Delete"}
-                  label={t("MAPPING_DELETE")}
+                  label={t(LOCALIZATION.MAPPING_DELETE)}
                   onClick={() => {
                     dispatch({
                       type: "DELETE_DATA",
@@ -968,26 +969,26 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         ]
       : [
           {
-            name: t("FACILITY_NAME"),
+            name: t(LOCALIZATION.FACILITY_NAME),
             selector: (row) => {
-              return row?.[Schemas?.find((i) => i.description === "Facility Name")?.name] || t("NA");
+              return row?.[Schemas?.find((i) => i.description === "Facility Name")?.name] || t(LOCALIZATION.NA);
             },
             sortable: true,
           },
           {
-            name: t("FACILITY_TYPE"),
-            selector: (row) => row?.[Schemas?.find((i) => i.description === "Facility type")?.name] || t("NA"),
+            name: t(LOCALIZATION.FACILITY_TYPE),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Facility type")?.name] || t(LOCALIZATION.NA),
             sortable: true,
           },
           {
-            name: t("FACILITY_STATUS"),
-            selector: (row) => row?.[Schemas?.find((i) => i.description === "Facility status")?.name] || t("NA"),
+            name: t(LOCALIZATION.FACILITY_STATUS),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Facility status")?.name] || t(LOCALIZATION.NA),
             sortable: true,
           },
           {
-            name: t("FACILITY_USAGE"),
+            name: t(LOCALIZATION.FACILITY_USAGE),
             cell: (row) => {
-              // row?.["Facility Usage"] || t("NA"),
+              // row?.["Facility Usage"] || t(LOCALIZATION.NA),
               const b = [
                 {
                   code: "Active",
@@ -1021,7 +1022,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           },
           {
-            name: t("BOUNDARY"),
+            name: t(LOCALIZATION.BOUNDARY),
             cell: (row) => {
               const listOfBoundaries = row?.[Schemas?.find((i) => i.description === "Boundary Code")?.name]?.split(",") || [];
               return (
@@ -1032,7 +1033,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     ))}
                     {listOfBoundaries?.length > 2 && (
                       <Button
-                        label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        label={`+${listOfBoundaries?.length - 2} ${t(LOCALIZATION.ES_MORE)}`}
                         onClick={() => setChipPopUpRowId(listOfBoundaries)}
                         variation="link"
                         style={{
@@ -1059,7 +1060,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                     variation={"link"}
-                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t(LOCALIZATION.CHANGE_BOUNDARY) : t(LOCALIZATION.ADD_BOUNDARY)}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -1069,7 +1070,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           },
           {
-            name: t("MAPPING_EDIT"),
+            name: t(LOCALIZATION.MAPPING_EDIT),
             cell: (row) => {
               return (
                 <Button
@@ -1077,7 +1078,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   size={"small"}
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
-                  label={t("MAPPING_EDIT")}
+                  label={t(LOCALIZATION.MAPPING_EDIT)}
                   icon={"Edit"}
                   onClick={() => {
                     setShowEditPopUp(row);
@@ -1087,7 +1088,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             },
           },
           {
-            name: t("MAPPING_DELETE"),
+            name: t(LOCALIZATION.MAPPING_DELETE),
             cell: (row) => {
               return (
                 <Button
@@ -1095,7 +1096,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   size={"small"}
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
-                  label={t("MAPPING_DELETE")}
+                  label={t(LOCALIZATION.MAPPING_DELETE)}
                   icon={"Delete"}
                   onClick={() => {
                     dispatch({
@@ -1113,11 +1114,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   return (
     <Fragment>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-        <CardHeader className="select-boundary">{t(`UPLOAD_DATA_MAPPING`)}</CardHeader>
+        <CardHeader className="select-boundary">{t(LOCALIZATION.UPLOAD_DATA_MAPPING)}</CardHeader>
         <Switch
           className={"data-mapping-filter-switch"}
           isLabelFirst
-          label={t("FILTER_BY_ACTIVE_STATUS")}
+          label={t(LOCALIZATION.FILTER_BY_ACTIVE_STATUS)}
           style={{
             position: "relative",
             zIndex: "1",
@@ -1142,7 +1143,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           className={"custom-pop-up-mapping"}
           // className={"dataMapping"}
           type={"default"}
-          heading={t("MAPPING_ADD_DATA")}
+          heading={t(LOCALIZATION.MAPPING_ADD_DATA)}
           children={[]}
           onOverlayClick={() => {
             setShowAddPopup(false);
@@ -1155,7 +1156,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("CLOSE")}
+              label={t(LOCALIZATION.CLOSE)}
               onClick={() => {
                 setShowAddPopup(false);
               }}
@@ -1164,7 +1165,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ADD_DATA_MAPPING")}
+              label={t(LOCALIZATION.ADD_DATA_MAPPING)}
               onClick={async () => {
                 const result = await handleButtonAddClick("add");
                 if (result) setShowAddPopup(false);
@@ -1189,7 +1190,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           className={"custom-pop-up-mapping"}
           // className={"dataMapping"}
           type={"default"}
-          heading={t("MAPPING_EDIT_DATA")}
+          heading={t(LOCALIZATION.MAPPING_EDIT_DATA)}
           children={[]}
           onOverlayClick={() => {
             setShowEditPopUp(false);
@@ -1202,7 +1203,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("CLOSE")}
+              label={t(LOCALIZATION.CLOSE)}
               onClick={() => {
                 setShowEditPopUp(false);
               }}
@@ -1211,7 +1212,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("EDIT_DATA_MAPPING")}
+              label={t(LOCALIZATION.EDIT_DATA_MAPPING)}
               onClick={async () => {
                 const result = await handleButtonAddClick("edit");
                 if (result) setShowEditPopUp(false);
@@ -1268,7 +1269,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 <Button
                   className="custom-class"
                   variation={"secondary"}
-                  label={t("MAPPING_ADD_DATA")}
+                  label={t(LOCALIZATION.MAPPING_ADD_DATA)}
                   onClick={() => {
                     setShowAddPopup(true);
                   }}
@@ -1366,7 +1367,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         <PopUp
           className={"dataMapping"}
           type={"default"}
-          heading={currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER") : t("USER_MAPPING_POP_HEADER")}
+          heading={currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t(LOCALIZATION.FACILITY_MAPPING_POP_HEADER) : t(LOCALIZATION.USER_MAPPING_POP_HEADER)}
           equalWidthButtons={true}
           children={[
             <div>
@@ -1381,7 +1382,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     whiteSpace: "normal",
                   }}
                 >
-                  {t("CHOOSE_BOUNDARY_LEVEL")}
+                  {t(LOCALIZATION.CHOOSE_BOUNDARY_LEVEL)}
                 </CardLabel>
                 <Dropdown
                   className="mappingPopUp"
@@ -1412,7 +1413,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     whiteSpace: "normal",
                   }}
                 >
-                  {t("CHOOSE_BOUNDARY")}
+                  {t(LOCALIZATION.CHOOSE_BOUNDARY)}
                 </CardLabel>
                 <MultiSelectDropdown
                   variant="nestedmultiselect"
@@ -1470,7 +1471,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("NO")}
+              label={t(LOCALIZATION.NO)}
               onClick={() => {
                 setShowPopUp(false);
                 setSelectedLevel(null);
@@ -1481,7 +1482,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("YES")}
+              label={t(LOCALIZATION.YES)}
               onClick={() => {
                 dispatch({
                   type: "UPDATE_BOUNDARY",

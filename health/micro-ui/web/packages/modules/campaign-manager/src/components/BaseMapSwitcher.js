@@ -1,6 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import React from "react";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 //TODO delete this file and remove its dependency @bhavya
 export const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
@@ -29,7 +30,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
         tabIndex={0}
         style={{display:"flex"}}
       >
-        <p className="map-filter-layers">{t("LAYERS")}</p>
+        <p className="map-filter-layers">{t(LOCALIZATION.LAYERS)}</p>
         <div className="layer-icon">{DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}</div>
       </div>
       <div className="base-map-area-wrapper" ref={basemapRef}>
@@ -42,7 +43,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
                     className="base-map-img"
                     key={index}
                     src={generatePreviewUrl(baseMap?.metadata?.url, [0, 0], 0)}
-                    alt={t("ERROR_LOADING_BASE_MAP")}
+                    alt={t(LOCALIZATION.ERROR_LOADING_BASE_MAP)}
                     onClick={() => handleBaseMapToggle(name)}
                   />
                   <p>{t(name)}</p>

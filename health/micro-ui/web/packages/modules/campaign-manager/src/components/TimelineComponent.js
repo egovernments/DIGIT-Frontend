@@ -3,6 +3,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 function epochToDateTime(epoch) {
   // Create a new Date object using the epoch time
@@ -248,7 +249,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
                         additionalElements={[
                           // {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
                             <Button
-                              label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+                              label={t(LOCALIZATION.CAMPAIGN_DOWNLOAD_USER_CRED)}
                               variation="primary"
                               icon={"DownloadIcon"}
                               type="button"
@@ -292,7 +293,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
         )}
         {/* {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
           <Button
-            label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+            label={t(LOCALIZATION.CAMPAIGN_DOWNLOAD_USER_CRED)}
             variation="primary"
             icon={"DownloadIcon"}
             type="button"
@@ -301,10 +302,10 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
           />
         )} */}
       </div>
-      {lastCompletedProcess?.type !== "campaign-creation" && 
+      {lastCompletedProcess?.type !== "campaign-creation" &&
         <AlertCard
         label="Info"
-        text={t("CAMPAIGN_CREATION_TAKES_SOME_TIME_PLEASE_WAIT")}
+        text={t(LOCALIZATION.CAMPAIGN_CREATION_TAKES_SOME_TIME_PLEASE_WAIT)}
         variant="default"
         />
       }

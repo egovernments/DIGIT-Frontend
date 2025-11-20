@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldV1, Card, LabelFieldPair, HeaderComponent } from "@egovernments/digit-ui-components";
 import { handleCreateValidate } from "../../utils/handleCreateValidate";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const DateSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -47,12 +48,12 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
   return (
     <Card>
       <HeaderComponent styles={{}} className="digit-header-content digit-card-section-header titleStyle date-selection ">
-        {t(`HCM_CAMPAIGN_DATES_HEADER`)}
+        {t(LOCALIZATION.HCM_CAMPAIGN_DATES_HEADER)}
       </HeaderComponent>
-      <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
+      <p className="dates-description digit-header-content SubHeadingClass">{t(LOCALIZATION.HCM_CAMPAIGN_DATES_DESC)}</p>
       <LabelFieldPair className={"boldLabel"} style={{}} vertical={false} removeMargin={false}>
         <div className="digit-header-content label " style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
-          <div>{t(`HCM_CAMPAIGN_DATES`)}</div>
+          <div>{t(LOCALIZATION.HCM_CAMPAIGN_DATES)}</div>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">
@@ -62,7 +63,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             type="date"
             value={startDate}
             // disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
-            placeholder={t("HCM_START_DATE")}
+            placeholder={t(LOCALIZATION.HCM_START_DATE)}
             populators={{
               newDateFormat: true,
               min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
@@ -82,7 +83,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             withoutLabel={true}
             type="date"
             value={endDate}
-            placeholder={t("HCM_END_DATE")}
+            placeholder={t(LOCALIZATION.HCM_END_DATE)}
             populators={{
               newDateFormat: true,
               min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),

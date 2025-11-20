@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PopUp ,Button , Loader } from "@egovernments/digit-ui-components";
 import QRCode from "react-qr-code";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const QRButton = ({setShowQRPopUp}) => {
   const { t } = useTranslation();
@@ -31,8 +32,8 @@ const QRButton = ({setShowQRPopUp}) => {
   return (
     <PopUp
           type={"default"}
-          heading={t("ES_APP_QR")}
-          description={t("ES_APP_QR_DESC")}
+          heading={t(LOCALIZATION.ES_APP_QR)}
+          description={t(LOCALIZATION.ES_APP_QR_DESC)}
           className={"QR-pop-up"}
           onOverlayClick={() => setShowQRPopUp(false)}
           onClose={() => setShowQRPopUp(false)}
@@ -44,7 +45,7 @@ const QRButton = ({setShowQRPopUp}) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_CLOSE")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_CLOSE)}
               onClick={() => {
                 setShowQRPopUp(false);
               }}

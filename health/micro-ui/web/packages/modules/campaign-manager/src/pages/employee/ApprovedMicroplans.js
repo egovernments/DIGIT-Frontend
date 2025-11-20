@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { MicroplanCampaignSearchConfig } from "../../configs/myMicroplanConfig";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const ApprovedMicroplans = () => {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ const ApprovedMicroplans = () => {
   };
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>{t("MY_MICROPLANS_HEADING")}</Header>
+      <Header styles={{ fontSize: "32px" }}>{t(LOCALIZATION.MY_MICROPLANS_HEADING)}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={MicroplanCampaignSearchConfig?.[0]}

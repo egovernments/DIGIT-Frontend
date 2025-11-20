@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { AlertCard, Toast, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
@@ -78,7 +79,7 @@ const FetchFromMicroplanScreen = () => {
           setCurrentStep((prev) => TEMPLATE_GENERATION_STEP);
         } catch (error) {
           console.error("Error fetching templates:", error);
-          setShowToast({ key: "warning", label: t("EMPTY_TEMPLATE_GENERTAION_NOTCOMPLETED_STILL_PROCEEDING") });
+          setShowToast({ key: "warning", label: t(LOCALIZATION.EMPTY_TEMPLATE_GENERTAION_NOTCOMPLETED_STILL_PROCEEDING) });
           setCurrentStep((prev) => TEMPLATE_GENERATION_STEP);
           setTemplates({
             facilityFile: null,
@@ -113,11 +114,11 @@ const FetchFromMicroplanScreen = () => {
         setTimeout(() => {
           // Ensure progressive updates
           setCurrentStep((prev) => MICROPLAN_FETCH_STEP);
-          setShowToast({ key: "info", label: t("FETCHING_MICROPLAN_DATA") });
+          setShowToast({ key: "info", label: t(LOCALIZATION.FETCHING_MICROPLAN_DATA) });
         }, MICROPLAN_FETCH_TIMEOUT);
       } catch (error) {
         console.error("Error fetching microplan data:", error);
-        setShowToast({ key: "error", label: t("ERROR_FETCHING_MICROPLAN") });
+        setShowToast({ key: "error", label: t(LOCALIZATION.ERROR_FETCHING_MICROPLAN) });
       }
     };
     if (templates?.completed) {
@@ -138,14 +139,14 @@ const FetchFromMicroplanScreen = () => {
   }, [showToast]);
   useEffect(() => {
     const navigateTimeout = setTimeout(() => {
-      setShowToast({ key: "info", label: t("PLS_WAIT_UNTIL_PAGE_REDIRECTS") });
+      setShowToast({ key: "info", label: t(LOCALIZATION.PLS_WAIT_UNTIL_PAGE_REDIRECTS) });
     }, 3000);
     return () => clearTimeout(navigateTimeout); // Cleanup timeout
   }, []);
 
   useEffect(() => {
     if (showToast?.key != "error" && error) {
-      setShowToast({ key: "error", label: t("SOME_ERROR_OCCURED_IN_FETCH") });
+      setShowToast({ key: "error", label: t(LOCALIZATION.SOME_ERROR_OCCURED_IN_FETCH) });
     }
   }, [error]);
 
@@ -179,7 +180,7 @@ const FetchFromMicroplanScreen = () => {
             setCompleted({ ...response });
             setCurrentStep((curr) => curr + 1);
           } else {
-            setShowToast({ key: "warning", label: t("SOME_ERROR_OCCURED_IN_FETCH_RETRYING") });
+            setShowToast({ key: "warning", label: t(LOCALIZATION.SOME_ERROR_OCCURED_IN_FETCH_RETRYING) });
             setCurrentStep(TEMPLATE_GENERATION_STEP);
           }
           if (response?.resources && response?.resources?.length > 0) {
@@ -187,7 +188,7 @@ const FetchFromMicroplanScreen = () => {
           }
         } catch (error) {
           console.error("Error fetching campaign:", error);
-          setShowToast({ key: "error", label: t("ERROR_FETCHING_CAMPAIGN") });
+          setShowToast({ key: "error", label: t(LOCALIZATION.ERROR_FETCHING_CAMPAIGN) });
         }
       }
     };
@@ -197,7 +198,7 @@ const FetchFromMicroplanScreen = () => {
   useEffect(() => {
     async function useeffectfetchfrommicrploan() {
       if (currentStep === steps.length && microplan) {
-        setShowToast({ key: "success", label: t("CMN_ALL_DATA_FETCH_DONE") });
+        setShowToast({ key: "success", label: t(LOCALIZATION.CMN_ALL_DATA_FETCH_DONE) });
 
         const navigateTimeout = setTimeout(() => {
           searchParams?.set("id", data?.updatedCampaignData?.id);
@@ -216,13 +217,13 @@ const FetchFromMicroplanScreen = () => {
   };
   return (
     <span className="fetch-from-microplan">
-      <HeaderComponent>{t("MY_FETCH_FROM_MICROPLAN_HEADING")}</HeaderComponent>
+      <HeaderComponent>{t(LOCALIZATION.MY_FETCH_FROM_MICROPLAN_HEADING)}</HeaderComponent>
       <AlertCard
         populators={{
           name: "infocard",
         }}
         variant="info"
-        text={t("HCM_FETCH_FROM_PLAN_INFO")}
+        text={t(LOCALIZATION.HCM_FETCH_FROM_PLAN_INFO)}
       />
 
       <div className="sandbox-loader-screen ">
@@ -236,7 +237,7 @@ const FetchFromMicroplanScreen = () => {
           ))}
           <li key={currentStep + 1} className={`sandbox-step ${0 < currentStep ? "sandbox-visible" : ""}`}>
             <span className="sandbox-step-text">
-              {t("MP_COMPELTED_STEPS")} - {currentStep} {t("MP_OUT_OFF")} - {steps?.length}
+              {t(LOCALIZATION.MP_COMPELTED_STEPS)} - {currentStep} {t(LOCALIZATION.MP_OUT_OFF)} - {steps?.length}
             </span>
           </li>
         </ul>

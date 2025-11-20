@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const CampaignDetailsSummary = (props) => {
   const { t } = useTranslation();
@@ -63,29 +64,29 @@ const CampaignDetailsSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.CAMPAIGN_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
                   values: [
                     {
                       key: "CAMPAIGN_TYPE",
-                      value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NAME",
-                      value: data?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.campaignName || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_START_DATE",
-                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_END_DATE",
-                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -117,10 +118,10 @@ const CampaignDetailsSummary = (props) => {
       setShowToast({ label: data?.error, key: "error" });
     }
     if (data?.status === "creating") {
-      setShowToast({ label: "CAMPAIGN_STATUS_CREATING_MESSAGE", key: "info" });
+      setShowToast({ label: LOCALIZATION.CAMPAIGN_STATUS_CREATING_MESSAGE, key: "info" });
     }
     if (data?.status === "created" && data?.userGenerationSuccess?.length > 0) {
-      setShowToast({ label: "CAMPAIGN_USER_GENERATION_SUCCESS", key: "success" });
+      setShowToast({ label: LOCALIZATION.CAMPAIGN_USER_GENERATION_SUCCESS, key: "success" });
     }
   }, [data]);
 
@@ -143,11 +144,11 @@ const CampaignDetailsSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(LOCALIZATION.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(LOCALIZATION.HCM_CAMPAIGN_DETAILS)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]} currentStep={4} onStepClick={onStepClick} direction={"vertical"} />
@@ -157,7 +158,7 @@ const CampaignDetailsSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <HeaderComponent className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(LOCALIZATION.HCM_CAMPAIGN_DETAILS_SUMMARY)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container">
             <ViewComposer data={updatedObject} />

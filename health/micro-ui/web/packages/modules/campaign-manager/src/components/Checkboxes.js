@@ -4,6 +4,7 @@ import { CheckBox, Tooltip } from "@egovernments/digit-ui-components";
 import CreateQuestion from "./CreateQuestion";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { FieldV1, Button } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const Checkboxes = ({
   t,
@@ -97,7 +98,7 @@ const Checkboxes = ({
           // className="custom-class"
           icon="AddIcon"
           iconFill=""
-          label={`${t("ADD_OPTIONS")} ${questionNumber}`}
+          label={`${t(LOCALIZATION.ADD_OPTIONS)} ${questionNumber}`}
           onClick={() => addOption()}
           size="medium"
           title=""
@@ -225,7 +226,7 @@ const CheckBoxOption = ({
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
                 disabled={optionDependency ? true : false}
-                label={t("ADD_COMMENT")}
+                label={t(LOCALIZATION.ADD_COMMENT)}
                 checked={optionComment}
                 onChange={(event) => handleOptionComment(optionId)}
                 // isLabelFirst={true}
@@ -246,13 +247,13 @@ const CheckBoxOption = ({
           {!dis && !disableDelete && (
             // <div className="pointer" onClick={() => removeOption(index)}>
             //   <DustbinIcon />
-            //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+            //   {t(LOCALIZATION.CAMPAIGN_DELETE_ROW_TEXT)}
             // </div>
             <Button
               // className="custom-class"
               icon="Delete"
               iconFill=""
-              label={t(`DELETE`)}
+              label={t(LOCALIZATION.DELETE)}
               onClick={() => removeOption(index)}
               size="medium"
               style={{}}

@@ -17,6 +17,7 @@ import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updatePageConditionalNav } from "./redux/remoteConfigSlice";
 import { fetchFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
@@ -110,41 +111,41 @@ function NewNavigationLogicWrapper({ t }) {
     }, [dispatch, currentPageName, flowId, campaignNumber, pageConfigs, pageFieldsLoading, tenantId]);
 
     // ----- labels -----
-    const navLogicTitle = t("NAVIGATION_LOGIC") || "Navigation Logic";
-    const addRuleLabel = t("HCM_ADD_RULE") || "Add Logic";
-    const editLabel = t("EDIT") || "Edit";
-    const deleteRuleLabel = t("HCM_REMOVE_RULE") || "Delete Rule";
-    const noRulesYet = t("HCM_NO_RULES_YET") || "No navigation rules added yet.";
-    const joinWithLabel = t("HCM_JOIN_WITH") || "Join with";
-    const selectFieldLabel = t("HCM_SELECT_FIELD") || "Select Field";
-    const comparisonTypeLabel = t("HCM_COMPARISION_TYPE") || "Comparison";
-    const selectValueLabel = t("HCM_SELECT_VALUE") || "Select Value";
-    const enterValueLabel = t("ENTER_VALUE") || "Enter value";
-    const targetPageLabel = t("HCM_TARGET_PAGE") || "Navigate to page";
-    const removeConditionLabel = t("REMOVE_CONDITION") || "Delete Condition";
-    const addConditionLabel = t("ADD_CONDITION") || "Add Condition";
-    const closeLabel = t("CLOSE") || "Cancel";
-    const submitLabel = t("SUBMIT") || "Submit";
-    const andText = t("AND") || "And";
-    const orText = t("OR") || "Or";
-    const incompleteExprLabel = t("INCOMPLETE_EXPRESSION") || "(incomplete)";
+    const navLogicTitle = t(LOCALIZATION.NAVIGATION_LOGIC) || "Navigation Logic";
+    const addRuleLabel = t(LOCALIZATION.HCM_ADD_RULE) || "Add Logic";
+    const editLabel = t(LOCALIZATION.EDIT) || "Edit";
+    const deleteRuleLabel = t(LOCALIZATION.HCM_REMOVE_RULE) || "Delete Rule";
+    const noRulesYet = t(LOCALIZATION.HCM_NO_RULES_YET) || "No navigation rules added yet.";
+    const joinWithLabel = t(LOCALIZATION.HCM_JOIN_WITH) || "Join with";
+    const selectFieldLabel = t(LOCALIZATION.HCM_SELECT_FIELD) || "Select Field";
+    const comparisonTypeLabel = t(LOCALIZATION.HCM_COMPARISION_TYPE) || "Comparison";
+    const selectValueLabel = t(LOCALIZATION.HCM_SELECT_VALUE) || "Select Value";
+    const enterValueLabel = t(LOCALIZATION.ENTER_VALUE) || "Enter value";
+    const targetPageLabel = t(LOCALIZATION.HCM_TARGET_PAGE) || "Navigate to page";
+    const removeConditionLabel = t(LOCALIZATION.REMOVE_CONDITION) || "Delete Condition";
+    const addConditionLabel = t(LOCALIZATION.ADD_CONDITION) || "Add Condition";
+    const closeLabel = t(LOCALIZATION.CLOSE) || "Cancel";
+    const submitLabel = t(LOCALIZATION.SUBMIT) || "Submit";
+    const andText = t(LOCALIZATION.AND) || "And";
+    const orText = t(LOCALIZATION.OR) || "Or";
+    const incompleteExprLabel = t(LOCALIZATION.INCOMPLETE_EXPRESSION) || "(incomplete)";
     const completeAllMsg =
-        t("PLEASE_COMPLETE_ALL_CONDITIONS") ||
+        t(LOCALIZATION.PLEASE_COMPLETE_ALL_CONDITIONS) ||
         "Please complete all conditions and select a target page before confirming.";
-    const logicLabel = t("HCM_LOGIC") || "Logic";
+    const logicLabel = t(LOCALIZATION.HCM_LOGIC) || "Logic";
 
     // ----- constants / helpers -----
     const LOGICALS = [
-        { code: "&&", name: t("AND") || "AND" },
-        { code: "||", name: t("OR") || "OR" },
+        { code: "&&", name: t(LOCALIZATION.AND) || "AND" },
+        { code: "||", name: t(LOCALIZATION.OR) || "OR" },
     ];
     const ALL_OPERATOR_OPTIONS = [
-        { code: "==", name: t("EQUALS_TO") || "equals to" },
-        { code: "!=", name: t("NOT_EQUALS_TO") || "not equals to" },
-        { code: ">=", name: t("GREATER_THAN_OR_EQUALS_TO") || "greater than or equals to" },
-        { code: "<=", name: t("LESS_THAN_OR_EQUALS_TO") || "less than or equals to" },
-        { code: ">", name: t("GREATER_THAN") || "greater than" },
-        { code: "<", name: t("LESS_THAN") || "less than" },
+        { code: "==", name: t(LOCALIZATION.EQUALS_TO) || "equals to" },
+        { code: "!=", name: t(LOCALIZATION.NOT_EQUALS_TO) || "not equals to" },
+        { code: ">=", name: t(LOCALIZATION.GREATER_THAN_OR_EQUALS_TO) || "greater than or equals to" },
+        { code: "<=", name: t(LOCALIZATION.LESS_THAN_OR_EQUALS_TO) || "less than or equals to" },
+        { code: ">", name: t(LOCALIZATION.GREATER_THAN) || "greater than" },
+        { code: "<", name: t(LOCALIZATION.LESS_THAN) || "less than" },
     ];
 
     const PARSE_OPERATORS = useMemo(
@@ -641,7 +642,7 @@ function NewNavigationLogicWrapper({ t }) {
             <Card type="secondary">
                 <div style={{ padding: "1rem" }}>
                     <p style={{ opacity: 0.7, margin: 0 }}>
-                        {t("LOADING_CONFIGURATION") || "Loading configuration..."}
+                        {t(LOCALIZATION.LOADING_CONFIGURATION) || "Loading configuration..."}
                     </p>
                 </div>
             </Card>
@@ -906,7 +907,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                         <TextInput
                                                                                             type="text"
                                                                                             populators={{ name: `months-${editorIndex}-${idx}` }}
-                                                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                            placeholder={t(LOCALIZATION.ENTER_INTEGER_VALUE) || enterValueLabel}
                                                                                             value={cond.fieldValue}
                                                                                             onChange={(event) =>
                                                                                                 updateCond(editorIndex, idx, {
@@ -998,7 +999,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                         <TextInput
                                                                                             type="text"
                                                                                             populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                            placeholder={t(LOCALIZATION.ENTER_INTEGER_VALUE) || enterValueLabel}
                                                                                             value={cond.fieldValue}
                                                                                             onChange={(event) =>
                                                                                                 updateCond(editorIndex, idx, {

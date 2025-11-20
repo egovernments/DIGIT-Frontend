@@ -7,6 +7,7 @@ import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { convertEpochToNewDateFormat } from "../../utils/convertEpochToNewDateFormat";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -325,14 +326,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               <CardText>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
               <LabelFieldPair style={{ marginBottom: "1.5rem" }}>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700" }}>
-                  {t(`CAMPAIGN_NO_OF_CYCLE`)}
+                  {t(LOCALIZATION.CAMPAIGN_NO_OF_CYCLE)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
               </LabelFieldPair>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700" }}>
-                  {t(`CAMPAIGN_NO_OF_DELIVERY`)}
+                  {t(LOCALIZATION.CAMPAIGN_NO_OF_DELIVERY)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <TextInput
@@ -346,18 +347,18 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </div>
           <Card className="campaign-counter-container">
             <CardSubHeader className={"start-header"} style={{ marginBottom: "1.5rem" }}>
-              {t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}
+              {t(LOCALIZATION.CAMPAIGN_ADD_START_END_DATE_TEXT)}
             </CardSubHeader>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel>
-                  {t(`CAMPAIGN_CYCLE`)} {index + 1}
+                  {t(LOCALIZATION.CAMPAIGN_CYCLE)} {index + 1}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <div className="date-field-container">
                   <FieldV1
                     type="date"
-                    placeholder={t("FROM_DATE")}
+                    placeholder={t(LOCALIZATION.FROM_DATE)}
                     // value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
                     value={
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
@@ -383,7 +384,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   />
                   <FieldV1
                     type="date"
-                    placeholder={t("TO_DATE")}
+                    placeholder={t(LOCALIZATION.TO_DATE)}
                     // value={cycleData?.find((j) => j.key === index + 1)?.toDate}
                     value={
                       cycleData?.find((j) => j.key === index + 1)?.toDate

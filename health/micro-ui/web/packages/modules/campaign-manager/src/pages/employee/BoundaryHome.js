@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import BoundaryPopup from "../../components/BoundaryPopup";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const config = {
   type: "campaign",
@@ -60,9 +61,9 @@ const BoundaryHome = () => {
     <React.Fragment>
       <BoundaryPopup showPopUp={showPopUp} setShowPopUp={setShowPopUp} callGeoPode={() => {}} data={data} geoPodeData={geoPodeData} />
       {/* {toast &&
-        <Toast label={t("USER_NOT_AUTHORISED")} type={"error"} onClose={() => setToast(false)} />} */}
+        <Toast label={t(LOCALIZATION.USER_NOT_AUTHORISED)} type={"error"} onClose={() => setToast(false)} />} */}
       <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-        <div style={{ fontWeight: 700, fontSize: "2.5rem", fontFamily: "Roboto Condensed" }}>{t("BOUNDARY_DATA_MANAGEMENT")}</div>
+        <div style={{ fontWeight: 700, fontSize: "2.5rem", fontFamily: "Roboto Condensed" }}>{t(LOCALIZATION.BOUNDARY_DATA_MANAGEMENT)}</div>
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
           {Object.keys(boundaryHomeConfig)?.map((key) => {
             const isBoundaryDataEmpty = Object.keys(data?.boundaryData || {})?.length === 0;
@@ -89,13 +90,13 @@ const BoundaryHome = () => {
         style={{ maxWidth: "200rem", marginTop: "1rem" }}
         additionalElements={[
           <span style={{ color: "#505A5F", fontWeight: 600 }}>
-            {t(`CURRENT_HIERARCHY_TYPE_IS`)} {": "} {t(data?.hierarchyName)}
+            {t(LOCALIZATION.CURRENT_HIERARCHY_TYPE_IS)} {": "} {t(data?.hierarchyName)}
           </span>,
           <span style={{ color: "#505A5F", fontWeight: 600 }}>
-            {t(`HIERARCHY_CREATED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.createdTime).toLocaleDateString()}
+            {t(LOCALIZATION.HIERARCHY_CREATED_ON)} {": "} {new Date(data?.boundaryData?.auditDetails?.createdTime).toLocaleDateString()}
           </span>,
           <span style={{ color: "#505A5F", fontWeight: 600 }}>
-            {t(`HIERARCHY_LAST_MODIFIED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.lastModifiedTime).toLocaleDateString()}
+            {t(LOCALIZATION.HIERARCHY_LAST_MODIFIED_ON)} {": "} {new Date(data?.boundaryData?.auditDetails?.lastModifiedTime).toLocaleDateString()}
           </span>,
         ]}
       />

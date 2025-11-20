@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 import RenderSelectionField from "../../components/RenderSelectionField";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const responsePanelComponent = ({ components, t }) => {
   const titleField = components.find((f) => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
@@ -67,7 +68,7 @@ const Filter = (props) => {
         <PopUp
           className={"custom-popup-filter"}
           type={"default"}
-          heading={props.t("SELECT_FILTER")}
+          heading={props.t(LOCALIZATION.SELECT_FILTER)}
           onClose={() => setShowPopUp(false)}
           style={{
             width: "100%", // Full width popup

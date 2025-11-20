@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { Card, HeaderComponent, AlertCard, PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
@@ -231,8 +232,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     <>
       <Card>
         <TagComponent campaignName={campaignName} />
-        <HeaderComponent className={"update-boundary-header"}>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
-        <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+        <HeaderComponent className={"update-boundary-header"}>{t(LOCALIZATION.CAMPAIGN_SELECT_BOUNDARY)}</HeaderComponent>
+        <p className="description-type">{t(LOCALIZATION.CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION)}</p>
         {hierarchyData && (
           <Wrapper
             hierarchyType={hierarchyType}
@@ -253,7 +254,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
       <div style={{ marginTop: "1rem" }}>
         <AlertCard
           label="Info"
-          text={t("CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES")}
+          text={t(LOCALIZATION.CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES)}
           variant="default"
           style={{ margin: "0rem", maxWidth: "100%", marginTop: "1.5rem", marginBottom: "2rem" }}
         />
@@ -262,10 +263,10 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(LOCALIZATION.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -279,7 +280,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
               onClick={() => {
                 checkDataPresent({ action: false });
               }}
@@ -288,7 +289,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
               onClick={() => {
                 checkDataPresent({ action: true });
               }}

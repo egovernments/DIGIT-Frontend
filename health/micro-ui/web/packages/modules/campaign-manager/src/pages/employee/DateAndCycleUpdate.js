@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Card, FieldV1 } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const initialState = (projectData) => {
   return projectData;
@@ -186,10 +187,10 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
   };
   return (
     <Card className={"boundary-with-container"}>
-      <Header className="header">{t(`UPDATE_DATE_AND_CYCLE_HEADER`)}</Header>
+      <Header className="header">{t(LOCALIZATION.UPDATE_DATE_AND_CYCLE_HEADER)}</Header>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start", gap: "1rem" }}>
         <div className="campaign-dates">
-          <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+          <p>{t(LOCALIZATION.HCM_CAMPAIGN_DATES)}</p>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">
@@ -199,7 +200,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             type="date"
             value={startDate}
             nonEditable={startDate && startDate?.length > 0 && today >= startDate ? true : false}
-            placeholder={t("HCM_START_DATE")}
+            placeholder={t(LOCALIZATION.HCM_START_DATE)}
             populators={
               today >= startDate
                 ? { newDateFormat: true }
@@ -221,7 +222,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             type="date"
             value={endDate}
             nonEditable={endDate && endDate?.length > 0 && today >= endDate ? true : false}
-            placeholder={t("HCM_END_DATE")}
+            placeholder={t(LOCALIZATION.HCM_END_DATE)}
             populators={{
               newDateFormat: true,
               min:
@@ -243,7 +244,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
           {cycleDates?.map((item, index) => (
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
-                <p>{`${t(`CYCLE`)} ${item?.cycleIndex}`}</p>
+                <p>{`${t(LOCALIZATION.CYCLE)} ${item?.cycleIndex}`}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="date-field-container">
@@ -253,7 +254,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                   type="date"
                   value={item?.startDate}
                   nonEditable={item?.startDate && item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
-                  placeholder={t("HCM_START_DATE")}
+                  placeholder={t(LOCALIZATION.HCM_START_DATE)}
                   populators={{
                     newDateFormat: true,
                     min:
@@ -287,7 +288,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                       ? true
                       : false
                   }
-                  placeholder={t("HCM_END_DATE")}
+                  placeholder={t(LOCALIZATION.HCM_END_DATE)}
                   populators={{
                     newDateFormat: true,
                     min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())

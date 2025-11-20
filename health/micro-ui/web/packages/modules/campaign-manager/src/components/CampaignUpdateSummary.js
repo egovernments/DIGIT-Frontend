@@ -7,6 +7,7 @@ import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
 import TagComponent from "./TagComponent";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 // Define the function that groups boundary data based on hierarchy
 function boundaryDataGrp(boundaryData, hierarchyDefinition) {
@@ -218,13 +219,13 @@ const CampaignUpdateSummary = (props) => {
                       name: `HIERARCHY_${index + 1}`,
                       type: "COMPONENT",
                       cardHeader: {
-                        value: hierarchyType ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` : t("To Be Updated"),
+                        value: hierarchyType ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` : t(LOCALIZATION.TO_BE_UPDATED),
                         inlineStyles: { color: "#0B4B66" },
                       },
                       component: "BoundaryDetailsSummary",
                       cardSecondaryAction: noAction !== "false" && (
                         <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                          <span>{t(`CAMPAIGN_EDIT`)}</span>
+                          <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                           <EditIcon />
                         </div>
                       ),
@@ -261,10 +262,10 @@ const CampaignUpdateSummary = (props) => {
                   props: {
                     documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
                   },
-                  cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -281,10 +282,10 @@ const CampaignUpdateSummary = (props) => {
                   props: {
                     documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                   },
-                  cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -301,10 +302,10 @@ const CampaignUpdateSummary = (props) => {
                   props: {
                     documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                   },
-                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -323,7 +324,7 @@ const CampaignUpdateSummary = (props) => {
                         resources: processid,
                         resources: resourceIdArr,
                       },
-                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                      cardHeader: { value: t(LOCALIZATION.USER_GENERATE_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     },
                   ],
                 }
@@ -337,12 +338,12 @@ const CampaignUpdateSummary = (props) => {
               {
                 name: "card1",
                 active: true,
-                code: t("HCM_BOUNDARY_DETAILS"),
+                code: t(LOCALIZATION.HCM_BOUNDARY_DETAILS),
               },
               {
                 name: "card2",
                 active: true,
-                code: t("HCM_DATA_UPLOAD"),
+                code: t(LOCALIZATION.HCM_DATA_UPLOAD),
               },
             ],
             activeByDefault: "card2",
@@ -416,7 +417,7 @@ const CampaignUpdateSummary = (props) => {
     <>
       <TagComponent campaignName={campaignName} />
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem", marginTop: "1.5rem" }}>
-        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
+        <HeaderComponent className="summary-header">{t(LOCALIZATION.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
         <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

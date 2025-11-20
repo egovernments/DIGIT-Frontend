@@ -8,6 +8,7 @@ import { PRIMARY_COLOR } from "../utils";
 import { Toast } from "@egovernments/digit-ui-components";
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import { Button as ButtonNew } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 
 /**
@@ -54,7 +55,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
     <div className="upload-drag-drop-container">
       <UploadIcon />
       <div className="drag-drop-text">
-        <p className="drag-drop"> {t("WBH_DRAG_DROP")}</p> <p className="browse-text">{t("WBH_BULK_BROWSE_FILES")}</p>
+        <p className="drag-drop"> {t(LOCALIZATION.WBH_DRAG_DROP)}</p> <p className="browse-text">{t(LOCALIZATION.WBH_BULK_BROWSE_FILES)}</p>
       </div>
     </div>
   );
@@ -67,7 +68,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
     return new Promise((resolve, reject) => {
       // Check if a file is selected
       if (!selectedFile) {
-        reject(t("HCM_FILE_UPLOAD_ERROR"));
+        reject(t(LOCALIZATION.HCM_FILE_UPLOAD_ERROR));
         return;
       }
 
@@ -96,7 +97,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           } else {
             // const label = "HCM_FILE_VALIDATION_ERROR";
             // setShowToast({ isError: true, label });
-            reject(t("HCM_FILE_VALIDATION_ERROR"));
+            reject(t(LOCALIZATION.HCM_FILE_VALIDATION_ERROR));
           }
         } catch (error) {
           reject("HCM_FILE_UNAVAILABLE");
@@ -125,7 +126,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
   };
 
   const fileTypeError = (err) => {
-    setShowToast({ key: "error", label: t("HCM_ERROR_INVALID_FILE_TYPE") });
+    setShowToast({ key: "error", label: t(LOCALIZATION.HCM_ERROR_INVALID_FILE_TYPE) });
   };
 
   const renderFileCards = useMemo(() => {
@@ -150,7 +151,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         </div>
         <div className="delete-and-download-button">
           <ButtonNew
-            label={t("WBH_DOWNLOAD")}
+            label={t(LOCALIZATION.WBH_DOWNLOAD)}
             variation="secondary"
             type="button"
             size={"medium"}
@@ -161,7 +162,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
             }}
           />
           <ButtonNew
-            label={t("WBH_DELETE")}
+            label={t(LOCALIZATION.WBH_DELETE)}
             variation="secondary"
             size={"medium"}
             type="button"

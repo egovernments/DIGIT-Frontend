@@ -17,6 +17,7 @@ import { useDeliveryRules } from './useDeliveryRules';
 import AddProducts from "./AddProductscontext";
 import { PRIMARY_COLOR } from "../../../utils";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 
 const DustbinIcon = React.memo(() => (
   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -196,7 +197,7 @@ const AddAttributeField = React.memo(({
     <div className="attribute-field-wrapper">
       <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <CardLabel isMandatory className="card-label-smaller">
-          {t("CAMPAIGN_ATTRIBUTE_LABEL")}
+          {t(LOCALIZATION.CAMPAIGN_ATTRIBUTE_LABEL)}
         </CardLabel>
         <Dropdown
           className="form-field"
@@ -213,7 +214,7 @@ const AddAttributeField = React.memo(({
 
       <LabelFieldPair style={{ marginBottom: "0rem" }}>
         <CardLabel isMandatory className="card-label-smaller">
-          {t("CAMPAIGN_OPERATOR_LABEL")}
+          {t(LOCALIZATION.CAMPAIGN_OPERATOR_LABEL)}
         </CardLabel>
         <Dropdown
           className="form-field"
@@ -230,7 +231,7 @@ const AddAttributeField = React.memo(({
       {isRangeOperator ? (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <LabelFieldPair style={{ marginBottom: "0rem" }}>
-            <CardLabel className="card-label-smaller">{t("CAMPAIGN_FROM_LABEL")}</CardLabel>
+            <CardLabel className="card-label-smaller">{t(LOCALIZATION.CAMPAIGN_FROM_LABEL)}</CardLabel>
             <TextInput
               value={attribute?.fromValue || ""}
               onChange={(e) => handleRangeValueChange(e, "from")}
@@ -238,7 +239,7 @@ const AddAttributeField = React.memo(({
             />
           </LabelFieldPair>
           <LabelFieldPair style={{ marginBottom: "0rem" }}>
-            <CardLabel className="card-label-smaller">{t("CAMPAIGN_TO_LABEL")}</CardLabel>
+            <CardLabel className="card-label-smaller">{t(LOCALIZATION.CAMPAIGN_TO_LABEL)}</CardLabel>
             <TextInput
               value={attribute?.toValue || ""}
               onChange={(e) => handleRangeValueChange(e, "to")}
@@ -248,7 +249,7 @@ const AddAttributeField = React.memo(({
         </div>
       ) : (
         <LabelFieldPair style={{ marginBottom: "0rem" }}>
-          <CardLabel className="card-label-smaller">{t("CAMPAIGN_VALUE_LABEL")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t(LOCALIZATION.CAMPAIGN_VALUE_LABEL)}</CardLabel>
           <div className="field" style={{ display: "flex", width: "100%" }}>
             {isDropdownValue ? (
               optionsLoading ? (
@@ -281,7 +282,7 @@ const AddAttributeField = React.memo(({
         <Button
           variation="link"
           style={{ marginTop: "3rem" }}
-          label={t("CAMPAIGN_DELETE_ROW_TEXT")}
+          label={t(LOCALIZATION.CAMPAIGN_DELETE_ROW_TEXT)}
           icon="Delete"
           onClick={onDelete}
         />
@@ -328,7 +329,7 @@ const AddAttributeWrapper = React.memo(({
       {canAddMore && (
         <Button
           variation="secondary"
-          label={t("CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT")}
+          label={t(LOCALIZATION.CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT)}
           className="add-attribute hover"
           icon="AddIcon"
           onClick={handleAddAttribute}
@@ -380,7 +381,7 @@ const AddDeliveryRule = React.memo(({
       <Card className="delivery-rule-container">
         <CardHeader styles={{ display: "flex", justifyContent: "space-between" }} className="card-header-delivery">
           <p className="title">
-            {t("CAMPAIGN_DELIVERY_RULE_LABEL")} {rule.ruleKey}
+            {t(LOCALIZATION.CAMPAIGN_DELIVERY_RULE_LABEL)} {rule.ruleKey}
           </p>
           {canDelete && (
             <div
@@ -396,7 +397,7 @@ const AddDeliveryRule = React.memo(({
                 cursor: "pointer",
               }}
             >
-              <DustbinIcon /> {t("CAMPAIGN_DELETE_CONDITION_LABEL")}
+              <DustbinIcon /> {t(LOCALIZATION.CAMPAIGN_DELETE_CONDITION_LABEL)}
             </div>
           )}
         </CardHeader>
@@ -404,7 +405,7 @@ const AddDeliveryRule = React.memo(({
         {/* {deliveryTypeConfig && deliveryTypeConfig?.length > 0 && (
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
-              <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
+              <span className="bold">{t(LOCALIZATION.HCM_DELIVERY_TYPE)}</span>
             </div>
             <RadioButtons
               options={deliveryTypeConfig}
@@ -442,7 +443,7 @@ const AddDeliveryRule = React.memo(({
         <Button
           variation="secondary"
           className="add-product-btn hover"
-          label={t("CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT")}
+          label={t(LOCALIZATION.CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT)}
           icon="AppRegistration"
           onClick={() => setShowModal(true)}
         />
@@ -452,7 +453,7 @@ const AddDeliveryRule = React.memo(({
         <PopUp
           className="campaign-product-wrapper"
           type="default"
-          heading={t("CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT")}
+          heading={t(LOCALIZATION.CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT)}
           onOverlayClick={() => setShowModal(false)}
           onClose={() => setShowModal(false)}
           footerChildren={[
@@ -461,7 +462,7 @@ const AddDeliveryRule = React.memo(({
               type="button"
               size="large"
               variation="primary"
-              label={t("CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT")}
+              label={t(LOCALIZATION.CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT)}
               onClick={confirmResources}
             />,
           ]}
@@ -537,7 +538,7 @@ const AddDeliveryRuleWrapper = React.memo(({
         <Card className="delivery-type-container">
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
-              <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
+              <span className="bold">{t(LOCALIZATION.HCM_DELIVERY_TYPE)}</span>
             </div>
             <RadioButtons
               options={deliveryTypeConfig}
@@ -567,7 +568,7 @@ const AddDeliveryRuleWrapper = React.memo(({
       {canAddMore && (
         <Button
           variation="secondary"
-          label={t("CAMPAIGN_ADD_MORE_DELIVERY_BUTTON")}
+          label={t(LOCALIZATION.CAMPAIGN_ADD_MORE_DELIVERY_BUTTON)}
           className="add-rule-btn hover"
           icon="AddIcon"
           onClick={handleAddRule}

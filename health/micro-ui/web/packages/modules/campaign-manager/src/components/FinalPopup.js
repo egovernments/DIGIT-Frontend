@@ -1,16 +1,17 @@
 import React from "react";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
     const { t } = useTranslation();
     return (
         showFinalPopUp &&  (
-            <PopUp 
+            <PopUp
                 className={"custom-popup"}
                 type={"alert"}
-                alertMessage={t("YOU_WON'T_BE_ABLE_TO_UNDO_THIS_STEP_OF_CREATING_HIERARCHY")}
-                alertHeading={t("CREATE_BOUNDARY_HIERARCHY")}
+                alertMessage={t(LOCALIZATION.YOU_WONT_BE_ABLE_TO_UNDO_THIS_STEP)}
+                alertHeading={t(LOCALIZATION.CREATE_BOUNDARY_HIERARCHY)}
                 children={[
                 ]}
                 onClose={()=>{
@@ -28,7 +29,7 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                         type={"button"}
                         size={"large"}
                         variation={"secondary"}
-                        label={t("CANCEL")}
+                        label={t(LOCALIZATION.CANCEL)}
                         onClick={() => {
                             setShowFinalPopup(false);
                         }}
@@ -37,7 +38,7 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                         type={"button"}
                         size={"large"}
                         variation={"primary"}
-                        label={t("CREATE")}
+                        label={t(LOCALIZATION.CREATE)}
                         onClick={() => {
                             onConfirmClick();
                             setShowFinalPopup(false);

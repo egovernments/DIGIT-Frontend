@@ -7,6 +7,7 @@ import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TimelineComponent from "./TimelineComponent";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 function mergeObjects(item) {
   const arr = item;
@@ -402,14 +403,14 @@ const CampaignSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.CAMPAIGN_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   // cardSecondaryAction: isPreview === "true" && (
                   //   <Button
                   //     className={"campaign-type-alert-button"}
                   //     type={"button"}
                   //     size={"large"}
                   //     variation={"primary"}
-                  //     label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                  //     label={t(LOCALIZATION.ES_CAMPAIGN_DOWNLOAD_USER_DETAILS)}
                   //     onClick={() => {
                   //       setTimeline(true);
                   //       setResource(resourceIdArr);
@@ -425,7 +426,7 @@ const CampaignSummary = (props) => {
                         type={"button"}
                         size={"large"}
                         variation={"primary"}
-                        label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                        label={t(LOCALIZATION.ES_CAMPAIGN_DOWNLOAD_USER_DETAILS)}
                         onClick={() => {
                           setTimeline(true);
                           setResource(resourceIdArr);
@@ -434,28 +435,28 @@ const CampaignSummary = (props) => {
                       />
                     ) : (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
-                        <span>{t("CAMPAIGN_EDIT")}</span>
+                        <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
                   values: [
                     {
                       key: "CAMPAIGN_TYPE",
-                      value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NAME",
-                      value: data?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.campaignName || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_START_DATE",
-                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
-                      value: Digit.Utils.date.convertEpochToDate(startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
+                      value: Digit.Utils.date.convertEpochToDate(startDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_END_DATE",
-                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
-                      value: Digit.Utils.date.convertEpochToDate(endDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
+                      value: Digit.Utils.date.convertEpochToDate(endDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -476,7 +477,7 @@ const CampaignSummary = (props) => {
                     component: "BoundaryDetailsSummary",
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -493,10 +494,10 @@ const CampaignSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -507,7 +508,7 @@ const CampaignSummary = (props) => {
                         ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
                         : cycles?.cycle
                         ? cycles?.cycle
-                        : t("CAMPAIGN_SUMMARY_NA"),
+                        : t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
@@ -515,7 +516,7 @@ const CampaignSummary = (props) => {
                         ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
                         : cycles?.deliveries
                         ? cycles?.deliveries
-                        : t("CAMPAIGN_SUMMARY_NA"),
+                        : t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -530,10 +531,10 @@ const CampaignSummary = (props) => {
                   {
                     name: `CYCLE_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: `${t(LOCALIZATION.CYCLE)} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -555,10 +556,10 @@ const CampaignSummary = (props) => {
                   props: {
                     documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
                   },
-                  cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -575,10 +576,10 @@ const CampaignSummary = (props) => {
                   props: {
                     documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                   },
-                  cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -595,10 +596,10 @@ const CampaignSummary = (props) => {
                   props: {
                     documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                   },
-                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -617,7 +618,7 @@ const CampaignSummary = (props) => {
                         // resources: processid,
                         resources: resourceIdArr,
                       },
-                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                      cardHeader: { value: t(LOCALIZATION.USER_GENERATE_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     },
                   ],
                 }
@@ -633,29 +634,29 @@ const CampaignSummary = (props) => {
               //       {
               //         name: "card1",
               //         active: true,
-              //         code: t("HCM_TIMELINE"),
+              //         code: t(LOCALIZATION.HCM_TIMELINE),
               //       },
               //     ]
               //   : []),
               {
                 name: "card1",
                 active: true,
-                code: t("HCM_CAMPAIGN_SETUP_DETAILS"),
+                code: t(LOCALIZATION.HCM_CAMPAIGN_SETUP_DETAILS),
               },
               {
                 name: "card2",
                 active: true,
-                code: t("HCM_BOUNDARY_DETAILS"),
+                code: t(LOCALIZATION.HCM_BOUNDARY_DETAILS),
               },
               {
                 name: "card3",
                 active: true,
-                code: t("HCM_DELIVERY_DETAILS"),
+                code: t(LOCALIZATION.HCM_DELIVERY_DETAILS),
               },
               {
                 name: "card4",
                 active: true,
-                code: t("HCM_DATA_UPLOAD"),
+                code: t(LOCALIZATION.HCM_DATA_UPLOAD),
               },
             ],
             activeByDefault: "card1",
@@ -733,7 +734,7 @@ const CampaignSummary = (props) => {
     updatedObject.cards[0].sections[0].values[3].value = Digit.Utils.date.convertEpochToDate(endDate);
   }, [startDate, endDate]);
 
-  if (updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value == t("MR-DN")) {
+  if (updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value == t(LOCALIZATION.MR_DN)) {
     updatedObject.cards.forEach((card) => {
       if (card.name && card.name.startsWith("CYCLE_")) {
         const cycleId = card.name.split("_")[1];
@@ -743,9 +744,9 @@ const CampaignSummary = (props) => {
           card.sections.forEach((section) => {
             if (section.props && section.props.data) {
               section.props.data.startDate = new Date(cycleData.startDate).toLocaleDateString("en-GB");
-              // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t("CAMPAIGN_SUMMARY_NA");
+              // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.startDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA);
               section.props.data.endDate = new Date(cycleData.endDate).toLocaleDateString("en-GB");
-              // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t("CAMPAIGN_SUMMARY_NA");
+              // section.props.data.startDate = Digit.Utils.date.convertEpochToDate(cycleData.endDate) || t(LOCALIZATION.CAMPAIGN_SUMMARY_NA);
             }
           });
         }
@@ -756,9 +757,9 @@ const CampaignSummary = (props) => {
   return (
     <>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem" }}>
-        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
+        <HeaderComponent className="summary-header">{t(LOCALIZATION.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
         {timeLine && (
-          <PopUp type={"default"} heading={t("ES_CAMPAIGN_TIMELINE")} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
+          <PopUp type={"default"} heading={t(LOCALIZATION.ES_CAMPAIGN_TIMELINE)} onOverlayClick={() => setTimeline(false)} onClose={() => setTimeline(false)}>
             <TimelineComponent campaignId={campaignId} resourceId={resource} />
           </PopUp>
         )}

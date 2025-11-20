@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -242,10 +243,10 @@ const DeliveryDetailsSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(LOCALIZATION.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   // cardSecondaryAction: noAction !== "false" && (
                   //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
-                  //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                  //     <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                   //     <EditIcon />
                   //   </div>
                   // ),
@@ -254,13 +255,13 @@ const DeliveryDetailsSummary = (props) => {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
                         ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        : t("CAMPAIGN_SUMMARY_NA"),
+                        : t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
                         ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        : t("CAMPAIGN_SUMMARY_NA"),
+                        : t(LOCALIZATION.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -274,10 +275,10 @@ const DeliveryDetailsSummary = (props) => {
                   {
                     name: `CYCLE_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: `${t(LOCALIZATION.CYCLE)} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     // cardSecondaryAction: noAction !== "false" && (
                     //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
-                    //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                    //     <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                     //     <EditIcon />
                     //   </div>
                     // ),
@@ -335,11 +336,11 @@ const DeliveryDetailsSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(LOCALIZATION.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(LOCALIZATION.HCM_DELIVERY_DETAILS)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
@@ -353,7 +354,7 @@ const DeliveryDetailsSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(LOCALIZATION.HCM_DELIVERY_DETAILS_SUMMARY)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container">
             <ViewComposer data={updatedObject} cardErrors={summaryErrors} />

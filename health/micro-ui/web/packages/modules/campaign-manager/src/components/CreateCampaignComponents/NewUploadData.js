@@ -8,6 +8,7 @@ import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader } from "
 import { downloadExcelWithCustomName } from "../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../TagComponent";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
@@ -445,23 +446,23 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //           .map((error) => {
   //             let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
   //             if (error.instancePath === "/Phone Number (Mandatory)") {
-  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
+  //               return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${t(LOCALIZATION.HCM_IN_COLUMN)}  ${t(LOCALIZATION.HCM_DATA_SHOULD_BE_10_DIGIT)}`;
   //             }
   //             if (instancePath.startsWith("/")) {
   //               instancePath = instancePath.slice(1);
   //             }
   //             if (error.keyword === "required") {
   //               const missingProperty = error.params?.missingProperty || "";
-  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+  //               return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${t(LOCALIZATION.HCM_IN_COLUMN)} '${missingProperty}' ${t(LOCALIZATION.HCM_DATA_SHOULD_NOT_BE_EMPTY)}`;
   //             }
   //             if (error.keyword === "type" && error.message === "must be string") {
-  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
+  //               return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${t(LOCALIZATION.HCM_IN_COLUMN)} ${instancePath} ${t(LOCALIZATION.HCM_IS_INVALID)}`;
   //             }
-  //             let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+  //             let formattedError = `${t(LOCALIZATION.HCM_IN_COLUMN)} '${instancePath}' ${error.message}`;
   //             if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-  //               formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+  //               formattedError += `${t(LOCALIZATION.HCM_DATA_ALLOWED_VALUES_ARE)} ${error.params.allowedValues.join("/ ")}`;
   //             }
-  //             return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError}`;
+  //             return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${formattedError}`;
   //           })
   //           .join(", ");
   //         return formattedErrors;
@@ -485,7 +486,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   // };
 
   // const validateTarget = (jsonData, headersToValidate) => {
-  //   const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+  //   const boundaryCodeIndex = headersToValidate.indexOf(t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_CODE));
   //   const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
 
   //   const filteredData = jsonData
@@ -494,10 +495,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //         return true;
   //       }
   //     })
-  //     .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
+  //     .filter((e) => e[t(LOCALIZATION.HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL)]);
 
   //   if (filteredData.length == 0) {
-  //     const errorMessage = t("HCM_MISSING_TARGET");
+  //     const errorMessage = t(LOCALIZATION.HCM_MISSING_TARGET);
   //     setErrorsType((prevErrors) => ({
   //       ...prevErrors,
   //       [type]: errorMessage,
@@ -506,10 +507,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //     return false;
   //   }
 
-  //   const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
+  //   const targetValue = filteredData?.[0][t(LOCALIZATION.HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL)];
 
   //   if (targetValue <= 0 || targetValue >= 100000000) {
-  //     const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
+  //     const errorMessage = t(LOCALIZATION.HCM_TARGET_VALIDATION_ERROR);
   //     setErrorsType((prevErrors) => ({
   //       ...prevErrors,
   //       [type]: errorMessage,
@@ -541,21 +542,21 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //             }
   //             if (error.keyword === "required") {
   //               const missingProperty = error.params?.missingProperty || "";
-  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t(
+  //               return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${t(LOCALIZATION.HCM_IN_COLUMN)} '${missingProperty}' ${t(
   //                 "HCM_DATA_SHOULD_NOT_BE_EMPTY"
   //               )} at ${sheetName}`;
   //             }
   //             if (error.keyword === "type" && error.message === "must be string") {
-  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}`;
+  //               return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${t(LOCALIZATION.HCM_IN_COLUMN)} ${instancePath} ${t(LOCALIZATION.HCM_IS_INVALID)} at ${sheetName}`;
   //             }
   //             if (error.keyword === "maximum") {
-  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_MAXIMUM_VALUE")} at ${sheetName}`;
+  //               return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${t(LOCALIZATION.HCM_IN_COLUMN)} ${instancePath} ${t(LOCALIZATION.HCM_IS_MAXIMUM_VALUE)} at ${sheetName}`;
   //             }
-  //             let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+  //             let formattedError = `${t(LOCALIZATION.HCM_IN_COLUMN)} '${instancePath}' ${error.message}`;
   //             if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-  //               formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+  //               formattedError += `${t(LOCALIZATION.HCM_DATA_ALLOWED_VALUES_ARE)} ${error.params.allowedValues.join("/ ")}`;
   //             }
-  //             return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError} at ${sheetName}`;
+  //             return `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${index} ${formattedError} at ${sheetName}`;
   //           })
   //           .join(", ");
   //         return formattedErrors;
@@ -585,7 +586,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   // const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
   //   //   header: 1,
   //   // })[0];
-  //   const excludedSheetNames = [t("HCM_README_SHEETNAME"), t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")];
+  //   const excludedSheetNames = [t(LOCALIZATION.HCM_README_SHEETNAME), t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)];
   //   let nextSheetName = null;
   //   let expectedHeaders = [];
 
@@ -604,7 +605,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   //   // for (const header of mdmsHeaders) {
   //   //   if (!expectedHeaders.includes(t(header))) {
-  //   //     const errorMessage = t("HCM_BOUNDARY_INVALID_SHEET");
+  //   //     const errorMessage = t(LOCALIZATION.HCM_BOUNDARY_INVALID_SHEET);
   //   //     setErrorsType((prevErrors) => ({
   //   //       ...prevErrors,
   //   //       [type]: errorMessage,
@@ -620,7 +621,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   for (let i = 0; i < workbook.SheetNames.length; i++) {
   //     const sheetName = workbook?.SheetNames[i];
 
-  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+  //     if (sheetName === t(LOCALIZATION.HCM_README_SHEETNAME) || sheetName === t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)) {
   //       continue;
   //     }
 
@@ -633,7 +634,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   //     // Check if headers match the expected headers
   //     // if (!arraysEqual(headersToValidate, expectedHeaders)) {
-  //     //   const errorMessage = t("HCM_MISSING_HEADERS");
+  //     //   const errorMessage = t(LOCALIZATION.HCM_MISSING_HEADERS);
   //     //   setErrorsType((prevErrors) => ({
   //     //     ...prevErrors,
   //     //     [type]: errorMessage,
@@ -651,7 +652,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   for (let i = 0; i < workbook.SheetNames.length; i++) {
   //     const sheetName = workbook?.SheetNames[i];
 
-  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+  //     if (sheetName === t(LOCALIZATION.HCM_README_SHEETNAME) || sheetName === t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)) {
   //       continue;
   //     }
 
@@ -667,7 +668,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   //     if (jsonData.length == 0) continue;
 
-  //     const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+  //     const boundaryCodeIndex = headersToValidate.indexOf(t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_CODE));
 
   //     for (const row of jsonData) {
   //       for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
@@ -676,25 +677,25 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   //         if (value === undefined || value === null) {
   //           targetError.push(
-  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //             `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${jsonData.indexOf(row) + 2} ${t(LOCALIZATION.HCM_IN_COLUMN)} "${headersToValidate[j]}" ${t(
   //               "HCM_DATA_SHOULD_NOT_BE_EMPTY"
   //             )} at ${sheetName}`
   //           );
   //         } else if (value >= 100000000) {
   //           targetError.push(
-  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //             `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${jsonData.indexOf(row) + 2} ${t(LOCALIZATION.HCM_IN_COLUMN)} "${headersToValidate[j]}" ${t(
   //               "HCM_DATA_SHOULD_BE_LESS_THAN_MAXIMUM"
   //             )} at ${sheetName}`
   //           );
   //         } else if (value < 0) {
   //           targetError.push(
-  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //             `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${jsonData.indexOf(row) + 2} ${t(LOCALIZATION.HCM_IN_COLUMN)} "${headersToValidate[j]}" ${t(
   //               "HCM_DATA_SHOULD_BE_GREATER_THAN_ZERO"
   //             )} at ${sheetName}`
   //           );
   //         } else if (typeof value !== "number") {
   //           targetError.push(
-  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //             `${t(LOCALIZATION.HCM_DATA_AT_ROW)} ${jsonData.indexOf(row) + 2} ${t(LOCALIZATION.HCM_IN_COLUMN)} "${headersToValidate[j]}" ${t(
   //               "HCM_DATA_SHOULD_BE_NUMBER"
   //             )} at ${sheetName}`
   //           );
@@ -725,16 +726,16 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   // };
 
   const sheetTypeMap = {
-    facility: t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES"),
-    boundary: t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA"),
-    user: t("HCM_ADMIN_CONSOLE_USER_LIST"),
+    facility: t(LOCALIZATION.HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES),
+    boundary: t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_DATA),
+    user: t(LOCALIZATION.HCM_ADMIN_CONSOLE_USER_LIST),
   };
 
   // const validateExcel = (selectedFile) => {
   //   return new Promise((resolve, reject) => {
   //     // Check if a file is selected
   //     if (!selectedFile) {
-  //       reject(t("HCM_FILE_UPLOAD_ERROR"));
+  //       reject(t(LOCALIZATION.HCM_FILE_UPLOAD_ERROR));
   //       return;
   //     }
 
@@ -784,8 +785,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   //         jsonData = jsonData.filter((element) => element);
   //         if (type === "boundary") {
-  //           if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-  //             const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+  //           if (workbook?.SheetNames.filter(sheetName => sheetName !== t(LOCALIZATION.HCM_ADMIN_CONSOLE_BOUNDARY_DATA)).length == 0) {
+  //             const errorMessage = t(LOCALIZATION.HCM_INVALID_BOUNDARY_SHEET);
   //             setErrorsType((prevErrors) => ({
   //               ...prevErrors,
   //               [type]: errorMessage,
@@ -795,8 +796,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //           }
   //         } else
   //         if (type === "facility") {
-  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
-  //             const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t(LOCALIZATION.HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES)).length == 0) {
+  //             const errorMessage = t(LOCALIZATION.HCM_INVALID_FACILITY_SHEET);
   //             setErrorsType((prevErrors) => ({
   //               ...prevErrors,
   //               [type]: errorMessage,
@@ -805,13 +806,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //             return;
   //           }
   //           if (type === "facility") {
-  //             const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
-  //             const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
+  //             const activeColumnName = t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITY_USAGE);
+  //             const uniqueIdentifierColumnName = t(LOCALIZATION.HCM_ADMIN_CONSOLE_FACILITY_CODE);
   //             if (activeColumnName && uniqueIdentifierColumnName) {
   //               jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
   //             }
   //             // if (jsonData.length == 0) {
-  //             //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+  //             //   const errorMessage = t(LOCALIZATION.HCM_FACILITY_USAGE_VALIDATION);
   //             //   setErrorsType((prevErrors) => ({
   //             //     ...prevErrors,
   //             //     [type]: errorMessage,
@@ -821,8 +822,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //             // }
   //           }
   //         } else if (type === "userWithBoundary") {
-  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
-  //             const errorMessage = t("HCM_INVALID_USER_SHEET");
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t(LOCALIZATION.HCM_ADMIN_CONSOLE_USER_LIST)).length == 0) {
+  //             const errorMessage = t(LOCALIZATION.HCM_INVALID_USER_SHEET);
   //             setErrorsType((prevErrors) => ({
   //               ...prevErrors,
   //               [type]: errorMessage,
@@ -838,7 +839,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //         } else if (type !== "boundary") {
   //           for (const header of expectedHeaders) {
   //             if (!headersToValidate.includes(header)) {
-  //               const errorMessage = t("HCM_MISSING_HEADERS");
+  //               const errorMessage = t(LOCALIZATION.HCM_MISSING_HEADERS);
   //               setErrorsType((prevErrors) => ({
   //                 ...prevErrors,
   //                 [type]: errorMessage,
@@ -856,7 +857,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //         }
 
   //         // if (jsonData.length == 0) {
-  //         //   const errorMessage = t("HCM_EMPTY_SHEET");
+  //         //   const errorMessage = t(LOCALIZATION.HCM_EMPTY_SHEET);
   //         //   setErrorsType((prevErrors) => ({
   //         //     ...prevErrors,
   //         //     [type]: errorMessage,
@@ -883,7 +884,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
-      setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
+      setShowToast({ key: "error", label: t(LOCALIZATION.HCM_ERROR_MORE_THAN_ONE_FILE) });
       return;
     }
     try {
@@ -893,14 +894,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
       if (!fileStoreIds || fileStoreIds.length === 0) {
         setUploadLoader(false);
-        setShowToast({ key: "error", label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED") });
-        throw new Error(t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED"));
+        setShowToast({ key: "error", label: t(LOCALIZATION.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED) });
+        throw new Error(t(LOCALIZATION.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED));
       }
       const filesArray = [fileStoreIds?.[0]?.fileStoreId];
       const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
       if (!fileUrl || fileUrl.length === 0) {
         setUploadLoader(false);
-        throw new Error(t("HCM_CONSOLE_ERROR_FILE_FETCH_FAILED"));
+        throw new Error(t(LOCALIZATION.HCM_CONSOLE_ERROR_FILE_FETCH_FAILED));
       }
       const fileData = fileUrl
         .map((i) => {
@@ -923,7 +924,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       setErrorsType(0);
       // const validate = await validateExcel(file[0]);
     } catch (error) {
-      setShowUploadToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD") });
+      setShowUploadToast({ key: "error", label: t(LOCALIZATION.HCM_ERROR_FILE_UPLOAD) });
     } finally {
       setUploadLoader(false);
     }
@@ -1000,7 +1001,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             if (!temp?.additionalDetails?.sheetErrors?.length) {
-              setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
+              setShowToast({ key: "success", label: t(LOCALIZATION.HCM_VALIDATION_COMPLETED) });
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
@@ -1015,7 +1016,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             } else {
               const processedFileStore = temp?.processedFilestoreId;
               if (!processedFileStore) {
-                setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
+                setShowToast({ key: "error", label: t(LOCALIZATION.HCM_VALIDATION_FAILED) });
                 // setIsValidation(true);
                 return;
               } else {
@@ -1037,17 +1038,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   .map(({ id, ...rest }) => rest);
                 // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
-                setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
+                setShowToast({ key: "warning", label: t(LOCALIZATION.HCM_CHECK_FILE_AGAIN) });
                 setIsError(true);
               }
             }
           } else {
             setLoader(false);
             setIsValidation(false);
-            // setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+            // setShowToast({ key: "error", label: t(LOCALIZATION.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+              setShowToast({ key: "error", label: t(LOCALIZATION.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
               return;
             } else {
               setIsError(true);
@@ -1068,7 +1069,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 .map(({ id, ...rest }) => rest);
               // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
-              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
+              setShowToast({ key: "warning", label: t(LOCALIZATION.HCM_CHECK_FILE_AGAIN), transitionTime: 5000000 });
               setIsError(true);
             }
           }
@@ -1113,17 +1114,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         onSuccess: async (result) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            setShowToast({ key: "error", label: t(LOCALIZATION.ERROR_WHILE_DOWNLOADING) });
             return;
           }
           if (result?.GeneratedResource?.[0]?.status === "inprogress") {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
             return;
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -1142,7 +1143,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
               const customFileName = parentId
-                ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}`
+                ? `${campaignName}_${t(LOCALIZATION.HCM_FILLED)}_${fileData[0].filename}`
                 : `${campaignName}_${fileData[0].filename}`;
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
               setDownloadedTemplates((prev) => ({
@@ -1152,17 +1153,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT) });
           }
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
           if (errorCode == "NativeIoException") {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
           } else {
             setDownloadError(true);
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            setShowToast({ key: "error", label: t(LOCALIZATION.ERROR_WHILE_DOWNLOADING) });
           }
         },
       }
@@ -1199,22 +1200,22 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const getDownloadLabel = () => {
     if (parentId) {
       if (type === "boundary") {
-        return t("WBH_DOWNLOAD_CURRENT_TARGET");
+        return t(LOCALIZATION.WBH_DOWNLOAD_CURRENT_TARGET);
       } else if (type === "facility") {
-        return t("WBH_DOWNLOAD_CURRENT_FACILITY");
+        return t(LOCALIZATION.WBH_DOWNLOAD_CURRENT_FACILITY);
       } else {
-        return t("WBH_DOWNLOAD_CURRENT_USER");
+        return t(LOCALIZATION.WBH_DOWNLOAD_CURRENT_USER);
       }
     } else {
-      return t("WBH_DOWNLOAD_TEMPLATE");
+      return t(LOCALIZATION.WBH_DOWNLOAD_TEMPLATE);
     }
   };
 
   return (
     <>
-      <div className="container-full">
-        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
-        {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
+      <div className="container-full upload-screen">
+        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t(LOCALIZATION.CAMPAIGN_VALIDATION_INPROGRESS)} />}
+        {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t(LOCALIZATION.CAMPAIGN_UPLOADING_FILE)} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
           <Card>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -1230,12 +1231,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facility" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+                {type === "boundary" ? t(LOCALIZATION.WBH_UPLOAD_TARGET) : type === "facility" ? t(LOCALIZATION.WBH_UPLOAD_FACILITY) : t(LOCALIZATION.WBH_UPLOAD_USER)}
               </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
-                {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facility" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+                {type === "boundary" ? t(LOCALIZATION.HCM_BOUNDARY_MESSAGE) : type === "facility" ? t(LOCALIZATION.HCM_FACILITY_MESSAGE) : t(LOCALIZATION.HCM_USER_MESSAGE)}
               </div>
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
@@ -1246,7 +1247,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 }}
                 variant="error"
                 style={{ marginLeft: "0rem", maxWidth: "100%" }}
-                label={t("HCM_ERROR")}
+                label={t(LOCALIZATION.HCM_ERROR)}
                 additionalElements={[
                   <React.Fragment key={type}>
                     {errorsType[type] && (
@@ -1295,18 +1296,18 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             footerclassName={"popUpFooter"}
             heading={
               type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                ? t(LOCALIZATION.ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER)
                 : type === "facility"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                ? t(LOCALIZATION.ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER)
+                : t(LOCALIZATION.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER)
             }
             children={[
               <div>
                 {type === "boundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  ? t(LOCALIZATION.ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT)
                   : type === "facility"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
+                  ? t(LOCALIZATION.ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT)
+                  : t(LOCALIZATION.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT)}
               </div>,
             ]}
             onOverlayClick={() => {
@@ -1317,7 +1318,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                label={t(LOCALIZATION.HCM_CAMPAIGN_UPLOAD_CANCEL)}
                 onClick={() => {
                   setShowPopUp(false);
                 }}
@@ -1328,7 +1329,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 variation={"primary"}
                 icon={"FileDownload"}
                 label={getDownloadLabel()}
-                title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                title={t(LOCALIZATION.HCM_CAMPAIGN_DOWNLOAD_TEMPLATE)}
                 onClick={() => {
                   downloadTemplate(), setShowPopUp(false);
                 }}

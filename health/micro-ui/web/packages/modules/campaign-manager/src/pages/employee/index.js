@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
@@ -157,12 +158,12 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
-      content: t("CAMPAIGN_HOME"),
+      content: t(LOCALIZATION.CAMPAIGN_HOME),
       show: true,
     },
     // {
     //   path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
-    //   content: t("MY_CAMPAIGN"),
+    //   content: t(LOCALIZATION.MY_CAMPAIGN),
     //   show:
     //     pathVar === "my-campaign" ||
     //     pathVar === "checklist/create" ||
@@ -174,22 +175,22 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     // },
     {
       path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
-      content: t("MY_CAMPAIGN"),
+      content: t(LOCALIZATION.MY_CAMPAIGN),
       show: pathVar === "my-campaign-new" || pathVar === "checklist/update" ? true : false,
     },
     {
       path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
-      content: t("CREATE_CAMPAIGN_HOME"),
+      content: t(LOCALIZATION.CREATE_CAMPAIGN_HOME),
       show: pathVar.match("campaign-home") || pathVar.match("create-campaign") ? true : false,
     },
     {
       path: "",
-      content: t("CREATE_CAMPAIGN"),
+      content: t(LOCALIZATION.CREATE_CAMPAIGN),
       show: pathVar.match("create-campaign") || pathVar === "view-details" ? true : false,
     },
     {
       path: pathVar === "view-details" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
-      content: t("VIEW_DETAILS"),
+      content: t(LOCALIZATION.VIEW_DETAILS),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
         pathVar.match("view-details") ||
@@ -206,64 +207,64 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
-      content: t("UPDATE_DATE_CHANGE"),
+      content: t(LOCALIZATION.UPDATE_DATE_CHANGE),
       show: pathVar === "update-dates-boundary" ? true : false,
     },
     {
       path: pathVar === "checklist/search" ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
-      content: t("ACTION_LABEL_CONFIGURE_APP"),
+      content: t(LOCALIZATION.ACTION_LABEL_CONFIGURE_APP),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&name=${name}&campaignId=${campaignId}&projectType=${projectType}&role=${role}`,
       show: pathVar === "checklist/search" || pathVar === "checklist/create" || pathVar === "checklist/view" ? true : false,
     },
     {
       path: "",
-      content: t("ACTION_CREATE_CHECKLIST"),
+      content: t(LOCALIZATION.ACTION_CREATE_CHECKLIST),
       show: pathVar === "checklist/create" ? true : false,
     },
     {
       path: "",
-      content: t("ACTION_UPLOAD_SCREEN"),
+      content: t(LOCALIZATION.ACTION_UPLOAD_SCREEN),
       show: pathVar === "upload-screen" ? true : false,
     },
     {
       path: "",
-      content: t("ACTION_VIEW_CHECKLIST"),
+      content: t(LOCALIZATION.ACTION_VIEW_CHECKLIST),
       show: pathVar === "checklist/view" ? true : false,
     },
     {
       path: "",
-      content: t("ACTION_UPDATE_CHECKLIST"),
+      content: t(LOCALIZATION.ACTION_UPDATE_CHECKLIST),
       show: pathVar === "checklist/update" ? true : false,
     },
     {
       path: pathVar === "boundary/home" ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
-      content: t("BOUNDARY_DATA_MANAGEMENT"),
+      content: t(LOCALIZATION.BOUNDARY_DATA_MANAGEMENT),
       show: pathVar.match("boundary/") ? true : false,
     },
     {
       path: pathVar === "update-campaign" ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
-      content: t("UPDATE_CAMPAIGN"),
+      content: t(LOCALIZATION.UPDATE_CAMPAIGN),
       show: pathVar.match("update-campaign") ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      content: t("CREATE_NEW_CAMPAIGN"),
+      content: t(LOCALIZATION.CREATE_NEW_CAMPAIGN),
       show: pathVar === "setup-campaign" ? true : false,
     },
     {
       path: pathVar === "app-modules" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
-      content: t("APP_CONFIGURATION"),
+      content: t(LOCALIZATION.APP_CONFIGURATION),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&projectType=${projectType}`,
       show: pathVar === "app-modules" || pathVar === "app-configuration-redesign" ? true : false,
     },
     {
       path: "",
-      content: t("APP_FEATURES"),
+      content: t(LOCALIZATION.APP_FEATURES),
       show: pathVar === "app-features" ? true : false,
     },
     {
       path: "",
-      content: t("APP_CONFIGURATION_REDESIGN"),
+      content: t(LOCALIZATION.APP_CONFIGURATION_REDESIGN),
       show: pathVar === "app-configuration-redesign" ? true : false,
     },
   ];

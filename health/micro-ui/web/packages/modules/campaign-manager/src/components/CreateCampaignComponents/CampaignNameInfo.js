@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertCard , Loader } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 
 const CampaignNameInfo = () => {
@@ -30,7 +31,7 @@ const CampaignNameInfo = () => {
 
   return (
     <AlertCard
-            label={t("CONSOLE_NAMING_CONVENTION")}
+            label={t(LOCALIZATION.CONSOLE_NAMING_CONVENTION)}
             style={{ width: "100%", maxWidth: "unset" }}
             additionalElements={[
               <div className="campaign-name-parent-container">

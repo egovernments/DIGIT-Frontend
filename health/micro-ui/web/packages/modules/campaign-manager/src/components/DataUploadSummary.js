@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { useNavigate } from "react-router-dom";
 import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
@@ -192,10 +193,10 @@ const DataUploadSummary = (props) => {
                     props: {
                       documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
                     },
-                    cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: t(LOCALIZATION.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -213,10 +214,10 @@ const DataUploadSummary = (props) => {
                     props: {
                       documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                     },
-                    cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: t(LOCALIZATION.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -234,10 +235,10 @@ const DataUploadSummary = (props) => {
                     props: {
                       documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                     },
-                    cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: t(LOCALIZATION.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(LOCALIZATION.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -307,11 +308,11 @@ const DataUploadSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(LOCALIZATION.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(LOCALIZATION.HCM_UPLOAD_DATA)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
@@ -326,10 +327,10 @@ const DataUploadSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(LOCALIZATION.HCM_DATA_UPLOAD_SUMMARY)}</HeaderComponent>
             {/* {userCredential && (
           <Button
-            label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+            label={t(LOCALIZATION.CAMPAIGN_DOWNLOAD_USER_CRED)}
             variation="secondary"
             icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
             type="button"

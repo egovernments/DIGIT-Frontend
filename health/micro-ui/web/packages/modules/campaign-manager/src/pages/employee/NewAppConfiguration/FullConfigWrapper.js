@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
@@ -86,11 +87,11 @@ const FullConfigWrapper = () => {
             setSelectedPageName(firstFlow.indexRoute || firstFlow.pages?.[0]?.name);
           }
         } else {
-          setError(t("APP_CONFIG_NO_FLOW_CONFIG_FOUND"));
+          setError(t(LOCALIZATION.APP_CONFIG_NO_FLOW_CONFIG_FOUND));
         }
       } catch (err) {
         console.error("Error fetching flow config:", err);
-        setError(t("APP_CONFIG_FAILED_TO_FETCH_FLOW_CONFIG"));
+        setError(t(LOCALIZATION.APP_CONFIG_FAILED_TO_FETCH_FLOW_CONFIG));
       } finally {
         setIsLoading(false);
       }
@@ -241,8 +242,8 @@ const FullConfigWrapper = () => {
   if (error || !flowConfig) {
     return (
       <div className="full-config-wrapper__error-container">
-        <h2>{t("APP_CONFIG_ERROR")}</h2>
-        <p>{error || t("APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG")}</p>
+        <h2>{t(LOCALIZATION.APP_CONFIG_ERROR)}</h2>
+        <p>{error || t(LOCALIZATION.APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG)}</p>
       </div>
     );
   }
@@ -261,7 +262,7 @@ const FullConfigWrapper = () => {
         <Button
           variation="secondary"
           icon="ArrowBack"
-          label={t("BACK_TO_MODULES")}
+          label={t(LOCALIZATION.BACK_TO_MODULES)}
           className="full-config-wrapper__back-button"
           onClick={() => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
@@ -281,7 +282,7 @@ const FullConfigWrapper = () => {
             onClick={() => handleToggleSidePanel("roles")}
           >
             <SVG.Person fill="#0B4B66" />
-            <span>{t("APP_CONFIG_ROLES")}</span>
+            <span>{t(LOCALIZATION.APP_CONFIG_ROLES)}</span>
           </div>
 
           <div
@@ -291,7 +292,7 @@ const FullConfigWrapper = () => {
             onClick={() => handleToggleSidePanel("flows")}
           >
             <Earbuds fill="#0B4B66" />
-            <span>{t("APP_CONFIG_FLOWS")}</span>
+            <span>{t(LOCALIZATION.APP_CONFIG_FLOWS)}</span>
           </div>
         </div>
 
@@ -308,7 +309,7 @@ const FullConfigWrapper = () => {
               }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
-                <div className="full-config-wrapper__slide-panel-title">{t("APP_CONFIG_ROLES")}</div>
+                <div className="full-config-wrapper__slide-panel-title">{t(LOCALIZATION.APP_CONFIG_ROLES)}</div>
                 <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
                   <SVG.Close fill="#787878" />
                 </button>
@@ -320,7 +321,7 @@ const FullConfigWrapper = () => {
                   </div>
                 ))
               ) : (
-                <div className="full-config-wrapper__no-roles">{t("APP_CONFIG_NO_ROLES_ASSIGNED")}</div>
+                <div className="full-config-wrapper__no-roles">{t(LOCALIZATION.APP_CONFIG_NO_ROLES_ASSIGNED)}</div>
               )}
             </div>
           </div>
@@ -339,7 +340,7 @@ const FullConfigWrapper = () => {
               }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
-                <div className="full-config-wrapper__slide-panel-title">{t("APP_CONFIG_FLOWS")}</div>
+                <div className="full-config-wrapper__slide-panel-title">{t(LOCALIZATION.APP_CONFIG_FLOWS)}</div>
                 <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
                   <SVG.Close fill="#787878" />
                 </button>
@@ -444,7 +445,7 @@ const FullConfigWrapper = () => {
         <div className="full-config-wrapper__bottom-nav">
           <Button
             variation="secondary"
-            label={t("BACK")}
+            label={t(LOCALIZATION.BACK)}
             icon="ArrowBack"
             onClick={() => {
               // Handle back navigation - could go to module selection or previous screen
@@ -453,7 +454,7 @@ const FullConfigWrapper = () => {
           />
           <Button
             variation="primary"
-            label={t("PROCEED_TO_PREVIEW")}
+            label={t(LOCALIZATION.PROCEED_TO_PREVIEW)}
             icon="ArrowForward"
             isSuffix={true}
             onClick={() => {

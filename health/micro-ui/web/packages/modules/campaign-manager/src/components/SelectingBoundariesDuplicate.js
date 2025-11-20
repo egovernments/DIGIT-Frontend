@@ -5,6 +5,7 @@ import { Wrapper } from "./SelectingBoundaryComponent";
 import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -191,12 +192,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               {/* Commenting Cancel Campaign feature */}
               {/* {isDraftCampaign ? (
                 <div className="digit-tag-container" style={{ margin: "0rem" }}>
-                  <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+                  <Chip text={`${t(LOCALIZATION.CANCEL_CAMPAIGN)}`} onClick={handleCancelClick} hideClose={false} />
                 </div>
               ) : null} */}
             </div>
-            <HeaderComponent className="select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
-            <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+            <HeaderComponent className="select-boundary">{t(LOCALIZATION.CAMPAIGN_SELECT_BOUNDARY)}</HeaderComponent>
+            <p className="dates-description">{t(LOCALIZATION.CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION)}</p>
             <Wrapper
               hierarchyType={hierarchyType}
               lowest={lowestHierarchy}
@@ -218,7 +219,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             style={{ margin: "0rem", maxWidth: "100%", marginTop: "1.5rem", marginBottom: "2rem" }}
             additionalElements={[
               <span style={{ color: "#505A5F" }}>
-                {t("HCM_BOUNDARY_INFO")}
+                {t(LOCALIZATION.HCM_BOUNDARY_INFO)}
                 &nbsp;
                 <a href={`mailto:${mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
                   {mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}
@@ -233,10 +234,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(LOCALIZATION.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -250,7 +251,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
               onClick={() => {
                 checkDataPresent({ action: false });
               }}
@@ -259,7 +260,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
               onClick={() => {
                 checkDataPresent({ action: true });
               }}

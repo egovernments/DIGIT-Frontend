@@ -2,6 +2,7 @@ import React, { useState, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button,  Loader } from "@egovernments/digit-ui-components";
 import { Close,TutorialGuide } from "@egovernments/digit-ui-svg-components";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const SampleHelpContent = [
   {
@@ -124,7 +125,7 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
         <div className="tutorial-header">
           <span style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
             <TutorialGuide />
-            {t("EXPLORE_TUTORIALS")}
+            {t(LOCALIZATION.EXPLORE_TUTORIALS)}
           </span>
           <Close className="tutorial-close"  height="32" width="32" fill="#0B0C0C" onClick={handleClose}  />
         </div>

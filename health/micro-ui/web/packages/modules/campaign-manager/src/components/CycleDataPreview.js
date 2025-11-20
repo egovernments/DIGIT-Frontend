@@ -1,6 +1,7 @@
 import { Row } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import DetailsTable from "./DetailsTable";
 import { Button, AlertCard , Card } from "@egovernments/digit-ui-components";
 
@@ -17,7 +18,7 @@ const Tabs = ({ deliveryData, onTabChange }) => {
           className={`campaign-sub-tab-head ${_.active === true ? "active" : ""} hover`}
           onClick={() => onTabChange(_.deliveryIndex, index)}
         >
-          {t(`CAMPAIGN_DELIVERY`)} {index + 1}
+          {t(LOCALIZATION.CAMPAIGN_DELIVERY)} {index + 1}
         </button>
       ))}
     </div>
@@ -67,8 +68,8 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
       <div className="employee-data-table ">
         {data?.startDate && (
           <Row
-            key={t("startDate")}
-            label={`${t("Start Date")}`}
+            key={t(LOCALIZATION.START_DATE_KEY)}
+            label={`${t(LOCALIZATION.START_DATE_LABEL)}`}
             text={data?.startDate}
             className="border-none"
             rowContainerStyle={{ display: "flex" }}
@@ -77,8 +78,8 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
         )}
         {data?.endDate && (
           <Row
-            key={t("endDate")}
-            label={`${t("End Date")}`}
+            key={t(LOCALIZATION.END_DATE_KEY)}
+            label={`${t(LOCALIZATION.END_DATE_LABEL)}`}
             text={data?.endDate}
             className="border-none"
             rowContainerStyle={{ display: "flex" }}
@@ -98,18 +99,18 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
               {rules?.attributes?.length > 0 && (
                 <DetailsTable
                   className="campaign-attribute-table"
-                  cardHeader={{ value: `${t("CAMPAIGN_CONDITION")} ${ruleIndex + 1}` }}
+                  cardHeader={{ value: `${t(LOCALIZATION.CAMPAIGN_CONDITION)} ${ruleIndex + 1}` }}
                   columnsData={[
                     {
-                      Header: t("CAMPAIGN_ATTRIBUTE_LABEL"),
+                      Header: t(LOCALIZATION.CAMPAIGN_ATTRIBUTE_LABEL),
                       accessor: "attribute",
                     },
                     {
-                      Header: t("CAMPAIGN_OPERATOR_LABEL"),
+                      Header: t(LOCALIZATION.CAMPAIGN_OPERATOR_LABEL),
                       accessor: "operator",
                     },
                     {
-                      Header: t("CAMPAIGN_VALUE_LABEL"),
+                      Header: t(LOCALIZATION.CAMPAIGN_VALUE_LABEL),
                       accessor: "value",
                     },
                   ]}
@@ -122,11 +123,11 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
                   // cardHeader={{ value: "Product Details" }}
                   columnsData={[
                     {
-                      Header: t("CAMPAIGN_PRODUCT_LABEL"),
+                      Header: t(LOCALIZATION.CAMPAIGN_PRODUCT_LABEL),
                       accessor: "name",
                     },
                     {
-                      Header: t("CAMPAIGN_COUNT_LABEL"),
+                      Header: t(LOCALIZATION.CAMPAIGN_COUNT_LABEL),
                       accessor: "quantity",
                     },
                   ]}

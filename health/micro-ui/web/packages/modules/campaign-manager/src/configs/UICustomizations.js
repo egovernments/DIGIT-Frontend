@@ -20,6 +20,7 @@ import {
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import CloneCampaignWrapper from "../components/CloneCampaignWrapper";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -123,7 +124,7 @@ export const UICustomizations = {
           return row?.ServiceRequest?.[0] ? (
             <Switch isCheckedInitially={row?.ServiceRequest?.[0]?.isActive} label={switchText} onToggle={toggle} />
           ) : (
-            <>{t("CHECKLIST_TOBE_CONFIGURED")}</>
+            <>{t(LOCALIZATION.CHECKLIST_TOBE_CONFIGURED)}</>
           );
         case "CHECKLIST_LAST_UPDATE":
           const lastModDate =
@@ -143,7 +144,7 @@ export const UICustomizations = {
                 style={{ width: "8rem" }}
                 // icon="View"
                 variation="secondary"
-                label={t("HCM_CHECKLIST_VIEW")}
+                label={t(LOCALIZATION.HCM_CHECKLIST_VIEW)}
                 onClick={() => {
                   navigate(
                     `/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
@@ -159,7 +160,7 @@ export const UICustomizations = {
                 style={{ width: "8rem" }}
                 // icon="View"
                 variation="secondary"
-                label={t("HCM_CHECKLIST_CREATE")}
+                label={t(LOCALIZATION.HCM_CHECKLIST_CREATE)}
                 onClick={() => {
                   navigate(
                     `/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
@@ -295,7 +296,7 @@ export const UICustomizations = {
                 size={"medium"}
                 icon={"DownloadIcon"}
                 variation={"secondary"}
-                label={t("DOWNLOAD")}
+                label={t(LOCALIZATION.DOWNLOAD)}
                 onClick={() => {
                   downloadExcelTemplate();
                 }}
@@ -335,7 +336,7 @@ export const UICustomizations = {
           } else {
             return (
               <div>
-                <p>{t("NA")}</p>
+                <p>{t(LOCALIZATION.NA)}</p>
               </div>
             );
           }
@@ -346,7 +347,7 @@ export const UICustomizations = {
           } else {
             return (
               <div>
-                <p>{t("NA")}</p>
+                <p>{t(LOCALIZATION.NA)}</p>
               </div>
             );
           }
@@ -490,7 +491,7 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(LOCALIZATION.ES_COMMON_NA))}
               </Link>
             </span>
           );
@@ -510,13 +511,13 @@ export const UICustomizations = {
                 label={"Action"}
                 options={[
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t(LOCALIZATION.ACTION_LABEL_UPDATE_DATES) }]
                     : []),
-                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
-                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t(LOCALIZATION.ACTION_LABEL_CONFIGURE_APP) },
+                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(LOCALIZATION.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t(LOCALIZATION.CREATE_COPY) },
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t(LOCALIZATION.ACTION_LABEL_UPDATE_BOUNDARY_DETAILS) }]
                     : []),
                 ]}
                 optionsKey="i18nKey"
@@ -527,7 +528,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(LOCALIZATION.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
@@ -650,7 +651,7 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(LOCALIZATION.ES_COMMON_NA))}
               </Link>
             </span>
           );
@@ -669,8 +670,8 @@ export const UICustomizations = {
                 variation="secondary"
                 label={"Action"}
                 options={[
-                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 1, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(LOCALIZATION.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 1, code: "CREATE_COPY", i18nKey: t(LOCALIZATION.CREATE_COPY) },
                 ]}
                 optionsKey="i18nKey"
                 showBottom={true}
@@ -680,7 +681,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(LOCALIZATION.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
@@ -847,7 +848,7 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(LOCALIZATION.ES_COMMON_NA))}
               </Link>
             </span>
           );
@@ -867,13 +868,13 @@ export const UICustomizations = {
                 label={"Action"}
                 options={[
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t(LOCALIZATION.ACTION_LABEL_UPDATE_DATES) }]
                     : []),
-                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
-                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t(LOCALIZATION.ACTION_LABEL_CONFIGURE_APP) },
+                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(LOCALIZATION.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t(LOCALIZATION.CREATE_COPY) },
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t(LOCALIZATION.ACTION_LABEL_UPDATE_BOUNDARY_DETAILS) }]
                     : []),
                 ]}
                 optionsKey="i18nKey"
@@ -884,7 +885,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(LOCALIZATION.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
@@ -985,12 +986,12 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(LOCALIZATION.ES_COMMON_NA))}
               </Link>
             </span>
           );
         case "CM_DRAFT_TYPE":
-          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+          return value ? t(LOCALIZATION.CM_UPDATE_REQUEST) : t(LOCALIZATION.CM_CREATE_REQUEST);
         case "CAMPAIGN_LAST_UPDATE":
           return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
@@ -1085,12 +1086,12 @@ export const UICustomizations = {
                   row.tenantId
                 }&draft=${true}`}
               >
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(LOCALIZATION.ES_COMMON_NA))}
               </Link>
             </span>
           );
         case "CM_DRAFT_TYPE":
-          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+          return value ? t(LOCALIZATION.CM_UPDATE_REQUEST) : t(LOCALIZATION.CM_CREATE_REQUEST);
         case "CAMPAIGN_LAST_UPDATE":
           return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
@@ -1200,12 +1201,12 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(LOCALIZATION.ES_COMMON_NA))}
               </Link>
             </span>
           );
         case "CM_DRAFT_TYPE":
-          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+          return value ? t(LOCALIZATION.CM_UPDATE_REQUEST) : t(LOCALIZATION.CM_CREATE_REQUEST);
         case "CAMPAIGN_LAST_UPDATE":
           return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
@@ -1221,8 +1222,8 @@ export const UICustomizations = {
                 variation="secondary"
                 label={"Action"}
                 options={[
-                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  // { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }, // disabling in UI Since it is just beta functionality
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(LOCALIZATION.ACTION_LABEL_VIEW_TIMELINE) },
+                  // { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t(LOCALIZATION.ACTION_LABEL_RETRY) }, // disabling in UI Since it is just beta functionality
                 ].filter((obj) => Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"] || obj?.key != 2))} //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
                 showBottom={true}
@@ -1232,7 +1233,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(LOCALIZATION.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >

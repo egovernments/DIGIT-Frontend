@@ -1,6 +1,7 @@
 import { Card, LabelFieldPair, Row } from "@egovernments/digit-ui-react-components";
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import DetailsTable from "./DetailsTable";
 
 function mergeObjects(item) {
@@ -42,7 +43,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
     <>
       <Row
         key={item?.cycleNumber}
-        label={`${t("CYCLE_NUMBER")}`}
+        label={`${t(LOCALIZATION.CYCLE_NUMBER)}`}
         text={item?.cycleNumber}
         className="border-none"
         rowContainerStyle={{ display: "flex", marginBottom: "1rem" }}
@@ -51,7 +52,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
       />
       <Row
         key={item?.deliveryNumber}
-        label={`${t("DELIVERY_NUMBER")}`}
+        label={`${t(LOCALIZATION.DELIVERY_NUMBER)}`}
         text={item?.deliveryNumber}
         className="border-none"
         rowContainerStyle={{ display: "flex", marginBottom: "1rem" }}
@@ -59,24 +60,24 @@ const CycleDetaisPreview = ({ data, items, index }) => {
         textStyle={{ width: "60%" }}
       />
       {/* <LabelFieldPair>
-        <span>{`${t("CYCLE_NUMBER")}`}</span>
+        <span>{`${t(LOCALIZATION.CYCLE_NUMBER)}`}</span>
         <span>{item?.cycleNumber}</span>
       </LabelFieldPair>
       <LabelFieldPair>
-        <span>{`${t("DELIVERY_NUMBER")}`}</span>
+        <span>{`${t(LOCALIZATION.DELIVERY_NUMBER)}`}</span>
         <span>{item?.deliveryNumber}</span>
       </LabelFieldPair> */}
       {item?.startDate || item?.endDate ? (
         <Card className="card-with-background" style={{ maxWidth: "45%", marginLeft: "0px" }}>
           <div className="card-head">
             <h2>
-              {t(`CYCLE`)} {item?.cycleNumber}
+              {t(LOCALIZATION.CYCLE)} {item?.cycleNumber}
             </h2>
           </div>
           {item?.startDate && (
             <Row
               key={t(item?.startDate)}
-              label={`${t("Start Date")}`}
+              label={`${t(LOCALIZATION.START_DATE_LABEL)}`}
               text={Digit.Utils.date.convertEpochToDate(item?.startDate)}
               className="border-none"
               rowContainerStyle={{ display: "flex" }}
@@ -86,7 +87,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
           {item?.endDate && (
             <Row
               key={t(item?.endDate)}
-              label={`${t("End Date")}`}
+              label={`${t(LOCALIZATION.END_DATE_LABEL)}`}
               text={Digit.Utils.date.convertEpochToDate(item?.endDate)}
               className="border-none"
               rowContainerStyle={{ display: "flex" }}
@@ -103,15 +104,15 @@ const CycleDetaisPreview = ({ data, items, index }) => {
             cardHeader={{ value: "Condition" }}
             columnsData={[
               {
-                Header: t("Attribute"),
+                Header: t(LOCALIZATION.ATTRIBUTE),
                 accessor: "attribute",
               },
               {
-                Header: t("Operator"),
+                Header: t(LOCALIZATION.OPERATOR),
                 accessor: "operator",
               },
               {
-                Header: t("Value"),
+                Header: t(LOCALIZATION.VALUE),
                 accessor: "value",
               },
             ]}
@@ -124,11 +125,11 @@ const CycleDetaisPreview = ({ data, items, index }) => {
             // cardHeader={{ value: "Product Details" }}
             columnsData={[
               {
-                Header: t("Product"),
+                Header: t(LOCALIZATION.PRODUCT),
                 accessor: "name",
               },
               {
-                Header: t("Count"),
+                Header: t(LOCALIZATION.COUNT),
                 accessor: "quantity",
               },
             ]}

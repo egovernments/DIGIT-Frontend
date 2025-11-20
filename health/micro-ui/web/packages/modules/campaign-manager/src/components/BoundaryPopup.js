@@ -2,6 +2,7 @@ import React from "react";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const BoundaryPopup = ({ showPopUp, setShowPopUp, data }) => {
   const { t } = useTranslation();
@@ -11,7 +12,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data }) => {
       <PopUp
         className={"custom-popup-boundary"}
         type={"default"}
-        heading={t("CHOOSE_MEANS_TO_CREATE_BOUNDARY")}
+        heading={t(LOCALIZATION.CHOOSE_MEANS_TO_CREATE_BOUNDARY)}
         children={[]}
         onClose={() => {
           setShowPopUp(false);
@@ -29,7 +30,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data }) => {
             size={"large"}
             isDisabled={Object.keys(data?.defaultBoundaryData || {})?.length == 0}
             variation={"secondary"}
-            label={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
+            label={t(LOCALIZATION.GET_BOUNDARY_DATA_FROM_GEOPODE)}
             onClick={() => {
               navigate(
                 `/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${
@@ -44,7 +45,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data }) => {
             type={"button"}
             size={"large"}
             variation={"secondary"}
-            label={t("CREATE_MY_OWN_BOUNDARY_DATA")}
+            label={t(LOCALIZATION.CREATE_MY_OWN_BOUNDARY_DATA)}
             onClick={() => {
               navigate(
                 `/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${

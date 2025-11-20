@@ -1,14 +1,15 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { FieldV1, Card, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const CycleSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const [selectedOption, setSelectedOption] = useState(formData?.CycleSelection);
 
   const options = [
-    { code: "HCM_SINGLE_ROUND", name: t("HCM_SINGLE_ROUND") },
-    { code: "HCM_MULTI_ROUND", name: t("HCM_MULTI_ROUND") },
+    { code: "HCM_SINGLE_ROUND", name: t(LOCALIZATION.HCM_SINGLE_ROUND) },
+    { code: "HCM_MULTI_ROUND", name: t(LOCALIZATION.HCM_MULTI_ROUND) },
   ];
 
 useEffect(()=>{

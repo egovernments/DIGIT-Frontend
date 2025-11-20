@@ -1,5 +1,6 @@
 import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup } from "./redux/remoteConfigSlice";
@@ -74,7 +75,7 @@ const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t 
   return (
     <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
       <div className="">
-        <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+        <span>{`${t(LOCALIZATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
       </div>
       <TextInput
         name={`footerLabel-${index}`}
@@ -162,7 +163,7 @@ function NewAppFieldScreenWrapper() {
   if (!currentCard) {
     return (
       <div style={{ padding: "16px" }}>
-        <p>{t("APP_CONFIG_NO_CONFIGURATION_DATA_AVAILABLE")}</p>
+        <p>{t(LOCALIZATION.APP_CONFIG_NO_CONFIGURATION_DATA_AVAILABLE)}</p>
       </div>
     );
   }
@@ -170,8 +171,8 @@ function NewAppFieldScreenWrapper() {
   return (
     <React.Fragment>
       <div className="app-config-drawer-subheader">
-        <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
+        <div>{t(LOCALIZATION.APPCONFIG_HEAD_FIELDS)}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(LOCALIZATION.TIP_APPCONFIG_HEAD_FIELDS)} />
       </div>
       <Divider />
       {/* Heading Field */}
@@ -198,8 +199,8 @@ function NewAppFieldScreenWrapper() {
       />
       <Divider />
       <div className="app-config-drawer-subheader">
-        <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+        <div> {t(LOCALIZATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(LOCALIZATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
       </div>
       {currentCard?.body?.map((section, index, card) => {
 
@@ -241,7 +242,7 @@ function NewAppFieldScreenWrapper() {
               size={"medium"}
               icon={"AddIcon"}
               variation={"teritiary"}
-              label={t("ADD_FIELD")}
+              label={t(LOCALIZATION.ADD_FIELD)}
               onClick={() => handleAddField(currentCard, card[index])}
             />)}
           </Fragment>
@@ -252,8 +253,8 @@ function NewAppFieldScreenWrapper() {
         <>
           <Divider className="app-config-drawer-action-divider" />
           <div className="app-config-drawer-subheader">
-            <div>{t("NAVIGATION_LOGIC")}</div>
-            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
+            <div>{t(LOCALIZATION.NAVIGATION_LOGIC)}</div>
+            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(LOCALIZATION.TIP_NAVIGATION_LOGIC)} />
           </div>
           <NewNavigationLogicWrapper t={t} />
         </>
@@ -264,14 +265,14 @@ function NewAppFieldScreenWrapper() {
           type={"button"}
           size={"large"}
           variation={"primary"}
-          label={t("ADD_SECTION")}
+          label={t(LOCALIZATION.ADD_SECTION)}
           onClick={handleAddSection}
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
       <div className="app-config-drawer-subheader">
-        <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+        <div>{t(LOCALIZATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(LOCALIZATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
       </div>
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&

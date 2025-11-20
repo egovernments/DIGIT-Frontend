@@ -2,7 +2,7 @@ import { CloseSvg } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useMemo, useState, useRef } from "react";
 import { TextInput, Tooltip, CheckBox, Button, FieldV1 } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
-
+import { LOCALIZATION } from "../constants/localizationConstants";
 import CreateQuestion from "./CreateQuestion";
 
 const Dropdowns = ({
@@ -100,7 +100,7 @@ const Dropdowns = ({
           className="custom-class"
           icon="AddIcon"
           iconFill=""
-          label={`${t("ADD_OPTIONS")} ${questionNumber}`}
+          label={`${t(LOCALIZATION.ADD_OPTIONS)} ${questionNumber}`}
           onClick={() => addOption()}
           size="medium"
           title=""
@@ -230,7 +230,7 @@ const DropdownOption = ({
                 disabled={optionDependency ? true : false}
                 // styles={{ margin: "0px 0px 0px", maxWidth: "70%",  }}
                 // className={"digit-checkbox-containe  r"}
-                label={t("ADD_COMMENT_(OR)")}
+                label={t(LOCALIZATION.ADD_COMMENT_OR)}
                 checked={optionComment}
                 onChange={(event) => handleOptionComment(optionId)}
                 // isLabelFirst={true}
@@ -246,7 +246,7 @@ const DropdownOption = ({
                 disabled={optionComment ? true : false || subQlevel>=maxDepth+1}
                 // styles={{ margin: "0px 0px 0px", maxWidth: "70%",  }}
                 // className={"digit-checkbox-containe  r"}
-                label={t("LINK_NESTED_CHECKLIST")}
+                label={t(LOCALIZATION.LINK_NESTED_CHECKLIST)}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}
                 // isLabelFirst={true}
@@ -257,13 +257,13 @@ const DropdownOption = ({
           {!dis && !disableDelete && (
             // <div className="pointer"  onClick={() => removeOption(index)}>
             //   <DustbinIcon />
-            //   {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+            //   {t(LOCALIZATION.CAMPAIGN_DELETE_ROW_TEXT)}
             // </div>
             <Button
               // className="custom-class"
               icon="Delete"
               iconFill=""
-              label={t(`DELETE`)}
+              label={t(LOCALIZATION.DELETE)}
               onClick={() => removeOption(index)}
               size="medium"
               style={{}}

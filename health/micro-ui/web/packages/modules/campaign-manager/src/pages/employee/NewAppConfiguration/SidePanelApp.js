@@ -5,6 +5,7 @@ import NewAppFieldScreenWrapper from "./NewAppFieldScreenWrapper";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { deselectField } from "./redux/remoteConfigSlice";
 import { useDispatch } from "react-redux";
 
@@ -27,7 +28,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
       footer={[]}
       header={[
         <div className="typography heading-m" style={{ color: "#0B4B66" }}>
-          {t("FIELD_CONFIGURATION")}
+          {t(LOCALIZATION.FIELD_CONFIGURATION)}
         </div>,
       ]}
       hideScrollIcon
@@ -42,8 +43,8 @@ const SidePanelApp = ({ showPanelProperties }) => {
           <Button
             className=""
             variation="secondary"
-            label={t("BACK")}
-            title={t("BACK")}
+            label={t(LOCALIZATION.BACK)}
+            title={t(LOCALIZATION.BACK)}
             icon="ArrowBack"
             size="small"
             onClick={handleBackClick}

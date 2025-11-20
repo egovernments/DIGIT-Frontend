@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import FinalPopup from "../../components/FinalPopup";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const BoundaryRelationCreate = () => {
   const { t } = useTranslation();
@@ -169,11 +170,11 @@ const BoundaryRelationCreate = () => {
 
   const downloadExcelTemplate = async () => {
     try {
-      setShowToast({ label: t("TEMPLATE_GENERATION_IN_PROGRESS"), isError: "info" });
+      setShowToast({ label: t(LOCALIZATION.TEMPLATE_GENERATION_IN_PROGRESS), isError: "info" });
 
       const fid = await pollForTemplateGeneration();
       setFileStoreId(fid);
-      setShowToast({ label: t("TEMPLATE_GENERATED_SUCCESSFULLY"), isError: "success" });
+      setShowToast({ label: t(LOCALIZATION.TEMPLATE_GENERATED_SUCCESSFULLY), isError: "success" });
       return fid;
     } catch (error) {
       let errorMessage;
@@ -237,7 +238,7 @@ const BoundaryRelationCreate = () => {
 
           if (status === "completed") {
             cleanup();
-            setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+            setShowToast({ label: `${t(LOCALIZATION.WBH_HIERARCHY_STATUS_COMPLETED)}`, isError: "success" });
             resolve(true);
             return; // Add explicit return to stop further execution
           }
@@ -305,9 +306,9 @@ const BoundaryRelationCreate = () => {
       let label;
 
       if (error.message === "Polling timeout" || error.message === "Max retries reached") {
-        label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
+        label = `${t(LOCALIZATION.WBH_BOUNDARY_CREATION_TIMEOUT)}: ${t(LOCALIZATION.WBH_OPERATION_INCOMPLETE)}`;
       } else {
-        label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+        label = `${t(LOCALIZATION.WBH_BOUNDARY_CREATION_FAIL)}: `;
         // if (error?.message) label += `${t(error?.message)}`;
       }
 
@@ -328,7 +329,7 @@ const BoundaryRelationCreate = () => {
     try {
       setCreatingData(true);
       setShowToast({
-        label: t("HIERARCHY_PLEASE_WAIT"),
+        label: t(LOCALIZATION.HIERARCHY_PLEASE_WAIT),
         isError: "info",
         transitionTime: 100000,
       });
@@ -350,7 +351,7 @@ const BoundaryRelationCreate = () => {
 
       const localisationResult = await localisationMutateAsync(local);
       if (!localisationResult.success) {
-        setShowToast({ label: t("BOUNDARY_LOCALISATION_ERROR"), isError: "error" });
+        setShowToast({ label: t(LOCALIZATION.BOUNDARY_LOCALISATION_ERROR), isError: "error" });
       }
 
       const res = await callCreate();
@@ -368,7 +369,7 @@ const BoundaryRelationCreate = () => {
       }
 
       setShowToast({
-        label: t("HIERARCHY_CREATED_SUCCESSFULLY"),
+        label: t(LOCALIZATION.HIERARCHY_CREATED_SUCCESSFULLY),
         isError: "success",
       });
 
@@ -381,8 +382,8 @@ const BoundaryRelationCreate = () => {
     } catch (error) {
       const errorMessage =
         error.message === "LEVELS_CANNOT_BE_EMPTY"
-          ? t("LEVELS_CANNOT_BE_EMPTY")
-          : t(error?.response?.data?.Errors?.[0]?.code) || t("HIERARCHY_CREATION_FAILED");
+          ? t(LOCALIZATION.LEVELS_CANNOT_BE_EMPTY)
+          : t(error?.response?.data?.Errors?.[0]?.code) || t(LOCALIZATION.HIERARCHY_CREATION_FAILED);
 
       setCreatingData(false);
       setShowToast({ label: errorMessage, isError: "error" });
@@ -432,13 +433,13 @@ const BoundaryRelationCreate = () => {
           {firstPage && !newHierarchy && (
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div className="hierarchy-boundary-heading">{t("BOUNDARY_DATA_FROM_GEOPODE")}</div>
+                <div className="hierarchy-boundary-heading">{t(LOCALIZATION.BOUNDARY_DATA_FROM_GEOPODE)}</div>
                 <Button
                   icon={"Preview"}
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("PREVIEW_ON_MAP")}
+                  label={t(LOCALIZATION.PREVIEW_ON_MAP)}
                   onClick={() => {
                     // setShowPopUp(true);
                   }}
@@ -473,7 +474,7 @@ const BoundaryRelationCreate = () => {
               <div style={{ height: "1rem" }}></div>
               <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                 <div>
-                  <div className="hierarchy-boundary-heading">{t("NEWLY_ADDED_BOUNDARY_DATA")}</div>
+                  <div className="hierarchy-boundary-heading">{t(LOCALIZATION.NEWLY_ADDED_BOUNDARY_DATA)}</div>
                   <div style={{ height: "2rem" }}></div>
                 </div>
                 <div>
@@ -481,7 +482,7 @@ const BoundaryRelationCreate = () => {
                     <div>
                       <div style={{ display: "flex" }}>
                         <div className="hierarchy-boundary-sub-heading">
-                          {t("LEVEL")} {boundaryData.length + index + 1}
+                          {t(LOCALIZATION.LEVEL)} {boundaryData.length + index + 1}
                         </div>
                         <div style={{ display: "flex", gap: "1rem" }}>
                           <TextInput
@@ -506,7 +507,7 @@ const BoundaryRelationCreate = () => {
                     className="custom-class"
                     icon="Add"
                     iconFill=""
-                    label={t("ADD_HIERARCHY_LEVEL")}
+                    label={t(LOCALIZATION.ADD_HIERARCHY_LEVEL)}
                     onClick={() => addLevel()}
                     size="medium"
                     title=""
@@ -524,7 +525,7 @@ const BoundaryRelationCreate = () => {
               <Button
                 icon="ArrowBack"
                 style={{ marginLeft: "3.5rem" }}
-                label={t("COMMON_BACK")}
+                label={t(LOCALIZATION.COMMON_BACK)}
                 onClick={goBackToBoundary}
                 type="button"
                 variation="secondary"
@@ -534,7 +535,7 @@ const BoundaryRelationCreate = () => {
                 icon="ArrowForward"
                 style={{ marginLeft: "auto" }}
                 isSuffix
-                label={t("CMN_BOUNDARY_REL_CREATE")}
+                label={t(LOCALIZATION.CMN_BOUNDARY_REL_CREATE)}
                 // onClick={goToPreview}
                 isDisabled={creatingData}
                 onClick={() => {
@@ -542,7 +543,7 @@ const BoundaryRelationCreate = () => {
                   if (checkValid) {
                     setShowFinalPopup(true);
                   } else {
-                    setShowToast({ label: t("CMN_FILLORDELETE_CREATED_HIERARCHY"), isError: "error" });
+                    setShowToast({ label: t(LOCALIZATION.CMN_FILLORDELETE_CREATED_HIERARCHY), isError: "error" });
                   }
                 }}
                 type="button"
@@ -555,7 +556,7 @@ const BoundaryRelationCreate = () => {
             sortActionFields
             style={{}}
           />
-          {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+          {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t(LOCALIZATION.DATA_SYNC_WITH_SERVER)} />}
 
           {showToast && (
             <Toast
@@ -574,17 +575,17 @@ const BoundaryRelationCreate = () => {
             <div style={{ marginBottom: "2rem" }}>
               <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <div className="hierarchy-boundary-heading">{t("CREATE_BOUNDARY_HIERARCHY")}</div>
+                  <div className="hierarchy-boundary-heading">{t(LOCALIZATION.CREATE_BOUNDARY_HIERARCHY)}</div>
                 </div>
                 <div style={{ height: "1.5rem" }}></div>
-                <div>{t("BOUNDARY_HIERARCHY_INFO_MSG")}</div>
+                <div>{t(LOCALIZATION.BOUNDARY_HIERARCHY_INFO_MSG)}</div>
                 <div style={{ height: "2rem" }}></div>
                 <div>
                   {newBoundaryData.map((item, index) => (
                     <div>
                       <div style={{ display: "flex" }}>
                         <div className="hierarchy-boundary-sub-heading">
-                          {t("LEVEL")} {index + 1}
+                          {t(LOCALIZATION.LEVEL)} {index + 1}
                           {index === 0 && <span className="mandatory-span">*</span>}
                         </div>
                         <div style={{ display: "flex", gap: "1rem" }}>
@@ -612,7 +613,7 @@ const BoundaryRelationCreate = () => {
                     className="custom-class"
                     icon="Add"
                     iconFill=""
-                    label={t("ADD_HIERARCHY_LEVEL")}
+                    label={t(LOCALIZATION.ADD_HIERARCHY_LEVEL)}
                     onClick={() => addLevel()}
                     size="medium"
                     title=""
@@ -629,7 +630,7 @@ const BoundaryRelationCreate = () => {
               <Button
                 icon="ArrowBack"
                 style={{ marginLeft: "3.5rem" }}
-                label={t("COMMON_BACK")}
+                label={t(LOCALIZATION.COMMON_BACK)}
                 onClick={goBackToBoundary}
                 type="button"
                 variation="secondary"
@@ -639,7 +640,7 @@ const BoundaryRelationCreate = () => {
                 icon="ArrowForward"
                 style={{ marginLeft: "auto" }}
                 isSuffix
-                label={t("CMN_BOUNDARY_REL_CREATE")}
+                label={t(LOCALIZATION.CMN_BOUNDARY_REL_CREATE)}
                 // onClick={goToPreview}
                 isDisabled={creatingData}
                 onClick={() => {
@@ -647,9 +648,9 @@ const BoundaryRelationCreate = () => {
                   if (checkValid) {
                     setShowFinalPopup(true);
                   } else if (newBoundaryData?.some((obj) => obj?.boundaryType)) {
-                    setShowToast({ label: t("CMN_FILLORDELETE_CREATED_HIERARCHY"), isError: "error" });
+                    setShowToast({ label: t(LOCALIZATION.CMN_FILLORDELETE_CREATED_HIERARCHY), isError: "error" });
                   } else {
-                    setShowToast({ label: t("CMN_ATLEAST_ONE_HIERARCHY"), isError: "error" });
+                    setShowToast({ label: t(LOCALIZATION.CMN_ATLEAST_ONE_HIERARCHY), isError: "error" });
                   }
                 }}
                 type="button"
@@ -670,7 +671,7 @@ const BoundaryRelationCreate = () => {
               onClose={() => setShowToast(null)}
             />
           )}
-          {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+          {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t(LOCALIZATION.DATA_SYNC_WITH_SERVER)} />}
         </React.Fragment>
       );
     }

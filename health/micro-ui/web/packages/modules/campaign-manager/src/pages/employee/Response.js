@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PanelCard, Footer, Button } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ const Response = () => {
         actionFields={[
           state?.secondaryActionLabel && (
             <Button
-              label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
+              label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t(LOCALIZATION.ES_CAMPAIGN_RESPONSE_ACTION)}
               onClick={() => navigation(state?.secondaryActionLink)}
               type="button"
               variation="secondary"
@@ -66,7 +67,7 @@ const Response = () => {
           <Button
             icon="ArrowForward"
             isSuffix
-            label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
+            label={state?.actionLabel ? t(state?.actionLabel) : t(LOCALIZATION.ES_CAMPAIGN_RESPONSE_ACTION)}
             onClick={() => navigation(state?.actionLink)}
             type="button"
           />,

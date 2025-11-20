@@ -1,6 +1,7 @@
 import React from "react";
 import * as XLSX from "xlsx";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = false, sheetName = "template" }) => {
   const { t } = useTranslation();
@@ -60,7 +61,7 @@ const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = f
   return (
     <div style={{ display: "none" }}>
       <button ref={inputRef} onClick={handleExport}>
-        {t("WBH_DOWNLOAD_XLS")} {/* ✅ i18n key for “Export XLSX Files” */}
+        {t(LOCALIZATION.WBH_DOWNLOAD_XLS)} {/* ✅ i18n key for “Export XLSX Files” */}
       </button>
     </div>
   );

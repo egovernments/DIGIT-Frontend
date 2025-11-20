@@ -15,6 +15,7 @@ import {
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -362,9 +363,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         //           history.push(
         //             `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
         //             {
-        //               message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-        //               text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-        //               info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+        //               message: t(LOCALIZATION.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE),
+        //               text: t(LOCALIZATION.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT),
+        //               info: t(LOCALIZATION.ES_CAMPAIGN_SUCCESS_INFO_TEXT),
         //               actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
         //               actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${data?.CampaignDetails?.campaignName}&campaignId=${data?.CampaignDetails?.id}&projectType=${data?.CampaignDetails?.projectType}`,
         //               secondaryActionLabel: "MY_CAMPAIGN",
@@ -975,7 +976,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (isSubmit) {
       setShouldUpdate(true);
       if (currentKey == 6 || currentKey == 9 || currentKey == 15) {
-        setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+        setShowToast({ key: "success", label: t(LOCALIZATION.HCM_DRAFT_SUCCESS) });
         if (isDraft === "true") {
           navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`);
         } else {
@@ -1112,7 +1113,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {loader || (isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />)}
+      {loader || (isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t(LOCALIZATION.PLEASE_WAIT_WHILE_UPDATING)} />)}
       {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
@@ -1132,7 +1133,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         isDisabled={isDataCreating}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
+        secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t(LOCALIZATION.HCM_BACK) : noAction === "false" ? null : t(LOCALIZATION.HCM_BACK)}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
@@ -1144,16 +1145,16 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         primaryActionIcon={"ArrowDirection"}
         label={
           isChangeDates === "true" && currentKey == 16
-            ? t("HCM_UPDATE_DATE")
+            ? t(LOCALIZATION.HCM_UPDATE_DATE)
             : isChangeDates === "true"
             ? null
             : noAction === "false"
             ? null
             : isSubmit === true
-            ? t("HCM_NEXT")
+            ? t(LOCALIZATION.HCM_NEXT)
             : filteredConfig?.[0]?.form?.[0]?.isLast === true
-            ? t("HCM_SUBMIT")
-            : t("HCM_NEXT")
+            ? t(LOCALIZATION.HCM_SUBMIT)
+            : t(LOCALIZATION.HCM_NEXT)
         }
       />
       {actionBar === "true" && (
@@ -1162,7 +1163,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             <Button
               type={"button"}
               style={{ marginLeft: "2.5rem", width: "14rem" }}
-              label={t("HCM_BACK")}
+              label={t(LOCALIZATION.HCM_BACK)}
               variation={"secondary"}
               t={t}
               onClick={() => {
@@ -1172,7 +1173,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             <Button
               type={"actionButton"}
               options={actionbarOptions}
-              label={t("ES_COMMON_TAKE_ACTION")}
+              label={t(LOCALIZATION.ES_COMMON_TAKE_ACTION)}
               variation={"primary"}
               style={{ width: "14rem" }}
               optionsKey={"name"}

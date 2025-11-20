@@ -1,6 +1,7 @@
 import { Tag, LabelFieldPair, Switch } from "@egovernments/digit-ui-components";
 import React, { Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { useSelector } from "react-redux";
 import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
@@ -77,7 +78,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
           {isDependent &&
 
             <div className="appConfigLabelField-label">
-              <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
+              <Tag icon="" label={t(LOCALIZATION.DEPENDENT_FIELD_TAG)} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
             </div>
 
           }

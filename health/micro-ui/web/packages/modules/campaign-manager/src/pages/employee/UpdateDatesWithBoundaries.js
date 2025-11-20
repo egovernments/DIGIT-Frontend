@@ -7,6 +7,7 @@ import { Button, AlertCard, PopUp, Toast, Tag } from "@egovernments/digit-ui-com
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
@@ -87,18 +88,18 @@ function UpdateDatesWithBoundaries() {
   const onSubmit = async (formData) => {
     if (DateWithBoundary) {
       if (!formData?.dateWithBoundary || !Array.isArray(formData?.dateWithBoundary) || formData?.dateWithBoundary?.length === 0) {
-        setShowToast({ isError: true, label: "SELECT_BOUNDARY_LEVEL_ERROR" });
+        setShowToast({ isError: true, label: LOCALIZATION.SELECT_BOUNDARY_LEVEL_ERROR });
         return;
       }
     } else if (!DateWithBoundary) {
       if (!formData?.dateAndCycle) {
-        setShowToast({ isError: true, label: "SELECT_DATE_CHANGE_MANDATORY_ERROR" });
+        setShowToast({ isError: true, label: LOCALIZATION.SELECT_DATE_CHANGE_MANDATORY_ERROR });
         return;
       }
     }
     let isValid = checkValid(formData);
     if (!isValid) {
-      setShowToast({ isError: true, label: "UPDATE_DATE_MANDATORY_FIELDS_MISSING" });
+      setShowToast({ isError: true, label: LOCALIZATION.UPDATE_DATE_MANDATORY_FIELDS_MISSING });
       return;
     }
     setShowPopUp(formData);
@@ -129,10 +130,10 @@ function UpdateDatesWithBoundaries() {
         const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-          message: t("ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS"),
-          // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
-          // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
-          actionLabel: t("HCM_DATE_CHANGE_VIEW_SUCCESS_RESPONSE_ACTION"),
+          message: t(LOCALIZATION.ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS),
+          // text: t(LOCALIZATION.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK),
+          // info: t(LOCALIZATION.ES_CAMPAIGN_SUCCESS_INFO_TEXTKK),
+          actionLabel: t(LOCALIZATION.HCM_DATE_CHANGE_VIEW_SUCCESS_RESPONSE_ACTION),
           actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
         });
       } else {
@@ -146,10 +147,10 @@ function UpdateDatesWithBoundaries() {
         });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-          message: t("ES_CAMPAIGN_DATE_CHANGE_SUCCESS"),
-          // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
-          // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
-          actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
+          message: t(LOCALIZATION.ES_CAMPAIGN_DATE_CHANGE_SUCCESS),
+          // text: t(LOCALIZATION.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK),
+          // info: t(LOCALIZATION.ES_CAMPAIGN_SUCCESS_INFO_TEXTKK),
+          actionLabel: t(LOCALIZATION.HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION),
           actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=16&summary=true`,
         });
       }
@@ -165,7 +166,7 @@ function UpdateDatesWithBoundaries() {
     <div>
        <TagComponent campaignName={campaignName} />  
       <FormComposerV2
-        label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
+        label={t(LOCALIZATION.CAMPAIGN_UPDATE_DATE_SUBMIT)}
         config={
           DateWithBoundary
             ? dateChangeBoundaryConfig?.map((config) => {
@@ -196,8 +197,8 @@ function UpdateDatesWithBoundaries() {
         variant="default"
         style={{ marginBottom: "1.5rem", marginTop: "1.5rem", marginLeft: "0rem", maxWidth: "100%" }}
         additionalElements={[
-          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT1`)}</span>,
-          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT2`)}</span>,
+          <span style={{ color: "#505A5F" }}>{t(LOCALIZATION.UPDATE_DATE_CHANGE_INFO_TEXT1)}</span>,
+          <span style={{ color: "#505A5F" }}>{t(LOCALIZATION.UPDATE_DATE_CHANGE_INFO_TEXT2)}</span>,
         ]}
         label={"Info"}
         headerClassName={"headerClassName"}
@@ -206,7 +207,7 @@ function UpdateDatesWithBoundaries() {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_CHANGE_DATE_CONFIRM")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_CHANGE_DATE_CONFIRM)}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -219,7 +220,7 @@ function UpdateDatesWithBoundaries() {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("NO")}
+              label={t(LOCALIZATION.NO)}
               onClick={() => {
                 setShowPopUp(null);
               }}
@@ -228,7 +229,7 @@ function UpdateDatesWithBoundaries() {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("YES")}
+              label={t(LOCALIZATION.YES)}
               onClick={() => {
                 onConfirm(showPopUp);
               }}

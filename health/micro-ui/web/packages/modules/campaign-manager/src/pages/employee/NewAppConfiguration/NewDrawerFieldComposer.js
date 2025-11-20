@@ -1,5 +1,6 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { useSelector, useDispatch } from "react-redux";
 import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
@@ -452,7 +453,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
           >
-            {isDisabled && <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>}
+            {isDisabled && <span className="onhover-tooltip-text"> {t(LOCALIZATION.MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT)}</span>}
             <FieldV1
               config={{
                 step: "",
@@ -544,8 +545,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 chipsKey="code"
                 type="multiselectdropdown"
                 variant="nestedmultiselect"
-                selectAllLabel={t("SELECT_ALL")}
-                clearLabel={t("CLEAR_ALL")}
+                selectAllLabel={t(LOCALIZATION.SELECT_ALL)}
+                clearLabel={t(LOCALIZATION.CLEAR_ALL)}
                 config={{ isDropdownWithChip: true }}
                 selected={selectedOptions} // Pass actual option objects directly
                 onSelect={(selectedArray) => {}}
@@ -649,18 +650,18 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     <LocalizationInput
                       key={`${column.header}-${index}`}
                       code={column.header}
-                      label={`${t("COLUMN")} ${index + 1} - ${column.header}`}
+                      label={`${t(LOCALIZATION.COLUMN)} ${index + 1} - ${column.header}`}
                       currentLocale={currentLocale}
                       dispatch={dispatch}
                       t={t}
-                      placeholder={t("ADD_HEADER_LOCALIZATION")}
+                      placeholder={t(LOCALIZATION.ADD_HEADER_LOCALIZATION)}
                     />
                   ))}
                 </div>
               )}
 
               {columns.length === 0 && (
-                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>{t("NO_TABLE_COLUMNS_FOUND")}</div>
+                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>{t(LOCALIZATION.NO_TABLE_COLUMNS_FOUND)}</div>
               )}
             </div>
           </>
@@ -683,7 +684,7 @@ const LocalizationInput = React.memo(({ code, label, currentLocale, dispatch, t,
       label={label}
       value={localizedValue}
       type="text"
-      placeholder={placeholder || t("ADD_LOCALIZATION")}
+      placeholder={placeholder || t(LOCALIZATION.ADD_LOCALIZATION)}
       onChange={(e) => {
         const val = e.target.value;
         // Update localization for the code
@@ -747,7 +748,7 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
 
   return (
     <div style={{ display: "flex", gap: "1rem" }}>
-      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t("OPTION_PLACEHOLDER")} onChange={handleChange} />
+      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t(LOCALIZATION.OPTION_PLACEHOLDER)} onChange={handleChange} />
       <div
         onClick={onDelete}
         style={{
@@ -932,7 +933,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             icon="AddIcon"
             size="small"
             variation="tertiary"
-            label={t("ADD_OPTIONS")}
+            label={t(LOCALIZATION.ADD_OPTIONS)}
             className={`app-config-add-option-button`}
             style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
             textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}
@@ -1119,7 +1120,7 @@ function NewDrawerFieldComposer() {
   if (!selectedField) {
     return (
       <div style={{ padding: "16px" }}>
-        <p>{t("APP_CONFIG_NO_FIELD_SELECTED")}</p>
+        <p>{t(LOCALIZATION.APP_CONFIG_NO_FIELD_SELECTED)}</p>
       </div>
     );
   }
@@ -1127,9 +1128,9 @@ function NewDrawerFieldComposer() {
   return (
     <Fragment>
       <div className="app-config-drawer-subheader">
-        <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_PROPERTIES")}</div>
+        <div className={"app-config-drawer-subheader-text"}>{t(LOCALIZATION.APPCONFIG_PROPERTIES)}</div>
         <span className="icon-wrapper new">
-          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
+          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t(LOCALIZATION.TIP_APPCONFIG_PROPERTIES)} />
         </span>
       </div>
       <Divider />
@@ -1149,7 +1150,7 @@ function NewDrawerFieldComposer() {
       {/* Hidden Field Warning */}
       {selectedField?.hidden && (
         <div style={{ marginBottom: "16px" }}>
-          <Tag showIcon={true} label={t("CMP_DRAWER_FIELD_DISABLED_SINCE_HIDDEN")} type="warning" />
+          <Tag showIcon={true} label={t(LOCALIZATION.CMP_DRAWER_FIELD_DISABLED_SINCE_HIDDEN)} type="warning" />
         </div>
       )}
 

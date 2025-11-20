@@ -13,6 +13,7 @@ import {
   TextBlock,
   Card,
 } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
@@ -108,7 +109,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
       <div className="container">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(LOCALIZATION.HCM_CAMPAIGN_DETAILS)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
@@ -122,11 +123,11 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
         <div className="card-container2">
           <Card className="setup-campaign-card">
-            <HeaderComponent styles={{ margin: "0px" }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</HeaderComponent>
-            <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
+            <HeaderComponent styles={{ margin: "0px" }}>{t(LOCALIZATION.HCM_CAMPAIGN_TYPE_HEADER)}</HeaderComponent>
+            <p className="description-type">{t(LOCALIZATION.HCM_CAMPAIGN_TYPE_DESCRIPTION)}</p>
             <LabelFieldPair style={{ display: "flex", marginBottom: "-0.8rem" }}>
               <div className="campaign-type">
-                <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
+                <span>{`${t(LOCALIZATION.HCM_CAMPAIGN_TYPE)}`}</span>
                 <span className="mandatory-span">*</span>
               </div>
               <div
@@ -164,7 +165,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
             </LabelFieldPair>
             {showBeneficiary && (
               <LabelFieldPair style={{ alignItems: "center", display: "flex", marginBottom: "0rem" }}>
-                <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
+                <div className="beneficiary-type">{`${t(LOCALIZATION.HCM_BENEFICIARY_TYPE)}`}</div>
                 <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
               </LabelFieldPair>
             )}
@@ -174,7 +175,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               name: "infocard",
             }}
             variant="info"
-            text={t("HCM_UPDATE_CAMPAIGN_TYPE_INFO")}
+            text={t(LOCALIZATION.HCM_UPDATE_CAMPAIGN_TYPE_INFO)}
             style={{ marginTop: "1rem", maxWidth: "100%" }}
           />
         </div>
@@ -182,10 +183,10 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
           <PopUp
             className={"boundaries-pop-module"}
             type={"default"}
-            heading={t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER")}
+            heading={t(LOCALIZATION.ES_CAMPAIGN_UPDATE_TYPE_MODAL_HEADER)}
             children={[
               <div>
-                <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+                <CardText style={{ margin: 0 }}>{t(LOCALIZATION.ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT) + " "}</CardText>
               </div>,
             ]}
             onOverlayClick={() => {
@@ -200,7 +201,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+                label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
                 onClick={() => {
                   setShowPopUp(false);
                   setCanUpdate(true);
@@ -211,7 +212,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"primary"}
-                label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+                label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
                 onClick={() => {
                   setShowPopUp(false);
                   setCanUpdate(false);

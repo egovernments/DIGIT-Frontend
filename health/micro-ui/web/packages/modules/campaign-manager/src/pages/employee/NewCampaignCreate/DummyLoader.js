@@ -1,5 +1,6 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -119,7 +120,7 @@ const DummyLoader = () => {
     }
   }, [mdmsData, campaignNumber, flow, navigate, tenantId]);
 
-  return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING_MODULE", { module: flow, campaign: campaignNumber })} />;
+  return <Loader page={true} variant={"OverlayLoader"} loaderText={t(LOCALIZATION.LOADING_MODULE, { module: flow, campaign: campaignNumber })} />;
 };
 
 export default DummyLoader;

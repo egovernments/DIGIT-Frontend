@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { addProductConfig } from "../../configs/addProductConfig";
 import { Toast } from "@egovernments/digit-ui-components";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 function AddProduct() {
   const { t } = useTranslation();
@@ -185,7 +186,7 @@ function AddProduct() {
     <div>
       <FormComposerV2
         showMultipleCardsWithoutNavs={true}
-        label={t("ES_CAMPAIGN_ADD_PRODUCT_BUTTON")}
+        label={t(LOCALIZATION.ES_CAMPAIGN_ADD_PRODUCT_BUTTON)}
         config={addProductConfig?.map((config) => {
           return {
             ...config,
@@ -198,7 +199,7 @@ function AddProduct() {
         onFormValueChange={onFormValueChange}
         actionClassName={"addProductActionClass"}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(LOCALIZATION.HCM_BACK)}
         onSecondayActionClick={onSecondayActionClick}
       />
 

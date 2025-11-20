@@ -4,6 +4,7 @@ import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} }) => {
   return (
@@ -31,14 +32,14 @@ function XlsPreview({ file, ...props }) {
     <PopUp className="campaign-data-preview" style={{ flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
         <Button
-          label={t("BACK")}
+          label={t(LOCALIZATION.BACK)}
           onClick={() => props?.onBack()}
           variation="secondary"
           icon="ArrowBack"
           className={"back-button-xlsxpreview"}
         />
         <Button
-          label={t("WBH_DOWNLOAD")}
+          label={t(LOCALIZATION.WBH_DOWNLOAD)}
           onClick={() => props?.onDownload()}
           variation="primary"
           isSuffix

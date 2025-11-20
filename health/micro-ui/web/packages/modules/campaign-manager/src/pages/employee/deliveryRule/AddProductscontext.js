@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 
 const AddProducts = React.memo(({ 
   stref, 
@@ -162,12 +163,12 @@ const AddProducts = React.memo(({
           <div key={product.key} className="add-resource-container">
             <div className="header-container">
               <CardText>
-                {t("CAMPAIGN_RESOURCE")} {index + 1}
+                {t(LOCALIZATION.CAMPAIGN_RESOURCE)} {index + 1}
               </CardText>
               {products.length > 1 && (
                 <Button
                   icon="Delete"
-                  label={t("DELETE")}
+                  label={t(LOCALIZATION.DELETE)}
                   onClick={() => deleteProduct(product)}
                   variation="link"
                 />
@@ -176,7 +177,7 @@ const AddProducts = React.memo(({
             
             <div className="add-resource-label-field-container">
               <LabelFieldPair style={{ display: "grid" }}>
-                <label>{t("CAMPAIGN_ADD_PRODUCTS_LABEL")}</label>
+                <label>{t(LOCALIZATION.CAMPAIGN_ADD_PRODUCTS_LABEL)}</label>
                 <Dropdown
                   t={t}
                   style={{ width: "100%", minWidth: "100%", marginBottom: 0 }}
@@ -196,7 +197,7 @@ const AddProducts = React.memo(({
                   flexDirection: "column", 
                   alignItems: "flex-start" 
                 }}>
-                  <label>{t("CAMPAIGN_COUNT_LABEL")}</label>
+                  <label>{t(LOCALIZATION.CAMPAIGN_COUNT_LABEL)}</label>
                   <TextInput
                     type="numeric"
                     value={product?.quantity}
@@ -212,7 +213,7 @@ const AddProducts = React.memo(({
       {canAddMore && (
         <Button
           variation="secondary"
-          label={t("CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION")}
+          label={t(LOCALIZATION.CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION)}
           className="add-rule-btn hover"
           icon="AddIcon"
           onClick={addProduct}
@@ -229,7 +230,7 @@ const AddProducts = React.memo(({
           marginBottom: "1rem"
         }}
       >
-        <p>{t("CAMPAIGN_NEW_PRODUCT_TEXT")}</p>
+        <p>{t(LOCALIZATION.CAMPAIGN_NEW_PRODUCT_TEXT)}</p>
         <span className="link" onClick={updateSession}>
           <Link
             to={{
@@ -244,7 +245,7 @@ const AddProducts = React.memo(({
               },
             }}
           >
-            {t("ES_CAMPAIGN_ADD_PRODUCT_LINK")}
+            {t(LOCALIZATION.ES_CAMPAIGN_ADD_PRODUCT_LINK)}
           </Link>
         </span>
       </div>

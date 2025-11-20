@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
@@ -188,7 +189,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
           }, 2000);
         },
         onError: () => {
-          setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          setShowToast({ key: "error", label: t(LOCALIZATION.HCM_ERROR_IN_CAMPAIGN_CREATION) });
           setLoader(false);
         },
       }
@@ -219,7 +220,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
-        setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
+        setShowToast({ key: "error", label: t(LOCALIZATION.CAMPAIGN_NAME_ALREADY_EXIST) });
         setIsValidatingName(false);
         return;
       } else {
@@ -302,7 +303,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         <Loader
           page={true}
           variant={"OverlayLoader"}
-          loaderText={isValidatingName ? t("VALIDATING_CAMPAIGN_NAME") : t("PLEASE_WAIT_WHILE_UPDATING")}
+          loaderText={isValidatingName ? t(LOCALIZATION.VALIDATING_CAMPAIGN_NAME) : t(LOCALIZATION.PLEASE_WAIT_WHILE_UPDATING)}
         />
       )}
       <Stepper
@@ -322,13 +323,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         onSubmit={onSubmit}
         defaultValues={params}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(LOCALIZATION.HCM_BACK)}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         noCardStyle={currentKey === 3}
         onSecondayActionClick={onSecondayActionClick}
         isDisabled={isDataCreating}
-        label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t(LOCALIZATION.HCM_SUBMIT) : t(LOCALIZATION.HCM_NEXT)}
         noBreakLine={true}
         // secondaryActionIcon={"ArrowBack"}
         // primaryActionIconAsSuffix={true}
@@ -338,10 +339,10 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         <PopUp
           className={"deliveries-pop-module"}
           type={"warning"}
-          heading={t("ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(LOCALIZATION.ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -356,7 +357,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_DELIVERY_BACK")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_DELIVERY_BACK)}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -366,7 +367,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_DELIVERY_SUBMIT)}
               onClick={() => {
                 setShowPopUp(false);
                 if (pendingFormData) {

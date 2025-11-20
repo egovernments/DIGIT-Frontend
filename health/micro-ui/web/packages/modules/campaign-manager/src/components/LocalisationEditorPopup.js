@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextInput, Button, Tab } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { wrap } from "lodash";
 
 const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisationData, onSave, onClose }) => {
@@ -37,7 +38,7 @@ const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisati
               [row.code]: { ...prev[row.code], [activeLocale]: e.target.value },
             }))
           }
-          placeholder={t("ENTER_TRANSLATION")}
+          placeholder={t(LOCALIZATION.ENTER_TRANSLATION)}
         >
         </TextInput>
       ),
@@ -69,9 +70,9 @@ const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisati
       />
 
       <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "2rem" }}>
-        <Button label={t("CANCEL")} variation="secondary" onClick={onClose} />
+        <Button label={t(LOCALIZATION.CANCEL)} variation="secondary" onClick={onClose} />
         <Button
-          label={t("SAVE_TRANSLATIONS")}
+          label={t(LOCALIZATION.SAVE_TRANSLATIONS)}
           variation="primary"
           onClick={() => {
             const formatted = Object.entries(translations)

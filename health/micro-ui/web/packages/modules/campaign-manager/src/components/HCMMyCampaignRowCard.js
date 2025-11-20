@@ -8,6 +8,7 @@ import CloneCampaignWrapper from "./CloneCampaignWrapper";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
 import QRButton from "./CreateCampaignComponents/QRButton";
 import TagComponent from "./TagComponent";
+import { LOCALIZATION } from "../constants/localizationConstants";
 
 /**
  * HCMMyCampaignRowCard Component
@@ -51,14 +52,14 @@ const getTagElements = (rowData) => {
   }
   if (rowData?.deliveryRules?.[0]?.cycles?.length == 1) {
     tags.type = {
-      label: "SINGLEROUND_CAMPAIGN",
+      label: LOCALIZATION.SINGLEROUND_CAMPAIGN,
       showIcon: false,
       type: "warning",
       stroke: true,
     };
   } else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
     tags.type = {
-      label: "MULTIROUND_CAMPAIGN",
+      label: LOCALIZATION.MULTIROUND_CAMPAIGN,
       showIcon: false,
       type: "error",
       stroke: true,
@@ -70,7 +71,7 @@ const getTagElements = (rowData) => {
     rowData.resources.some((resource) => resource.type === "user" && rowData?.status == "created")
   ) {
     tags.userCreds = {
-      label: "USER_CREDS_GENERATED",
+      label: LOCALIZATION.USER_CREDS_GENERATED,
       showIcon: true,
       type: "success",
       stroke: true,
@@ -122,14 +123,14 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   // Always show download if userCreds exist
   if (rowData?.status == "created") {
     actions.downloadApp = {
-      label: "DOWNLOAD_APP",
+      label: LOCALIZATION.DOWNLOAD_APP,
       onClick: () => setShowQRPopUp(true),
       size: "medium",
       icon: "FileDownload",
       variation: "secondary",
     };
     actions.downloadUserCreds = {
-      label: "DOWNLOAD_USER_CREDENTIALS",
+      label: LOCALIZATION.DOWNLOAD_USER_CREDENTIALS,
       onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
       icon: "FileDownload",
       size: "medium",
@@ -139,7 +140,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
 
   if (rowData?.status == "creating") {
     actions.downloadUserCreds = {
-      label: "EDIT_CREATING_CAMPAIGN",
+      label: LOCALIZATION.EDIT_CREATING_CAMPAIGN,
       onClick: () => setShowCreatingPopUp(true),
       size: "medium",
       variation: "secondary",
@@ -151,7 +152,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
 
   if (currentTab === "CAMPAIGN_FAILED") {
     actions.editCampaign = {
-      label: "SHOW_ERROR",
+      label: LOCALIZATION.SHOW_ERROR,
       size: "medium",
       onClick: () => setShowErrorPopUp(true),
       icon: "",
@@ -161,7 +162,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
 
   if (currentTab === "CAMPAIGN_FAILED" && rowData?.startDate > Date.now()) {
     actions.downloadUserCreds = {
-      label: "RETRY",
+      label: LOCALIZATION.RETRY,
       size: "medium",
       onClick: () => handleRetryLogic(rowData),
       icon: "",
@@ -172,7 +173,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   // Show edit button for editable campaigns
   if (!(currentTab === "CAMPAIGN_COMPLETED" || currentTab === "CAMPAIGN_FAILED" || rowData?.status == "creating")) {
     actions.editCampaign = {
-      label: "EDIT_CAMPAIGN",
+      label: LOCALIZATION.EDIT_CAMPAIGN,
       size: "medium",
       onClick: () =>
         navigate(
@@ -193,7 +194,7 @@ const getActionTags = (rowData) => {
 
   if (rowData?.status == "creating") {
     actions.generateUserCreds = {
-      label: "GENERATING_USER_CRED",
+      label: LOCALIZATION.GENERATING_USER_CRED,
       loader: true,
       animationStyle: {
         width: "2rem",
@@ -201,7 +202,7 @@ const getActionTags = (rowData) => {
       },
     };
     actions.generateAPK = {
-      label: "GENERATING_APK",
+      label: LOCALIZATION.GENERATING_APK,
       loader: true,
       animationStyle: {
         width: "2rem",
@@ -247,14 +248,14 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         },
         onError: () => {
           setShowRetryPopUp(true);
-          // setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          // setShowToast({ key: "error", label: t(LOCALIZATION.HCM_ERROR_IN_CAMPAIGN_CREATION) });
           // setLoader(false);
         },
       }
     );
   };
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
-  const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
+  const duration = durationDays !== "NA" ? `${durationDays} ${t(LOCALIZATION.Days)}` : "NA";
   const rawCycleCount = rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle;
   const noOfCycles =
     rawCycleCount > 0 ? rawCycleCount : rowData?.deliveryRules?.[0]?.cycles?.length > 0 ? rowData.deliveryRules[0].cycles.length : "NA";
@@ -313,7 +314,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           <div className="digit-results-card-tags">
             {showCancelCampaign ? (
               <div className="digit-tag-container" style={{ margin: "0rem" }}>
-                <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+                <Chip text={`${t(LOCALIZATION.CANCEL_CAMPAIGN)}`} onClick={handleCancelClick} hideClose={false} />
               </div>
             ) : null}
             {tagElements &&
@@ -337,33 +338,33 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("START_DATE")}
+              label={t(LOCALIZATION.START_DATE)}
               value={convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("END_DATE")}
+              label={t(LOCALIZATION.END_DATE)}
               value={convertEpochToNewDateFormat(rowData?.endDate) || "NA"}
             />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("DURATION")} value={duration} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(LOCALIZATION.DURATION)} value={duration} />
           </div>
           <Divider />
           <div className="right-column">
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("NO_OF_CYCLES")} value={noOfCycles} />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("RESOURCES")} value={resources} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(LOCALIZATION.NO_OF_CYCLES)} value={noOfCycles} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(LOCALIZATION.RESOURCES)} value={resources} />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("STATUS")}
+              label={t(LOCALIZATION.STATUS)}
               type="custom"
               // value={t(rowData?.status) || "NA"}
               value={{}}
               renderCustomContent={({ status }) => {
                 if (rowData?.status === "created") {
-                  return <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={true} />;
+                  return <Tag label={t(LOCALIZATION.CAMPAIGN_CREATED)} type="success" stroke={true} />;
                 } else if (rowData?.status === "creating") {
-                  return <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={true} />;
+                  return <Tag label={t(LOCALIZATION.CAMPAIGN_CREATION_INPROGRESS)} type="warning" showIcon={false} stroke={true} />;
                 } else {
                   return <Tag label={t(rowData?.status)} showIcon={false} stroke={true} />;
                 }
@@ -378,11 +379,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           <Button
             key={"DuplicateCampaign"}
             icon={"TabInactive"}
-            label={t("DUPLICATE_CAMPAIGN")}
+            label={t(LOCALIZATION.DUPLICATE_CAMPAIGN)}
             onClick={() => setCloneCampaign(true)}
             variation={"teritiary"}
             size={"medium"}
-            title={t("DUPLICATE_CAMPAIGN")}
+            title={t(LOCALIZATION.DUPLICATE_CAMPAIGN)}
           />
         )}
         {cloneCampaign && (
@@ -440,7 +441,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showErrorPopUp && (
         <PopUp
           type={"default"}
-          heading={t("ES_CAMPAIGN_FAILED_ERROR")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_FAILED_ERROR)}
           children={[
             <div>
               <CardText style={{ margin: 0 }}>{t(rowData?.additionalDetails?.error)}</CardText>
@@ -458,10 +459,10 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showRetryPopUp && (
         <PopUp
           type={"default"}
-          heading={t("ES_CAMPAIGN_RETRY")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_RETRY)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("RETRY_IN_PROGRESS")}</CardText>
+              <CardText style={{ margin: 0 }}>{t(LOCALIZATION.RETRY_IN_PROGRESS)}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -476,10 +477,10 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {showCreatingPopUp && (
         <PopUp
           type={"default"}
-          heading={t("ES_CAMPAIGN_CREATING")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_CREATING)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("HCM_CAMPAIGN_CREATION_PROGRESS")}</CardText>
+              <CardText style={{ margin: 0 }}>{t(LOCALIZATION.HCM_CAMPAIGN_CREATION_PROGRESS)}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {

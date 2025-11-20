@@ -9,6 +9,7 @@ import MobileChecklist from "../../components/MobileChecklist";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
 import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 let temp_data = [];
 
@@ -150,7 +151,7 @@ const CreateChecklist = () => {
             id: crypto.randomUUID(),
             key: 1,
             parentQuestionId: newId,
-            label: `${t("HCM_CHECKLIST_OPTION")} 1`,
+            label: `${t(LOCALIZATION.HCM_CHECKLIST_OPTION)} 1`,
             optionDependency: false,
             optionComment: false,
           },
@@ -581,12 +582,12 @@ const CreateChecklist = () => {
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CREATE_NEW_CHECKLIST")}</h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t(LOCALIZATION.CREATE_NEW_CHECKLIST)}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
                 variation="secondary"
-                label={t("HCM_CHECKLIST_CLEAR")}
+                label={t(LOCALIZATION.HCM_CHECKLIST_CLEAR)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -596,7 +597,7 @@ const CreateChecklist = () => {
               <Button
                 icon="Preview"
                 variation="secondary"
-                label={t("PREVIEW_CHECKLIST")}
+                label={t(LOCALIZATION.PREVIEW_CHECKLIST)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -608,7 +609,7 @@ const CreateChecklist = () => {
             <PopUp
               className={"custom-pop-up"}
               type={"default"}
-              heading={t("CHECKLIST_PREVIEW")}
+              heading={t(LOCALIZATION.CHECKLIST_PREVIEW)}
               children={[]}
               onOverlayClick={() => {
                 setShowPopUp(false);
@@ -621,7 +622,7 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CLOSE")}
+                  label={t(LOCALIZATION.CLOSE)}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -630,7 +631,7 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CREATE_CHECKLIST")}
+                  label={t(LOCALIZATION.CREATE_CHECKLIST)}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
@@ -671,12 +672,12 @@ const CreateChecklist = () => {
             ))}
             {<hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />}
             <div style={{ display: "flex" }}>
-              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
+              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t(LOCALIZATION.NAME_OF_CHECKLIST)}</div>
               <TextInput
                 disabled={true}
                 className="tetxinput-example"
                 type={"text"}
-                name={t("NAME_OF_CHECKLIST")}
+                name={t(LOCALIZATION.NAME_OF_CHECKLIST)}
                 // value={`${checklistTypeLocal} ${roleLocal}`}
                 value={`${clTranslated} ${rlTranslated}`}
                 // onChange={(event) => addChecklistName(event.target.value)}
@@ -684,23 +685,23 @@ const CreateChecklist = () => {
               />
             </div>
             <div style={{ display: "flex" }}>
-              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t(LOCALIZATION.CHECKLIST_HELP_TEXT)}</div>
               <TextInput
                 disabled={false}
                 className="tetxinput-example"
                 type={"text"}
-                name={t("CHECKLIST_HELP_TEXT")}
+                name={t(LOCALIZATION.CHECKLIST_HELP_TEXT)}
                 value={helpText}
                 // value={`${clTranslated} ${rlTranslated}`}
                 onChange={(event) => setHelpText(event.target.value)}
-                placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                placeholder={t(LOCALIZATION.CHECKLIST_HELP_TEXT_PALCEHOLDER)}
               />
             </div>
           </Card>
           <div style={{ height: "1rem" }}></div>
           <FormComposerV2
             showMultipleCardsWithoutNavs={true}
-            label={t("CREATE_CHECKLIST")}
+            label={t(LOCALIZATION.CREATE_CHECKLIST)}
             config={config}
             onSubmit={popShow}
             fieldStyle={{ marginRight: 0 }}
@@ -709,7 +710,7 @@ const CreateChecklist = () => {
             actionClassName={"actionBarClass"}
             noCardStyle={true}
             showSecondaryLabel={true}
-            secondaryLabel={t("HCM_BACK")}
+            secondaryLabel={t(LOCALIZATION.HCM_BACK)}
             onSecondayActionClick={onSecondayActionClick}
           />
 
@@ -725,7 +726,7 @@ const CreateChecklist = () => {
           {showLocalisationPopup && (
             <PopUp
               className="localisation-popup-container"
-              heading={t("ADD_TRANSLATIONS")}
+              heading={t(LOCALIZATION.ADD_TRANSLATIONS)}
               onClose={() => setShowLocalisationPopup(false)}
               onOverlayClick={() => {
                 setShowLocalisationPopup(false);

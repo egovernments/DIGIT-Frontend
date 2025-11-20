@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
 import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const UpdateChecklist = () => {
   const { t } = useTranslation();
@@ -563,13 +564,13 @@ const UpdateChecklist = () => {
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "1rem" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("UPDATE_CHECKLIST")}</h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t(LOCALIZATION.UPDATE_CHECKLIST)}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
                 icon="Preview"
                 variation="secondary"
-                label={t("PREVIEW_CHECKLIST")}
+                label={t(LOCALIZATION.PREVIEW_CHECKLIST)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -581,7 +582,7 @@ const UpdateChecklist = () => {
             <PopUp
               className={"custom-pop-up"}
               type={"default"}
-              heading={t("CHECKLIST_PREVIEW")}
+              heading={t(LOCALIZATION.CHECKLIST_PREVIEW)}
               children={[]}
               onOverlayClick={() => {
                 setShowPopUp(false);
@@ -594,7 +595,7 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CLOSE")}
+                  label={t(LOCALIZATION.CLOSE)}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -603,7 +604,7 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CREATE_CHECKLIST")}
+                  label={t(LOCALIZATION.CREATE_CHECKLIST)}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
@@ -640,15 +641,15 @@ const UpdateChecklist = () => {
             ))}
             {
               <div style={{ display: "flex" }}>
-                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t(LOCALIZATION.CHECKLIST_HELP_TEXT)}</div>
                 <TextInput
                   disabled={false}
                   className="tetxinput-example"
                   type={"text"}
-                  name={t("CHECKLIST_HELP_TEXT")}
+                  name={t(LOCALIZATION.CHECKLIST_HELP_TEXT)}
                   value={helpText}
                   onChange={(event) => setHelpText(event.target.value)}
-                  placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                  placeholder={t(LOCALIZATION.CHECKLIST_HELP_TEXT_PALCEHOLDER)}
                 />
               </div>
             }
@@ -657,7 +658,7 @@ const UpdateChecklist = () => {
           {!isLoading && (
             <FormComposerV2
               showMultipleCardsWithoutNavs={true}
-              label={t("UPDATE_CHECKLIST")}
+              label={t(LOCALIZATION.UPDATE_CHECKLIST)}
               config={config}
               onSubmit={popShow}
               fieldStyle={{ marginRight: 0 }}
@@ -673,7 +674,7 @@ const UpdateChecklist = () => {
           {showLocalisationPopup && (
             <PopUp
               className="localisation-popup-container"
-              heading={t("ADD_TRANSLATIONS")}
+              heading={t(LOCALIZATION.ADD_TRANSLATIONS)}
               onClose={() => setShowLocalisationPopup(false)}
               onOverlayClick={() => setShowLocalisationPopup(false)}
             >

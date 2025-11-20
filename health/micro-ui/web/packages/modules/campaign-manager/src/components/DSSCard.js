@@ -1,6 +1,7 @@
 import { EmployeeModuleCard, ModuleCardFullWidth, SVG } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 // TODO delete file and remove its dependecy @bhavya 
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
@@ -48,8 +49,8 @@ const NDSSCard = () => {
 
   const propsForModuleCard = {
     headerStyle: { border: "none", height: "48px" },
-    moduleName: t("ACTION_TEST_NATDASHBOARD"),
-    subHeader: t("ACTION_TEST_NATDASHBOARD"),
+    moduleName: t(LOCALIZATION.ACTION_TEST_NATDASHBOARD),
+    subHeader: t(LOCALIZATION.ACTION_TEST_NATDASHBOARD),
     subHeaderLink: `/digit-ui/employee/dss/landing/NURT_DASHBOARD`,
     className: "employeeCard customEmployeeCard card-home full-width-card full-employee-card-height",
     links: [...links],
@@ -99,8 +100,8 @@ const DSSCard = () => {
 
   const propsForModuleCard = {
     headerStyle: { border: "none", height: "48px" },
-    moduleName: t("ES_TITLE_DSS"),
-    subHeader: t("ACTION_TEST_SURE_DASHBOARD"),
+    moduleName: t(LOCALIZATION.ES_TITLE_DSS),
+    subHeader: t(LOCALIZATION.ACTION_TEST_SURE_DASHBOARD),
     subHeaderLink: `/digit-ui/employee/dss/landing/home`,
     className: "employeeCard card-home customEmployeeCard full-width-card full-employee-card-height",
     links: [...links],
@@ -167,43 +168,43 @@ const DynamicDSSCard = () => {
 
   if (isNationalSupervisor) {
     links.push({
-      label: t("NATIONAL_DASHBOARD"),
+      label: t(LOCALIZATION.NATIONAL_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/national"
     });
     // TODO: To remove these hardcoded urls and generate all of this from mdms config
     links.push({
-      label: t("NDSS_DASHBOARD"),
+      label: t(LOCALIZATION.NDSS_DASHBOARD),
       link: "/digit-ui/employee/dss/landing/national-health-dashboard"
     })
   } else if (isProvincialSupervisor) {
     links.push({
-      label: t("PROVINCIAL_DASHBOARD"),
+      label: t(LOCALIZATION.PROVINCIAL_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/province?query=true"
     })
     links = [...links, ...generateLinks("province","PROVINCIAL_SUPERVISOR")]
   } else if (isDistrictSupervisor) {
     links.push({
-      label: t("DISTRICT_DASHBOARD"),
+      label: t(LOCALIZATION.DISTRICT_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/district?query=true"
     })
     links = [...links, ...generateLinks("district","DISTRICT_SUPERVISOR")]
   }
   else if(isHealthFacilitySupervisor){
     links.push({
-      label: t("REFERRAL_DASHBOARD"),
+      label: t(LOCALIZATION.REFERRAL_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/hf?query=true"
     })
   }
 
   // if(isNationalSupervisor || isProvincialSupervisor || isDistrictSupervisor){
   //   links.push({
-  //     label: t('CUSTOM_REPORTS_LINK'),
+  //     label: t(LOCALIZATION.CUSTOM_REPORTS_LINK),
   //     link:  Digit.SessionStorage.get("initData")?.stateInfo?.customReportsDriveLink,
   //     external: true
   //   })
 
   //   links.push({
-  //     label: t('FEEDBACK_LINK'),
+  //     label: t(LOCALIZATION.FEEDBACK_LINK),
   //     link:  Digit.SessionStorage.get("initData")?.stateInfo?.feedbackLink,
   //     external: true
   //   })
@@ -211,7 +212,7 @@ const DynamicDSSCard = () => {
 
   const propsForModuleCard = {
     Icon: <SVG.Dashboard fill="#fff" />,
-    moduleName: t("DSS_CARD_HEADER_DASHBOARD"),
+    moduleName: t(LOCALIZATION.DSS_CARD_HEADER_DASHBOARD),
     links: [...links],
   };
 

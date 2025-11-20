@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 // import Chip from "./Chip";
 // import { SVG } from "./SVG";
 // import Button from "./Button";
@@ -99,7 +100,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
     <PopUp
       className={"selecting-boundaries-pop"}
       type={"default"}
-      heading={`${t((hierarchyType + "_" + boundaryType).toUpperCase())} ${t("DIGIT_SELECT")}`}
+      heading={`${t((hierarchyType + "_" + boundaryType).toUpperCase())} ${t(LOCALIZATION.DIGIT_SELECT)}`}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
@@ -110,7 +111,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
           type={"button"}
           size={"large"}
           variation={"secondary"}
-          label={t("DIGIT_CLOSE")}
+          label={t(LOCALIZATION.DIGIT_CLOSE)}
           onClick={() => {
             setShowPopUp(false);
           }}
@@ -120,7 +121,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
           type={"button"}
           size={"large"}
           variation={"primary"}
-          label={t("DIGIT_CONFIRM_SELECTION")}
+          label={t(LOCALIZATION.DIGIT_CONFIRM_SELECTION)}
           onClick={() => {
             const selectedPropsData = dummySelected.map((item) => item.propsData);
             onSelect(selectedPropsData);
@@ -212,7 +213,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
           </div>
           {frozenData.length === 0 && (
             <Button
-              label={t("HCM_CLEAR_ALL")}
+              label={t(LOCALIZATION.HCM_CLEAR_ALL)}
               onClick={() => {
                 const updatedDummySelected = dummySelected.filter((item) => item?.propsData?.[1]?.parent !== parent);
                 setDummySelected(updatedDummySelected);
@@ -819,7 +820,7 @@ const MultiSelectDropdown = ({
       <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
         <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
       </div>
-      <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t("SELECT_ALL")}</p>
+      <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t(LOCALIZATION.SELECT_ALL)}</p>
     </div>
   );
   const Menu = () => {
@@ -834,7 +835,7 @@ const MultiSelectDropdown = ({
           key={"-1"}
           onClick={() => {}}
         >
-          {<span> {t("NO_RESULTS_FOUND")}</span>}
+          {<span> {t(LOCALIZATION.NO_RESULTS_FOUND)}</span>}
         </div>
       );
     }
@@ -849,7 +850,7 @@ const MultiSelectDropdown = ({
                 <div className="digit-category-name">{t(option[optionsKey])}</div>
                 {addCategorySelectAllCheck && (
                   <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
-                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t("SELECT_ALL")}</div>
+                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(LOCALIZATION.SELECT_ALL)}</div>
                     <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
                     <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
                       <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
@@ -956,7 +957,7 @@ const MultiSelectDropdown = ({
 
           {alreadyQueuedSelectedState.length > (config?.numberOfChips || 4) && (
             <Button
-              label={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t("HCM_SELECTED")}`}
+              label={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t(LOCALIZATION.HCM_SELECTED)}`}
               onClick={() => openPopUp(alreadyQueuedSelectedState)}
               variation="link"
             />
@@ -976,7 +977,7 @@ const MultiSelectDropdown = ({
           )}
           {alreadyQueuedSelectedState.length > 0 && frozenData.length == 0 && (
             <Button
-              label={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
+              label={t(config?.clearLabel ? config?.clearLabel : t(LOCALIZATION.CLEAR_ALL))}
               onClick={handleClearAll}
               variation=""
               style={{

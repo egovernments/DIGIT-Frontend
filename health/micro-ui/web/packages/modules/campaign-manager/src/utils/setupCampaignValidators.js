@@ -1,6 +1,7 @@
 /**
  * This file contains all the validations for create campaign flow
  */
+import { LOCALIZATION } from "../constants/localizationConstants";
  const  validateCycleData=(data,t)=> {
   const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
   const cycleData = data.cycleConfigure.cycleData;
@@ -14,8 +15,8 @@
         cycle: index + 1,
         dateError: true,
         // error: `Dates are missing in Cycle {CYCLE_NO}${index + 1}`,
-        error: t(`CAMPAIGN_SUMMARY_DATE_MISSING_ERROR`, { CYCLE_NO: index + 1 }),
-        button: t(`CAMPAIGN_SUMMARY_ADD_DATE_ACTION`),
+        error: t(LOCALIZATION.CAMPAIGN_SUMMARY_DATE_MISSING_ERROR, { CYCLE_NO: index + 1 }),
+        button: t(LOCALIZATION.CAMPAIGN_SUMMARY_ADD_DATE_ACTION),
       });
     }
   });
@@ -38,12 +39,12 @@
           deliveryRulesError?.push({
             name: `CYCLE_${cycle?.cycleIndex}`,
             cycle: cycle?.cycleIndex,
-            error: t(`CAMPAIGN_SUMMARY_DELIVERY_TYPE_MISSING_ERROR`, {
+            error: t(LOCALIZATION.CAMPAIGN_SUMMARY_DELIVERY_TYPE_MISSING_ERROR, {
               CONDITION_NO: rule?.ruleKey,
               DELIVERY_NO: delivery?.deliveryIndex,
               CYCLE_NO: cycle?.cycleIndex,
             }),
-            button: t(`CAMPAIGN_SUMMARY_ADD_DELIVERY_TYPE_ACTION`),
+            button: t(LOCALIZATION.CAMPAIGN_SUMMARY_ADD_DELIVERY_TYPE_ACTION),
           });
         }
         if (rule.attributes.length === 0) {
@@ -51,12 +52,12 @@
           deliveryRulesError?.push({
             name: `CYCLE_${cycle?.cycleIndex}`,
             cycle: cycle?.cycleIndex,
-            error: t(`CAMPAIGN_SUMMARY_VALUES_MISSING_ERROR`, {
+            error: t(LOCALIZATION.CAMPAIGN_SUMMARY_VALUES_MISSING_ERROR, {
               CONDITION_NO: rule?.ruleKey,
               DELIVERY_NO: delivery?.deliveryIndex,
               CYCLE_NO: cycle?.cycleIndex,
             }),
-            button: t(`CAMPAIGN_SUMMARY_ADD_VALUES_ACTION`),
+            button: t(LOCALIZATION.CAMPAIGN_SUMMARY_ADD_VALUES_ACTION),
           });
         }
         if (rule.products.length === 0) {
@@ -64,12 +65,12 @@
           deliveryRulesError?.push({
             name: `CYCLE_${cycle?.cycleIndex}`,
             cycle: cycle?.cycleIndex,
-            error: t(`CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR`, {
+            error: t(LOCALIZATION.CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR, {
               CONDITION_NO: rule?.ruleKey,
               DELIVERY_NO: delivery?.deliveryIndex,
               CYCLE_NO: cycle?.cycleIndex,
             }),
-            button: t(`CAMPAIGN_SUMMARY_ADD_PRODUCT_ACTION`),
+            button: t(LOCALIZATION.CAMPAIGN_SUMMARY_ADD_PRODUCT_ACTION),
           });
         }
 
@@ -82,13 +83,13 @@
               deliveryRulesError?.push({
                 name: `CYCLE_${cycle?.cycleIndex}`,
                 cycle: cycle?.cycleIndex,
-                error: t(`CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR`, {
+                error: t(LOCALIZATION.CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR, {
                   CONDITION_NO: rule?.ruleKey,
                   DELIVERY_NO: delivery?.deliveryIndex,
                   CYCLE_NO: cycle?.cycleIndex,
                 }),
                 // error: `Attributes missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
-                button: t(`CAMPAIGN_SUMMARY_ADD_ATTRIBUTES_ACTION`),
+                button: t(LOCALIZATION.CAMPAIGN_SUMMARY_ADD_ATTRIBUTES_ACTION),
               });
               isValid = false;
             }
@@ -223,13 +224,13 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       const startDateObj = new Date(formData?.campaignDates?.startDate);
       const endDateObj = new Date(formData?.campaignDates?.endDate);
       if (!formData?.campaignDates?.startDate || !formData?.campaignDates?.endDate) {
-        setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_DATE_MISSING")}` });
+        setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_CAMPAIGN_DATE_MISSING)}` });
         return false;
       } else if (endDateObj.getTime() === startDateObj.getTime()) {
-        setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE")}` });
+        setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE)}` });
         return false;
       } else if (endDateObj.getTime() < startDateObj) {
-        setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
+        setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE)}` });
         return false;
       } else {
         setShowToast(null);
@@ -240,12 +241,12 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData, hierarchyDefinition, lowestHierarchy);
         const missedType = recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy);
         if (!validateBoundary) {
-          setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
+          setShowToast({ key: "error", label: t(LOCALIZATION.HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY) });
           return false;
         } else if (recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy).length > 0) {
           setShowToast({
             key: "error",
-            label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
+            label: `${t(LOCALIZATION.HCM_CAMPAIGN_FOR)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
               `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
             )}`,
           });
@@ -260,18 +261,18 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         // setRefetchGenerate(checkEqual === false ? true : false);
         return true;
       } else {
-        setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+        setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_SELECT_BOUNDARY)}` });
         return false;
       }
 
     case "uploadBoundary":
       if (formData?.uploadBoundary?.isValidation) {
-        setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+        setShowToast({ key: "info", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
         return false;
       } else if (formData?.uploadBoundary?.isError) {
         if (formData?.uploadBoundary?.apiError) {
           setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
-        } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+        } else setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION)}` });
         return false;
       } else {
         setShowToast(null);
@@ -280,12 +281,12 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
 
     case "uploadFacility":
       if (formData?.uploadFacility?.isValidation) {
-        setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+        setShowToast({ key: "info", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
         return false;
       } else if (formData?.uploadFacility?.isError) {
         if (formData?.uploadFacility?.apiError) {
           setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
-        } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+        } else setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION)}` });
         return false;
       } else {
         setShowToast(null);
@@ -293,12 +294,12 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       }
     case "uploadUser":
       if (formData?.uploadUser?.isValidation) {
-        setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+        setShowToast({ key: "info", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
         return false;
       } else if (formData?.uploadUser?.isError) {
         if (formData?.uploadUser?.apiError) {
           setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
-        } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+        } else setShowToast({ key: "error", label: `${t(LOCALIZATION.HCM_FILE_VALIDATION)}` });
         return false;
       } else {
         setShowToast(null);
@@ -391,7 +392,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               target: [
                 {
                   name: `target`,
-                  error: t(`TARGET_FILE_MISSING`),
+                  error: t(LOCALIZATION.TARGET_FILE_MISSING),
                 },
               ],
             };
@@ -405,7 +406,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               facility: [
                 {
                   name: `facility`,
-                  error: t(`FACILITY_FILE_MISSING`),
+                  error: t(LOCALIZATION.FACILITY_FILE_MISSING),
                 },
               ],
             };
@@ -419,7 +420,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               user: [
                 {
                   name: `user`,
-                  error: t(`USER_FILE_MISSING`),
+                  error: t(LOCALIZATION.USER_FILE_MISSING),
                 },
               ],
             };

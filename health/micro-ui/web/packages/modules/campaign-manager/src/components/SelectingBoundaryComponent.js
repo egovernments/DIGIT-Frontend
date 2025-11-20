@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { LabelFieldPair, CardLabel, CardText, Loader, PopUp, Button } from "@egovernments/digit-ui-components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { Dropdown } from "@egovernments/digit-ui-components";
@@ -609,10 +610,10 @@ const SelectingBoundaryComponent = ({
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          heading={t(LOCALIZATION.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(LOCALIZATION.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -626,7 +627,7 @@ const SelectingBoundaryComponent = ({
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
               onClick={() => {
                 checkDataPresent({ action: false });
               }}
@@ -635,7 +636,7 @@ const SelectingBoundaryComponent = ({
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              label={t(LOCALIZATION.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
               onClick={() => {
                 checkDataPresent({ action: true });
               }}

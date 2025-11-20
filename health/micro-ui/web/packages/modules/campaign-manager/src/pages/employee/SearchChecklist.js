@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
@@ -87,7 +88,7 @@ const SearchChecklist = () => {
   }, [HCM]);
 
   const onStepClick = (step) => {
-    setShowToast({ key: "error", label: "CAMPAIGN_CANNOT_CLICK" });
+    setShowToast({ key: "error", label: LOCALIZATION.CAMPAIGN_CANNOT_CLICK });
     return;
     // history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
@@ -137,12 +138,12 @@ const SearchChecklist = () => {
           // className={"campaign-flow-stepper"}
         /> */}
         <TagComponent campaignName={campaignName} />
-        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1rem" }}>{t("CONFIGURE_CHECKLIST")}</div>
+        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1rem" }}>{t(LOCALIZATION.CONFIGURE_CHECKLIST)}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
-          {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
+          {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t(LOCALIZATION.ACTION_LABEL_CONFIGURE_APP)}</Header> */}
           {/* <Button
             variation="secondary"
-            label={t("ADD_NEW_CHECKLIST")}
+            label={t(LOCALIZATION.ADD_NEW_CHECKLIST)}
             className={"hover"}
             style={{ marginTop: "2rem", marginBottom: "2rem" }}
             onClick={makeNewChecklist}
@@ -151,7 +152,7 @@ const SearchChecklist = () => {
             <PopUp
               className={"boundaries-pop-module"}
               type={"default"}
-              heading={t("CREATE_CHECKLIST")}
+              heading={t(LOCALIZATION.CREATE_CHECKLIST)}
               children={[]}
               style={{
                 height: "30rem",
@@ -167,7 +168,7 @@ const SearchChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CLOSE")}
+                  label={t(LOCALIZATION.CLOSE)}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -176,7 +177,7 @@ const SearchChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CREATE_CHECKLIST")}
+                  label={t(LOCALIZATION.CREATE_CHECKLIST)}
                   onClick={() => {
                     createNewChecklist();
                   }}
@@ -186,7 +187,7 @@ const SearchChecklist = () => {
             >
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t("HCM_CHECKLIST_ROLE")}</span>
+                  <span>{t(LOCALIZATION.HCM_CHECKLIST_ROLE)}</span>
                   <Dropdown
                     t={t}
                     style={{ width: "50%" }}
@@ -200,7 +201,7 @@ const SearchChecklist = () => {
                 </div>
                 <div style={{ height: "1rem" }}></div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t("SELECT_CHECKLIST_TYPE")}</span>
+                  <span>{t(LOCALIZATION.SELECT_CHECKLIST_TYPE)}</span>
                   <Dropdown
                     t={t}
                     style={{ width: "50%" }}
@@ -219,7 +220,7 @@ const SearchChecklist = () => {
         <div className="container-full">
           {/* <div className="card-container">
             <Card className="card-header-timeline">
-              <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+              <TextBlock subHeader={t(LOCALIZATION.ACTION_LABEL_CONFIGURE_APP)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
@@ -243,8 +244,8 @@ const SearchChecklist = () => {
         <Footer
           actionFields={[
             <Button
-              label={t("GO_BACK")}
-              title={t("GO_BACK")}
+              label={t(LOCALIZATION.GO_BACK)}
+              title={t(LOCALIZATION.GO_BACK)}
               variation="secondary"
               style={{
                 marginLeft: "2.5rem",

@@ -9,6 +9,7 @@ import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import * as XLSX from "xlsx";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import validateBoundaryExcelContent from "../../utils/validateBoundaryExcel";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const ViewHierarchy = () => {
   const { t } = useTranslation();
@@ -99,10 +100,10 @@ const ViewHierarchy = () => {
       });
       setShowPopUp(false);
     } else if (resFile && resFile?.GeneratedResource?.[0]?.status === "inprogress") {
-      setShowToast({ label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"), isError: "info" });
+      setShowToast({ label: t(LOCALIZATION.PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME), isError: "info" });
       setShowPopUp(false);
     } else {
-      setShowToast({ label: t("PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME"), isError: "info" });
+      setShowToast({ label: t(LOCALIZATION.PLEASE_WAIT_AND_RETRY_AFTER_SOME_TIME), isError: "info" });
       setShowPopUp(false);
     }
   };
@@ -123,7 +124,7 @@ const ViewHierarchy = () => {
       const fileExtension = file.name.split(".").pop().toLowerCase(); // Get the file extension
 
       if (!validExtensions.includes(fileExtension)) {
-        setShowToast({ label: t("INVALID_FILE_FORMAT"), isError: "error" });
+        setShowToast({ label: t(LOCALIZATION.INVALID_FILE_FORMAT), isError: "error" });
         setDisableFile(true);
         event.target.value = "";
         return; // Exit the function if the file is not valid
@@ -145,11 +146,11 @@ const ViewHierarchy = () => {
         await uploadFileToAPI([file]);
         setDisableFile(false);
         setUiValError(false);
-        setShowToast({ label: t("FILE_UPLOADED_SUCCESSFULLY"), isError: "success" });
+        setShowToast({ label: t(LOCALIZATION.FILE_UPLOADED_SUCCESSFULLY), isError: "success" });
       } catch (error) {
         event.target.value = "";
         setShowToast({
-          label: error?.response?.data?.Errors?.[0]?.message || t("FILE_UPLOAD_FAILED"),
+          label: error?.response?.data?.Errors?.[0]?.message || t(LOCALIZATION.FILE_UPLOAD_FAILED),
           isError: "error",
         });
       }
@@ -223,7 +224,7 @@ const ViewHierarchy = () => {
             secondaryActionLabel: "CS_HOME",
             secondaryActionLink: `/${window?.contextPath}/employee`,
           });
-          // setShowToast({ label: `${t("WBH_HIERARCHY_CREATED")}`, isError: "success" });
+          // setShowToast({ label: `${t(LOCALIZATION.WBH_HIERARCHY_CREATED)}`, isError: "success" });
         } catch (pollError) {
           throw pollError; // Propagate polling errors to the outer catch block
         }
@@ -236,10 +237,10 @@ const ViewHierarchy = () => {
 
       // Handle known errors like polling timeout and max retries
       if (error.message === "Polling timeout" || error.message === "Max retries reached") {
-        label = `${t("WBH_BOUNDARY_CREATION_TIMEOUT")}: ${t("WBH_OPERATION_INCOMPLETE")}`;
+        label = `${t(LOCALIZATION.WBH_BOUNDARY_CREATION_TIMEOUT)}: ${t(LOCALIZATION.WBH_OPERATION_INCOMPLETE)}`;
       } else {
         // Initialize the label with a failure message
-        label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+        label = `${t(LOCALIZATION.WBH_BOUNDARY_CREATION_FAIL)}: `;
         if (error?.message) label += `${t(error?.message)}`; // the message here is sent from the polling mechnism which sendds the error code from backend.
       }
 
@@ -279,7 +280,7 @@ const ViewHierarchy = () => {
   //         const status = searchResponse?.ResourceDetails?.status;
 
   //         if (status === "completed") {
-  //           setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+  //           setShowToast({ label: `${t(LOCALIZATION.WBH_HIERARCHY_STATUS_COMPLETED)}`, isError: "success" });
   //           setDataCreationGoing(false);
   //           resolve(true);
   //         } else if (status === "failed") {
@@ -344,7 +345,7 @@ const ViewHierarchy = () => {
           if (errorObject) errorCode = errorObject.code;
 
           if (status === "completed") {
-            setShowToast({ label: `${t("WBH_HIERARCHY_STATUS_COMPLETED")}`, isError: "success" });
+            setShowToast({ label: `${t(LOCALIZATION.WBH_HIERARCHY_STATUS_COMPLETED)}`, isError: "success" });
             setDataCreationGoing(false);
             resolve(true);
           } else if (status === "failed") {
@@ -398,7 +399,7 @@ const ViewHierarchy = () => {
           <div>
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
               <div className="hierarchy-boundary-heading">
-                {t(`HIERARCHY`)} {hierarchyType}
+                {t(LOCALIZATION.HIERARCHY)} {hierarchyType}
               </div>
               <div style={{ height: "2rem" }}></div>
               {hierData.map((hierItem, index) => {
@@ -463,7 +464,7 @@ const ViewHierarchy = () => {
                                             className="custom-class"
                                             icon="Upload"
                                             iconFill=""
-                                            label={t("UPLOAD_GEOJSONS")}
+                                            label={t(LOCALIZATION.UPLOAD_GEOJSONS)}
                                             onClick={handleUpload}
                                             options={[]}
                                             optionsKey=""
@@ -484,12 +485,12 @@ const ViewHierarchy = () => {
             <div style={{ height: "1rem" }}></div>
             <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div className="hierarchy-boundary-heading">{t("UPLOAD_EXCEL")}</div>
+                <div className="hierarchy-boundary-heading">{t(LOCALIZATION.UPLOAD_EXCEL)}</div>
                 <Button
                   className="custom-class"
                   icon="DownloadIcon"
                   iconFill=""
-                  label={t("DOWNLOAD_EXCEL_TEMPLATE")}
+                  label={t(LOCALIZATION.DOWNLOAD_EXCEL_TEMPLATE)}
                   onClick={() => {
                     setShowPopUp(true);
                   }}
@@ -504,7 +505,7 @@ const ViewHierarchy = () => {
               <div>
                 {disableFile && (
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{t("UPLOAD_EXCEL_FOR_ALL_BOUNDARIES")}</div>
+                    <div style={{ fontWeight: "600", fontSize: "1.2rem" }}>{t(LOCALIZATION.UPLOAD_EXCEL_FOR_ALL_BOUNDARIES)}</div>
                     <input
                       ref={inputRef}
                       type="file"
@@ -515,7 +516,7 @@ const ViewHierarchy = () => {
                       className="custom-class"
                       icon="Upload"
                       iconFill=""
-                      label={t("UPLOAD_EXCEL")}
+                      label={t(LOCALIZATION.UPLOAD_EXCEL)}
                       onClick={handleUpload}
                       options={[]}
                       optionsKey=""
@@ -547,7 +548,7 @@ const ViewHierarchy = () => {
                 <Button
                   icon="ArrowBack"
                   style={{ marginLeft: "3.5rem" }}
-                  label={t("COMMON_BACK")}
+                  label={t(LOCALIZATION.COMMON_BACK)}
                   // isDisabled={true}
                   onClick={() => {
                     navigate(`/${window.contextPath}/employee/campaign/boundary/home`);
@@ -561,7 +562,7 @@ const ViewHierarchy = () => {
                   isDisabled={disableFile}
                   style={{ marginLeft: "auto" }}
                   isSuffix
-                  label={t("CMN_BOUNDARY_REL_DATA_CREATE_PREVIEW")}
+                  label={t(LOCALIZATION.CMN_BOUNDARY_REL_DATA_CREATE_PREVIEW)}
                   onClick={() => {
                     setPreviewPage(true);
                     setFirstPage(false);
@@ -584,7 +585,7 @@ const ViewHierarchy = () => {
             footerclassName={"popUpFooter"}
             type={"default"}
             // style={{width:"70%"}}
-            heading={t("DOWNLOAD_EXCEL_TEMPLATE_FOR_BOUNDARY")}
+            heading={t(LOCALIZATION.DOWNLOAD_EXCEL_TEMPLATE_FOR_BOUNDARY)}
             children={[]}
             onOverlayClick={() => {
               setShowPopUp(false);
@@ -597,7 +598,7 @@ const ViewHierarchy = () => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("CLOSE")}
+                label={t(LOCALIZATION.CLOSE)}
                 onClick={() => {
                   setShowPopUp(false);
                 }}
@@ -606,7 +607,7 @@ const ViewHierarchy = () => {
                 type={"button"}
                 size={"large"}
                 variation={"primary"}
-                label={t("DOWNLOAD_TEMPLATE_BOUNDARY")}
+                label={t(LOCALIZATION.DOWNLOAD_TEMPLATE_BOUNDARY)}
                 icon={"DownloadIcon"}
                 onClick={downloadExcelTemplate}
               />,
@@ -614,14 +615,14 @@ const ViewHierarchy = () => {
             sortFooterChildren={true}
           >
             <div style={{ fontWeight: "400", fontSize: "1.25rem", fontFamily: "Roboto", marginTop: "1rem", marginBottom: "1rem" }}>
-              {t("BOUNDARY_DOWNLOAD_MESSAGE")}
+              {t(LOCALIZATION.BOUNDARY_DOWNLOAD_MESSAGE)}
             </div>
           </PopUp>
         )}
         {showToast && <Toast label={showToast.label} type={showToast.isError} onClose={() => setShowToast(null)} />}
         {previewPage && (
           <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
-            <div className="hierarchy-boundary-heading">{t("CONFIRM_BOUNDARY_DATA")}</div>
+            <div className="hierarchy-boundary-heading">{t(LOCALIZATION.CONFIRM_BOUNDARY_DATA)}</div>
             {!dataCreationGoing && (
               <XlsPreviewNew
                 file={fileData}
@@ -639,7 +640,7 @@ const ViewHierarchy = () => {
                   icon="ArrowBack"
                   style={{ marginLeft: "3.5rem" }}
                   isDisabled={disable}
-                  label={t("COMMON_BACK")}
+                  label={t(LOCALIZATION.COMMON_BACK)}
                   onClick={() => {
                     setFirstPage(true);
                     setPreviewPage(false);
@@ -653,7 +654,7 @@ const ViewHierarchy = () => {
                   isDisabled={dataCreationGoing}
                   style={{ marginLeft: "auto" }}
                   isSuffix
-                  label={t("CMN_BOUNDARY_REL_DATA_CREATE")}
+                  label={t(LOCALIZATION.CMN_BOUNDARY_REL_DATA_CREATE)}
                   onClick={() => {
                     createData();
                   }}

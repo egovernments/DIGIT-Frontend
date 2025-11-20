@@ -16,6 +16,7 @@ import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { fetchFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
@@ -151,30 +152,30 @@ function NewDependentFieldWrapper({ t }) {
     }, [dispatch, flowId, campaignNumber, currentFlowPages, currentPageName, pageConfigs, pageFieldsLoading, tenantId]);
 
     // ---------- labels ----------
-    const displayLogicLabel = t("DISPLAY_LOGIC") || "Display Logic";
-    const noLogicAddedLabel = t("NO_LOGIC_ADDED") || "No logic added yet.";
-    const addDisplayLogicLabel = t("ADD_DISPLAY_LOGIC") || "Add Display Logic";
-    const editLabel = t("EDIT") || "Edit";
-    const deleteRuleLabel = t("HCM_REMOVE_RULE") || "Delete Rule";
-    const joinWithLabel = t("HCM_JOIN_WITH") || "Join with";
-    const selectPageLabel = t("HCM_SELECT_PAGE") || "Select Page";
-    const selectFieldLabel = t("HCM_SELECT_FIELD") || "Select Field";
-    const comparisonTypeLabel = t("HCM_COMPARISION_TYPE") || "Comparison";
-    const selectValueLabel = t("HCM_SELECT_VALUE") || "Select Value";
-    const enterValueLabel = t("ENTER_VALUE") || "Enter value";
-    const closeLabel = t("CLOSE") || "Cancel";
-    const submitLabel = t("SUBMIT") || "Submit";
-    const andText = t("AND") || "And";
-    const orText = t("OR") || "Or";
+    const displayLogicLabel = t(LOCALIZATION.DISPLAY_LOGIC) || "Display Logic";
+    const noLogicAddedLabel = t(LOCALIZATION.NO_LOGIC_ADDED) || "No logic added yet.";
+    const addDisplayLogicLabel = t(LOCALIZATION.ADD_DISPLAY_LOGIC) || "Add Display Logic";
+    const editLabel = t(LOCALIZATION.EDIT) || "Edit";
+    const deleteRuleLabel = t(LOCALIZATION.HCM_REMOVE_RULE) || "Delete Rule";
+    const joinWithLabel = t(LOCALIZATION.HCM_JOIN_WITH) || "Join with";
+    const selectPageLabel = t(LOCALIZATION.HCM_SELECT_PAGE) || "Select Page";
+    const selectFieldLabel = t(LOCALIZATION.HCM_SELECT_FIELD) || "Select Field";
+    const comparisonTypeLabel = t(LOCALIZATION.HCM_COMPARISION_TYPE) || "Comparison";
+    const selectValueLabel = t(LOCALIZATION.HCM_SELECT_VALUE) || "Select Value";
+    const enterValueLabel = t(LOCALIZATION.ENTER_VALUE) || "Enter value";
+    const closeLabel = t(LOCALIZATION.CLOSE) || "Cancel";
+    const submitLabel = t(LOCALIZATION.SUBMIT) || "Submit";
+    const andText = t(LOCALIZATION.AND) || "And";
+    const orText = t(LOCALIZATION.OR) || "Or";
     const completeAllMsg =
-        t("PLEASE_COMPLETE_ALL_CONDITIONS") ||
+        t(LOCALIZATION.PLEASE_COMPLETE_ALL_CONDITIONS) ||
         "Please complete all condition fields before confirming.";
-    const logicLabel = t("HCM_LOGIC") || "Logic";
+    const logicLabel = t(LOCALIZATION.HCM_LOGIC) || "Logic";
 
     // ---------- constants & helpers ----------
     const LOGICALS = [
-        { code: "&&", name: t("AND") || "AND" },
-        { code: "||", name: t("OR") || "OR" },
+        { code: "&&", name: t(LOCALIZATION.AND) || "AND" },
+        { code: "||", name: t(LOCALIZATION.OR) || "OR" },
     ];
     const ALL_OPERATOR_OPTIONS = [
         { code: "==", name: "EQUALS_TO" },
@@ -331,7 +332,7 @@ function NewDependentFieldWrapper({ t }) {
             <Card type="secondary">
                 <div style={{ padding: "1rem" }}>
                     <p style={{ opacity: 0.7, margin: 0 }}>
-                        {t("LOADING_CONFIGURATION") || "Loading configuration..."}
+                        {t(LOCALIZATION.LOADING_CONFIGURATION) || "Loading configuration..."}
                     </p>
                 </div>
             </Card>
@@ -958,7 +959,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     <TextInput
                                                                         type="text"
                                                                         populators={{ name: `months-editor` }}
-                                                                        placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                        placeholder={t(LOCALIZATION.ENTER_INTEGER_VALUE) || enterValueLabel}
                                                                         value={draftRule.fieldValue}
                                                                         onChange={(event) =>
                                                                             setDraftRule((prev) => ({
@@ -1059,7 +1060,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     type="text"
                                                                     populators={{ name: `text-editor` }}
                                                                     placeholder={
-                                                                        numericValue ? t("ENTER_INTEGER_VALUE") || enterValueLabel : enterValueLabel
+                                                                        numericValue ? t(LOCALIZATION.ENTER_INTEGER_VALUE) || enterValueLabel : enterValueLabel
                                                                     }
                                                                     value={draftRule.fieldValue}
                                                                     onChange={(event) => {

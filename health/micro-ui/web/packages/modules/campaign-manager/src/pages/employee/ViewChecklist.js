@@ -6,6 +6,7 @@ import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
+import { LOCALIZATION } from "../../constants/localizationConstants";
 
 const ViewChecklist = () => {
   const { t } = useTranslation();
@@ -182,13 +183,13 @@ const ViewChecklist = () => {
       <TagComponent campaignName={campaignName} />
       <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "1rem" }}>
         <div>
-          <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("VIEW_CHECKLIST")}</h2>
+          <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t(LOCALIZATION.VIEW_CHECKLIST)}</h2>
         </div>
         <div style={{ display: "flex", gap: "1rem" }}>
           <Button
             icon="Preview"
             variation="secondary"
-            label={t("PREVIEW_CHECKLIST")}
+            label={t(LOCALIZATION.PREVIEW_CHECKLIST)}
             className={"hover"}
             style={{ marginTop: "2rem", marginBottom: "2rem" }}
             // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -200,7 +201,7 @@ const ViewChecklist = () => {
         <PopUp
           className={"custom-pop-up"}
           type={"default"}
-          heading={t("CHECKLIST_PREVIEW")}
+          heading={t(LOCALIZATION.CHECKLIST_PREVIEW)}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -214,7 +215,7 @@ const ViewChecklist = () => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("CLOSE")}
+              label={t(LOCALIZATION.CLOSE)}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -246,14 +247,14 @@ const ViewChecklist = () => {
         ))}
         {
           <div style={{ display: "flex" }}>
-            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t(LOCALIZATION.CHECKLIST_HELP_TEXT)}</div>
             <TextInput
               disabled={true}
               className="tetxinput-example"
               type={"text"}
-              name={t("CHECKLIST_HELP_TEXT")}
+              name={t(LOCALIZATION.CHECKLIST_HELP_TEXT)}
               value={helpText}
-              placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+              placeholder={t(LOCALIZATION.CHECKLIST_HELP_TEXT_PALCEHOLDER)}
             />
           </div>
         }
@@ -263,7 +264,7 @@ const ViewChecklist = () => {
       {!isLoading && (
         <FormComposerV2
           showMultipleCardsWithoutNavs={true}
-          label={t("UPDATE")}
+          label={t(LOCALIZATION.UPDATE)}
           config={config}
           onSubmit={() => {
             navigate(

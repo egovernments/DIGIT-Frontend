@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { PRIMARY_COLOR } from "../utils";
 import { CheckBox, FieldV1, LabelFieldPair, Button, AddIcon, Card, TextInput, Dropdown } from "@egovernments/digit-ui-components";
@@ -30,7 +31,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
         id: crypto.randomUUID(),
         key: 1,
         parentQuestionId: field.id,
-        label: `${t("HCM_CHECKLIST_OPTION")} 1`,
+        label: `${t(LOCALIZATION.HCM_CHECKLIST_OPTION)} 1`,
         optionDependency: false,
         optionComment: false,
       };
@@ -65,7 +66,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           id: crypto.randomUUID(),
           key: prev.length + 1,
           parentQuestionId: field.id,
-          label: `${t("HCM_CHECKLIST_OPTION")} ${field.options.length + 1}`,
+          label: `${t(LOCALIZATION.HCM_CHECKLIST_OPTION)} ${field.options.length + 1}`,
           optionDependency: false
         },
       ];
@@ -155,7 +156,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return (
         <MultipleChoice
           maxLength={60}
-          titleHover={t("MAX_LENGTH_60")}
+          titleHover={t(LOCALIZATION.MAX_LENGTH_60)}
           t={t}
           addOption={handleAddOption}
           updateOption={handleUpdateOption}
@@ -182,7 +183,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return (
         <Checkboxes
           maxLength={60}
-          titleHover={t("MAX_LENGTH_60")}
+          titleHover={t(LOCALIZATION.MAX_LENGTH_60)}
           t={t}
           addOption={handleAddOption}
           updateOption={handleUpdateOption}
@@ -209,7 +210,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return (
         <Dropdowns
           maxLength={60}
-          titleHover={t("MAX_LENGTH_60")}
+          titleHover={t(LOCALIZATION.MAX_LENGTH_60)}
           t={t}
           addOption={handleAddOption}
           updateOption={handleUpdateOption}
@@ -425,8 +426,8 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                   <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                     <div className="question-label" style={{ height: "3.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
                       <div style={{ display: "flex", gap: "1rem" , alignItems: "center"}}>
-                        {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span> */}
-                        <span style={{ fontWeight: "700", fontSize: "1.5rem", display: "flex", justifyContent: "center", alignItems: "center" }}>{`${t("HCM_CHECKLIST_QUESTION")} ${questionNumber}`}</span>
+                        {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t(LOCALIZATION.QUESTION)} ${index + 1}`}</span> */}
+                        <span style={{ fontWeight: "700", fontSize: "1.5rem", display: "flex", justifyContent: "center", alignItems: "center" }}>{`${t(LOCALIZATION.HCM_CHECKLIST_QUESTION)} ${questionNumber}`}</span>
                         <div style={{ alignItems: "center" }}>
                           <CheckBox
                             disabled={dis}
@@ -434,7 +435,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                             key={field.key}
                             mainClassName={"checkboxOptionVariant"}
                             // disabled={optionDependency ? true : false}
-                            label={t("REQUIRED")}
+                            label={t(LOCALIZATION.REQUIRED)}
                             checked={field?.isRequired}
                             // onChange={handleRequiredField(field.id)}
                             onChange={() => handleRequiredField(field.id)}
@@ -451,7 +452,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           <Button
                             icon="Delete"
                             iconFill=""
-                            label={`${t(`CAMPAIGN_DELETE_QUESTION`)} ${questionNumber}`}
+                            label={`${t(LOCALIZATION.CAMPAIGN_DELETE_QUESTION)} ${questionNumber}`}
                             onClick={() => deleteField(field.key, initialQuestionData, field.id, field)}
                             size="medium"
                             title=""
@@ -472,7 +473,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                             name="title"
                             value={field?.title || ""}
                             onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                            placeholder={t("TYPE_YOUR_QUESTION_HERE")}
+                            placeholder={t(LOCALIZATION.TYPE_YOUR_QUESTION_HERE)}
                           />
                           {!dis && <Dropdown
                             style={{ width: "20%" }}
@@ -564,7 +565,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
           <Button
             variation="secondary"
             size="medium"
-            label={`${t("ADD_QUESTION")} ${nextQuestionNumber}`}
+            label={`${t(LOCALIZATION.ADD_QUESTION)} ${nextQuestionNumber}`}
             className={"hover"}
             icon="Add"
             iconFill=""

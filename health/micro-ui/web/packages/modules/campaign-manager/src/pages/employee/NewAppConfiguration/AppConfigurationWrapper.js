@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
@@ -176,12 +177,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           // Initialize config with the fetched data
           dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
-          setPageConfigError(t("APP_CONFIG_NO_PAGE_CONFIG_FOUND"));
+          setPageConfigError(t(LOCALIZATION.APP_CONFIG_NO_PAGE_CONFIG_FOUND));
           console.error("No page configuration found for:", { flow, pageName, campaignNumber });
         }
       } catch (err) {
         console.error("Error fetching page config:", err);
-        setPageConfigError(t("APP_CONFIG_FAILED_TO_FETCH_PAGE_CONFIG"));
+        setPageConfigError(t(LOCALIZATION.APP_CONFIG_FAILED_TO_FETCH_PAGE_CONFIG));
       } finally {
         setIsLoadingPageConfig(false);
       }
@@ -262,7 +263,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   if (pageConfigError) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", flexDirection: "column" }}>
-        <h3 style={{ color: "#d32f2f" }}>{t("APP_CONFIG_ERROR_LOADING_CONFIGURATION")}</h3>
+        <h3 style={{ color: "#d32f2f" }}>{t(LOCALIZATION.APP_CONFIG_ERROR_LOADING_CONFIGURATION)}</h3>
         <p>{pageConfigError}</p>
       </div>
     );
@@ -291,7 +292,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         <PopUp
           className="app-config-add-field-popup"
           type={"default"}
-          heading={t("ADD_FIELD")}
+          heading={t(LOCALIZATION.ADD_FIELD)}
           onOverlayClick={() => {}}
           onClose={() => {
             dispatch(handleShowAddFieldPopup(null));
@@ -305,19 +306,19 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           <>
             <LabelFieldPair>
               <span style={{ fontWeight: "600", width: "33%" }}>
-                {t("FIELD_LABEL")} <span style={{ color: "red" }}>*</span>
+                {t(LOCALIZATION.FIELD_LABEL)} <span style={{ color: "red" }}>*</span>
               </span>
               <TextInput
                 name="fieldLabel"
                 value={fieldDataLabel}
-                placeholder={t("ENTER_FIELD_LABEL")}
+                placeholder={t(LOCALIZATION.ENTER_FIELD_LABEL)}
                 onChange={(event) => handleFieldChange(event.target.value)}
               />
             </LabelFieldPair>
 
             <LabelFieldPair>
               <span style={{ fontWeight: "600", width: "33%" }}>
-                {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
+                {t(LOCALIZATION.FIELD_TYPE)} <span style={{ color: "red" }}>*</span>
               </span>
               <Dropdown
                 option={fieldTypeMaster?.fieldTypeMappingConfig?.filter((item) => {
@@ -334,7 +335,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   const updatedData = { ...newFieldType, field: value };
                   setNewFieldType(updatedData);
                 }}
-                placeholder={t("SELECT_FIELD_TYPE")}
+                placeholder={t(LOCALIZATION.SELECT_FIELD_TYPE)}
                 t={t}
               />
             </LabelFieldPair>
@@ -344,7 +345,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 type="button"
                 size="medium"
                 variation="secondary"
-                label={t("CANCEL")}
+                label={t(LOCALIZATION.CANCEL)}
                 onClick={() => {
                   dispatch(handleShowAddFieldPopup(null));
                   setNewFieldType(null);
@@ -354,7 +355,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 type="button"
                 size="medium"
                 variation="primary"
-                label={t("ADD")}
+                label={t(LOCALIZATION.ADD)}
                 isDisabled={!newFieldType?.label || !newFieldType?.field}
                 onClick={handleAddNewField}
               />

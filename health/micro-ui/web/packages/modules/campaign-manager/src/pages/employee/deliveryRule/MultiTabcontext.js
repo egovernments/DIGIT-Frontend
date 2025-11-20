@@ -5,6 +5,7 @@ import { useDeliveryRules } from './useDeliveryRules';
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import TagComponent from "../../../components/TagComponent";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 
 const Tabs = React.memo(() => {
   const { campaignData, activeTabIndex, changeTab } = useDeliveryRules();
@@ -24,7 +25,7 @@ const Tabs = React.memo(() => {
           onClick={() => handleTabChange(cycle.cycleIndex, index)}
         >
           <p style={{ margin: 0, position: "relative", top: "-0.1rem" }}>
-            {t(`CAMPAIGN_CYCLE`)} {index + 1}
+            {t(LOCALIZATION.CAMPAIGN_CYCLE)} {index + 1}
           </p>
         </button>
       ))}
@@ -53,7 +54,7 @@ const SubTabs = React.memo(() => {
           className={`campaign-sub-tab-head ${index === activeSubTabIndex ? "active" : ""} hover`}
           onClick={() => handleSubTabChange(delivery.deliveryIndex, index)}
         >
-          {t(`CAMPAIGN_DELIVERY`)} {index + 1}
+          {t(LOCALIZATION.CAMPAIGN_DELIVERY)} {index + 1}
         </button>
       ))}
     </div>

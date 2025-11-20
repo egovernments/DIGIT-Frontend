@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment, useReducer, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { LOCALIZATION } from "../constants/localizationConstants";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Button, Card, Dropdown, MultiSelectDropdown, Toast } from "@egovernments/digit-ui-components";
@@ -274,13 +275,13 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   return (
     <>
       <Card className={"campaign-update-container"} style = {{marginTop: "1rem"}}>
-        <Header className="header" styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
+        <Header className="header" styles={{ marginBottom: "0rem" }}>{t(LOCALIZATION.HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER)}</Header>
         <div className={"search-field-container"}>
-          <p className="field-description" style={{ marginTop: "0rem" , marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+          <p className="field-description" style={{ marginTop: "0rem" , marginBottom: "1rem" }}>{t(LOCALIZATION.HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT)}</p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">
-                <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY_LEVEL`)}</p>
+                <p>{t(LOCALIZATION.HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY_LEVEL)}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="update-field">
@@ -300,7 +301,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
             </LabelFieldPair>
             <LabelFieldPair className="update-date-labelField" style={{ display: "grid", gridTemplateColumns: "1fr", alignItems: "start" }}>
               <div className="update-label">
-                <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_DATA_LABEL`)}</p>
+                <p>{t(LOCALIZATION.HCM_CAMPAIGN_SELECT_BOUNDARY_DATA_LABEL)}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="update-field">
@@ -314,7 +315,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
                 />
               </div>
             </LabelFieldPair>
-            <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
+            <Button variation="primary" label={t(LOCALIZATION.CAMPAIGN_SELECT_BOUNDARY_BUTTON)} onClick={() => selectBoundary()} />
           </div>
         </div>
       </Card>

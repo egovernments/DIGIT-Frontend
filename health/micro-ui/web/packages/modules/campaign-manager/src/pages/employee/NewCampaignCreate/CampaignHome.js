@@ -6,6 +6,7 @@ import { SVG } from "@egovernments/digit-ui-components";
 import { NewWindow } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { AppHelpContent } from "../../../components/HelpInfoCard";
+import { LOCALIZATION } from "../../../constants/localizationConstants";
 const CampaignHome = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -133,8 +134,8 @@ const CampaignHome = () => {
 
   return (
     <Card>
-      <HeaderComponent className="campaign-header-style">{t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}</HeaderComponent>
-      <p className="name-description">{t(`HCM_CREATE_CAMPAIGN_DESCRIPTION`)}</p>
+      <HeaderComponent className="campaign-header-style">{t(LOCALIZATION.HCM_HOW_DO_YOU_WANT_TO_CREATE)}</HeaderComponent>
+      <p className="name-description">{t(LOCALIZATION.HCM_CREATE_CAMPAIGN_DESCRIPTION)}</p>
       <div className={"containerStyle"}>
         <div
           className="cardStyle"
@@ -150,7 +151,7 @@ const CampaignHome = () => {
           }}
         >
           <NewWindow />
-          <div className={"descStyle "}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
+          <div className={"descStyle "}>{t(LOCALIZATION.HCM_CREATE_NEW_CAMPAIGN)}</div>
         </div>
         <div
           className={"cardStyle disabledCard"}
@@ -159,14 +160,14 @@ const CampaignHome = () => {
           }}
         >
           <SVG.SystemUpdateAlt width="40" height="40" fill={"#c5c5c5"} />
-          <div className={"descStyle disabledText"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
+          <div className={"descStyle disabledText"}>{t(LOCALIZATION.HCM_IMPORT_EXISTING_CAMPAIGN)}</div>
         </div>
       </div>
       {showPopUp && (
         <PopUp
           className={"campaign-requirements-heading"}
           type={"default"}
-          heading={t("CAMPAIGN_REQUIREMENTS_HEADING")}
+          heading={t(LOCALIZATION.CAMPAIGN_REQUIREMENTS_HEADING)}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -181,7 +182,7 @@ const CampaignHome = () => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("HCM_CAMPAIGN_PROCEED")}
+              label={t(LOCALIZATION.HCM_CAMPAIGN_PROCEED)}
               onClick={() => {
                 navigate(`/${window.contextPath}/employee/campaign/create-campaign`);
               }}
