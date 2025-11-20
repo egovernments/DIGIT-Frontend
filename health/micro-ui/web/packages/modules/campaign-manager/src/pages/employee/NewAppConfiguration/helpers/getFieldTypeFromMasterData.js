@@ -16,13 +16,17 @@ export const getFieldTypeFromMasterData = (field, fieldTypeMasterData) => {
     // 2. If field only has type, try to match where format equals the field's type
     // (e.g., field.type = "text" should match metadata: {type: "string", format: "text"})
     else {
-      return typeMatches || (item?.metadata?.format === field?.type);
+      return typeMatches || item?.metadata?.format === field?.type;
     }
   });
 
   return matched?.fieldType || "text";
 };
 
+export const getAppTypeFromMasterData = (field, fieldTypeMasterData) => {
+  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
+  return matched?.type || null;
+};
 export const getFieldTypeFromMasterData2 = (field, fieldTypeMasterData) => {
   if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
     return "text";

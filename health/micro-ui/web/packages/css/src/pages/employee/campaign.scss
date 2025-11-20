@@ -306,7 +306,6 @@
   }
 
   .app-card {
-    min-height: 100%;
     gap: 0.5rem;
     box-shadow: none;
     border-style: none;
@@ -321,7 +320,6 @@
 .app-card {
   flex-direction: column;
   display: flex;
-  min-height: 100%;
   gap: 0.5rem;
   box-shadow: none;
   border-style: none;

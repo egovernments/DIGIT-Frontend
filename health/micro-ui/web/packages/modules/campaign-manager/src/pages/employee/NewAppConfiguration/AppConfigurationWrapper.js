@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
@@ -30,6 +30,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   const [pageConfigError, setPageConfigError] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  const previousLocaleModuleRef = useRef(null);
 
   // Redux selectors
   const { currentData, showAddFieldPopup, responseData, pageType } = useSelector((state) => state.remoteConfig);
@@ -213,8 +214,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       })
     );
 
-    // Fetch localization data only if not already loaded
-    if (localeModule && localizationStatus === "idle") {
+    // Fetch localization data when localeModule changes
+    if (localeModule && previousLocaleModuleRef.current !== localeModule) {
+      previousLocaleModuleRef.current = localeModule;
+
       dispatch(
         fetchLocalization({
           tenantId,
@@ -234,7 +237,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         })
       );
     }
-  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale, localizationStatus]);
+  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale]);
 
   // Auto-close toast after 10 seconds
   useEffect(() => {
@@ -255,7 +258,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     };
   }, []);
 
-  if (isLoadingPageConfig || !currentData || (localeModule && localizationStatus === "loading")) {
+  if (isLoadingPageConfig || !currentData || (localeModule && localizationStatus === "loading") || isUpdating) {
     return <Loader />;
   }
 
