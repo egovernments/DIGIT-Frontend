@@ -884,7 +884,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
-      setShowToast({ key: "error", label: t(LOCALIZATION.HCM_ERROR_MORE_THAN_ONE_FILE) });
+      setShowToast({ key: "error", label: LOCALIZATION.HCM_ERROR_MORE_THAN_ONE_FILE });
       return;
     }
     try {
@@ -894,7 +894,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
       if (!fileStoreIds || fileStoreIds.length === 0) {
         setUploadLoader(false);
-        setShowToast({ key: "error", label: t(LOCALIZATION.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED) });
+        setShowToast({ key: "error", label: LOCALIZATION.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED });
         throw new Error(t(LOCALIZATION.HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED));
       }
       const filesArray = [fileStoreIds?.[0]?.fileStoreId];
@@ -1001,7 +1001,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             if (!temp?.additionalDetails?.sheetErrors?.length) {
-              setShowToast({ key: "success", label: t(LOCALIZATION.HCM_VALIDATION_COMPLETED) });
+              setShowToast({ key: "success", label: LOCALIZATION.HCM_VALIDATION_COMPLETED });
               if (temp?.id) {
                 setResourceId(temp?.id);
               }
@@ -1016,7 +1016,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             } else {
               const processedFileStore = temp?.processedFilestoreId;
               if (!processedFileStore) {
-                setShowToast({ key: "error", label: t(LOCALIZATION.HCM_VALIDATION_FAILED) });
+                setShowToast({ key: "error", label: LOCALIZATION.HCM_VALIDATION_FAILED });
                 // setIsValidation(true);
                 return;
               } else {
@@ -1038,17 +1038,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   .map(({ id, ...rest }) => rest);
                 // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
-                setShowToast({ key: "warning", label: t(LOCALIZATION.HCM_CHECK_FILE_AGAIN) });
+                setShowToast({ key: "warning", label: LOCALIZATION.HCM_CHECK_FILE_AGAIN });
                 setIsError(true);
               }
             }
           } else {
             setLoader(false);
             setIsValidation(false);
-            // setShowToast({ key: "error", label: t(LOCALIZATION.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
+            // setShowToast({ key: "error", label: LOCALIZATION.HCM_VALIDATION_FAILED, transitionTime: 5000000 });
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t(LOCALIZATION.HCM_VALIDATION_FAILED), transitionTime: 5000000 });
+              setShowToast({ key: "error", label: LOCALIZATION.HCM_VALIDATION_FAILED, transitionTime: 5000000 });
               return;
             } else {
               setIsError(true);
@@ -1069,7 +1069,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 .map(({ id, ...rest }) => rest);
               // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
-              setShowToast({ key: "warning", label: t(LOCALIZATION.HCM_CHECK_FILE_AGAIN), transitionTime: 5000000 });
+              setShowToast({ key: "warning", label: LOCALIZATION.HCM_CHECK_FILE_AGAIN, transitionTime: 5000000 });
               setIsError(true);
             }
           }
@@ -1114,17 +1114,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         onSuccess: async (result) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
-            setShowToast({ key: "error", label: t(LOCALIZATION.ERROR_WHILE_DOWNLOADING) });
+            setShowToast({ key: "error", label: LOCALIZATION.ERROR_WHILE_DOWNLOADING });
             return;
           }
           if (result?.GeneratedResource?.[0]?.status === "inprogress") {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
+            setShowToast({ key: "info", label: LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME });
             return;
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
+            setShowToast({ key: "info", label: LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME });
             return;
           }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
@@ -1153,17 +1153,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             }
           } else {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT) });
+            setShowToast({ key: "info", label: LOCALIZATION.HCM_PLEASE_WAIT });
           }
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
           if (errorCode == "NativeIoException") {
             setDownloadError(true);
-            setShowToast({ key: "info", label: t(LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME) });
+            setShowToast({ key: "info", label: LOCALIZATION.HCM_PLEASE_WAIT_TRY_IN_SOME_TIME });
           } else {
             setDownloadError(true);
-            setShowToast({ key: "error", label: t(LOCALIZATION.ERROR_WHILE_DOWNLOADING) });
+            setShowToast({ key: "error", label: LOCALIZATION.ERROR_WHILE_DOWNLOADING });
           }
         },
       }
