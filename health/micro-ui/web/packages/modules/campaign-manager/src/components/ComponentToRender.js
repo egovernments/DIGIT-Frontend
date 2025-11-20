@@ -2,7 +2,11 @@ import { FieldV1 } from "@egovernments/digit-ui-components";
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2 } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
+import {
+  getAppTypeFromMasterData,
+  getFieldTypeFromMasterData,
+  getFieldTypeFromMasterData2,
+} from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
 import { getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers/getComponentFromMasterData";
 
 const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
@@ -45,6 +49,8 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           customProps: {
             field: field,
             t: customT,
+            type: field?.type,
+            fieldType: getAppTypeFromMasterData(field, fieldTypeMasterData),
           },
         }}
         description={field?.isMdms ? t(field?.helpText) : customT(field?.helpText) || null}

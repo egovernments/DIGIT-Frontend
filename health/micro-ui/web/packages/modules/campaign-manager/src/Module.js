@@ -80,6 +80,7 @@ import MenuCardTemplate from "./pages/employee/NewAppConfiguration/components/Me
 import { CaptureImage } from "./pages/employee/NewAppConfiguration/components/CaptureImage";
 import LabelFieldPairTemplate from "./pages/employee/NewAppConfiguration/components/LabelFieldPairTemplate";
 import QRScanner from "./pages/employee/NewAppConfiguration/components/Scanner";
+import DynamicSVG from "./components/DynamicSVGComponent";
 
 /**
  * MDMS Module name
@@ -231,6 +232,7 @@ const componentsToRegister = {
   MenuCardTemplate,
   CaptureImage,
   LabelFieldPair: LabelFieldPairTemplate,
+  DynamicSVG,
 };
 
 const overrideHooks = () => {
