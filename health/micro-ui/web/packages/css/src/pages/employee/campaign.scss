@@ -148,6 +148,10 @@
   gap: 1.5rem;
   align-items: stretch;
   height: 100%;
+
+  &.upload-screen{
+    width:"100%"
+  }
 }
 .name-container-label {
   .label-field-wrapper {
