@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2 } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
+import { getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers/getComponentFromMasterData";
 
 const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
