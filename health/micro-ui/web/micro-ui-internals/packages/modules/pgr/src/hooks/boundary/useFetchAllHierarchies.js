@@ -15,6 +15,7 @@ export const useFetchAllBoundaryHierarchies = ({ tenantId, config = {} }) => {
       tenantId,
       offset,
       limit: DEFAULT_LIMIT,
+      hierarchyType: config?.refetchKey || null,
     },
   };
 
