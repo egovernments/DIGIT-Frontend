@@ -22,16 +22,7 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
             id: field.id || field.fieldName || `${sectionName}-${field.format}-${index}`,
           };
 
-          return renderTemplateComponent(
-            fieldWithId,
-            fieldTypeMasterData,
-            selectedField,
-            t,
-            onFieldClick,
-            data,
-            sectionName,
-            index
-          );
+          return renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
         })}
     </>
   );
@@ -48,61 +39,53 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
 
   return (
     <MobileBezelFrame>
-      <div className="mobile-bezel-child-container" style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        position: "relative"
-      }}>
-        <Card className="app-card" style={{
-          // flex: 1,
+      <div
+        className="mobile-bezel-child-container"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
           backgroundColor: "#eee",
-          overflow: "auto",
-          paddingBottom: data?.footer?.length > 0 ? "80px" : "0"
-        }}>
+        }}
+      >
+        <Card
+          className="app-card"
+          style={{
+            flex: 1,
+            boxShadow: "none",
+            backgroundColor: "#eee",
+            overflow: "auto",
+          }}
+        >
           {/* HEADER */}
           {data?.heading && <CardHeader>{t(data.heading)}</CardHeader>}
           {data?.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
           {/* BODY */}
-          {data?.body && data?.body?.[0]?.fields && renderSection(
-            data?.body?.[0]?.fields,
-            "body",
-            fieldTypeMasterData,
-            selectedField,
-            t,
-            onFieldClick,
-            data
-          )}
+          {data?.body &&
+            data?.body?.[0]?.fields &&
+            renderSection(data?.body?.[0]?.fields, "body", fieldTypeMasterData, selectedField, t, onFieldClick, data)}
         </Card>
 
         {/* FOOTER */}
         {data?.footer?.length > 0 && (
-          <div style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: "#fff",
-            borderTop: "1px solid #e0e0e0",
-            padding: "12px 16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px"
-          }}>
+          <div
+            style={{
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "1px solid #e0e0e0",
+              padding: "12px 16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              flexShrink: 0,
+              zIndex: 10,
+            }}
+          >
             {data.footer.map((footerItem, index) => {
-              return renderTemplateComponent(
-                footerItem,
-                fieldTypeMasterData,
-                selectedField,
-                t,
-                onFieldClick,
-                data,
-                "footer",
-                index
-              );
-            }
-            )}
+              return renderTemplateComponent(footerItem, fieldTypeMasterData, selectedField, t, onFieldClick, data, "footer", index);
+            })}
           </div>
         )}
       </div>

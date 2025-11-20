@@ -256,6 +256,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     switch (panelItem.fieldType) {
       case "toggle": {
         const bindTo = panelItem.bindTo;
+        const isMandatory = selectedField?.mandatory === true;
+        const isDisabled = panelItem?.disableForRequired && isMandatory;
 
         const handleToggleChange = (value) => {
           // Update local UI
@@ -271,6 +273,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               onToggle={handleToggleChange}
               isCheckedInitially={localToggle}
               shapeOnOff
+              disabled={isDisabled}
             />
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
@@ -285,7 +288,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         );
       }
 
-      case "text":
+      case "text": {
+        const isMandatory = selectedField?.mandatory === true;
+        const isDisabled = panelItem?.disableForRequired && isMandatory;
         return (
           <FieldV1
             type="text"
@@ -298,10 +303,14 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            disabled={isDisabled}
           />
         );
+      }
 
-      case "number":
+      case "number": {
+        const isMandatory = selectedField?.mandatory === true;
+        const isDisabled = panelItem?.disableForRequired && isMandatory;
         return (
           <FieldV1
             type="number"
@@ -325,10 +334,14 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            disabled={isDisabled}
           />
         );
+      }
 
-      case "date":
+      case "date": {
+        const isMandatory = selectedField?.mandatory === true;
+        const isDisabled = panelItem?.disableForRequired && isMandatory;
         return (
           <FieldV1
             type="date"
@@ -339,8 +352,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            disabled={isDisabled}
           />
         );
+      }
 
       case "group": {
         // Evaluate validation expression
@@ -442,7 +457,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Determine if field should be disabled
         const isTemplate = metadataType === "template";
         const isDynamic = metadataType === "dynamic";
-        const isMandatory = selectedField?.required === true || selectedField?.required?.required === true;
+        const isMandatory = selectedField?.mandatory === true;
         const isDisabled = (panelItem?.disableForRequired && isMandatory) || isTemplate || isDynamic;
 
         return (

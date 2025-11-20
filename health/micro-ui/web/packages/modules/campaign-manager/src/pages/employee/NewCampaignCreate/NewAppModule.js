@@ -29,14 +29,19 @@ const NewAppModule = () => {
   );
 
   const handleCardClick = (moduleName) => {
-    navigate(
-      `/${window.contextPath}/employee/campaign/dummy-loader?campaignNumber=${campaignNumber}&flow=${moduleName}`
-    );
+    navigate(`/${window.contextPath}/employee/campaign/dummy-loader?campaignNumber=${campaignNumber}&flow=${moduleName}`);
   };
 
   if (isLoading) {
     return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING")} />;
   }
+
+  // Sort mdmsData by order
+  const sortedMdmsData = mdmsData?.slice().sort((a, b) => {
+    const orderA = a?.data?.order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b?.data?.order ?? Number.MAX_SAFE_INTEGER;
+    return orderA - orderB;
+  });
 
   return (
     <>
@@ -47,20 +52,16 @@ const NewAppModule = () => {
       </div>
       <EqualHeightWrapper deps={[mdmsData]}>
         <div className="modules-container">
-          {mdmsData?.map((item, index) => (
+          {sortedMdmsData?.map((item, index) => (
             <Card
               key={item?.id || index}
               className="module-card"
               onClick={() => handleCardClick(item?.data?.name)}
               style={{ cursor: "pointer" }}
             >
-              <HeaderComponent className="detail-header">
-                {t(item?.data?.name)}
-              </HeaderComponent>
+              <HeaderComponent className="detail-header">{t(item?.data?.name)}</HeaderComponent>
               <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-              <p className="module-description">
-                {item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}
-              </p>
+              <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
             </Card>
           ))}
         </div>

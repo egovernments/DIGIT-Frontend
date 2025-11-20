@@ -6,10 +6,21 @@ import ComponentToRender from "./ComponentToRender";
 const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
   return (
     <MobileBezelFrame>
-      <div className="mobile-bezel-child-container">
+      <div
+        className="mobile-bezel-child-container"
+        style={{
+          backgroundColor: "#eee",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
         <Card
           style={{
             backgroundColor: "#eee",
+            boxShadow: "none",
+            flex: 1,
+            overflow: "auto",
           }}
         >
           <Card className="app-card" style={{}}>
@@ -48,22 +59,39 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                     })}
               </Fragment>
             ))}
-
-            {/* RENDERING FOOTER */}
-            {data?.footer?.length > 0 &&
-              data?.footer?.map((footer_item) => {
-                return (
-                  <Button
-                    className="app-preview-action-button"
-                    variation="primary"
-                    label={t(footer_item?.label)}
-                    title={t(footer_item?.label)}
-                    onClick={() => {}}
-                  />
-                );
-              })}
           </Card>
         </Card>
+
+        {/* RENDERING FOOTER */}
+        {data?.footer?.length > 0 && (
+          <div
+            style={{
+              position: "sticky",
+              bottom: 0,
+              backgroundColor: "#fff",
+              borderTop: "1px solid #e0e0e0",
+              padding: "12px 16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              flexShrink: 0,
+              zIndex: 10,
+            }}
+          >
+            {data?.footer?.map((footer_item, index) => {
+              return (
+                <Button
+                  key={index}
+                  className="app-preview-action-button"
+                  variation="primary"
+                  label={t(footer_item?.label)}
+                  title={t(footer_item?.label)}
+                  onClick={() => {}}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </MobileBezelFrame>
   );

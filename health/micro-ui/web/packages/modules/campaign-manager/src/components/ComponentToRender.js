@@ -2,7 +2,6 @@ import { FieldV1 } from "@egovernments/digit-ui-components";
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { getFieldTypeFromMasterData,getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers";
 import { getFieldTypeFromMasterData2 } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
 
 const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
@@ -42,10 +41,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         component={component}
         config={{
           step: "",
-           customProps: {
+          customProps: {
             field: field,
             t: customT,
-          }
+          },
         }}
         description={field?.isMdms ? t(field?.helpText) : customT(field?.helpText) || null}
         error={field?.isMdms ? t(field?.errorMessage) : customT(field?.errorMessage) || null}
@@ -56,14 +55,14 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         populators={{
           prefix: field?.prefixText || null,
           suffix: field?.suffixText || null,
-          t: null,
+          t: !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox") ? customT : null,
           fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
           mdmsConfig: field?.isMdms
-                          ? {
-                              moduleName: field?.schemaCode?.split(".")[0],
-                              masterName: field?.schemaCode?.split(".")[1],
-                            }
-                          : null,
+            ? {
+                moduleName: field?.schemaCode?.split(".")[0],
+                masterName: field?.schemaCode?.split(".")[1],
+              }
+            : null,
           options: field?.isMdms ? null : field?.dropDownOptions,
           optionsKey: field?.isMdms ? "code" : "name",
         }}
