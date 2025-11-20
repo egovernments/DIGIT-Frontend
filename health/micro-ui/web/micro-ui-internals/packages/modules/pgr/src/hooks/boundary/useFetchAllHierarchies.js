@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-const DEFAULT_LIMIT = 1000;
+const DEFAULT_LIMIT = 100000;
 
 export const useFetchAllBoundaryHierarchies = ({ tenantId, config = {} }) => {
   const [allBoundaries, setAllBoundaries] = useState([]);

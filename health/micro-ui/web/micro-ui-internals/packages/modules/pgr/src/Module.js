@@ -24,7 +24,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 
   const { data: hierarchies,
     isLoading: isHierarchyLoading,
-  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId });
+  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, refetchKey: HierarchySelectedForPGR });
 
   // Fetch hierarchy type from MDMS v2
   const { isLoading: isMDMSLoading, data: HierarchySelectedForPGR } = Digit.Hooks.useCustomMDMS(
