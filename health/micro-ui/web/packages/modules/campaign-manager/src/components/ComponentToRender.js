@@ -60,6 +60,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         onChange={function noRefCheck() {}}
         placeholder={customT(field?.innerLabel) || ""}
         populators={{
+          title: field?.label,
           prefix: field?.prefixText || null,
           suffix: field?.suffixText || null,
           t: !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox") ? customT : null,

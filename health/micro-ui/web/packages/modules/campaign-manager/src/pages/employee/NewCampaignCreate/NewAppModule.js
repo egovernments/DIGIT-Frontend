@@ -71,7 +71,7 @@ const NewAppModule = () => {
                   position: 'relative'
                 }}
               >
-                {isActive && (
+                {/* {isActive && (
                   <SVG.CheckCircle
                     fill={"#00703C"}
                     width={"3rem"}
@@ -82,7 +82,7 @@ const NewAppModule = () => {
                       top: "-14px",
                     }}
                   />
-                )}
+                )} */}
                 <HeaderComponent className={`detail-header ${isActive ? 'selected-header' : ''}`}>
                   {t(item?.data?.name)}
                 </HeaderComponent>
