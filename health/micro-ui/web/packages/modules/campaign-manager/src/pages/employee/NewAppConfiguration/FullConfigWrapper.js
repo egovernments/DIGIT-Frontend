@@ -165,6 +165,7 @@ const FullConfigWrapper = () => {
             schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
             filters: {
               project: campaignNumber,
+              module: flowModule,
             },
             isActive: true,
           },
