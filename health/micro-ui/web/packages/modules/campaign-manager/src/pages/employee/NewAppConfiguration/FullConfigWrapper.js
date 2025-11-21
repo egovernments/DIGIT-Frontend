@@ -29,6 +29,7 @@ const FullConfigWrapper = () => {
   const [showToast, setShowToast] = useState(null);
   const [activeSidePanel, setActiveSidePanel] = useState(null); // 'roles' or 'flows' or null
   const [isClosing, setIsClosing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleCloseSidePanel = () => {
     setIsClosing(true);
@@ -156,6 +157,8 @@ const FullConfigWrapper = () => {
     }
 
     try {
+      setIsSaving(true);
+
       // Step 1: Fetch NewFormConfig data and transform it
       const response = await Digit.CustomService.getResponse({
         url: `/${mdmsContext}/v2/_search`,
@@ -213,6 +216,8 @@ const FullConfigWrapper = () => {
           body: updatePayload,
         });
 
+        setIsSaving(false);
+
         // Show success toast
         setShowToast({ key: "success", label: "APP_CONFIG_SAVED_SUCCESSFULLY_REDIRECTING_TO_MODULE_SCREEN" });
 
@@ -222,10 +227,12 @@ const FullConfigWrapper = () => {
         }, 5000);
       } else {
         console.error("No existing NewApkConfig found for campaignNumber and flow");
+        setIsSaving(false);
         setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
       }
     } catch (error) {
       console.error("Error in saveToAppConfig:", error);
+      setIsSaving(false);
       setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
     }
   };
@@ -468,6 +475,9 @@ const FullConfigWrapper = () => {
         {showToast && (
           <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
         )}
+
+        {/* Saving Loader Overlay */}
+        {isSaving && <Loader loaderText={t("SUBMITTING_APP_CONFIG")} />}
       </div>
     </React.Fragment>
   );
