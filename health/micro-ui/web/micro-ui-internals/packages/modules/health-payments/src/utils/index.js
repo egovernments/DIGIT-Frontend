@@ -2,8 +2,6 @@ import _ from "lodash";
 import axios from "axios";
 import { CustomisedHooks } from "../hooks";
 
-
-
 export const overrideHooks = () => {
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
@@ -79,20 +77,15 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
           "auth-token": Digit.UserService.getUser()?.["access_token"],
         },
         params: {
-          tenantId: Digit.ULBService.getCurrentTenantId(),
+          tenantId: type == "excel" ? "pg" : Digit.ULBService.getCurrentTenantId(),
           fileStoreId: fileStoreId,
         },
       })
       .then((res) => {
-        downloadFile(
-          new Blob([res.data], { type: mimeType }),
-          customName || "download",
-          extension
-        );
+        downloadFile(new Blob([res.data], { type: mimeType }), customName || "download", extension);
       });
   }
 };
-
 
 export function formatTimestampToDate(timestamp) {
   // Check if the timestamp is valid
@@ -104,8 +97,7 @@ export function formatTimestampToDate(timestamp) {
   const date = new Date(timestamp);
 
   // Define an array of month abbreviations
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   // Extract day, month, and year from the date
   const day = date.getDate().toString().padStart(2, "0");
@@ -126,8 +118,7 @@ export function formatTimestampToDateTime(timestamp) {
   const date = new Date(timestamp);
 
   // Define an array of month abbreviations
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   // Extract day, month, and year
   const day = date.getDate().toString().padStart(2, "0");
@@ -147,7 +138,6 @@ export function formatTimestampToDateTime(timestamp) {
   // Return the formatted date and time string
   return `${day} ${month} ${year}  ${hours}:${minutes} ${amPm}`;
 }
-
 
 // pagination options for table
 export const getCustomPaginationOptions = (t) => ({
