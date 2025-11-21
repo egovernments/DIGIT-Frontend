@@ -246,11 +246,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
     // Immediately dispatch the current value
     if (panelItem.fieldType === "text") {
-      handleFieldChangeWithLoc(fieldValue, localValue);
+      // If isLocalisable is false, save directly without localization
+      // If undefined or true, use localization
+      if (panelItem?.isLocalisable === false) {
+        handleFieldChange(localValue);
+      } else {
+        handleFieldChangeWithLoc(fieldValue, localValue);
+      }
     } else if (panelItem.fieldType === "number") {
       handleNumberChange(localValue);
     }
-  }, [panelItem.fieldType, fieldValue, localValue, handleFieldChangeWithLoc, handleNumberChange]);
+  }, [panelItem.fieldType, panelItem?.isLocalisable, fieldValue, localValue, handleFieldChangeWithLoc, handleNumberChange, handleFieldChange]);
 
   const renderMainField = () => {
     switch (panelItem.fieldType) {
@@ -300,7 +306,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             value={localValue}
             onChange={(event) => {
               setLocalValue(event.target.value);
-              handleFieldChangeWithLoc(fieldValue, event.target.value);
+              // If isLocalisable is false, save directly without localization
+              // If undefined or true, use localization
+              if (panelItem?.isLocalisable === false) {
+                handleFieldChange(event.target.value);
+              } else {
+                handleFieldChangeWithLoc(fieldValue, event.target.value);
+              }
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
@@ -875,7 +887,13 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   const { currentLocale } = useSelector((state) => state.localization);
 
   // Check if this field should skip localization
-  const shouldSkipLocalization = cField.bindTo === "prefixText" || cField.bindTo === "suffixText" || cField.type === "number";
+  // If isLocalisable is false, skip localization
+  // If undefined or true, use localization (unless it's a special field like prefixText/suffixText/number)
+  const shouldSkipLocalization =
+    cField?.isLocalisable === false ||
+    cField.bindTo === "prefixText" ||
+    cField.bindTo === "suffixText" ||
+    cField.type === "number";
 
   // Get the raw value (localization code) from selectedField
   const fieldValue = selectedField[cField.bindTo] || "";
