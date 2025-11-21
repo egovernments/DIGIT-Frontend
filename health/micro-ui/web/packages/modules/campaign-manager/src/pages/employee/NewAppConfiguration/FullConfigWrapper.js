@@ -283,8 +283,9 @@ const FullConfigWrapper = () => {
         {/* Left Sidebar - Menu Items */}
         <div className="full-config-wrapper__left-sidebar">
           <div
-            className={`full-config-wrapper__sidebar-menu-item ${activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
-              }`}
+            className={`full-config-wrapper__sidebar-menu-item ${
+              activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
+            }`}
             onClick={() => handleToggleSidePanel("roles")}
           >
             <SVG.Person fill="#0B4B66" />
@@ -292,8 +293,9 @@ const FullConfigWrapper = () => {
           </div>
 
           <div
-            className={`full-config-wrapper__sidebar-menu-item ${activeSidePanel === "flows" ? "full-config-wrapper__sidebar-menu-item--active" : ""
-              }`}
+            className={`full-config-wrapper__sidebar-menu-item ${
+              activeSidePanel === "flows" ? "full-config-wrapper__sidebar-menu-item--active" : ""
+            }`}
             onClick={() => handleToggleSidePanel("flows")}
           >
             <Earbuds fill="#0B4B66" />
@@ -304,12 +306,14 @@ const FullConfigWrapper = () => {
         {/* Slide-out Panel for Roles */}
         {activeSidePanel === "roles" && (
           <div
-            className={`full-config-wrapper__side-panel-wrapper ${activeSidePanel === "roles" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
-              }`}
+            className={`full-config-wrapper__side-panel-wrapper ${
+              activeSidePanel === "roles" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
+            }`}
           >
             <div
-              className={`full-config-wrapper__side-panel-slide ${isClosing ? "full-config-wrapper__side-panel-slide--slide-out" : "full-config-wrapper__side-panel-slide--slide-in"
-                }`}
+              className={`full-config-wrapper__side-panel-slide ${
+                isClosing ? "full-config-wrapper__side-panel-slide--slide-out" : "full-config-wrapper__side-panel-slide--slide-in"
+              }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
                 <div className="full-config-wrapper__slide-panel-title">{t("APP_CONFIG_ROLES")}</div>
@@ -333,12 +337,14 @@ const FullConfigWrapper = () => {
         {/* Slide-out Panel for Flows */}
         {activeSidePanel === "flows" && (
           <div
-            className={`full-config-wrapper__side-panel-wrapper ${activeSidePanel === "flows" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
-              }`}
+            className={`full-config-wrapper__side-panel-wrapper ${
+              activeSidePanel === "flows" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
+            }`}
           >
             <div
-              className={`full-config-wrapper__side-panel-slide ${isClosing ? "full-config-wrapper__side-panel-slide--slide-out" : "full-config-wrapper__side-panel-slide--slide-in"
-                }`}
+              className={`full-config-wrapper__side-panel-slide ${
+                isClosing ? "full-config-wrapper__side-panel-slide--slide-out" : "full-config-wrapper__side-panel-slide--slide-in"
+              }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
                 <div className="full-config-wrapper__slide-panel-title">{t("APP_CONFIG_FLOWS")}</div>
@@ -346,7 +352,8 @@ const FullConfigWrapper = () => {
                   <SVG.Close fill="#787878" />
                 </button>
               </div>
-              {flowConfig.flows?.slice()
+              {flowConfig.flows
+                ?.slice()
                 .sort((a, b) => {
                   const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
                   const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
@@ -355,8 +362,9 @@ const FullConfigWrapper = () => {
                 ?.map((flow, index) => (
                   <div
                     key={index}
-                    className={`full-config-wrapper__flow-item ${selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
-                      }`}
+                    className={`full-config-wrapper__flow-item ${
+                      selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                    }`}
                     onClick={() => handleFlowClick(flow)}
                   >
                     {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
@@ -392,8 +400,9 @@ const FullConfigWrapper = () => {
 
             {/* Left Arrow */}
             <div
-              className={`full-config-wrapper__nav-arrow ${!previousRoute ? "full-config-wrapper__nav-arrow--disabled" : "full-config-wrapper__nav-arrow--enabled"
-                }`}
+              className={`full-config-wrapper__nav-arrow ${
+                !previousRoute ? "full-config-wrapper__nav-arrow--disabled" : "full-config-wrapper__nav-arrow--enabled"
+              }`}
               onClick={() => {
                 if (previousRoute) {
                   // Reset selected field when navigating backwards
@@ -418,8 +427,9 @@ const FullConfigWrapper = () => {
 
             {/* Right Arrow */}
             <div
-              className={`full-config-wrapper__nav-arrow ${!nextRoute ? "full-config-wrapper__nav-arrow--disabled" : "full-config-wrapper__nav-arrow--enabled"
-                }`}
+              className={`full-config-wrapper__nav-arrow ${
+                !nextRoute ? "full-config-wrapper__nav-arrow--disabled" : "full-config-wrapper__nav-arrow--enabled"
+              }`}
               onClick={async () => {
                 if (nextRoute) {
                   // Check for validation errors before navigating
@@ -474,7 +484,7 @@ const FullConfigWrapper = () => {
         )}
 
         {/* Saving Loader Overlay */}
-        {isSaving && <Loader loaderText={t("SUBMITTING_APP_CONFIG")} />}
+        {isSaving && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SUBMITTING_APP_CONFIG")} />}
       </div>
     </React.Fragment>
   );
