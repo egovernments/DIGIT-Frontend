@@ -1368,3 +1368,7 @@ textarea.light-placeholder::placeholder {
     width: 2rem;
     height: 2rem;
 }
+
+.employee .digit-label-field-pair .digit-card-label{
+  margin-top: -1rem;
+}
