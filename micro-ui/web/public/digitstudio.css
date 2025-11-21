@@ -1355,3 +1355,6 @@ textarea.light-placeholder::placeholder {
 .employeeCard .card-text b{
     display: none;
 }
+.digit-upload-file-max-width .digit-tag-container{
+    width: 50% !important;
+}
