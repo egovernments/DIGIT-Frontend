@@ -74,11 +74,11 @@ const transformTemplate = (screenData) => {
         ...field,
         primaryAction: {
           ...field?.primaryAction,
-          label: primaryActionLabel
+          label: field?.primaryActionLabel
         },
         secondaryAction: {
           ...field?.secondaryAction,
-          label: secondaryActionLabel
+          label: field?.secondaryActionLabel
         },
       }
     }
@@ -88,19 +88,19 @@ const transformTemplate = (screenData) => {
 
       validations.push({
         type: "scanLimit",
-        value: field.scanLimit || 1,
+        value: field?.scanLimit || 1,
         message: field["scanLimit.message"]
       });
 
       validations.push({
         type: "isGS1",
-        value: field.isGS1 || false,
+        value: field?.isGS1 || false,
       });
 
       if (field["pattern.message"] !== undefined && field["pattern.message"] !== null && field["pattern.message"] !== "") {
         validations.push({
           type: "pattern",
-          value: field.pattern,
+          value: field?.pattern,
           message: field["pattern.message"]
         });
       }
