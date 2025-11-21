@@ -1343,4 +1343,12 @@ textarea.light-placeholder::placeholder {
 .mandatory-span-popup{
   color: #B91900 !important;
 }
+.sla-cell-success {
+  padding: 0.25rem 16px;
+  border-radius: 16px;
+}
+.sla-cell-error {
+  padding: 0.25rem 16px;
+  border-radius: 16px;
+}
 
