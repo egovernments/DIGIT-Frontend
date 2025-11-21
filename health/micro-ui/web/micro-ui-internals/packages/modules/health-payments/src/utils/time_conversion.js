@@ -233,22 +233,21 @@ export const getValidPeriods = (t, periods, addingBool) => {
 
   // Only show AGGREGATE if current time passed last periodEndDate
   if (addingBool) {
-    if (now > lastPeriod.periodEndDate) {
-      const result = [...validPeriods];
+    if (periods.length !== 1) {
+      // INFO:: if the periods length is one, then do not add any aggregate options
+      if (now > lastPeriod.periodEndDate) {
+        const result = [...validPeriods];
 
-      // TODO: ref(0) [Date: 17/11/2025]
-      //  Temporarily commented the aggregated period options for giving the build to QA for initial testing
-      //       It will be uncommented once the backend changes are done properly
-      const aggregate = getPeriodAggregateObject(t, "AGGREGATE");
+        const aggregate = getPeriodAggregateObject(t, "AGGREGATE");
 
-      // You said aggregate based on last period date
-      aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
-      aggregate.periodEndDate = lastPeriod.periodEndDate + 1;
+        // You said aggregate based on last period date
+        aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
+        aggregate.periodEndDate = lastPeriod.periodEndDate + 1;
 
-      result.push(aggregate);
-      // ref(0), end of comment
+        result.push(aggregate);
 
-      return result;
+        return result;
+      }
     }
   }
 

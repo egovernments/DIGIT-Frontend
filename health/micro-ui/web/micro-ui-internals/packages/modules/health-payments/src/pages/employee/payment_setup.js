@@ -813,7 +813,7 @@ const PaymentSetUpPage = () => {
       body: {
         CampaignDetails: {
           tenantId,
-          status: ["creating", "created"],
+          status: ["created"],
           isLikeSearch: true,
           isOverrideDatesFromProject: true,
           createdBy: Digit.UserService.getUser().info.uuid,

@@ -80,8 +80,12 @@ const EditRegister = ({ editAttendance = false }) => {
    */
   useEffect(() => {
     if (AttendanceData?.attendanceRegister?.length > 0) {
-      const ids = AttendanceData.attendanceRegister[0].attendees.map((a) => a.individualId);
-      setIndividualIds(ids);
+      if (AttendanceData.attendanceRegister[0].attendees != null && AttendanceData.attendanceRegister[0].attendees?.length > 0) {
+        const ids = AttendanceData.attendanceRegister[0].attendees.map((a) => a.individualId);
+        setIndividualIds(ids);
+      } else {
+        setIndividualIds([]);
+      }
     }
   }, [AttendanceData]);
 

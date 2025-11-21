@@ -8,6 +8,7 @@ import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
 import { getCustomPaginationOptions } from "../../utils";
 import CommentPopUp from "../commentPopUp";
+import { renderProjectPeriod } from "../../utils/time_conversion";
 
 const CustomInboxTable = ({
   handleTabChange,
@@ -199,7 +200,7 @@ const CustomInboxTable = ({
   return (
     <React.Fragment>
       <Card style={{ gap: "1.5rem", height: "80vh", display: "flex", flexDirection: "column" }}>
-        <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+        <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, selectedPeriod)}</div>
 
         {!tableData ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />

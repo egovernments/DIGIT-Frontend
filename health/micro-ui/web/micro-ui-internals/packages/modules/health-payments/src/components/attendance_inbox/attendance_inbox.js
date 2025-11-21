@@ -251,6 +251,7 @@
 
 // export default AttendanceInboxComponent;
 
+// existing
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
@@ -326,7 +327,7 @@ const AttendanceInboxComponent = () => {
                   : filterCriteria?.code
                 : filterData?.code,
             // reviewStatus: status == undefined ? selectedStatus : status,
-            registerPeriodStatus:status == undefined ? selectedStatus : status,
+            registerPeriodStatus: status == undefined ? selectedStatus : status,
             isChildrenRequired: true,
             billingPeriodId: periodId, // Use the latest period ID
           },
@@ -489,6 +490,10 @@ const AttendanceInboxComponent = () => {
 
   //   return `${t(selectedProject.name)} (${start} - ${end})`;
   // };
+
+  const projectPeriodLabel = React.useMemo(() => {
+    return renderProjectPeriod(t, selectedProject, markPeriod);
+  }, [t, selectedProject, markPeriod]);
 
   return (
     <div>
