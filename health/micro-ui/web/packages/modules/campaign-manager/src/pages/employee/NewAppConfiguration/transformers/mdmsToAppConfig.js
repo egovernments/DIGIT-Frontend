@@ -238,7 +238,7 @@ const transformFormProperties = (body) => {
         };
 
         // Add optional fields
-        if (field.enums) property.enums = field.enums;
+        if (field.dropDownOptions) property.enums = field.dropDownOptions;
         if (field.schemaCode) property.schemaCode = field.schemaCode;
         if (field.includeInForm !== undefined) property.includeInForm = field.includeInForm;
         if (field.includeInSummary !== undefined) property.includeInSummary = field.includeInSummary;

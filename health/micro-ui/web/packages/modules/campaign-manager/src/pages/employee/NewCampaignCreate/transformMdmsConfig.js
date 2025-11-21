@@ -104,7 +104,7 @@ const transformBodyForTemplate = (body) => {
   return body.map((item) => {
     // Transform the item and its nested structures
     const transformed = transformField(item);
-    
+
     // Handle listView with child elements
     if (item.format === "listView" && item.child) {
       transformed.child = transformField(item.child);
@@ -112,13 +112,12 @@ const transformBodyForTemplate = (body) => {
 
     // Handle card elements with children
     if (item.format === "card" && item.children) {
-      transformed.children = item.children.map(child => transformField(child));
+      transformed.children = item.children.map((child) => transformField(child));
     }
 
     return transformed;
   });
 };
-
 
 /**
  * Helper function to transform a single field (handles nested children)
@@ -126,10 +125,10 @@ const transformBodyForTemplate = (body) => {
  * @returns {Object} - Transformed field
  */
 const transformField = (field) => {
-  if (!field || typeof field !== 'object') return field;
-  
+  if (!field || typeof field !== "object") return field;
+
   const transformed = { ...field };
-  
+
   // Transform validations if present
   if (field.validations && Array.isArray(field.validations)) {
     const validationProps = transformValidations(field.validations);
@@ -137,23 +136,23 @@ const transformField = (field) => {
     // Optionally remove the original validations array
     // delete transformed.validations;
   }
-  
+
   // Extract action labels for panelCard format
-  if (field.format === 'panelCard') {
+  if (field.format === "panelCard") {
     const actionLabels = extractActionLabels(field);
     Object.assign(transformed, actionLabels);
   }
-  
+
   // Recursively transform child
   if (field.child) {
     transformed.child = transformField(field.child);
   }
-  
+
   // Recursively transform children array
   if (field.children && Array.isArray(field.children)) {
-    transformed.children = field.children.map(child => transformField(child));
+    transformed.children = field.children.map((child) => transformField(child));
   }
-  
+
   return transformed;
 };
 
@@ -201,7 +200,7 @@ const transformPropertiesToFields = (properties) => {
 
     // Add enums if present
     if (prop.enums) {
-      field.enums = prop.enums;
+      field.dropDownOptions = prop.enums;
     }
 
     // Add schemaCode if present and set isMdms accordingly
@@ -212,7 +211,7 @@ const transformPropertiesToFields = (properties) => {
       field.isMdms = false;
     }
 
-      // Transform validations to flat keys
+    // Transform validations to flat keys
     if (prop.validations && Array.isArray(prop.validations)) {
       const validationProps = transformValidations(prop.validations);
       Object.assign(field, validationProps);
@@ -302,11 +301,10 @@ const transformActionLabelToFooter = (actionLabel, navigateTo) => {
  */
 const transformFooter = (footer) => {
   if (!footer || !Array.isArray(footer)) return [];
-  
-  // Apply field transformation to each footer item
-  return footer.map(item => transformField(item));
-};
 
+  // Apply field transformation to each footer item
+  return footer.map((item) => transformField(item));
+};
 
 /**
  * Transform header array
@@ -318,35 +316,35 @@ const transformHeader = (header) => {
 
 const transformValidations = (validations) => {
   if (!validations || !Array.isArray(validations)) return {};
-  
+
   const validationProps = {};
-  
+
   validations.forEach((validation) => {
     const { type, value, message } = validation;
-    
+
     if (type && value !== undefined) {
       validationProps[type] = value;
-      
+
       if (message) {
         validationProps[`${type}.message`] = message;
       }
     }
   });
-  
+
   return validationProps;
 };
 
 const extractActionLabels = (field) => {
   const actionLabels = {};
-  
+
   if (field.primaryAction?.label) {
     actionLabels.primaryActionLabel = field.primaryAction.label;
   }
-  
+
   if (field.secondaryAction?.label) {
     actionLabels.secondaryActionLabel = field.secondaryAction.label;
   }
-  
+
   return actionLabels;
 };
 
