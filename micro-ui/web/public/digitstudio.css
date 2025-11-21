@@ -1352,3 +1352,6 @@ textarea.light-placeholder::placeholder {
   border-radius: 16px;
 }
 
+.employeeCard .card-text b{
+    display: none;
+}
