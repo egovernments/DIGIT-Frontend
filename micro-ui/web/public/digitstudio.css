@@ -1358,3 +1358,13 @@ textarea.light-placeholder::placeholder {
 .digit-upload-file-max-width .digit-tag-container{
     width: 50% !important;
 }
+.popupwrap .digit-header-wrap .heading-m{
+    font-size: 25px;
+}
+.popupwrap .digit-header-wrap .icon-bg-secondary{
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+}
