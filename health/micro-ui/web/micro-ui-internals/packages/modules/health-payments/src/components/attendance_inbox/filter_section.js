@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "../BoundaryComponent";
-import { Card, SVG, SubmitBar, Dropdown, Loader } from "@egovernments/digit-ui-components";
+import { Card, SVG, SubmitBar, Dropdown, Loader, Toast } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { getValidPeriods } from "../../utils/time_conversion";
@@ -23,6 +23,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
   const [loadingPeriods, setLoadingPeriods] = useState(false);
   const [billingConfigData, setBillingConfigData] = useState(null);
+  const [showToast, setShowToast] = useState(null);
 
   const onChangeId = (value) => {
     setBoundary(value);
@@ -31,27 +32,6 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
       setIsDistrictSelected(true);
     }
   };
-
-  // const hasRun = useRef(false);
-
-  // useEffect(() => {
-  //   if (hasRun.current) return;
-  //   hasRun.current = true;
-
-  //   const periods = Digit.SessionStorage.get("projectPeriods") || [];
-
-  //   if (periods.length > 0) {
-  //     const currentTimestamp = Date.now();
-  //     const currentPeriod =
-  //       periods.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
-  //       periods.find((p) => currentTimestamp < p.periodStartDate);
-
-  //     if (currentPeriod) {
-  //       setSelectedPeriod(currentPeriod);
-  //       Digit.SessionStorage.set("selectedPeriod", currentPeriod);
-  //     }
-  //   }
-  // }, []);
 
   // Format date for display
   const formatDate = (timestamp) => {
@@ -148,7 +128,13 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   }, []);
 
   const handleApplyFilter = () => {
-    onFilterChange(boundary, isDistrictSelected, selectedPeriod);
+    setShowToast(null);
+    if ((periods.length > 0)) {
+      onFilterChange(boundary, isDistrictSelected, selectedPeriod);
+    } else {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
+      return;
+    }
   };
 
   // Fetch project data on mount
@@ -248,7 +234,10 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         {/* Billing Period Dropdown */}
         {projectSelected && (
           <div style={{ width: "100%", marginTop: "1.5rem" }}>
-            <div className="comment-label">{t("HCM_AM_BILL_PERIOD_DATE")}<span className="required comment-label"> *</span></div>
+            <div className="comment-label">
+              {t("HCM_AM_BILL_PERIOD_DATE")}
+              <span className="required comment-label"> *</span>
+            </div>
 
             {loadingPeriods ? (
               <div style={{ padding: "1rem", textAlign: "center" }}>
@@ -264,30 +253,27 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
                 select={handlePeriodSelect}
               />
             ) : (
-              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
-            )}
-          </div>
-        )}
-
-        {/* Display Billing Config Info */}
-        {/* {billingConfigData && (
-          <div style={{ marginTop: "1rem", padding: "0.5rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              <strong>{t("Billing Frequency")}:</strong> {billingConfigData.billingFrequency}
-            </div>
-            {billingConfigData.customFrequencyDays && (
-              <div style={{ fontSize: "12px", color: "#666", marginTop: "0.25rem" }}>
-                <strong>{t("Custom Days")}:</strong> {billingConfigData.customFrequencyDays}
+              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>
+                {t("")}
               </div>
             )}
           </div>
-        )} */}
+        )}
       </div>
 
       {/* Submit Button */}
       <div style={{ justifyContent: "center", marginTop: "auto", paddingTop: "16px" }}>
         <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} disabled={!boundary} />
       </div>
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </Card>
   );
 };

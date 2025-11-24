@@ -151,11 +151,13 @@ const PGRDetails = () => {
   const [openModal, setOpenModal] = useState(false);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = Digit.ULBService.getStateId();
   const history = useHistory();
   const { id } = useParams();
   const [selectedAction, setSelectedAction] = useState(null);
   const [toast, setToast] = useState({ show: false, label: "", type: "" });
   const userInfo = Digit.UserService.getUser();
+  const [showMore, setShowMore] = useState(false);
 
   // Persist session data for complaint update
   const UpdateComplaintSession = Digit.Hooks.useSessionStorage("COMPLAINT_UPDATE", {});
@@ -191,6 +193,40 @@ const PGRDetails = () => {
     url: Urls.workflow.businessServiceSearch,
     params: { tenantId, businessServices: "PGR" },
     config: { enabled: true },
+  });
+
+  // Parse boundaryCode from additionalDetails
+  const boundaryCode = React.useMemo(() => {
+    try {
+      const additionalDetail = pgrData?.ServiceWrappers?.[0]?.service?.additionalDetail;
+      if (typeof additionalDetail === 'string') {
+        const parsed = JSON.parse(additionalDetail);
+        return parsed?.boundaryCode || null;
+      }
+      return additionalDetail?.boundaryCode || null;
+    } catch (e) {
+      return null;
+    }
+  }, [pgrData]);
+
+  // Get hierarchy from SessionStorage (set during complaint creation)
+  const selectedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+
+  // Fetch boundary hierarchy definition (not boundaries)
+  const { data: hierarchyDefinition, isLoading: isHierarchyLoading } = Digit.Hooks.useCustomAPIHook({
+    url: "/boundary-service/boundary-hierarchy-definition/_search",
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: stateId,
+        limit: 1,
+        offset: 0,
+        hierarchyType: selectedHierarchy?.hierarchyType,
+      },
+    },
+    config: {
+      enabled: showMore && !!stateId && !!selectedHierarchy?.hierarchyType && !!boundaryCode,
+      select: (data) => data?.BoundaryHierarchy?.[0] || null,
+    },
   });
 
   // Automatically dismiss toast messages after 3 seconds
@@ -329,6 +365,39 @@ const PGRDetails = () => {
       : [];
   };
 
+  // Build boundary hierarchy display from hierarchy definition
+  const boundaryHierarchyPath = React.useMemo(() => {
+    if (!boundaryCode || !hierarchyDefinition) return [];
+
+    // Extract boundary hierarchy structure from definition
+    const boundaryHierarchy = hierarchyDefinition?.boundaryHierarchy || [];
+
+    if (boundaryHierarchy.length === 0) return [];
+
+    const codeParts = boundaryCode.split('.');
+    const path = [];
+
+    // Map each code part to its boundary type from hierarchy definition
+    boundaryHierarchy.forEach((hierarchyLevel, index) => {
+      const boundaryType = hierarchyLevel.boundaryType;
+      const code = codeParts[index] || "";
+
+      if (code) {
+        const label = selectedHierarchy?.hierarchyType
+          ? `${selectedHierarchy.hierarchyType}_${boundaryType}`
+          : boundaryType;
+
+        path.push({
+          type: boundaryType,
+          code: code,
+          label: label,
+        });
+      }
+    });
+
+    return path;
+  }, [boundaryCode, hierarchyDefinition, selectedHierarchy]);
+
   // Display loader until required data loads
   if (isLoading || isMDMSLoading || isWorkflowLoading) return <Loader />;
 
@@ -398,6 +467,49 @@ const PGRDetails = () => {
                     inline: true,
                     label: t("COMPLAINTS_COMPLAINANT_CONTACT_NUMBER"),
                     value: pgrData?.ServiceWrappers[0].service?.user?.mobileNumber || "NA",
+                  },
+                  ...(showMore && boundaryCode
+                    ? [
+                        {
+                          inline: false,
+                          type: "custom",
+                          renderCustomContent: () => (
+                            <div className="boundary-hierarchy-container">
+                              <div style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
+                                {t("CS_COMPLAINT_BOUNDARY_HIERARCHY")}
+                              </div>
+                              {isHierarchyLoading ? (
+                                <Loader />
+                              ) : boundaryHierarchyPath.length > 0 ? (
+                                <div className="boundary-hierarchy-list">
+                                  {boundaryHierarchyPath.map((boundary, index) => (
+                                    <div key={index} className="boundary-hierarchy-item">
+                                      <span className="boundary-hierarchy-label">{t(boundary.label)}</span>
+                                      <span className="boundary-hierarchy-code">{t(boundary.code)}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div>{t("CS_COMPLAINT_NO_BOUNDARY_DATA")}</div>
+                              )}
+                            </div>
+                          ),
+                        },
+                      ]
+                    : []),
+                  {
+                    inline: false,
+                    type: "custom",
+                    renderCustomContent: () => (
+                      <div style={{ marginTop: "1rem" }}>
+                        <Button
+                          label={showMore ? t("HCM_AM_VIEW_LESS") : t("HCM_AM_VIEW_MORE")}
+                          onClick={() => setShowMore((prev) => !prev)}
+                          variation="link"
+                          style={{ whiteSpace: "nowrap", width: "auto", padding: 0 }}
+                        />
+                      </div>
+                    ),
                   },
                 ],
               },

@@ -274,7 +274,7 @@ const CreateComplaintForm = ({
    */
   const sendDataToResponsePage = (message, description, info, responseId) => {
     history.push({
-      pathname: `/${window?.contextPath}/employee/pgr/complaint-failed`, // Redirect path
+      pathname: `/${window?.contextPath}/employee/pgr/complaint-success`, // Redirect path
       state: {
         message,
         description,
