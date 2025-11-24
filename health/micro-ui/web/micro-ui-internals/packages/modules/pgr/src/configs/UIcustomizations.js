@@ -131,7 +131,8 @@ export const UICustomizations = {
           );
 
         case "WF_INBOX_HEADER_LOCALITY":
-          return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
+          const formattedValue = value?.includes(".") ? value.split(".").pop() : value;
+          return formattedValue ? <span>{t(`${formattedValue}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
           return value && value?.length > 0 ? <span>{t(`WF_INBOX_${value}`)}</span> : <span>{t("NA")}</span>;
