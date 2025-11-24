@@ -128,19 +128,7 @@ export const getValidPeriods = (t, periods, addingBool) => {
   // -----------------------------------------------------
   // CASE 1: If we are INSIDE any period → show only previous + current
   // -----------------------------------------------------
-  // if (current) {
-  //   const currentIndex = validPeriods.findIndex((p) => p.id === current.id);
-
-  //   const result = [];
-
-  //   if (currentIndex > 0) {
-  //     result.push(validPeriods[currentIndex - 1]); // previous
-  //   }
-
-  //   result.push(current); // current
-  //   
-  //   return result;
-  // }
+  
 
   if (current) {
     const currentIndex = validPeriods.findIndex((p) => p.id === current.id);

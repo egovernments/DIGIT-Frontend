@@ -32,27 +32,6 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
     }
   };
 
-  // const hasRun = useRef(false);
-
-  // useEffect(() => {
-  //   if (hasRun.current) return;
-  //   hasRun.current = true;
-
-  //   const periods = Digit.SessionStorage.get("projectPeriods") || [];
-
-  //   if (periods.length > 0) {
-  //     const currentTimestamp = Date.now();
-  //     const currentPeriod =
-  //       periods.find((p) => currentTimestamp >= p.periodStartDate && currentTimestamp <= p.periodEndDate) ||
-  //       periods.find((p) => currentTimestamp < p.periodStartDate);
-
-  //     if (currentPeriod) {
-  //       setSelectedPeriod(currentPeriod);
-  //       Digit.SessionStorage.set("selectedPeriod", currentPeriod);
-  //     }
-  //   }
-  // }, []);
-
   // Format date for display
   const formatDate = (timestamp) => {
     if (!timestamp) return "";
@@ -248,7 +227,10 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         {/* Billing Period Dropdown */}
         {projectSelected && (
           <div style={{ width: "100%", marginTop: "1.5rem" }}>
-            <div className="comment-label">{t("HCM_AM_BILL_PERIOD_DATE")}<span className="required comment-label"> *</span></div>
+            <div className="comment-label">
+              {t("HCM_AM_BILL_PERIOD_DATE")}
+              <span className="required comment-label"> *</span>
+            </div>
 
             {loadingPeriods ? (
               <div style={{ padding: "1rem", textAlign: "center" }}>
@@ -268,20 +250,6 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
             )}
           </div>
         )}
-
-        {/* Display Billing Config Info */}
-        {/* {billingConfigData && (
-          <div style={{ marginTop: "1rem", padding: "0.5rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              <strong>{t("Billing Frequency")}:</strong> {billingConfigData.billingFrequency}
-            </div>
-            {billingConfigData.customFrequencyDays && (
-              <div style={{ fontSize: "12px", color: "#666", marginTop: "0.25rem" }}>
-                <strong>{t("Custom Days")}:</strong> {billingConfigData.customFrequencyDays}
-              </div>
-            )}
-          </div>
-        )} */}
       </div>
 
       {/* Submit Button */}
