@@ -163,9 +163,18 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
     "type": "EMPLOYEE",
     "tenantId": tenantId,
   } : user;
-  const safeAdditionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
+  
+  const boundaryCode = formData?.SelectedBoundary?.code;
+  const localityCode = boundaryCode;
+
+  const safeAdditionalDetail = {
+    supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null,
+    supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null,
+    boundaryCode: boundaryCode || null
+  };
   const additionalDetail= JSON.stringify(safeAdditionalDetail);
   const timestamp = Date.now();
+
   let complaint = {
     "service": {
       "active": true,
@@ -183,7 +192,7 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
         "street": formData?.AddressTwo,
         "pincode": formData?.postalCode,
         "locality": {
-          "code": formData?.SelectedBoundary?.code,
+          "code": localityCode,
         },
         "geoLocation": {}
       },

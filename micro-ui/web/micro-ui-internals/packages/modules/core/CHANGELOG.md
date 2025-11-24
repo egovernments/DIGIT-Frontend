@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.9.3]  [21-November-2025]
+-Bug fix for edit profile in citizen side
+
 ## [1.9.2]  [12-November-2025]
 -New feature added for external URLs in employeeSidebar
 

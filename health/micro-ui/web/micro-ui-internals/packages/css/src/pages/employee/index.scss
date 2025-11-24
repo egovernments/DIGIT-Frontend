@@ -1336,7 +1336,6 @@ tbody {
   align-items: center;
 }
 
-/* Custom styling for PGR Inbox date range field - targets the 3rd search field */
 .pgr-inbox-wrapper {
   .digit-date-range-label-field {
     gap: 0.25rem !important;
@@ -1367,7 +1366,6 @@ tbody {
   }
 }
 
-/* Boundary dropdown container - increased row gap between dropdowns */
 .boundary-dropdown-container {
   display: flex;
   flex-direction: column;
@@ -1383,7 +1381,6 @@ tbody {
   }
 }
 
-/* Add line separators between form sections in CreateComplaint form */
 .custom-form-complaints {
   .digit-card-section-header:not(:first-of-type) {
     border-top: 0.2rem solid #D6D5D5;
@@ -1395,7 +1392,6 @@ tbody {
   }
 }
 
-/* Add row-gap between Upload and Download button in PGR workflow modal */
 .pgr-upload-file-wrapper {
   display: flex;
   flex-direction: column;
@@ -1423,7 +1419,6 @@ tbody {
   right: 2.3rem;
 }
 
-/* PGR Response ActionBar Button Styling */
 .pgr-response-btn {
   box-sizing: border-box;
   display: flex;
@@ -1451,4 +1446,43 @@ tbody {
   margin-right: 6rem;
 }
 
-/* PGR Response ActionBar Styling - buttons at opposite ends */
+.digit-button-primary {
+  &.pgr-response-btn {
+    .icon-label-container {
+      justify-content: center;
+
+      .digit-button-label {
+        width: fit-content
+      }
+    }
+  }
+}
+
+.boundary-hierarchy-container {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.boundary-hierarchy-list {
+  width: 100%;
+}
+
+.boundary-hierarchy-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.boundary-hierarchy-label {
+  font-weight: 500;
+  min-width: 20%;
+  flex-shrink: 0;
+}
+
+.boundary-hierarchy-code {
+  flex: 1;
+  max-width: 80%;
+  word-break: break-word;
+}

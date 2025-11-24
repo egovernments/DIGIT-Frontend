@@ -151,11 +151,7 @@ const PGRSearchInboxConfig = () => {
                 defaultValues: {
                     assignedToMe: null,
                     locality: null,
-                    status: [],
-
-                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.serviceCode && {
-                      serviceCode: window.Digit.SessionStorage.get("filtersForInbox").serviceCode
-                    })
+                    status: []
                   },
                   
                 fields: [

@@ -17,7 +17,6 @@ const Profile = ({ info, stateName, t }) => {
     const uuid = info?.uuid;
     if (uuid) {
       const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-
       if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
         const userDetails = usersResponse.user[0];
         const thumbs = userDetails?.photo?.split(",");
@@ -123,6 +122,8 @@ export const CitizenSideBar = ({
       const uuid = user?.info?.uuid;
       if (uuid) {
         const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+        const userData = usersResponse?.user?.[0];
+      if(userData) Digit.UserService.setUser({ info: userData });
         if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
           const userDetails = usersResponse.user[0];
           const thumbs = userDetails?.photo?.split(",");
@@ -409,7 +410,7 @@ export const CitizenSideBar = ({
     <Hamburger
       items={hamburgerItems}
       profileName={user?.info?.name}
-      profileNumber={user?.info?.mobileNumber}
+      profileNumber={user?.info?.mobileNumber || user?.info?.emailId}
       theme="dark"
       transitionDuration={0.3}
       styles={{ marginTop: "64px", height: "93%" }}
