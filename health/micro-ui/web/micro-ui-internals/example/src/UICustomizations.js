@@ -1785,9 +1785,14 @@ export const UICustomizations = {
             </div>
           );
 
-        case "WF_INBOX_HEADER_LOCALITY":
-          const formattedValue = value?.includes(".") ? value.split(".").pop() : value;
-          return formattedValue ? <span>{t(`${formattedValue}`)}</span> : <span>{t("NA")}</span>;
+          case "WF_INBOX_HEADER_LOCALITY": { 
+            const formattedValue =
+              typeof value === "string" && value.length > 0 && value.includes(".")
+                ? value.split(".").pop() 
+                : (typeof value === "string" && value.length > 0 ? value : null); 
+          
+            return formattedValue ? <span>{t(`${formattedValue}`)}</span> : <span>{t("NA")}</span>;
+          }          
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
           return value && value?.length > 0 ? <span>{t(`WF_INBOX_${value}`)}</span> : <span>{t("NA")}</span>;
