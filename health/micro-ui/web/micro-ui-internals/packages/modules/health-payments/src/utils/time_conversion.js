@@ -109,88 +109,6 @@ export const findAllOverlappingPeriods = (startDate, endDate) => {
   return rdata;
 };
 
-// export const getValidPeriods = (periods) => {
-//   if (!Array.isArray(periods) || periods.length === 0) return [];
-
-//   const now = Date.now();
-
-//   // Remove future periods
-//   const validPeriods = periods.filter((p) => p.periodStartDate <= now);
-
-//   if (validPeriods.length === 0) return [];
-
-//   // Sort by start date (ascending)
-//   validPeriods.sort((a, b) => a.periodStartDate - b.periodStartDate);
-
-//   // Find current period (where now is between start and end)
-//   const current = validPeriods.find((p) => now >= p.periodStartDate && now <= p.periodEndDate);
-
-//   // Find previous period (the one before the current one)
-//   let previous = null;
-//   if (current) {
-//     const index = validPeriods.findIndex((p) => p.id === current.id);
-//     if (index > 0) previous = validPeriods[index - 1];
-//   } else {
-//     // If no current, take the last past period as previous
-//     previous = validPeriods[validPeriods.length - 1];
-//   }
-
-//   // Return filtered list (previous + current if exists)
-//   const result = [];
-//   if (previous) result.push(previous);
-//   if (current) result.push(current);
-
-//   return result;
-// };
-
-// export const getValidPeriods = (t,periods) => {
-//   if (!Array.isArray(periods) || periods.length === 0) return [];
-
-//   const now = Date.now();
-
-//   // Remove future periods
-//   const validPeriods = periods.filter((p) => p.periodStartDate <= now);
-
-//   if (validPeriods.length === 0) return [];
-
-//   // Sort by start date
-//   validPeriods.sort((a, b) => a.periodStartDate - b.periodStartDate);
-
-//   // Determine current & previous period
-//   const current = validPeriods.find((p) => now >= p.periodStartDate && now <= p.periodEndDate);
-
-//   let previous = null;
-//   if (current) {
-//     const index = validPeriods.findIndex((p) => p.id === current.id);
-//     if (index > 0) previous = validPeriods[index - 1];
-//   } else {
-//     // If no current, last one is previous
-//     previous = validPeriods[validPeriods.length - 1];
-//   }
-
-//   // Build the result list
-//   const result = [];
-//   if (previous) result.push(previous);
-//   if (current) result.push(current);
-
-//   // --------------------------------------------------
-//   // ADD AGGREGATE ONLY WHEN LAST PERIOD HAS ENDED
-//   // --------------------------------------------------
-//   const lastPeriod = validPeriods[validPeriods.length - 1];
-
-//   if (now > lastPeriod.periodEndDate) {
-//     const aggregate = getPeriodAggregateObject(t,"AGGREGATE");
-
-//     // Optional: give aggregate a dynamic start date after last period
-//     aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
-//     aggregate.periodEndDate = lastPeriod.periodEndDate + 1; // or any logic you want
-
-//     result.push(aggregate);
-//   }
-
-//   return result;
-// };
-
 export const getValidPeriods = (t, periods, addingBool) => {
   if (!Array.isArray(periods) || periods.length === 0) return [];
 
@@ -210,16 +128,25 @@ export const getValidPeriods = (t, periods, addingBool) => {
   // -----------------------------------------------------
   // CASE 1: If we are INSIDE any period → show only previous + current
   // -----------------------------------------------------
+  // if (current) {
+  //   const currentIndex = validPeriods.findIndex((p) => p.id === current.id);
+
+  //   const result = [];
+
+  //   if (currentIndex > 0) {
+  //     result.push(validPeriods[currentIndex - 1]); // previous
+  //   }
+
+  //   result.push(current); // current
+  //   
+  //   return result;
+  // }
+
   if (current) {
     const currentIndex = validPeriods.findIndex((p) => p.id === current.id);
 
-    const result = [];
-
-    if (currentIndex > 0) {
-      result.push(validPeriods[currentIndex - 1]); // previous
-    }
-
-    result.push(current); // current
+    // Return ALL periods from start → current (inclusive)
+    const result = validPeriods.slice(0, currentIndex + 1);
 
     return result;
   }
@@ -250,7 +177,7 @@ export const getValidPeriods = (t, periods, addingBool) => {
       }
     }
   }
-
+  
   // If somehow we reach here (should not), return past periods
   return validPeriods;
 };
