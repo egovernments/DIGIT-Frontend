@@ -802,7 +802,7 @@ const BillInboxComponent = () => {
     return <LoaderWithGap />;
   }
   if (isAttendanceLoading || isBillLoading) {
-    return <Loader />;
+    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
   // Rest of the JSX remains the same...

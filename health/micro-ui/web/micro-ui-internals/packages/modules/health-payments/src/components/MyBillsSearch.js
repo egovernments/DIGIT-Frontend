@@ -44,7 +44,7 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
   };
 
   const handleClear = () => {
-    setSelectedBillType(billTypeOptions?.[0] || null);
+    setSelectedBillType(null);
     setIsDisabled(false);
     setDateRange({ startDate: "", endDate: "", title: "" });
     setBillID("");

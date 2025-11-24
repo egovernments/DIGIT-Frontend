@@ -180,18 +180,7 @@ const MyBills = () => {
   };
 
   if (isBillLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh", // full screen height
-        }}
-      >
-        <Loader />
-      </div>
-    );
+    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
   return (
@@ -203,7 +192,7 @@ const MyBills = () => {
       {
         <Card>
           {isFetching ? (
-            <Loader />
+            <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
           ) : tableData.length === 0 ? (
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
