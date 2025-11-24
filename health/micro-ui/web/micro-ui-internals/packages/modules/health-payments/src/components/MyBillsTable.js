@@ -57,13 +57,6 @@ const MyBillsTable = ({ ...props }) => {
           return <div className="ellipsis-cell">{formatTimestampToDate(row.billDate) || t("NA")}</div>;
         },
       },
-      // INFO:: need to implement
-      {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_TYPE_COLOUMN")}</div>,
-        selector: (row) => {
-          return <div className="ellipsis-cell">{t(row?.additionalDetails?.billingType || "NA") || t("NA")}</div>;
-        },
-      },
 
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_PERIOD_DATE")}</div>,
@@ -82,7 +75,7 @@ const MyBillsTable = ({ ...props }) => {
           );
         },
       },
-   // INFO:: no of registers commented
+      // INFO:: no of registers commented
       // {
       //   name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
       //   selector: (row) => {
