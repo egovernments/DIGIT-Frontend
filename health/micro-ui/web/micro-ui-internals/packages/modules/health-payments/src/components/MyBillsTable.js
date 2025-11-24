@@ -75,20 +75,20 @@ const MyBillsTable = ({ ...props }) => {
           );
         },
       },
-
-      {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
-        selector: (row) => {
-          return (
-            <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-              {t(row?.additionalDetails?.noOfRegisters || "0")}
-            </div>
-          );
-        },
-        style: {
-          justifyContent: "flex-end",
-        },
-      },
+   // INFO:: no of registers commented
+      // {
+      //   name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
+      //   selector: (row) => {
+      //     return (
+      //       <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+      //         {t(row?.additionalDetails?.noOfRegisters || "0")}
+      //       </div>
+      //     );
+      //   },
+      //   style: {
+      //     justifyContent: "flex-end",
+      //   },
+      // },
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NUMBER_OF_WORKERS")}</div>,
         selector: (row) => {
@@ -162,7 +162,7 @@ const MyBillsTable = ({ ...props }) => {
                 },
               ]}
               optionsKey="name"
-              style={{ minWidth: "14rem" }}
+              style={{ minWidth: "13rem" }}
               type="actionButton"
               variation="secondary"
             />
