@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.1-dev-01"] [24-Nov-2025]
+- Made SideNav theme and variant configurable via globalConfigs
+
 ## ["2.0.0-dev-01"] [3-Nov-2025]
 -Optimised packages of core with lazy implementation republish
 
