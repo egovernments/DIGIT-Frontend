@@ -37,13 +37,19 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
    * Displays a toast if the boundary is not properly selected.
    */
   const handleApplyFilter = () => {
+    //Clear the toast if the input is valid
+    setShowToast(null);
     if (!boundary || boundary?.boundaryType !== selectedLevel?.code) {
       setShowToast({ key: "error", label: t("HCM_AM_SELECT_BOUNDARY_TILL_LAST_LEVEL"), transitionTime: 3000 });
       return;
     }
-    //Clear the toast if the input is valid
-    setShowToast(null);
-    onFilterChange(boundary.code);
+
+    if (periods.length > 0) {
+      onFilterChange(boundary.code);
+    } else {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
+      return;
+    }
   };
 
   // Updates the boundary when changed in the BoundaryComponent.
@@ -252,7 +258,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
                 select={handlePeriodSelect}
               />
             ) : (
-              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
+              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("")}</div>
             )}
           </div>
         )}

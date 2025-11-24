@@ -142,6 +142,9 @@ const AttendanceInboxComponent = () => {
     } else if (selectedPeriod === null) {
       setMarkPeriod(null);
       Digit.SessionStorage.del("selectedPeriod");
+
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PERIOD_SELECT"), transitionTime: 3000 });
+      return;
     }
 
     const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");

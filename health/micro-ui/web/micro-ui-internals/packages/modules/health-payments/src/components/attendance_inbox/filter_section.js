@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "../BoundaryComponent";
-import { Card, SVG, SubmitBar, Dropdown, Loader } from "@egovernments/digit-ui-components";
+import { Card, SVG, SubmitBar, Dropdown, Loader, Toast } from "@egovernments/digit-ui-components";
 import { lowerBoundaryDefaultSet } from "../../utils/constants";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { getValidPeriods } from "../../utils/time_conversion";
@@ -23,6 +23,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   const [selectedPeriod, setSelectedPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
   const [loadingPeriods, setLoadingPeriods] = useState(false);
   const [billingConfigData, setBillingConfigData] = useState(null);
+  const [showToast, setShowToast] = useState(null);
 
   const onChangeId = (value) => {
     setBoundary(value);
@@ -127,7 +128,13 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
   }, []);
 
   const handleApplyFilter = () => {
-    onFilterChange(boundary, isDistrictSelected, selectedPeriod);
+    setShowToast(null);
+    if ((periods.length > 0)) {
+      onFilterChange(boundary, isDistrictSelected, selectedPeriod);
+    } else {
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
+      return;
+    }
   };
 
   // Fetch project data on mount
@@ -246,7 +253,9 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
                 select={handlePeriodSelect}
               />
             ) : (
-              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
+              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>
+                {t("")}
+              </div>
             )}
           </div>
         )}
@@ -256,6 +265,15 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
       <div style={{ justifyContent: "center", marginTop: "auto", paddingTop: "16px" }}>
         <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} disabled={!boundary} />
       </div>
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </Card>
   );
 };
