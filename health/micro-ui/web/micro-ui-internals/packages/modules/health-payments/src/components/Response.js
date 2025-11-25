@@ -35,7 +35,7 @@ const Response = () => {
                     history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
                   }}
                   variation="teritiary"
-                  icon="ExitToApp"
+                  icon="ArrowForward"
                   isSuffix
                 />,
               ]
@@ -57,7 +57,7 @@ const Response = () => {
           style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
           variation="primary"
           label={t(back)}
-          icon={"ArrowBack"}
+          icon={"ExitToApp"}
           onClick={() => {
             const backlink = state?.backlink || `/${window.contextPath}/employee/`;
             history.push(backlink);
