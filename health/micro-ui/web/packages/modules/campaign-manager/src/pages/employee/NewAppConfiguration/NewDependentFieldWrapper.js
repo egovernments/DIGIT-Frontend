@@ -692,15 +692,15 @@ function NewDependentFieldWrapper({ t }) {
             <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
                 <div
                     role="button"
-                    title={editLabel}
-                    aria-label={editLabel}
+                    title={addDisplayLogicLabel}
+                    aria-label={addDisplayLogicLabel}
                     onClick={() => onEdit(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
                     {SVG?.Edit ? (
                         <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
                     ) : (
-                        <Button variation="secondary" label={editLabel} onClick={() => onEdit(idx)} />
+                        <Button variation="secondary" label={addDisplayLogicLabel} onClick={() => onEdit(idx)} />
                     )}
                 </div>
 
@@ -768,7 +768,7 @@ function NewDependentFieldWrapper({ t }) {
                         <PopUp
                             className="digit-popup--fullscreen popup-editor"
                             type={"default"}
-                            heading={editLabel}
+                            heading={addDisplayLogicLabel}
                             children={[
                                 <div key="single-rule-editor" style={{ display: "grid", gap: "1rem" }}>
                                     <div
