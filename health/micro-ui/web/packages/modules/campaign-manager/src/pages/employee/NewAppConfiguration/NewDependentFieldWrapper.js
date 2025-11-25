@@ -766,7 +766,7 @@ function NewDependentFieldWrapper({ t }) {
                 <BodyPortal>
                     <div className="popup-portal-overlay">
                         <PopUp
-                            className="digit-popup--fullscreen"
+                            className="digit-popup--fullscreen popup-editor"
                             type={"default"}
                             heading={editLabel}
                             children={[
@@ -790,7 +790,7 @@ function NewDependentFieldWrapper({ t }) {
                                                         option={LOGICALS}
                                                         optionKey="name"
                                                         name={`joiner-new`}
-                                                        optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                                        optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                         t={t}
                                                         select={(e) =>
                                                             setDraftRule((prev) => ({
@@ -813,7 +813,7 @@ function NewDependentFieldWrapper({ t }) {
                                                         <Dropdown
                                                             option={pageOptions}
                                                             optionKey="displayName"
-                                                             optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                                             optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                             name={`page-editor`}
                                                             t={t}
                                                             select={(e) => {
@@ -849,7 +849,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     : []
                                                             }
                                                             optionKey="label"
-                                                             optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                                             optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                             name={`field-editor`}
                                                             t={useT}
                                                             select={(e) => {
@@ -908,7 +908,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     option={operatorOptions}
                                                                     optionKey="name"
                                                                     name={`op-editor`}
-                                                                    optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                     t={t}
                                                                     select={(e) => setDraftRule((prev) => ({ ...prev, comparisonType: e }))}
                                                                     disabled={!draftRule?.selectedField?.code}
@@ -1012,7 +1012,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     return (
                                                                         <Dropdown
                                                                             option={enumOptions}
-                                                                            optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                                                            optionCardStyles={{ maxHeight: "15vh", overflow: "auto",  zIndex: 10000 }}
                                                                             optionKey="name"
                                                                             name={`val-editor`}
                                                                             t={t}
