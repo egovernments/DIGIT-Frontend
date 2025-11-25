@@ -51,6 +51,24 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   const ownershipDetails = ownershipInfo?.ownershipDetails || {};
   const documentInfo = sessionData["document-info"] || {};
 
+  // Global helper function to safely extract display value from object, array, or string
+  const getDisplayValue = (value) => {
+    if (!value) return t("ES_COMMON_NA");
+    if (typeof value === 'string') return value;
+    if (Array.isArray(value) && value.length > 0) {
+      // Handle array format [{code, name}]
+      const firstItem = value[0];
+      if (typeof firstItem === 'string') return firstItem;
+      if (typeof firstItem === 'object') {
+        return firstItem.name || firstItem.code || firstItem.i18nKey || t("ES_COMMON_NA");
+      }
+    }
+    if (typeof value === 'object') {
+      return value.name || value.code || value.i18nKey || t("ES_COMMON_NA");
+    }
+    return t("ES_COMMON_NA");
+  };
+
   // Debug logging
   console.log("=== PropertySummary DEBUG ===");
   console.log("sessionData:", sessionData);
@@ -70,11 +88,11 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
         { inline: true, label: t("PT_PROPERTY_DETAILS_DOOR_NUMBER"), value: propertyAddress.doorNo || t("ES_COMMON_NA") },
         { inline: true, label: t("PT_PROPERTY_DETAILS_BUILDING_COLONY_NAME"), value: propertyAddress.buildingName || t("ES_COMMON_NA") },
         { inline: true, label: t("PT_PROPERTY_DETAILS_STREET_NAME"), value: propertyAddress.street || t("ES_COMMON_NA") },
-        { inline: true, label: t("PT_LOCALITY_MOHALLA"), value: propertyAddress.locality?.name || propertyAddress.locality?.code || t("ES_COMMON_NA") },
+        { inline: true, label: t("PT_LOCALITY_MOHALLA"), value: getDisplayValue(propertyAddress.locality) },
         { inline: true, label: t("PT_PROPERTY_ADDRESS_PINCODE"), value: propertyAddress.pincode || t("ES_COMMON_NA") },
         { inline: true, label: t("PT_PROPERTY_ADDRESS_EXISTING_PID"), value: propertyAddress.existingPropertyId || t("ES_COMMON_NA") },
         { inline: true, label: t("PT_SURVEY_ID"), value: propertyAddress.surveyId || t("ES_COMMON_NA") },
-        { inline: true, label: t("PT_YEAR_OF_CREATION"), value: propertyAddress.yearOfCreation?.name || propertyAddress.yearOfCreation?.code || propertyAddress.yearOfCreation || t("ES_COMMON_NA") }
+        { inline: true, label: t("PT_YEAR_OF_CREATION"), value: getDisplayValue(propertyAddress.yearOfCreation) }
       ]
     }
   ];
@@ -86,8 +104,8 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   const isShared = propertyTypeCode === "SHAREDPROPERTY";
 
   const assessmentInfoFields = [
-    { inline: true, label: t("PT_ASSESMENT_INFO_TYPE_OF_BUILDING"), value: assessmentInfo.propertyType?.[0]?.name || assessmentInfo.propertyType?.name || t("ES_COMMON_NA") },
-    { inline: true, label: t("PT_ASSESMENT_INFO_USAGE_TYPE"), value: assessmentInfo.usageCategory?.[0]?.name || assessmentInfo.usageCategory?.name || t("ES_COMMON_NA") },
+    { inline: true, label: t("PT_ASSESMENT_INFO_TYPE_OF_BUILDING"), value: getDisplayValue(assessmentInfo.propertyType) },
+    { inline: true, label: t("PT_ASSESMENT_INFO_USAGE_TYPE"), value: getDisplayValue(assessmentInfo.usageCategory) },
     { inline: true, label: t("PT_COMMON_VASIKA_NO"), value: assessmentInfo.vasikaNo || t("ES_COMMON_NA") },
     { inline: true, label: t("PT_COMMON_VASIKA_DATE"), value: assessmentInfo.vasikaDate ? new Date(assessmentInfo.vasikaDate).toLocaleDateString() : t("ES_COMMON_NA") },
     { inline: true, label: t("PT_COMMON_ALLOTMENT_NO"), value: assessmentInfo.allotmentNo || t("ES_COMMON_NA") },
@@ -104,7 +122,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   }
 
   if (isIndependent && assessmentInfo.noOfFloors) {
-    assessmentInfoFields.push({ inline: true, label: t("PT_FORM2_NUMBER_OF_FLOORS"), value: assessmentInfo.noOfFloors?.name || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors });
+    assessmentInfoFields.push({ inline: true, label: t("PT_FORM2_NUMBER_OF_FLOORS"), value: getDisplayValue(assessmentInfo.noOfFloors) });
   }
 
   const assessmentInfoSections = [
@@ -141,19 +159,19 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
 
     if (isSingleOwner) {
       const fieldPairs = [
-        { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: ownershipInfo.ownershipType?.[0]?.name || t("ES_COMMON_NA") },
+        { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
         { inline: true, label: t("PT_OWNER_NAME"), value: ownershipDetails?.ownerName || t("ES_COMMON_NA") },
-        { inline: true, label: t("PT_FORM3_GENDER"), value: ownershipDetails?.gender?.name || ownershipDetails?.gender?.code || t("ES_COMMON_NA") },
+        { inline: true, label: t("PT_FORM3_GENDER"), value: getDisplayValue(ownershipDetails?.gender) },
         { inline: true, label: t("PT_FORM3_MOBILE_NO"), value: ownershipDetails?.mobileNumber || t("ES_COMMON_NA") },
         { inline: true, label: t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME"), value: ownershipDetails?.guardianName || t("ES_COMMON_NA") },
-        { inline: true, label: t("PT_FORM3_RELATIONSHIP"), value: ownershipDetails?.relationship?.name || ownershipDetails?.relationship?.code || t("ES_COMMON_NA") },
-        { inline: true, label: t("PT_FORM3_SPECIAL_CATEGORY"), value: ownershipDetails?.specialCategory?.name || ownershipDetails?.specialCategory?.code || t("ES_COMMON_NA") },
+        { inline: true, label: t("PT_FORM3_RELATIONSHIP"), value: getDisplayValue(ownershipDetails?.relationship) },
+        { inline: true, label: t("PT_FORM3_SPECIAL_CATEGORY"), value: getDisplayValue(ownershipDetails?.specialCategory) },
       ];
 
       // Add document fields if special category is not NONE
       if (ownershipDetails?.specialCategory?.code && ownershipDetails.specialCategory.code !== "NONE") {
         fieldPairs.push(
-          { inline: true, label: t("PT_FORM3_DOCUMENT_ID_TYPE"), value: ownershipDetails?.documentIdType?.name || ownershipDetails?.documentIdType?.code || t("ES_COMMON_NA") },
+          { inline: true, label: t("PT_FORM3_DOCUMENT_ID_TYPE"), value: getDisplayValue(ownershipDetails?.documentIdType) },
           { inline: true, label: t("PT_FORM3_DOCUMENT_ID_NO"), value: ownershipDetails?.documentId || t("ES_COMMON_NA") }
         );
       }
@@ -180,7 +198,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
             cardType: "secondary",
             header: t("PT_OWNER_DETAILS"),
             fieldPairs: [
-              { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: ownershipInfo.ownershipType?.[0]?.name || t("ES_COMMON_NA") },
+              { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
               { inline: true, label: t("PT_OWNER_NAME"), value: t("ES_COMMON_NA") },
             ],
           },
@@ -193,7 +211,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
           cardType: "secondary",
           header: t("PT_OWNER_DETAILS"),
           fieldPairs: [
-            { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: ownershipInfo.ownershipType?.[0]?.name || t("ES_COMMON_NA") },
+            { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
             { inline: true, label: t("PT_MUTATION_NUMBER_OF_OWNERS"), value: owners.length },
           ],
         },
@@ -203,17 +221,17 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       owners.forEach((owner, index) => {
         const fieldPairs = [
           { inline: true, label: t("PT_OWNER_NAME"), value: owner?.ownerName || t("ES_COMMON_NA") },
-          { inline: true, label: t("PT_FORM3_GENDER"), value: owner?.gender?.name || owner?.gender?.code || t("ES_COMMON_NA") },
+          { inline: true, label: t("PT_FORM3_GENDER"), value: getDisplayValue(owner?.gender) },
           { inline: true, label: t("PT_FORM3_MOBILE_NO"), value: owner?.mobileNumber || t("ES_COMMON_NA") },
           { inline: true, label: t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME"), value: owner?.guardianName || t("ES_COMMON_NA") },
-          { inline: true, label: t("PT_FORM3_RELATIONSHIP"), value: owner?.relationship?.name || owner?.relationship?.code || t("ES_COMMON_NA") },
-          { inline: true, label: t("PT_FORM3_SPECIAL_CATEGORY"), value: owner?.specialCategory?.name || owner?.specialCategory?.code || t("ES_COMMON_NA") },
+          { inline: true, label: t("PT_FORM3_RELATIONSHIP"), value: getDisplayValue(owner?.relationship) },
+          { inline: true, label: t("PT_FORM3_SPECIAL_CATEGORY"), value: getDisplayValue(owner?.specialCategory) },
         ];
 
         // Add document fields if special category is not NONE
         if (owner?.specialCategory?.code && owner.specialCategory.code !== "NONE") {
           fieldPairs.push(
-            { inline: true, label: t("PT_FORM3_DOCUMENT_ID_TYPE"), value: owner?.documentIdType?.name || owner?.documentIdType?.code || t("ES_COMMON_NA") },
+            { inline: true, label: t("PT_FORM3_DOCUMENT_ID_TYPE"), value: getDisplayValue(owner?.documentIdType) },
             { inline: true, label: t("PT_FORM3_DOCUMENT_ID_NO"), value: owner?.documentId || t("ES_COMMON_NA") }
           );
         }
@@ -238,9 +256,9 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
           cardType: "secondary",
           header: t("PT_OWNER_DETAILS"),
           fieldPairs: [
-            { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: ownershipInfo.ownershipType?.[0]?.name || t("ES_COMMON_NA") },
+            { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
             { inline: true, label: t("PT_INSTITUTION_NAME"), value: ownershipDetails?.institutionName || t("ES_COMMON_NA") },
-            { inline: true, label: t("PT_INSTITUTION_TYPE"), value: ownershipDetails?.institutionType?.name || ownershipDetails?.institutionType?.code || t("ES_COMMON_NA") },
+            { inline: true, label: t("PT_INSTITUTION_TYPE"), value: getDisplayValue(ownershipDetails?.institutionType) },
             { inline: true, label: t("PT_OWNER_NAME"), value: ownershipDetails?.ownerName || t("ES_COMMON_NA") },
             { inline: true, label: t("TL_NEW_OWNER_DESIG_LABEL"), value: ownershipDetails?.designation || t("ES_COMMON_NA") },
             { inline: true, label: t("PT_FORM3_MOBILE_NO"), value: ownershipDetails?.mobileNumber || t("ES_COMMON_NA") },

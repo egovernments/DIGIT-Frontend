@@ -37,6 +37,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
   const [sameAsPropertyAddress, setSameAsPropertyAddress] = useState(savedData?.sameAsPropertyAddress || false);
   const [documentIdType, setDocumentIdType] = useState(savedData?.documentIdType || null);
   const [documentId, setDocumentId] = useState(savedData?.documentId || "");
+  const [dataInitialized, setDataInitialized] = useState(false);
 
   // Validation error states
   const [fieldErrors, setFieldErrors] = useState({});
@@ -129,6 +130,93 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
 
   // State for multiple owners
   const [owners, setOwners] = useState(savedData?.owners && savedData.owners.length > 0 ? savedData.owners : [{}]);
+
+  // Convert string values to objects matching master data when MDMS data is loaded
+  useEffect(() => {
+    if (!dataInitialized && ownerTypeData.length > 0 && relationshipOptions.length > 0 && genderOptions.length > 0) {
+      // Convert specialCategory from string to object for single owner
+      if (specialCategory && typeof specialCategory === 'string') {
+        const specialCategoryObj = ownerTypeData.find(item => item.code === specialCategory);
+        if (specialCategoryObj) {
+          setSpecialCategory(specialCategoryObj);
+        }
+      }
+
+      // Convert relationship from string to object for single owner
+      if (relationship && typeof relationship === 'string') {
+        const relationshipObj = relationshipOptions.find(item => item.code === relationship);
+        if (relationshipObj) {
+          setRelationship(relationshipObj);
+        }
+      }
+
+      // Convert gender from string to object for single owner (if needed)
+      // Also handle case where gender might have wrong structure (missing i18nKey)
+      if (gender) {
+        if (typeof gender === 'string') {
+          const genderObj = genderOptions.find(item => item.code === gender || item.code === gender.toUpperCase());
+          if (genderObj) {
+            setGender(genderObj);
+          }
+        } else if (typeof gender === 'object' && gender.code) {
+          // If gender is already an object but might not match genderOptions format, ensure it has i18nKey
+          const genderObj = genderOptions.find(item => item.code === gender.code || item.code === gender.code.toUpperCase());
+          if (genderObj && (!gender.i18nKey || gender.name !== genderObj.name)) {
+            setGender(genderObj);
+          }
+        }
+      }
+
+      // Convert specialCategory and relationship for multiple owners
+      if (isMultipleOwners && owners.length > 0) {
+        const hasStringValues = owners.some(owner =>
+          (owner.specialCategory && typeof owner.specialCategory === 'string') ||
+          (owner.relationship && typeof owner.relationship === 'string') ||
+          (owner.gender && typeof owner.gender === 'string')
+        );
+
+        if (hasStringValues) {
+          const updatedOwners = owners.map(owner => {
+            const updates = { ...owner };
+
+            if (owner.specialCategory && typeof owner.specialCategory === 'string') {
+              const specialCategoryObj = ownerTypeData.find(item => item.code === owner.specialCategory);
+              if (specialCategoryObj) {
+                updates.specialCategory = specialCategoryObj;
+              }
+            }
+
+            if (owner.relationship && typeof owner.relationship === 'string') {
+              const relationshipObj = relationshipOptions.find(item => item.code === owner.relationship);
+              if (relationshipObj) {
+                updates.relationship = relationshipObj;
+              }
+            }
+
+            if (owner.gender) {
+              if (typeof owner.gender === 'string') {
+                const genderObj = genderOptions.find(item => item.code === owner.gender || item.code === owner.gender.toUpperCase());
+                if (genderObj) {
+                  updates.gender = genderObj;
+                }
+              } else if (typeof owner.gender === 'object' && owner.gender.code) {
+                // If gender is already an object but might not match genderOptions format, ensure it has i18nKey
+                const genderObj = genderOptions.find(item => item.code === owner.gender.code || item.code === owner.gender.code.toUpperCase());
+                if (genderObj && (!owner.gender.i18nKey || owner.gender.name !== genderObj.name)) {
+                  updates.gender = genderObj;
+                }
+              }
+            }
+
+            return updates;
+          });
+          setOwners(updatedOwners);
+        }
+      }
+
+      setDataInitialized(true);
+    }
+  }, [ownerTypeData, relationshipOptions, genderOptions, isMultipleOwners, dataInitialized]);
 
   // Show/hide document fields based on special category
   const [showDocumentFields, setShowDocumentFields] = useState(false);
@@ -559,15 +647,17 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               <div style={{ color: "#B91900" }}>{" * "}</div>
             </div>
           </HeaderComponent>
-          <RadioButtons
-            t={t}
-            options={genderOptions}
-            optionsKey="name"
-            selectedOption={ownerData?.gender}
-            onSelect={(value) => updateField("gender", value)}
-            style={{ gap: "8px", marginBottom: "0px" }}
-            disabled={isDisabled}
-          />
+          <div style={isDisabled ? { pointerEvents: 'none', opacity: 0.6 } : {}}>
+            <RadioButtons
+              t={t}
+              options={genderOptions}
+              optionsKey="name"
+              selectedOption={ownerData?.gender}
+              onSelect={(value) => !isDisabled && updateField("gender", value)}
+              style={{ gap: "8px", marginBottom: "0px" }}
+              disabled={isDisabled}
+            />
+          </div>
         </LabelFieldPair>
 
         {/* Mobile Number */}
@@ -627,9 +717,10 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             option={relationshipOptions}
             optionKey="name"
             selected={ownerData?.relationship}
-            select={(value) => updateField("relationship", value)}
+            select={(value) => !isDisabled && updateField("relationship", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
             disable={isDisabled}
+            style={isDisabled ? { pointerEvents: 'none', opacity: 0.6 } : {}}
           />
         </LabelFieldPair>
 
@@ -646,9 +737,10 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             option={ownerTypeData}
             optionKey="name"
             selected={ownerData?.specialCategory}
-            select={(value) => updateField("specialCategory", value)}
+            select={(value) => !isDisabled && updateField("specialCategory", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
             disable={isDisabled}
+            style={isDisabled ? { pointerEvents: 'none', opacity: 0.6 } : {}}
           />
         </LabelFieldPair>
 

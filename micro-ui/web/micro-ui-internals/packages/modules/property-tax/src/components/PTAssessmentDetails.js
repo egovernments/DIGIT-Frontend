@@ -114,15 +114,37 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   }));
 
   // Sync all data to parent under "conditionalFields" key whenever any field changes
+  // Use useRef to track if this is the initial render to avoid calling onSelect on mount
+  const isInitialMount = React.useRef(true);
+  const prevDataRef = React.useRef({ plotSize, noOfFloors, floorsData, unitsData });
+
   useEffect(() => {
-    const allData = {
-      plotSize,
-      noOfFloors,
-      floors: floorsData,
-      units: unitsData
-    };
-    onSelect("conditionalFields", allData);
-  }, [plotSize, noOfFloors,floorsData, unitsData]);
+    // Skip on initial mount when data is being loaded from formData
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevDataRef.current = { plotSize, noOfFloors, floorsData, unitsData };
+      return;
+    }
+
+    // Only call onSelect if data actually changed (deep comparison for arrays)
+    const prevData = prevDataRef.current;
+    const hasChanged =
+      plotSize !== prevData.plotSize ||
+      noOfFloors !== prevData.noOfFloors ||
+      JSON.stringify(floorsData) !== JSON.stringify(prevData.floorsData) ||
+      JSON.stringify(unitsData) !== JSON.stringify(prevData.unitsData);
+
+    if (hasChanged) {
+      const allData = {
+        plotSize,
+        noOfFloors,
+        floors: floorsData,
+        units: unitsData
+      };
+      onSelect("conditionalFields", allData);
+      prevDataRef.current = { plotSize, noOfFloors, floorsData, unitsData };
+    }
+  }, [plotSize, noOfFloors, floorsData, unitsData, onSelect]);
 
   const handleFieldChange = (fieldName, value) => {
     // Don't call onSelect directly anymore - let the useEffect handle it
@@ -148,23 +170,89 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   };
 
   // Initialize floors state from floorsData when data is loaded (for update mode)
+  // Also convert string floorNo to object matching floorMasterData
+  const hasInitializedFloors = React.useRef(false);
+
   useEffect(() => {
+    // Only run once when data is first loaded
+    if (hasInitializedFloors.current) return;
+
     if (isIndependent && floorsData.length > 0 && floors.length === 0) {
       const initialFloors = floorsData.map((floorData, i) => ({
         floorNumber: i,
         units: (floorData.units || []).map((_, unitIdx) => ({ id: `floor_${i}_unit_${unitIdx}` }))
       }));
       setFloors(initialFloors);
+
+      // Convert string floorNo and occupancy to objects matching master data
+      if (floorMasterData.length > 0 && occupancyData.length > 0) {
+        const updatedFloorsData = floorsData.map(floor => {
+          // Find matching floor object from master data
+          const floorNoStr = typeof floor.floorNo === 'object' ? floor.floorNo.code : String(floor.floorNo);
+          const floorObj = floorMasterData.find(f => String(f.code) === floorNoStr);
+
+          return {
+            ...floor,
+            floorNo: floorObj || floor.floorNo,
+            units: (floor.units || []).map(unit => {
+              // Find matching occupancy object from master data
+              const occupancyStr = typeof unit.occupancy === 'object' ? unit.occupancy.code : String(unit.occupancy);
+              const occupancyObj = occupancyData.find(o => o.code === occupancyStr);
+
+              return {
+                ...unit,
+                occupancy: occupancyObj || unit.occupancy
+              };
+            })
+          };
+        });
+        setFloorsData(updatedFloorsData);
+      }
+
+      hasInitializedFloors.current = true;
     }
-  }, [floorsData, isIndependent]);
+  }, [floorsData, isIndependent, floorMasterData, occupancyData, floors.length]);
 
   // Initialize shared property with one unit if none exist
+  // Also convert string floorNo and occupancy to objects matching master data
+  const hasInitializedSharedUnits = React.useRef(false);
+
   useEffect(() => {
-    if (isShared && units.length === 0) {
-      setUnits([{}]);
-      handleFieldChange("units", [{}]);
+    if (isShared) {
+      // Initialize empty unit only once
+      if (units.length === 0 && unitsData.length === 0 && !hasInitializedSharedUnits.current) {
+        setUnits([{}]);
+        handleFieldChange("units", [{}]);
+        hasInitializedSharedUnits.current = true;
+      } else if (unitsData.length > 0 && floorMasterData.length > 0 && occupancyData.length > 0 && !hasInitializedSharedUnits.current) {
+        // Convert string floorNo and occupancy to objects matching master data (only once)
+        const hasStringValues = unitsData.some(unit =>
+          (unit.floorNo && typeof unit.floorNo === 'string') ||
+          (unit.occupancy && typeof unit.occupancy === 'string')
+        );
+
+        if (hasStringValues) {
+          const updatedUnitsData = unitsData.map(unit => {
+            // Find matching floor object from master data
+            const floorNoStr = typeof unit.floorNo === 'object' ? unit.floorNo.code : String(unit.floorNo);
+            const floorObj = floorMasterData.find(f => String(f.code) === floorNoStr);
+
+            // Find matching occupancy object from master data
+            const occupancyStr = typeof unit.occupancy === 'object' ? unit.occupancy.code : String(unit.occupancy);
+            const occupancyObj = occupancyData.find(o => o.code === occupancyStr);
+
+            return {
+              ...unit,
+              ...(floorObj ? { floorNo: floorObj } : {}),
+              ...(occupancyObj ? { occupancy: occupancyObj } : {})
+            };
+          });
+          setUnitsData(updatedUnitsData);
+        }
+        hasInitializedSharedUnits.current = true;
+      }
     }
-  }, [isShared]);
+  }, [isShared, units.length, unitsData, floorMasterData, occupancyData]);
 
   // Set default usage type to RESIDENTIAL when usage category is RESIDENTIAL
   useEffect(() => {
