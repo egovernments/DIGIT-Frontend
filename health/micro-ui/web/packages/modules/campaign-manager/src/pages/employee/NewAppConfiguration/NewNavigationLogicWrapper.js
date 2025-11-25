@@ -15,7 +15,7 @@ import {
 import ReactDOM from "react-dom";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updatePageConditionalNav } from "./redux/remoteConfigSlice";
-import { fetchFlowPages } from "./redux/flowPagesSlice";
+import { fetchFlowPages , clearFlowPages} from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
@@ -83,6 +83,12 @@ function NewNavigationLogicWrapper({ t }) {
     const campaignNumber = currentData?.project || "";
     const currentPageName = currentData?.page || currentData?.name || currentData?.pageName;
 
+
+// Clear flow pages when flowId or campaignNumber changes
+
+    useEffect(() => {
+    dispatch(clearFlowPages());
+}, [dispatch, flowId, campaignNumber]);
     // Fetch flows on mount or when campaign changes
     useEffect(() => {
         if (flowPagesStatus === 'idle' && campaignNumber) {

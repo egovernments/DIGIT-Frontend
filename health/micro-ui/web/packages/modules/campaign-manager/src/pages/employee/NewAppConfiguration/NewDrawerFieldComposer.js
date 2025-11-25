@@ -669,10 +669,26 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "table": {
         // Get columns from selectedField.data.columns
         const columns = selectedField?.data?.columns || [];
+
+        // Count visible columns
+        const visibleColumnsCount = columns.filter(col => col.hidden !== true).length;
+
         const handleColumnVisibilityToggle = useCallback((columnIndex, toggleValue) => {
           // Toggle ON means visible (hidden: false)
           // Toggle OFF means hidden (hidden: true)
           const hiddenValue = !Boolean(toggleValue);
+
+          // Prevent hiding if this is the last visible column
+          if (hiddenValue && visibleColumnsCount === 1) {
+            // Show toast/alert to user
+            if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
+              window.__appConfig_showToast({
+                key: "error",
+                label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
+              });
+            }
+            return; // Don't allow hiding
+          }
 
           // Create updated columns array
           const updatedColumns = columns.map((col, idx) => {
@@ -692,7 +708,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           };
 
           onFieldChange(updatedField);
-        }, [columns, selectedField, onFieldChange]);
+        }, [columns, selectedField, onFieldChange, visibleColumnsCount, t]);
 
         return (
           <>
@@ -706,20 +722,26 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               {/* Display header localization inputs for each column */}
               {columns.length > 0 && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {columns.map((column, index) => (
-                    <LocalizationInput
-                      key={`${column.header}-${index}`}
-                      code={column.header}
-                      label={`${t("COLUMN")} ${index + 1} - ${t(column.header)}`}
-                      currentLocale={currentLocale}
-                      dispatch={dispatch}
-                      t={t}
-                      placeholder={t("ADD_HEADER_LOCALIZATION")}
-                      column={column}
-                      columnIndex={index}
-                      onColumnToggle={handleColumnVisibilityToggle}
-                    />
-                  ))}
+                  {columns.map((column, index) => {
+                    // Check if this is the last visible column
+                    const isLastVisible = visibleColumnsCount === 1 && column.hidden !== true;
+
+                    return (
+                      <LocalizationInput
+                        key={`${column.header}-${index}`}
+                        code={column.header}
+                        label={`${t("COLUMN")} ${index + 1} - ${t(column.header)}`}
+                        currentLocale={currentLocale}
+                        dispatch={dispatch}
+                        t={t}
+                        placeholder={t("ADD_HEADER_LOCALIZATION")}
+                        column={column}
+                        columnIndex={index}
+                        onColumnToggle={handleColumnVisibilityToggle}
+                        isLastVisible={isLastVisible}
+                      />
+                    );
+                  })}
                 </div>
               )}
 
@@ -750,7 +772,8 @@ const LocalizationInput = React.memo(({
   // Optional props for table column toggle
   column = null,
   columnIndex = null,
-  onColumnToggle = null
+  onColumnToggle = null,
+  isLastVisible = false
 }) => {
   // Get the localized value
   const localizedValue = useCustomT(code) || code;
@@ -759,9 +782,29 @@ const LocalizationInput = React.memo(({
   const isTableColumn = column !== null && columnIndex !== null && onColumnToggle !== null;
 
   // For table columns, toggle state controls visibility of input
-  // Toggle ON = visible (hidden: false) = show input
-  // Toggle OFF = hidden (hidden: true) = hide input
-  const showInput = isTableColumn ? column.hidden === false : true;
+  // Toggle ON = visible (hidden: false)
+  // Toggle OFF = hidden (hidden: true)
+  const isColumnHidden = isTableColumn ? column.hidden !== false : false;
+
+  // Local state to control the toggle and prevent it from changing when disabled
+  const [toggleState, setToggleState] = useState(!isColumnHidden);
+
+  // Sync toggle state with column hidden property
+  useEffect(() => {
+    setToggleState(!isColumnHidden);
+  }, [isColumnHidden]);
+
+  const handleToggle = (value) => {
+    // Don't allow toggling off if this is the last visible column
+    if (isLastVisible) {
+      return; // Don't update state, don't call handler
+    }
+
+    // Update local state
+    setToggleState(value);
+    // Call parent handler
+    onColumnToggle(columnIndex, value);
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -780,16 +823,18 @@ const LocalizationInput = React.memo(({
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <Switch
               label=""
-              onToggle={(value) => onColumnToggle(columnIndex, value)}
-              isCheckedInitially={(column.hidden === false)}  // Toggle ON = visible
+              onToggle={handleToggle}
+              disable={isLastVisible}
+              isCheckedInitially={toggleState}
+              key={`toggle-${columnIndex}-${toggleState}`} // Force re-render when state changes
               shapeOnOff
             />
           </div>
         )}
       </div>
 
-      {/* Localization input field - only show if toggle is ON (or not a table column) */}
-      {showInput && (
+      {/* Always render the input but hide it with CSS to maintain hook call order */}
+      <div style={{ display: isColumnHidden ? "none" : "block" }}>
         <FieldV1
           value={localizedValue}
           type="text"
@@ -808,8 +853,9 @@ const LocalizationInput = React.memo(({
           populators={{
             fieldPairClassName: "drawer-toggle-conditional-field",
           }}
+          disabled={isColumnHidden}
         />
-      )}
+      </div>
     </div>
   );
 });
@@ -1016,7 +1062,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation : cField.validation }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation }}
           />
         </div>
       );
