@@ -110,16 +110,18 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
           setBillingConfigData(response.billingConfig);
 
           // Transform periods into dropdown options
-          const periodOptions = response.periods.map((period, index) => ({
-            code: period.id,
-            name: `Period ${index + 1} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
-            periodNumber: period.periodNumber,
-            periodStartDate: period.periodStartDate,
-            periodEndDate: period.periodEndDate,
-            status: period.status,
-            billingFrequency: period.billingFrequency,
-            ...period,
-          }));
+          const periodOptions = response.periods
+            .sort((a, b) => a.periodNumber - b.periodNumber)
+            .map((period, index) => ({
+              code: period.id,
+              name: `Period ${index + 1} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
+              periodNumber: period.periodNumber,
+              periodStartDate: period.periodStartDate,
+              periodEndDate: period.periodEndDate,
+              status: period.status,
+              billingFrequency: period.billingFrequency,
+              ...period,
+            }));
 
           // Sort by period number
           periodOptions.sort((a, b) => a.periodNumber - b.periodNumber);
