@@ -2,10 +2,12 @@ import { Card, HeaderComponent, PopUp, Button, Loader } from "@egovernments/digi
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SVG } from "@egovernments/digit-ui-components";
 import { NewWindow } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { AppHelpContent } from "../../../components/HelpInfoCard";
+import { CopyAll } from "../../../components/icons/CopyAll";
+import { MobileLayout } from "../../../components/icons/MobileLayout";
+
 const CampaignHome = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -153,13 +155,24 @@ const CampaignHome = () => {
           <div className={"descStyle "}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
         </div>
         <div
+          className={"cardStyle"}
+          onClick={() => {
+            navigate(`/${window.contextPath}/employee/campaign/my-campaign-new`);
+          }}
+          tabIndex={1}
+        >
+          <CopyAll />
+          <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
+        </div>
+        <div
           className={"cardStyle disabledCard"}
           onClick={() => {
-            // Add functionality for importing existing campaign
+            // Add functionality for campaign templates
           }}
+          tabIndex={2}
         >
-          <SVG.SystemUpdateAlt width="40" height="40" fill={"#c5c5c5"} />
-          <div className={"descStyle disabledText"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
+          <MobileLayout width="40" height="40" fill={"#c5c5c5"} />
+          <div className={"descStyle disabledText"}>{t("HCM_START_WITH_CAMPAIGN_TEMPLATE")}</div>
         </div>
       </div>
       {showPopUp && (
@@ -174,7 +187,7 @@ const CampaignHome = () => {
           onClose={() => {
             setShowPopUp(false);
           }}
-          equalWidthButtons={"false"}
+          equalWidthButtons={false}
           footerChildren={[
             <Button
               className={"campaign-type-alert-button"}
