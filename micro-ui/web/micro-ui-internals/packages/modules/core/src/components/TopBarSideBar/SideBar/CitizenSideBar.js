@@ -123,7 +123,13 @@ export const CitizenSideBar = ({
       if (uuid) {
         const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
         const userData = usersResponse?.user?.[0];
-      if(userData) Digit.UserService.setUser({ info: userData });
+        if (userData) {
+          const currentUser = Digit.UserService.getUser();
+          Digit.UserService.setUser({
+            ...currentUser,
+            info: userData
+          });
+        }
         if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
           const userDetails = usersResponse.user[0];
           const thumbs = userDetails?.photo?.split(",");

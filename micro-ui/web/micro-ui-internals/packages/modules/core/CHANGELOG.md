@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.9.4]  [21-November-2025]
+-Bug fix for use data in edit profile in citizen side
+
 ## [1.9.3]  [21-November-2025]
 -Bug fix for edit profile in citizen side
 
