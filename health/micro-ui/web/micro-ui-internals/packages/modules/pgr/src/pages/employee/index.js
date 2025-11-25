@@ -44,7 +44,7 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
               {
                 content: t("ACTION_TEST_HOME"), // Home label
                 internalLink: `/${window?.contextPath}/employee`, // Link to employee home
-                show: true,
+                show: !location.pathname.includes("complaint-success"),
               },
               {
                 internalLink: `/${window?.contextPath}/employee/pgr/create-complaint`,

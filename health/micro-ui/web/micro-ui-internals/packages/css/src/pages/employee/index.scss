@@ -1443,7 +1443,7 @@ tbody {
 .back-btn {
   background: #C84C0E;
   border: 1px solid #C84C0E;
-  margin-right: 6rem;
+  margin-right: 1.5rem;
 }
 
 .digit-button-primary {
@@ -1486,3 +1486,15 @@ tbody {
   max-width: 80%;
   word-break: break-word;
 }
+
+.pgr-create-complaint-form {
+  .custom-form-complaints {
+    .digit-card-component{
+      .digit-label-field-pair{
+        .digit-field{
+          position: relative;
+          bottom: 0.5rem;
+        }
+      }
+    }
+}}

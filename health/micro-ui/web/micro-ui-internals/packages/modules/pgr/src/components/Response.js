@@ -37,7 +37,7 @@ const Response = () => {
         style={{}}
         type={state?.state}
       ></PanelCard>
-      <ActionBar className="pgr-response-actionbar" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
+      <ActionBar className="pgr-response-actionbar" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: "2.5rem", paddingRight: "1.5rem" }}>
         <Button
           className="pgr-response-btn create-complaint-btn"
           variation="secondary"
