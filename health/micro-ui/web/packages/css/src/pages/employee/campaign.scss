@@ -444,10 +444,10 @@
 .descStyle {
   font-family: "Roboto";
   font-weight: 500;
-  font-size: 24px;
+  font-size: 20px;
   color: var(--digitv2-lightTheme-primary);
   text-align: center;
-  margin-top: 1.5rem;
+  font-style: Medium;
   .disabledText {
     color: #c5c5c5;
   }
@@ -456,23 +456,30 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 2rem;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 .cardStyle {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 400px;
-  height: 139px;
+  width: 300px;
+  height: 158px;
   border: 1.5px solid var(--digitv2-lightTheme-primary);
-  border-radius: 4px;
-  margin: 1rem;
+  border-radius: 12px;
   cursor: pointer;
   flex-direction: column;
   text-align: center;
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-  background-color: #fff;
+  background-color: #ffffff;
+  gap: 24px;
+  padding: 24px;
+  box-shadow: 0px 2px 7px 0px #00000026;
+
+  svg{
+      flex-shrink: 0;
+      width:40px;
+      height:40px;
+  }
 }
 .cardStyle:hover {
   transform: translateY(-5px);
