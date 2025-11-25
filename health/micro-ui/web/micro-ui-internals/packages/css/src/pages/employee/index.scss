@@ -1498,3 +1498,11 @@ tbody {
       }
     }
 }}
+
+.pgr-inbox-wrapper{
+  .rdt_TableCol_Sortable{
+    .__rdt_custom_sort_icon__{
+      display:none;
+    }
+  }
+}

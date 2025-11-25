@@ -34,6 +34,7 @@ export const CreateComplaintConfig = {
               },
               populators: {
                 name: "ComplaintDate",
+                newDateFormat: true,
                 validation:{
                   required: true,
                   max: "currentDate"
