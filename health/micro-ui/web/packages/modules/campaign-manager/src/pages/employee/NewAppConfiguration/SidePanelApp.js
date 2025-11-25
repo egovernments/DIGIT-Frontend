@@ -27,7 +27,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
       footer={[]}
       header={[
         <div className="typography heading-m" style={{ color: "#0B4B66" }}>
-          {t("FIELD_CONFIGURATION")}
+          {showPanelProperties ? t("CONFIGURE_APPCONFIG_PROPERTIES") : t("FIELD_CONFIGURATION")}
         </div>,
       ]}
       hideScrollIcon

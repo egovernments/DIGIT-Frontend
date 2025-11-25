@@ -9,7 +9,7 @@ import { getFieldTypeFromMasterData2 } from "./helpers/getFieldTypeFromMasterDat
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
 const ToggleVisibilityControl = ({ config, onToggle }) => {
-  if (config?.deleteFlag || config?.["toArray.required"]) return null;
+  if (config?.deleteFlag || config?.mandatory) return null;
 
   return (
     <div
@@ -59,8 +59,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   const componentRef = useRef(null);
 
   const expr = config?.visibilityCondition?.expression;
-  const isDependent =
-    typeof expr === "string" && expr.trim().length > 0;
+  const isDependent = typeof expr === "string" && expr.trim().length > 0;
 
   return (
     <div
@@ -74,13 +73,11 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
     >
       <LabelFieldPair className={`appConfigLabelField`}>
         <div className="appConfigLabelField-label-container">
-          {isDependent &&
-
+          {isDependent && (
             <div className="appConfigLabelField-label">
               <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
             </div>
-
-          }
+          )}
           <div className="appConfigLabelField-label">
             <span>{label}</span>
           </div>
@@ -104,7 +101,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
         <ToggleVisibilityControl config={config} onToggle={onToggle} />
 
         {/* Control to delete the field */}
-        <DeleteFieldControl isDelete={isDelete} onDelete={onDelete} />
+        <DeleteFieldControl isDelete={isDelete} onDelete={onDelete} config={config} />
       </LabelFieldPair>
     </div>
   );

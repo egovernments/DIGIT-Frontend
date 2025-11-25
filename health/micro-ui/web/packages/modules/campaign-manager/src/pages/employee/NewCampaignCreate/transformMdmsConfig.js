@@ -196,6 +196,8 @@ const transformPropertiesToFields = (properties) => {
       innerLabel: prop.innerLabel || "",
       systemDate: prop.systemDate || false,
       errorMessage: prop.errorMessage || "",
+      mandatory: prop.mandatory || false,
+      ...prop,
     };
 
     // Add enums if present

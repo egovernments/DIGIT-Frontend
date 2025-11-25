@@ -7,6 +7,7 @@ import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import FullConfigWrapper from "./NewAppConfiguration/FullConfigWrapper";
+import AppConfigSaveLoader from "./NewAppConfiguration/AppConfigSaveLoader";
 import NewAppModule from "./NewCampaignCreate/NewAppModule";
 import DummyLoader from "./NewCampaignCreate/DummyLoader";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
@@ -374,6 +375,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
           <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper />} />
+          <Route path={`app-config-save`} element={<AppConfigSaveLoader />} />
           <Route
             path={`create-campaign`}
             element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
