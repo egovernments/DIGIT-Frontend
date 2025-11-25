@@ -41,19 +41,20 @@ export const CreateComplaintConfig = {
                 },
                 error: "CORE_COMMON_REQUIRED_ERRMSG"
               },
-            },
+            }
+          ],
+        },
+        {
+          head: "CS_COMPLAINT_BOUNDARY_DETAILS",
+          body: [
             {
               type: "component",
               isMandatory: true,
-              component: "PGRBoundaryComponent",
+              component: "BoundaryComponentWithCard",
               key: "SelectedBoundary",
-              label: "Boundary",
+              withoutLabel: true,
               populators: {
                 name: "SelectedBoundary",
-                error: "CORE_COMMON_REQUIRED_ERRMSG",
-                validation: {
-                  required: true
-                }
               },
             }
           ],

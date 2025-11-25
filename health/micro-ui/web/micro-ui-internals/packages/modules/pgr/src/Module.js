@@ -6,6 +6,7 @@ import PGRCard from "./components/PGRCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
 import BoundaryComponent from "./components/BoundaryComponent";
+import BoundaryComponentWithCard from "./components/BoundaryComponentWithCard";
 import PGRDetails from "./pages/employee/PGRDetails";
 import TimelineWrapper from "./components/TimeLineWrapper";
 import AssigneeComponent from "./components/AssigneeComponent";
@@ -92,6 +93,7 @@ const componentsToRegister = {
   PGRModule,
   PGRCard,
   PGRBoundaryComponent: BoundaryComponent,
+  BoundaryComponentWithCard: BoundaryComponentWithCard,
   PGRComplaintDetails: PGRDetails,
   PGRTimeLineWrapper: TimelineWrapper,
   PGRAssigneeComponent: AssigneeComponent,

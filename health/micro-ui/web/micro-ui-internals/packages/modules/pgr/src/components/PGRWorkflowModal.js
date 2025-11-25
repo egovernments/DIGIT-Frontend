@@ -27,6 +27,7 @@ const PGRWorkflowModal = ({
 
   return (
     <PopUp
+      className="pgr-workflow-popup"
       style={{ width: "47.5rem", borderRadius: "0.25rem", height: "fit-content" }}
       onClose={closeModal}
       heading={t(config?.label?.heading)}

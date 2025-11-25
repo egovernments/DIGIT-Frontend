@@ -1489,20 +1489,53 @@ tbody {
 
 .pgr-create-complaint-form {
   .custom-form-complaints {
-    .digit-card-component{
-      .digit-label-field-pair{
-        .digit-field{
-          position: relative;
-          bottom: 0.5rem;
+    .digit-card-component {
+      .digit-label-field-pair {
+        .digit-field {
+          position: relative;  
+          bottom: 0.5rem;     
         }
       }
     }
-}}
+  }
+}
+
+
+
+ 
+    .digit-popup-overlay {
+      .popup-wrapper {
+        &.pgr-workflow-popup {
+          .digit-popup-children-wrap {
+            .modal-action{
+            .digit-card-component {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+            }
+          }
+          }
+        }
+      }
+    }
+
 
 .pgr-inbox-wrapper{
   .rdt_TableCol_Sortable{
     .__rdt_custom_sort_icon__{
       display:none;
     }
+  }
+}
+
+.boundary-dropdown-wrapper{
+  display: flex;
+  flex-direction: row;
+  .comment-label-without-card{
+    min-width: 34%;
+  }
+  .digit-text-input-field-without-card{
+    min-width: 67%;
+    margin-bottom: 2.5rem;
+    margin-right: 2rem;
   }
 }
