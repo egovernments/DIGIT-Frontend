@@ -286,7 +286,7 @@ const CreateComplaintForm = ({
 
 
   return (
-    <React.Fragment>
+    <div className="pgr-create-complaint-form">
       <FormComposerV2
         onSubmit={onFormSubmit}
         defaultValues={sessionFormData}
@@ -307,7 +307,7 @@ const CreateComplaintForm = ({
           onClose={handleToastClose}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 
