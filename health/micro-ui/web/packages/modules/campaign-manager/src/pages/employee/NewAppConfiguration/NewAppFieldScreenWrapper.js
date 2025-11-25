@@ -200,7 +200,7 @@ function NewAppFieldScreenWrapper() {
       <HeaderFieldWrapper
         key="header-description"
         label="description"
-        type="text"
+        type="textarea"
         value={currentCard?.description}
         currentCard={currentCard}
         index={1}

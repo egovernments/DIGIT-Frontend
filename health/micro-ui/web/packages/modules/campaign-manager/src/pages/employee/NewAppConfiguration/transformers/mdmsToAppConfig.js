@@ -14,7 +14,7 @@ export const transformMdmsToAppConfig = (fullData) => {
   const templates = [];
   const forms = {};
 
-  fullData.forEach(item => {
+  fullData.forEach((item) => {
     // Check if it's a template (has screenType: TEMPLATE or type: template)
     const isTemplate = item.screenType === "TEMPLATE" || item.type === "template" || (!item.type && !item.flow);
 
@@ -34,7 +34,7 @@ export const transformMdmsToAppConfig = (fullData) => {
           screenType: "FORM",
           pages: [],
           onAction: item.onAction,
-          wrapperConfig: item.wrapperConfig
+          wrapperConfig: item.wrapperConfig,
         };
       }
       // Add page to form
@@ -48,15 +48,12 @@ export const transformMdmsToAppConfig = (fullData) => {
   });
 
   // Clean up temporary fields
-  Object.values(forms).forEach(form => {
+  Object.values(forms).forEach((form) => {
     delete form.lastOrder;
   });
 
   // Combine templates and forms
-  const result = [
-    ...templates,
-    ...Object.values(forms)
-  ];
+  const result = [...templates, ...Object.values(forms)];
 
   return result;
 };
@@ -65,22 +62,19 @@ export const transformMdmsToAppConfig = (fullData) => {
  * Transform a template screen
  */
 const transformTemplate = (screenData) => {
-
-
-  const transformedFields = (screenData.body?.[0]?.fields || []).map(field => {
-
+  const transformedFields = (screenData.body?.[0]?.fields || []).map((field) => {
     if (field.format === "panelCard") {
       return {
         ...field,
         primaryAction: {
           ...field?.primaryAction,
-          label: field?.primaryActionLabel
+          label: field?.primaryActionLabel,
         },
         secondaryAction: {
           ...field?.secondaryAction,
-          label: field?.secondaryActionLabel
+          label: field?.secondaryActionLabel,
         },
-      }
+      };
     }
 
     if (field.format === "scanner" || field.format === "qrscanner") {
@@ -89,7 +83,7 @@ const transformTemplate = (screenData) => {
       validations.push({
         type: "scanLimit",
         value: field?.scanLimit || 1,
-        message: field["scanLimit.message"]
+        message: field["scanLimit.message"],
       });
 
       validations.push({
@@ -101,21 +95,21 @@ const transformTemplate = (screenData) => {
         validations.push({
           type: "pattern",
           value: field?.pattern,
-          message: field["pattern.message"]
+          message: field["pattern.message"],
         });
       }
 
       return {
         ...field,
-        validations
-      }
+        validations,
+      };
     }
 
     return field;
   });
 
   const template = {
-    body: transformedFields || []
+    body: transformedFields || [],
   };
 
   // Add all relevant fields from screenData
@@ -141,14 +135,14 @@ const transformTemplate = (screenData) => {
 const transformFooter = (footer) => {
   if (!footer || !Array.isArray(footer)) return [];
 
-  const updatedFooter = footer.map(foo => {
+  const updatedFooter = footer.map((foo) => {
     if (foo.format === "scanner" || foo.format === "qrscanner") {
       const validations = [];
 
       validations.push({
         type: "scanLimit",
         value: foo.scanLimit || 1,
-        message: foo["scanLimit.message"]
+        message: foo["scanLimit.message"],
       });
 
       validations.push({
@@ -160,20 +154,20 @@ const transformFooter = (footer) => {
         validations.push({
           type: "pattern",
           value: foo.pattern,
-          message: foo["pattern.message"]
+          message: foo["pattern.message"],
         });
       }
 
       return {
         ...foo,
-        validations
+        validations,
       };
     }
     return foo;
   });
 
   return updatedFooter;
-}
+};
 
 /**
  * Transform a form page from MDMS format
@@ -185,7 +179,7 @@ const transformFormPage = (pageData) => {
     label: pageData.heading,
     order: pageData.order,
     description: pageData.description,
-    properties: transformFormProperties(pageData.body)
+    properties: transformFormProperties(pageData.body),
   };
 
   // Add navigateTo if exists
@@ -214,9 +208,9 @@ const transformFormProperties = (body) => {
 
   const properties = [];
 
-  body.forEach(bodySection => {
+  body.forEach((bodySection) => {
     if (bodySection.fields && Array.isArray(bodySection.fields)) {
-      bodySection.fields.forEach(field => {
+      bodySection.fields.forEach((field) => {
         const property = {
           type: field.type,
           label: field.label,
@@ -234,7 +228,9 @@ const transformFormProperties = (body) => {
           systemDate: field.systemDate !== undefined ? field.systemDate : false,
           validations: buildValidations(field),
           errorMessage: field.errorMessage || "",
-          isMultiSelect: field.isMultiSelect !== undefined ? field.isMultiSelect : false
+          isMultiSelect: field.isMultiSelect !== undefined ? field.isMultiSelect : false,
+          mandatory: field?.mandatory ? field?.mandatory : false,
+          ...field,
         };
 
         // Add optional fields
@@ -263,7 +259,7 @@ const buildValidations = (field) => {
     validations.push({
       type: "required",
       value: true,
-      message: field["required.message"] || "Required field cannot be empty"
+      message: field["required.message"] || "Required field cannot be empty",
     });
   }
 
@@ -272,7 +268,7 @@ const buildValidations = (field) => {
     validations.push({
       type: "minLength",
       value: field.minLength,
-      message: field["minLength.message"] || `Minimum length is ${field.minLength}`
+      message: field["minLength.message"] || `Minimum length is ${field.minLength}`,
     });
   }
 
@@ -281,7 +277,7 @@ const buildValidations = (field) => {
     validations.push({
       type: "maxLength",
       value: field.maxLength,
-      message: field["maxLength.message"] || `Maximum length is ${field.maxLength}`
+      message: field["maxLength.message"] || `Maximum length is ${field.maxLength}`,
     });
   }
 
@@ -290,7 +286,7 @@ const buildValidations = (field) => {
     validations.push({
       type: "min",
       value: field.min,
-      message: field["min.message"] || `Minimum value is ${field.min}`
+      message: field["min.message"] || `Minimum value is ${field.min}`,
     });
   }
 
@@ -299,7 +295,7 @@ const buildValidations = (field) => {
     validations.push({
       type: "max",
       value: field.max,
-      message: field["max.message"] || `Maximum value is ${field.max}`
+      message: field["max.message"] || `Maximum value is ${field.max}`,
     });
   }
 
@@ -307,16 +303,15 @@ const buildValidations = (field) => {
     validations.push({
       type: "isGS1",
       value: field.isGS1 === true ? true : false,
-    })
+    });
   }
-
 
   if (field.scanLimit) {
     validations.push({
       type: "scanLimit",
       value: field?.scanLimit,
-      message: field["scanLimit.message"]
-    })
+      message: field["scanLimit.message"],
+    });
   }
 
   return validations;

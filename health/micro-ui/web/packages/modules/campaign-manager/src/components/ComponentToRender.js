@@ -39,6 +39,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     }
   }, [isFieldSelected]);
 
+  const shouldCustomTranslate = !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox");
   return (
     <div ref={fieldRef}>
       <FieldV1
@@ -53,17 +54,17 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
             fieldType: getAppTypeFromMasterData(field, fieldTypeMasterData),
           },
         }}
-        description={field?.isMdms ? t(field?.helpText) : customT(field?.helpText) || null}
-        error={field?.isMdms ? t(field?.errorMessage) : customT(field?.errorMessage) || null}
-        infoMessage={field?.isMdms ? t(field?.tooltip) : customT(field?.tooltip) || null}
-        label={customT(field?.label)}
+        description={shouldCustomTranslate ? field?.helpText : customT(field?.helpText) || ""}
+        error={shouldCustomTranslate ? field?.errorMessage : customT(field?.errorMessage) || null}
+        infoMessage={shouldCustomTranslate ? field?.tooltip : customT(field?.tooltip) || null}
+        label={shouldCustomTranslate ? field?.label : customT(field?.label) || ""}
         onChange={function noRefCheck() {}}
-        placeholder={customT(field?.innerLabel) || ""}
+        placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
         populators={{
           title: field?.label,
           prefix: field?.prefixText || null,
           suffix: field?.suffixText || null,
-          t: !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox") ? customT : null,
+          t: shouldCustomTranslate ? customT : null,
           fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
           mdmsConfig: field?.isMdms
             ? {
