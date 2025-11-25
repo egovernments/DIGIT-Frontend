@@ -5,13 +5,16 @@ import NewAppFieldScreenWrapper from "./NewAppFieldScreenWrapper";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTranslation } from "react-i18next";
-import { deselectField } from "./redux/remoteConfigSlice";
+import { deselectField, setShowPopupPreview } from "./redux/remoteConfigSlice";
 import { useDispatch } from "react-redux";
 
 const SidePanelApp = ({ showPanelProperties }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const handleBackClick = () => {
+    // Close popup preview if open
+    dispatch(setShowPopupPreview(false));
+    // Deselect field
     dispatch(deselectField());
   };
   return (

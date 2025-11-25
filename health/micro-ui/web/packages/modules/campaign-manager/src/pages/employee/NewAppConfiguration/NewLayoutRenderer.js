@@ -1,8 +1,9 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Card, CardHeader, CardText, Button } from "@egovernments/digit-ui-components";
+import React, { Fragment } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-ui-components";
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
+import { setShowPopupPreview } from "./redux/remoteConfigSlice";
 
 /**
  * Render a section (body or footer)
@@ -34,9 +35,13 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
  */
 const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   // Get field type master data from Redux
+  const dispatch = useDispatch();
   const { byName } = useSelector((state) => state.fieldTypeMaster);
+  const { showPopupPreview } = useSelector((state) => state.remoteConfig);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
+  // Get popup config from selected field if it's an actionPopup
+  const popupConfig = selectedField?.properties?.popupConfig || {};
   return (
     <MobileBezelFrame>
       <div
@@ -89,6 +94,68 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           </div>
         )}
       </div>
+      {/* Popup Preview for actionPopup fields */}
+      {showPopupPreview && selectedField?.format === "actionPopup" && (
+        <PopUp
+          type={popupConfig.type || "default"}
+          heading={t(popupConfig.title) || t("DEFAULT_POPUP_HEADING")}
+          onClose={() => {
+            dispatch(setShowPopupPreview(false));
+          }}
+          onOverlayClick={() => {
+            dispatch(setShowPopupPreview(false));
+          }}
+          style={{
+            maxHeight: "90%",
+            maxWidth: "90%",
+          }}
+          // footerChildren={popupConfig?.footerActions?.map((action, index) =>
+          //   renderTemplateComponent(
+          //     action,
+          //     fieldTypeMasterData,
+          //     selectedField,
+          //     t,
+          //     onFieldClick,
+          //     data,
+          //     "popupFooter",
+          //     index
+          //   )
+          // )}
+          footerChildren={popupConfig?.footerActions?.map((action, idx) => {
+            return (
+              <Button
+                key={idx}
+                type={action?.format || "button"}
+                label={t(action.label) || action.label}
+                size={action.properties?.size || "medium"}
+                variation={action.properties?.type || "primary"}
+                onClick={() => {
+                  console.log("footer action clicked", action);
+                }}
+              />
+            );
+          })}
+          showIcon={!!popupConfig?.titleIcon}
+          customIcon={popupConfig?.titleIcon}
+
+        >
+          {/* Popup Body */}
+          {popupConfig?.body?.map((section, index) => (
+            <Fragment key={index}>
+              {renderTemplateComponent(
+                section,
+                fieldTypeMasterData,
+                selectedField,
+                t,
+                onFieldClick,
+                data,
+                "popupBody",
+                index
+              )}
+            </Fragment>
+          ))}
+        </PopUp>
+      )}
     </MobileBezelFrame>
   );
 };
