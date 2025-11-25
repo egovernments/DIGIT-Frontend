@@ -702,15 +702,15 @@ function NewNavigationLogicWrapper({ t }) {
             <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
                 <div
                     role="button"
-                    title={editLabel}
-                    aria-label={editLabel}
+                    title={navLogicTitle}
+                    aria-label={navLogicTitle}
                     onClick={() => openEditor(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
                     {SVG?.Edit ? (
                         <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
                     ) : (
-                        <Button variation="secondary" label={editLabel} onClick={() => openEditor(idx)} />
+                        <Button variation="secondary" label={navLogicTitle} onClick={() => openEditor(idx)} />
                     )}
                 </div>
 
@@ -770,7 +770,7 @@ function NewNavigationLogicWrapper({ t }) {
                         <PopUp
                             className="digit-popup--fullscreen popup-editor"
                             type={"default"}
-                            heading={editLabel}
+                            heading={navLogicTitle}
                             children={[
                                 <div key="single-rule-editor" style={{ display: "grid", gap: "1rem" }}>
                                     {(() => {

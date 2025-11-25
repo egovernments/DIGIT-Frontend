@@ -282,11 +282,11 @@ const transformActionLabelToFooter = (actionLabel, navigateTo) => {
       format: "button",
       onAction: navigateTo
         ? [
-            {
-              actionType: "NAVIGATION",
-              properties: navigateTo,
-            },
-          ]
+          {
+            actionType: "NAVIGATION",
+            properties: navigateTo,
+          },
+        ]
         : [],
       properties: {
         size: "large",
@@ -339,16 +339,17 @@ const transformValidations = (validations) => {
 const extractActionLabels = (field) => {
   const actionLabels = {};
 
-  if (field.primaryAction?.label) {
+  if (field?.primaryAction && field.primaryAction?.label) {
     actionLabels.primaryActionLabel = field.primaryAction.label;
   }
 
-  if (field.secondaryAction?.label) {
+  if (field?.secondaryAction && field.secondaryAction?.label) {
     actionLabels.secondaryActionLabel = field.secondaryAction.label;
   }
 
   return actionLabels;
 };
+
 
 /**
  * Extract flow metadata (onAction, wrapperConfig, etc.)
