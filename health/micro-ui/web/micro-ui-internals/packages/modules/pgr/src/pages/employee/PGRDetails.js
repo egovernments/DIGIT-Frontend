@@ -440,7 +440,7 @@ const PGRDetails = () => {
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_AREA"),
-                    value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code || "NA"),
+                    value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code?.split('.')?.pop() || "NA"),
                   },
                   {
                     inline: true,
