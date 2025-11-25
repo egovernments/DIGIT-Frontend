@@ -159,7 +159,7 @@ const TopBar = ({
       props={{}}
       showDeafultImg
       style={{}}
-      theme="light"
+      theme={window?.globalConfigs?.getConfig("HEADER_THEME") || "light"}
       ulb={
         loggedin ? (
           cityDetails?.city?.ulbGrade ? (

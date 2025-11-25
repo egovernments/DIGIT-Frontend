@@ -179,8 +179,8 @@ const EmployeeSideBar = () => {
         items={sortedTransformedData}
         hideAccessbilityTools={true}
         onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
-        theme={"dark"}
-        variant={"primary"}
+        theme={window?.globalConfigs?.getConfig("SIDENAV_THEME") || "dark"}
+        variant={window?.globalConfigs?.getConfig("SIDENAV_VARIANT") || "primary"}
         transitionDuration={""}
         className=""
         styles={{}}
