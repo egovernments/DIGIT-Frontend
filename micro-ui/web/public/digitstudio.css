@@ -1369,6 +1369,6 @@ textarea.light-placeholder::placeholder {
     height: 2rem;
 }
 
-.employee .digit-label-field-pair .digit-card-label{
+.employee-app-wrapper .digit-label-field-pair .digit-card-label{
   margin-top: -1rem;
 }
