@@ -768,7 +768,7 @@ function NewNavigationLogicWrapper({ t }) {
                 <BodyPortal>
                     <div className="popup-portal-overlay">
                         <PopUp
-                            className="digit-popup--fullscreen"
+                            className="digit-popup--fullscreen popup-editor"
                             type={"default"}
                             heading={editLabel}
                             children={[
@@ -855,6 +855,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                             : (isCk ? nextOps.find((o) => o.code === "==") : {}),
                                                                                     });
                                                                                 }}
+                                                                                optionCardStyles={{maxHeight:"10vh"}}
                                                                                 selected={
                                                                                     cond?.selectedField?.code
                                                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
@@ -1105,7 +1106,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                 option={allPageOptions}
                                                                 optionKey="code"
                                                                 name={`target-${editorIndex}`}
-                                                                optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                 t={t}
                                                                 select={(e) => updateRule(editorIndex, { targetPage: e })}
                                                                 selected={
