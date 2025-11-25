@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
@@ -29,7 +28,6 @@ const FullConfigWrapper = () => {
   const [showToast, setShowToast] = useState(null);
   const [activeSidePanel, setActiveSidePanel] = useState(null); // 'roles' or 'flows' or null
   const [isClosing, setIsClosing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
 
   const handleCloseSidePanel = () => {
     setIsClosing(true);
@@ -156,85 +154,13 @@ const FullConfigWrapper = () => {
       return;
     }
 
-    try {
-      setIsSaving(true);
-
-      // Step 1: Fetch NewFormConfig data and transform it
-      const response = await Digit.CustomService.getResponse({
-        url: `/${mdmsContext}/v2/_search`,
-        body: {
-          MdmsCriteria: {
-            tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
-            filters: {
-              project: campaignNumber,
-              module: flowModule,
-            },
-            isActive: true,
-          },
-        },
-      });
-
-      const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
-      const transformedData = transformMdmsToAppConfig(fullData);
-
-      // Step 2: Search for existing NewApkConfig with campaignNumber and flow
-      const appConfigResponse = await Digit.CustomService.getResponse({
-        url: `/${mdmsContext}/v2/_search`,
-        body: {
-          MdmsCriteria: {
-            tenantId: tenantId,
-            schemaCode: "HCM-ADMIN-CONSOLE.NewApkConfig",
-            filters: {
-              project: campaignNumber,
-              name: flowModule,
-            },
-            isActive: true,
-          },
-        },
-      });
-      // Step 3: Update the existing config's mdms property with transformedData
-      if (appConfigResponse?.mdms && appConfigResponse.mdms.length > 0) {
-        const existingConfig = appConfigResponse.mdms?.[0].data;
-
-        // Update the mdms property with transformed data
-        const updatedConfig = {
-          ...existingConfig,
-          flows: transformedData,
-        };
-
-        // Update the MDMS record
-        const updatePayload = {
-          Mdms: {
-            ...appConfigResponse.mdms?.[0],
-            data: updatedConfig,
-          },
-        };
-
-        await Digit.CustomService.getResponse({
-          url: `/${mdmsContext}/v2/_update/HCM-ADMIN-CONSOLE.FormConfig`,
-          body: updatePayload,
-        });
-
-        setIsSaving(false);
-
-        // Show success toast
-        setShowToast({ key: "success", label: "APP_CONFIG_SAVED_SUCCESSFULLY_REDIRECTING_TO_MODULE_SCREEN" });
-
-        // Navigate after 5 seconds
-        setTimeout(() => {
-          navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
-        }, 5000);
-      } else {
-        console.error("No existing NewApkConfig found for campaignNumber and flow");
-        setIsSaving(false);
-        setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
-      }
-    } catch (error) {
-      console.error("Error in saveToAppConfig:", error);
-      setIsSaving(false);
-      setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
+    // Call MDMS update for current screen before navigating
+    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+      await window.__appConfig_onNext();
     }
+
+    // Navigate to the save loader screen
+    navigate(`/${window?.contextPath}/employee/campaign/app-config-save?campaignNumber=${campaignNumber}&flow=${flowModule}&tenantId=${tenantId}`);
   };
   // Show loader while fetching data
   if (isLoading) {
@@ -483,8 +409,6 @@ const FullConfigWrapper = () => {
           <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
         )}
 
-        {/* Saving Loader Overlay */}
-        {isSaving && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SUBMITTING_APP_CONFIG")} />}
       </div>
     </React.Fragment>
   );
