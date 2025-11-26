@@ -72,6 +72,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
                 masterName: field?.schemaCode?.split(".")[1],
               }
             : null,
+          mdmsv2: field?.isMdms ? true : false,
           options: field?.isMdms ? null : field?.dropDownOptions,
           optionsKey: field?.isMdms ? "code" : "name",
         }}
