@@ -116,7 +116,6 @@ const styles = {
     backgroundColor: "#fff",
     borderRadius: "24px",
     flexGrow: 1,
-    overflowY: "auto",
     // padding: "16px",
     boxSizing: "border-box",
   },
