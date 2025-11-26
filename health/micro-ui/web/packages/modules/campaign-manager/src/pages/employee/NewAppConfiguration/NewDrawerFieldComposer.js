@@ -1317,7 +1317,7 @@ function NewDrawerFieldComposer() {
       {/* Tab Description */}
       <TextBlock
         body=""
-        caption={t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
+        caption={selectedField?.type === "template" ?  t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}_${selectedField?.type?.toUpperCase()}`) : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
         header=""
         captionClassName="camp-drawer-caption"
         subHeader=""

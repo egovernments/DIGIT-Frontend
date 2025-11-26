@@ -233,7 +233,7 @@ function NewNavigationLogicWrapper({ t }) {
     };
 
     const isCheckboxField = (field) => {
-        const tpe = (field?.type || "").toLowerCase();
+        const tpe = (field?.format || "").toLowerCase();
         return tpe === "checkbox";
     };
 
