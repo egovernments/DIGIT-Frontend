@@ -196,5 +196,15 @@
         "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
       }
     ]
+  },
+  {
+    "type": "actionPopup",
+    "order": 19,
+    "metadata": {
+      "type": "template",
+      "format": "actionPopup"
+    },
+    "component": "Button",
+    "fieldType": "button"
   }
 ]
