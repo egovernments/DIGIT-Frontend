@@ -357,14 +357,22 @@ const BillInboxComponent = () => {
           <div style={{ width: "100%", display: "flex", flexDirection: "row", height: infoDescription ? "60vh" : "74vh", minHeight: "60vh" }}>
             {tableData == null && (
               <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
-                <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, selectedPeriod)}</div>
+                <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
+                  {renderProjectPeriod(t, selectedProject, selectedPeriod)?.[0]}
+                  <div style={{ fontSize: "14px" }}>{(renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1]) || ""}</div>
+                </div>
                 <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name || "")}</div>
                 <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} />
               </Card>
             )}
             {tableData && (
               <Card style={{ width: "100%" }}>
-                {tableData != null && <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, selectedPeriod)}</div>}
+                {tableData != null && (
+                  <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
+                    {renderProjectPeriod(t, selectedProject, selectedPeriod)?.[0]}
+                    <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1]}</div>
+                  </div>
+                )}
                 {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name || "")}</div>}
                 <div>
                   {approvalCount !== null && pendingApprovalCount !== null && (

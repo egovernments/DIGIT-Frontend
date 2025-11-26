@@ -42,12 +42,26 @@ const MyBillsTable = ({ ...props }) => {
             </div>
           );
         },
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
+        },
       },
 
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_TYPE_COLOUMN")}</div>,
         selector: (row) => {
-          return <div className="ellipsis-cell">{t(`HCM_AM_${row?.additionalDetails?.billingType}` || "NA") || t("NA")}</div>;
+          return (
+            <div className="ellipsis-cell" style={{ alignItems: "flex-start" }}>
+              {t(`HCM_AM_${row?.additionalDetails?.billingType}` || "NA") || t("NA")}
+            </div>
+          );
+        },
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
         },
       },
 
@@ -55,6 +69,11 @@ const MyBillsTable = ({ ...props }) => {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_DATE")}</div>,
         selector: (row) => {
           return <div className="ellipsis-cell">{formatTimestampToDate(row.billDate) || t("NA")}</div>;
+        },
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
         },
       },
 
@@ -73,6 +92,11 @@ const MyBillsTable = ({ ...props }) => {
               {`${formatTimestampToDate(row.fromPeriod)} - ${formatTimestampToDate(row.toPeriod)}` || t("NA")}
             </div>
           );
+        },
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
         },
       },
       // INFO:: no of registers commented
@@ -98,14 +122,22 @@ const MyBillsTable = ({ ...props }) => {
             </div>
           );
         },
+
         style: {
           justifyContent: "flex-end",
+          paddingTop: "15px",
+          alignItems: "flex-start",
         },
       },
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BOUNDARY_NAME")}</div>,
         selector: (row) => {
           return <div className="ellipsis-cell">{t(row.localityCode) || t("NA")}</div>;
+        },
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
         },
       },
 
@@ -125,6 +157,11 @@ const MyBillsTable = ({ ...props }) => {
               {t(project?.[0]?.name || `NA`)}
             </div>
           );
+        },
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
         },
       },
       {
@@ -188,6 +225,11 @@ const MyBillsTable = ({ ...props }) => {
           );
         },
         width: "300px",
+        style: {
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
+        },
       },
     ];
 

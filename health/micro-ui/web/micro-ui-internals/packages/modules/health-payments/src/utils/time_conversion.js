@@ -187,8 +187,8 @@ export const renderProjectPeriod = (t, selectedProject, period) => {
   const end = formatDate(period.periodEndDate);
 
   if (period?.id === "AGGREGATE") {
-    return t(selectedProject.name);
+    return [`${t(selectedProject.name)}`, ""];
   }
 
-  return [`${t(selectedProject.name)}`, `(${start} - ${end})`];
+  return [`${t(selectedProject.name)}`, start && end ? `(${start} - ${end})` : ""];
 };

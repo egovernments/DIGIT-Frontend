@@ -200,9 +200,9 @@ const CustomInboxTable = ({
   return (
     <React.Fragment>
       <Card style={{ gap: "0.8rem", height: "90vh", display: "flex", flexDirection: "column" }}>
-        <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px",alignItems:"center" }}>
+        <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
           {renderProjectPeriod(t, selectedProject, selectedPeriod)?.[0]}
-          <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1]}</div>
+          <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1] || ""}</div>
         </div>
         <div>{t(`ATTENDANCE_${Digit.SessionStorage.get("selectedProject")?.address?.boundaryType}`)}</div>
 

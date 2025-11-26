@@ -185,7 +185,11 @@ const MyBills = () => {
 
   return (
     <React.Fragment>
-      {<Header styles={{ fontSize: "32px" }}>{t("HCM_AM_MY_BILLS")}</Header>}
+      {
+        <Header styles={{ fontSize: "32px" }}>
+          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MY_BILLS")}</span>
+        </Header>
+      }
 
       <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
