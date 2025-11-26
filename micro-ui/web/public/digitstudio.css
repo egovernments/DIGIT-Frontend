@@ -1253,7 +1253,7 @@ digit-button-link {
   line-height: 1.4em;
 }
 
-// Custom scrollbar styling for workflow panels
+/*Custom scrollbar styling for workflow panels */
 .properties-scroll-container {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e0 transparent;
@@ -1361,7 +1361,7 @@ textarea.light-placeholder::placeholder {
 .popupwrap .digit-header-wrap .heading-m{
     font-size: 25px;
 }
-.popupwrap .digit-header-wrap .icon-bg-secondary{
+.popup-wrap .digit-header-wrap .icon-bg-secondary{
     position: absolute;
     top: 1rem;
     right: 1.5rem;
