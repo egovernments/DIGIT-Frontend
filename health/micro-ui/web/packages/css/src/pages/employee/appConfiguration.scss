@@ -232,9 +232,10 @@
   }
 
   &__flow-tag {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
+    position: fixed;
+    top: 220px;
+    left: 270px;
+    z-index: 100;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -245,8 +246,11 @@
     font-weight: 400;
     color: #0057bd;
     width: fit-content;
-    margin-top: 1rem;
-    margin-left: 1rem;
+    transition: left 0.3s ease-out;
+  }
+
+  &__container--panel-open &__flow-tag {
+    left: 540px; /* 240px + 280px (side panel width) */
   }
 
   &__page-tabs {
@@ -284,15 +288,19 @@
   }
 
   &__preview-area {
-    position: relative;
+    position: fixed !important;
+    left: 267px !important;
+    right: 369px !important;
+    top: 216px !important;
+    bottom: 72px !important;
     background-color: #fafafa;
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 24px;
     padding: 24px;
     overflow: auto;
+    box-sizing: border-box;
   }
 
   &__preview-with-tag {
