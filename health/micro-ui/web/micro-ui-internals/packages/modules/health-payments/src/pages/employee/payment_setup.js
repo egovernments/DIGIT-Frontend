@@ -1,7 +1,17 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
-import { Card, LabelFieldPair, Dropdown, CardText, HeaderComponent, TextInput, Button, Loader } from "@egovernments/digit-ui-components";
+import {
+  Card,
+  LabelFieldPair,
+  Dropdown,
+  CardText,
+  HeaderComponent,
+  TextInput,
+  Button,
+  Loader,
+  NoResultsFound,
+} from "@egovernments/digit-ui-components";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import RoleWageTable from "../../components/payment_setup/wageTable";
 import ProjectService from "../../services/project/ProjectService";
@@ -659,6 +669,33 @@ const PaymentSetUpPage = () => {
 
   if (loading) {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
+  }
+
+  if (!CampaignData || CampaignData?.CampaignDetails?.length === 0) {
+    return (
+      <div>
+        <Card type="primary" className="bottom-gap-card-payment">
+          <NoResultsFound style={{ height: "35rem" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+        </Card>
+
+        {/* Action Bar */}
+        <ActionBar className="mc_back">
+          <Button
+            style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "14rem" }}
+            variation="primary"
+            label={t("GO_BACK_TO_HOME")}
+            title={t("GO_BACK_TO_HOME")}
+            onClick={() => {
+              history.push(`/${window.contextPath}/employee`);
+              return;
+            }}
+            icon={"ArrowBack"}
+            isSuffix={false}
+            isDisabled={false}
+          />
+        </ActionBar>
+      </div>
+    );
   }
 
   return (
