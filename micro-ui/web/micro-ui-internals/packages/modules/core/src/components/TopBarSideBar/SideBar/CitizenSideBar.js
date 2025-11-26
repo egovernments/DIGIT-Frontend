@@ -400,7 +400,7 @@ export const CitizenSideBar = ({
       icon: "Language",
       key: "language",
     },
-    ...(user
+    ...(user && user.access_token
     ? [
         {
           label: t("EDIT_PROFILE"),
