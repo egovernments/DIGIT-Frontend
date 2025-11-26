@@ -181,13 +181,13 @@ const formatDate = (timestamp) => {
 
 export const renderProjectPeriod = (t, selectedProject, period) => {
   if (!selectedProject?.name) return t(selectedProject?.name || "");
-  if (!period?.periodStartDate || !period?.periodEndDate) return t(selectedProject.name);
+  if (!period?.periodStartDate || !period?.periodEndDate) return [t(selectedProject.name)];
 
   const start = formatDate(period.periodStartDate);
   const end = formatDate(period.periodEndDate);
 
   if (period?.id === "AGGREGATE") {
-    return [`${t(selectedProject.name)}`, ""];
+    return [`${t(selectedProject.name)}`, " "];
   }
 
   return [`${t(selectedProject.name)}`, start && end ? `(${start} - ${end})` : ""];

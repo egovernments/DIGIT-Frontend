@@ -129,11 +129,16 @@ const AttendanceInboxComponent = () => {
     const data = Digit.SessionStorage.get("paymentInbox");
     const selectedArea = Digit.SessionStorage.get("selectedValues");
 
-    if (data) {
+    const selectedPeriod= Digit.SessionStorage.get("selectedPeriod");
+
+
+    if (data && selectedPeriod) {
+      
       triggerAttendanceSearch(data);
     } else if (selectedArea) {
       const pp = Object.values(selectedArea).find((v) => v !== null);
-      if (pp) {
+      if (pp && selectedPeriod) {
+        
         triggerAttendanceSearch(pp?.code);
       }
     }
@@ -247,8 +252,8 @@ const AttendanceInboxComponent = () => {
               {card == false ? (
                 <Card className="card-overide" style={{gap:"0.5rem"}}>
                   <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
-                    {renderProjectPeriod(t, selectedProject, markPeriod)?.[0]}
-                    <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, markPeriod)?.[1]}</div>
+                    {renderProjectPeriod(t, selectedProject, markPeriod)?.[0] || " "}
+                    <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, markPeriod)?.[1] || ""}</div>
                   </div>
                   <div>{t(`ATTENDANCE_${Digit.SessionStorage.get("selectedProject")?.address?.boundaryType}`)}</div>
                   {<SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />}
