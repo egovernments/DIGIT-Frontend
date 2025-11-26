@@ -1251,38 +1251,15 @@ tbody {
   display: block;
 }
 .mobile-bezel-screen {
-  scrollbar-width: none;
-  scrollbar-color: #d6d5d4 transparent;
-
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-y: overlay !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 
   &::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    transition: background-color 0.3s ease;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-button {
-    display: none !important;
-    height: 0 !important;
     width: 0 !important;
-  }
-
-  &.scrolling {
-    scrollbar-width: thin;
-    scrollbar-color: #d6d5d4 transparent;
-    transition: scrollbar-color 0.3s ease;
-    &::-webkit-scrollbar-thumb {
-      background-color: #d6d5d4;
-    }
+    height: 0 !important;
+    display: none !important;
   }
 }
 .mobile-bezel-flexContainer {

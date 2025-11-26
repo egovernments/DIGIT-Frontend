@@ -205,7 +205,7 @@ const FullConfigWrapper = () => {
           {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
         </div>
       </div>
-      <div className="full-config-wrapper__container">
+      <div className={`full-config-wrapper__container ${activeSidePanel && !isClosing ? "full-config-wrapper__container--panel-open" : ""}`}>
         {/* Left Sidebar - Menu Items */}
         <div className="full-config-wrapper__left-sidebar">
           <div
