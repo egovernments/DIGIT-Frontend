@@ -265,7 +265,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
 
-        console.log("Rendering toggle for bindTo:", bindTo, "with value:", getFieldValue(), selectedField, panelItem);
 
         const handleToggleChange = (value) => {
           // Update local UI
