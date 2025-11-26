@@ -265,6 +265,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
 
+
         const handleToggleChange = (value) => {
           // Update local UI
           setLocalToggle(Boolean(value));
@@ -1317,7 +1318,7 @@ function NewDrawerFieldComposer() {
       {/* Tab Description */}
       <TextBlock
         body=""
-        caption={selectedField?.type === "template" ?  t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}_${selectedField?.type?.toUpperCase()}`) : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
+        caption={selectedField?.type === "template" ? t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}_${selectedField?.type?.toUpperCase()}`) : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
         header=""
         captionClassName="camp-drawer-caption"
         subHeader=""
@@ -1332,11 +1333,25 @@ function NewDrawerFieldComposer() {
 
       {/* Field Properties */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {visibleTabProperties.map((panelItem) => (
-          <div key={panelItem.id} className="drawer-toggle-field-container">
-            <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
-          </div>
-        ))}
+        {visibleTabProperties.map((panelItem) => {
+          const bindTo = panelItem?.bindTo || "";
+
+          // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
+          const parentKey = bindTo.includes(".") ? bindTo.split(".")[0] : bindTo;
+
+
+
+          const shouldShowToggle = !(
+            selectedField?.format === "panelCard" &&
+            parentKey &&                                  // not empty
+            selectedField?.[parentKey] === undefined       // hide if missing
+          );
+          return shouldShowToggle ? (
+            <div key={panelItem.id} className="drawer-toggle-field-container">
+              <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
+            </div>
+          ) : null
+        })}
 
         {/* No properties message */}
         {visibleTabProperties.length === 0 && (
