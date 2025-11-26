@@ -377,7 +377,6 @@ const FullConfigWrapper = () => {
                       </span>
                     </span>
                   }
-                  // label={currentPageType === "template" ? t("TEMPLATE_PARTIALLY_CONFIGURABLE") : t("FORM_FULLY_CONFIGURABLE")}
                   showIcon={true}
                   type={currentPageType === "template" ? "warning" : "default"}
                   stroke={false}
