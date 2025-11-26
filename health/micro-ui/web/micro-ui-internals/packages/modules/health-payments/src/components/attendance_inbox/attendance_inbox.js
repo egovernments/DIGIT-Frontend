@@ -47,7 +47,7 @@ const AttendanceInboxComponent = () => {
    * @param {number} totalNext - Offset for pagination
    * @param {object} selectedProject - Selected project object
    */
-  const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, selectedProject) => {
+  const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, selectedProjectp) => {
     try {
       setChildrenDataLoading(true);
 
@@ -64,7 +64,9 @@ const AttendanceInboxComponent = () => {
             tenantId: Digit.ULBService.getStateId(),
             limit: totalRows || rowsPerPage,
             offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
-            referenceId: selectedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id,
+            referenceId:
+              (selectedProjectp?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id) ||
+              selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode:
               filterData?.code == undefined || filterData?.code == null
@@ -125,9 +127,15 @@ const AttendanceInboxComponent = () => {
   // Trigger initial data fetch when the component is mounted
   useEffect(() => {
     const data = Digit.SessionStorage.get("paymentInbox");
+    const selectedArea = Digit.SessionStorage.get("selectedValues");
 
     if (data) {
       triggerAttendanceSearch(data);
+    } else if (selectedArea) {
+      const pp = Object.values(selectedArea).find((v) => v !== null);
+      if (pp) {
+        triggerAttendanceSearch(pp?.code);
+      }
     }
   }, []);
 
@@ -235,10 +243,14 @@ const AttendanceInboxComponent = () => {
           </div>
 
           <div className="custom-inbox-outer-table-section">
-            <div className="inner-table-section" style={{ height: "60vh" }}>
+            <div className="inner-table-section" style={{ height: "61vh" }}>
               {card == false ? (
-                <Card className="card-overide">
-                  <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, markPeriod)}</div>
+                <Card className="card-overide" style={{gap:"0.5rem"}}>
+                  <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
+                    {renderProjectPeriod(t, selectedProject, markPeriod)?.[0]}
+                    <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, markPeriod)?.[1]}</div>
+                  </div>
+                  <div>{t(`ATTENDANCE_${Digit.SessionStorage.get("selectedProject")?.address?.boundaryType}`)}</div>
                   {<SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />}
                 </Card>
               ) : (

@@ -509,7 +509,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}
+          <span style={{ color: "#0B4B66" }}>{editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}</span>
         </Header>
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
@@ -665,8 +665,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
               }}
               type="button"
-              style={{ minWidth: "14rem" }}
+              style={{ minWidth: "13rem" }}
               variation="primary"
+              icon="ArrowBack"
             />
           ) : editAttendance ? (
             <Button

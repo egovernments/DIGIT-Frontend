@@ -128,7 +128,6 @@ export const getValidPeriods = (t, periods, addingBool) => {
   // -----------------------------------------------------
   // CASE 1: If we are INSIDE any period → show only previous + current
   // -----------------------------------------------------
-  
 
   if (current) {
     const currentIndex = validPeriods.findIndex((p) => p.id === current.id);
@@ -165,7 +164,7 @@ export const getValidPeriods = (t, periods, addingBool) => {
       }
     }
   }
-  
+
   // If somehow we reach here (should not), return past periods
   return validPeriods;
 };
@@ -191,5 +190,5 @@ export const renderProjectPeriod = (t, selectedProject, period) => {
     return t(selectedProject.name);
   }
 
-  return `${t(selectedProject.name)} (${start} - ${end})`;
+  return [`${t(selectedProject.name)}`, `(${start} - ${end})`];
 };

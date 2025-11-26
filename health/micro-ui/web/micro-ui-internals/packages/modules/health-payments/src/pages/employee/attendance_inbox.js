@@ -34,20 +34,24 @@ import AttendanceInboxComponent from "../../components/attendance_inbox/attendan
  */
 
 const AttendanceInbox = () => {
-
   const { t } = useTranslation();
   const location = useLocation();
 
   return (
     <div>
       <Header styles={{ fontSize: "28px" }}>
-        {t("HCM_AM_ATTENDANCE_INBOX")}
+        <span style={{ color: "#0B4B66" }}>{t("HCM_AM_ATTENDANCE_INBOX")}</span>
       </Header>
-      {<div className="inbox-search-wrapper" style={{
-        height:"160px"
-      }}>
-        <AttendanceInboxComponent></AttendanceInboxComponent>
-      </div>}
+      {
+        <div
+          className="inbox-search-wrapper"
+          style={{
+            height: "160px",
+          }}
+        >
+          <AttendanceInboxComponent></AttendanceInboxComponent>
+        </div>
+      }
     </div>
   );
 };

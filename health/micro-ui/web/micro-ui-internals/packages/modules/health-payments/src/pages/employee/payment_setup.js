@@ -713,6 +713,8 @@ const PaymentSetUpPage = () => {
               inputMode="numeric"
               disabled={edit ? true : false}
               allowNegativeValues={false}
+              min={billingCycle.minDuration}
+              max={billingCycle.maxDuration}
             />
           )}
       </Card>
