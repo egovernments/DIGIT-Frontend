@@ -400,12 +400,16 @@ export const CitizenSideBar = ({
       icon: "Language",
       key: "language",
     },
-    {
-      label: t("EDIT_PROFILE"),
-      type: "custom",
-      icon: "Edit",
-      key: "editProfile",
-    },
+    ...(user
+    ? [
+        {
+          label: t("EDIT_PROFILE"),
+          type: "custom",
+          icon: "Edit",
+          key: "editProfile",
+        },
+      ]
+    : []),
     {
       label: t("Modules"),
       icon: "DriveFileMove",
