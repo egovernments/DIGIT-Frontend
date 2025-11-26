@@ -1,3 +1,4 @@
+// NewDependentFieldWrapper.js
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -23,6 +24,7 @@ function BodyPortal({ children }) {
     return ReactDOM.createPortal(children, document.body);
 }
 
+/** MDMS Dropdown */
 function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
     const [module = "", master = ""] = (schemaCode || "").split(".");
@@ -70,15 +72,14 @@ function NewDependentFieldWrapper({ t }) {
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
 
-    // Get data from Redux
+    // Redux selectors
     const selectedField = useSelector((state) => state.remoteConfig.selectedField);
     const currentData = useSelector((state) => state.remoteConfig.currentData);
-
-    // FIXED: Access pages directly from state.flowPages.pages
     const flowPages = useSelector((state) => state.flowPages.pages);
     const flowPagesStatus = useSelector((state) => state.flowPages.status);
     const pageConfigs = useSelector((state) => state.pageFields.byPage);
     const pageFieldsLoading = useSelector((state) => state.pageFields.loadingPages);
+
     const moduleName = "HCM-ADMIN-CONSOLE";
     const masterName = "AppFlowConfig";
 
@@ -88,67 +89,38 @@ function NewDependentFieldWrapper({ t }) {
 
     // Fetch flows on mount or when campaign changes
     useEffect(() => {
-        if (flowPagesStatus === 'idle' && campaignNumber) {
-            dispatch(fetchFlowPages({
-                tenantId,
-                campaignNumber,
-                flowId,
-                moduleName,
-                masterName,
-            }));
+        if (flowPagesStatus === "idle" && campaignNumber) {
+            dispatch(
+                fetchFlowPages({
+                    tenantId,
+                    campaignNumber,
+                    flowId,
+                    moduleName,
+                    masterName,
+                })
+            );
         }
-    }, [dispatch, flowPagesStatus, tenantId, campaignNumber]);
+    }, [dispatch, flowPagesStatus, tenantId, campaignNumber, flowId, moduleName, masterName]);
 
     // Fetch current page fields if not already loaded
     useEffect(() => {
-        if (currentPageName && flowId && campaignNumber &&
-            !pageConfigs[currentPageName] && !pageFieldsLoading[currentPageName]) {
-            dispatch(fetchPageFields({
-                tenantId,
-                flow: flowId,
-                campaignNumber,
-                pageName: currentPageName,
-            }));
+        if (
+            currentPageName &&
+            flowId &&
+            campaignNumber &&
+            !pageConfigs[currentPageName] &&
+            !pageFieldsLoading[currentPageName]
+        ) {
+            dispatch(
+                fetchPageFields({
+                    tenantId,
+                    flow: flowId,
+                    campaignNumber,
+                    pageName: currentPageName,
+                })
+            );
         }
     }, [dispatch, currentPageName, flowId, campaignNumber, pageConfigs, pageFieldsLoading, tenantId]);
-
-    useEffect(() => {
-        if (!flowId || !campaignNumber || !currentFlowPages.length || !currentPageName) return;
-
-        // Find current page order
-        const currentPageFullName = currentPageName?.includes('.')
-            ? currentPageName
-            : `${flowId}.${currentPageName}`;
-
-        const currentPage = currentFlowPages.find(p =>
-            p.name === currentPageFullName ||
-            p.name === currentPageName ||
-            p.name.endsWith(`.${currentPageName}`)
-        );
-
-        const currentPageOrder = currentPage?.order || Number.MAX_VALUE;
-
-
-        // Only fetch pages with order <= current page order
-        currentFlowPages
-            .filter(page => page.order <= currentPageOrder)
-            .forEach(page => {
-                // Extract page code (remove flow prefix if present)
-                const pageCode = page.name.includes('.')
-                    ? page.name.split('.').pop()
-                    : page.name;
-
-
-                if (!pageConfigs[pageCode] && !pageFieldsLoading[pageCode]) {
-                    dispatch(fetchPageFields({
-                        tenantId,
-                        flow: flowId,
-                        campaignNumber,
-                        pageName: pageCode, // Use code without flow prefix
-                    }));
-                }
-            });
-    }, [dispatch, flowId, campaignNumber, currentFlowPages, currentPageName, pageConfigs, pageFieldsLoading, tenantId]);
 
     // ---------- labels ----------
     const displayLogicLabel = t("DISPLAY_LOGIC") || "Display Logic";
@@ -156,7 +128,6 @@ function NewDependentFieldWrapper({ t }) {
     const addDisplayLogicLabel = t("ADD_DISPLAY_LOGIC") || "Add Display Logic";
     const editLabel = t("EDIT") || "Edit";
     const deleteRuleLabel = t("HCM_REMOVE_RULE") || "Delete Rule";
-    const joinWithLabel = t("HCM_JOIN_WITH") || "Join with";
     const selectPageLabel = t("HCM_SELECT_PAGE") || "Select Page";
     const selectFieldLabel = t("HCM_SELECT_FIELD") || "Select Field";
     const comparisonTypeLabel = t("HCM_COMPARISION_TYPE") || "Comparison";
@@ -164,12 +135,13 @@ function NewDependentFieldWrapper({ t }) {
     const enterValueLabel = t("ENTER_VALUE") || "Enter value";
     const closeLabel = t("CLOSE") || "Cancel";
     const submitLabel = t("SUBMIT") || "Submit";
-    const andText = t("AND") || "And";
-    const orText = t("OR") || "Or";
+    const addConditionLabel = t("ADD_CONDITION") || "Add Condition";
+    const removeConditionLabel = t("REMOVE_CONDITION") || "Remove Condition";
+    const compareFieldToggleLabel = t("COMPARE_WITH_FIELD") || "Compare with another field";
     const completeAllMsg =
-        t("PLEASE_COMPLETE_ALL_CONDITIONS") ||
-        "Please complete all condition fields before confirming.";
+        t("PLEASE_COMPLETE_ALL_CONDITIONS") || "Please complete all condition fields before confirming.";
     const logicLabel = t("HCM_LOGIC") || "Logic";
+    const selectPageFirstLabel = t("SELECT_PAGE_FIRST") || "Select page first";
 
     // ---------- constants & helpers ----------
     const LOGICALS = [
@@ -189,22 +161,24 @@ function NewDependentFieldWrapper({ t }) {
         []
     );
 
-    // Safe extraction of expression
-    const getExpressionString = () => {
+    // ---------- helpers to read existing expression ----------
+    const getExpressionArray = () => {
         const expr = selectedField?.visibilityCondition?.expression;
-        if (typeof expr === 'string') {
-            return expr.trim();
+        // If string (old) -> wrap into single object
+        if (typeof expr === "string" && expr.trim()) {
+            return [{ condition: expr.trim() }];
         }
-        if (expr && typeof expr === 'object' && expr.expression) {
-            return String(expr.expression).trim();
+        // If array of objects with condition key
+        if (Array.isArray(expr)) {
+            return expr.map((e) => ({ condition: String(e.condition || "").trim() }));
         }
-        return "";
+        return [];
     };
 
     // Find the current flow from flowPages
     const currentFlow = useMemo(() => {
         if (!flowPages || !flowId) return null;
-        return flowPages.find(flow => flow.name === flowId || flow.flowId === flowId);
+        return flowPages.find((flow) => flow.name === flowId || flow.flowId === flowId);
     }, [flowPages, flowId]);
 
     // Extract pages from the current flow
@@ -213,83 +187,61 @@ function NewDependentFieldWrapper({ t }) {
         return currentFlow.pages;
     }, [currentFlow]);
 
-    // REPLACE the existing pageOptions useMemo (around line 120) with this:
+    // Prepare page options (only pages up to current page order)
     const pageOptions = useMemo(() => {
         if (!currentFlowPages.length || !currentPageName) return [];
 
-        // Find current page order
-        // currentPageName might be with or without flow prefix
-        const currentPageFullName = currentPageName?.includes('.')
-            ? currentPageName
-            : `${flowId}.${currentPageName}`;
+        const currentPageFullName = currentPageName?.includes(".") ? currentPageName : `${flowId}.${currentPageName}`;
 
-        const currentPage = currentFlowPages.find(p =>
-            p.name === currentPageFullName ||
-            p.name === currentPageName ||
-            p.name.endsWith(`.${currentPageName}`)
+        const currentPage = currentFlowPages.find(
+            (p) => p.name === currentPageFullName || p.name === currentPageName || p.name.endsWith(`.${currentPageName}`)
         );
 
         const currentPageOrder = currentPage?.order || Number.MAX_VALUE;
 
-        // Only show pages up to and including current page order
-        const availablePages = currentFlowPages.filter(p => p.order <= currentPageOrder);
+        const availablePages = currentFlowPages.filter((p) => p.order <= currentPageOrder);
 
         return availablePages.map((p) => {
-            // Extract code from name (part after the dot, or full name if no dot)
-            const code = p.name.includes('.')
-                ? p.name.split('.').pop()
-                : p.name;
-
+            const code = p.name.includes(".") ? p.name.split(".").pop() : p.name;
             return {
-                code: code,
-                name: p.name, // Keep full name for reference
-                displayName: Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${p.name}`), // Use short name for display
-                order: p.order
+                code,
+                name: p.name,
+                displayName: Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${p.name}`),
+                order: p.order,
             };
         });
     }, [currentFlowPages, currentPageName, flowId]);
 
-
-    // Updated getPageObj to use fetched page configs
+    // Get page object (fields) -- current page uses currentData body, else pageConfigs
     const getPageObj = (pageCode) => {
         if (pageCode === currentPageName) {
-            // Use currentData for current page (it's already loaded)
             return currentData?.body?.[0];
         }
 
-        // Check if we have fetched the page configuration
         const pageConfig = pageConfigs[pageCode];
         if (pageConfig) {
             return pageConfig.body?.[0] || { fields: [] };
         }
-
-        // Return empty object if no data yet
         return { fields: [] };
     };
 
+    // Helper: obtain code of the field currently being edited (selectedField)
+    const getCurrentEditingFieldCode = () =>
+        selectedField?.fieldName || selectedField?.jsonPath || selectedField?.id || selectedField?.code || "";
+
     // Get field options for a page
+    // IMPORTANT: we exclude the selectedField (the one being configured) from options
     const getFieldOptions = (pageCode) => {
         const pageObj = getPageObj(pageCode);
         if (!pageObj?.fields) return [];
-
+        const currentEditingFieldCode = getCurrentEditingFieldCode();
         return pageObj.fields
             .filter((f) => {
-                // Skip template, dynamic, and custom fields
                 const fieldType = String(f?.type || "").toLowerCase();
                 if (["template", "dynamic", "custom"].includes(fieldType)) return false;
-
-                // Skip hidden fields unless explicitly included in form
                 const isHidden = f?.hidden === true;
                 const includeInForm = f?.includeInForm;
                 if (isHidden && !includeInForm) return false;
-
-                return true;
-            })
-            .filter((f) => {
-                // For current page, only show fields before the selected field
-                if (pageCode === currentPageName && selectedField) {
-                    return f?.order < (selectedField?.order || Number.MAX_VALUE);
-                }
                 return true;
             })
             .map((f) => ({
@@ -300,51 +252,30 @@ function NewDependentFieldWrapper({ t }) {
                 type: f.type || f.datatype || f.format || "string",
                 schemaCode: f.schemaCode,
                 enums: f.enums || f.dropDownOptions || f.options || [],
-                order: f.order,
-            }));
+            }))
+            .filter((f) => f.code !== getCurrentEditingFieldCode()); // exclude the field being edited
     };
 
     // Fetch fields when a page is selected
-    const handlePageSelection = useCallback((pageCode) => {
-        if (!flowId || !campaignNumber) {
-            console.warn("Missing flow or campaign information");
-            return;
-        }
+    const handlePageSelection = useCallback(
+        (pageCode) => {
+            if (!flowId || !campaignNumber) return;
+            const cleanPageCode = pageCode.includes(".") ? pageCode.split(".").pop() : pageCode;
+            if (!pageConfigs[cleanPageCode] && !pageFieldsLoading[cleanPageCode]) {
+                dispatch(
+                    fetchPageFields({
+                        tenantId,
+                        flow: flowId,
+                        campaignNumber,
+                        pageName: cleanPageCode,
+                    })
+                );
+            }
+        },
+        [dispatch, pageConfigs, pageFieldsLoading, tenantId, flowId, campaignNumber]
+    );
 
-        // pageCode should be without flow prefix (e.g., "stockDetails" not "RECORDSTOCK.stockDetails")
-        const cleanPageCode = pageCode.includes('.') ? pageCode.split('.').pop() : pageCode;
-
-        // Fetch fields for the selected page if not already cached
-        if (!pageConfigs[cleanPageCode] && !pageFieldsLoading[cleanPageCode]) {
-            dispatch(fetchPageFields({
-                tenantId,
-                flow: flowId,
-                campaignNumber,
-                pageName: cleanPageCode,
-            }));
-        }
-    }, [dispatch, pageConfigs, pageFieldsLoading, tenantId, flowId, campaignNumber]);
-
-    // Don't render until we have the necessary data
-    if (!campaignNumber || !flowId) {
-        return (
-            <Card type="secondary">
-                <div style={{ padding: "1rem" }}>
-                    <p style={{ opacity: 0.7, margin: 0 }}>
-                        {t("LOADING_CONFIGURATION") || "Loading configuration..."}
-                    </p>
-                </div>
-            </Card>
-        );
-    }
-
-    // type helpers
-    const getFieldMeta = (pageCode, fieldCode) => {
-        const pageObj = getPageObj(pageCode);
-        const field = pageObj?.fields?.find((f) => (f.jsonPath || f.fieldName || f.id) === fieldCode);
-        return { pageObj, field };
-    };
-
+    // ---------- field-type helpers ----------
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
@@ -352,7 +283,7 @@ function NewDependentFieldWrapper({ t }) {
         return ["string", "text", "textinput", "textarea"].includes(tpe);
     };
 
-    const isCheckboxField = (field) => (field?.type || "").toLowerCase() === "checkbox";
+    const isCheckboxField = (field) => (field?.format || "").toLowerCase() === "checkbox";
 
     const isNumericField = (field) => {
         const tpe = (field?.type || "").toLowerCase();
@@ -386,13 +317,10 @@ function NewDependentFieldWrapper({ t }) {
     };
 
     const toDDMMYYYY = (iso) => {
-        const dateOnly = String(iso).split("T")[0];  // "2025-11-11"
-
+        const dateOnly = String(iso).split("T")[0];
         const [y, m, d] = dateOnly.split("-");
-
         if (!y || !m || !d) return "";
-
-        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`
+        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
     };
 
     const toISOFromDDMMYYYY = (ddmmyyyy) => {
@@ -431,33 +359,77 @@ function NewDependentFieldWrapper({ t }) {
         return opts.find((o) => o.code === comp.code);
     };
 
-    // ---------- parse / serialize ----------
-    const serializeRule = (r) => {
-        if (!r?.selectedPage?.code || !r?.selectedField?.code || !r?.comparisonType?.code)
-            return "";
-        const { field } = getFieldMeta(r.selectedPage.code, r.selectedField.code);
+    // ---------- parse / serialize for sub-conditions ----------
+    // parseSingle: parse a simple comparison like `page.field==value` or `page.field==page2.field2`
+    const parseSingle = (expression = "", defaultLeftPage = currentPageName) => {
+        let expr = (expression || "").trim();
+        for (const operator of PARSE_OPERATORS) {
+            const i = expr.indexOf(operator);
+            if (i !== -1) {
+                const leftRaw = expr.slice(0, i).trim();
+                const rightRaw = expr.slice(i + operator.length).trim();
 
-        if (field && isDobLike(field)) {
-            const months = String(r?.fieldValue ?? "").trim();
-            if (months === "") return "";
-            const left = `calculateAgeInMonths(${r.selectedPage.code}.${r.selectedField.code})`;
-            return `${left}${r.comparisonType.code}${months}`;
+                // left might be "calculateAgeInMonths(page.field)" handled as before
+                let left = leftRaw;
+                const ageFn = "calculateAgeInMonths(";
+                let isAge = false;
+                if (leftRaw.startsWith(ageFn) && leftRaw.endsWith(")")) {
+                    left = leftRaw.slice(ageFn.length, -1);
+                    isAge = true;
+                }
+
+                // left page.field
+                const leftParts = (left || "").split(".").map((s) => (s || "").trim());
+                let leftPage = defaultLeftPage;
+                let leftField = "";
+                if (leftParts.length === 1) {
+                    leftField = leftParts[0];
+                } else if (leftParts.length >= 2) {
+                    leftPage = leftParts[0] || defaultLeftPage;
+                    leftField = leftParts.slice(1).join(".");
+                }
+
+                // now right; determine if right is a page.field pattern
+                const rightParts = (rightRaw || "").split(".").map((s) => (s || "").trim());
+                let isFieldComparison = false;
+                let rightPage = null;
+                let rightField = null;
+                let rightValue = rightRaw;
+
+                if (rightParts.length >= 2) {
+                    // treat as field comparison
+                    isFieldComparison = true;
+                    rightPage = rightParts[0];
+                    rightField = rightParts.slice(1).join(".");
+                    rightValue = "";
+                }
+
+                // special: if rightRaw looks like a quoted string keep as-is; else keep as raw
+                return {
+                    leftPage,
+                    leftField,
+                    comparisonType: { code: operator, name: operator },
+                    isFieldComparison,
+                    rightPage,
+                    rightField,
+                    fieldValue: isFieldComparison ? "" : rightValue,
+                    isAge,
+                };
+            }
         }
-        if (field && isDatePickerNotDob(field)) {
-            const ddmmyyyy = String(r?.fieldValue ?? "").trim();
-            if (ddmmyyyy === "") return "";
-            return `${r.selectedPage.code}.${r.selectedField.code}${r.comparisonType.code}${ddmmyyyy}`;
-        }
-        if (String(r?.fieldValue ?? "").trim() === "") return "";
-        return `${r.selectedPage.code}.${r.selectedField.code}${r.comparisonType.code}${r.fieldValue}`;
+        return {
+            leftPage: defaultLeftPage,
+            leftField: "",
+            comparisonType: {},
+            isFieldComparison: false,
+            rightPage: null,
+            rightField: null,
+            fieldValue: "",
+            isAge: false,
+        };
     };
 
-    const buildFinalExpression = (rulesArr) =>
-        rulesArr
-            .map((r, i) => (i > 0 ? `${r.joiner?.code || "&&"} ${serializeRule(r)}` : serializeRule(r)))
-            .filter((seg) => !!seg)
-            .join(" ");
-
+    // tokenize splits by top-level && and || preserving order
     const tokenize = (expr = "") => {
         if (!expr) return [];
         const tokens = [];
@@ -497,58 +469,84 @@ function NewDependentFieldWrapper({ t }) {
         return tokens;
     };
 
-    const parseSingle = (expression = "") => {
-        for (const operator of PARSE_OPERATORS) {
-            const i = expression.indexOf(operator);
-            if (i !== -1) {
-                const leftRaw = expression.slice(0, i).trim();
-                const right = expression.slice(i + operator.length).trim();
-
-                let left = leftRaw;
-                const ageFn = "calculateAgeInMonths(";
-                if (leftRaw.startsWith(ageFn) && leftRaw.endsWith(")")) {
-                    left = leftRaw.slice(ageFn.length, -1);
-                }
-
-                const [pageCode = "", fieldCode = ""] = (left || "")
-                    .split(".")
-                    .map((s) => (s || "").trim());
-
-                return {
-                    selectedPage: pageCode ? { code: pageCode, name: pageCode } : {},
-                    selectedField: fieldCode ? { code: fieldCode, name: fieldCode } : {},
-                    comparisonType: { code: operator, name: operator },
-                    fieldValue: (right || "").trim(),
-                };
-            }
+    // Build serialized single condition from sub-condition object
+    const serializeSingle = (c) => {
+        if (!c?.leftPage || !c?.leftField || !c?.comparisonType?.code) return "";
+        // left
+        let left = `${c.leftPage}.${c.leftField}`;
+        if (c.isAge) {
+            left = `calculateAgeInMonths(${left})`;
         }
-        return { selectedPage: {}, selectedField: {}, comparisonType: {}, fieldValue: "" };
+        if (c.isFieldComparison) {
+            if (!c.rightPage || !c.rightField) return "";
+            return `${left}${c.comparisonType.code}${c.rightPage}.${c.rightField}`;
+        }
+        if (String(c.fieldValue ?? "").trim() === "") return "";
+        // for date types we expect dd/mm/yyyy format in UI; navigation did similar
+        if (c.isDate) {
+            return `${left}${c.comparisonType.code}${c.fieldValue}`;
+        }
+        return `${left}${c.comparisonType.code}${c.fieldValue}`;
     };
 
-    // ---------- rules state ----------
-    const committedExpression = getExpressionString();
+    // Build string of all sub-conditions joined by their joiner
+    const buildConditionStringFromConds = (conds) =>
+        conds
+            .map((seg, i) => {
+                const single = serializeSingle(seg);
+                if (!single) return "";
+                // joiner is between previous and this, so we add operator before this segment if i>0
+                if (i > 0) {
+                    const joiner = seg.joiner?.code || "&&";
+                    return `${joiner} ${single}`;
+                }
+                return single;
+            })
+            .filter(Boolean)
+            .join(" ");
 
+    // ---------- rules state ----------
+    // rulesFromExisting: create editable structure from the existing visibilityCondition expression array
     const rulesFromExisting = useMemo(() => {
-        if (!committedExpression) return [];
-        const tokens = tokenize(committedExpression);
-        if (!tokens.length) return [];
-        const out = [];
-        let pendingJoin = "&&";
-        tokens.forEach((t) => {
-            if (t.type === "op") pendingJoin = t.value;
-            else {
-                const base = parseSingle(t.value);
-                out.push({
-                    ...base,
-                    joiner:
-                        out.length === 0
-                            ? { code: "&&", name: "AND" }
-                            : { code: pendingJoin, name: pendingJoin === "||" ? "OR" : "AND" },
+        const arr = getExpressionArray(); // array of { condition: "..." }
+        if (!arr.length) return [];
+        // For each object (one UI rule), parse its condition string into conds (array)
+        return arr.map((obj) => {
+            const expr = obj.condition || "";
+            const tokens = tokenize(expr);
+            const conds = [];
+            let pendingJoin = "&&";
+            tokens.forEach((t) => {
+                if (t.type === "op") {
+                    pendingJoin = t.value;
+                } else {
+                    const parsed = parseSingle(t.value.trim(), currentPageName);
+                    conds.push({
+                        ...parsed,
+                        joiner: conds.length === 0 ? { code: "&&", name: "AND" } : { code: pendingJoin, name: pendingJoin === "||" ? "OR" : "AND" },
+                        // set isDate if parsed left field is date type (we can derive later when leftPage/leftField are resolved)
+                        isDate: parsed.isDate || false,
+                    });
+                    pendingJoin = "&&";
+                }
+            });
+            if (!conds.length) {
+                conds.push({
+                    leftPage: currentPageName,
+                    leftField: "",
+                    comparisonType: {},
+                    isFieldComparison: false,
+                    rightPage: null,
+                    rightField: null,
+                    fieldValue: "",
+                    joiner: { code: "&&", name: "AND" },
                 });
             }
+            return {
+                conds,
+            };
         });
-        return out;
-    }, [committedExpression]);
+    }, [selectedField, currentPageName, pageConfigs, flowPages]);
 
     const [rules, setRules] = useState(() => rulesFromExisting);
     const [editorIndex, setEditorIndex] = useState(null);
@@ -562,38 +560,41 @@ function NewDependentFieldWrapper({ t }) {
         setRules(rulesFromExisting);
     }, [rulesFromExisting]);
 
-    const isRuleComplete = (r) =>
-        Boolean(r?.selectedPage?.code) &&
-        Boolean(r?.selectedField?.code) &&
-        Boolean(r?.comparisonType?.code) &&
-        String(r?.fieldValue ?? "").trim() !== "";
-
-    // ---------- actions ----------
-    const openEditorForNew = () => {
-        const jr = {
-            selectedPage: {},
-            selectedField: {},
-            comparisonType: {},
-            fieldValue: "",
-            joiner: { code: "&&", name: "AND" }
-        };
-        setDraftRule(jr);
-        setValidationStarted(false);
+    // When user opens a rule editor, set draft to a deep copy
+    const openEditor = (idx) => {
+        const r = rules[idx] || { conds: [{ leftPage: currentPageName, leftField: "", comparisonType: {}, isFieldComparison: false, fieldValue: "", joiner: { code: "&&", name: "AND" } }] };
+        // Normalize conds: resolve pages/fields metadata if needed later in UI
+        const cloned = JSON.parse(JSON.stringify(r));
+        setDraftRule(cloned);
         setGlobalFormError("");
-        setEditorIndex("new");
+        setValidationStarted(false);
+        setEditorIndex(idx);
+        // Ensure pages fields are fetched for pages used in these conds
+        (cloned.conds || []).forEach((c) => {
+            if (c.leftPage) handlePageSelection(c.leftPage);
+            if (c.rightPage) handlePageSelection(c.rightPage);
+        });
     };
 
-    const openEditor = (idx) => {
-        const rule = rules[idx];
-        setDraftRule({ ...rule });
-        setValidationStarted(false);
+    const openEditorForNew = () => {
+        const newRule = {
+            conds: [
+                {
+                    leftPage: currentPageName,
+                    leftField: "",
+                    comparisonType: {},
+                    isFieldComparison: false,
+                    rightPage: null,
+                    rightField: null,
+                    fieldValue: "",
+                    joiner: { code: "&&", name: "AND" },
+                },
+            ],
+        };
+        setDraftRule(newRule);
+        setEditorIndex("new");
         setGlobalFormError("");
-        setEditorIndex(idx);
-
-        // Fetch fields for the selected page if not already loaded
-        if (rule?.selectedPage?.code) {
-            handlePageSelection(rule.selectedPage.code);
-        }
+        setValidationStarted(false);
     };
 
     const discardAndCloseEditor = () => {
@@ -606,68 +607,146 @@ function NewDependentFieldWrapper({ t }) {
     const deleteRuleFromList = (idx) =>
         setRules((prev) => {
             const next = prev.filter((_, i) => i !== idx);
-            const expressionString = buildFinalExpression(next);
-            // Update Redux
-            dispatch(updateSelectedField({
-                visibilityCondition: {
-                    ...selectedField?.visibilityCondition,
-                    expression: expressionString,
-                },
-            }));
+            // sync to redux
+            const payload = next
+                .map((r) => {
+                    const condStr = buildConditionStringFromConds(r.conds || []);
+                    return condStr ? { condition: condStr } : null;
+                })
+                .filter(Boolean);
+            dispatch(
+                updateSelectedField({
+                    visibilityCondition: {
+                        ...selectedField?.visibilityCondition,
+                        expression: payload,
+                    },
+                })
+            );
             return next;
         });
 
+    const isSubCondComplete = (c) =>
+        Boolean(c?.leftPage) &&
+        Boolean(c?.leftField) &&
+        Boolean(c?.comparisonType?.code) &&
+        (c.isFieldComparison ? Boolean(c?.rightPage && c?.rightField) : String(c?.fieldValue ?? "").trim() !== "");
+
+    const isRuleComplete = (r) => (r?.conds || []).every(isSubCondComplete);
+
+    // Add sub-condition (Option B behavior: joiner selection visible after adding row)
+    const addSubCondition = () => {
+        setValidationStarted(true);
+        setDraftRule((prev) => {
+            const next = JSON.parse(JSON.stringify(prev));
+            next.conds.push({
+                leftPage: currentPageName,
+                leftField: "",
+                comparisonType: {},
+                isFieldComparison: false,
+                rightPage: null,
+                rightField: null,
+                fieldValue: "",
+                joiner: { code: "&&", name: "AND" },
+            });
+            return next;
+        });
+    };
+
+    const removeSubCondition = (idx) => {
+        setDraftRule((prev) => {
+            const next = JSON.parse(JSON.stringify(prev));
+            next.conds = next.conds.filter((_, i) => i !== idx);
+            if (!next.conds.length) {
+                next.conds.push({
+                    leftPage: currentPageName,
+                    leftField: "",
+                    comparisonType: {},
+                    isFieldComparison: false,
+                    rightPage: null,
+                    rightField: null,
+                    fieldValue: "",
+                    joiner: { code: "&&", name: "AND" },
+                });
+            } else {
+                // Ensure first cond joiner is always defaulted to &&
+                next.conds[0].joiner = { code: "&&", name: "AND" };
+            }
+            return next;
+        });
+    };
+
+    const updateSubCond = (index, patch) => {
+        setDraftRule((prev) => {
+            const next = JSON.parse(JSON.stringify(prev));
+            next.conds = next.conds.map((c, i) => (i === index ? { ...c, ...patch } : c));
+            return next;
+        });
+    };
+
+    const changeJoinerForCond = (idx, joinCode) => {
+        setDraftRule((prev) => {
+            const next = JSON.parse(JSON.stringify(prev));
+            // joiner sits on the cond that comes AFTER the joiner (we follow earlier navigation scheme)
+            if (next.conds[idx]) {
+                next.conds[idx].joiner = { code: joinCode, name: joinCode === "||" ? "OR" : "AND" };
+            }
+            return next;
+        });
+    };
+
+    // Submit draft rule into rules array and sync to redux
     const submitAndClose = () => {
         setValidationStarted(true);
-        if (!isRuleComplete(draftRule)) {
+        if (!draftRule || !isRuleComplete(draftRule)) {
             setGlobalFormError(completeAllMsg);
             return;
         }
+
+        const condString = buildConditionStringFromConds(draftRule.conds || []);
+        if (!condString) {
+            setGlobalFormError(completeAllMsg);
+            return;
+        }
+
         if (editorIndex === "new") {
-            const next = [...rules, draftRule];
+            const next = [...rules, { conds: draftRule.conds }];
             setRules(next);
-            const expressionString = buildFinalExpression(next);
-            // Update Redux
-            dispatch(updateSelectedField({
-                visibilityCondition: {
-                    ...selectedField?.visibilityCondition,
-                    expression: expressionString,
-                },
-            }));
+            const payload = next
+                .map((r) => {
+                    const cStr = buildConditionStringFromConds(r.conds || []);
+                    return cStr ? { condition: cStr } : null;
+                })
+                .filter(Boolean);
+            dispatch(
+                updateSelectedField({
+                    visibilityCondition: {
+                        ...selectedField?.visibilityCondition,
+                        expression: payload,
+                    },
+                })
+            );
         } else if (typeof editorIndex === "number") {
-            const next = rules.map((r, i) => (i === editorIndex ? draftRule : r));
+            const next = rules.map((r, i) => (i === editorIndex ? { conds: draftRule.conds } : r));
             setRules(next);
-            const expressionString = buildFinalExpression(next);
-            // Update Redux
-            dispatch(updateSelectedField({
-                visibilityCondition: {
-                    ...selectedField?.visibilityCondition,
-                    expression: expressionString,
-                },
-            }));
+            const payload = next
+                .map((r) => {
+                    const cStr = buildConditionStringFromConds(r.conds || []);
+                    return cStr ? { condition: cStr } : null;
+                })
+                .filter(Boolean);
+            dispatch(
+                updateSelectedField({
+                    visibilityCondition: {
+                        ...selectedField?.visibilityCondition,
+                        expression: payload,
+                    },
+                })
+            );
         }
         discardAndCloseEditor();
     };
 
-    // ---------- UI helpers ----------
-    const JoinerRow = ({ code }) => (
-        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <span
-                style={{
-                    background: "#ffffffff",
-                    color: "#C84C0E",
-                    borderRadius: 4,
-                    border: "1px solid #C84C0E",
-                    padding: "0.1rem 0.5rem",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                }}
-            >
-                {code === "||" ? orText.toUpperCase() : andText.toUpperCase()}
-            </span>
-        </div>
-    );
-
+    // UI helpers
     const RuleRow = ({ idx, onEdit, onDelete }) => (
         <div
             style={{
@@ -692,16 +771,12 @@ function NewDependentFieldWrapper({ t }) {
             <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
                 <div
                     role="button"
-                    title={editLabel}
-                    aria-label={editLabel}
+                    title={addDisplayLogicLabel}
+                    aria-label={addDisplayLogicLabel}
                     onClick={() => onEdit(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Edit ? (
-                        <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                    ) : (
-                        <Button variation="secondary" label={editLabel} onClick={() => onEdit(idx)} />
-                    )}
+                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} onClick={() => onEdit(idx)} />}
                 </div>
 
                 <div
@@ -711,15 +786,37 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onDelete(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Delete ? (
-                        <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                    ) : (
-                        <Button variation="secondary" label={deleteRuleLabel} onClick={() => onDelete(idx)} />
-                    )}
+                    {SVG?.Delete ? <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel} onClick={() => onDelete(idx)} />}
                 </div>
             </div>
         </div>
     );
+
+    // Format cond preview for list (simple)
+    const formatRulePreview = (r) => {
+        try {
+            return r?.conds?.map((c, i) => {
+                const leftLabel = c.leftField ? `${c.leftPage}.${c.leftField}` : "(field)";
+                const op = c.comparisonType?.code || "?";
+                const rightLabel = c.isFieldComparison ? `${c.rightPage}.${c.rightField}` : `${c.fieldValue || "(value)"}`;
+                if (i === 0) return `${leftLabel} ${op} ${rightLabel}`;
+                return `${c.joiner?.code || "&&"} ${leftLabel} ${op} ${rightLabel}`;
+            }).join(" ");
+        } catch (e) {
+            return "(incomplete)";
+        }
+    };
+
+    // Don't render until we have the necessary data
+    if (!campaignNumber || !flowId) {
+        return (
+            <Card type="secondary">
+                <div style={{ padding: "1rem" }}>
+                    <p style={{ opacity: 0.7, margin: 0 }}>{t("LOADING_CONFIGURATION") || "Loading configuration..."}</p>
+                </div>
+            </Card>
+        );
+    }
 
     // ---------- UI ----------
     return (
@@ -728,14 +825,7 @@ function NewDependentFieldWrapper({ t }) {
                 <h3 style={{ margin: 0 }}>{displayLogicLabel}</h3>
             </div>
 
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                    marginBottom: "0.75rem",
-                }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.75rem" }}>
                 {(!rules || rules.length === 0) ? (
                     <p style={{ opacity: 0.7, margin: 0 }}>{noLogicAddedLabel}</p>
                 ) : (
@@ -743,7 +833,11 @@ function NewDependentFieldWrapper({ t }) {
                         <RuleRow idx={0} onEdit={openEditor} onDelete={deleteRuleFromList} />
                         {rules.slice(1).map((r, i) => (
                             <React.Fragment key={`logic-block-${i + 1}`}>
-                                <JoinerRow code={r?.joiner?.code} />
+                                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                                    <span style={{ background: "#FFFFFFFF", color: "#C84C0E", borderRadius: 4, border: "1px solid #C84C0E", padding: "0.1rem 0.5rem", fontSize: "0.75rem", fontWeight: 600 }}>
+                                        {t("OR") || "OR"}
+                                    </span>
+                                </div>
                                 <RuleRow idx={i + 1} onEdit={openEditor} onDelete={deleteRuleFromList} />
                             </React.Fragment>
                         ))}
@@ -752,396 +846,372 @@ function NewDependentFieldWrapper({ t }) {
             </div>
 
             <div>
-                <Button
-                    variation="secondary"
-                    label={addDisplayLogicLabel}
-                    onClick={openEditorForNew}
-                    icon="Add"
-                    style={{ width: "100%" }}
-                />
+                <Button variation="secondary" label={addDisplayLogicLabel} onClick={openEditorForNew} icon="Add" style={{ width: "100%" }} />
             </div>
 
-            {/* Full Editor Popup with all field type handling */}
+            {/* Editor popup */}
             {showPopUp && draftRule && (
                 <BodyPortal>
                     <div className="popup-portal-overlay">
                         <PopUp
                             className="digit-popup--fullscreen popup-editor"
                             type={"default"}
-                            heading={editLabel}
+                            heading={addDisplayLogicLabel}
                             children={[
                                 <div key="single-rule-editor" style={{ display: "grid", gap: "1rem" }}>
-                                    <div
-                                        style={{
-                                            background: "#FAFAFA",
-                                            border: "1px solid #F5D8C6",
-                                            borderRadius: 8,
-                                            padding: "0.75rem",
-                                            display: "grid",
-                                            gap: "0.75rem",
-                                        }}
-                                    >
-                                        {/* Join-with dropdown */}
-                                        {editorIndex === "new" && rules.length > 0 && (
-                                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                                                <span style={{ fontWeight: 600 }}>{joinWithLabel}</span>
-                                                <div style={{ width: 160, maxWidth: "100%" }}>
-                                                    <Dropdown
-                                                        option={LOGICALS}
-                                                        optionKey="name"
-                                                        name={`joiner-new`}
-                                                        optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
-                                                        t={t}
-                                                        select={(e) =>
-                                                            setDraftRule((prev) => ({
-                                                                ...prev,
-                                                                joiner: { code: e.code, name: e.code === "||" ? "OR" : "AND" },
-                                                            }))
-                                                        }
-                                                        selected={draftRule.joiner}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
+                                    <div style={{ background: "#FAFAFA", border: "1px solid #F5D8C6", borderRadius: 8, padding: "0.75rem", display: "grid", gap: "0.75rem" }}>
+                                        {/* list of sub-conditions */}
+                                        {draftRule.conds.map((cond, idx) => {
+                                            // derive left page/field options
+                                            const leftPageSelected = cond.leftPage;
+                                            const leftFieldOptions = leftPageSelected ? getFieldOptions(leftPageSelected) : [];
+                                            const selectedLeftField = leftFieldOptions.find((f) => f.code === cond.leftField) || cond.leftField;
 
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
-                                            {/* Page Dropdown */}
-                                            <div style={{ minWidth: 220, flex: "1 1 240px" }}>
-                                                <LabelFieldPair vertical removeMargin>
-                                                    <p style={{ margin: 0 }}>{selectPageLabel}</p>
-                                                    <div className="digit-field" style={{ width: "100%" }}>
-                                                        <Dropdown
-                                                            option={pageOptions}
-                                                            optionKey="displayName"
-                                                             optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
-                                                            name={`page-editor`}
-                                                            t={t}
-                                                            select={(e) => {
-                                                                handlePageSelection(e.code);
-                                                                setDraftRule((prev) => ({
-                                                                    ...prev,
-                                                                    selectedPage: e,
-                                                                    selectedField: {},
-                                                                    comparisonType: {},
-                                                                    fieldValue: "",
-                                                                }));
-                                                            }}
-                                                            selected={
-                                                                draftRule?.selectedPage?.code
-                                                                    ? pageOptions.find((p) => p.code === draftRule.selectedPage.code) ||
-                                                                    draftRule.selectedPage
-                                                                    : draftRule.selectedPage
-                                                            }
-                                                        />
-                                                    </div>
-                                                </LabelFieldPair>
-                                            </div>
+                                            // right side options when field comparison
+                                            const rightPageSelected = cond.rightPage;
+                                            // when showing rightFieldOptions, exclude the selectedField (global) as well
+                                            const rightFieldOptions = rightPageSelected ? getFieldOptions(rightPageSelected) : [];
+                                            const selectedRightField = rightFieldOptions.find((f) => f.code === cond.rightField) || cond.rightField;
 
-                                            {/* Field Dropdown */}
-                                            <div style={{ minWidth: 260, flex: "1 1 280px" }}>
-                                                <LabelFieldPair vertical removeMargin>
-                                                    <p style={{ margin: 0 }}>{selectFieldLabel}</p>
-                                                    <div className="digit-field" style={{ width: "100%" }}>
-                                                        <Dropdown
-                                                            option={
-                                                                draftRule?.selectedPage?.code
-                                                                    ? getFieldOptions(draftRule.selectedPage.code)
-                                                                    : []
-                                                            }
-                                                            optionKey="label"
-                                                             optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
-                                                            name={`field-editor`}
-                                                            t={useT}
-                                                            select={(e) => {
-                                                                const nextOps = getOperatorOptions(e);
-                                                                const canKeep =
-                                                                    draftRule?.comparisonType?.code &&
-                                                                    nextOps.some((o) => o.code === draftRule.comparisonType.code);
+                                            const selectedLeftFieldMeta = leftFieldOptions.find((f) => f.code === cond.leftField);
+                                            const operatorOptions = getOperatorOptions(selectedLeftFieldMeta);
+                                            const selectedOperator = selectedLeftFieldMeta ? getSelectedOperatorFromOptions(selectedLeftFieldMeta, cond.comparisonType) : getSelectedOperatorFromOptions(null, cond.comparisonType);
 
-                                                                const isCk = isCheckboxField(e);
-                                                                setDraftRule((prev) => ({
-                                                                    ...prev,
-                                                                    selectedField: e,
-                                                                    fieldValue: isCk
-                                                                        ? (["true", "false"].includes(String(prev.fieldValue).toLowerCase())
-                                                                            ? prev.fieldValue
-                                                                            : "false")
-                                                                        : "",
-                                                                    comparisonType: canKeep
-                                                                        ? nextOps.find((o) => o.code === prev.comparisonType.code)
-                                                                        : (isCk ? nextOps.find((o) => o.code === "==") : {}),
-                                                                }));
-                                                            }}
-                                                            selected={
-                                                                draftRule?.selectedField?.code
-                                                                    ? (draftRule?.selectedPage?.code ? getFieldOptions(draftRule.selectedPage.code) : []).find(
-                                                                        (f) => f.code === draftRule.selectedField.code
-                                                                    ) || draftRule.selectedField
-                                                                    : draftRule.selectedField
-                                                            }
-                                                            disabled={!draftRule?.selectedPage?.code}
-                                                        />
-                                                    </div>
-                                                </LabelFieldPair>
-                                            </div>
+                                            const isSelect = selectedLeftFieldMeta && (selectedLeftFieldMeta.format === "dropdown" || selectedLeftFieldMeta.format === "radio" || selectedLeftFieldMeta.type === "selection");
+                                            const isCheckbox = selectedLeftFieldMeta && isCheckboxField(selectedLeftFieldMeta);
+                                            const isDob = selectedLeftFieldMeta && isDobLike(selectedLeftFieldMeta);
+                                            const isDate = selectedLeftFieldMeta && (isDatePickerNotDob(selectedLeftFieldMeta));
+                                            const useMdms = selectedLeftFieldMeta && (["dropdown", "radio"].includes((selectedLeftFieldMeta.format || "").toLowerCase())) && !!selectedLeftFieldMeta.schemaCode; // Option A behavior
 
-                                            {/* Operator Dropdown */}
-                                            <div style={{ minWidth: 220, flex: "0 1 220px" }}>
-                                                <LabelFieldPair vertical removeMargin>
-                                                    <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
-                                                    <div className="digit-field" style={{ width: "100%" }}>
-                                                        {(() => {
-                                                            const selectedFieldObj =
-                                                                draftRule?.selectedPage?.code && draftRule?.selectedField?.code
-                                                                    ? getFieldOptions(draftRule.selectedPage.code).find(
-                                                                        (f) => f.code === draftRule.selectedField.code
-                                                                    )
-                                                                    : null;
-                                                            const operatorOptions = getOperatorOptions(selectedFieldObj);
-                                                            const selectedOperator = getSelectedOperatorFromOptions(
-                                                                selectedFieldObj,
-                                                                draftRule?.comparisonType
-                                                            );
-
-                                                            return (
+                                            return (
+                                                <div key={`cond-row-${idx}`} style={{ background: "#FFF", border: "1px dashed #EAC5AD", borderRadius: 8, padding: "0.75rem", display: "grid", gap: "0.5rem" }}>
+                                                    {/* If not first cond, show joiner control (Option B: appears because there is a previous row) */}
+                                                    {idx > 0 && (
+                                                        <div style={{ display: "flex", justifyContent: "flex-start", gap: "0.5rem", alignItems: "center" }}>
+                                                            <span style={{ fontWeight: 600 }}>{t("JOIN_WITH") || "Join with"}</span>
+                                                            <div style={{ width: 140 }}>
                                                                 <Dropdown
-                                                                    option={operatorOptions}
+                                                                    option={LOGICALS}
                                                                     optionKey="name"
-                                                                    name={`op-editor`}
-                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                    name={`joiner-${idx}`}
                                                                     t={t}
-                                                                    select={(e) => setDraftRule((prev) => ({ ...prev, comparisonType: e }))}
-                                                                    disabled={!draftRule?.selectedField?.code}
-                                                                    selected={selectedOperator}
+                                                                    select={(e) => changeJoinerForCond(idx, e.code)}
+                                                                    selected={cond.joiner || { code: "&&", name: "AND" }}
                                                                 />
-                                                            );
-                                                        })()}
-                                                    </div>
-                                                </LabelFieldPair>
-                                            </div>
-
-                                            {/* Value Input - with full field type handling */}
-                                            <div style={{ minWidth: 220, flex: "0 1 220px" }}>
-                                                <LabelFieldPair vertical removeMargin>
-                                                    <p style={{ margin: 0 }}>{selectValueLabel}</p>
-                                                    <div className="digit-field" style={{ width: "100%" }}>
-                                                        {(() => {
-                                                            const selectedFieldObj =
-                                                                draftRule?.selectedPage?.code && draftRule?.selectedField?.code
-                                                                    ? getFieldOptions(draftRule.selectedPage.code).find(
-                                                                        (f) => f.code === draftRule.selectedField.code
-                                                                    )
-                                                                    : null;
-
-                                                            // Checkbox Field
-                                                            if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
-                                                                const boolVal = String(draftRule.fieldValue).toLowerCase() === "true";
-                                                                return (
-                                                                    <CheckBox
-                                                                        mainClassName={"app-config-checkbox-main"}
-                                                                        labelClassName={"app-config-checkbox-label"}
-                                                                        onChange={(v) => {
-                                                                            const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
-                                                                            setDraftRule((prev) => ({ ...prev, fieldValue: checked ? "true" : "false" }));
-                                                                        }}
-                                                                        value={boolVal}
-                                                                        label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
-                                                                        isLabelFirst={false}
-                                                                        disabled={!draftRule?.selectedField?.code}
-                                                                    />
-                                                                );
-                                                            }
-
-                                                            // DOB Field (Age in months)
-                                                            if (selectedFieldObj && isDobLike(selectedFieldObj)) {
-                                                                return (
-                                                                    <TextInput
-                                                                        type="text"
-                                                                        populators={{ name: `months-editor` }}
-                                                                        placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
-                                                                        value={draftRule.fieldValue}
-                                                                        onChange={(event) =>
-                                                                            setDraftRule((prev) => ({
-                                                                                ...prev,
-                                                                                fieldValue: sanitizeIntegerInput(event.target.value),
-                                                                            }))
-                                                                        }
-                                                                        disabled={!draftRule?.selectedField?.code}
-                                                                    />
-                                                                );
-                                                            }
-
-                                                            // Date Picker (not DOB)
-                                                            if (selectedFieldObj && isDatePickerNotDob(selectedFieldObj)) {
-                                                                const iso = toISOFromDDMMYYYY(draftRule.fieldValue);
-                                                                return (
-                                                                    <TextInput
-                                                                        type="date"
-                                                                        populators={{
-                                                                            newDateFormat: true,
-
-                                                                            name: `date-editor`
-                                                                        }}
-                                                                        value={iso}
-                                                                        onChange={(d) =>
-                                                                            setDraftRule((prev) => ({
-                                                                                ...prev,
-                                                                                fieldValue: toDDMMYYYY(d),
-                                                                            }))
-                                                                        }
-                                                                        disabled={!draftRule?.selectedField?.code}
-                                                                    />
-                                                                );
-                                                            }
-
-                                                            const isSelect = selectedFieldObj && isSelectLike(selectedFieldObj);
-
-                                                            if (isSelect) {
-                                                                // Dropdown with enum options
-                                                                if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
-                                                                    const enumOptions = selectedFieldObj.enums.map((en) => ({
-                                                                        code: String(en.code),
-                                                                        name: en.name,
-                                                                    }));
-                                                                    const selectedEnum =
-                                                                        enumOptions.find((o) => String(o.code) === String(draftRule.fieldValue)) ||
-                                                                        (draftRule.fieldValue
-                                                                            ? { code: String(draftRule.fieldValue), name: String(draftRule.fieldValue) }
-                                                                            : undefined);
-                                                                   
-                                                                    return (
-                                                                        <Dropdown
-                                                                            option={enumOptions}
-                                                                            optionCardStyles={{ maxHeight: "15vh", overflow: "auto",  zIndex: 10000 }}
-                                                                            optionKey="name"
-                                                                            name={`val-editor`}
-                                                                            t={t}
-                                                                            select={(e) =>
-                                                                                setDraftRule((prev) => ({ ...prev, fieldValue: e.code }))
-                                                                            }
-                                                                            disabled={!draftRule?.selectedField?.code}
-                                                                            selected={selectedEnum}
-                                                                        />
-                                                                    );
-                                                                }
-
-                                                                // MDMS Dropdown
-                                                                if (selectedFieldObj.schemaCode) {
-                                                                    return (
-                                                                        <MdmsValueDropdown
-                                                                            schemaCode={selectedFieldObj.schemaCode}
-                                                                            value={draftRule.fieldValue}
-                                                                            onChange={(code) => setDraftRule((prev) => ({ ...prev, fieldValue: code }))}
-                                                                            t={useT}
-                                                                        />
-                                                                    );
-                                                                }
-
-                                                                // Fallback text input for other select-like fields
-                                                                return (
-                                                                    <TextInput
-                                                                        type="text"
-                                                                        populators={{ name: `text-editor` }}
-                                                                        placeholder={enterValueLabel}
-                                                                        value={draftRule.fieldValue}
-                                                                        onChange={(event) =>
-                                                                            setDraftRule((prev) => ({ ...prev, fieldValue: event.target.value }))
-                                                                        }
-                                                                        disabled={!draftRule?.selectedField?.code}
-                                                                    />
-                                                                );
-                                                            }
-
-                                                            // Numeric fields
-                                                            const numericValue = isNumericField(selectedFieldObj);
-                                                            return (
-                                                                <TextInput
-                                                                    type="text"
-                                                                    populators={{ name: `text-editor` }}
-                                                                    placeholder={
-                                                                        numericValue ? t("ENTER_INTEGER_VALUE") || enterValueLabel : enterValueLabel
-                                                                    }
-                                                                    value={draftRule.fieldValue}
-                                                                    onChange={(event) => {
-                                                                        const raw = event.target.value;
-                                                                        const next = numericValue ? sanitizeIntegerInput(raw) : raw;
-                                                                        setDraftRule((prev) => ({ ...prev, fieldValue: next }));
-                                                                    }}
-                                                                    disabled={!draftRule?.selectedField?.code}
-                                                                />
-                                                            );
-                                                        })()}
-                                                    </div>
-                                                </LabelFieldPair>
-                                            </div>
-
-                                            {/* Validation error message */}
-                                            {validationStarted && !isRuleComplete(draftRule) && (
-                                                <div
-                                                    style={{
-                                                        border: "1px solid #FCA5A5",
-                                                        background: "#FEF2F2",
-                                                        color: "#B91C1C",
-                                                        borderRadius: 6,
-                                                        padding: "0.5rem 0.75rem",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "space-between",
-                                                        gap: "0.75rem",
-                                                        width: "100%",
-                                                    }}
-                                                >
-                                                    <span>{completeAllMsg}</span>
-                                                    {SVG?.Close ? (
-                                                        <SVG.Close
-                                                            width={"1.1rem"}
-                                                            height={"1.1rem"}
-                                                            fill={"#7F1D1D"}
-                                                            onClick={() => {
-                                                                setGlobalFormError(null);
-                                                                setValidationStarted(false);
-                                                            }}
-                                                            style={{ cursor: "pointer" }}
-                                                        />
-                                                    ) : (
-                                                        <span
-                                                            style={{ cursor: "pointer", color: "#7F1D1D" }}
-                                                            onClick={() => {
-                                                                setGlobalFormError(null);
-                                                                setValidationStarted(false);
-                                                            }}
-                                                        >
-                                                            ×
-                                                        </span>
+                                                            </div>
+                                                        </div>
                                                     )}
+
+                                                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
+                                                        {/* Left Page */}
+                                                        <div style={{ minWidth: 220, flex: "1 1 240px" }}>
+                                                            <LabelFieldPair vertical removeMargin>
+                                                                <p style={{ margin: 0 }}>{selectPageLabel}</p>
+                                                                <div className="digit-field" style={{ width: "100%" }}>
+                                                                    <Dropdown
+                                                                        option={pageOptions}
+                                                                        optionKey="displayName"
+                                                                        optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                        name={`left-page-${idx}`}
+                                                                        t={t}
+                                                                        select={(e) => {
+                                                                            handlePageSelection(e.code);
+                                                                            updateSubCond(idx, { leftPage: e.code, leftField: "", comparisonType: {}, fieldValue: "", isFieldComparison: false, rightPage: null, rightField: null });
+                                                                        }}
+                                                                        selected={cond.leftPage ? pageOptions.find((p) => p.code === cond.leftPage) || { code: cond.leftPage, displayName: cond.leftPage } : { code: cond.leftPage }}
+                                                                    />
+                                                                </div>
+                                                            </LabelFieldPair>
+                                                        </div>
+
+                                                        {/* Left Field */}
+                                                        <div style={{ minWidth: 260, flex: "1 1 280px" }}>
+                                                            <LabelFieldPair vertical removeMargin>
+                                                                <p style={{ margin: 0 }}>{selectFieldLabel}</p>
+                                                                <div className="digit-field" style={{ width: "100%" }}>
+                                                                    <Dropdown
+                                                                        option={cond.leftPage ? leftFieldOptions : []}
+                                                                        optionKey="label"
+                                                                        name={`left-field-${idx}`}
+                                                                        t={useT}
+                                                                        optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                        select={(e) => {
+                                                                            const nextOps = getOperatorOptions(e);
+                                                                            const canKeep =
+                                                                                cond?.comparisonType?.code &&
+                                                                                nextOps.some((o) => o.code === cond.comparisonType?.code);
+
+                                                                            const isCk = isCheckboxField(e);
+                                                                            updateSubCond(idx, {
+                                                                                leftField: e.code,
+                                                                                isAge: isDob ? true : false,
+                                                                                comparisonType: canKeep ? cond.comparisonType : (isCk ? nextOps.find((o) => o.code === "==") : {}),
+                                                                                fieldValue: isCk ? (["true", "false"].includes(String(cond.fieldValue).toLowerCase()) ? cond.fieldValue : "false") : "",
+                                                                            });
+                                                                        }}
+                                                                        selected={cond.leftPage && cond.leftField ? leftFieldOptions.find((f) => f.code === cond.leftField) || { code: cond.leftField, label: cond.leftField } : { code: "", label: selectPageFirstLabel }}
+                                                                        disabled={!cond.leftPage}
+                                                                    />
+                                                                </div>
+                                                            </LabelFieldPair>
+                                                        </div>
+
+                                                        {/* Operator */}
+                                                        <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                                            <LabelFieldPair vertical removeMargin>
+                                                                <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
+                                                                <div className="digit-field" style={{ width: "100%" }}>
+                                                                    <Dropdown
+                                                                        option={operatorOptions}
+                                                                        optionKey="name"
+                                                                        name={`op-${idx}`}
+                                                                        t={t}
+                                                                        select={(e) => updateSubCond(idx, { comparisonType: e })}
+                                                                        selected={selectedOperator}
+                                                                        disabled={!cond.leftField}
+                                                                    />
+                                                                </div>
+                                                            </LabelFieldPair>
+                                                        </div>
+
+                                                        {/* Right: either value input OR page+field when isFieldComparison */}
+                                                        <div style={{ minWidth: 260, flex: "1 1 280px" }}>
+                                                            <LabelFieldPair vertical removeMargin>
+                                                                <div className="digit-field" style={{ width: "100%" }}>
+                                                                    {/* Toggle for field comparison */}
+                                                                    <div style={{ marginBottom: "0.25rem" }}>
+                                                                        <CheckBox
+                                                                            mainClassName={"app-config-checkbox-main"}
+                                                                            labelClassName={"app-config-checkbox-label"}
+                                                                            onChange={(v) => {
+                                                                                const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
+                                                                                updateSubCond(idx, {
+                                                                                    isFieldComparison: checked,
+                                                                                    fieldValue: checked ? "" : cond.fieldValue,
+                                                                                    rightPage: checked ? currentPageName : null,
+                                                                                    rightField: checked ? "" : null,
+                                                                                });
+                                                                                if (checked) handlePageSelection(currentPageName);
+                                                                            }}
+                                                                            value={!!cond.isFieldComparison}
+                                                                            label={compareFieldToggleLabel}
+                                                                            isLabelFirst={false}
+                                                                            disabled={!cond.leftField}
+                                                                        />
+                                                                    </div>
+
+                                                                    {/* If field comparison: show Page + Field dropdowns */}
+                                                                    {cond.isFieldComparison ? (
+                                                                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                                                                            <div style={{ minWidth: 160, flex: "1 1 160px" }}>
+                                                                                <Dropdown
+                                                                                    option={pageOptions}
+                                                                                    optionKey="displayName"
+                                                                                    name={`right-page-${idx}`}
+                                                                                    t={t}
+                                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                                    select={(e) => {
+                                                                                        handlePageSelection(e.code);
+                                                                                        updateSubCond(idx, { rightPage: e.code, rightField: "" });
+                                                                                    }}
+                                                                                    selected={cond.rightPage ? pageOptions.find((p) => p.code === cond.rightPage) || { code: cond.rightPage, displayName: cond.rightPage } : {}}
+                                                                                    disabled={!cond.leftField}
+                                                                                />
+                                                                            </div>
+
+                                                                            <div style={{ minWidth: 160, flex: "1 1 160px" }}>
+                                                                                <Dropdown
+                                                                                    option={cond.rightPage ? rightFieldOptions : []}
+                                                                                    optionKey="label"
+                                                                                    name={`right-field-${idx}`}
+                                                                                    t={useT}
+                                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                                    select={(e) => updateSubCond(idx, { rightField: e.code })}
+                                                                                    selected={cond.rightPage && cond.rightField ? rightFieldOptions.find((f) => f.code === cond.rightField) || { code: cond.rightField, label: cond.rightField } : { code: "", label: selectPageFirstLabel }}
+                                                                                    disabled={!cond.rightPage}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <>
+                                                                            {/* Value input handling: when schemaCode exists & format is dropdown/radio -> use MdmsValueDropdown (Option A) */}
+                                                                            {useMdms ? (
+                                                                                <MdmsValueDropdown
+                                                                                    schemaCode={selectedLeftFieldMeta?.schemaCode}
+                                                                                    value={cond.fieldValue}
+                                                                                    onChange={(v) => updateSubCond(idx, { fieldValue: v })}
+                                                                                    t={t}
+                                                                                />
+                                                                            ) : isCheckbox ? (
+                                                                                <CheckBox
+                                                                                    mainClassName={"app-config-checkbox-main"}
+                                                                                    labelClassName={"app-config-checkbox-label"}
+                                                                                    onChange={(v) => {
+                                                                                        const checkedVal = typeof v === "boolean" ? v : !!v?.target?.checked;
+                                                                                        updateSubCond(idx, { fieldValue: checkedVal ? "true" : "false" });
+                                                                                    }}
+                                                                                    value={String(cond.fieldValue).toLowerCase() === "true"}
+                                                                                    label={t(selectedLeftFieldMeta?.label) || selectedLeftFieldMeta?.label || ""}
+                                                                                    isLabelFirst={false}
+                                                                                    disabled={!cond.leftField}
+                                                                                />
+                                                                            ) : isDob ?
+                                                                                (
+                                                                                    <TextInput
+                                                                                        type="number"
+                                                                                        populators={{ name: `months-${editorIndex}-${idx}` }}
+                                                                                        placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                        value={cond.fieldValue}
+                                                                                        onChange={(event) =>
+                                                                                            updateSubCond(idx, {
+                                                                                                isAge: true,        // 👈 IMPORTANT
+                                                                                                isFieldComparison: false,
+                                                                                                fieldValue: sanitizeIntegerInput(event.target.value),
+                                                                                            })
+                                                                                        }
+                                                                                    />
+                                                                                )
+                                                                                : isDate ? (
+                                                                                    <TextInput
+                                                                                        type="date"
+                                                                                        name={`date-${idx}`}
+                                                                                        className="appConfigLabelField-Input"
+                                                                                        value={toISOFromDDMMYYYY(cond.fieldValue)}
+                                                                                        populators={{ newDateFormat: true }}
+                                                                                        onChange={(d) => updateSubCond(idx, { fieldValue: toDDMMYYYY(d) })}
+                                                                                        disabled={!cond.leftField}
+                                                                                    />
+                                                                                ) : isSelect ? (
+                                                                                    // select from enum values
+                                                                                    (() => {
+                                                                                        const enumOptions = (selectedLeftFieldMeta?.enums || []).map((en) => ({ code: String(en.code), name: en.name || en.code }));
+                                                                                        const selectedEnum = enumOptions.find((eo) => eo.code === String(cond.fieldValue));
+                                                                                        return (
+                                                                                            <Dropdown
+                                                                                                option={enumOptions}
+                                                                                                optionKey="name"
+                                                                                                name={`enum-${idx}`}
+                                                                                                t={useT}
+                                                                                                select={(e) => updateSubCond(idx, { fieldValue: e.code })}
+                                                                                                selected={selectedEnum}
+                                                                                                disabled={!cond.leftField}
+                                                                                            />
+                                                                                        );
+                                                                                    })()
+                                                                                ) : (
+                                                                                    <TextInput
+                                                                                        type={isNumericField(selectedLeftFieldMeta) ? "number" : "text"}
+                                                                                        placeholder={enterValueLabel}
+                                                                                        value={cond.fieldValue}
+                                                                                        onChange={(ev) => {
+                                                                                            const v = ev?.target?.value ?? "";
+                                                                                            updateSubCond(idx, {
+                                                                                                fieldValue: isNumericField(selectedLeftFieldMeta) ? sanitizeIntegerInput(v) : v,
+                                                                                            });
+                                                                                        }}
+                                                                                        disabled={!cond.leftField}
+                                                                                    />
+                                                                                )}
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </LabelFieldPair>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Footer row below each condition:
+                              Left: (empty) or AddCondition if this is last cond
+                              Right: DeleteCondition for this cond */}
+                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.5rem" }}>
+                                                        {/* Left side: Add Condition (only show for last cond) */}
+                                                        <div>
+                                                            {idx === (draftRule.conds.length - 1) && (
+                                                                <Button variation="secondary" label={addConditionLabel} onClick={addSubCondition} />
+                                                            )}
+                                                        </div>
+                                                        {idx !== (draftRule.conds.length - 1) && (<div
+                                                            style={{
+                                                                marginLeft: "auto",
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                gap: "0.25rem",
+                                                                cursor: "pointer",
+                                                            }}
+                                                            onClick={() => removeSubCondition(idx)}
+                                                            title={removeConditionLabel}
+                                                            aria-label={removeConditionLabel}
+                                                            role="button"
+                                                        >
+                                                            <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
+                                                            <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
+                                                                {removeConditionLabel}
+                                                            </span>
+                                                        </div>)}
+                                                        {/* Right side: Delete Condition for every cond */}
+                                                        {/* <div>
+                                                            <Button variation="tertiary" label={removeConditionLabel} onClick={() => removeSubCondition(idx)} />
+                                                        </div> */}
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </div>
+                                            );
+                                        })}
+
+                                        {/* show any form-level error here */}
+                                        {globalFormError ? (
+                                            <div
+                                                style={{
+                                                    border: "1px solid #FCA5A5",
+                                                    background: "#FEF2F2",
+                                                    color: "#B91C1C",
+                                                    borderRadius: 6,
+                                                    padding: "0.5rem 0.75rem",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "space-between",
+                                                    gap: "0.75rem",
+                                                }}
+                                            >
+                                                <span>{globalFormError}</span>
+                                                <SVG.Close
+                                                    width={"1.1rem"}
+                                                    height={"1.1rem"}
+                                                    fill={"#7F1D1D"}
+                                                    onClick={() => setGlobalFormError("")}
+                                                    tabIndex={0}
+                                                    style={{ cursor: "pointer" }}
+                                                />
+                                            </div>
+                                        ) : null}
                                     </div>
                                 </div>,
                             ]}
+                            footerChildren={
+                                [
+                                    <Button
+                                        key="close"
+                                        type={"button"}
+                                        size={"large"}
+                                        variation={"secondary"}
+                                        label={closeLabel}
+                                        onClick={discardAndCloseEditor}
+                                    />,
+                                    <Button
+                                        key="submit"
+                                        type={"button"}
+                                        size={"large"}
+                                        variation={"primary"}
+                                        label={submitLabel}
+                                        onClick={submitAndClose}
+                                        disabled={!isRuleComplete(draftRule)}
+                                    />
+                                ]
+                                // <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", width: "100%" }}>
+                                //     <Button variation="tertiary" label={closeLabel} onClick={discardAndCloseEditor} />
+                                //     <Button variation="primary" label={submitLabel} onClick={submitAndClose} />
+                                // </div>
+                            }
                             onOverlayClick={discardAndCloseEditor}
                             onClose={discardAndCloseEditor}
-                            equalWidthButtons={false}
-                            footerChildren={[
-                                <Button
-                                    key="close"
-                                    type={"button"}
-                                    size={"large"}
-                                    variation={"secondary"}
-                                    label={closeLabel}
-                                    onClick={discardAndCloseEditor}
-                                />,
-                                <Button
-                                    key="submit"
-                                    type={"button"}
-                                    size={"large"}
-                                    variation={"primary"}
-                                    label={submitLabel}
-                                    onClick={submitAndClose}
-                                    disabled={!isRuleComplete(draftRule)}
-                                />,
-                            ]}
                         />
                     </div>
                 </BodyPortal>
@@ -1150,4 +1220,4 @@ function NewDependentFieldWrapper({ t }) {
     );
 }
 
-export default React.memo(NewDependentFieldWrapper);
+export default NewDependentFieldWrapper;

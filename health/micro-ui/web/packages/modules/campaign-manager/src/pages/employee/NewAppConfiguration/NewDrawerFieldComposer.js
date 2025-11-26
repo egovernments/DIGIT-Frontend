@@ -1189,7 +1189,19 @@ function NewDrawerFieldComposer() {
         return true;
       }
       // Check if current field type matches any of the enabled types
-      return panelItem.visibilityEnabledFor.includes(fieldType);
+      return panelItem.visibilityEnabledFor.includes(fieldType) && panelItem?.isPopupProperty !== true;
+    });
+  }, [currentTabProperties, fieldType]);
+
+  // Filter properties based on field type visibility
+  const visiblePopupProperties = useMemo(() => {
+    return currentTabProperties.filter((panelItem) => {
+      // If visibilityEnabledFor is empty, the field is always visible
+      if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
+        return true;
+      }
+      // Check if current field type matches any of the enabled types
+      return panelItem.visibilityEnabledFor.includes("actionPopup") && panelItem?.isPopupProperty === true;
     });
   }, [currentTabProperties, fieldType]);
 
@@ -1305,7 +1317,7 @@ function NewDrawerFieldComposer() {
       {/* Tab Description */}
       <TextBlock
         body=""
-        caption={t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
+        caption={selectedField?.type === "template" ?  t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}_${selectedField?.type?.toUpperCase()}`) : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
         header=""
         captionClassName="camp-drawer-caption"
         subHeader=""
@@ -1333,6 +1345,31 @@ function NewDrawerFieldComposer() {
           </div>
         )}
       </div>
+      {/* Popup Properties Section - Only for actionPopup field type */}
+      {fieldType === "actionPopup" && activeTab === "content" && (
+        <>
+          <Divider />
+          <div className="app-config-drawer-subheader">
+            <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_POPUP_PROPERTIES")}</div>
+            <span className="icon-wrapper new">
+              <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_POPUP_PROPERTIES")} />
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            {visiblePopupProperties.map((panelItem) => (
+              <div key={panelItem.id} className="drawer-toggle-field-container">
+                <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
+              </div>
+            ))}
+            {/* No properties message */}
+            {visiblePopupProperties.length === 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <Tag showIcon={true} label={t(`CMP_DRAWER_NO_CONFIG_ERROR_${activeTab.toUpperCase()}`)} type="error" />
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </Fragment>
   );
 }

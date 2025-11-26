@@ -303,6 +303,13 @@
     box-sizing: border-box;
   }
 
+  &__preview-with-tag {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
   &__nav-arrow {
     cursor: pointer;
     padding: 8px;

@@ -16,6 +16,8 @@ const remoteConfigSlice = createSlice({
     currentCard: null,
     isFieldSelected: false,
     showAddFieldPopup: false,
+    // Popup preview state for actionPopup fields
+    showPopupPreview: false,
   },
   reducers: {
     initializeConfig(state, action) {
@@ -86,6 +88,11 @@ const remoteConfigSlice = createSlice({
       state.currentScreen = screen;
       state.currentCard = card;
       state.isFieldSelected = true;
+
+      // Auto-show popup preview if field is actionPopup type
+      if (field?.format === "actionPopup") {
+        state.showPopupPreview = true;
+      }
     },
     deselectField(state) {
       state.selectedField = null;
@@ -97,6 +104,8 @@ const remoteConfigSlice = createSlice({
       state.currentScreen = null;
       state.currentCard = null;
       state.isFieldSelected = false;
+      // Hide popup preview when field is deselected
+      state.showPopupPreview = false;
     },
     updateSelectedField(state, action) {
       if (!state.selectedField || !action?.payload) return;
@@ -405,6 +414,10 @@ const remoteConfigSlice = createSlice({
         state.currentData = { ...state.currentData };
       }
     },
+    // Popup preview actions
+    setShowPopupPreview(state, action) {
+      state.showPopupPreview = action.payload;
+    },
   },
 });
 
@@ -431,5 +444,6 @@ export const {
   updateHeaderProperty,
   handleShowAddFieldPopup,
   updatePageConditionalNav,
+  setShowPopupPreview,
 } = remoteConfigSlice.actions;
 export default remoteConfigSlice.reducer;

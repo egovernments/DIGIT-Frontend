@@ -7,22 +7,27 @@ import SidePanelApp from "./SidePanelApp";
 // import LayoutRenderer from "./LayoutRenderer";
 import NewLayoutRenderer from "./NewLayoutRenderer";
 
-function AppConfiguration({ onNext, isUpdating }) {
+function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp }) {
   const dispatch = useDispatch();
   const { currentData, selectedField, isFieldSelected, pageType } = useSelector((state) => state.remoteConfig);
   const t = useCustomTranslate();
 
-  // Expose onNext and isUpdating to parent via window object for FullConfigWrapper to access
+  // Use prop if available, otherwise fall back to Redux state
+  const effectivePageType = pageTypeProp || currentData?.type;
+
+  // Expose onNext, isUpdating, and pageType to parent via window object for FullConfigWrapper to access
   React.useEffect(() => {
     if (onNext) {
       window.__appConfig_onNext = onNext;
       window.__appConfig_isUpdating = isUpdating;
+      window.__appConfig_pageType = effectivePageType;
     }
     return () => {
       delete window.__appConfig_onNext;
       delete window.__appConfig_isUpdating;
+      delete window.__appConfig_pageType;
     };
-  }, [onNext, isUpdating]);
+  }, [onNext, isUpdating, effectivePageType]);
 
   const handleFieldClick = useCallback(
     (field, screen, card, cardIndex, fieldIndex) => {

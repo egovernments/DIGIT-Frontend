@@ -66,14 +66,24 @@ const transformTemplate = (screenData) => {
     if (field.format === "panelCard") {
       return {
         ...field,
-        primaryAction: {
-          ...field?.primaryAction,
-          label: field?.primaryActionLabel,
-        },
-        secondaryAction: {
-          ...field?.secondaryAction,
-          label: field?.secondaryActionLabel,
-        },
+
+        ...(field?.primaryAction && field?.primaryActionLabel
+          ? {
+            primaryAction: {
+              ...field.primaryAction,
+              label: field.primaryActionLabel
+            }
+          }
+          : {}),
+
+        ...(field?.secondaryAction && field?.secondaryActionLabel
+          ? {
+            secondaryAction: {
+              ...field.secondaryAction,
+              label: field.secondaryActionLabel
+            }
+          }
+          : {}),
       };
     }
 
