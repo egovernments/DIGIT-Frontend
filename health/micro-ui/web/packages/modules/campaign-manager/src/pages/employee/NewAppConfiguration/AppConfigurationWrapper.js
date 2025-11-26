@@ -289,7 +289,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   };
   return (
     <React.Fragment>
-      <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} />
+      <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} pageType={currentData?.type} />
       {showAddFieldPopup && (
         <PopUp
           className="app-config-add-field-popup"

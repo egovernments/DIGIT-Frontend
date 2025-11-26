@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import AppConfigurationStore from "./AppConfigurationStore";
-import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
@@ -28,6 +28,7 @@ const FullConfigWrapper = () => {
   const [showToast, setShowToast] = useState(null);
   const [activeSidePanel, setActiveSidePanel] = useState(null); // 'roles' or 'flows' or null
   const [isClosing, setIsClosing] = useState(false);
+  const [currentPageType, setCurrentPageType] = useState(null);
 
   const handleCloseSidePanel = () => {
     setIsClosing(true);
@@ -108,6 +109,23 @@ const FullConfigWrapper = () => {
     // Use page roles if available, otherwise fall back to flow roles
     setCurrentPageRoles(page?.roles || flow?.roles || []);
   }, [flowConfig, selectedFlow, selectedPageName]);
+
+  // Monitor pageType from AppConfiguration via window object
+  useEffect(() => {
+    const checkPageType = () => {
+      if (window.__appConfig_pageType) {
+        setCurrentPageType(window.__appConfig_pageType);
+      }
+    };
+
+    // Check immediately
+    checkPageType();
+
+    // Set up interval to check for updates
+    const interval = setInterval(checkPageType, 100);
+
+    return () => clearInterval(interval);
+  }, [selectedPageName]);
 
   const handleFlowClick = async (flow) => {
     // Check for validation errors before switching
@@ -340,16 +358,59 @@ const FullConfigWrapper = () => {
               <SVG.ArrowBack />
             </div>
 
-            {/* App Preview */}
-            <AppConfigurationStore
-              flow={selectedFlow}
-              flowName={activeFlow?.name}
-              pageName={selectedPageName}
-              campaignNumber={flowConfig?.project}
-              onPageChange={setSelectedPageName}
-              nextRoute={nextRoute}
-              previousRoute={previousRoute}
-            />
+            {/* App Preview with Page Type Tag */}
+            <div className="full-config-wrapper__preview-with-tag">
+              {/* Page Type Tag */}
+              {currentPageType && (
+                <Tag
+                  label={
+                    <span style={{ display: "flex", gap: "4px" }}>
+                      <span>
+                        {currentPageType === "template" ? t("TEMPLATE_SCREEN") : t("FORM_SCREEN")}
+                      </span>
+                      <span style={currentPageType === "template" ? {
+                        fontWeight: 400,
+                      } : {
+                        fontWeight: 400,
+                      }}>
+                        {currentPageType === "template" ? t("PARTIALLY_CONFIGURABLE_PARENTHESES") : t("FULLY_CONFIGURABLE_PARENTHESES")}
+                      </span>
+                    </span>
+                  }
+                  // label={currentPageType === "template" ? t("TEMPLATE_PARTIALLY_CONFIGURABLE") : t("FORM_FULLY_CONFIGURABLE")}
+                  showIcon={true}
+                  type={currentPageType === "template" ? "warning" : "default"}
+                  stroke={false}
+                  iconColor={currentPageType === "template" ? "#8A4E09" : ""}
+                  icon={"DataSet"}
+                  labelStyle={currentPageType === "template" ? {
+                    color: "#8A4E09",
+                    fontFamily: "Roboto",
+                    fontWeight: 600,
+                    fontStyle: "SemiBold",
+                    fontSize: "12px",
+                    textAlign: "right"
+                  } : {
+                    color: "#1C00BD", fontFamily: "Roboto",
+                    fontWeight: 600,
+                    fontStyle: "SemiBold",
+                    fontSize: "12px",
+                    textAlign: "right"
+                  }}
+                  style={currentPageType === "template" ? { backgroundColor: "#FFFCC0", borderRadius: "6px", top: "6px", position: "absolute" } : { backgroundColor: "#EBECFE", borderRadius: "6px", top: "6px", position: "absolute" }}
+                />
+              )}
+
+              <AppConfigurationStore
+                flow={selectedFlow}
+                flowName={activeFlow?.name}
+                pageName={selectedPageName}
+                campaignNumber={flowConfig?.project}
+                onPageChange={setSelectedPageName}
+                nextRoute={nextRoute}
+                previousRoute={previousRoute}
+              />
+            </div>
 
             {/* Right Arrow */}
             <div
