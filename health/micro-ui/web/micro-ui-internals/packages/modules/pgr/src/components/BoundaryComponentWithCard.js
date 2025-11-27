@@ -102,6 +102,7 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
                 data={value[key]}
                 onChange={(selectedValue) => handleSelection(selectedValue)}
                 selected={formData?.locality || formData?.SelectedBoundary ? selectedValues[key] : null}
+                isMandatory={config?.isMandatory}
               />
             );
           }
@@ -115,15 +116,18 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
 /**
  * BoundaryDropdown Component
  */
-const BoundaryDropdown = ({ label, data, onChange, selected }) => {
+const BoundaryDropdown = ({ label, data, onChange, selected, isMandatory }) => {
   const { t } = useTranslation();
 
   return (
     <div className="boundary-dropdown-wrapper">
-      <div className="comment-label-without-card">{t(label)}</div>
+      <div className="comment-label-without-card">
+        {t(label)}
+        {isMandatory && <span style={{ color: "#d4351c" }}>*</span>}
+      </div>
       <div className='digit-text-input-field-without-card'>
-      <Dropdown style={{}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
-    </div>
+        <Dropdown style={{}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
+      </div>
     </div>
   );
 };

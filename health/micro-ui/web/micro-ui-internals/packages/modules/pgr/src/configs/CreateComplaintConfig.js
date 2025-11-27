@@ -29,7 +29,7 @@ export const CreateComplaintConfig = {
               label: "CS_COMPLAINT_DETAILS_COMPLAINT_DATE",
               isMandatory: true,
               disable: false,
-              withoutLabel: true,
+              // withoutLabel: true,
               populators: {
                 name: "ComplaintDate",
                 validation: {
