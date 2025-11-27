@@ -86,6 +86,7 @@ const PaymentSetUpPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [tableError, setTableError] = useState(false);
+  const [isFormModified, setIsFormModified] = useState(false);
 
   // Update cached state whenever state changes (only while mounted)
   useEffect(() => {
@@ -349,7 +350,11 @@ const PaymentSetUpPage = () => {
 
           // Set edit state if user rates exist
           if (userRatesData?.data?.rates?.length > 0) {
-            setEdit(true);
+            // INFO :: with edit button feature
+            //setEdit(true);
+
+            setEdit(false);
+            setUpdate(true);
           }
 
           setSkillsData(finalSkillsData);
@@ -391,6 +396,7 @@ const PaymentSetUpPage = () => {
   // Billing Cycle Selection Handler
   const handleBillingCycleSelect = useCallback((value) => {
     setBillingCycle(value);
+    setIsFormModified(true);
     if (value?.code !== "CUSTOM") {
       setCustomDays("");
     }
@@ -401,6 +407,7 @@ const PaymentSetUpPage = () => {
     const value = event.target.value;
     if (value === "" || /^\d+$/.test(value)) {
       setCustomDays(value);
+      setIsFormModified(true);
     }
   }, []);
 
@@ -632,9 +639,9 @@ const PaymentSetUpPage = () => {
   );
 
   // Handle wage table data changes
-  const handleWageDataChange = useCallback(({ payload, errorFlag }) => {
+  const handleWageDataChange = useCallback(({ payload, errorFlag, isFormModified }) => {
     setWagePayload(payload);
-
+    setIsFormModified(isFormModified);
     setTableError(errorFlag);
   }, []);
 
@@ -655,11 +662,14 @@ const PaymentSetUpPage = () => {
       return;
     }
 
-    if (edit) {
-      handleEditClick();
-    } else {
-      setPopUp(true);
-    }
+    //INFO :: for edit functionality
+    // if (edit) {
+    //   handleEditClick();
+    // } else {
+    //setPopUp(true);
+    //}
+
+    setPopUp(true);
   }, [isCampaignStarted, edit, history, handleEditClick]);
 
   // Show loading state
@@ -796,12 +806,28 @@ const PaymentSetUpPage = () => {
         <Button
           style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "12rem" }}
           variation="primary"
-          label={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
-          title={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
+          label={
+            isCampaignStarted
+              ? t("GO_BACK_TO_HOME")
+              : // edit ? t("HCM_AM_BTN_EDIT") :
+              update
+              ? t("HCM_AM_BTN_UPDATE")
+              : t("HCM_AM_BTN_SUBMIT")
+          }
+          title={
+            isCampaignStarted
+              ? t("GO_BACK_TO_HOME")
+              : //  edit ? t("HCM_AM_BTN_EDIT") :
+              update
+              ? t("HCM_AM_BTN_UPDATE")
+              : t("HCM_AM_BTN_SUBMIT")
+          }
           onClick={handlePrimaryButtonClick}
           icon={edit ? "" : "ArrowForward"}
           isSuffix={edit ? false : true}
-          isDisabled={!tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData}
+          isDisabled={
+            !isFormModified || !tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData
+          }
         />
       </ActionBar>
 
