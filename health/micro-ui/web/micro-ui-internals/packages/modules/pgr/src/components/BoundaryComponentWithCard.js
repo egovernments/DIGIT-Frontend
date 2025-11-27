@@ -125,7 +125,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, isMandatory }) => {
   return (
     <div className="boundary-dropdown-wrapper">
       <div className="comment-label-without-card">
-        {t(label)}
+        {label}
         {isMandatory && <span style={{ color: "#d4351c" }}> *</span>}
       </div>
       <div className='digit-text-input-field-without-card'>
