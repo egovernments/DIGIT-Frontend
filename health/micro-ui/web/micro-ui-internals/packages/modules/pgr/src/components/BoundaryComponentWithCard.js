@@ -90,6 +90,9 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />
   }
 
+  // Get the first boundary key that has data
+  const firstBoundaryKey = boundaryHierarchy.find((key) => value[key]?.length > 0);
+
   return (
     <React.Fragment>
       <div className="boundary-dropdown-container">
@@ -102,7 +105,7 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
                 data={value[key]}
                 onChange={(selectedValue) => handleSelection(selectedValue)}
                 selected={formData?.locality || formData?.SelectedBoundary ? selectedValues[key] : null}
-                isMandatory={config?.isMandatory}
+                isMandatory={config?.isMandatory && key === firstBoundaryKey}
               />
             );
           }
