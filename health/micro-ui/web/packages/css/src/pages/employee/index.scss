@@ -1351,3 +1351,23 @@ tbody {
 .react-datepicker__current-month {
   width: 100% !important;
 }
+
+.digit-multiselectdropdown-server {
+    top: 2.5rem;
+    position: absolute;
+    z-index: 20;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 20vmax;
+    box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
+}
+
+.digit-dropdown-options-card {
+    box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
+    max-height: 20vmax;
+    position: absolute;
+    background-color: #ffffff;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
