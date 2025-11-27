@@ -675,7 +675,7 @@ const PaymentSetUpPage = () => {
     return (
       <div>
         <Card type="primary" className="bottom-gap-card-payment">
-          <NoResultsFound style={{ height: "35rem" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+          <NoResultsFound style={{ height: "35rem" }} text={t(`HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND`)} />
         </Card>
 
         {/* Action Bar */}
@@ -757,35 +757,39 @@ const PaymentSetUpPage = () => {
       </Card>
 
       {/* Role Wages Setup Card */}
-      <Card>
-        <HeaderComponent>
-          {" "}
-          <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</span>
-        </HeaderComponent>
-        <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
+      {selectedCampaign ? (
+        <Card>
+          <HeaderComponent>
+            {" "}
+            <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</span>
+          </HeaderComponent>
+          <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
 
-        {/* Conditional Rendering */}
-        {loadingSkills ? (
-          <div style={{ padding: "2rem", textAlign: "center" }}>
-            <Loader className={"digit-center-loader"} />
-          </div>
-        ) : skillsData ? (
-          <RoleWageTable
-            disabled={edit ? true : false}
-            skills={skillsData.skills}
-            rateBreakupSchema={skillsData.rateBreakupSchema}
-            rateMaxLimitSchema={skillsData.rateMaxLimitSchema}
-            onDataChange={handleWageDataChange}
-            campaignId={selectedCampaign?.projectId}
-            campaignName={selectedCampaign?.name}
-            existingRatesData={skillsData ? skillsData.existingRatesData : null}
-          />
-        ) : selectedCampaign ? (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
-        ) : (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN")}</div>
-        )}
-      </Card>
+          {/* Conditional Rendering */}
+          {loadingSkills ? (
+            <div style={{ padding: "2rem", textAlign: "center" }}>
+              <Loader className={"digit-center-loader"} />
+            </div>
+          ) : skillsData ? (
+            <RoleWageTable
+              disabled={edit ? true : false}
+              skills={skillsData.skills}
+              rateBreakupSchema={skillsData.rateBreakupSchema}
+              rateMaxLimitSchema={skillsData.rateMaxLimitSchema}
+              onDataChange={handleWageDataChange}
+              campaignId={selectedCampaign?.projectId}
+              campaignName={selectedCampaign?.name}
+              existingRatesData={skillsData ? skillsData.existingRatesData : null}
+            />
+          ) : selectedCampaign ? (
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
+          ) : (
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN")}</div>
+          )}
+        </Card>
+      ) : (
+        <div></div>
+      )}
 
       {/* Action Bar */}
       <ActionBar className="mc_back">

@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -215,10 +214,28 @@ const RoleWageTable = ({
       });
     });
 
+    // cols.push({
+    //   name: <div style={{ textAlign: "start" }}>{t("HCM_AM_TOTAL_WAGE")}</div>,
+    //   selector: (row) => (
+    //     <div title={row.total.toFixed(2)} style={{ fontWeight: 500 }}>
+    //       {row.total.toFixed(2)}
+    //     </div>
+    //   ),
+    //   // right: true,
+    //   width: "150px",
+    // });
     cols.push({
       name: <div style={{ textAlign: "start" }}>{t("HCM_AM_TOTAL_WAGE")}</div>,
-      selector: (row) => (
-        <div title={row.total.toFixed(2)} style={{ fontWeight: 500 }}>
+      cell: (row) => (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end", // RIGHT align the value
+            fontWeight: 500,
+          }}
+          title={row.total.toFixed(2)}
+        >
           {row.total.toFixed(2)}
         </div>
       ),
