@@ -35,6 +35,7 @@ export const transformMdmsToAppConfig = (fullData) => {
           pages: [],
           onAction: item.onAction,
           wrapperConfig: item.wrapperConfig,
+          summary: item.summary || false,
         };
       }
       // Add page to form
@@ -69,20 +70,20 @@ const transformTemplate = (screenData) => {
 
         ...(field?.primaryAction && field?.primaryActionLabel
           ? {
-            primaryAction: {
-              ...field.primaryAction,
-              label: field.primaryActionLabel
+              primaryAction: {
+                ...field.primaryAction,
+                label: field.primaryActionLabel,
+              },
             }
-          }
           : {}),
 
         ...(field?.secondaryAction && field?.secondaryActionLabel
           ? {
-            secondaryAction: {
-              ...field.secondaryAction,
-              label: field.secondaryActionLabel
+              secondaryAction: {
+                ...field.secondaryAction,
+                label: field.secondaryActionLabel,
+              },
             }
-          }
           : {}),
       };
     }

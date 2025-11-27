@@ -16,7 +16,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
   const moduleName = mdmsData.data.name; // Overall module name like "REGISTRATION-DELIVERY"
 
   flows.forEach((flow, flowIndex) => {
-    const project = flow.project || mdmsData.data.project;
+    const project = mdmsData.data.project;
     const version = flow.version || mdmsData.data.version || 1;
     const flowName = flow.name;
     const onAction = flow.onAction; // Individual flow name like "HOUSEHOLD", "ADD_MEMBER", "DELIVERY"
@@ -69,6 +69,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           version: version,
           navigateTo: page.navigateTo,
           onAction: flow.onAction,
+          summary: flow.summary || false,
           description: page.description,
           showAlertPopUp: page.showAlertPopUp,
         };
@@ -282,11 +283,11 @@ const transformActionLabelToFooter = (actionLabel, navigateTo) => {
       format: "button",
       onAction: navigateTo
         ? [
-          {
-            actionType: "NAVIGATION",
-            properties: navigateTo,
-          },
-        ]
+            {
+              actionType: "NAVIGATION",
+              properties: navigateTo,
+            },
+          ]
         : [],
       properties: {
         size: "large",
@@ -350,7 +351,6 @@ const extractActionLabels = (field) => {
   return actionLabels;
 };
 
-
 /**
  * Extract flow metadata (onAction, wrapperConfig, etc.)
  */
@@ -371,6 +371,7 @@ export const extractFlowMetadata = (mdmsData) => {
         version: flow.version || mdmsData.data.version || 1,
         disabled: flow.disabled,
         isSelected: flow.isSelected,
+        summary: flow.summary,
       };
     }
   });
