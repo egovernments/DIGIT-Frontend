@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -256,7 +256,15 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     } else if (panelItem.fieldType === "number") {
       handleNumberChange(localValue);
     }
-  }, [panelItem.fieldType, panelItem?.isLocalisable, fieldValue, localValue, handleFieldChangeWithLoc, handleNumberChange, handleFieldChange]);
+  }, [
+    panelItem.fieldType,
+    panelItem?.isLocalisable,
+    fieldValue,
+    localValue,
+    handleFieldChangeWithLoc,
+    handleNumberChange,
+    handleFieldChange,
+  ]);
 
   const renderMainField = () => {
     switch (panelItem.fieldType) {
@@ -264,7 +272,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const bindTo = panelItem.bindTo;
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
-
 
         const handleToggleChange = (value) => {
           // Update local UI
@@ -525,9 +532,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Fetch labelPairConfig from Redux
         const allLabelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
 
-        const labelPairConfig = allLabelPairConfig.filter(item =>
-          item.modules?.includes(currentData?.module)
-        );
+        const labelPairConfig = allLabelPairConfig.filter((item) => item.modules?.includes(currentData?.module));
 
         // Get currently selected data from selectedField.data
         const selectedData = selectedField?.data || [];
@@ -565,9 +570,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           <>
             <div ref={switchRef} className="drawer-container-tooltip">
               <div style={{ display: "flex" }}>
-                <label>
-                  {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-                </label>
+                <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
                 <span className="mandatory-span">*</span>
               </div>
 
@@ -581,11 +584,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 selectAllLabel={t("SELECT_ALL")}
                 clearLabel={t("CLEAR_ALL")}
                 config={{ isDropdownWithChip: true }}
-                selected={selectedOptions}  // Pass actual option objects directly
-                onSelect={(selectedArray) => {
-                }}
+                selected={selectedOptions} // Pass actual option objects directly
+                onSelect={(selectedArray) => {}}
                 onClose={(selectedArray) => {
-
                   // Extract options from the array pairs: [null, [category, option]] -> option
                   const extractedOptions = selectedArray?.map((arr) => arr?.[1]) || [];
 
@@ -652,7 +653,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(entityName || 'ENTITY')} - ${t(item.key)}`}
+                        label={`${t(entityName || "ENTITY")} - ${t(item.key)}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
@@ -672,52 +673,53 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const columns = selectedField?.data?.columns || [];
 
         // Count visible columns
-        const visibleColumnsCount = columns.filter(col => col.hidden !== true).length;
+        const visibleColumnsCount = columns.filter((col) => col.hidden !== true).length;
 
-        const handleColumnVisibilityToggle = useCallback((columnIndex, toggleValue) => {
-          // Toggle ON means visible (hidden: false)
-          // Toggle OFF means hidden (hidden: true)
-          const hiddenValue = !Boolean(toggleValue);
+        const handleColumnVisibilityToggle = useCallback(
+          (columnIndex, toggleValue) => {
+            // Toggle ON means visible (hidden: false)
+            // Toggle OFF means hidden (hidden: true)
+            const hiddenValue = !Boolean(toggleValue);
 
-          // Prevent hiding if this is the last visible column
-          if (hiddenValue && visibleColumnsCount === 1) {
-            // Show toast/alert to user
-            if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
-              window.__appConfig_showToast({
-                key: "error",
-                label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
-              });
+            // Prevent hiding if this is the last visible column
+            if (hiddenValue && visibleColumnsCount === 1) {
+              // Show toast/alert to user
+              if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
+                window.__appConfig_showToast({
+                  key: "error",
+                  label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
+                });
+              }
+              return; // Don't allow hiding
             }
-            return; // Don't allow hiding
-          }
 
-          // Create updated columns array
-          const updatedColumns = columns.map((col, idx) => {
-            if (idx === columnIndex) {
-              return { ...col, hidden: hiddenValue };
-            }
-            return col;
-          });
+            // Create updated columns array
+            const updatedColumns = columns.map((col, idx) => {
+              if (idx === columnIndex) {
+                return { ...col, hidden: hiddenValue };
+              }
+              return col;
+            });
 
-          // Update the selectedField with new columns
-          const updatedField = {
-            ...selectedField,
-            data: {
-              ...selectedField.data,
-              columns: updatedColumns
-            }
-          };
+            // Update the selectedField with new columns
+            const updatedField = {
+              ...selectedField,
+              data: {
+                ...selectedField.data,
+                columns: updatedColumns,
+              },
+            };
 
-          onFieldChange(updatedField);
-        }, [columns, selectedField, onFieldChange, visibleColumnsCount, t]);
+            onFieldChange(updatedField);
+          },
+          [columns, selectedField, onFieldChange, visibleColumnsCount, t]
+        );
 
         return (
           <>
             <div className="drawer-container-tooltip">
               <div style={{ display: "flex", marginBottom: "12px" }}>
-                <label>
-                  {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-                </label>
+                <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
               </div>
 
               {/* Display header localization inputs for each column */}
@@ -747,9 +749,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               )}
 
               {columns.length === 0 && (
-                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>
-                  {t("NO_TABLE_COLUMNS_FOUND")}
-                </div>
+                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>{t("NO_TABLE_COLUMNS_FOUND")}</div>
               )}
             </div>
           </>
@@ -763,103 +763,105 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   return <div className="drawer-container-tooltip">{renderMainField()}</div>;
 });
 
-const LocalizationInput = React.memo(({
-  code,
-  label,
-  currentLocale,
-  dispatch,
-  t,
-  placeholder,
-  // Optional props for table column toggle
-  column = null,
-  columnIndex = null,
-  onColumnToggle = null,
-  isLastVisible = false
-}) => {
-  // Get the localized value
-  const localizedValue = useCustomT(code) || code;
+const LocalizationInput = React.memo(
+  ({
+    code,
+    label,
+    currentLocale,
+    dispatch,
+    t,
+    placeholder,
+    // Optional props for table column toggle
+    column = null,
+    columnIndex = null,
+    onColumnToggle = null,
+    isLastVisible = false,
+  }) => {
+    // Get the localized value
+    const localizedValue = useCustomT(code) || code;
 
-  // Check if this is a table column input (has column data and toggle handler)
-  const isTableColumn = column !== null && columnIndex !== null && onColumnToggle !== null;
+    // Check if this is a table column input (has column data and toggle handler)
+    const isTableColumn = column !== null && columnIndex !== null && onColumnToggle !== null;
 
-  // For table columns, toggle state controls visibility of input
-  // Toggle ON = visible (hidden: false)
-  // Toggle OFF = hidden (hidden: true)
-  const isColumnHidden = isTableColumn ? column.hidden !== false : false;
+    // For table columns, toggle state controls visibility of input
+    // Toggle ON = visible (hidden: false)
+    // Toggle OFF = hidden (hidden: true)
+    const isColumnHidden = isTableColumn ? column.hidden !== false : false;
 
-  // Local state to control the toggle and prevent it from changing when disabled
-  const [toggleState, setToggleState] = useState(!isColumnHidden);
+    // Local state to control the toggle and prevent it from changing when disabled
+    const [toggleState, setToggleState] = useState(!isColumnHidden);
 
-  // Sync toggle state with column hidden property
-  useEffect(() => {
-    setToggleState(!isColumnHidden);
-  }, [isColumnHidden]);
+    // Sync toggle state with column hidden property
+    useEffect(() => {
+      setToggleState(!isColumnHidden);
+    }, [isColumnHidden]);
 
-  const handleToggle = (value) => {
-    // Don't allow toggling off if this is the last visible column
-    if (isLastVisible) {
-      return; // Don't update state, don't call handler
-    }
+    const handleToggle = (value) => {
+      // Don't allow toggling off if this is the last visible column
+      if (isLastVisible) {
+        return; // Don't update state, don't call handler
+      }
 
-    // Update local state
-    setToggleState(value);
-    // Call parent handler
-    onColumnToggle(columnIndex, value);
-  };
+      // Update local state
+      setToggleState(value);
+      // Call parent handler
+      onColumnToggle(columnIndex, value);
+    };
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-      {/* Label row with toggle for table columns */}
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between"
-      }}>
-        <label style={{ fontWeight: "500", fontSize: "14px" }}>
-          {label}
-        </label>
-
-        {/* Show toggle only for table columns */}
-        {isTableColumn && (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Switch
-              label=""
-              onToggle={handleToggle}
-              disable={isLastVisible}
-              isCheckedInitially={toggleState}
-              key={`toggle-${columnIndex}-${toggleState}`} // Force re-render when state changes
-              shapeOnOff
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Always render the input but hide it with CSS to maintain hook call order */}
-      <div style={{ display: isColumnHidden ? "none" : "block" }}>
-        <FieldV1
-          value={localizedValue}
-          type="text"
-          placeholder={placeholder || t("ADD_LOCALIZATION")}
-          onChange={(e) => {
-            const val = e.target.value;
-            // Update localization for the code
-            dispatch(
-              updateLocalizationEntry({
-                code: code,
-                locale: currentLocale || "en_IN",
-                message: val,
-              })
-            );
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {/* Label row with toggle for table columns */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
-          populators={{
-            fieldPairClassName: "drawer-toggle-conditional-field",
-          }}
-          disabled={isColumnHidden}
-        />
+        >
+          <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>
+
+          {/* Show toggle only for table columns */}
+          {isTableColumn && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Switch
+                label=""
+                onToggle={handleToggle}
+                disable={isLastVisible}
+                isCheckedInitially={toggleState}
+                key={`toggle-${columnIndex}-${toggleState}`} // Force re-render when state changes
+                shapeOnOff
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Always render the input but hide it with CSS to maintain hook call order */}
+        <div style={{ display: isColumnHidden ? "none" : "block" }}>
+          <FieldV1
+            value={localizedValue}
+            type="text"
+            placeholder={placeholder || t("ADD_LOCALIZATION")}
+            onChange={(e) => {
+              const val = e.target.value;
+              // Update localization for the code
+              dispatch(
+                updateLocalizationEntry({
+                  code: code,
+                  locale: currentLocale || "en_IN",
+                  message: val,
+                })
+              );
+            }}
+            populators={{
+              fieldPairClassName: "drawer-toggle-conditional-field",
+            }}
+            disabled={isColumnHidden}
+          />
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 // Separate component for option items to avoid hooks violations
 const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onDelete }) => {
@@ -937,10 +939,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   // If isLocalisable is false, skip localization
   // If undefined or true, use localization (unless it's a special field like prefixText/suffixText/number)
   const shouldSkipLocalization =
-    cField?.isLocalisable === false ||
-    cField.bindTo === "prefixText" ||
-    cField.bindTo === "suffixText" ||
-    cField.type === "number";
+    cField?.isLocalisable === false || cField.bindTo === "prefixText" || cField.bindTo === "suffixText" || cField.type === "number";
 
   // Get the raw value (localization code) from selectedField
   const fieldValue = selectedField[cField.bindTo] || "";
@@ -1134,6 +1133,19 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
     case "dependencyFieldWrapper":
       return selectedField?.type !== "template" ? <NewDependentFieldWrapper t={t} /> : <></>;
 
+    case "radioOptions":
+      return (
+        <RadioButtons
+          options={cField?.options}
+          additionalWrapperClass="app-config-radio"
+          selectedOption={cField?.options?.find((i) => i.pattern === selectedField?.[cField?.bindTo])}
+          onSelect={(value) => {
+            onFieldChange({ ...selectedField, [cField?.bindTo]: value?.pattern });
+          }}
+          optionsKey="code"
+        />
+      );
+
     default:
       return null;
   }
@@ -1318,7 +1330,11 @@ function NewDrawerFieldComposer() {
       {/* Tab Description */}
       <TextBlock
         body=""
-        caption={selectedField?.type === "template" ? t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}_${selectedField?.type?.toUpperCase()}`) : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
+        caption={
+          selectedField?.type === "template"
+            ? t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}_${selectedField?.type?.toUpperCase()}`)
+            : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)
+        }
         header=""
         captionClassName="camp-drawer-caption"
         subHeader=""
@@ -1339,18 +1355,18 @@ function NewDrawerFieldComposer() {
           // If bindTo has ".", take the first part (parent key), otherwise use the whole bindTo
           const parentKey = bindTo.includes(".") ? bindTo.split(".")[0] : bindTo;
 
-
-
           const shouldShowToggle = !(
-            selectedField?.format === "panelCard" &&
-            parentKey &&                                  // not empty
-            selectedField?.[parentKey] === undefined       // hide if missing
+            (
+              selectedField?.format === "panelCard" &&
+              parentKey && // not empty
+              selectedField?.[parentKey] === undefined
+            ) // hide if missing
           );
           return shouldShowToggle ? (
             <div key={panelItem.id} className="drawer-toggle-field-container">
               <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
             </div>
-          ) : null
+          ) : null;
         })}
 
         {/* No properties message */}

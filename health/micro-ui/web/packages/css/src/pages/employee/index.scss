@@ -1251,16 +1251,7 @@ tbody {
   display: block;
 }
 .mobile-bezel-screen {
-  overflow-y: auto !important;
-  overflow-y: overlay !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-
-  &::-webkit-scrollbar {
-    width: 0 !important;
-    height: 0 !important;
-    display: none !important;
-  }
+  overflow: hidden !important;
 }
 .mobile-bezel-flexContainer {
   display: flex;

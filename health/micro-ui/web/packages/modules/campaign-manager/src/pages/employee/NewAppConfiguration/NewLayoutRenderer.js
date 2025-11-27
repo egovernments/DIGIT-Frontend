@@ -54,7 +54,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         }}
       >
         <Card
-          className="app-card"
+          className="app-card template-layout-card"
           style={{
             flex: 1,
             boxShadow: "none",

@@ -310,10 +310,24 @@
     box-shadow: none;
     border-style: none;
     padding: 1rem;
-    &::-webkit-scrollbar-button {
-      display: none !important;
-      height: 0 !important;
-      width: 0 !important;
+    margin-bottom: 3rem;
+    overflow-y: auto !important;
+    overflow-y: overlay !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #d6d5d4 transparent !important;
+
+    &::-webkit-scrollbar {
+      width: 8px !important;
+      background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #d6d5d4 !important;
+      border-radius: 4px !important;
     }
   }
 }
@@ -324,8 +338,51 @@
   box-shadow: none;
   border-style: none;
   padding: 1rem;
+  margin-bottom: 3rem;
+
   .digit-card-header {
     font-size: 2rem;
+  }
+}
+
+.app-card.template-layout-card {
+  overflow-y: auto !important;
+  overflow-y: overlay !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #d6d5d4 transparent !important;
+
+  &::-webkit-scrollbar {
+    width: 8px !important;
+    background: transparent !important;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d6d5d4 !important;
+    border-radius: 4px !important;
+  }
+}
+.app-preview-card {
+  overflow-y: auto !important;
+  overflow-y: overlay !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #d6d5d4 transparent !important; /* thumb color, track color */
+
+  &::-webkit-scrollbar {
+    width: 8px !important;
+    background: transparent !important;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent !important; /* track background - transparent */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d6d5d4 !important; /* thumb color */
+    border-radius: 4px !important;
   }
 }
 .mobile-bezel-outerWrapper {
@@ -475,10 +532,10 @@
   padding: 24px;
   box-shadow: 0px 2px 7px 0px #00000026;
 
-  svg{
-      flex-shrink: 0;
-      width:40px;
-      height:40px;
+  svg {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
   }
 }
 .cardStyle:hover {
