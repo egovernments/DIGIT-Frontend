@@ -1106,7 +1106,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                 option={allPageOptions}
                                                                 optionKey="code"
                                                                 name={`target-${editorIndex}`}
-                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                optionCardStyles={{ maxHeight: "15vh"}}
                                                                 t={t}
                                                                 select={(e) => updateRule(editorIndex, { targetPage: e })}
                                                                 selected={
