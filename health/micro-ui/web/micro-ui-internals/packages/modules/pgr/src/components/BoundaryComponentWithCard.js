@@ -90,6 +90,9 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />
   }
 
+  // Get the first boundary key that has data
+  const firstBoundaryKey = boundaryHierarchy.find((key) => value[key]?.length > 0);
+
   return (
     <React.Fragment>
       <div className="boundary-dropdown-container">
@@ -102,6 +105,7 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
                 data={value[key]}
                 onChange={(selectedValue) => handleSelection(selectedValue)}
                 selected={formData?.locality || formData?.SelectedBoundary ? selectedValues[key] : null}
+                isMandatory={config?.isMandatory && key === firstBoundaryKey}
               />
             );
           }
@@ -115,15 +119,18 @@ const BoundaryComponentWithCard = ({ t, config, onSelect, userType, formData }) 
 /**
  * BoundaryDropdown Component
  */
-const BoundaryDropdown = ({ label, data, onChange, selected }) => {
+const BoundaryDropdown = ({ label, data, onChange, selected, isMandatory }) => {
   const { t } = useTranslation();
 
   return (
     <div className="boundary-dropdown-wrapper">
-      <div className="comment-label-without-card">{t(label)}</div>
+      <div className="comment-label-without-card">
+        {label}
+        {isMandatory && <span style={{ color: "#d4351c" }}> *</span>}
+      </div>
       <div className='digit-text-input-field-without-card'>
-      <Dropdown style={{}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
-    </div>
+        <Dropdown style={{}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
+      </div>
     </div>
   );
 };

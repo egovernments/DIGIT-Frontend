@@ -23,20 +23,16 @@ export const CreateComplaintConfig = {
               },
             },
             {
-              inline: true,
+              type: "component",
+              component: "DatePickerComponent",
+              key: "ComplaintDate",
               label: "CS_COMPLAINT_DETAILS_COMPLAINT_DATE",
               isMandatory: true,
-              key: "ComplaintDate",
-              type: "date", // Input type is date picker
               disable: false,
-              preProcess : {
-                updateDependent : ["populators.validation.max"]
-              },
+              // withoutLabel: true,
               populators: {
                 name: "ComplaintDate",
-                newDateFormat: true,
-                validation:{
-                  required: true,
+                validation: {
                   max: "currentDate"
                 },
                 error: "CORE_COMMON_REQUIRED_ERRMSG"
