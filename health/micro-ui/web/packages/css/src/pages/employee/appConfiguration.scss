@@ -106,6 +106,16 @@
     margin-bottom: 8px;
   }
 
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    z-index: 40;
+  }
+
   &__side-panel-wrapper {
     width: 0px;
     min-width: 0px;
@@ -113,6 +123,7 @@
     overflow: hidden;
     transition: width 0.3s ease-out, min-width 0.3s ease-out;
     position: relative;
+    z-index: 50;
 
     &--open {
       width: 280px;
@@ -233,8 +244,8 @@
 
   &__flow-tag {
     position: fixed;
-    top: 220px;
-    left: 270px;
+    top: 230px;
+    left: 280px;
     z-index: 100;
     display: flex;
     align-items: center;
@@ -250,7 +261,7 @@
   }
 
   &__container--panel-open &__flow-tag {
-    left: 555px; /* 240px + 280px (side panel width) */
+    left: 560px; /* 240px + 280px (side panel width) */
   }
 
   &__page-tabs {
@@ -381,5 +392,10 @@
   to {
     transform: translateX(-100%);
     opacity: 0;
+  }
+}
+.app-config-pop-dropdown {
+  .digit-dropdown-options-card {
+    height: 20rem;
   }
 }

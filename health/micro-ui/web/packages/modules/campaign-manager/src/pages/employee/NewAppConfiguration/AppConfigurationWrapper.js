@@ -323,6 +323,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
               </span>
               <Dropdown
+                className="app-config-pop-dropdown"
                 option={fieldTypeMaster?.fieldTypeMappingConfig?.filter((item) => {
                   // Always filter out dynamic types
                   if (item?.metadata?.type === "dynamic") return false;
