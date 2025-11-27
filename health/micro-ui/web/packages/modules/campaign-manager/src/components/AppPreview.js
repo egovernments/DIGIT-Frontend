@@ -16,6 +16,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
         }}
       >
         <Card
+          className="app-preview-card"
           style={{
             backgroundColor: "#eee",
             boxShadow: "none",

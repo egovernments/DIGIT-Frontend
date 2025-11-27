@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import AppConfigurationStore from "./AppConfigurationStore";
@@ -29,6 +29,34 @@ const FullConfigWrapper = () => {
   const [activeSidePanel, setActiveSidePanel] = useState(null); // 'roles' or 'flows' or null
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
+
+  const sidePanelRef = useRef(null);
+  const sidebarRef = useRef(null);
+
+  // Click outside to close panel
+  useEffect(() => {
+    if (!activeSidePanel) return;
+
+    const handleClickOutside = (e) => {
+      // Check if click is outside both the panel and the sidebar menu
+      const isOutsidePanel = sidePanelRef.current && !sidePanelRef.current.contains(e.target);
+      const isOutsideSidebar = sidebarRef.current && !sidebarRef.current.contains(e.target);
+
+      if (isOutsidePanel && isOutsideSidebar) {
+        handleCloseSidePanel();
+      }
+    };
+
+    // Add listener on next tick to avoid catching the opening click
+    const timer = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeSidePanel]);
 
   const handleCloseSidePanel = () => {
     setIsClosing(true);
@@ -225,7 +253,7 @@ const FullConfigWrapper = () => {
       </div>
       <div className={`full-config-wrapper__container ${activeSidePanel && !isClosing ? "full-config-wrapper__container--panel-open" : ""}`}>
         {/* Left Sidebar - Menu Items */}
-        <div className="full-config-wrapper__left-sidebar">
+        <div ref={sidebarRef} className="full-config-wrapper__left-sidebar">
           <div
             className={`full-config-wrapper__sidebar-menu-item ${
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
@@ -250,6 +278,7 @@ const FullConfigWrapper = () => {
         {/* Slide-out Panel for Roles */}
         {activeSidePanel === "roles" && (
           <div
+            ref={sidePanelRef}
             className={`full-config-wrapper__side-panel-wrapper ${
               activeSidePanel === "roles" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
             }`}
@@ -281,6 +310,7 @@ const FullConfigWrapper = () => {
         {/* Slide-out Panel for Flows */}
         {activeSidePanel === "flows" && (
           <div
+            ref={sidePanelRef}
             className={`full-config-wrapper__side-panel-wrapper ${
               activeSidePanel === "flows" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
             }`}
@@ -447,6 +477,7 @@ const FullConfigWrapper = () => {
             variation="secondary"
             label={t("BACK")}
             icon="ArrowBack"
+            isSuffix={false}
             onClick={() => {
               // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
@@ -455,8 +486,8 @@ const FullConfigWrapper = () => {
           <Button
             variation="primary"
             label={t("PROCEED_TO_PREVIEW")}
-            icon="ArrowForward"
-            isSuffix={true}
+            icon="CheckCircle"
+            isSuffix={false}
             onClick={() => {
               // Handle proceed to preview
               saveToAppConfig();
