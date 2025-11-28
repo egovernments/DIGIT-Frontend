@@ -69,9 +69,9 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
           setBillingConfigData(response.billingConfig);
 
           // Transform periods into dropdown options
-          const periodOptions = response.periods.map((period) => ({
+          const periodOptions = response.periods.map((period, index) => ({
             code: period.id,
-            name: `Period ${period.periodNumber} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
+            name: `Period ${index + 1} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
             periodNumber: period.periodNumber,
             periodStartDate: period.periodStartDate,
             periodEndDate: period.periodEndDate,
@@ -129,7 +129,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
 
   const handleApplyFilter = () => {
     setShowToast(null);
-    if ((periods.length > 0)) {
+    if (periods.length > 0) {
       onFilterChange(boundary, isDistrictSelected, selectedPeriod);
     } else {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
@@ -253,9 +253,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
                 select={handlePeriodSelect}
               />
             ) : (
-              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>
-                {t("")}
-              </div>
+              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("")}</div>
             )}
           </div>
         )}

@@ -521,11 +521,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair("HCM_AM_NO_OF_ATTENDEE", AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
           {/* {renderLabelPair("HCM_AM_CAMPAIGN_START_DATE", formatTimestampToDate(project?.[0]?.startDate))} */}
           {/* {renderLabelPair("HCM_AM_CAMPAIGN_END_DATE", formatTimestampToDate(project?.[0]?.endDate))} */}
+
           {renderLabelPair(
-            "Attendance duration",
+            "HCM_AM_EVENT_DURATION",
+            `${Math.ceil(
+              (AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000)
+            )}`
+          )}
+          {renderLabelPair(
+            "HCM_AM_ATTENDANCE_DURATION",
             `${formatTimestampToDate(selectedPeriod?.periodStartDate)} - ${formatTimestampToDate(selectedPeriod?.periodEndDate)}`
           )}
-          {renderLabelPair("HCM_AM_EVENT_DURATION", attendanceDuration || 0)}
+          {renderLabelPair("HCM_AM_DURATION", attendanceDuration || 0)}
           {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>
         <Card className="bottom-gap-card-payment">

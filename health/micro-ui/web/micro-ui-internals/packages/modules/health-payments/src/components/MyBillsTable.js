@@ -75,7 +75,7 @@ const MyBillsTable = ({ ...props }) => {
           );
         },
       },
-   // INFO:: no of registers commented
+      // INFO:: no of registers commented
       // {
       //   name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
       //   selector: (row) => {
@@ -113,7 +113,15 @@ const MyBillsTable = ({ ...props }) => {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_PROJECT_NAME")}</div>,
         selector: (row) => {
           return (
-            <div className="ellipsis-cell" title={t(project?.[0]?.name || "0")}>
+            <div
+              className="ellipsis-cell"
+              style={{
+                whiteSpace: "normal", // allow wrapping
+                wordBreak: "break-word", // break long words if needed
+                textAlign: "start",
+              }}
+              title={t(project?.[0]?.name || "0")}
+            >
               {t(project?.[0]?.name || `NA`)}
             </div>
           );

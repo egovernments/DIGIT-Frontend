@@ -35,7 +35,7 @@ const Response = () => {
                     history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
                   }}
                   variation="teritiary"
-                  icon="ArrowForward"
+                  icon="ExitToApp"
                   isSuffix
                 />,
               ]

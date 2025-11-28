@@ -110,9 +110,9 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
           setBillingConfigData(response.billingConfig);
 
           // Transform periods into dropdown options
-          const periodOptions = response.periods.map((period) => ({
+          const periodOptions = response.periods.map((period, index) => ({
             code: period.id,
-            name: `Period ${period.periodNumber} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
+            name: `Period ${index + 1} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
             periodNumber: period.periodNumber,
             periodStartDate: period.periodStartDate,
             periodEndDate: period.periodEndDate,
