@@ -16,6 +16,7 @@ const enabledModules = [
   "Engagement",
   "Workbench",
   "Payments",
+  "Campaign",
   "PGR",
   "HRMS"
 ];

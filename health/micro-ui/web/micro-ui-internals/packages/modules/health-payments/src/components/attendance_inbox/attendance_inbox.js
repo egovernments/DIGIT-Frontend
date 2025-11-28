@@ -6,6 +6,7 @@ import CustomInboxTable from "./table_inbox";
 import { Toast, Card } from "@egovernments/digit-ui-components";
 import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../../utils/constants";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
+import { renderProjectPeriod } from "../../utils/time_conversion";
 
 /**
  * AttendanceInboxComponent: Displays a filterable and paginated inbox for attendance records.
@@ -28,6 +29,9 @@ const AttendanceInboxComponent = () => {
   const [childrenDataLoading, setChildrenDataLoading] = useState(false);
   const [childrenData, setchildrenData] = useState([]);
 
+  // State for selected period (for display purposes only)
+  const [markPeriod, setMarkPeriod] = useState(() => Digit.SessionStorage.get("selectedPeriod") || null);
+
   // API hook for fetching attendance registers
   const fetchRegisters = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${attendanceContextPath}/v1/_search`,
@@ -46,6 +50,14 @@ const AttendanceInboxComponent = () => {
   const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, selectedProject) => {
     try {
       setChildrenDataLoading(true);
+
+      // FIX: Always get the latest period from session storage when function is called
+      const latestPeriod = Digit.SessionStorage.get("selectedPeriod");
+      const periodId = latestPeriod?.id;
+
+      // Update display state with latest period
+      setMarkPeriod(latestPeriod);
+
       fetchRegisters.mutateAsync(
         {
           params: {
@@ -60,8 +72,10 @@ const AttendanceInboxComponent = () => {
                   ? Digit.SessionStorage.get("paymentInbox").code
                   : filterCriteria?.code
                 : filterData?.code,
-            reviewStatus: status == undefined ? selectedStatus : status,
+            // reviewStatus: status == undefined ? selectedStatus : status,
+            registerPeriodStatus: status == undefined ? selectedStatus : status,
             isChildrenRequired: true,
+            billingPeriodId: periodId, // Use the latest period ID
           },
         },
         {
@@ -73,16 +87,16 @@ const AttendanceInboxComponent = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                  return {
-                    id: item?.registerNumber,
-                    registerId: item?.id,
-                    name: selectedProject?.name,
-                    boundary: item?.localityCode,
-                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                    markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
-                    approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
-                  };
-                })
+                    return {
+                      id: item?.registerNumber,
+                      registerId: item?.id,
+                      name: selectedProject?.name,
+                      boundary: item?.localityCode,
+                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                      markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
+                      approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
+                    };
+                  })
                 : [];
             setChildrenDataLoading(false);
             setCard(true);
@@ -105,7 +119,6 @@ const AttendanceInboxComponent = () => {
       );
     } catch (error) {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_REGISTER_FETCH_FAILED"), transitionTime: 3000 });
-      /// will show error toast
     }
   };
 
@@ -119,8 +132,20 @@ const AttendanceInboxComponent = () => {
   }, []);
 
   /// Update filter criteria and fetch new data.
-  const handleFilterUpdate = (newFilter, isSelectedData) => {
+  const handleFilterUpdate = (newFilter, isSelectedData, selectedPeriod) => {
     setFilterCriteria(newFilter);
+
+    // Update period in session storage and state
+    if (selectedPeriod) {
+      setMarkPeriod(selectedPeriod);
+      Digit.SessionStorage.set("selectedPeriod", selectedPeriod);
+    } else if (selectedPeriod === null) {
+      setMarkPeriod(null);
+      Digit.SessionStorage.del("selectedPeriod");
+
+      setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PERIOD_SELECT"), transitionTime: 3000 });
+      return;
+    }
 
     const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
 
@@ -133,7 +158,6 @@ const AttendanceInboxComponent = () => {
     }
 
     // Validation 2: Check if `newFilter` is null or undefined
-
     if ((!newFilter || isEmptyObject(newFilter)) && !existingPaymentInbox?.boundaryType) {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_BOUNDARY_SELECT"), transitionTime: 3000 });
       return;
@@ -153,64 +177,68 @@ const AttendanceInboxComponent = () => {
     // Save the updated object back to SessionStorage
     Digit.SessionStorage.set("paymentInbox", existingData);
 
-    // Trigger the approval action
+    // Trigger search - it will automatically get the latest period from session storage
     triggerAttendanceSearch(newFilter, selectedStatus);
   };
 
   const handlePaginationChange = (page) => {
     setCurrentPage(page);
-
+    // Will get latest period from session storage when called
     triggerAttendanceSearch(filterCriteria, selectedStatus, rowsPerPage, page);
   };
+
   const handleRowsPerPageChange = (newPerPage, page) => {
-    setRowsPerPage(newPerPage); // Update the rows per page state
-    setCurrentPage(page); // Optionally reset the current page or maintain it
+    setRowsPerPage(newPerPage);
+    setCurrentPage(page);
+    // Will get latest period from session storage when called
     triggerAttendanceSearch(filterCriteria, selectedStatus, newPerPage, page);
   };
+
   const callServiceOnTap = (status) => {
     if (status.code == StatusEnum.PENDING_FOR_APPROVAL) {
-      setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
+      setRowsPerPage(defaultRowsPerPage);
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
+      // Will get latest period from session storage when called
       triggerAttendanceSearch(Digit.SessionStorage.get("paymentInbox"), StatusEnum.PENDING_FOR_APPROVAL, defaultRowsPerPage, 1);
     } else {
-      setRowsPerPage(defaultRowsPerPage); // Update the rows per page state
+      setRowsPerPage(defaultRowsPerPage);
       setCurrentPage(1);
       setSelectedStatus(StatusEnum.APPROVED);
+      // Will get latest period from session storage when called
       triggerAttendanceSearch(Digit.SessionStorage.get("paymentInbox"), StatusEnum.APPROVED, defaultRowsPerPage, 1);
     }
   };
 
-  // Reset the table and clear filters.
+  // Reset the table and clear filters including period
   const resetTable = () => {
     setSelectedStatus(StatusEnum.PENDING_FOR_APPROVAL);
     setchildrenData([]);
     setFilterCriteria(null);
     setCard(false);
+    setMarkPeriod(null);
+    Digit.SessionStorage.del("selectedPeriod");
   };
+
+  const projectPeriodLabel = React.useMemo(() => {
+    return renderProjectPeriod(t, selectedProject, markPeriod);
+  }, [t, selectedProject, markPeriod]);
 
   return (
     <div>
-      <div className="custom-register-inbox-screen" style={{
-        // "minHeight":"20%",
-        // "maxHeight":"30%"
-      }}>
+      <div className="custom-register-inbox-screen">
         <div className="inner-div-row-section">
           <div className="custom-inbox-filter-section">
             <div className="custom-inbox-inner-filter-section" style={{ height: "60vh" }}>
-              <CustomFilter
-                resetTable={resetTable}
-                isRequired={ScreenTypeEnum.REGISTER}
-                onFilterChange={handleFilterUpdate}
-              ></CustomFilter>
+              <CustomFilter resetTable={resetTable} isRequired={ScreenTypeEnum.REGISTER} onFilterChange={handleFilterUpdate}></CustomFilter>
             </div>
           </div>
 
-          <div className="custom-inbox-outer-table-section" >
+          <div className="custom-inbox-outer-table-section">
             <div className="inner-table-section" style={{ height: "60vh" }}>
               {card == false ? (
                 <Card className="card-overide">
-                  <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+                  <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, markPeriod)}</div>
                   {<SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />}
                 </Card>
               ) : (
@@ -224,6 +252,7 @@ const AttendanceInboxComponent = () => {
                   tableData={childrenData?.data}
                   totalCount={childrenData?.totalCount}
                   selectedProject={selectedProject}
+                  selectedPeriod={markPeriod}
                 ></CustomInboxTable>
               )}
             </div>
