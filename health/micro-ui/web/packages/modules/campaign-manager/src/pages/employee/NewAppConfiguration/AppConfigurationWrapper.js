@@ -100,10 +100,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         body: updatePayload,
       });
 
-      if (response) {
-        // Show success message
-        setShowToast({ key: "success", label: "CONFIGURATION_UPDATED_SUCCESSFULLY" });
-      }
+      // if (response) {
+      // Show success message
+      // setShowToast({ key: "success", label: "CONFIGURATION_UPDATED_SUCCESSFULLY" });
+      // }
     } catch (error) {
       console.error("Error updating MDMS:", error);
       setShowToast({ key: "error", label: "CONFIGURATION_UPDATE_FAILED" });
