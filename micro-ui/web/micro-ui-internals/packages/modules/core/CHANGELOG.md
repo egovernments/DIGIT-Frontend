@@ -1,5 +1,14 @@
 # Changelog 
 
+## [1.9.6]  [26-November-2025]
+-Bug fix : minor logic enhancement in 1.9.5
+
+## [1.9.5]  [26-November-2025]
+-Bug fix for edit profile citizen side(if user logged out, no need to show edit profile button)
+
+## [1.9.4]  [25-November-2025]
+-Bug fix for use data in edit profile in citizen side
+
 ## [1.9.3]  [21-November-2025]
 -Bug fix for edit profile in citizen side
 
