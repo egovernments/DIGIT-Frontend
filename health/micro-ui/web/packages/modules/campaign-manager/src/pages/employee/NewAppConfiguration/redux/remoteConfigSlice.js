@@ -51,7 +51,7 @@ const remoteConfigSlice = createSlice({
       const { field, screen, card, cardIndex, fieldIndex } = action.payload;
 
       // Check if this field is in footer
-      const isFooterField = state.currentData?.footer?.some(
+      const isFooterField =  field?.fieldName && state.currentData?.footer?.some(
         (f) => f.fieldName === field?.fieldName || f === field
       );
 
