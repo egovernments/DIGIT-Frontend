@@ -1,6 +1,6 @@
 import { TourProvider } from "@egovernments/digit-ui-react-components";
 import { Loader, lazyWithFallback } from "@egovernments/digit-ui-components";
-import React from "react";
+import React, { useEffect } from "react";
 // import { useRouteMatch } from "react-router-dom";
 
 import { CustomisedHooks } from "./hooks";
@@ -94,6 +94,32 @@ const EmployeeApp = lazyWithFallback(
   { loaderText: "Loading Employee App..." }
 );
 
+// QUICK FIXES JUST TO WORK AROUND Z-INDEX ISSUES WITH POPUPS AND MODALS - SHOULD BE REMOVED LATER ONCE POPUP SWICTH TO REACT PORTAL
+function initPopupZIndexFix() {
+  function forcePopupOnTop() {
+    const popup = document.querySelector(".digit-popup-overlay");
+    const hasPopup = !!popup;
+
+    const elements = document.querySelectorAll(".full-config-wrapper__page-tab, .full-config-wrapper__left-sidebar");
+
+    elements.forEach((el) => {
+      if (hasPopup) {
+        // popup exists → push behind
+        el.style.zIndex = "0";
+      } else {
+        // popup gone → restore original
+        el.style.zIndex = "1";
+      }
+    });
+  }
+
+  const observer = new MutationObserver(forcePopupOnTop);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // initial run
+  forcePopupOnTop();
+}
+
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
  * renders the EmployeeApp component within a TourProvider component if the data is not loading.
@@ -123,6 +149,9 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
+  useEffect(() => {
+    initPopupZIndexFix();
+  }, []);
   const moduleCode = BOUNDARY_HIERARCHY_TYPE
     ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
     : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
