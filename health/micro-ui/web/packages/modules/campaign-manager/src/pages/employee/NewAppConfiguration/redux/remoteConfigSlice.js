@@ -146,6 +146,10 @@ const remoteConfigSlice = createSlice({
                 return true;
               }
 
+              // Check primaryAction and secondaryAction
+              if (node.primaryAction && updateFieldInTree(node.primaryAction)) return true;
+              if (node.secondaryAction && updateFieldInTree(node.secondaryAction)) return true;
+
               // Recursively search in child and children (template-specific)
               if (node.child && updateFieldInTree(node.child)) return true;
               if (node.children && updateFieldInTree(node.children)) return true;
@@ -191,6 +195,10 @@ const remoteConfigSlice = createSlice({
               }
               return true;
             }
+
+            // Check primaryAction and secondaryAction
+            if (node.primaryAction && updateFieldInTree(node.primaryAction)) return true;
+            if (node.secondaryAction && updateFieldInTree(node.secondaryAction)) return true;
 
             // Recursively search in child and children (template-specific)
             if (node.child && updateFieldInTree(node.child)) return true;
@@ -276,6 +284,10 @@ const remoteConfigSlice = createSlice({
               node.hidden = !node.hidden;
               return true;
             }
+
+            // Check primaryAction and secondaryAction
+            if (node.primaryAction && toggleByFieldName(node.primaryAction)) return true;
+            if (node.secondaryAction && toggleByFieldName(node.secondaryAction)) return true;
 
             // Recursively search in child and children (template-specific)
             if (node.child && toggleByFieldName(node.child)) return true;

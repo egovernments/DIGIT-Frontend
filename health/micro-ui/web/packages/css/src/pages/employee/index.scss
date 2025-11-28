@@ -1371,3 +1371,15 @@ tbody {
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+.app-preview-card{
+  .digit-checkbox-container {
+    label {
+      width:fit-content !important
+    }
+  }
+}
+
+.digit-toast-success{
+  z-index:10000;
+}

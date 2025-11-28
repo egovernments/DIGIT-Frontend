@@ -142,13 +142,23 @@ function NewAppFieldScreenWrapper() {
       return node.flatMap(extractTemplateFields);
     }
 
-    // If it’s a template (like your fields), include it and also look inside for nested templates
+    // If it's a template (like your fields), include it and also look inside for nested templates
     if (typeof node === "object" && node.type === "template") {
-      return [
-        node,
-        ...extractTemplateFields(node.child),
-        ...extractTemplateFields(node.children),
-      ];
+      const fields = [node];
+
+      // Extract primaryAction and secondaryAction if they exist
+      if (node.primaryAction && typeof node.primaryAction === "object") {
+        fields.push(...extractTemplateFields(node.primaryAction));
+      }
+      if (node.secondaryAction && typeof node.secondaryAction === "object") {
+        fields.push(...extractTemplateFields(node.secondaryAction));
+      }
+
+      // Continue with child and children
+      fields.push(...extractTemplateFields(node.child));
+      fields.push(...extractTemplateFields(node.children));
+
+      return fields;
     }
 
     // If it has nested objects, scan through them for templates
@@ -159,14 +169,14 @@ function NewAppFieldScreenWrapper() {
     return [];
   };
 
-    const isFieldEditable = (field) => {
-    
-    const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);    
+  const isFieldEditable = (field) => {
+
+    const fieldConfig = fieldTypeMaster?.fieldTypeMappingConfig?.find((item) => item.metadata.format === field.format && item.metadata.type === field.type);
     // If no config found, default to editable
     if (!fieldConfig) return true;
-    
+
     // Check if editable is explicitly set to false
-    return fieldConfig.editable !== false ;
+    return fieldConfig.editable !== false;
   };
 
 
@@ -224,7 +234,7 @@ function NewAppFieldScreenWrapper() {
             ? extractTemplateFields(currentCard.footer)
             : [];
 
-          // Filter editable fields only
+        // Filter editable fields only
         const editableBodyFields = bodyFields.filter(isFieldEditable);
         const editableFooterFields = footerFields.filter(isFieldEditable);
         // Combine editable body and footer fields
@@ -259,7 +269,7 @@ function NewAppFieldScreenWrapper() {
                   moveField={type !== "template" ? moveField : null}
                   key={`field-${i}`}
                   fields={c}
-                  // isFooterField={isFooterField}
+                // isFooterField={isFooterField}
                 />
               );
             })}
