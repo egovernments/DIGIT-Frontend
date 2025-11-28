@@ -246,26 +246,26 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
               <span className="required comment-label"> *</span>
             </div>
 
-            {loadingPeriods ? (
-              <div style={{ padding: "1rem", textAlign: "center" }}>
-                <Loader />
-              </div>
-            ) : 
-            // periods.length > 0 ? 
-            (
-              <Dropdown
-                style={{ width: "100%" }}
-                t={t}
-                option={periods.length > 0?getValidPeriods(t, periods, true):[]}
-                optionKey="name"
-                selected={selectedPeriod}
-                select={handlePeriodSelect}
-              />
-            )
-            //  : (
-            //   <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("")}</div>
-            // )
-            
+            {
+              loadingPeriods ? (
+                <div style={{ padding: "1rem", textAlign: "center" }}>
+                  <Loader />
+                </div>
+              ) : (
+                // periods.length > 0 ?
+                <Dropdown
+                  showToolTip={true}
+                  style={{ width: "100%" }}
+                  t={t}
+                  option={periods.length > 0 ? getValidPeriods(t, periods, true) : []}
+                  optionKey="name"
+                  selected={selectedPeriod}
+                  select={handlePeriodSelect}
+                />
+              )
+              //  : (
+              //   <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("")}</div>
+              // )
             }
           </div>
         )}

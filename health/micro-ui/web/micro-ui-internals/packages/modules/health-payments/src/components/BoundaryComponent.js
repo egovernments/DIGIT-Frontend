@@ -256,7 +256,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequ
       <div className="comment-label">
         {t(label)}
         {/* {temp disbale for boundary in v2} */}
-        {/* {isRequired && <span className="required"> *</span>} */}
+        {isRequired && <span className="required"> *</span>}
       </div>
       <Dropdown
         selected={selected}

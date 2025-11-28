@@ -248,7 +248,9 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
                 </div>
               ) : (
                 // periods.length > 0 ?
+
                 <Dropdown
+                  showToolTip={true}
                   style={{ width: "100%" }}
                   t={t}
                   option={periods.length > 0 ? getValidPeriods(t, periods, false) : []}
