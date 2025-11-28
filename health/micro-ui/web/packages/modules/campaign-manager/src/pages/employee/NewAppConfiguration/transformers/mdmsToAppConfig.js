@@ -222,6 +222,8 @@ const transformFormProperties = (body) => {
   body.forEach((bodySection) => {
     if (bodySection.fields && Array.isArray(bodySection.fields)) {
       bodySection.fields.forEach((field) => {
+        // Destructure to exclude validations from spread (we build our own)
+        const { validations: _existingValidations, ...restField } = field;
         const property = {
           type: field.type,
           label: field.label,
@@ -241,7 +243,7 @@ const transformFormProperties = (body) => {
           errorMessage: field.errorMessage || "",
           isMultiSelect: field.isMultiSelect !== undefined ? field.isMultiSelect : false,
           mandatory: field?.mandatory ? field?.mandatory : false,
-          ...field,
+          ...restField,
         };
 
         // Add optional fields
@@ -324,6 +326,28 @@ const buildValidations = (field) => {
       message: field["scanLimit.message"],
     });
   }
+
+  // Handle grouped validations (range, lengthRange, dateRange)
+  const validationGroups = {
+    range: ["min", "max"],
+    lengthRange: ["minLength", "maxLength"],
+    dateRange: ["startDate", "endDate"],
+  };
+
+  Object.entries(validationGroups).forEach(([groupName, types]) => {
+    if (field[groupName] && typeof field[groupName] === "object") {
+      const groupData = field[groupName];
+      types.forEach((type) => {
+        if (groupData[type] !== undefined) {
+          validations.push({
+            type: type,
+            value: groupData[type],
+            message: groupData.errorMessage || "",
+          });
+        }
+      });
+    }
+  });
 
   return validations;
 };

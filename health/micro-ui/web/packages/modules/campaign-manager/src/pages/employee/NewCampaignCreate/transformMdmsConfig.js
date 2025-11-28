@@ -322,16 +322,52 @@ const transformValidations = (validations) => {
 
   const validationProps = {};
 
+  // Define validation groups - related types that should be combined
+  const validationGroups = {
+    range: ["min", "max"],
+    lengthRange: ["minLength", "maxLength"],
+    dateRange: ["startDate", "endDate"],
+  };
+
+  // Create reverse lookup: type -> groupName
+  const typeToGroup = {};
+  Object.entries(validationGroups).forEach(([groupName, types]) => {
+    types.forEach((type) => {
+      typeToGroup[type] = groupName;
+    });
+  });
+
+  // Collect grouped validations
+  const groupedValues = {};
+
   validations.forEach((validation) => {
     const { type, value, message } = validation;
+    if (type === undefined || value === undefined) return;
 
-    if (type && value !== undefined) {
+    const groupName = typeToGroup[type];
+
+    if (groupName) {
+      // This type belongs to a group
+      if (!groupedValues[groupName]) {
+        groupedValues[groupName] = {};
+      }
+      groupedValues[groupName][type] = value;
+      // Store the last message as errorMessage
+      if (message) {
+        groupedValues[groupName].errorMessage = message;
+      }
+    } else {
+      // Standalone validation - keep as flat key
       validationProps[type] = value;
-
       if (message) {
         validationProps[`${type}.message`] = message;
       }
     }
+  });
+
+  // Merge grouped validations into result
+  Object.entries(groupedValues).forEach(([groupName, groupData]) => {
+    validationProps[groupName] = groupData;
   });
 
   return validationProps;
