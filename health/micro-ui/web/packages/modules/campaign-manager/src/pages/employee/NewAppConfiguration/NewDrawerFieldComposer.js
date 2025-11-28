@@ -579,6 +579,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 options={nestedOptions}
                 optionsKey="name"
                 chipsKey="code"
+                disablePortal={true}
                 type="multiselectdropdown"
                 variant="nestedmultiselect"
                 selectAllLabel={t("SELECT_ALL")}
