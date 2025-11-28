@@ -238,7 +238,7 @@ function NewDependentFieldWrapper({ t }) {
         return pageObj.fields
             .filter((f) => {
                 const fieldType = String(f?.type || "").toLowerCase();
-                if (["template", "dynamic", "custom"].includes(fieldType)) return false;
+                // if (["template", "dynamic", "custom"].includes(fieldType)) return false;
                 const isHidden = f?.hidden === true;
                 const includeInForm = f?.includeInForm;
                 if (isHidden && !includeInForm) return false;
@@ -510,26 +510,47 @@ function NewDependentFieldWrapper({ t }) {
     const rulesFromExisting = useMemo(() => {
         const arr = getExpressionArray(); // array of { condition: "..." }
         if (!arr.length) return [];
-        // For each object (one UI rule), parse its condition string into conds (array)
+
         return arr.map((obj) => {
             const expr = obj.condition || "";
             const tokens = tokenize(expr);
             const conds = [];
             let pendingJoin = "&&";
+
             tokens.forEach((t) => {
                 if (t.type === "op") {
                     pendingJoin = t.value;
                 } else {
                     const parsed = parseSingle(t.value.trim(), currentPageName);
+
                     conds.push({
                         ...parsed,
-                        joiner: conds.length === 0 ? { code: "&&", name: "AND" } : { code: pendingJoin, name: pendingJoin === "||" ? "OR" : "AND" },
-                        // set isDate if parsed left field is date type (we can derive later when leftPage/leftField are resolved)
+
+                        // 🔥 FIX: AUTO-SELECT Compare-With-Field WHEN RIGHT-SIDE IS A FIELD
+                        isFieldComparison: parsed.isFieldComparison,
+                        rightPage: parsed.isFieldComparison ? parsed.rightPage : null,
+                        rightField: parsed.isFieldComparison ? parsed.rightField : null,
+
+                        // If it's field comparison → no literal value
+                        fieldValue: parsed.isFieldComparison ? "" : parsed.fieldValue,
+
+                        joiner:
+                            conds.length === 0
+                                ? { code: "&&", name: "AND" }
+                                : {
+                                    code: pendingJoin,
+                                    name: pendingJoin === "||" ? "OR" : "AND",
+                                },
+
+                        // Keep date info if useful
                         isDate: parsed.isDate || false,
                     });
+
                     pendingJoin = "&&";
                 }
             });
+
+            // If no conds (edge case)
             if (!conds.length) {
                 conds.push({
                     leftPage: currentPageName,
@@ -542,11 +563,11 @@ function NewDependentFieldWrapper({ t }) {
                     joiner: { code: "&&", name: "AND" },
                 });
             }
-            return {
-                conds,
-            };
+
+            return { conds };
         });
     }, [selectedField, currentPageName, pageConfigs, flowPages]);
+
 
     const [rules, setRules] = useState(() => rulesFromExisting);
     const [editorIndex, setEditorIndex] = useState(null);
@@ -995,6 +1016,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                             }}
                                                                             value={!!cond.isFieldComparison}
                                                                             label={compareFieldToggleLabel}
+                                                                            checked={!!cond.isFieldComparison}
                                                                             isLabelFirst={false}
                                                                             disabled={!cond.leftField}
                                                                         />

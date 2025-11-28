@@ -57,7 +57,13 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         description={shouldCustomTranslate ? field?.helpText : customT(field?.helpText) || ""}
         error={shouldCustomTranslate ? field?.errorMessage : customT(field?.errorMessage) || null}
         infoMessage={shouldCustomTranslate ? field?.tooltip : customT(field?.tooltip) || null}
-        label={field?.showLabel === false ? "" : shouldCustomTranslate ? field?.label : customT(field?.label) || ""}
+        label={
+          field?.showLabel === false || fieldType === "checkbox" || field.format === "scanner"
+            ? ""
+            : shouldCustomTranslate
+            ? field?.label
+            : customT(field?.label) || ""
+        }
         onChange={function noRefCheck() {}}
         placeholder={shouldCustomTranslate ? field?.innerLabel : customT(field?.innerLabel) || ""}
         populators={{
@@ -66,6 +72,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           suffix: field?.suffixText || null,
           t: shouldCustomTranslate ? customT : null,
           fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
+          labelStyles: field?.format === "checkbox" ? { width: "fit-content" } : null,
           mdmsConfig: field?.isMdms
             ? {
                 moduleName: field?.schemaCode?.split(".")[0],
@@ -76,6 +83,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           options: field?.isMdms ? null : field?.dropDownOptions,
           optionsKey: field?.isMdms ? "code" : "name",
         }}
+        withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
         type={fieldType}
         value={field?.value === true ? "" : field?.value || ""}
