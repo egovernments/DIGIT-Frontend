@@ -49,7 +49,7 @@ const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClic
         flexWrap: properties.wrap ? "wrap" : "nowrap",
       }}
     >
-      {validChildren.map((child, index) => {
+      {children.map((child, index) => {
         // Ensure child has proper id
         const childWithId = {
           ...child,

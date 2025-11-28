@@ -352,6 +352,12 @@ const remoteConfigSlice = createSlice({
           deleteFlag: true,
           active: true,
         };
+
+        // Add showLabel: false for scanner format fields
+        if (fieldData?.format === "scanner" || fieldData?.format === "qrScanner") {
+          newField.showLabel = false;
+        }
+
         state.currentData.body[cardIndex].fields.push(newField);
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
