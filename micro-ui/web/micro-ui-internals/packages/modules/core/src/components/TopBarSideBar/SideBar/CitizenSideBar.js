@@ -123,7 +123,13 @@ export const CitizenSideBar = ({
       if (uuid) {
         const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
         const userData = usersResponse?.user?.[0];
-      if(userData) Digit.UserService.setUser({ info: userData });
+        if (userData) {
+          const currentUser = Digit.UserService.getUser();
+          Digit.UserService.setUser({
+            ...currentUser,
+            info: userData
+          });
+        }
         if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
           const userDetails = usersResponse.user[0];
           const thumbs = userDetails?.photo?.split(",");
@@ -394,12 +400,16 @@ export const CitizenSideBar = ({
       icon: "Language",
       key: "language",
     },
-    {
-      label: t("EDIT_PROFILE"),
-      type: "custom",
-      icon: "Edit",
-      key: "editProfile",
-    },
+    ...(user && user.access_token
+    ? [
+        {
+          label: t("EDIT_PROFILE"),
+          type: "custom",
+          icon: "Edit",
+          key: "editProfile",
+        },
+      ]
+    : []),
     {
       label: t("Modules"),
       icon: "DriveFileMove",

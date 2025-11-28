@@ -1532,8 +1532,26 @@ tbody {
   flex-direction: row;
   .comment-label-without-card{
     min-width: 34%;
+    position: relative;
+    top: 0.5rem;
   }
   .digit-text-input-field-without-card{
+    min-width: 67%;
+    margin-bottom: 2.5rem;
+    margin-right: 2rem;
+  }
+}
+
+.date-picker-wrapper {
+  display: flex;
+  flex-direction: row;
+  .date-picker-label {
+    min-width: 34%;
+    color: #363636;
+    position: relative;
+    top: 0.5rem;
+  }
+  .date-picker-field {
     min-width: 67%;
     margin-bottom: 2.5rem;
     margin-right: 2rem;
