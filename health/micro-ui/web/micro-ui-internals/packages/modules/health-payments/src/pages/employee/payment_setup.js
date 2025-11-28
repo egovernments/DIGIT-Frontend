@@ -484,7 +484,7 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData} ${t("HCM_AM_FULL_STOP")} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}${t("HCM_AM_FULL_STOP")} ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
