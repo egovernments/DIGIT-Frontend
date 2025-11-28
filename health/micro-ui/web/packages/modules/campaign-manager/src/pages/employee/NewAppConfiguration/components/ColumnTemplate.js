@@ -20,6 +20,7 @@ const ColumnTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldC
     return allowed;
   });
 
+
   return (
     <div
       style={{
@@ -50,7 +51,7 @@ const ColumnTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldC
             : "flex-start",
       }}
     >
-      {validChildren.map((child, index) => {
+      {children.map((child, index) => {
         // Ensure child has proper id
         const childWithId = {
           ...child,

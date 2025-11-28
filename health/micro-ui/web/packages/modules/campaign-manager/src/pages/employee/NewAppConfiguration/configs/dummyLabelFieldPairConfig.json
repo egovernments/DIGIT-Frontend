@@ -158,6 +158,26 @@
                 "modules": [
                     "COMPLAINTS"
                 ]
+            },
+              {
+                "entity": "HFReferralModel",
+                "labelFields": [
+                    {
+                        "name": "REFERRAL_INBOX_NAME",
+                        "fieldKey": "referralName",
+                        "jsonPath": "{{0.HFReferralModel.name}}",
+                        "mandatory": "false"
+                    },
+                     {
+                        "name": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
+                        "fieldKey": "refrralSymptom",
+                        "jsonPath": "{{0.HFReferralModel.symptom}}",
+                        "mandatory": "false"
+                    }            
+                ],
+                "modules": [
+                    "HFREFERRAL"
+                ]
             }
 ]
 
