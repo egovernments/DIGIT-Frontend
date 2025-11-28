@@ -15,6 +15,7 @@ const Response = () => {
   return (
     <>
       <PanelCard
+        children={<div dangerouslySetInnerHTML={{ __html: state?.description }} />}
         animationProps={{
           loop: false,
           noAutoplay: false,
@@ -23,7 +24,7 @@ const Response = () => {
         cardStyles={{}}
         className=""
         customIcon=""
-        description={t(state?.description)}
+        //description={t(state?.description)}
         footerChildren={
           state?.showFooter === false
             ? []

@@ -430,7 +430,7 @@ const PaymentSetUpPage = () => {
             });
           },
           onSuccess: (responseData) => {
-            const camData = `"${selectedCampaign?.name}"`;
+            const camData = `<strong>${selectedCampaign?.name}</strong>`;
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
@@ -479,7 +479,7 @@ const PaymentSetUpPage = () => {
             });
           },
           onSuccess: (responseData) => {
-            const camData = `"${selectedCampaign?.name}"`;
+            const camData = `<strong>${selectedCampaign?.name}</strong>`;
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
