@@ -430,11 +430,12 @@ const PaymentSetUpPage = () => {
             });
           },
           onSuccess: (responseData) => {
+            const camData = `"${selectedCampaign?.name}"`;
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.name} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}${t("HCM_AM_FULL_STOP")} ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
@@ -478,11 +479,12 @@ const PaymentSetUpPage = () => {
             });
           },
           onSuccess: (responseData) => {
+            const camData = `"${selectedCampaign?.name}"`;
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.name} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData} ${t("HCM_AM_FULL_STOP")} ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),

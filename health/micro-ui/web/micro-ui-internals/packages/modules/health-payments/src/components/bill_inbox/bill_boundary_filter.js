@@ -250,18 +250,23 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
               <div style={{ padding: "1rem", textAlign: "center" }}>
                 <Loader />
               </div>
-            ) : periods.length > 0 ? (
+            ) : 
+            // periods.length > 0 ? 
+            (
               <Dropdown
                 style={{ width: "100%" }}
                 t={t}
-                option={getValidPeriods(t, periods, true)}
+                option={periods.length > 0?getValidPeriods(t, periods, true):[]}
                 optionKey="name"
                 selected={selectedPeriod}
                 select={handlePeriodSelect}
               />
-            ) : (
-              <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("")}</div>
-            )}
+            )
+            //  : (
+            //   <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("")}</div>
+            // )
+            
+            }
           </div>
         )}
       </div>

@@ -406,7 +406,7 @@ const RoleWageTable = ({
       const numericValue = parseFloat(value) || 0;
       const maxLimit = rateMaxLimitSchema[field];
 
-      // Mark table as updated ⭐
+      // Mark table as updated 
       setIsFormModified(true);
 
       // Manage errors
@@ -415,7 +415,7 @@ const RoleWageTable = ({
 
         if (maxLimit !== undefined && numericValue > maxLimit) {
           if (!updated[id]) updated[id] = {};
-          updated[id][field] = `${t("HCM_AM_MAX_ALLOW")} ${t(`${"HCM_AM"}_${field}`)} ${t("HCM_AM_IS")} ${maxLimit}`;
+          updated[id][field] = `${t(`${"HCM_AM"}_${field}`)} ${t("HCM_AM_CAN_NOT_EXCEED")} ${maxLimit}`;
         } else {
           if (updated[id]) {
             delete updated[id][field];
