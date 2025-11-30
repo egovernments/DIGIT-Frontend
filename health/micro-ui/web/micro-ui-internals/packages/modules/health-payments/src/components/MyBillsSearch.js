@@ -16,7 +16,7 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
 
   const [isDisabled, setIsDisabled] = useState(false);
 
-  const [selectedBillType, setSelectedBillType] = useState(billTypeOptions?.[0] || null);
+  const [selectedBillType, setSelectedBillType] = useState(null);
 
   const [billID, setBillID] = useState(null);
   const [dateRange, setDateRange] = useState({

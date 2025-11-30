@@ -51,6 +51,8 @@ const MyBills = () => {
         billingPeriodIds:
           periodType && periodType?.code == "FINAL_AGGREGATE"
             ? []
+            : periodType && periodType?.code == "INTERMEDIATE" && dateRange.startDate == "" && dateRange.endDate == ""
+            ? Digit.SessionStorage.get("projectPeriods").map((x) => x?.id)
             : dateRange.startDate == "" && dateRange.endDate == ""
             ? []
             : findAllOverlappingPeriods(
