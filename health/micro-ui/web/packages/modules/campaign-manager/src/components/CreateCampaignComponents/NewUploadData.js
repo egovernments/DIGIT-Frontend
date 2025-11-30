@@ -122,6 +122,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else if (type === "boundary") {
       onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess });
+    } else if (type === "unified-console") {
+      onSelect("uploadUnified", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else {
       onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
     }
@@ -321,6 +323,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         uploadType = "uploadBoundary";
       } else if (type === "facility") {
         uploadType = "uploadFacility";
+      } else if (type === "unified-console") {
+        uploadType = "uploadUnified";
       }
       onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
       setExecutionCount((prevCount) => prevCount + 1);
@@ -399,6 +403,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       }
       case "facility": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA", "facility");
+        setUploadedFile(uploadedFile);
+        setIsSuccess(isSuccess);
+        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        break;
+      }
+      case "unified-console": {
+        const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA", "unified-console");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
         setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
@@ -950,7 +961,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     if (
       totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated" ||
       totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId == "not-validated" ||
-      totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId == "not-validated"
+      totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId == "not-validated" ||
+      totalData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.[0]?.resourceId == "not-validated"
     ) {
       setNotValid(1);
     }
@@ -958,6 +970,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId,
     totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId,
     totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId,
+    totalData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.[0]?.resourceId,
   ]);
 
   useEffect(() => {
@@ -966,12 +979,14 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
+        // For unified-console, use hyphenated validation type; for others use camelCase
+        const validationType = type === "unified-console" ? "unified-console-validation" : `${type}Validation`;
 
         try {
           const temp = await Digit.Hooks.campaign.useProcessData(
             uploadedFile,
             params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
-            `${type}Validation`,
+            validationType,
             tenantId,
             id,
             baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
@@ -1095,9 +1110,76 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     boundary: false,
     facility: false,
     user: false,
+    "unified-console": false,
   });
 
   const downloadTemplate = async () => {
+    // For unified-console type, use generation search API
+    if (type === "unified-console") {
+      try {
+        const response = await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/_generationSearch",
+          body: {
+            GenerationSearchCriteria: {
+              tenantId: tenantId,
+              referenceIds: [id],
+              statuses: ["completed"],
+              limit: 5,
+              offset: 0,
+            },
+          },
+        });
+        // API returns GenerationDetails array
+        const generatedResource = response?.GenerationDetails?.[0];
+        if (!generatedResource) {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+
+        if (generatedResource?.status === "failed") {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          return;
+        }
+
+        if (generatedResource?.status === "inprogress") {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+
+        const fileStoreId = generatedResource?.fileStoreid || generatedResource?.fileStoreId;
+        if (!fileStoreId) {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+        // Download the file directly using fileStoreId
+        setDownloadError(false);
+        const customFileName = parentId
+          ? `${campaignName}_${t("HCM_FILLED")}_Unified_Template`
+          : `${campaignName}_Unified_Template`;
+        downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
+        setDownloadedTemplates((prev) => ({
+          ...prev,
+          [type]: true,
+        }));
+      } catch (error) {
+        console.error("Error in unified-console download:", error);
+        const errorCode = error?.response?.data?.Errors?.[0]?.code;
+        if (errorCode === "NativeIoException") {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        }
+      }
+      return;
+    }
+
+    // For other types (boundary, facility, user), use the existing download API
     await mutation.mutate(
       {
         params: {
@@ -1212,7 +1294,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   return (
     <>
-      <div className="container-full">
+      <div className="container-full" style={{width:"100%"}}>
         {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
         {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
@@ -1230,12 +1312,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facility" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facility" ? t("WBH_UPLOAD_FACILITY") : type === "unified-console" ? t("WBH_UPLOAD_UNIFIED_DATA") : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
-                {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facility" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+                {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facility" ? t("HCM_FACILITY_MESSAGE") : type === "unified-console" ? t("HCM_UNIFIED_DATA_MESSAGE") : t("HCM_USER_MESSAGE")}
               </div>
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
@@ -1298,6 +1380,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
                 : type === "facility"
                 ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+                : type === "unified-console"
+                ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER")
                 : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
@@ -1306,6 +1390,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
                   : type === "facility"
                   ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                  : type === "unified-console"
+                  ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT")
                   : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
               </div>,
             ]}

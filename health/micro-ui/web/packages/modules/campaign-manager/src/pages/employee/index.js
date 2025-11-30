@@ -133,6 +133,18 @@ const NewUploadScreen = lazyWithFallback(
   { loaderText: "Loading New Upload Screen..." }
 );
 
+const UnifiedUploadScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "unified-upload-screen" */ "./NewCampaignCreate/UnifiedUploadScreen"),
+  () => require("./NewCampaignCreate/UnifiedUploadScreen").default,
+  { loaderText: "Loading Unified Upload Screen..." }
+);
+
+const CampaignTemplates = lazyWithFallback(
+  () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
+  () => require("./campaignTemplateScreens/CampaignTemplates").default,
+  { loaderText: "Loading Campaign Templates..." }
+);
+
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -201,6 +213,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("update-campaign") ||
         pathVar.includes("checklist/search") ||
         pathVar.includes("upload-screen") ||
+        pathVar.includes("unified-upload-screen") ||
         pathVar.includes("update-dates-boundary")
           ? true
           : false,
@@ -226,6 +239,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_UPLOAD_SCREEN"),
       show: pathVar.includes("upload-screen") ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_UNIFIED_UPLOAD_SCREEN"),
+      show: pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
       path: "",
@@ -272,6 +290,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ADD_LOCALISATION_BREADCRUMB"),
       show: pathVar.includes("localization-add") ? true : false,
+    },
+    {
+      path: "",
+      content: t("CAMPAIGN_TEMPLATES"),
+      show: pathVar.includes("campaign-templates") ? true : false,
     },
   ];
 
@@ -386,8 +409,10 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`new-app-modules`} element={<NewAppModule />} />
           <Route path={`app-features`} element={<AppFeatures />} />
           <Route path={`upload-screen`} element={<NewUploadScreen />} />
+          <Route path={`unified-upload-screen`} element={<UnifiedUploadScreen />} />
           <Route path={`dummy-loader`} element={<DummyLoader />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
+          <Route path={`campaign-templates`} element={<CampaignTemplates />} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>
       </AppContainer>

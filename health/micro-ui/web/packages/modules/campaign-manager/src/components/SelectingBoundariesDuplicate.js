@@ -2,7 +2,7 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip, Switch } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -56,6 +56,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   });
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [restrictSelection, setRestrictSelection] = useState(null);
+  const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign || false
+  );
 
   // useEffect(() => {
   //   setKey(currentKey);
@@ -81,8 +84,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
-  }, [selectedData, boundaryOptions, restrictSelection]);
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection, isUnifiedCampaign });
+  }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
 
   useEffect(() => {
     if (selectedData?.length > 0 || Object.keys(boundaryOptions || {}).length) {
@@ -90,13 +93,14 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         selectedData,
         boundaryData: boundaryOptions,
         updateBoundary: !restrictSelection,
+        isUnifiedCampaign,
       });
     }
-  }, [selectedData, boundaryOptions, restrictSelection]);
+  }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
 
   useEffect(() => {
     if (executionCount < 5) {
-      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
+      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection, isUnifiedCampaign });
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -105,6 +109,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     if (sessionData || campaignData?.boundaries) {
       setSelectedData(sessionData?.selectedData || campaignData?.boundaries);
       setBoundaryOptions(sessionData?.boundaryData || {});
+      if (sessionData?.isUnifiedCampaign !== undefined) {
+        setIsUnifiedCampaign(sessionData?.isUnifiedCampaign);
+      } else if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
+        setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
+      }
     }
     setTimeout(() => setIsLoading(false), 10);
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType, campaignData]);
@@ -227,6 +236,20 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             ]}
             label={"Info"}
           />
+          <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div>
+                <HeaderComponent className="unified-upload-header">{t("HCM_UNIFIED_UPLOAD_OPTION")}</HeaderComponent>
+                <p className="dates-description">{t("HCM_UNIFIED_UPLOAD_OPTION_DESC")}</p>
+              </div>
+              <Switch
+                isLabelFirst={true}
+                label={t("HCM_USE_UNIFIED_UPLOAD")}
+                isCheckedInitially={isUnifiedCampaign}
+                onToggle={(checked) => setIsUnifiedCampaign(checked)}
+              />
+            </div>
+          </Card>
         </div>
       </div>
       {showPopUp && (

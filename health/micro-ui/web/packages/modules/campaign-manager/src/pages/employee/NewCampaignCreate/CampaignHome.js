@@ -17,6 +17,8 @@ const CampaignHome = () => {
   useEffect(() => {
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
     window.Digit.SessionStorage.del("SelectedFeaturesByModule");
+    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
     sessionStorage.removeItem("HCM_CAMPAIGN_NUMBER");
 
   }, []);
@@ -165,14 +167,14 @@ const CampaignHome = () => {
           <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
         <div
-          className={"cardStyle disabledCard"}
+          className={"cardStyle"}
           onClick={() => {
-            // Add functionality for campaign templates
+            navigate(`/${window.contextPath}/employee/campaign/campaign-templates`);
           }}
           tabIndex={2}
         >
-          <MobileLayout width="40" height="40" fill={"#c5c5c5"} />
-          <div className={"descStyle disabledText"}>{t("HCM_START_WITH_CAMPAIGN_TEMPLATE")}</div>
+          <MobileLayout width="40" height="40" fill={"#C84C0E"} />
+          <div className={"descStyle"}>{t("HCM_START_WITH_CAMPAIGN_TEMPLATE")}</div>
         </div>
       </div>
       {showPopUp && (

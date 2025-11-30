@@ -81,6 +81,12 @@ export const transformUpdateCreateData = ({ campaignData }) => {
     return rule;
   });
 
+  // Transform resource types for API - unified-console should be sent as unified-console-resources
+  const transformedResources = campaignData?.resources?.map((resource) => ({
+    ...resource,
+    type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+  }));
+
   return {
     CampaignDetails: {
       hierarchyType: campaignData?.hierarchyType,
@@ -92,7 +98,7 @@ export const transformUpdateCreateData = ({ campaignData }) => {
       deliveryRules: updatedDeliveryRules,
       boundaries: campaignData?.boundaries,
       id: campaignData?.id,
-      resources: campaignData?.resources,
+      resources: transformedResources,
       projectType: campaignData?.projectType,
       endDate: endDate,
       startDate: startDate,

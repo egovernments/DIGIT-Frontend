@@ -1,4 +1,5 @@
-export const CampaignCreateConfig = (totalFormData, editName) => {
+export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
+  const disableCampaignType = editName || fromTemplate;
   return [
     {
       form: [
@@ -15,7 +16,7 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
               key: "CampaignType",
               type: "dropdown",
               label: "HCM_SELECT_CAMPAIGN_TYPE",
-              disable: editName,
+              disable: disableCampaignType,
               populators: {
                 name: "CampaignType",
                 fieldPairClassName: "boldLabel",
