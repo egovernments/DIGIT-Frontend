@@ -239,13 +239,13 @@ export const getValidPeriods = (t, periods, addingBool) => {
       // TODO: ref(0) [Date: 17/11/2025]
       //  Temporarily commented the aggregated period options for giving the build to QA for initial testing
       //       It will be uncommented once the backend changes are done properly
-      //   const aggregate = getPeriodAggregateObject(t, "AGGREGATE");
+      const aggregate = getPeriodAggregateObject(t, "AGGREGATE");
 
-      //   // You said aggregate based on last period date
-      //   aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
-      //   aggregate.periodEndDate = lastPeriod.periodEndDate + 1;
+      // You said aggregate based on last period date
+      aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
+      aggregate.periodEndDate = lastPeriod.periodEndDate + 1;
 
-      //   result.push(aggregate);
+      result.push(aggregate);
       // ref(0), end of comment
 
       return result;
