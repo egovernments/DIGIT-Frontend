@@ -703,9 +703,6 @@
 
 // export default PaymentSetUpPage;
 
-
-
-
 import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
@@ -755,12 +752,10 @@ const PaymentSetUpPage = () => {
     resetCache();
   }
 
-  
-
   // Mark as mounted and setup cleanup
   useEffect(() => {
     window.__paymentSetupMounted = true;
-    
+
     return () => {
       // Clear flag when unmounting (navigating away)
       delete window.__paymentSetupMounted;
@@ -1220,7 +1215,7 @@ const PaymentSetUpPage = () => {
           status: "ACTIVE",
           createdBy: Digit.UserService.getUser().info.uuid,
           projectId: selectedCampaign?.projectId,
-          id: billingCycle?.id,
+          id: billingConfigData?.id,
           ...(billingCycle?.code === "CUSTOM" && { customFrequencyDays: customDays }),
         };
 
@@ -1462,7 +1457,7 @@ const PaymentSetUpPage = () => {
           label={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
           title={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
           onClick={handlePrimaryButtonClick}
-          icon={edit?"":"ArrowForward"}
+          icon={edit ? "" : "ArrowForward"}
           isSuffix={edit ? false : true}
           isDisabled={!tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData}
         />

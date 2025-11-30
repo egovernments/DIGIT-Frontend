@@ -610,9 +610,14 @@ const BillInboxComponent = () => {
         tenantId: tenantId,
         localityCode: selectedBoundaryCode,
         referenceIds: [project?.[0]?.id],
-        billingPeriodIds: [pId],
+        billingPeriodIds: pId === "AGGREGATE" ? [] : [pId],
         // TODO: need to add here
-        ...(pId === "AGGREGATE" ? { isAggregate: pId === "AGGREGATE" ? true : false, billingType: pId } : {}),
+        ...(pId === "AGGREGATE"
+          ? {
+              // isAggregate: pId === "AGGREGATE" ? true : false,
+              billingType: "FINAL_AGGREGATE",
+            }
+          : {}),
       },
     },
     config: {

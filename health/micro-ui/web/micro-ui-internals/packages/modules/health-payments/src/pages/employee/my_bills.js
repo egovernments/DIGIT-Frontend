@@ -58,7 +58,7 @@ const MyBills = () => {
 
         ...(periodType && periodType?.code == "FINAL_AGGREGATE"
           ? {
-              isAggregate: periodType != null ? true : false,
+             // isAggregate: periodType != null ? true : false,
               billingType: periodType?.code,
             }
           : {}),
