@@ -34,6 +34,8 @@ const MyBills = () => {
   const project = Digit?.SessionStorage.get("staffProjects");
   // TODO: need to send the periodIDs here
 
+  const projectPeriods = Digit.SessionStorage.get("projectPeriods");
+
   const BillSearchCri = {
     url: `/${expenseContextPath}/bill/v1/_search`,
     body: {
@@ -52,7 +54,7 @@ const MyBills = () => {
           periodType && periodType?.code == "FINAL_AGGREGATE"
             ? []
             : periodType && periodType?.code == "INTERMEDIATE" && dateRange.startDate == "" && dateRange.endDate == ""
-            ? Digit.SessionStorage.get("projectPeriods").map((x) => x?.id)
+            ? projectPeriods.map((x) => x?.id)
             : dateRange.startDate == "" && dateRange.endDate == ""
             ? []
             : findAllOverlappingPeriods(
