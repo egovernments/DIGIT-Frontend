@@ -27,6 +27,7 @@ function transformCampaignData(inputObj = {}) {
   const boundaryFiles = resourceByType("boundary");
   const facilityFiles = resourceByType("facility");
   const userFiles = resourceByType("user");
+  const unifiedFiles = resourceByType("unified-console");
 
   const deliveryRulesData = Array.isArray(inputObj.deliveryRules)
     ? inputObj.deliveryRules.map((rule) => ({
@@ -123,6 +124,12 @@ function transformCampaignData(inputObj = {}) {
       uploadUser: {
         uploadedFile: userFiles,
         isSuccess: userFiles.length > 0,
+      },
+    },
+    HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
+      uploadUnified: {
+        uploadedFile: unifiedFiles,
+        isSuccess: unifiedFiles.length > 0,
       },
     },
   };
@@ -390,28 +397,55 @@ const CampaignDetails = () => {
           },
         ],
       },
-      {
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            component: "ViewDetailComponent",
-            noCardStyle: true,
-            props: {
-              headingName: t("HCM_UPLOAD_DATA_HEADING"),
-              desc: t("HCM_UPLOAD_DATA_DESC"),
-              buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
-              navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
-              // navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
-              type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
-              icon: (
-                <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
-              ),
-              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+      ...(campaignData?.additionalDetails?.isUnifiedCampaign
+        ? [
+            {
+              noCardStyle: true,
+              sections: [
+                {
+                  type: "COMPONENT",
+                  component: "ViewDetailComponent",
+                  noCardStyle: true,
+                  props: {
+                    headingName: t("HCM_UPLOAD_UNIFIED_DATA_HEADING"),
+                    desc: t("HCM_UPLOAD_UNIFIED_DATA_DESC"),
+                    buttonLabel: campaignData?.resources?.some((r) => r.type === "unified-console" || r.type === "unified-console-resources")
+                      ? t("HCM_EDIT_UPLOAD_DATA_BUTTON")
+                      : t("HCM_UPLOAD_DATA_BUTTON"),
+                    navLink: `unified-upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
+                    type: campaignData?.resources?.some((r) => r.type === "unified-console" || r.type === "unified-console-resources") ? "secondary" : "primary",
+                    icon: (
+                      <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+                    ),
+                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                  },
+                },
+              ],
             },
-          },
-        ],
-      },
+          ]
+        : [
+            {
+              noCardStyle: true,
+              sections: [
+                {
+                  type: "COMPONENT",
+                  component: "ViewDetailComponent",
+                  noCardStyle: true,
+                  props: {
+                    headingName: t("HCM_UPLOAD_DATA_HEADING"),
+                    desc: t("HCM_UPLOAD_DATA_DESC"),
+                    buttonLabel: campaignData?.resources?.some((r) => r.type !== "unified-console" && r.type !== "unified-console-resources") ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
+                    navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
+                    type: campaignData?.resources?.some((r) => r.type !== "unified-console" && r.type !== "unified-console-resources") ? "secondary" : "primary",
+                    icon: (
+                      <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+                    ),
+                    disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+                  },
+                },
+              ],
+            },
+          ]),
       {
         noCardStyle: true,
         sections: [
