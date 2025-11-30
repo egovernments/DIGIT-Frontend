@@ -82,6 +82,7 @@ import LabelFieldPairTemplate from "./pages/employee/NewAppConfiguration/compone
 import QRScanner from "./pages/employee/NewAppConfiguration/components/Scanner";
 import DynamicSVG from "./components/DynamicSVGComponent";
 import IconTemplate from "./pages/employee/NewAppConfiguration/components/IconTemplate";
+import CampaignTemplateRowCard from "./pages/employee/campaignTemplateScreens/CampaignTemplateRowCard";
 
 /**
  * MDMS Module name
@@ -264,6 +265,7 @@ const componentsToRegister = {
   LabelFieldPair: LabelFieldPairTemplate,
   DynamicSVG,
   IconTemplate,
+  CampaignTemplateRowCard
 };
 
 const overrideHooks = () => {

@@ -55,6 +55,11 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
+    {
+      label: t("CAMPAIGN_TEMPLATES"),
+      link: `/${window?.contextPath}/employee/campaign/campaign-templates`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+    },
     // {
     //   label: t("NEW APP CONFIGURATION"),
     //   link: `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign`,

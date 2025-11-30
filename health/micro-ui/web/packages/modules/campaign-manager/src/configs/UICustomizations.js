@@ -1255,4 +1255,106 @@ export const UICustomizations = {
       return "TQM_VIEW_TEST_DETAILS";
     },
   },
+  CampaignTemplateConfig: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const { templateName, campaignType, disease } = data?.state?.searchForm || {};
+
+      // Build filters object - extract only the code values
+      const filters = {};
+      if (templateName) {
+        filters.name = templateName;
+      }
+      // Handle campaignType - extract code from array or object
+      const campaignTypeCode = Array.isArray(campaignType)
+        ? campaignType?.[0]?.code
+        : campaignType?.code;
+      if (campaignTypeCode) {
+        filters.projectTypeCode = campaignTypeCode;
+      }
+      // Handle disease - extract code from array or object
+      const diseaseCode = Array.isArray(disease)
+        ? disease?.[0]?.code
+        : disease?.code;
+      if (diseaseCode) {
+        filters.disease = diseaseCode;
+      }
+
+      // Completely replace MdmsCriteria to avoid InboxSearchComposer merging raw form values
+      data.body.MdmsCriteria = {
+        tenantId: tenantId,
+        schemaCode: "HCM-CAMPAIGN-TEMPLATES.campaignTypeTemplates",
+        limit: 10000,
+        isActive: true,
+        ...(Object.keys(filters).length > 0 && { filters }),
+      };
+
+      // Clean up unwanted properties added by InboxSearchComposer
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.body.searchFilters;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setProjectTypes",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    populateDiseasesReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-DISEASES-LIST",
+                masterDetails: [
+                  {
+                    name: "diseases",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setDiseases",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-DISEASES-LIST"]?.diseases;
+          },
+        },
+      };
+    },
+  },
 };
