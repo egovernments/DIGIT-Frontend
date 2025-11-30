@@ -47,7 +47,7 @@ const MyBillsTable = ({ ...props }) => {
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_BILL_TYPE_COLOUMN")}</div>,
         selector: (row) => {
-          return <div className="ellipsis-cell">{t(row?.additionalDetails?.billingType || "NA") || t("NA")}</div>;
+          return <div className="ellipsis-cell">{t(`HCM_AM_${row?.additionalDetails?.billingType}` || "NA") || t("NA")}</div>;
         },
       },
 
