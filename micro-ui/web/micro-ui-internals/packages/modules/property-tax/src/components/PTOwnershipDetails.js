@@ -647,17 +647,15 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
               <div style={{ color: "#B91900" }}>{" * "}</div>
             </div>
           </HeaderComponent>
-          <div style={isDisabled ? { pointerEvents: 'none', opacity: 0.6 } : {}}>
-            <RadioButtons
-              t={t}
-              options={genderOptions}
-              optionsKey="name"
-              selectedOption={ownerData?.gender}
-              onSelect={(value) => !isDisabled && updateField("gender", value)}
-              style={{ gap: "8px", marginBottom: "0px" }}
-              disabled={isDisabled}
-            />
-          </div>
+          <RadioButtons
+            t={t}
+            options={genderOptions}
+            optionsKey="name"
+            selectedOption={ownerData?.gender}
+            onSelect={(value) => updateField("gender", value)}
+            style={{ gap: "8px", marginBottom: "0px" }}
+            disabled={isDisabled}
+          />
         </LabelFieldPair>
 
         {/* Mobile Number */}
@@ -720,7 +718,6 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             select={(value) => !isDisabled && updateField("relationship", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
             disable={isDisabled}
-            style={isDisabled ? { pointerEvents: 'none', opacity: 0.6 } : {}}
           />
         </LabelFieldPair>
 
@@ -740,7 +737,6 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
             select={(value) => !isDisabled && updateField("specialCategory", value)}
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
             disable={isDisabled}
-            style={isDisabled ? { pointerEvents: 'none', opacity: 0.6 } : {}}
           />
         </LabelFieldPair>
 

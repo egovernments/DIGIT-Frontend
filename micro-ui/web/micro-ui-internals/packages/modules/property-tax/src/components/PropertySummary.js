@@ -51,24 +51,6 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   const ownershipDetails = ownershipInfo?.ownershipDetails || {};
   const documentInfo = sessionData["document-info"] || {};
 
-  // Global helper function to safely extract display value from object, array, or string
-  const getDisplayValue = (value) => {
-    if (!value) return t("ES_COMMON_NA");
-    if (typeof value === 'string') return value;
-    if (Array.isArray(value) && value.length > 0) {
-      // Handle array format [{code, name}]
-      const firstItem = value[0];
-      if (typeof firstItem === 'string') return firstItem;
-      if (typeof firstItem === 'object') {
-        return firstItem.name || firstItem.code || firstItem.i18nKey || t("ES_COMMON_NA");
-      }
-    }
-    if (typeof value === 'object') {
-      return value.name || value.code || value.i18nKey || t("ES_COMMON_NA");
-    }
-    return t("ES_COMMON_NA");
-  };
-
   // Debug logging
   console.log("=== PropertySummary DEBUG ===");
   console.log("sessionData:", sessionData);

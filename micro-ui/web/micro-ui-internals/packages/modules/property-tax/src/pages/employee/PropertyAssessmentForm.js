@@ -241,8 +241,16 @@
     });
     
 
-    // NOTE: Update API is now called directly in handleFinalSubmit to avoid payload corruption
-    // The useCustomAPIHook was causing RequestInfo.userInfo.roles to bleed into Property.owners array
+    // API hook for property update
+    const { isLoading: isUpdating, data: updateResponse, revalidate: updateProperty } = Digit.Hooks.useCustomAPIHook({
+      url: "/property-services/property/_update",
+      params: {},
+      body: propertyData,
+      config: {
+        enabled: submitTrigger && !!propertyData && isUpdateMode,
+        select: (data) => data,
+      },
+    });
 
     // API hook for tax calculation/estimation in reassess or assess mode
     const { isLoading: isFetchingTaxCalculation, data: taxCalculationResponse } = (isReassessMode || isAssessMode) && propertyIdFromUrl && financialYearFromUrl
@@ -274,16 +282,11 @@
       const dataLoadedKey = `PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`;
       const hasLoadedInSession = Digit.SessionStorage.get(dataLoadedKey);
 
-      // Check if we already have form data in session storage (user has made edits)
-      const savedData = Digit.SessionStorage.get(sessionKey);
-      const hasExistingFormData = savedData?.formData && Object.keys(savedData.formData).length > 0;
-
       // Only load property data if:
       // 1. We have property response from API
       // 2. We're in update/reassess/assess mode
       // 3. We haven't loaded it yet (both flag and session check)
-      // 4. We DON'T have existing form data in session (prevents overwriting user edits)
-      if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded && !hasLoadedInSession && !hasExistingFormData) {
+      if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded && !hasLoadedInSession) {
         const property = propertyResponse[0];
         setFetchedPropertyData(property);
         // Transform property data to form data format
@@ -319,15 +322,8 @@
         setIsPropertyDataLoaded(true);
         // Mark as loaded in session storage to prevent reloading
         Digit.SessionStorage.set(dataLoadedKey, true);
-      } else if (propertyResponse && propertyResponse.length > 0 && !fetchedPropertyData && (isUpdateMode || isReassessMode || isAssessMode)) {
-        // If we have property response but haven't cached it yet, cache it for comparison
-        // This handles the case where we skip the transform but still need the original for change detection
-        const property = propertyResponse[0];
-        setFetchedPropertyData(property);
-        setIsPropertyDataLoaded(true);
-        Digit.SessionStorage.set(dataLoadedKey, true);
       }
-    }, [propertyResponse, isUpdateMode, isReassessMode, isAssessMode, isPropertyDataLoaded, tenantId, propertyIdFromUrl, sessionKey]);
+    }, [propertyResponse, isUpdateMode, isReassessMode, isAssessMode, isPropertyDataLoaded, tenantId, propertyIdFromUrl]);
 
     // Clear adhoc values and existing assessment on component mount for new assessments (assess mode with assessmentId=0)
     // This must run BEFORE config is created to prevent PropertySummary from initializing with stale values
@@ -466,19 +462,68 @@
       }
     }, [createResponse, submitTrigger, t]);
 
-    // NOTE: Update API response is now handled directly in handleFinalSubmit
-    // Removed useEffect to avoid hook-based payload corruption issue
+    // Handle update API response
+    useEffect(() => {
+      if (!submitTrigger || isUpdating) return;
+
+      if (updateResponse) {
+        // Check for errors first
+        if (updateResponse?.Errors && updateResponse.Errors.length > 0) {
+          setToast({
+            label: updateResponse.Errors[0].message || t("PT_PROPERTY_UPDATE_ERROR"),
+            type: "error"
+          });
+          setLoading(false);
+          setSubmitTrigger(false);
+          return;
+        }
+
+        // API returns Properties array or direct array
+        const propertiesArray = updateResponse?.Properties || (Array.isArray(updateResponse) ? updateResponse : null);
+
+        if (propertiesArray && propertiesArray.length > 0) {
+          const updatedProperty = propertiesArray[0];
+
+          // Clear session storage on successful submission
+          Digit.SessionStorage.set(sessionKey, null);
+          Digit.SessionStorage.set(popupSeenKey, null);
+          Digit.SessionStorage.set(`PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`, null);
+
+          // Redirect to acknowledgment page
+          const params = new URLSearchParams({
+            purpose: 'update',
+            status: 'success',
+            propertyId: updatedProperty.propertyId,
+            tenantId: updatedProperty.tenantId,
+            secondNumber: updatedProperty.acknowldgementNumber
+          });
+
+          const contextPath = isCitizen ? "citizen" : "employee";
+          history.push(
+            `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
+          );
+        } else {
+          setToast({
+            label: t("PT_PROPERTY_UPDATE_ERROR"),
+            type: "error"
+          });
+        }
+
+        setLoading(false);
+        setSubmitTrigger(false);
+      }
+    }, [updateResponse, submitTrigger, isUpdating, t, history, sessionKey, popupSeenKey]);
 
     // Handle API loading state
     useEffect(() => {
-      if (isCreating) {
+      if (isCreating || isUpdating) {
         setLoading(true);
       } else if (isFetchingProperty || isFetchingAssessment) {
         setLoading(true);
       } else {
         setLoading(false);
       }
-    }, [isCreating, isFetchingProperty, isFetchingAssessment]);
+    }, [isCreating, isUpdating, isFetchingProperty, isFetchingAssessment]);
 
     // Save form data to session storage whenever it changes
     useEffect(() => {
@@ -513,6 +558,84 @@
       "PT_DOCUMENT_INFO",
       "PT_COMMON_SUMMARY"
     ];
+
+    // Function to check if there are any changes between original and current form data
+    const checkForChanges = (originalProperty, currentFormData) => {
+      if (!originalProperty || !currentFormData) {
+        return true; // Assume changes if data is missing
+      }
+
+      try {
+        // Transform original property to form data format for comparison
+        const originalFormData = transformPropertyToFormData(originalProperty);
+
+        // Deep comparison function for nested objects
+        const deepEqual = (obj1, obj2) => {
+          // Handle null/undefined cases
+          if (obj1 === obj2) return true;
+          if (!obj1 || !obj2) return false;
+          if (typeof obj1 !== 'object' || typeof obj2 !== 'object') return obj1 === obj2;
+
+          // Handle arrays
+          if (Array.isArray(obj1) && Array.isArray(obj2)) {
+            if (obj1.length !== obj2.length) return false;
+            return obj1.every((item, index) => deepEqual(item, obj2[index]));
+          }
+          if (Array.isArray(obj1) !== Array.isArray(obj2)) return false;
+
+          // Compare object keys and values
+          const keys1 = Object.keys(obj1);
+          const keys2 = Object.keys(obj2);
+
+          // Check if all keys match
+          if (keys1.length !== keys2.length) return false;
+
+          return keys1.every(key => {
+            // Skip metadata fields in comparison
+            if (key === '_propertyMetadata') return true;
+            return deepEqual(obj1[key], obj2[key]);
+          });
+        };
+
+        // Compare each step's data
+        const hasPropertyAddressChanges = !deepEqual(
+          originalFormData['property-address'],
+          currentFormData['property-address']
+        );
+
+        const hasAssessmentInfoChanges = !deepEqual(
+          originalFormData['assessment-info'],
+          currentFormData['assessment-info']
+        );
+
+        const hasOwnershipInfoChanges = !deepEqual(
+          originalFormData['ownership-info'],
+          currentFormData['ownership-info']
+        );
+
+        const hasDocumentInfoChanges = !deepEqual(
+          originalFormData['document-info'],
+          currentFormData['document-info']
+        );
+
+        const hasChanges = hasPropertyAddressChanges || hasAssessmentInfoChanges ||
+                          hasOwnershipInfoChanges || hasDocumentInfoChanges;
+
+        console.log("=== CHANGE DETECTION DEBUG ===");
+        console.log("Property Address Changes:", hasPropertyAddressChanges);
+        console.log("Assessment Info Changes:", hasAssessmentInfoChanges);
+        console.log("Ownership Info Changes:", hasOwnershipInfoChanges);
+        console.log("Document Info Changes:", hasDocumentInfoChanges);
+        console.log("Has Changes:", hasChanges);
+        console.log("==============================");
+
+        return hasChanges;
+      } catch (error) {
+        console.error("Error in change detection:", error);
+        // If comparison fails, assume changes exist to be safe
+        return true;
+      }
+    };
 
     const handleFormSubmit = async (data) => {
       const currentStepKey = currentConfig.key;
@@ -578,117 +701,82 @@
       // Now update state (this will trigger remount due to URL change)
       setFormData(newFormData);
 
-      // DISABLED AUTO-SAVE: Only update on final submit
-      // Auto-save on each step has been disabled as per user requirement
-      // Data is saved in session storage and will be sent on final submit only
-
-      // For all modes, just navigate to next step or trigger final submit
-      if (currentStep < config.length - 1) {
-        setCurrentStep(currentStep + 1);
-      } else {
-        handleFinalSubmit();
-      }
-    };
-
-    const handleFinalSubmit = async () => {
-      // Transform form data to API format
-      console.log("=== FINAL SUBMIT - Form Data ===");
-      console.log("formData:", JSON.stringify(formData, null, 2));
-      console.log("================================");
-
-      const apiPayload = transformFormDataToAPIFormat(formData);
-
-      console.log("=== FINAL SUBMIT - API Payload ===");
-      console.log("Full API Payload:", JSON.stringify(apiPayload, null, 2));
-      console.log("===================================");
-
-      // For update mode, use direct API call instead of hooks to avoid payload corruption
-      if (isUpdateMode) {
+      // AUTO-SAVE: For update mode, trigger API call on each step navigation (except last step)
+      if (isUpdateMode && currentStep < config.length - 1) {
         try {
           setLoading(true);
 
-          // Get current user info for RequestInfo
-          const userInfo = Digit.UserService.getUser();
-          const authToken = userInfo?.access_token || null;
+          // CHANGE DETECTION: Compare original fetched data with new form data
+          const hasChanges = checkForChanges(fetchedPropertyData, newFormData);
 
-          // Wrap payload with RequestInfo (as sibling, not parent)
-          const payloadWithRequestInfo = {
-            Property: apiPayload.Property,
-            RequestInfo: {
-              apiId: "Rainmaker",
-              authToken: authToken,
-              userInfo: userInfo?.info || userInfo,
-              msgId: `${Date.now()}|en_IN`,
-              plainAccessRequest: {}
-            }
-          };
-
-          const updateResponse = await Digit.CustomService.getResponse({
-            url: "/property-services/property/_update",
-            method: "POST",
-            body: payloadWithRequestInfo,
-            params: { tenantId: tenantId }
-          });
-
-          console.log("=== UPDATE API RESPONSE ===");
-          console.log("updateResponse:", JSON.stringify(updateResponse, null, 2));
-          console.log("===========================");
-
-          // Check for errors first
-          if (updateResponse?.Errors && updateResponse.Errors.length > 0) {
-            setToast({
-              label: updateResponse.Errors[0].message || t("PT_PROPERTY_UPDATE_ERROR"),
-              type: "error"
-            });
+          if (!hasChanges) {
+            // No changes detected, skip API call and proceed to next step
+            console.log("No changes detected, skipping auto-save API call");
             setLoading(false);
+            setCurrentStep(currentStep + 1);
             return;
           }
 
-          // API returns Properties array
-          const propertiesArray = updateResponse?.Properties;
+          // Transform form data to API format
+          const apiPayload = transformFormDataToAPIFormat(newFormData);
 
-          if (propertiesArray && propertiesArray.length > 0) {
-            const updatedProperty = propertiesArray[0];
-            console.log("=== UPDATED PROPERTY FROM API ===");
-            console.log("updatedProperty:", JSON.stringify(updatedProperty, null, 2));
-            console.log("=================================");
+          // Call the update API
+          const updateResult = await Digit.CustomService.getResponse({
+            url: "/property-services/property/_update",
+            method: "POST",
+            body: apiPayload,
+            params: { tenantId: tenantId }
+          });
 
-            // Clear session storage on successful submission
-            Digit.SessionStorage.set(sessionKey, null);
-            Digit.SessionStorage.set(popupSeenKey, null);
-            Digit.SessionStorage.set(`PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`, null);
+          if (updateResult?.Errors && updateResult.Errors.length > 0) {
+            setToast({
+              label: updateResult.Errors[0].message || t("PT_PROPERTY_UPDATE_ERROR"),
+              type: "error"
+            });
+            setLoading(false);
+            return; // Don't proceed to next step if update fails
+          }
 
-            // Redirect to acknowledgment page
-            const params = new URLSearchParams({
-              purpose: 'update',
-              status: 'success',
-              propertyId: updatedProperty.propertyId,
-              tenantId: updatedProperty.tenantId,
-              secondNumber: updatedProperty.acknowldgementNumber
+          if (updateResult?.Properties && updateResult.Properties.length > 0) {
+            // Successfully updated - show success toast
+            setToast({
+              label: t("PT_PROPERTY_UPDATED_SUCCESSFULLY") || "Property updated successfully",
+              type: "success"
             });
 
-            const contextPath = isCitizen ? "citizen" : "employee";
-            history.push(
-              `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
-            );
+            // Continue to next step
+            setLoading(false);
+            setCurrentStep(currentStep + 1);
           } else {
             setToast({
               label: t("PT_PROPERTY_UPDATE_ERROR"),
               type: "error"
             });
+            setLoading(false);
+            return; // Don't proceed if update failed
           }
-
-          setLoading(false);
         } catch (error) {
-          console.error("Property update error:", error);
+          console.error("Auto-save error:", error);
           setToast({
             label: error?.response?.data?.Errors?.[0]?.message || t("PT_PROPERTY_UPDATE_ERROR"),
             type: "error"
           });
           setLoading(false);
+          return; // Don't proceed if error occurred
         }
-        return; // Exit early after handling update
+      } else {
+        // For non-update mode OR final step, use the original flow
+        if (currentStep < config.length - 1) {
+          setCurrentStep(currentStep + 1);
+        } else {
+          handleFinalSubmit();
+        }
       }
+    };
+
+    const handleFinalSubmit = async () => {
+      // Transform form data to API format
+      const apiPayload = transformFormDataToAPIFormat(formData);
 
       // For reassessment or new assessment, create/update assessment (matching mono-ui flow)
       if (isReassessMode || isAssessMode) {
@@ -838,7 +926,7 @@
           setLoading(false);
         }
       } else {
-        // For create mode, use the hook-based flow
+        // For create/update mode, use the existing flow
         setPropertyData(apiPayload);
         setSubmitTrigger(true);
         setLoading(true);
@@ -1242,7 +1330,6 @@
           } : {}),
           tenantId: tenantId,
           surveyId: propertyAddress.surveyId || null,
-          linkedProperties: null,
           propertyType: propertyTypeFull,
           usageCategory: usageCategoryCode,
           usageCategoryMajor: usageCategoryMajor || null,
@@ -1250,20 +1337,10 @@
           ownershipCategory: ownershipCategory,
           source: "MUNICIPAL_RECORDS",
           channel: "CFC_COUNTER",
-          creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "STATUS" : "CREATE"),
+          creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "UPDATE" : "CREATE"),
           noOfFloors: parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1,
-          // landArea: null for SHAREDPROPERTY, otherwise string value
-          landArea: propertyTypeCode === 'SHAREDPROPERTY' ? null : String(parseFloat(conditionalFields.plotSize) || 0),
-          // Calculate superBuiltUpArea from sum of all unit builtUpAreas
-          superBuiltUpArea: (() => {
-            const units = conditionalFields.floors?.flatMap(f => f.units || []) || conditionalFields.units || [];
-            const totalBuiltUp = units.reduce((sum, unit) => sum + (parseFloat(unit.builtUpArea) || 0), 0);
-            return totalBuiltUp > 0 ? totalBuiltUp : null;
-          })(),
-          isactive: false,
-          isinactive: false,
-          dueAmount: null,
-          dueAmountYear: null,
+          landArea: String(parseFloat(conditionalFields.plotSize) || 0),
+          superBuiltUpArea: null,
           additionalDetails: {
             yearConstruction: propertyAddress.yearOfCreation?.code || propertyAddress.yearOfCreation || null,
             vasikaNo: assessmentInfo.vasikaNo || null,
@@ -1276,38 +1353,20 @@
             heightAbove36Feet: assessmentInfo.heightOfProperty || false
           },
           address: {
-            tenantId: tenantId,
-            doorNo: propertyAddress.doorNo || null,
-            plotNo: null,
             ...(isUpdateMode && propertyMetadata?.address?.id ? { id: propertyMetadata.address.id } : {}),
-            landmark: null,
             city: (() => {
               // Get city name from tenant
               const cityCode = tenantId.split('.').pop();
               return capitalizeFirst(cityCode);
             })(),
-            district: null,
-            region: null,
-            state: null,
-            country: null,
-            pincode: propertyAddress.pincode || null,
+            doorNo: propertyAddress.doorNo || null,
             buildingName: propertyAddress.buildingName || null,
             street: propertyAddress.street || null,
             locality: {
               code: propertyAddress.locality?.[0]?.code || propertyAddress.locality?.code || propertyAddress.locality,
-              name: propertyAddress.locality?.[0]?.name || propertyAddress.locality?.name || propertyAddress.locality?.[0]?.code || "Locality",
-              label: "Locality",
-              latitude: null,
-              longitude: null,
-              area: propertyAddress.locality?.[0]?.area || propertyAddress.locality?.area || "AREA1",
-              children: [],
-              materializedPath: null
+              area: propertyAddress.locality?.[0]?.area || propertyAddress.locality?.[0]?.name || propertyAddress.locality?.area || propertyAddress.locality?.name || "AREA1"
             },
-            geoLocation: {
-              latitude: 0,
-              longitude: 0
-            },
-            additionalDetails: null
+            pincode: propertyAddress.pincode || null
           },
           owners: (() => {
             const ownershipTypeCode = ownershipInfo.ownershipType?.[0]?.code || ownershipInfo.ownershipType?.code || "";
@@ -1384,7 +1443,7 @@
                   mobileNumber: owner.mobileNumber,
                   emailId: owner.emailId || null,
                   fatherOrHusbandName: owner.guardianName || null,
-                  gender: (genderCode || "").toUpperCase(),
+                  gender: capitalizeFirst(genderCode),
                   permanentAddress: owner.correspondenceAddress || null,
                   ownerShipPercentage: String(parseFloat(owner.ownershipPercentage) || 0),
                   ownerType: owner.specialCategory?.code || owner.specialCategory || "NONE",
@@ -1438,7 +1497,7 @@
                 mobileNumber: ownerDetails.mobileNumber,
                 emailId: ownerDetails.emailId || null,
                 fatherOrHusbandName: ownerDetails.guardianName || null,
-                gender: (genderCode || "").toUpperCase(),
+                gender: capitalizeFirst(genderCode),
                 permanentAddress: ownerDetails.correspondenceAddress || null,
                 ownerShipPercentage: String(parseFloat(ownerDetails.ownershipPercentage) || 100),
                 ownerType: ownerDetails.specialCategory?.code || ownerDetails.specialCategory || "NONE",
@@ -1489,34 +1548,26 @@
                     const pathParts = subUsageCode.split('.');
                     finalUnitType = pathParts[pathParts.length - 1];
                   } else {
-                    // Fallback: use property-level usageCategory or unit's usage type
-                    finalUsageCategory = usageCategoryCode || unit.usageType?.code || unit.usageType || "RESIDENTIAL";
-                    finalUnitType = unit.usageType?.code || unit.usageType || usageCategoryCode || "RESIDENTIAL";
+                    // Fallback: use property-level usageCategory
+                    finalUsageCategory = usageCategoryCode;
+                    finalUnitType = usageCategoryCode;
                   }
 
                   return {
                     ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
-                    tenantId: null,
-                    floorNo: parseInt(floor.floorNo?.code || floor.floorNo) || 0,
-                    unitType: "false",
+                    floorNo: String(parseInt(floor.floorNo?.code || floor.floorNo) || 0),
+                    unitType: finalUnitType,
                     usageCategory: finalUsageCategory,
                     occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
-                    occupancyName: occupancy === "OWNER" ? "Self-Occupied" : (occupancy === "RENTED" ? "Rented" : occupancy),
-                    active: true,
-                    occupancyDate: 0,
+                    additionalDetails: {
+                      usageForDueMonths: unit.usageForDueMonths?.code || unit.usageForDueMonths || "UNOCCUPIED",
+                      rentedformonths: parseInt(unit.rentedForMonths) || null
+                    },
+                    arv: String(parseFloat(unit.arv) || 0),
                     constructionDetail: {
                       ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
-                      carpetArea: null,
-                      builtUpArea: parseFloat(unit.builtUpArea) || 0,
-                      plinthArea: null,
-                      superBuiltUpArea: null,
-                      constructionType: null,
-                      constructionDate: null,
-                      dimensions: null
-                    },
-                    additionalDetails: null,
-                    auditDetails: null,
-                    arv: null
+                      builtUpArea: parseFloat(unit.builtUpArea) || 0
+                    }
                   };
                 })
               ).filter(Boolean);
@@ -1591,20 +1642,7 @@
               action: "OPEN",
               moduleName: "PT"
             }
-          } : {}),
-          // Additional fields matching old UI
-          AlternateUpdated: false,
-          isOldDataEncryptionRequest: false,
-          occupancyDate: 0,
-          usage: null,
-          financialYear: null,
-          assessmentNumber: "0",
-          assessmentDate: null,
-          adhocExemption: null,
-          adhocPenalty: null,
-          adhocExemptionReason: null,
-          adhocPenaltyReason: null,
-          calculation: null
+          } : {})
         }
       };
 
