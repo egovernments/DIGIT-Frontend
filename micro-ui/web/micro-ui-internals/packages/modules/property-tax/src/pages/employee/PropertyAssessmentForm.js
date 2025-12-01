@@ -1587,9 +1587,9 @@
                   const pathParts = subUsageCode.split('.');
                   finalUnitType = pathParts[pathParts.length - 1];
                 } else {
-                  // Fallback: use property-level usageCategory
-                  finalUsageCategory = usageCategoryCode;
-                  finalUnitType = usageCategoryCode;
+                  // Fallback: use property-level usageCategory or unit's usage type
+                  finalUsageCategory = usageCategoryCode || unit.usageType?.code || unit.usageType || "RESIDENTIAL";
+                  finalUnitType = unit.usageType?.code || unit.usageType || usageCategoryCode || "RESIDENTIAL";
                 }
 
                 return {
