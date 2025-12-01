@@ -31,13 +31,6 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected}) => 
                 value={field?.value}
                 disabled={field?.readOnly || false}
         ></FieldV1>
-        // <Dropdown
-        //     style={{ width: "100%" }}
-        //     t={t}
-        //     option={[]}
-        //     optionKey="code"
-        //     select={(value) => {}}
-        // />
     );
 };
 
