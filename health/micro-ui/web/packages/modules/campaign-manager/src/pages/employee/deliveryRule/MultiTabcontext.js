@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
-import { useDeliveryRules } from './useDeliveryRules';
+import { useDeliveryRules } from "./useDeliveryRules";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import TagComponent from "../../../components/TagComponent";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
@@ -67,26 +67,17 @@ const TabContent = React.memo(({ project }) => {
     <Card className="sub-tab-container">
       <SubTabs />
       <div>
-        <CardText>
-          {t(`CAMPAIGN_DELIVERY_TAB_SUB_TEXT_${project?.code ? project.code.toUpperCase() : project?.toUpperCase()}`)}
-        </CardText>
+        <CardText>{t(`CAMPAIGN_DELIVERY_TAB_SUB_TEXT_${project?.code ? project.code.toUpperCase() : project?.toUpperCase()}`)}</CardText>
       </div>
     </Card>
   );
 });
 
-const MultiTab = React.memo(({ 
-  projectConfig, 
-  attributeConfig, 
-  operatorConfig, 
-  deliveryTypeConfig 
-}) => {
+const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, deliveryTypeConfig }) => {
   const { t } = useTranslation();
-  
+
   // Get session data for display
-  const tempSession = useMemo(() => 
-    Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {}
-  , [projectConfig]);
+  const tempSession = useMemo(() => Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {}, [projectConfig]);
 
   const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
   const projectType = tempSession?.HCM_CAMPAIGN_TYPE?.projectType || projectConfig?.code;
@@ -97,7 +88,7 @@ const MultiTab = React.memo(({
     if (!campaignDates?.startDate || !campaignDates?.endDate) {
       return "";
     }
-    
+
     const startDate = convertEpochToNewDateFormat(campaignDates.startDate);
     const endDate = convertEpochToNewDateFormat(campaignDates.endDate);
     return `${startDate} - ${endDate}`;
@@ -106,34 +97,29 @@ const MultiTab = React.memo(({
   // Memoize project title
   const projectTitle = useMemo(() => {
     const code = projectType?.code || projectType;
-    return code ? `CAMPAIGN_PROJECT_${code.toUpperCase()}` : '';
+    return code ? `CAMPAIGN_PROJECT_${code.toUpperCase()}` : "";
   }, [projectType]);
 
   return (
     <div className="container-full">
       <div className="card-container-delivery">
         {campaignName && <TagComponent campaignName={campaignName} />}
-        
+
         {projectTitle && (
           <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary">
             {t(projectTitle)}
           </HeaderComponent>
         )}
-        
-        {formattedDates && (
-          <Paragraph
-            customClassName="cycle-paragraph"
-            value={formattedDates}
-          />
-        )}
-        
+
+        {formattedDates && <Paragraph customClassName="cycle-paragraph" value={formattedDates} />}
+
         <div className="campaign-cycle-container">
           <div className="campaign-tabs-container">
             <Tabs />
           </div>
-          
+
           <TabContent project={projectType} />
-          
+
           <AddDeliveryRuleWrapper
             projectConfig={projectConfig}
             attributeConfig={attributeConfig}

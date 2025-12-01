@@ -185,6 +185,12 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
             label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
           });
           setTimeout(() => {
+            // Clear session storage before navigating to ensure fresh data is fetched
+            Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
+            Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+            Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+            Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
+            Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
             const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`;
             navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
             setLoader(false);

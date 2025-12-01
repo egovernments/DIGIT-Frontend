@@ -21,6 +21,8 @@ export const useSearchCampaign = ({ tenantId, filter, pagination, config = {} })
     queryKey: ["SEARCH_CAMPAIGN", tenantId, filter, pagination],
     queryFn: () => searchCampaignService({ tenantId, filter, pagination }),
     cacheTime: 0,
+    staleTime: 0,
+    refetchOnMount: "always",
     ...config,
   });
 };

@@ -123,6 +123,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
       enabled: !!campaignNumber,
       cacheTime: 0,
       staleTime: 0,
+      refetchOnMount: "always",
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
