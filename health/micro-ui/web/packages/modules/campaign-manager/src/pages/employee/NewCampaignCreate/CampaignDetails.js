@@ -209,6 +209,9 @@ const CampaignDetails = () => {
     },
     config: {
       enabled: !!campaignNumber,
+      staleTime: 0,
+      cacheTime: 0,
+      refetchOnMount: "always",
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
@@ -272,6 +275,23 @@ const CampaignDetails = () => {
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
     Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", tranformedManagerUploadData);
+    // Update HCM_CAMPAIGN_MANAGER_FORM_DATA with fresh campaign dates for CycleConfiguration
+    const existingFormData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {};
+    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", {
+      ...existingFormData,
+      HCM_CAMPAIGN_DATE: {
+        campaignDates: {
+          startDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.startDate)?.split("/")?.reverse()?.join("-"),
+          endDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.endDate)?.split("/")?.reverse()?.join("-"),
+        },
+      },
+      HCM_CAMPAIGN_TYPE: {
+        projectType: { code: campaignData?.projectType },
+      },
+      HCM_CAMPAIGN_NAME: {
+        campaignName: campaignData?.campaignName,
+      },
+    });
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
