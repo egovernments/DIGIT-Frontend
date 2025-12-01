@@ -86,6 +86,7 @@ export const renderTemplateComponent = (
           fieldTypeMasterData={fieldTypeMasterData}
           selectedField={selectedField}
           onFieldClick={onFieldClick}
+          isFieldSelected={isSelected}
           data={data}
         />
       </div>
