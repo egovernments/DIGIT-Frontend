@@ -43,7 +43,7 @@ const fetchAndInjectSVGTemplate = async (url, data = {}) => {
 
 const DynamicSVG = ({ ...props }) => {
   const { field, type, fieldType } = props?.props || {};
-  const url = `https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/${type}/${fieldType}.svg`; // TODO @Nabeel @jagan @bhavya scan through the app we should have s3 urls added in app directly
+  const url = `https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/${type}/${field?.fieldName}.svg`; // TODO @Nabeel @jagan @bhavya scan through the app we should have s3 urls added in app directly
   const [svgContent, setSvgContent] = useState(null);
 
   useEffect(() => {
