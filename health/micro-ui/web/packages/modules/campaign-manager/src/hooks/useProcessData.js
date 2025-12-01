@@ -8,18 +8,30 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     };
     let response;
     try {
+        // For unified-console-validation, use different API and referenceId instead of campaignId
+        const isUnifiedConsole = type === "unified-console-validation";
+        const resourceDetails = {
+            type,
+            hierarchyType: hierarchyType,
+            tenantId: Digit.ULBService.getCurrentTenantId(),
+            fileStoreId: data?.[0]?.filestoreId,
+            additionalDetails: additionalDetails,
+        };
+
+        if (isUnifiedConsole) {
+            resourceDetails.referenceId = id;
+        } else {
+            resourceDetails.campaignId = id;
+        }
+
+        const apiUrl = isUnifiedConsole
+            ? "/excel-ingestion/v1/data/_process"
+            : "/project-factory/v2/data/_process";
+
         const responseTemp = await Digit.CustomService.getResponse({
-            url: "/project-factory/v2/data/_process",
+            url: apiUrl,
             body: {
-                ResourceDetails: {
-                    type,
-                    hierarchyType: hierarchyType,
-                    tenantId: Digit.ULBService.getCurrentTenantId(),
-                    fileStoreId: data?.[0]?.filestoreId,
-                    // action: "validate",
-                    campaignId: id,
-                    additionalDetails: additionalDetails,
-                },
+                ResourceDetails: resourceDetails,
             },
         });
         response = responseTemp;
@@ -46,23 +58,53 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     const maxTime = baseTimeOut?.baseTimeout?.[0]?.maxTime;
     let retryInterval = 2000;
 
+    // For unified-console, use different search API and response structure
+    const isUnifiedConsole = type === "unified-console-validation";
+    const searchUrl = isUnifiedConsole
+        ? "/excel-ingestion/v1/data/_processSearch"
+        : "/project-factory/v1/data/_search";
+
+    // Get the ID from the response - different field for unified-console
+    const processId = isUnifiedConsole
+        ? response?.ProcessResource?.id
+        : response?.ResourceDetails?.id;
+
     await new Promise((resolve) => setTimeout(resolve, retryInterval));
 
     // Retry until a response is received
-    while (status == "inprogress") {
+    // For unified-console, status can be "pending" instead of "inprogress"
+    const isStatusPending = (s) => s === "inprogress" || s === "pending";
+
+    while (isStatusPending(status)) {
         try {
-            searchResponse = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_search",
-                body: {
-                    SearchCriteria: {
-                        id: [response?.ResourceDetails?.id],
-                        tenantId: tenantId,
-                        type,
+            if (isUnifiedConsole) {
+                searchResponse = await Digit.CustomService.getResponse({
+                    url: searchUrl,
+                    body: {
+                        ProcessingSearchCriteria: {
+                            tenantId: tenantId,
+                            ids: [processId],
+                            limit: 5,
+                            offset: 0,
+                        },
                     },
-                },
-            });
-            status = searchResponse?.ResourceDetails?.[0]?.status;
-            if (status == "inprogress") {
+                });
+                status = searchResponse?.ProcessingDetails?.[0]?.status;
+            } else {
+                searchResponse = await Digit.CustomService.getResponse({
+                    url: searchUrl,
+                    body: {
+                        SearchCriteria: {
+                            id: [processId],
+                            tenantId: tenantId,
+                            type,
+                        },
+                    },
+                });
+                status = searchResponse?.ResourceDetails?.[0]?.status;
+            }
+
+            if (isStatusPending(status)) {
                 await new Promise((resolve) => setTimeout(resolve, retryInterval));
             }
             else if(!status){
@@ -76,5 +118,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     if (Error.isError) {
         return Error;
     }
-    return searchResponse?.ResourceDetails?.[0];
+    return isUnifiedConsole
+        ? searchResponse?.ProcessingDetails?.[0]
+        : searchResponse?.ResourceDetails?.[0];
 };

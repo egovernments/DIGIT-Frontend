@@ -412,7 +412,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             const temp = resourceData(
               resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
               resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-              resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+              resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+              resourceDatas?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.[0]
             );
 
             payloadData.resources = temp;
@@ -423,6 +424,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
+              ...(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign && { isUnifiedCampaign: true }),
             };
             if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
               payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
@@ -489,7 +491,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             const temp = resourceData(
               resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
               resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-              resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+              resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+              resourceDatas?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.[0]
             );
             payloadData.resources = temp;
             payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
@@ -499,6 +502,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
+              ...(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign && { isUnifiedCampaign: true }),
             };
             if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
               payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;

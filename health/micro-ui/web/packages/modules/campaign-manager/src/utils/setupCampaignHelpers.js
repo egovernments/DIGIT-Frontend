@@ -291,8 +291,8 @@ export const updateUrlParams = (params) => {
     return _.isEqual(draftData, payload);
   };
 
-  export const  resourceData=(facilityData, boundaryData, userData)=> {
-    const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
+  export const  resourceData=(facilityData, boundaryData, userData, unifiedData)=> {
+    const resources = [facilityData, boundaryData, userData, unifiedData].filter((data) => data !== null && data !== undefined);
     return resources;
   }
 
@@ -358,6 +358,12 @@ export const updateUrlParams = (params) => {
         uploadUser: {
           uploadedFile: draftData?.resources?.filter((i) => i?.type === "user"),
           isSuccess: draftData?.resources?.filter((i) => i?.type === "user").length > 0,
+        },
+      },
+      HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
+        uploadUnified: {
+          uploadedFile: draftData?.resources?.filter((i) => i?.type === "unified-console"),
+          isSuccess: draftData?.resources?.filter((i) => i?.type === "unified-console").length > 0,
         },
       },
     };

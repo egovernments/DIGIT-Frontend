@@ -27,6 +27,12 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
     totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleConfgureDate ||
     params?.additionalDetails?.cycleData?.cycleConfgureDate ||
     {};
+
+  // Transform resource types for API - unified-console should be sent as unified-console-resources
+  const transformedResources = params?.resources?.map((resource) => ({
+    ...resource,
+    type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+  }));
   return {
     CampaignDetails: {
       hierarchyType: hierarchyType,
@@ -35,7 +41,7 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
       parentId: null,
       id: id,
       campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.CampaignName || params?.CampaignName,
-      resources: params?.resources,
+      resources: transformedResources,
       boundaries: params?.boundaries,
       deliveryRules: id && hasDateChanged ? [] : params?.deliveryRules,
       projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.CampaignType?.code || params?.CampaignType?.code || params?.CampaignType,

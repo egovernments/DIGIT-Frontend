@@ -15,8 +15,9 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [isDataCreating, setIsDataCreating] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const editName = searchParams.get("editName");
+  const fromTemplate = searchParams.get("fromTemplate");
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
-  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName));
+  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName, fromTemplate));
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
   const storedInfo = JSON.parse(sessionStorage.getItem("HCM_CAMPAIGN_NUMBER") || "{}");
@@ -87,6 +88,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
   useEffect(() => {
     if (draftLoading) return;
+    // Don't overwrite session data if coming from template - use template data instead
+    if (fromTemplate) return;
     // if (Object.keys(params).length !== 0) return;
     // if (!draftData) return;
     const restructureFormData = transformDraftDataToFormData(draftData);
