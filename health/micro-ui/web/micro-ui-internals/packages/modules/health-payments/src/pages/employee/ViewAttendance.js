@@ -207,7 +207,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   }, [data]);
 
-  //TODO:: commenting the old muster roll create API
+  
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${musterRollContextPath}/v1/_create`,
   });
@@ -306,7 +306,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
     try {
       await mutation.mutateAsync(
         {
-          //TODO:: commenting the old payload
           body: {
             musterRoll: {
               billingPeriodId: selectedPeriod.id,
@@ -321,21 +320,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
               action: "SUBMIT",
             },
           },
-
-          // body: {
-          //   tenantId: tenantId,
-          //   registerIds: [AttendanceData?.attendanceRegister[0]?.id],
-          //   billingPeriod: {
-          //     id: selectedPeriod.id,
-          //     periodNumber: selectedPeriod.periodNumber,
-          //     periodStartDate: selectedPeriod.periodStartDate,
-          //     periodEndDate: selectedPeriod.periodEndDate,
-          //     campaignNumber: Digit.SessionStorage.get("selectedProject").referenceID || selectedPeriod.campaignNumber,
-          //   },
-          //   workflow: {
-          //     action: "SUBMIT",
-          //   },
-          // },
         },
         {
           onSuccess: (data) => {

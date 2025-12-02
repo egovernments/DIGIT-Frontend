@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-health-payments" :"0.1.0",
+"@egovernments/digit-ui-module-health-payments" :"0.3.0",
 ```
 
 then navigate to App.js
@@ -55,6 +55,7 @@ const initDigitUI = () => {
 4. Enable bill download in Excel format.
 5. Enrolment of attendee in the attendance register
 6. Disabling the attendee in the attendance register
+7. Create periodic payment reports at flexible intervals, enabling timely worker compensation during ongoing campaigns
 
 
 ### Contributors
