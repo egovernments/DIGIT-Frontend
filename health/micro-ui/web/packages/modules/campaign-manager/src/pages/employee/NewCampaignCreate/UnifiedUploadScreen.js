@@ -86,10 +86,15 @@ const UnifiedUploadScreen = () => {
       },
     ];
 
-    // Also include existing resources from campaign (filter out both old and new unified type names)
-    const existingResources = campaignData?.resources || [];
-    const otherResources = existingResources.filter((r) => r.type !== "unified-console" && r.type !== "unified-console-resources");
-    const allResources = [...otherResources, ...resources];
+    // // Also include existing resources from campaign (filter out both old and new unified type names)
+    // const existingResources = campaignData?.resources || [];
+    // const otherResources = existingResources.filter((r) => r.type !== "unified-console" && r.type !== "unified-console-resources");
+    // const allResources = [...otherResources, ...resources];
+
+    // When unified-console is used, only send unified resources (remove facility/user/boundary)
+    // Unified and normal upload flows are mutually exclusive
+    const allResources = resources;
+
 
     setLoader(true);
     await mutationUpdate.mutate(
