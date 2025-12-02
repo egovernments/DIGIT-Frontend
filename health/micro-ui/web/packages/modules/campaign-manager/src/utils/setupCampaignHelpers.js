@@ -362,8 +362,8 @@ export const updateUrlParams = (params) => {
       },
       HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
         uploadUnified: {
-          uploadedFile: draftData?.resources?.filter((i) => i?.type === "unified-console"),
-          isSuccess: draftData?.resources?.filter((i) => i?.type === "unified-console").length > 0,
+          uploadedFile: draftData?.resources?.filter((i) => i?.type === "unified-console" || i?.type === "unified-console-resources"),
+          isSuccess: draftData?.resources?.filter((i) => i?.type === "unified-console" || i?.type === "unified-console-resources").length > 0,
         },
       },
     };
