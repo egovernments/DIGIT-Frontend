@@ -262,8 +262,6 @@
 
 // export default RoleWageTable;
 
-
-
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -401,12 +399,16 @@ const RoleWageTable = ({
       let value = rawValue;
 
       if (!/^\d*\.?\d*$/.test(value)) return;
+      // If decimal exists, trim everything after dot
+  if (value.includes(".")) {
+    value = value.split(".")[0];  // take only the integer part
+  }
       if (value === "") value = "0";
 
       const numericValue = parseFloat(value) || 0;
       const maxLimit = rateMaxLimitSchema[field];
 
-      // Mark table as updated 
+      // Mark table as updated
       setIsFormModified(true);
 
       // Manage errors
@@ -448,8 +450,9 @@ const RoleWageTable = ({
       return (
         <div style={{ width: "100%" }}>
           <TextInput
-            disabled={disabled}
             type="text"
+            inputMode="numeric"
+            disabled={disabled}
             value={row[field] === 0 ? "0" : row[field] !== undefined && row[field] !== null ? String(row[field]) : "0"}
             onChange={(e) => handleChange(row.id, field, e.target.value)}
             populators={{ disableTextField: false }}
