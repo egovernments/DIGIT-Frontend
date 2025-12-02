@@ -303,11 +303,15 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const newReadMeboundary = await translateReadMeInfo(
           readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
         );
+        const newReadMeUnifiedConsole = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
 
         const readMeText = {
           boundary: newReadMeboundary,
           facility: newReadMeFacility,
           user: newReadMeUser,
+          "unified-console": newReadMeUnifiedConsole,
         };
 
         setReadMeInfo(readMeText);
