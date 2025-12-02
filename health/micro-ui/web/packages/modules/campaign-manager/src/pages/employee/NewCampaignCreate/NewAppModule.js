@@ -56,6 +56,7 @@ const NewAppModule = () => {
         <div className="modules-container">
           {sortedMdmsData?.map((item, index) => {
             const isActive = item?.data?.active === true;
+            const isVisited = item?.data?.visited === true;  // 👈 new key
 
             return (
               <Card
@@ -68,10 +69,10 @@ const NewAppModule = () => {
                 }}
                 style={{
                   cursor: "pointer",
-                  position: 'relative'
+                  position: "relative",
                 }}
               >
-                {/* {isActive && (
+                {isVisited && (
                   <SVG.CheckCircle
                     fill={"#00703C"}
                     width={"3rem"}
@@ -82,7 +83,8 @@ const NewAppModule = () => {
                       top: "-14px",
                     }}
                   />
-                )} */}
+                )}
+
                 <HeaderComponent className={`detail-header ${isActive ? 'selected-header' : ''}`}>
                   {t(item?.data?.name)}
                 </HeaderComponent>
@@ -94,24 +96,25 @@ const NewAppModule = () => {
                 <Button
                   type="button"
                   size="medium"
-                  variation={isActive ? "primary" : "secondary"}
-                  label={isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
+                  icon={isVisited ? "Edit" : null}  
+                  variation={isVisited ? "secondary" : "primary"}   
+                  label={isVisited ? t("EDIT_CONFIGURATION") : t("CONFIGURE_MODULE")}   // 👈 new label for visited
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click
+                    e.stopPropagation();
                     if (isActive) {
-                      // Handle button click for allowed modules
                       handleCardClick(item?.data?.name);
                     }
                   }}
                   isDisabled={!isActive}
                   style={{
                     marginTop: "1rem",
-                    width: "100%"
+                    width: "100%",
                   }}
                 />
               </Card>
             );
           })}
+
         </div>
       </EqualHeightWrapper>
     </>
