@@ -75,7 +75,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
   return (
     <PanelCard
       type={panelType || "success"}
-      message={t(field?.heading) || "Panel Title"}
+      message={t(field?.label) || "Panel Title"}
       description={t(field?.description) || "Panel content"}
       footerChildren={footerChildren}
       showAsSvg={true}
