@@ -195,6 +195,7 @@ const getActionTags = (rowData) => {
     actions.generateUserCreds = {
       label: "GENERATING_USER_CRED",
       loader: true,
+      showBottom: true,
       animationStyle: {
         width: "2rem",
         height: "2rem",
@@ -203,6 +204,7 @@ const getActionTags = (rowData) => {
     actions.generateAPK = {
       label: "GENERATING_APK",
       loader: true,
+      showBottom: true,
       animationStyle: {
         width: "2rem",
         height: "2rem",
