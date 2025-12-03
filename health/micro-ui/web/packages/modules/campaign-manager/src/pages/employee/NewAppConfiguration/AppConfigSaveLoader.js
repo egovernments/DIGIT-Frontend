@@ -69,10 +69,7 @@ const AppConfigSaveLoader = () => {
           const updatePayload = {
             Mdms: {
               ...appConfigResponse.mdms?.[0],
-              data: {
-                ...updatedConfig,
-                visited: true, // Mark as visited on update
-                },
+              data: updatedConfig,
             },
           };
 

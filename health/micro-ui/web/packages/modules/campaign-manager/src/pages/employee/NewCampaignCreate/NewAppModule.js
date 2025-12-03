@@ -1,4 +1,4 @@
-import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Loader, SVG, Button, } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -57,7 +57,7 @@ const NewAppModule = () => {
         <div className="modules-container">
           {sortedMdmsData?.map((item, index) => {
             const isActive = item?.data?.active === true;
-            const isVisited = item?.data?.visited === true;  // 👈 new key
+            const isVisited = item?.data?.version > 1;
 
             return (
               <Card
@@ -80,7 +80,7 @@ const NewAppModule = () => {
                       top: "-14px",
                     }}
                   />
-                )} 
+                )}
                 <HeaderComponent className={`detail-header ${isActive ? "selected-header" : ""}`}>{t(item?.data?.name)}</HeaderComponent>
                 <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
                 <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
@@ -88,11 +88,11 @@ const NewAppModule = () => {
                 <Button
                   type="button"
                   size="medium"
-                  icon={isVisited ? "Edit" : null}  
-                  variation={isVisited ? "secondary" : "primary"}   
-                  label={isVisited ? t("EDIT_CONFIGURATION") : t("CONFIGURE_MODULE")}   // 👈 new label for visited
+                  variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
+                  icon={isVisited ? "Edit" : null}
+                  label={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
                   onClick={(e) => {
-                    e.stopPropagation();
+                    e.stopPropagation(); // Prevent card click
                     if (isActive) {
                       // Handle button click for allowed modules
                       handleCardClick(item?.data?.name, item?.data?.version);
@@ -107,7 +107,6 @@ const NewAppModule = () => {
               </Card>
             );
           })}
-
         </div>
       </EqualHeightWrapper>
     </>
