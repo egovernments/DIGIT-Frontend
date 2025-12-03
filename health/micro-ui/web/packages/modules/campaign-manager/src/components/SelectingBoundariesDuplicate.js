@@ -2,7 +2,7 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip, Switch } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip,TextBlock, Switch } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -238,10 +238,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           />
           <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div>
-                <HeaderComponent className="unified-upload-header">{t("HCM_UNIFIED_UPLOAD_OPTION")}</HeaderComponent>
-                <p className="dates-description">{t("HCM_UNIFIED_UPLOAD_OPTION_DESC")}</p>
-              </div>
+              <TextBlock
+                subHeader={t("HCM_UNIFIED_UPLOAD_OPTION")}
+                subHeaderClassName={"switch-unified-upload"}
+                body={t("HCM_UNIFIED_UPLOAD_OPTION_DESC")}
+              ></TextBlock>
               <Switch
                 isLabelFirst={true}
                 label={t("HCM_USE_UNIFIED_UPLOAD")}
