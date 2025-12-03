@@ -62,6 +62,7 @@ const AppConfigSaveLoader = () => {
           const updatedConfig = {
             ...existingConfig,
             flows: transformedData,
+            version: existingConfig?.version + 1,
           };
 
           // Update the MDMS record

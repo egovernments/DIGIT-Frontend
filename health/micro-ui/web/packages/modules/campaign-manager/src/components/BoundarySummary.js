@@ -1,9 +1,8 @@
-import React, { useEffect, useState,Fragment } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import {LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card , Loader ,HeaderComponent } from "@egovernments/digit-ui-components";
+import { LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
-
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -44,7 +43,6 @@ const BoundarySummary = (props) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
-
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -53,13 +51,12 @@ const BoundarySummary = (props) => {
     window.history.replaceState({}, "", url);
   }
 
-
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  const { isLoading, data, error, refetch,isFetching } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading, data, error, refetch, isFetching } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
@@ -67,7 +64,7 @@ const BoundarySummary = (props) => {
     config: {
       select: (data) => {
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
-        const hierarchyType= data?.[0]?.hierarchyType;
+        const hierarchyType = data?.[0]?.hierarchyType;
         return {
           cards: [
             ...boundaryData?.map((item, index) => {
@@ -77,12 +74,12 @@ const BoundarySummary = (props) => {
                   {
                     name: `HIERARCHY_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t(( hierarchyType + "_" + item?.type).toUpperCase())}` , inlineStyles: { color : "#0B4B66" } },
+                    cardHeader: { value: `${t((hierarchyType + "_" + item?.type).toUpperCase())}`, inlineStyles: { color: "#0B4B66" } },
                     // cardHeader: { value: t("item?.boundaries?.type") },
                     component: "BoundaryDetailsSummary",
                     props: {
                       boundaries: item,
-                      hierarchyType: hierarchyType
+                      hierarchyType: hierarchyType,
                     },
                   },
                 ],
@@ -103,7 +100,6 @@ const BoundarySummary = (props) => {
     },
   });
 
-
   const closeToast = () => {
     setShowToast(null);
   };
@@ -112,7 +108,6 @@ const BoundarySummary = (props) => {
       setTimeout(closeToast, 5000);
     }
   }, [showToast]);
-
 
   useEffect(() => {
     setKey(currentKey);
@@ -125,34 +120,34 @@ const BoundarySummary = (props) => {
     } else setKey(6);
   };
 
-
   const updatedObject = { ...data };
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
     <>
-    {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
-     <div className="container-full"> 
-
+      {(isLoading || (!data && !error) || isFetching) && (
+        <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />
+      )}
+      <div className="container-full">
         <div className="card-container-delivery">
-        <TagComponent campaignName={campaignName} />
-      <div style={{ display: "flex", justifyContent: "space-between" , marginTop: "1.5rem" }}>
-        <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
-      </div>
-      <div className="campaign-summary-container">
-        <ViewComposer data={updatedObject} />
-        {showToast && (
-          <Toast
-            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
-            label={t(showToast?.label)}
-            onClose={closeToast}
-          />
-        )}
-      </div>
-      </div>
+          <TagComponent campaignName={campaignName} />
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
+            <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
+          </div>
+          <div className="campaign-summary-container">
+            <ViewComposer data={updatedObject} />
+            {showToast && (
+              <Toast
+                type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
+                label={t(showToast?.label)}
+                onClose={closeToast}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

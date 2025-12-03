@@ -11,6 +11,7 @@ const DummyLoader = () => {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
+  const version = searchParams.get("version");
   const flow = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
 
@@ -56,7 +57,7 @@ const DummyLoader = () => {
           // If data already exists, directly navigate
           if (searchResponse?.mdms && searchResponse.mdms.length > 0) {
             navigate(
-              `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}`
+              `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}&version=${version}`
             );
             return;
           }
@@ -108,7 +109,7 @@ const DummyLoader = () => {
 
           // Redirect to new-app-configuration after successful API calls
           navigate(
-            `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}`
+            `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}&version=${version}`
           );
         } catch (error) {
           console.error("Error processing MDMS data:", error);

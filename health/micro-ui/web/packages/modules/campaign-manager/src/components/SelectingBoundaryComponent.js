@@ -181,8 +181,9 @@ const SelectingBoundaryComponent = ({
   const updateBoundaryOptions = (selectedData1, boundaryData, hierarchy) => {
     selectedData1?.forEach((item) => {
       const { type, code } = item;
-      const childBoundaryType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === type)
-        ?.boundaryType;
+      const childBoundaryType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(
+        (boundary) => boundary.parentBoundaryType === type
+      )?.boundaryType;
       if (boundaryData[childBoundaryType]) {
         const filteredBoundaries = Object.entries(boundaryData[childBoundaryType])
           .filter(([key, value]) => value.includes(code))
@@ -379,7 +380,8 @@ const SelectingBoundaryComponent = ({
     const updatedBoundaryOptions = { ...boundaryOptions };
     let newData = {};
 
-    const childBoundaryType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find((h) => h.parentBoundaryType === res?.[0]?.type)?.boundaryType;
+    const childBoundaryType = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find((h) => h.parentBoundaryType === res?.[0]?.type)
+      ?.boundaryType;
 
     res.forEach((item) => {
       const { code, parent, boundaryType, name } = item;
@@ -460,6 +462,7 @@ const SelectingBoundaryComponent = ({
                     </CardLabel>
                     <div className="digit-field">
                       <MultiSelectDropdown
+                        disablePortal={true}
                         t={t}
                         props={{ className: "selecting-boundaries-dropdown" }}
                         options={
@@ -502,6 +505,7 @@ const SelectingBoundaryComponent = ({
                     </CardLabel>
                     <div className="digit-field">
                       <MultiSelectDropdown
+                        disablePortal={true}
                         t={t}
                         props={{ className: "selecting-boundaries-dropdown" }}
                         options={

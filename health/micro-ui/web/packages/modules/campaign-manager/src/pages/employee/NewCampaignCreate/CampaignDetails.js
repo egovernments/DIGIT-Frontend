@@ -11,7 +11,6 @@ import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
-export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
@@ -147,7 +146,6 @@ const CampaignDetails = () => {
   const isDraftCampaign = location.state?.isDraft;
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
-  const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
   const [showToast, setShowToast] = useState(null);
   const isDraft = searchParams.get("draft");
   const [showQRPopUp, setShowQRPopUp] = useState(false);
@@ -294,30 +292,6 @@ const CampaignDetails = () => {
     });
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
-  const { data: modulesData } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: AppConfigSchema,
-        // filter: `[?(@.project=='${campaignNumber}')].name`,
-        filter: `[?(@.project=='${campaignNumber}')].version`,
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.[AppConfigSchema];
-      },
-    },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigSchema` }
-  );
-
-  let hasVersionGreaterThanOne = false;
-
-  if (modulesData) {
-    hasVersionGreaterThanOne = modulesData?.some((version) => version > 1);
-  }
-
   const data = {
     cards: [
       {
@@ -383,10 +357,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel: hasVersionGreaterThanOne ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
-              // buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
-              // type: modulesData?.length > 0 ? "secondary" : "primary",
-              type: hasVersionGreaterThanOne ? "secondary" : "primary",
+              buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
+              type: "primary",
               navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
               disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),
@@ -429,13 +401,19 @@ const CampaignDetails = () => {
                   props: {
                     headingName: t("HCM_UPLOAD_UNIFIED_DATA_HEADING"),
                     desc: t("HCM_UPLOAD_UNIFIED_DATA_DESC"),
-                    buttonLabel: campaignData?.resources?.some((r) => r.type === "unified-console" || r.type === "unified-console-resources")
+                    buttonLabel: campaignData?.resources?.some(
+                      (r) => r.type === "unified-console" || r.type === "unified-console-resources"
+                    )
                       ? t("HCM_EDIT_UPLOAD_DATA_BUTTON")
                       : t("HCM_UPLOAD_DATA_BUTTON"),
                     navLink: `unified-upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
-                    type: campaignData?.resources?.some((r) => r.type === "unified-console" || r.type === "unified-console-resources") ? "secondary" : "primary",
+                    type: campaignData?.resources?.some((r) => r.type === "unified-console" || r.type === "unified-console-resources")
+                      ? "secondary"
+                      : "primary",
                     icon: (
-                      <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+                      <UploadCloud
+                        fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
+                      />
                     ),
                     disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
                   },
@@ -454,11 +432,19 @@ const CampaignDetails = () => {
                   props: {
                     headingName: t("HCM_UPLOAD_DATA_HEADING"),
                     desc: t("HCM_UPLOAD_DATA_DESC"),
-                    buttonLabel: campaignData?.resources?.some((r) => r.type !== "unified-console" && r.type !== "unified-console-resources") ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
+                    buttonLabel: campaignData?.resources?.some(
+                      (r) => r.type !== "unified-console" && r.type !== "unified-console-resources"
+                    )
+                      ? t("HCM_EDIT_UPLOAD_DATA_BUTTON")
+                      : t("HCM_UPLOAD_DATA_BUTTON"),
                     navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
-                    type: campaignData?.resources?.some((r) => r.type !== "unified-console" && r.type !== "unified-console-resources") ? "secondary" : "primary",
+                    type: campaignData?.resources?.some((r) => r.type !== "unified-console" && r.type !== "unified-console-resources")
+                      ? "secondary"
+                      : "primary",
                     icon: (
-                      <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+                      <UploadCloud
+                        fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
+                      />
                     ),
                     disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
                   },
@@ -667,10 +653,8 @@ const CampaignDetails = () => {
                   onClick={onsubmit}
                   isDisabled={
                     campaignData?.boundaries?.length === 0 ||
-                    campaignData?.deliveryRules?.some(rule => rule?.cycles?.length === 0) ||
+                    campaignData?.deliveryRules?.some((rule) => rule?.cycles?.length === 0) ||
                     campaignData?.resources?.length === 0
-                    // modulesData?.length === 0
-                    // !hasVersionGreaterThanOne
                   }
                   type="button"
                   variation="primary"

@@ -1,7 +1,7 @@
 import { TourProvider } from "@egovernments/digit-ui-react-components";
 import { Loader, lazyWithFallback } from "@egovernments/digit-ui-components";
-import React, { useEffect } from "react";
-// import { useRouteMatch } from "react-router-dom";
+import React, { useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
@@ -132,6 +132,20 @@ function initPopupZIndexFix() {
 const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const moduleName = Digit.Utils.campaign.getModuleName();
+  const location = useLocation();
+
+  // Derive path from location pathname (replaces useRouteMatch)
+  // Expected pattern: /{contextPath}/employee/campaign/...
+  // We need: /{contextPath}/employee/campaign
+  const path = useMemo(() => {
+    const pathParts = location.pathname.split("/").filter(Boolean);
+    // Take first 3 parts: contextPath/employee/campaign
+    if (pathParts.length >= 3) {
+      return `/${pathParts.slice(0, 3).join("/")}`;
+    }
+    return `/${window?.contextPath}/employee/campaign`;
+  }, [location.pathname]);
+
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -176,6 +190,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
         <EmployeeApp
+          path={path}
           BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
           stateCode={stateCode}
           userType={userType}

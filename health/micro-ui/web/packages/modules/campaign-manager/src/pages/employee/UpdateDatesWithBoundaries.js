@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, AlertCard, PopUp, Toast, Tag } from "@egovernments/digit-ui-components";
+import { Button, AlertCard, PopUp, Toast, Loader } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
@@ -61,10 +61,9 @@ function UpdateDatesWithBoundaries() {
     if (DateWithBoundary) {
       const temp = data?.dateWithBoundary;
       const isMultiCycles = isMultiCycle(temp?.[0]);
-      const allCycleDateValid =
-       isMultiCycles
-          ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true)
-          : true;
+      const allCycleDateValid = isMultiCycles
+        ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true)
+        : true;
       const allDateValid = temp.every((i) => i?.startDate && i?.endDate);
 
       if (isMultiCycles && allCycleDateValid && allDateValid) {
@@ -154,16 +153,22 @@ function UpdateDatesWithBoundaries() {
         });
       }
     } catch (error) {
-      setShowToast({ isError: true, label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error });
+      setShowToast({
+        isError: true,
+        label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error,
+      });
     }
   };
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
     return;
   };
 
+  if (DateWithBoundaryLoading) {
+    return <Loader />;
+  }
   return (
     <div>
-       <TagComponent campaignName={campaignName} />  
+      <TagComponent campaignName={campaignName} />
       <FormComposerV2
         label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={
