@@ -72,11 +72,15 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
     );
   }
 
+  // Allow empty labels - only use defaults if undefined/null
+  const message = field?.label !== undefined && field?.label !== null ? t(field?.label) : "";
+  const description = field?.description !== undefined && field?.description !== null ? t(field?.description) : "";
+
   return (
     <PanelCard
       type={panelType || "success"}
-      message={t(field?.label) || "Panel Title"}
-      description={t(field?.description) || "Panel content"}
+      message={message}
+      description={description}
       footerChildren={footerChildren}
       showAsSvg={true}
       cardClassName="panel-card-preview"

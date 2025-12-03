@@ -11,10 +11,15 @@ const ButtonTemplate = ({ field, t, fieldTypeMasterData }) => {
   const availableVariations = getPropertyOptions(field?.format, "variation", fieldTypeMasterData);
   const availableIcons = getPropertyOptions(field?.format, "icon", fieldTypeMasterData);
 
+  // Get translated label - allow empty string, only use default if undefined/null
+  const buttonLabel = field?.label !== undefined && field?.label !== null
+    ? t(field?.label)
+    : "Button";
+
   return (
     <Button
       variation={variation || "primary"}
-      label={t(field?.label) || "Button"}
+      label={buttonLabel}
       onClick={() => {}}
       className="app-preview-action-button"
       style={variation === "tertiary" ? { color: "#c84c0e", height: "1.5rem", width: "fit-content" } : null}
