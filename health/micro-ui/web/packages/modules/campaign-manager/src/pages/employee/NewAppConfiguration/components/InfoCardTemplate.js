@@ -10,13 +10,17 @@ const InfoCardTemplate = ({ field, t, fieldTypeMasterData }) => {
     error: "error",
     warning: "warning",
   };
+  // Allow empty labels - only use defaults if undefined/null
+  const infoLabel = field?.label !== undefined && field?.label !== null ? t(field.label) : "";
+  const infoText = field?.description !== undefined && field?.description !== null ? t(field?.description) : "";
+
   return (
     <AlertCard
       populators={{ name: "infocard" }}
       variant="default"
       className="cmn-help-info-card"
-      label={t(field.label) || "Info Card"}
-      text={t(field?.description) || "This is an info card template"}
+      label={infoLabel}
+      text={infoText}
     />
   );
 };

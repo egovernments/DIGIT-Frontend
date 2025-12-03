@@ -219,7 +219,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               }}
             ></Wrapper>
           </Card>
-          <AlertCard
+          {/*Commenting alert card for now*/}
+          {/* <AlertCard
             populators={{
               name: "infocard",
             }}
@@ -235,7 +236,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               </span>,
             ]}
             label={"Info"}
-          />
+          /> */}
           <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <TextBlock
