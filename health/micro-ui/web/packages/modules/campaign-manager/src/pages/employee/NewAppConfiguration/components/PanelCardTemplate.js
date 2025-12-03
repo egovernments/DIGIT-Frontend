@@ -74,7 +74,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
 
   // Allow empty labels - only use defaults if undefined/null
   const message = field?.heading !== undefined && field?.heading !== null ? t(field?.heading) : "";
-  const description = field?.heading !== undefined && field?.heading !== null ? t(field?.heading) : "";
+  const description = field?.description !== undefined && field?.description !== null ? t(field?.description) : "";
 
   return (
     <PanelCard
