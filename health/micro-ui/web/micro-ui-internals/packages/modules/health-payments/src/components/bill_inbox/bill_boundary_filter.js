@@ -4,7 +4,7 @@ import { CheckBox, SubmitBar, Loader, Dropdown } from "@egovernments/digit-ui-co
 import BoundaryComponent from "../BoundaryComponent";
 import { Card, SVG, Toast } from "@egovernments/digit-ui-components";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
-import { getValidPeriods } from "../../utils/time_conversion";
+import { getValidPeriods,formatDate } from "../../utils/time_conversion";
 
 /**
  * BillBoundaryFilter component allows users to filter boundaries
@@ -75,16 +75,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
     resetBoundaryFilter();
   };
 
-  // Format date for display
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
+  
 
   // Fetch billing config and periods
   const fetchBillingPeriods = useCallback(

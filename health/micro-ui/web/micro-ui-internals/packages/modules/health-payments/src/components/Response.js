@@ -15,6 +15,7 @@ const Response = () => {
   return (
     <>
       <PanelCard
+        showAsSvg={true}
         children={<div dangerouslySetInnerHTML={{ __html: state?.description }} />}
         animationProps={{
           loop: false,

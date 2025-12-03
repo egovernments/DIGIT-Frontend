@@ -169,7 +169,7 @@ export const getValidPeriods = (t, periods, addingBool) => {
   return validPeriods;
 };
 
-const formatDate = (timestamp) => {
+export const formatDate = (timestamp) => {
   if (!timestamp) return "";
   const date = new Date(timestamp);
   return date.toLocaleDateString("en-GB", {
