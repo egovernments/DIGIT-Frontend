@@ -1,4 +1,4 @@
-import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Loader, SVG, Button, } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -57,6 +57,7 @@ const NewAppModule = () => {
         <div className="modules-container">
           {sortedMdmsData?.map((item, index) => {
             const isActive = item?.data?.active === true;
+            const isVisited = item?.data?.version > 1;
 
             return (
               <Card
@@ -68,7 +69,7 @@ const NewAppModule = () => {
                   position: "relative",
                 }}
               >
-                {/* {isActive && (
+                {isVisited && (
                   <SVG.CheckCircle
                     fill={"#00703C"}
                     width={"3rem"}
@@ -79,7 +80,7 @@ const NewAppModule = () => {
                       top: "-14px",
                     }}
                   />
-                )} */}
+                )}
                 <HeaderComponent className={`detail-header ${isActive ? "selected-header" : ""}`}>{t(item?.data?.name)}</HeaderComponent>
                 <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
                 <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
@@ -87,8 +88,9 @@ const NewAppModule = () => {
                 <Button
                   type="button"
                   size="medium"
-                  variation={isActive ? "primary" : "secondary"}
-                  label={isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
+                  variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
+                  icon={isVisited ? "Edit" : null}
+                  label={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card click
                     if (isActive) {
