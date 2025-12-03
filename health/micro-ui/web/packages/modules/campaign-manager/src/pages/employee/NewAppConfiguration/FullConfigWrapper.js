@@ -399,7 +399,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             {/* App Preview with Page Type Tag */}
             <div className="full-config-wrapper__preview-with-tag">
               {/* Page Type Tag */}
-              {currentPageType && (
+              {/* commenting the tag component in app preview screen */}
+              {/* {currentPageType && (
                 <Tag
                   label={
                     <span style={{ display: "flex", gap: "4px" }}>
@@ -450,7 +451,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   }
                 />
               )}
-
+ */}
               <AppConfigurationStore
                 flow={selectedFlow}
                 flowName={activeFlow?.name}

@@ -26,7 +26,7 @@ function transformCampaignData(inputObj = {}) {
   const boundaryFiles = resourceByType("boundary");
   const facilityFiles = resourceByType("facility");
   const userFiles = resourceByType("user");
-  const unifiedFiles = resourceByType("unified-console");
+  const unifiedFiles = [...resourceByType("unified-console"), ...resourceByType("unified-console-resources")];
 
   const deliveryRulesData = Array.isArray(inputObj.deliveryRules)
     ? inputObj.deliveryRules.map((rule) => ({

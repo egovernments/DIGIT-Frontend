@@ -238,11 +238,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: "",
       content: t("ACTION_UPLOAD_SCREEN"),
-      show: pathVar.includes("upload-screen") ? true : false,
+      show: pathVar.includes("upload-screen") && !pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
       path: "",
-      content: t("ACTION_UNIFIED_UPLOAD_SCREEN"),
+      content: t("ACTION_UPLOAD_SCREEN"),
       show: pathVar.includes("unified-upload-screen") ? true : false,
     },
     {

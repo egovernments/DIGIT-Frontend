@@ -418,13 +418,17 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
             payloadData.resources = temp;
             payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
+            // Preserve existing additionalDetails (including isUnifiedCampaign) from draftData, then override with new values
+            const sessionIsUnifiedCampaign = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign;
             payloadData.additionalDetails = {
+              ...draftData?.additionalDetails,
               beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
               key: currentKey,
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
-              ...(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign && { isUnifiedCampaign: true }),
+              // Only override isUnifiedCampaign if session has it explicitly set; otherwise draftData value is already preserved from spread above
+              ...(sessionIsUnifiedCampaign !== undefined && { isUnifiedCampaign: sessionIsUnifiedCampaign }),
             };
             if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
               payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
@@ -496,13 +500,17 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             );
             payloadData.resources = temp;
             payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
+            // Preserve existing additionalDetails (including isUnifiedCampaign) from draftData, then override with new values
+            const sessionIsUnifiedCampaign2 = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign;
             payloadData.additionalDetails = {
+              ...draftData?.additionalDetails,
               beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
               key: currentKey,
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
-              ...(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign && { isUnifiedCampaign: true }),
+              // Only override isUnifiedCampaign if session has it explicitly set; otherwise draftData value is already preserved from spread above
+              ...(sessionIsUnifiedCampaign2 !== undefined && { isUnifiedCampaign: sessionIsUnifiedCampaign2 }),
             };
             if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
               payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;

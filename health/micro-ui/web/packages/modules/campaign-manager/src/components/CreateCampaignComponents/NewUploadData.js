@@ -303,11 +303,15 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const newReadMeboundary = await translateReadMeInfo(
           readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
         );
+        const newReadMeUnifiedConsole = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
 
         const readMeText = {
           boundary: newReadMeboundary,
           facility: newReadMeFacility,
           user: newReadMeUser,
+          "unified-console": newReadMeUnifiedConsole,
         };
 
         setReadMeInfo(readMeText);
@@ -1014,7 +1018,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           if (temp?.status === "completed") {
             setLoader(false);
             setIsValidation(false);
-            if (!temp?.additionalDetails?.sheetErrors?.length) {
+            // For unified-console, check validationStatus/totalErrors; for others, check sheetErrors
+            const isUnifiedConsoleInvalid = type === "unified-console" &&
+              (temp?.additionalDetails?.validationStatus === "invalid" || temp?.additionalDetails?.totalErrors > 0);
+            const hasSheetErrors = temp?.additionalDetails?.sheetErrors?.length > 0;
+            const isValidFile = !hasSheetErrors && !isUnifiedConsoleInvalid;
+
+            if (isValidFile) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
               if (temp?.id) {
                 setResourceId(temp?.id);
@@ -1028,7 +1038,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               }
               return;
             } else {
-              const processedFileStore = temp?.processedFilestoreId;
+              // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
+              const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
               if (!processedFileStore) {
                 setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
                 // setIsValidation(true);
@@ -1060,7 +1071,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             // setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
-            const processedFileStore = temp?.processedFilestoreId;
+            // Handle both casing: processedFilestoreId (old) and processedFileStoreId (unified-console API)
+            const processedFileStore = temp?.processedFilestoreId || temp?.processedFileStoreId;
             if (!processedFileStore) {
               setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
               return;
