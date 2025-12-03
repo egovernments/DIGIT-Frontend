@@ -332,6 +332,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         defaultValues={params}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={t("HCM_BACK")}
+        formLevelErrorMessage={t("HCM_CREATE_CAMPAIGN_FORM_LEVEL_ERROR_MESSAGE_GENERIC")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         noCardStyle={currentKey === 3}
@@ -390,7 +391,9 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          type={
+            showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+          }
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}
