@@ -24,13 +24,22 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description)}
-        footerChildren={[
-          <Button label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)} onClick={
-            () => {
-              history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-            }
-          } variation="teritiary" icon="ArrowForward" isSuffix />
-        ]}
+        footerChildren={
+          state?.showFooter === false
+            ? []
+            : [
+                <Button
+                  key="view-another-register"
+                  label={t("HCM_AM_VIEW_ANOTHER_REGISTER")}
+                  onClick={() => {
+                    history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+                  }}
+                  variation="teritiary"
+                  icon="ArrowForward"
+                  isSuffix
+                />,
+              ]
+        }
         footerStyles={{}}
         iconFill=""
         info={t(state?.info)}
@@ -48,7 +57,7 @@ const Response = () => {
           style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
           variation="primary"
           label={t(back)}
-          icon={"ArrowBack"}
+          icon={"ExitToApp"}
           onClick={() => {
             const backlink = state?.backlink || `/${window.contextPath}/employee/`;
             history.push(backlink);

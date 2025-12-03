@@ -8,6 +8,7 @@ import { tableCustomStyle } from "../table_inbox_custom_style";
 import { defaultPaginationValues } from "../../utils/constants";
 import { getCustomPaginationOptions } from "../../utils";
 import CommentPopUp from "../commentPopUp";
+import { renderProjectPeriod } from "../../utils/time_conversion";
 
 const CustomInboxTable = ({
   handleTabChange,
@@ -18,7 +19,8 @@ const CustomInboxTable = ({
   customHandlePaginationChange,
   totalCount,
   statusCount,
-  selectedProject
+  selectedProject,
+  selectedPeriod,
 }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -43,7 +45,8 @@ const CustomInboxTable = ({
         {
           params: {
             tenantId: tenantId,
-            registerId: attendanceId
+            registerId: attendanceId,
+            billingPeriodId: selectedPeriod?.id,
           },
         },
         {
@@ -52,7 +55,7 @@ const CustomInboxTable = ({
           },
           onError: (error) => {
             setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
-          }
+          },
         }
       );
     } catch (error) {
@@ -79,14 +82,17 @@ const CustomInboxTable = ({
           <Button
             label={t(`${row.id}`)}
             onClick={() => {
-              const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
-              const endDate = existingPaymentInbox?.selectedProject?.endDate;
+              // const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+              // const endDate = existingPaymentInbox?.selectedProject?.endDate;
+
+              const selectedP = Digit.SessionStorage.get("selectedPeriod");
+              const endDate = selectedP?.periodEndDate;
 
               if (endDate) {
                 const currentDate = Date.now();
                 if (!(currentDate <= endDate)) {
                   history.push(
-                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
                   );
                 } else {
                   history.push(
@@ -96,7 +102,7 @@ const CustomInboxTable = ({
               } else {
                 console.warn("No endDate found in session storage");
                 history.push(
-                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
                 );
               }
             }}
@@ -111,23 +117,12 @@ const CustomInboxTable = ({
     {
       name: (
         <div className="custom-inbox-table-row">
-          {activeLink?.code === "PENDINGFORAPPROVAL"
-            ? t("HCM_AM_ATTENDANCE_MARKED_BY")
-            : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
+          {activeLink?.code === "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
         </div>
       ),
       selector: (row) => (
-        <div
-          className="ellipsis-cell"
-          title={
-            activeLink?.code === "PENDINGFORAPPROVAL"
-              ? row?.markby
-              : row?.approvedBy || t("NA")
-          }
-        >
-          {activeLink?.code === "PENDINGFORAPPROVAL"
-            ? row?.markby
-            : row?.approvedBy || t("NA")}
+        <div className="ellipsis-cell" title={activeLink?.code === "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}>
+          {activeLink?.code === "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
         </div>
       ),
     },
@@ -167,15 +162,17 @@ const CustomInboxTable = ({
   }
 
   const handleRowClick = (row) => {
+    // const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+    // const endDate = existingPaymentInbox?.selectedProject?.endDate;
 
-    const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
-    const endDate = existingPaymentInbox?.selectedProject?.endDate;
+    const selectedP = Digit.SessionStorage.get("selectedPeriod");
+    const endDate = selectedP?.periodEndDate;
 
     if (endDate) {
       const currentDate = Date.now();
       if (!(currentDate <= endDate)) {
         history.push(
-          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
         );
       } else {
         history.push(
@@ -185,7 +182,7 @@ const CustomInboxTable = ({
     } else {
       console.warn("No endDate found in session storage");
       history.push(
-        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
       );
     }
 
@@ -203,13 +200,12 @@ const CustomInboxTable = ({
   return (
     <React.Fragment>
       <Card style={{ gap: "1.5rem", height: "80vh", display: "flex", flexDirection: "column" }}>
-        <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+        <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, selectedPeriod)}</div>
 
         {!tableData ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-
             {/* Fixed Tab Section */}
             <div
               style={{
@@ -228,7 +224,7 @@ const CustomInboxTable = ({
                 itemStyle={{ width: "290px" }}
                 configNavItems={[
                   {
-                    code: "PENDINGFORAPPROVAL",
+                    code: "PENDING",
                     name: `${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`,
                   },
                   {
@@ -296,11 +292,7 @@ const CustomInboxTable = ({
       </Card>
 
       {commentLogs && (
-        <CommentPopUp
-          onClose={onCommentLogClose}
-          businessId={data?.musterRollNumber}
-          heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
-        />
+        <CommentPopUp onClose={onCommentLogClose} businessId={data?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
       )}
       {showToast && (
         <Toast

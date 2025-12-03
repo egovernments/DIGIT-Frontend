@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
   BILLS: ["CAMPAIGN_SUPERVISOR"],
+  PAYMENT_SETUP: ["CAMPAIGN_MANAGER"],
 };
 
 const PaymentsCard = () => {
@@ -36,6 +37,7 @@ const PaymentsCard = () => {
   }
 
   let links = [
+    generateLink("ATTENDANCE_SETUP_PAYMENT_ATTRIBUTES", "payment-setup",ROLES.PAYMENT_SETUP),
     generateLink("ATTENDANCE_REGISTERS", "project-selection"),
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),

@@ -11,6 +11,7 @@ import InboxSearchLinkHeader from "./components/InboxSearchLinkHeader";
 import SearchResultsPlaceholder from "./components/SearchResultsPlaceholder";
 // import HierarchySelection from "./components/HierachySelection"; 
 import AttendeeBoundaryComponent from "./components/SearchAttendeeBoundary";
+import CampaignCard from "./components/CampaignCard";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   // const [hierarchySelected, setHierarchySelected] = useState(null);
@@ -81,6 +82,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 };
 
 const componentsToRegister = {
+  CampaignCard,
   PaymentsModule,
   PaymentsCard,
   BoundaryComponent,
