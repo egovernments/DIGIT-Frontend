@@ -950,6 +950,7 @@ tbody {
   margin-bottom: 5rem;
 }
 .app-configuration-side-panel {
+  position: fixed;
   top: 9rem;
   width: 24rem;
   z-index: 99;
@@ -1365,26 +1366,26 @@ tbody {
 }
 
 .digit-dropdown-options-card {
-    box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
-    max-height: 20vmax;
-    position: absolute;
-    background-color: #ffffff;
-    overflow-x: hidden;
-    overflow-y: auto;
+  box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
+  max-height: 20vmax;
+  position: absolute;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.app-preview-card{
+.app-preview-card {
   .digit-checkbox-container {
     label {
-      width:fit-content !important
+      width: fit-content !important;
     }
   }
 }
 
-.digit-toast-success{
-  z-index:10000;
+.digit-toast-success {
+  z-index: 10000;
 }
 
-.digit-radio-options-wrap .digit-radio-btn-checkmark{ 
-  border-width: 1px
+.digit-radio-options-wrap .digit-radio-btn-checkmark {
+  border-width: 1px;
 }

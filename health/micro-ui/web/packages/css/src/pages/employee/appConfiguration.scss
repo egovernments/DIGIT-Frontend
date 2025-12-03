@@ -45,6 +45,9 @@
   }
 
   &__flow-name-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     color: #ffffff;
     font-weight: 700;
     font-size: 1.5rem;
@@ -239,6 +242,7 @@
     flex-direction: column;
     overflow: hidden;
     max-width: 76rem;
+    margin-right: 21rem;
     transition: all 0.3s ease-out;
   }
 
