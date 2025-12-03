@@ -1,7 +1,10 @@
 import React from "react";
 
 const TextTemplate = ({ field, t }) => {
-  const label =  field?.fieldName || "Text";
+  // Allow empty labels - only use defaults if undefined/null
+  const label = field?.fieldName !== undefined && field?.fieldName !== null ? field?.fieldName : "";
+  const translatedLabel = label ? t(label) : "";
+
   return (
     <div
       style={{
@@ -10,7 +13,7 @@ const TextTemplate = ({ field, t }) => {
         padding: "4px 0",
       }}
     >
-      {`${t(label) || "LABEL"} : ********`}
+      {translatedLabel ? `${translatedLabel} : ********` : "********"}
     </div>
   );
 };

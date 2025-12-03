@@ -58,8 +58,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const componentRef = useRef(null);
 
-  const expr = config?.visibilityCondition?.expression;
-  const isDependent = typeof expr === "string" && expr.trim().length > 0;
+  const isDependent = config?.visibilityCondition?.expression?.length > 0;
 
   return (
     <div

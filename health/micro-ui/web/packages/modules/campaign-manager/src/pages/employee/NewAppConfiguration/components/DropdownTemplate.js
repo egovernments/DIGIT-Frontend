@@ -3,16 +3,18 @@ import { Button, CustomSVG, Dropdown, FieldV1 } from "@egovernments/digit-ui-com
 import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHelpers";
 
 const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected}) => {
+    // Allow empty labels - only use defaults if undefined/null
+    const dropdownLabel = field?.label !== undefined && field?.label !== null ? t(field?.label) : "";
 
     return (
         <FieldV1
         description={t(field?.helpText)}
                 error={t(field?.errorMessage)}
                 infoMessage={t(field?.tooltip)}
-                label={t(field?.label) || "LABEL"}
+                label={dropdownLabel}
                 onChange={function noRefCheck() {}}
                 populators={{
-                  title: t(field?.label) || "LABEL",
+                  title: dropdownLabel,
                   prefix: field?.prefixText || null,
                   suffix: field?.suffixText || null,
                   fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
