@@ -164,7 +164,6 @@ export const getValidPeriods = (t, periods, addingBool) => {
       }
     }
   }
-
   // If somehow we reach here (should not), return past periods
   return validPeriods;
 };
