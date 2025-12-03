@@ -1388,3 +1388,21 @@ tbody {
 .digit-radio-options-wrap .digit-radio-btn-checkmark{ 
   border-width: 1px
 }
+
+.digit-tag-container {
+  .digit-tag {
+    &.noClose {
+      &.noIcon {
+        display: unset;
+
+        .digit-text {
+          display: inline;
+        }
+      }
+    }
+  }
+}
+
+.switch-unified-upload{
+  color:#0b4b66;
+}
