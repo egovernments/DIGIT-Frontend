@@ -189,7 +189,7 @@ const CampaignHome = () => {
           onClose={() => {
             setShowPopUp(false);
           }}
-          equalWidthButtons={false}
+          equalWidthButtons={true}
           footerChildren={[
             <Button
               className={"campaign-type-alert-button"}

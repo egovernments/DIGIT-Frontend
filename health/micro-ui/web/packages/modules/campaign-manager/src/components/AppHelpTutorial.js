@@ -1,4 +1,5 @@
 import React, { useState, Fragment, useMemo } from "react";
+import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Button, Loader } from "@egovernments/digit-ui-components";
 import { Close, TutorialGuide } from "@egovernments/digit-ui-svg-components";
@@ -101,7 +102,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel = "HELP", buttonIcon =
           title="Help"
           variation="secondary"
           size={"medium"}
-          style={{ borderRadius: "0.25rem" }}
+          style={{ borderRadius: "0.25rem", marginLeft: "auto" }}
         />
       )}
 
@@ -121,7 +122,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel = "HELP", buttonIcon =
 const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
   const { t } = useTranslation();
 
-  return (
+  return ReactDOM.createPortal(
     <div className={`tutorial-overlay ${closing ? "fade-out" : "fade-in"}`} onClick={handleClose}>
       <div
         className={`tutorial-drawer ${closing ? "slide-out" : "slide-in"}`}
@@ -138,7 +139,8 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
           <AppHelpContent module={module} pathVar={pathVar} />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

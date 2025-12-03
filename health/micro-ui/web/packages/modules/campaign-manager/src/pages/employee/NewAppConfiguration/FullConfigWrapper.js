@@ -8,14 +8,16 @@ import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
 import { deselectField } from "./redux/remoteConfigSlice";
+import AppHelpTutorial from "../../../components/AppHelpTutorial";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-const FullConfigWrapper = () => {
+const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const searchParams = new URLSearchParams(location.search);
-  const campaignNumber = searchParams.get("campaignNumber") || "CMP-2025-08-04-004846";
+  const campaignNumber = searchParams.get("campaignNumber");
+  const version = searchParams.get("version");
   const flowModule = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
 
@@ -49,12 +51,12 @@ const FullConfigWrapper = () => {
 
     // Add listener on next tick to avoid catching the opening click
     const timer = setTimeout(() => {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }, 0);
 
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [activeSidePanel]);
 
@@ -206,7 +208,9 @@ const FullConfigWrapper = () => {
     }
 
     // Navigate to the save loader screen
-    navigate(`/${window?.contextPath}/employee/campaign/app-config-save?campaignNumber=${campaignNumber}&flow=${flowModule}&tenantId=${tenantId}`);
+    navigate(
+      `/${window?.contextPath}/employee/campaign/app-config-save?campaignNumber=${campaignNumber}&flow=${flowModule}&tenantId=${tenantId}`
+    );
   };
   // Show loader while fetching data
   if (isLoading) {
@@ -249,9 +253,13 @@ const FullConfigWrapper = () => {
         />
         <div className="full-config-wrapper__flow-name-header">
           {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
+          <span style={{ fontSize: "0.75rem" }}> ({`${t("APPCONFIG_VERSION")} - ${version}`})</span>
         </div>
+        <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
-      <div className={`full-config-wrapper__container ${activeSidePanel && !isClosing ? "full-config-wrapper__container--panel-open" : ""}`}>
+      <div
+        className={`full-config-wrapper__container ${activeSidePanel && !isClosing ? "full-config-wrapper__container--panel-open" : ""}`}
+      >
         {/* Left Sidebar - Menu Items */}
         <div ref={sidebarRef} className="full-config-wrapper__left-sidebar">
           <div
@@ -396,14 +404,18 @@ const FullConfigWrapper = () => {
                 <Tag
                   label={
                     <span style={{ display: "flex", gap: "4px" }}>
-                      <span>
-                        {currentPageType === "template" ? t("TEMPLATE_SCREEN") : t("FORM_SCREEN")}
-                      </span>
-                      <span style={currentPageType === "template" ? {
-                        fontWeight: 400,
-                      } : {
-                        fontWeight: 400,
-                      }}>
+                      <span>{currentPageType === "template" ? t("TEMPLATE_SCREEN") : t("FORM_SCREEN")}</span>
+                      <span
+                        style={
+                          currentPageType === "template"
+                            ? {
+                                fontWeight: 400,
+                              }
+                            : {
+                                fontWeight: 400,
+                              }
+                        }
+                      >
                         {currentPageType === "template" ? t("PARTIALLY_CONFIGURABLE_PARENTHESES") : t("FULLY_CONFIGURABLE_PARENTHESES")}
                       </span>
                     </span>
@@ -413,21 +425,30 @@ const FullConfigWrapper = () => {
                   stroke={false}
                   iconColor={currentPageType === "template" ? "#8A4E09" : ""}
                   icon={"DataSet"}
-                  labelStyle={currentPageType === "template" ? {
-                    color: "#8A4E09",
-                    fontFamily: "Roboto",
-                    fontWeight: 600,
-                    fontStyle: "SemiBold",
-                    fontSize: "12px",
-                    textAlign: "right"
-                  } : {
-                    color: "#1C00BD", fontFamily: "Roboto",
-                    fontWeight: 600,
-                    fontStyle: "SemiBold",
-                    fontSize: "12px",
-                    textAlign: "right"
-                  }}
-                  style={currentPageType === "template" ? { backgroundColor: "#FFFCC0", borderRadius: "6px", top: "6px", position: "absolute" } : { backgroundColor: "#EBECFE", borderRadius: "6px", top: "6px", position: "absolute" }}
+                  labelStyle={
+                    currentPageType === "template"
+                      ? {
+                          color: "#8A4E09",
+                          fontFamily: "Roboto",
+                          fontWeight: 600,
+                          fontStyle: "SemiBold",
+                          fontSize: "12px",
+                          textAlign: "right",
+                        }
+                      : {
+                          color: "#1C00BD",
+                          fontFamily: "Roboto",
+                          fontWeight: 600,
+                          fontStyle: "SemiBold",
+                          fontSize: "12px",
+                          textAlign: "right",
+                        }
+                  }
+                  style={
+                    currentPageType === "template"
+                      ? { backgroundColor: "#FFFCC0", borderRadius: "6px", top: "6px", position: "absolute" }
+                      : { backgroundColor: "#EBECFE", borderRadius: "6px", top: "6px", position: "absolute" }
+                  }
                 />
               )}
  */}
@@ -500,7 +521,6 @@ const FullConfigWrapper = () => {
         {showToast && (
           <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
         )}
-
       </div>
     </React.Fragment>
   );

@@ -36,10 +36,11 @@ const NewAppModule = () => {
     return orderA - orderB;
   });
 
-  const handleCardClick = (moduleName) => {
-    navigate(`/${window.contextPath}/employee/campaign/dummy-loader?campaignNumber=${campaignNumber}&flow=${moduleName}`);
+  const handleCardClick = (moduleName, version) => {
+    navigate(
+      `/${window.contextPath}/employee/campaign/dummy-loader?campaignNumber=${campaignNumber}&flow=${moduleName}&version=${version}`
+    );
   };
-
 
   if (isLoading) {
     return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING")} />;
@@ -61,12 +62,8 @@ const NewAppModule = () => {
             return (
               <Card
                 key={item?.id || index}
-                className={`module-card ${isActive ? 'selected-card' : ''}`}
-                onClick={() => {
-                  if (isActive) {
-                    handleCardClick(item?.data?.name);
-                  }
-                }}
+                className={`module-card ${isActive ? "selected-card" : ""}`}
+                onClick={() => {}}
                 style={{
                   cursor: "pointer",
                   position: "relative",
@@ -83,15 +80,10 @@ const NewAppModule = () => {
                       top: "-14px",
                     }}
                   />
-                )}
-
-                <HeaderComponent className={`detail-header ${isActive ? 'selected-header' : ''}`}>
-                  {t(item?.data?.name)}
-                </HeaderComponent>
+                )} 
+                <HeaderComponent className={`detail-header ${isActive ? "selected-header" : ""}`}>{t(item?.data?.name)}</HeaderComponent>
                 <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-                <p className="module-description">
-                  {item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}
-                </p>
+                <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
 
                 <Button
                   type="button"
@@ -102,7 +94,8 @@ const NewAppModule = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     if (isActive) {
-                      handleCardClick(item?.data?.name);
+                      // Handle button click for allowed modules
+                      handleCardClick(item?.data?.name, item?.data?.version);
                     }
                   }}
                   isDisabled={!isActive}

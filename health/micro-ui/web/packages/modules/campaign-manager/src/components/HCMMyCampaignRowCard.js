@@ -191,24 +191,42 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
 const getActionTags = (rowData) => {
   const actions = {};
 
-  if (rowData?.status == "creating") {
-    actions.generateUserCreds = {
-      label: "GENERATING_USER_CRED",
-      loader: true,
-      animationStyle: {
-        width: "2rem",
-        height: "2rem",
-      },
-    };
-    actions.generateAPK = {
-      label: "GENERATING_APK",
-      loader: true,
-      animationStyle: {
-        width: "2rem",
-        height: "2rem",
-      },
-    };
-  }
+  // if (rowData?.status == "creating") {
+  //   actions.generateUserCreds = {
+  //     label: "GENERATING_USER_CRED",
+  //     loader: true,
+  //     animationStyle: {
+  //       width: "2rem",
+  //       height: "2rem",
+  //     },
+  //   };
+  //   actions.generateAPK = {
+  //     label: "GENERATING_APK",
+  //     loader: true,
+  //     animationStyle: {
+  //       width: "2rem",
+  //       height: "2rem",
+  //     },
+  //   };
+  // }
+  actions.generateUserCreds = {
+    label: "GENERATING_USER_CRED",
+    loader: true,
+    showBottom: true,
+    animationStyle: {
+      width: "2rem",
+      height: "2rem",
+    },
+  };
+  actions.generateAPK = {
+    label: "GENERATING_APK",
+    loader: true,
+    showBottom: true,
+    animationStyle: {
+      width: "2rem",
+      height: "2rem",
+    },
+  };
 
   return actions;
 };
@@ -410,7 +428,9 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                   style={tag.style}
                   stroke={tag.stroke}
                   animationStyles={tag.animationStyle}
-                />
+                >
+                  {console.log("tag", tag)}
+                </Tag>
               ))}
             </div>
           )}

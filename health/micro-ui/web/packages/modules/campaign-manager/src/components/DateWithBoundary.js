@@ -102,23 +102,39 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-   const campaignNumber = searchParams.get("campaignNumber");
-   const campaignId = searchParams.get("id");
+  const campaignNumber = searchParams.get("campaignNumber");
+  const campaignId = searchParams.get("id");
   const { state } = useLocation();
   const historyState = window.history.state;
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
-   }], {
-    select: (data) => {
-      return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "HierarchySchema",
+        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
+      },
+    ],
+    {
+      select: (data) => {
+        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+      },
     },
-  },{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
-  const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(tenantId, CONSOLE_MDMS_MODULENAME, [{ 
-    name: "HierarchySchema",
-    "filter": `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`
-   }],{select:(MdmsRes)=>MdmsRes},{ schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` });
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  );
+  const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "HierarchySchema",
+        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
+      },
+    ],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+  );
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
   }, [HierarchySchema]);
@@ -208,7 +224,6 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     }
   }, [hierarchyDefinition]);
 
-
   const reqCriteriaProject = {
     url: `/project-factory/v1/project-type/search`,
     body: {
@@ -232,11 +247,10 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       setSelectedBoundaries(state?.data?.boundaries);
     } else if (historyState?.data) {
       setSelectedBoundaries(historyState?.data?.boundaries);
-    }
-    else{
+    } else {
       setSelectedBoundaries(campaignData?.boundaries);
     }
-  }, [state?.data, historyState?.data ,campaignData]);
+  }, [state?.data, historyState?.data, campaignData]);
 
   useEffect(() => {
     if (selectedLevel) {
@@ -245,6 +259,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   }, [selectedLevel]);
 
   const handleBoundaryChange = (data) => {
+    console.log("DKJDKDJ", data)
     let res = [];
     data.map((arg) => {
       res.push(arg[1]);
@@ -260,7 +275,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       name: state?.name ? state.name : historyState?.name,
       tenantId: tenantId,
       boundaries: targetBoundary,
-      referenceID: campaignNumber
+      referenceID: campaignNumber,
     });
     setProjectData(temp);
   };
@@ -273,10 +288,14 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   };
   return (
     <>
-      <Card className={"campaign-update-container"} style = {{marginTop: "1rem"}}>
-        <Header className="header" styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
+      <Card className={"campaign-update-container"} style={{ marginTop: "1rem" }}>
+        <Header className="header" styles={{ marginBottom: "0rem" }}>
+          {t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}
+        </Header>
         <div className={"search-field-container"}>
-          <p className="field-description" style={{ marginTop: "0rem" , marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+          <p className="field-description" style={{ marginTop: "0rem", marginBottom: "1rem" }}>
+            {t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}
+          </p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">
@@ -305,6 +324,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
               </div>
               <div className="update-field">
                 <MultiSelectDropdown
+                  disablePortal={true}
                   props={{ className: "select-boundaries-target" }}
                   t={t}
                   options={filteredBoundaries || []}

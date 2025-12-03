@@ -368,7 +368,9 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
+        {window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
+          <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
+        )}
       </div>
       <AppContainer className="campaign">
         <Routes>
@@ -397,7 +399,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
-          <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper />} />
+          <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper path={path} location={location} />} />
           <Route path={`app-config-save`} element={<AppConfigSaveLoader />} />
           <Route
             path={`create-campaign`}
