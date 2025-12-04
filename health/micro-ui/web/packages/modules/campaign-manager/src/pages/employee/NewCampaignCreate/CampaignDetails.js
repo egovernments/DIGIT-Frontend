@@ -653,6 +653,7 @@ const CampaignDetails = () => {
                   onClick={onsubmit}
                   isDisabled={
                     campaignData?.boundaries?.length === 0 ||
+                    campaignData?.deliveryRules?.length === 0 ||
                     campaignData?.deliveryRules?.some((rule) => rule?.cycles?.length === 0) ||
                     campaignData?.resources?.length === 0
                   }
