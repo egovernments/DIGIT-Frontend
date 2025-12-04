@@ -432,15 +432,9 @@ const CampaignDetails = () => {
                   props: {
                     headingName: t("HCM_UPLOAD_DATA_HEADING"),
                     desc: t("HCM_UPLOAD_DATA_DESC"),
-                    buttonLabel: campaignData?.resources?.some(
-                      (r) => r.type !== "unified-console" && r.type !== "unified-console-resources"
-                    )
-                      ? t("HCM_EDIT_UPLOAD_DATA_BUTTON")
-                      : t("HCM_UPLOAD_DATA_BUTTON"),
+                    buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
                     navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
-                    type: campaignData?.resources?.some((r) => r.type !== "unified-console" && r.type !== "unified-console-resources")
-                      ? "secondary"
-                      : "primary",
+                    type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
                     icon: (
                       <UploadCloud
                         fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"}
