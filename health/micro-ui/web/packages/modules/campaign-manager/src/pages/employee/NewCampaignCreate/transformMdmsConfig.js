@@ -192,7 +192,7 @@ const transformPropertiesToFields = (properties) => {
       helpText: prop.helpText || "",
       infoText: prop.infoText || "",
       readOnly: prop.readOnly || false,
-      fieldName: prop.fieldName,
+      fieldName: prop?.fieldName || prop?.jsonPath,
       deleteFlag: prop.deleteFlag || false,
       innerLabel: prop.innerLabel || "",
       systemDate: prop.systemDate || false,
