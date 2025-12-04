@@ -355,7 +355,7 @@ const DeliveryDetailsSummary = (props) => {
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
           </div>
-          <div className="campaign-summary-container">
+          <div className="campaign-summary-container delivery-summary">
             <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
             {showToast && (
               <Toast

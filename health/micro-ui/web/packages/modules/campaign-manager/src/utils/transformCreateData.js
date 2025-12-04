@@ -33,6 +33,12 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
     ...resource,
     type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
   }));
+
+  // Check if resources contain unified-console-resources type
+  const hasUnifiedResource = transformedResources?.some(
+    (r) => r?.type === "unified-console" || r?.type === "unified-console-resources"
+  );
+
   return {
     CampaignDetails: {
       hierarchyType: hierarchyType,
@@ -55,7 +61,8 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
         cycleData:{
           cycleData: cycleDataFromForm,
           cycleConfgureDate: cycleConfgureDateFromForm,
-        }
+        },
+        isUnifiedCampaign: hasUnifiedResource,
       },
     },
   };
