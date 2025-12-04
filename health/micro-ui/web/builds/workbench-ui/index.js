@@ -90,7 +90,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
           stateCode={stateCode} 
           enabledModules={enabledModules} 
           allowedUserTypes={["employee", "citizen"]} 
-          defaultLanding="workbench" 
+          defaultLanding="employee" 
         />
       )}
     </Suspense>
