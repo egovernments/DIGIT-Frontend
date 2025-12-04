@@ -219,6 +219,11 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     }));
 
     if (formData?.CampaignName && !editName && !campaignNumber) {
+      const campaignNamePattern = /^(?!.*[ _-]{2})(?!^[\s_-])(?!.*[\s_-]$)(?=^[A-Za-z][A-Za-z0-9 _\-\(\)]{4,29}$)^.*$/;
+      if (!campaignNamePattern.test(formData?.CampaignName)) {
+        setShowToast({ key: "error", label: t("CAMPAIGN_NAME_INVALID_FORMAT") });
+        return;
+      }
       if (formData?.CampaignName?.length > 30) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return;
@@ -235,6 +240,20 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast(null);
       }
       setIsValidatingName(false);
+    }
+    // Date validation checks - only on HCM_CAMPAIGN_DATE step
+    if (name === "HCM_CAMPAIGN_DATE" && formData?.DateSelection) {
+      const { startDate, endDate } = formData.DateSelection;
+      if (!startDate || !endDate) {
+        setShowToast({ key: "error", label: t("HCM_CAMPAIGN_DATE_MISSING") });
+        return;
+      }
+      const start = new Date(startDate).getTime();
+      const end = new Date(endDate).getTime();
+      if (start >= end) {
+        setShowToast({ key: "error", label: t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE") });
+        return;
+      }
     }
 
     const prevProjectType = prevProjectTypeRef.current;
@@ -332,7 +351,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         defaultValues={params}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={t("HCM_BACK")}
-        formLevelErrorMessage={t("HCM_CREATE_CAMPAIGN_FORM_LEVEL_ERROR_MESSAGE_GENERIC")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         noCardStyle={currentKey === 3}
