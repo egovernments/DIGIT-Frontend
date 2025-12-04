@@ -1,0 +1,798 @@
+[
+  {
+    "id": "Oncho",
+    "code": "Oncho",
+    "name": "Oncho",
+    "type": "multiround",
+    "group": "MALARIA",
+    "cycles": [
+      {
+        "id": 1,
+        "endDate": 1715279400000,
+        "startDate": 1714329000000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "60<=age<180and90<=height<119and12<=weight<45andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000582"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and90<=height<119and12<=weight<45||isPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000582"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and120<=height<139and12<=weight<45andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000582"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and120<=height<139and12<=weight<45||isPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000582"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159and45<=weight<75andisPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000583"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159and45<=weight<75andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000583"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159and45<=weight<75||isPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000583"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159andweight>=75andisPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000583"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159andweight>=75andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000583"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159andweight>=75||isPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-14-000583"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT"
+          }
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "name": "Ivermectin 100mg",
+        "productVariantId": "PVAR-2025-09-12-000579",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Albendazole 400mg",
+        "productVariantId": "PVAR-2025-09-12-000580",
+        "isBaseUnitVariant": true
+      }
+    ],
+    "dashboardUrls": {
+      "DISTRICT_SUPERVISOR": "3",
+      "NATIONAL_SUPERVISOR": "2",
+      "PROVINCIAL_SUPERVISOR": "1"
+    },
+    "IsCycleDisable": true,
+    "attrAddDisable": false,
+    "beneficiaryType": "HOUSEHOLD",
+    "productCountHide": false,
+    "deliveryAddDisable": false,
+    "eligibilityCriteria": []
+  },
+  {
+    "id": "Schisto",
+    "code": "Schisto",
+    "name": "Schisto",
+    "type": "multiround",
+    "group": "MALARIA",
+    "cycles": [
+      {
+        "id": 1,
+        "endDate": 1715279400000,
+        "startDate": 1714329000000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "60<=age<180and90<=height<119",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000579"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and120<=height<139",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000579"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT"
+          }
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "name": "Ivermectin 100mg",
+        "productVariantId": "PVAR-2025-09-12-000579",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Albendazole 400mg",
+        "productVariantId": "PVAR-2025-09-12-000580",
+        "isBaseUnitVariant": true
+      }
+    ],
+    "dashboardUrls": {
+      "DISTRICT_SUPERVISOR": "3",
+      "NATIONAL_SUPERVISOR": "2",
+      "PROVINCIAL_SUPERVISOR": "1"
+    },
+    "IsCycleDisable": false,
+    "attrAddDisable": false,
+    "beneficiaryType": "HOUSEHOLD",
+    "productCountHide": false,
+    "deliveryAddDisable": false,
+    "eligibilityCriteria": []
+  },
+  {
+    "id": "NTD1",
+    "code": "NTD1",
+    "name": "NTD1",
+    "type": "multiround",
+    "group": "MALARIA",
+    "cycles": [
+      {
+        "id": 1,
+        "endDate": 1715279400000,
+        "startDate": 1714329000000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "60<=age<180and90<=height<119andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000579"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and90<=height<119||isPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000579"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and120<=height<139andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000579"
+                  }
+                ]
+              },
+              {
+                "condition": "60<=age<180and120<=height<139||isPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Ivermectin 100mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000579"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159andisPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159||isPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180and140<=height<159andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159andisPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159||isPregnant=Yes",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              },
+              {
+                "condition": "age>=180andheight>=159andisPregnant=No",
+                "ProductVariants": [
+                  {
+                    "name": "Albendazole 400mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2025-09-12-000580"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT"
+          }
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "name": "Ivermectin 100mg",
+        "productVariantId": "PVAR-2025-09-12-000579",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Albendazole 400mg",
+        "productVariantId": "PVAR-2025-09-12-000580",
+        "isBaseUnitVariant": true
+      }
+    ],
+    "dashboardUrls": {
+      "DISTRICT_SUPERVISOR": "3",
+      "NATIONAL_SUPERVISOR": "2",
+      "PROVINCIAL_SUPERVISOR": "1"
+    },
+    "IsCycleDisable": false,
+    "attrAddDisable": false,
+    "beneficiaryType": "HOUSEHOLD",
+    "productCountHide": false,
+    "deliveryAddDisable": false,
+    "eligibilityCriteria": []
+  },
+  {
+    "id": "Bednets",
+    "code": "Bednets",
+    "name": "Bednets",
+    "group": "MALARIA",
+    "cycles": [
+      {
+        "id": 1,
+        "endDate": 1715279400000,
+        "startDate": 1714329000000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "memberCount>=1andmaxCount<=3",
+                "ProductVariants": [
+                  {
+                    "name": "Bednet - Grade - 1",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-05-09-000333"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          }
+        ],
+        "mandatoryWaitSinceLastCycleInDays": null
+      }
+    ],
+    "resources": [
+      {
+        "name": "Bednet - Grade - 1",
+        "productVariantId": "PVAR-2024-05-09-000333",
+        "isBaseUnitVariant": false
+      }
+    ],
+    "dashboardUrls": {
+      "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard-llin",
+      "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard-llin",
+      "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard-llin"
+    },
+    "taskProcedure": [
+      "1 bednet is to be distributed per 2 household members.",
+      "If there are 4 household members, 2 bednets should be distributed.",
+      "If there are 5 household members, 3 bednets should be distributed."
+    ],
+    "IsCycleDisable": true,
+    "attrAddDisable": true,
+    "beneficiaryType": "HOUSEHOLD",
+    "productCountHide": true,
+    "deliveryAddDisable": true,
+    "eligibilityCriteria": [
+      "All households are eligible.",
+      "Prison inmates are eligible."
+    ]
+  },
+  {
+    "id": "ea1bb2e7-06d8-4fe4-ba1e-f4a6363a23re",
+    "code": "DEFAULT",
+    "name": "configuration for Co-Delivery Campaign",
+    "type": "multiround",
+    "group": "MALARIA",
+    "cycles": [],
+    "resources": [],
+    "validMaxAge": 1300,
+    "validMinAge": 1,
+    "beneficiaryType": "INDIVIDUAL"
+  },
+  {
+    "id": "ea1bb2e7-06d8-4fe4-ba1e-f4a6363a21be",
+    "code": "MR-DN",
+    "name": "Configuration for Multi Round Campaigns",
+    "group": "MALARIA",
+    "cycles": [
+      {
+        "id": 1,
+        "endDate": 1715279400000,
+        "startDate": 1714329000000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "3<=age<11",
+                "ProductVariants": [
+                  {
+                    "name": "SP - 250mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000437"
+                  },
+                  {
+                    "name": "AQ - 75mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000439"
+                  }
+                ]
+              },
+              {
+                "condition": "12<=age<59",
+                "ProductVariants": [
+                  {
+                    "name": "SP - 500mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000436"
+                  },
+                  {
+                    "name": "AQ - 150mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000438"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          },
+          {
+            "id": 2,
+            "doseCriteria": [
+              {
+                "condition": "3<=age<11",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 75mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000439"
+                  }
+                ]
+              },
+              {
+                "condition": "12<=age<59",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 150mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000438"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "INDIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          },
+          {
+            "id": 3,
+            "doseCriteria": [
+              {
+                "condition": "3<=age<11",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 75mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000439"
+                  }
+                ]
+              },
+              {
+                "condition": "12<=age<59",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 150mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000438"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "INDIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          }
+        ],
+        "mandatoryWaitSinceLastCycleInDays": null
+      },
+      {
+        "id": 2,
+        "endDate": 1718908200000,
+        "startDate": 1716143400000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "3<=age<11",
+                "ProductVariants": [
+                  {
+                    "name": "SP - 250mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000437"
+                  },
+                  {
+                    "name": "AQ - 75mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000439"
+                  }
+                ]
+              },
+              {
+                "condition": "12<=age<59",
+                "ProductVariants": [
+                  {
+                    "name": "SP - 500mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000436"
+                  },
+                  {
+                    "name": "AQ - 150mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000438"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          },
+          {
+            "id": 2,
+            "doseCriteria": [
+              {
+                "condition": "3<=age<11",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 75mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000439"
+                  }
+                ]
+              },
+              {
+                "condition": "12<=age<59",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 150mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000438"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "INDIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          },
+          {
+            "id": 3,
+            "doseCriteria": [
+              {
+                "condition": "3<=age<11",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 75mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000439"
+                  }
+                ]
+              },
+              {
+                "condition": "12<=age<59",
+                "ProductVariants": [
+                  {
+                    "name": "AQ - 150mg",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-11-20-000438"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "INDIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          }
+        ],
+        "mandatoryWaitSinceLastCycleInDays": "30"
+      }
+    ],
+    "resources": [
+      {
+        "name": "SP - 500mg",
+        "productVariantId": "PVAR-2024-11-20-000436",
+        "isBaseUnitVariant": false
+      },
+      {
+        "name": "SP - 250mg",
+        "productVariantId": "PVAR-2024-11-20-000437",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "AQ - 150mg",
+        "productVariantId": "PVAR-2024-11-20-000438",
+        "isBaseUnitVariant": false
+      },
+      {
+        "name": "AQ - 75mg",
+        "productVariantId": "PVAR-2024-11-20-000439",
+        "isBaseUnitVariant": true
+      }
+    ],
+    "validMaxAge": 59,
+    "validMinAge": 3,
+    "dashboardUrls": {
+      "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard-smc",
+      "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard-smc",
+      "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard-smc"
+    },
+    "taskProcedure": [
+      "1 bednet is to be distributed per 2 household members.",
+      "If there are 4 household members, 2 bednets should be distributed.",
+      "If there are 5 household members, 3 bednets should be distributed."
+    ],
+    "beneficiaryType": "INDIVIDUAL",
+    "eligibilityCriteria": [
+      "All households having members under the age of 18 are eligible.",
+      "Prison inmates are eligible."
+    ],
+    "observationStrategy": "DOT1"
+  },
+  {
+    "id": "192a20d1-0edd-4108-925a-f37bf544d6c4",
+    "code": "IRS-mz",
+    "name": "Project type configuration for IRS - Campaigns",
+    "group": "IRS Campaign",
+    "cycles": [
+      {
+        "id": 1,
+        "endDate": 1715279400000,
+        "startDate": 1714329000000,
+        "deliveries": [
+          {
+            "id": 1,
+            "doseCriteria": [
+              {
+                "condition": "type_of_structure==CEMENTortype_of_structure==CLAYortype_of_structure==REEDS",
+                "ProductVariants": [
+                  {
+                    "name": "Sumishield - 1litre",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-10-09-000427"
+                  },
+                  {
+                    "name": "Fludora - 1litre",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-10-09-000428"
+                  },
+                  {
+                    "name": "Delt - 1litre",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-10-09-000429"
+                  },
+                  {
+                    "name": "Acetellic - 1litre",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-10-09-000430"
+                  },
+                  {
+                    "name": "DOT - 1litre",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-10-09-000431"
+                  },
+                  {
+                    "name": "Bendiocarb - 1litre",
+                    "quantity": 1,
+                    "productVariantId": "PVAR-2024-10-09-000432"
+                  }
+                ]
+              }
+            ],
+            "deliveryStrategy": "DIRECT",
+            "mandatoryWaitSinceLastDeliveryInDays": null
+          }
+        ],
+        "mandatoryWaitSinceLastCycleInDays": null
+      }
+    ],
+    "resources": [
+      {
+        "name": "Sumishield - 1litre",
+        "productVariantId": "PVAR-2024-10-09-000427",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Fludora - 1litre",
+        "productVariantId": "PVAR-2024-10-09-000428",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Delt - 1litre",
+        "productVariantId": "PVAR-2024-10-09-000429",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Acetellic - 1litre",
+        "productVariantId": "PVAR-2024-10-09-000430",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "DOT - 1litre",
+        "productVariantId": "PVAR-2024-10-09-000431",
+        "isBaseUnitVariant": true
+      },
+      {
+        "name": "Bendiocarb - 1litre",
+        "productVariantId": "PVAR-2024-10-09-000432",
+        "isBaseUnitVariant": true
+      }
+    ],
+    "dashboardUrls": {
+      "DISTRICT_SUPERVISOR": "/health-ui/employee/dss/dashboard/district-health-dashboard-irs",
+      "NATIONAL_SUPERVISOR": "/health-ui/employee/dss/landing/national-health-dashboard-irs",
+      "PROVINCIAL_SUPERVISOR": "/health-ui/employee/dss/dashboard/provincial-health-dashboard-irs"
+    },
+    "taskProcedure": [
+      "1 DDT is to be distributed per house.",
+      "1 Malathion is to be distributed per house.",
+      "1 Pyrethroid is to be distributed per house."
+    ],
+    "beneficiaryType": "HOUSEHOLD",
+    "eligibilityCriteria": [
+      "All households are eligible."
+    ]
+  }
+]
