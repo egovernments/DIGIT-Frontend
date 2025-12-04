@@ -17,7 +17,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
 
   flows.forEach((flow, flowIndex) => {
     const project = mdmsData.data.project;
-    const version = flow.version || mdmsData.data.version || 1;
+    const version = mdmsData.data.version;
     const flowName = flow.name;
     const onAction = flow.onAction; // Individual flow name like "HOUSEHOLD", "ADD_MEMBER", "DELIVERY"
 
@@ -404,7 +404,7 @@ export const extractFlowMetadata = (mdmsData) => {
         wrapperConfig: flow.wrapperConfig,
         screenType: flow.screenType,
         project: flow.project || mdmsData.data.project,
-        version: flow.version || mdmsData.data.version || 1,
+        version: mdmsData.data.version,
         disabled: flow.disabled,
         isSelected: flow.isSelected,
         summary: flow.summary,

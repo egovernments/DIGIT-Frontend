@@ -5,7 +5,7 @@
  */
 
 //Final TransformaTION
-export const transformMdmsToAppConfig = (fullData) => {
+export const transformMdmsToAppConfig = (fullData, version) => {
   if (!fullData || !Array.isArray(fullData) || fullData.length === 0) {
     throw new Error("Invalid fullData: Expected non-empty array");
   }
@@ -28,7 +28,7 @@ export const transformMdmsToAppConfig = (fullData) => {
         forms[flowName] = {
           name: flowName,
           project: item.project,
-          version: item.version,
+          version: version + 1,
           disabled: item.disabled || false,
           isSelected: item.isSelected !== undefined ? item.isSelected : true,
           screenType: "FORM",
