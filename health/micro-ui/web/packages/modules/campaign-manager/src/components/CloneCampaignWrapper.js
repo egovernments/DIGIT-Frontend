@@ -89,6 +89,7 @@ const CloneCampaignWrapper = (props) => {
     setIsValidatingName(false);
 
     // Prepare modified campaign payload
+    // Preserve original additionalDetails (including file upload info) and add cloneFrom
     const modifiedCampaign = {
       ...props?.row,
       campaignName: name,
@@ -103,6 +104,7 @@ const CloneCampaignWrapper = (props) => {
       action: "draft",
       status: "drafted",
       additionalDetails: {
+        ...props?.row?.additionalDetails,
         cloneFrom: props?.row?.campaignNumber,
       },
     };

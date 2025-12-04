@@ -390,6 +390,13 @@ tbody {
 
 .campaign-summary-container {
   overflow: auto;
+
+  &.delivery-summary{
+    display: flex;
+    flex-direction: column;
+    gap:1.5rem;
+  }
+
   .setup-campaign-card {
     .employeeCard.employeeCard-override {
       padding: 1.5rem;
@@ -1405,5 +1412,5 @@ tbody {
 }
 
 .switch-unified-upload{
-  color:#0b4b66;
+  color:#0b4b66 !important;
 }

@@ -87,6 +87,11 @@ export const transformUpdateCreateData = ({ campaignData }) => {
     type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
   }));
 
+  // Check if resources contain unified-console-resources type
+  const hasUnifiedResource = transformedResources?.some(
+    (r) => r?.type === "unified-console" || r?.type === "unified-console-resources"
+  );
+
   return {
     CampaignDetails: {
       hierarchyType: campaignData?.hierarchyType,
@@ -108,6 +113,7 @@ export const transformUpdateCreateData = ({ campaignData }) => {
         beneficiaryType: campaignData?.additionalDetails?.beneficiaryType,
         key: 2,
         cycleData: {},
+        isUnifiedCampaign: hasUnifiedResource,
       },
     },
   };
