@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PopUp, Button, Toast, Dropdown, FileUpload, FieldV1 } from "@egovernments/digit-ui-components";
 import { convertEpochToDate } from "../../utils/utlis";
 
-const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
+const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit,reasonMsg }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -42,7 +42,7 @@ const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
         children={[
           <div className="comment-section">
             <div className="comment-label">
-              {t(`HR_DEACTIVATION_REASON`)}
+              {t(reasonMsg?`HR_ACTIVATION_REASON`:`HR_DEACTIVATION_REASON`)}
               <span className="required"> *</span>
             </div>
 
