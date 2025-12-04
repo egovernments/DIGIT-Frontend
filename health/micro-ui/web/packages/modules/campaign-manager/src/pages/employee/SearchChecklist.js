@@ -48,6 +48,7 @@ const SearchChecklist = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.rolesForChecklist`,
+        limit: 1000,
         isActive: true,
       },
     },
@@ -70,6 +71,7 @@ const SearchChecklist = () => {
         tenantId: tenantId,
         schemaCode: "HCM.CHECKLIST_TYPES",
         filters: { type: "DEFAULT" },
+        limit: 1000,
         isActive: true,
       },
     },

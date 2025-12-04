@@ -30,6 +30,7 @@ const AppConfigSaveLoader = () => {
                 project: campaignNumber,
                 module: flowModule,
               },
+              limit: 1000,
               isActive: true,
             },
           },
@@ -46,12 +47,14 @@ const AppConfigSaveLoader = () => {
                 project: campaignNumber,
                 name: flowModule,
               },
+              limit: 1000,
               isActive: true,
             },
           },
         });
 
         const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
+        
         const transformedData = transformMdmsToAppConfig(fullData, appConfigResponse.mdms?.[0].data?.version);
         // Step 3: Update the existing config's mdms property with transformedData
         if (appConfigResponse?.mdms && appConfigResponse.mdms.length > 0) {
