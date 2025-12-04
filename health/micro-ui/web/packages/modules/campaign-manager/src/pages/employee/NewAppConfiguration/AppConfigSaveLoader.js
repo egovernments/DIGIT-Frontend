@@ -35,9 +35,6 @@ const AppConfigSaveLoader = () => {
           },
         });
 
-        const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
-        const transformedData = transformMdmsToAppConfig(fullData);
-
         // Step 2: Search for existing NewApkConfig with campaignNumber and flow
         const appConfigResponse = await Digit.CustomService.getResponse({
           url: `/${mdmsContext}/v2/_search`,
@@ -54,6 +51,8 @@ const AppConfigSaveLoader = () => {
           },
         });
 
+        const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
+        const transformedData = transformMdmsToAppConfig(fullData, appConfigResponse.mdms?.[0].data?.version);
         // Step 3: Update the existing config's mdms property with transformedData
         if (appConfigResponse?.mdms && appConfigResponse.mdms.length > 0) {
           const existingConfig = appConfigResponse.mdms?.[0].data;

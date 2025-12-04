@@ -391,6 +391,16 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             // Create a plain object copy to avoid "object is not extensible" errors
             // This allows expressions to reference properties directly (e.g., "range.max > range.min")
             const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+
+            // Check if all fields referenced in the expression have non-empty values
+            // Skip validation if any field is null, undefined, or empty string
+            const hasEmptyFields = Object.values(plainFieldCopy).some(
+              (value) => value === null || value === undefined || value === ""
+            );
+            if (hasEmptyFields) {
+              return true; // Skip validation if any field is empty
+            }
+
             // Get all property names and values from the plain copy
             // Replace dots in property names with underscores to make them valid JS parameter names
             const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
