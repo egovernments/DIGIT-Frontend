@@ -83,6 +83,7 @@ const CreateChecklist = () => {
               role: role,
               checklistType: checklistType,
             },
+            limit: 1000,
             isActive: true,
           },
         },

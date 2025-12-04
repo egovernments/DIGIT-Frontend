@@ -23,7 +23,7 @@ export const fetchPageFields = createAsyncThunk(
               project: campaignNumber,
               page: pageName,
             },
-            limit: 100,
+            limit: 1000,
             isActive: true,
           },
         },
