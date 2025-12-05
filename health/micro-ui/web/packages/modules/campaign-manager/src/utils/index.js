@@ -76,6 +76,7 @@ getMDMSV2Criteria: (tenantId, schemaCode,filters={}, cacheKey="CAMP_MDMS",config
             tenantId: tenantId,
             schemaCode: schemaCode,
             isActive: true,
+            limit: 1000,
             filters
           },
     },

@@ -100,6 +100,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 project: campaignNumber,
                 name: flowModule,
               },
+              limit: 1000,
               isActive: true,
             },
           },
