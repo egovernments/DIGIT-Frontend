@@ -52,8 +52,6 @@ function NewDraggableField({
         <span></span>
         <span></span>
         <span></span>
-        <span></span>
-        <span></span>
       </div>
       <PanelFieldDisplay
         type={type}

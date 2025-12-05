@@ -363,11 +363,13 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               value={{}}
               renderCustomContent={({ status }) => {
                 if (rowData?.status === "created") {
-                  return <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={true} />;
+                  return (
+                    <div className="digit-viewcard-value"><Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={false} /></div>)
+                    ;
                 } else if (rowData?.status === "creating") {
-                  return <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={true} />;
+                  return (<div className="digit-viewcard-value"><Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={false} /></div>);
                 } else {
-                  return <Tag label={t(rowData?.status)} showIcon={false} stroke={true} />;
+                  return (<div className="digit-viewcard-value"><Tag label={t(rowData?.status)} type="monochrome" showIcon={false} stroke={false} /></div>);
                 }
               }}
             />

@@ -376,7 +376,7 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_UPLOAD_LOCALIZATION_DATA_HEADING"),
               desc: t("HCM_UPLOAD_LOCALIZATION_DATA_DESC"),
-              buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
+              buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_LOCALIZATIONS_DATA_BUTTON") : t("HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON"),
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
               type: "primary",
@@ -633,7 +633,7 @@ const CampaignDetails = () => {
           <Edit width={"18"} height={"18"} />
         </div>
       </div>
-      {/* <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div> */}
+      <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>

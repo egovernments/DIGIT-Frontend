@@ -8,6 +8,8 @@ import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
 import { deselectField } from "./redux/remoteConfigSlice";
+import { FlowFilled } from "../../../components/icons/FlowFilled";
+import { FlowUnfilled } from "../../../components/icons/FlowUnfilled";
 import AppHelpTutorial from "../../../components/AppHelpTutorial";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -250,10 +252,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           onClick={() => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
           }}
+          size={"medium"}
         />
         <div className="full-config-wrapper__flow-name-header">
           {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
-          <span style={{ fontSize: "0.75rem" }}> ({`${t("APPCONFIG_VERSION")} - ${version}`})</span>
+          <span style={{fontSize: "0.75rem", marginBottom: "0.375rem",marginTop: "0.375rem"}}> ({`${t("APPCONFIG_VERSION")} - ${version}`})</span>
         </div>
         <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
@@ -268,7 +271,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             }`}
             onClick={() => handleToggleSidePanel("roles")}
           >
-            <SVG.Person fill="#0B4B66" />
+            {activeSidePanel ? <SVG.Person fill="#0B4B66" /> : <SVG.PersonOutline fill="#0B4B66" />}
+
             <span>{t("APP_CONFIG_ROLES")}</span>
           </div>
 
@@ -278,7 +282,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             }`}
             onClick={() => handleToggleSidePanel("flows")}
           >
-            <Earbuds fill="#0B4B66" />
+            {/* <Earbuds fill="#0B4B66" /> */}
+            {activeSidePanel ? <FlowFilled/> : <FlowUnfilled/>}
             <span>{t("APP_CONFIG_FLOWS")}</span>
           </div>
         </div>
@@ -376,7 +381,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           <div className="full-config-wrapper__preview-area">
             {/* Flow Tag */}
             <div className="full-config-wrapper__flow-tag">
-              <ConversionPath fill="#0057BD" />
+              {/* <ConversionPath fill="#0057BD" /> */}
+              <FlowUnfilled fill="#0057BD" />
               <span>{t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${activeFlow?.name}`))}</span>
             </div>
 
@@ -495,7 +501,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
 
         {/* Bottom Navigation */}
         <div className="full-config-wrapper__bottom-nav">
-          <Button
+          {/* <Button
             variation="secondary"
             label={t("BACK")}
             icon="ArrowBack"
@@ -504,7 +510,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
             }}
-          />
+          /> */}
           <Button
             variation="primary"
             label={t("PROCEED_TO_PREVIEW")}
@@ -514,6 +520,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               // Handle proceed to preview
               saveToAppConfig();
             }}
+            style={{marginLeft:"auto"}}
           />
         </div>
 

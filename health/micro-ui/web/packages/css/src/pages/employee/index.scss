@@ -289,8 +289,9 @@
   font-weight: 700;
   font-size: 24px;
   color: #505a5f;
-  margin-top: 0.5rem;
-  padding-bottom: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding:0rem;
 }
 
 .header-end {
@@ -352,7 +353,7 @@ tbody {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 0rem;
   max-width: 100% !important;
 }
 
@@ -391,11 +392,19 @@ tbody {
 .campaign-summary-container {
   overflow: auto;
 
-  &.delivery-summary{
+  &.delivery-summary,
+  &.boundary-summary{
     display: flex;
     flex-direction: column;
     gap:1.5rem;
+
+    .view-composer-header-section {
+      .employee-card-sub-header {
+        margin-bottom: 0rem !important;
+      }
+    }
   }
+}
 
   .setup-campaign-card {
     .employeeCard.employeeCard-override {
@@ -849,6 +858,16 @@ tbody {
 }
 .summary-group:not(:last-child) {
   margin-bottom: 1.5rem;
+}
+
+.summary-group{
+  &.popup{
+    margin-bottom: 0rem;
+
+    .digit-tag-container{
+      margin:0rem;
+    }
+  }
 }
 
 .card-container {
@@ -1387,6 +1406,9 @@ tbody {
       width: fit-content !important;
     }
   }
+  .app-preview-card-header{
+      color: #0b4b66;
+  }
 }
 
 .digit-toast-success {
@@ -1412,5 +1434,31 @@ tbody {
 }
 
 .switch-unified-upload{
-  color:#0b4b66 !important;
+  color:var(--digitv2-lightTheme-primary-2) !important;
+}
+
+.digit-popup-heading{
+  color:var(--digitv2-lightTheme-primary-2) !important;
+}
+
+.digit-tag-wrapper {
+  border-radius: 0.5rem;
+}
+
+.digit-button-primary,
+.digit-button-secondary,
+.digit-button-teritiary {
+  &.large {
+    border-radius: 0.5rem;
+  }
+
+  &.medium,
+  &.small {
+    border-radius: 0.375rem;
+  }
+}
+
+.digit-submit-bar,
+.jk-digit-secondary-btn {
+  border-radius: 0.5rem;
 }

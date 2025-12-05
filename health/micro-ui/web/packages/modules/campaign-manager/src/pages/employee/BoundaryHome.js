@@ -14,7 +14,7 @@ const boundaryHomeConfig = {
   VIEW_EXISTING_BOUNDARY_DATA: null,
 };
 
-const navigate = (navigate, key, data, setShowPopUp) => {
+const handleNavigation = (navigate, key, data, setShowPopUp) => {
   let url = "";
   switch (key) {
     case "CREATE_NEW_BOUNDARY_DATA":
@@ -75,7 +75,7 @@ const BoundaryHome = () => {
                 variation={"secondary"}
                 label={t(key)}
                 isDisabled={isEditDisabled || isCreateDisabled}
-                onClick={() => navigate(navigate, key, data, setShowPopUp)}
+                onClick={() => handleNavigation(navigate, key, data, setShowPopUp)}
                 style={{ width: "35rem", height: "5rem" }}
                 textStyles={{ fontSize: "1.5rem" }}
               />

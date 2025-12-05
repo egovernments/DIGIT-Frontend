@@ -26,7 +26,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
         >
           <Card className="app-card" style={{}}>
             {/* RENDERING HEADER AND SUB-HEADING */}
-            {data.heading && <CardHeader>{t(data.heading)}</CardHeader>}
+            {data.heading && <CardHeader className="app-preview-card-header">{t(data.heading)}</CardHeader>}
             {data.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
             {/* RENDERING FORMS */}
