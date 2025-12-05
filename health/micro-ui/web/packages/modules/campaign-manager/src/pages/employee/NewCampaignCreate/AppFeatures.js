@@ -102,6 +102,7 @@ const AppFeatures = () => {
         tenantId: Digit.ULBService.getCurrentTenantId(),
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigCache`,
         isActive: true,
+        limit: 1000,
         filters: {
           campaignNumber: campaignNumber,
         },

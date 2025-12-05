@@ -48,6 +48,7 @@ const DummyLoader = () => {
                   project: campaignNumber,
                   module: flow,
                 },
+                limit: 1000,
                 isActive: true,
               },
             },

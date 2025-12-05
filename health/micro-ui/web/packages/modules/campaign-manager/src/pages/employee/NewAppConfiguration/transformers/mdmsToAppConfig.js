@@ -235,7 +235,7 @@ const transformFormProperties = (body) => {
           helpText: field.helpText || "",
           infoText: field.infoText || "",
           readOnly: field.readOnly !== undefined ? field.readOnly : false,
-          fieldName: field.fieldName,
+          fieldName: field?.fieldName || field?.jsonPath,
           deleteFlag: field.deleteFlag !== undefined ? field.deleteFlag : false,
           innerLabel: field.innerLabel || "",
           systemDate: field.systemDate !== undefined ? field.systemDate : false,
