@@ -277,8 +277,11 @@ const UpdateCampaign = ({ hierarchyData }) => {
             //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
 
             // );
-            const temp = CampaignData?.CampaignDetails?.[0].resources;
-
+            const temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
+              ...resource,
+              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+            }));
+            const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.resources = temp;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
@@ -287,6 +290,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                   (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
                 )?.beneficiaryType || null,
               key: currentKey,
+              isUnifiedCampaign: hasUnifiedResource,
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
@@ -300,6 +304,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
             if (compareIdentical(draftData, payloadData) === false) {
               setIsDataCreating(true);
 
+              debugger;
               await updateCampaign(payloadData, {
                 onError: (error, variables) => {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
@@ -307,7 +312,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 onSuccess: async (data) => {
                   draftRefetch();
                   navigate(
-                    `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
+                    `/${window.contextPath}/employee/campaign/response?campaignId=${
+                      data?.CampaignDetails?.campaignNumber
+                    }&isSuccess=${true}`,
                     {
                       state: {
                         message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
@@ -355,7 +362,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
             const temp = CampaignData?.CampaignDetails?.[0].resources;
 
-            payloadData.resources = temp;
+            payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
+            const tempResources = temp?.map((resource) => ({
+              ...resource,
+              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+            }));
+            const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
               beneficiaryType:
@@ -363,10 +375,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
                   (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
                 )?.beneficiaryType || null,
               key: currentKey,
+              isUnifiedCampaign: hasUnifiedResource,
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
             };
+            payloadData.resources = tempResources;
             if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
               payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
             } else {
@@ -375,6 +389,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
             payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
             setIsDataCreating(true);
 
+            debugger;
             await mutate(payloadData, {
               onError: (error, variables) => {
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
@@ -420,7 +435,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
             //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
             //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
             // );
-            const temp = CampaignData?.CampaignDetails?.[0].resources;
+            const temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
+              ...resource,
+              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+            }));
+            const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+
             payloadData.resources = temp;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
@@ -432,6 +452,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
+              isUnifiedCampaign: hasUnifiedResource,
             };
             if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
               payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
@@ -445,6 +466,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
               delete payloadData?.endDate;
             }
             if (compareIdentical(draftData, payloadData) === false) {
+              debugger;
               await updateCampaign(payloadData, {
                 onError: (error, variables) => {
                   console.log(error);
@@ -539,9 +561,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
           } else if (recursiveParentFind(formData?.boundaryType?.selectedData).length > 0) {
             setShowToast({
               key: "error",
-              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
-                `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
-              )}`,
+              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(
+                missedType?.[0]?.code
+              )} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
             });
             return false;
           }
@@ -675,6 +697,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   }, [showToast]);
 
   const onSubmit = (formData, cc) => {
+    debugger;
     setIsSubmitting(true);
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
@@ -799,8 +822,10 @@ const UpdateCampaign = ({ hierarchyData }) => {
       v.push(stepFind("HCM_CAMPAIGN_DATE"));
     if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData?.length) v.push(stepFind("HCM_CAMPAIGN_CYCLE_CONFIGURE"));
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.length) v.push(stepFind("HCM_CAMPAIGN_DELIVERY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length)
+      v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length)
+      v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
     if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_USER_DATA"));
 
     const highestNumber = Math.max(...v);
@@ -908,7 +933,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
       />
       {showToast && (
         <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          type={
+            showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+          }
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}

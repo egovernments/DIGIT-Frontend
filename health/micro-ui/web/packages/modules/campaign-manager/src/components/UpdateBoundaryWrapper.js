@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
-import { Card, HeaderComponent, AlertCard, PopUp, Button } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, AlertCard, PopUp, Button, Switch } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
@@ -26,7 +26,9 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
-  const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
+  const [selectedData, setSelectedData] = useState(
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []
+  );
   const [boundaryOptions, setBoundaryOptions] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
   );
@@ -34,6 +36,9 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const [hierarchyType, SetHierarchyType] = useState(props?.props?.hierarchyType);
   const [showPopUp, setShowPopUp] = useState(false);
   const [restrictSelection, setRestrictSelection] = useState(null);
+  const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign || false
+  );
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [HierarchySchema, hierarchyType]);
@@ -180,14 +185,20 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
 
       setBoundaryOptions(rootOptions);
     }
+    setIsUnifiedCampaign(CampaignData?.CampaignDetails?.[0]?.additionalDetails?.isUnifiedCampaign || false);
     SetHierarchyType(CampaignData?.CampaignDetails?.[0]?.hierarchyType);
     // const tranformedManagerUploadData = transformCampaignData(CampaignData);
     // Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
   }, [CampaignData]);
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
-  }, [selectedData, boundaryOptions, restrictSelection]);
+    onSelect("boundaryType", {
+      selectedData: selectedData,
+      boundaryData: boundaryOptions,
+      updateBoundary: !restrictSelection,
+      isUnifiedCampaign,
+    });
+  }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
 
   useEffect(() => {
     if (props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType) {
@@ -249,6 +260,21 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
             restrictSelection={restrictSelection}
           />
         )}
+      </Card>
+      <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <HeaderComponent className="unified-upload-header">{t("HCM_UNIFIED_UPLOAD_OPTION")}</HeaderComponent>
+            <p className="dates-description">{t("HCM_UNIFIED_UPLOAD_OPTION_DESC")}</p>
+          </div>
+          <Switch
+            isLabelFirst={true}
+            label={t("HCM_USE_UNIFIED_UPLOAD")}
+            isCheckedInitially={isUnifiedCampaign}
+            disable={true}
+            onToggle={() => {}}
+          />
+        </div>
       </Card>
       <div style={{ marginTop: "1rem" }}>
         <AlertCard
