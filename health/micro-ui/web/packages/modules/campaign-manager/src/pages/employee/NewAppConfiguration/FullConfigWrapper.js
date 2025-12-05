@@ -272,7 +272,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             }`}
             onClick={() => handleToggleSidePanel("roles")}
           >
-            {activeSidePanel ? <SVG.Person fill="#0B4B66" /> : <SVG.PersonOutline fill="#0B4B66" />}
+            {activeSidePanel === "roles" ? <SVG.Person fill="#0B4B66" /> : <SVG.PersonOutline fill="#0B4B66" />}
 
             <span>{t("APP_CONFIG_ROLES")}</span>
           </div>
@@ -284,7 +284,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             onClick={() => handleToggleSidePanel("flows")}
           >
             {/* <Earbuds fill="#0B4B66" /> */}
-            {activeSidePanel ? <FlowFilled/> : <FlowUnfilled/>}
+            {activeSidePanel === "flows" ? <FlowFilled/> : <FlowUnfilled/>}
             <span>{t("APP_CONFIG_FLOWS")}</span>
           </div>
         </div>
