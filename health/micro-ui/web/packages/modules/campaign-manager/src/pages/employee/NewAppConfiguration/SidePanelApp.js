@@ -61,7 +61,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
             } : {
               color: "#1C00BD", ...labelStyles
             }}
-            style={currentData?.type === "template" ? { backgroundColor: "#FFF7D6", borderRadius: "8px" } : { backgroundColor: "#EBECFE", borderRadius: "8px" }}
+            style={currentData?.type === "template" ? { backgroundColor: "#FFF7D6", borderRadius: "8px",width:"100%"} : { backgroundColor: "#EBECFE", borderRadius: "8px" ,width:"100%"}}
           />
         </div>
       ]}

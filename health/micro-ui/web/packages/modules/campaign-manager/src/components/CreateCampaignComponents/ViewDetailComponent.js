@@ -13,9 +13,9 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, ic
         <div className="icon-heading">
           {icon}
           <HeaderComponent
-            className={"detail-header"}
+            className={"detail-header campaign-home-card-header"}
             styles={{
-              color: disabled ? "#C5C5C5" : "#004b5e", // same gray for disabled header
+              color: disabled ? "#C5C5C5" : "#0B4B66", // same gray for disabled header
             }}
           >
             {headingName}

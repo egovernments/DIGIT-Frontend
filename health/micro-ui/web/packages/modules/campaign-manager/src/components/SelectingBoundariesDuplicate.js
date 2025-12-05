@@ -204,7 +204,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 </div>
               ) : null} */}
             </div>
-            <HeaderComponent className="select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
+            <HeaderComponent className="select-boundary-screen-heading">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper
               hierarchyType={hierarchyType}

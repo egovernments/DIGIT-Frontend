@@ -154,7 +154,7 @@ const CampaignHome = () => {
           }}
         >
           <NewWindow />
-          <div className={"descStyle "}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
+          <div className={"descStyle "}>{t("HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH")}</div>
         </div>
         <div
           className={"cardStyle"}

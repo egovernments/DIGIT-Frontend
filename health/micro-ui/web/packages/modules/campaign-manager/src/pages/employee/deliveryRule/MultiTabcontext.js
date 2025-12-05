@@ -106,7 +106,7 @@ const MultiTab = React.memo(({ projectConfig, attributeConfig, operatorConfig, d
         {campaignName && <TagComponent campaignName={campaignName} />}
 
         {projectTitle && (
-          <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary">
+          <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary-screen-heading">
             {t(projectTitle)}
           </HeaderComponent>
         )}

@@ -569,6 +569,7 @@
 .icon-heading {
   gap: 1rem;
   display: flex;
+  align-items: center;
 }
 .detail-desc {
   margin-top: 1.5rem;
@@ -870,6 +871,14 @@
 .select-boundary {
   color: var(--digitv2-lightTheme-primary-2) !important;
 }
+.select-boundary-screen-heading {
+  font-family: var(--digitv2-fontFamily-rc);
+  font-weight: var(--digitv2-fontWeight-bold);
+  font-style: Bold;
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  color: var(--digitv2-lightTheme-primary-2) !important;
+}
+
 .appConfigLabelField-toggleVisibility {
   position: absolute;
   cursor: pointer;
@@ -907,4 +916,15 @@
   justify-content: center;
   align-self: start;
   width: 100%;
+}
+
+.details-heading {
+  .campaign-home-card-header{
+    font-family: "Roboto";
+    font-weight: var(--digitv2-fontWeight-bold);
+    font-style: Bold;
+    font-size: var(--digitv2-fontSize-heading-m-desktop);
+    display: flex;
+    align-items: center;
+  }
 }

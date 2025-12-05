@@ -137,7 +137,7 @@ const BoundarySummary = (props) => {
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
             <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
           </div>
-          <div className="campaign-summary-container">
+          <div className="campaign-summary-container boundary-summary">
             <ViewComposer data={updatedObject} />
             {showToast && (
               <Toast

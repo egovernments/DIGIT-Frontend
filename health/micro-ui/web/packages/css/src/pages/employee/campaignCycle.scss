@@ -3,7 +3,7 @@
   }
 
   .sub-tab-container {
-    margin-top: 5px;
+    margin-bottom: 1.5rem;
     padding: 1.5rem;
 
     .card-text {
@@ -206,7 +206,7 @@
 .campaign-tab-head {
   padding: 1rem;
   width: 12.5rem;
-  height: 3rem;
+  height: 3.75rem;
   border-radius: 10px 10px 0px 0px;
   background-color: #ffffff;
   outline: none;
@@ -220,7 +220,7 @@
   background-color: #fafafa;
 
   &.active {
-    height: 3.375rem;
+    height: 4rem;
     background-color: #ffffff;
     outline: none;
     font-weight: bold;
@@ -230,6 +230,12 @@
     box-sizing: border-box;
     font-size: 1.5rem;
     cursor: default;
+  }
+
+  p{
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   :focus {

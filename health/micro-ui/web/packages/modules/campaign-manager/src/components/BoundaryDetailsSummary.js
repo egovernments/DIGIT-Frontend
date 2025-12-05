@@ -95,7 +95,7 @@ const BoundaryDetailsSummary = (props) => {
           // sortFooterChildren={true}
         >
           {Object.keys(groupedByParent).map((parentKey, index) => (
-            <div className="summary-group" key={index}>
+            <div className="summary-group popup" key={index}>
               {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
               <div>
                 <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" }}>
