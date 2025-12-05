@@ -78,17 +78,39 @@ const EmployeeDetailScreen = () => {
   };
 
   const deActivateUser = async (comment, date, reason, order) => {
-    let employeeData = {
-      ...data?.Employees[0], // Keep existing data
-      isActive: false, // Update isActive to false
-      deactivationDetails: [
+    let updatedDeactivationDetails = [];
+
+    const existingEmployee = data?.Employees[0];
+
+    if (existingEmployee.deactivationDetails && existingEmployee.deactivationDetails.length > 0) {
+      // Update the first object
+      updatedDeactivationDetails = existingEmployee.deactivationDetails.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              effectiveFrom: Date.now(),
+              reasonForDeactivation: reason,
+              remarks: order,
+              orderNo: comment,
+            }
+          : item
+      );
+    } else {
+      // Create a new object if no existing objects
+      updatedDeactivationDetails = [
         {
-          effectiveFrom: Date.now(), // Use the current timestamp
+          effectiveFrom: Date.now(),
           reasonForDeactivation: reason,
           remarks: order,
           orderNo: comment,
         },
-      ],
+      ];
+    }
+
+    let employeeData = {
+      ...data?.Employees[0], // Keep existing data
+      isActive: false, // Update isActive to false
+      deactivationDetails: updatedDeactivationDetails,
     };
 
     try {
@@ -179,7 +201,19 @@ const EmployeeDetailScreen = () => {
   };
 
   if (isLoading || isMDMSLoading) {
-    return <Loader />;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center", // horizontal center
+          alignItems: "center", // vertical center
+          height: "100vh", // take full viewport height
+          width: "100%", // full width
+        }}
+      >
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -407,7 +441,7 @@ const EmployeeDetailScreen = () => {
                           }
                         />
                       ) : (
-                        <NoResultsFound/>
+                        <NoResultsFound />
                       );
                     },
                   },
@@ -492,6 +526,7 @@ const EmployeeDetailScreen = () => {
           onSubmit={(comment, date, reason, order) => {
             deActivateUser(comment, date, reason, order);
           }}
+          reasonMsg={false}
         />
       )}
 
@@ -505,6 +540,7 @@ const EmployeeDetailScreen = () => {
           onSubmit={(comment, date, reason, order) => {
             activateUser(comment, date, reason, order);
           }}
+          reasonMsg={true}
         />
       )}
     </React.Fragment>
