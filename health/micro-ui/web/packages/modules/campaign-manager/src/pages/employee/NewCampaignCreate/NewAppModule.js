@@ -1,4 +1,4 @@
-import { Card, HeaderComponent, Loader, SVG, Button, } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Loader, SVG, Button,Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -47,7 +47,7 @@ const NewAppModule = () => {
   }
 
   return (
-    <>
+    <div className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
           {t(`HCM_CHOOSE_MODULE`)}
@@ -82,7 +82,7 @@ const NewAppModule = () => {
                   />
                 )}
                 <HeaderComponent className={`detail-header ${isActive ? "selected-header" : ""}`}>{t(item?.data?.name)}</HeaderComponent>
-                <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+                <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0" }} />
                 <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
 
                 <Button
@@ -90,6 +90,7 @@ const NewAppModule = () => {
                   size="medium"
                   variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
                   icon={isVisited ? "Edit" : null}
+                  className={`campaign-module-button ${isVisited || isActive ? "primaryButton" : "secondButton"}`}
                   label={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card click
@@ -109,7 +110,26 @@ const NewAppModule = () => {
           })}
         </div>
       </EqualHeightWrapper>
-    </>
+      <Footer
+        actionFields={
+          [
+            <Button
+              icon="ArrowBack"
+              label={t("GO_BACK")}
+              onClick={() => {
+              // Handle back navigation - could go to module selection or previous screen
+              navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+              }}
+              type="button"
+              variation="secondary"
+            />
+          ]
+        }
+        maxActionFieldsAllowed={5}
+        setactionFieldsToRight={true}
+      />
+    </div>
+
   );
 };
 

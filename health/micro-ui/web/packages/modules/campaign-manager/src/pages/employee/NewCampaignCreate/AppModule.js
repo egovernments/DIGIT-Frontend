@@ -266,7 +266,7 @@ const AppModule = () => {
   }
 
   return (
-    <>
+    <div className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
           {t(`HCM_CHOOSE_MODULE`)}
@@ -296,12 +296,12 @@ const AppModule = () => {
                 <HeaderComponent className={`detail-header ${selectedModuleCodes.includes(module?.data?.name) ? "selected-header" : ""}`}>
                   {t(module?.data?.name)}
                 </HeaderComponent>
-                <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+                <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0.5rem 0" }} />
                 <p className="module-description">
                   {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}
                 </p>
                 <Button
-                  className={"campaign-module-button"}
+                  className={`campaign-module-button ${selectedModuleCodes.includes(module?.data?.name) ? "secondButton" : "primaryButton"}`}
                   type={"button"}
                   size={"large"}
                   isDisabled={module?.data?.disabled}
@@ -338,7 +338,7 @@ const AppModule = () => {
           onClose={closeToast}
         />
       )}
-    </>
+    </div>
   );
 };
 

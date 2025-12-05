@@ -403,3 +403,74 @@
     height: 20rem;
   }
 }
+
+.app-modules-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .campaign-header-module-style {
+    margin: 0rem !important;
+  }
+
+  .modules-container {
+    padding: 0rem;
+
+    .module-card {
+      background-color: var(--digitv2-lightTheme-paper-secondary);
+      border: 1px solid var(--digitv2-lightTheme-divider);
+
+      p{
+        margin: 0rem;
+      }
+
+      &.selected-card {
+        background-color: var(--digitv2-lightTheme-paper);
+      }
+
+      .campaign-module-button {
+        margin: 0rem;
+        border-radius: 0.375rem;
+      }
+
+      .detail-header {
+        font-family: var(--digitv2-fontFamily-sans);
+        font-weight: var(--digitv2-fontWeight-bold);
+        font-style: Bold;
+        font-size: 1.5rem;
+        text-align: center;
+        color:var(--digitv2-lightTheme-text-color-disabled);
+
+        &.selected-header {
+          color: var(--digitv2-lightTheme-primary-2);
+        }
+      }
+    }
+  }
+}
+
+.full-config-wrapper__page-tabs{
+  .full-config-wrapper__page-tab--active{
+    margin-right:0rem;
+  }
+}
+
+.full-config-wrapper__sidebar-menu-item {
+  span {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-weight: var(--digitv2-fontWeight-regular);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-size: 1rem;
+    vertical-align: middle;
+  }
+}
+
+.full-config-wrapper__sidebar-menu-item--active {
+  span {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-weight: var(--digitv2-fontWeight-bold);
+    font-style: Bold;
+    font-size: 1rem;
+    vertical-align: middle;
+  }
+}

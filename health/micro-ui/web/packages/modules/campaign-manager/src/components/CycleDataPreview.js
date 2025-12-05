@@ -9,7 +9,7 @@ const Tabs = ({ deliveryData, onTabChange }) => {
   const { t } = useTranslation();
 
   return (
-    <div style={{ marginTop: "1.5rem", marginBottom: "1.5rem", display: "flex" }}>
+    <div style={{display: "flex" }}>
       {deliveryData?.map((_, index) => (
         <button
           key={index}
@@ -87,7 +87,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
         )}
       </div>
 
-      <hr style={{ border: "1px solid #d6d5d4" }} />
+      <hr style={{ border: "1px solid #d6d5d4" ,marginTop:"-1.5rem"}} />
 
       <Tabs deliveryData={deliveryData} tabCount={deliveryData?.length} activeTab={activeTab} onTabChange={handleTabChange} />
 

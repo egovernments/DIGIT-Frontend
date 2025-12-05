@@ -51,7 +51,7 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
   // Calculate duration from deliveryCycles
   const deliveryCycles = rowData?.data?.deliveryCycles || [];
   const duration = deliveryCycles.length > 0
-    ? `${deliveryCycles.length} Round${deliveryCycles.length > 1 ? 's' : ''} | ${deliveryCycles[0]?.durationInDays || 0} ${t("DAYS")} each`
+    ? `${deliveryCycles.length} Round${deliveryCycles.length > 1 ? 's' : ''} | ${deliveryCycles[0]?.durationInDays || 0} ${t("DAYS")}`
     : "NA";
 
   const createdBy = rowData?.data?.partnerName || "NA";
