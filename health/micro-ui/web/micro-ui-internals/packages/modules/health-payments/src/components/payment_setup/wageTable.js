@@ -136,9 +136,9 @@ const RoleWageTable = ({
 
       if (!/^\d*\.?\d*$/.test(value)) return;
       // If decimal exists, trim everything after dot
-  if (value.includes(".")) {
-    value = value.split(".")[0];  // take only the integer part
-  }
+      if (value.includes(".")) {
+        value = value.split(".")[0]; // take only the integer part
+      }
       if (value === "") value = "0";
 
       const numericValue = parseFloat(value) || 0;
@@ -233,9 +233,9 @@ const RoleWageTable = ({
             justifyContent: "flex-end",
             fontWeight: 500,
           }}
-          title={row.total.toFixed(2)}
+          title={row.total || 0}
         >
-          {row.total.toFixed(2)}
+          {row.total || 0}
         </div>
       ),
       width: "150px",
