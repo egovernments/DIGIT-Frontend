@@ -15,7 +15,7 @@ const DetailsTable = ({ className = "", columnsData, rowsData, summaryRows, card
       if (i?.operator?.code === "IN_BETWEEN") {
         return {
           ...i,
-          value: `${i?.toValue ? i?.toValue : "N/A"}  to ${i?.fromValue ? i?.fromValue : "N/A"}`,
+          value: `${i?.fromValue ? i?.fromValue : "N/A"}  to ${i?.toValue ? i?.toValue : "N/A"}`,
           operator: t(i?.operator?.code) || t(i?.operator),
       attribute: i?.attribute?.code ||  i?.attribute ? t(`CAMPAIGN_ATTRIBUTE_${i?.attribute?.code?.toUpperCase()}`) : "",
         };
