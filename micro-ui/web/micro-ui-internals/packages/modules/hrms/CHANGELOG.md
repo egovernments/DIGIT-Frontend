@@ -1,3 +1,10 @@
+## [1.9.1] [08-December-2025]
+
+### 📱 Mobile Number Validation Enhancements:
+- **Consistent Validation**: Implemented consistent mobile number validation across Create Employee, Edit Employee, and Inbox Search forms.
+- **MDMS Integration**: Mobile number validation rules (max length, pattern, error messages) are now dynamically fetched from MDMS configuration.
+
+
 ## [1.9.0] [28-October-2025]
 
 ### 🚀 Enhanced HR Management System
