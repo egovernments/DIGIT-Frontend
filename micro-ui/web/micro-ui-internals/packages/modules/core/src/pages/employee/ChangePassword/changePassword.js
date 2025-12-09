@@ -10,7 +10,7 @@ import ImageComponent from "../../../components/ImageComponent";
 
 const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   const [user, setUser] = useState(null);
-  const { mobile_number: mobileNumber, tenantId } = Digit.Hooks.useQueryParams();
+  const { mobile_number: mobileNumber, tenantId, USERNAME } = Digit.Hooks.useQueryParams();
   const history = useHistory();
   const [otp, setOtp] = useState("");
   const [isOtpValid, setIsOtpValid] = useState(true);
@@ -37,6 +37,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
         userType: getUserType().toUpperCase(),
         type: "passwordreset",
         tenantId,
+        userName: USERNAME
       },
     };
 
