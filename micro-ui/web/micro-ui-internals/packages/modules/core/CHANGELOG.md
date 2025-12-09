@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.9.7] [09-December-2025]
+
+- Bug fix: Include userName parameter in OTP resend request for employee password reset flow
+
 ## [1.9.6]  [26-November-2025]
 -Bug fix : minor logic enhancement in 1.9.5
 
