@@ -179,7 +179,7 @@ const getUpdatedPath = (path = "") => {
 /* Method currently used to update the title for the all data with localisation code*/
 
 const updateTitleToLocalisationCodeForObject = (definition, schemaCode) => {
-  Object.keys(definition?.properties).map((key) => {
+definition?.properties&&  Object.keys(definition?.properties).map((key) => {
     const title = Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${key}`);
     definition.properties[key] = { ...definition.properties[key], title: title };
     if (definition?.properties?.[key]?.type == "object") {

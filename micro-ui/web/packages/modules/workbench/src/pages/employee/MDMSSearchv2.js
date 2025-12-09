@@ -136,7 +136,7 @@ const MDMSSearchv2 = () => {
       } = currentSchema;
       const schemaCodeToValidate = `${master}.${modulee}`;
       
-      Object.keys(properties)?.forEach((key) => {
+     properties && Object.keys(properties)?.forEach((key) => {
         if (properties[key].type === "string" && !properties[key].format) {
           dropDownOptions.push({
             name: key,

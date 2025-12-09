@@ -104,6 +104,13 @@ const MDMSManager = lazyWithFallback(
   { loaderText: "Loading MDMS Manager..." }
 );
 
+const AuditHistory = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-manager" */ "./AuditHistory"),
+    () => require("./AuditHistory").default,
+  { loaderText: "Loading MDMS Manager..." }
+);
+
+
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
@@ -222,6 +229,9 @@ const App = ({ path }) => {
           <Route path="sidebar-view" element={<PrivateRoute element={<SidebarView />} />} />
           <Route path="sidebar-add" element={<PrivateRoute element={<SidebarAdd />} />} />
           <Route path="manage-schema" element={<PrivateRoute element={<MDMSManager />} />} />
+          <Route path={`audit-history`} element={<PrivateRoute element={<AuditHistory  /> } />}>
+          
+        </Route>
         </Routes>
       </AppContainer>
     </React.Fragment>

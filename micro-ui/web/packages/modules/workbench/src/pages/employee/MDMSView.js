@@ -220,7 +220,7 @@ const MDMSView = ({ ...props }) => {
         variation="secondary"
         icon={"History"}
         onClick={() => {
-          navigate(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
+          navigate(`../audit-history?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
       />
       {renderToast()}
