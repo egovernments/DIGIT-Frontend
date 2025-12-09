@@ -1372,3 +1372,8 @@ textarea.light-placeholder::placeholder {
 .employee-app-wrapper .digit-label-field-pair .digit-card-label{
   margin-top: -1rem;
 }
+
+.login-form-container .citizen-linking-card{
+    position: absolute;
+    bottom : 0px;
+}
