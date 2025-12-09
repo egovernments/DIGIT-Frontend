@@ -47,7 +47,7 @@ const AttendanceInboxComponent = () => {
    * @param {number} totalNext - Offset for pagination
    * @param {object} selectedProject - Selected project object
    */
-  const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, selectedProjectp) => {
+  const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, userAssignedProject) => {
     try {
       setChildrenDataLoading(true);
 
@@ -65,7 +65,7 @@ const AttendanceInboxComponent = () => {
             limit: totalRows || rowsPerPage,
             offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
             referenceId:
-              (selectedProjectp?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id) ||
+              (userAssignedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id) ||
               selectedProject?.id,
             staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
             localityCode:
@@ -129,16 +129,13 @@ const AttendanceInboxComponent = () => {
     const data = Digit.SessionStorage.get("paymentInbox");
     const selectedArea = Digit.SessionStorage.get("selectedValues");
 
-    const selectedPeriod= Digit.SessionStorage.get("selectedPeriod");
-
+    const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
 
     if (data && selectedPeriod) {
-      
       triggerAttendanceSearch(data);
     } else if (selectedArea) {
       const pp = Object.values(selectedArea).find((v) => v !== null);
       if (pp && selectedPeriod) {
-        
         triggerAttendanceSearch(pp?.code);
       }
     }
@@ -250,7 +247,7 @@ const AttendanceInboxComponent = () => {
           <div className="custom-inbox-outer-table-section">
             <div className="inner-table-section" style={{ height: "61vh" }}>
               {card == false ? (
-                <Card className="card-overide" style={{gap:"0.5rem"}}>
+                <Card className="card-overide" style={{ gap: "0.5rem" }}>
                   <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
                     {renderProjectPeriod(t, selectedProject, markPeriod)?.[0] || " "}
                     <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, markPeriod)?.[1] || ""}</div>
