@@ -14,7 +14,7 @@
   "homepage": "/digit-studio",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.19",
-    "@egovernments/digit-ui-module-core": "1.9.6",
+    "@egovernments/digit-ui-module-core": "1.9.7",
     "@egovernments/digit-ui-module-workbench": "1.0.26",
     "@egovernments/digit-ui-module-hrms": "1.8.17",
     "@egovernments/digit-ui-module-open-payment": "0.0.5",
