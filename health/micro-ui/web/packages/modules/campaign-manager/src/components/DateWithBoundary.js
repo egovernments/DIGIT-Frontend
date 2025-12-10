@@ -259,7 +259,6 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   }, [selectedLevel]);
 
   const handleBoundaryChange = (data) => {
-    console.log("DKJDKDJ", data)
     let res = [];
     data.map((arg) => {
       res.push(arg[1]);
