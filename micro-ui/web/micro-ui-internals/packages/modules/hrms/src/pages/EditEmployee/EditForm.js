@@ -83,7 +83,7 @@ const EditForm = ({ tenantId, data }) => {
         },
         boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
         boundary: { code: ele.boundary },
-        roles: isMultiRootTenant?data?.user?.roles:data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
+        roles: isMultiRootTenant ? data?.user?.roles : data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
     Assignments: data?.assignments.map((ele, index) => {
@@ -191,10 +191,10 @@ const EditForm = ({ tenantId, data }) => {
     }
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        if(isMultiRootTenant){
+        if (isMultiRootTenant) {
           item["tenantId"] = tenantId;
         }
-        else{
+        else {
           item["tenantId"] = ele.boundary;
         }
         return item;
@@ -237,23 +237,49 @@ const EditForm = ({ tenantId, data }) => {
 
     // history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "UPDATE" });
   };
-  if (isLoading) {
+  // Fetch mobile validation config from MDMS
+  const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+    "ValidationConfigs",
+    [{ name: "mobileNumberValidation" }],
+    {
+      select: (data) => {
+        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const rules = validationData?.rules;
+        return {
+          prefix: rules?.prefix || "+91",
+          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
+          isActive: rules?.isActive !== false,
+          maxLength: rules?.maxLength || 10,
+          minLength: rules?.minLength || 10,
+          errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
+        };
+      },
+      staleTime: 300000,
+    }
+  );
+
+  if (isLoading || isValidationLoading) {
     return <Loader />;
   }
 
-  const config = mdmsData?.config ? mdmsData.config : newConfig;
+  const config = (mdmsData?.config ? mdmsData.config : newConfig).map((section) => ({
+    ...section,
+    body: section.body.filter((a) => !a.hideInEmployee).map((field) => {
+      if (field.component === "SelectEmployeePhoneNumber") {
+        return { ...field, validationConfig };
+      }
+      return field;
+    }),
+  }));
   return (
     <div>
       <FormComposer
         heading={t("HR_COMMON_EDIT_EMPLOYEE_HEADER")}
-        isDisabled={!canSubmit}
+        // isDisabled={!canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
-        config={config.map((config) => {
-          return {
-            ...config,
-            body: config.body.filter((a) => !a.hideInEmployee),
-          };
-        })}
+        config={config}
         fieldStyle={{ marginRight: 0 }}
         onSubmit={onSubmit}
         defaultValues={defaultValues}
