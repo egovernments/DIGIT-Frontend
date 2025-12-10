@@ -16,6 +16,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
     "HCM_UPLOAD_TARGET",
     "HCM_SUMMARY",
   ];
+  const isUnifiedCampaign = queryParams.isUnifiedCampaign === "true";
   const mappingCategories = ["HCM_UPLOAD_FACILITY_MAPPING", "HCM_UPLOAD_USER_MAPPING"];
   const [currentStep, setCurrentStep] = useState(1);
   const currentCategories = categories?.[parseInt(currentKey) - 1];
@@ -32,27 +33,18 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   }
 
   useEffect(() => {
-    setKey(currentKey);
-    setCurrentStep(currentKey - baseKey + 1);
+    if (!isUnifiedCampaign) {
+      setKey(currentKey);
+      setCurrentStep(currentKey - baseKey + 1);
+    }
   }, [currentKey]);
 
   useEffect(() => {
-    updateUrlParams({ key: key });
-    window.dispatchEvent(new Event("checking"));
+    if (!isUnifiedCampaign) {
+      updateUrlParams({ key: key });
+      window.dispatchEvent(new Event("checking"));
+    }
   }, [key]);
-
-  const onStepClick = (currentStep) => {
-    setCurrentStep(currentStep + 1);
-    if (currentStep === 0) {
-      setKey(10);
-    } else if (currentStep === 1) {
-      setKey(11);
-    } else if (currentStep === 3) {
-      setKey(13);
-    } else if (currentStep === 4) {
-      setKey(14);
-    } else setKey(12);
-  };
 
   return (
     <>
@@ -67,7 +59,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
             </Card>
           </div>
         )} */}
-        {mappingCategories?.includes(currentCategories) && !parentId ? (
+        {!isUnifiedCampaign && mappingCategories?.includes(currentCategories) && !parentId ? (
           <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
         ) : (
           // <UploadData formData={formData} props={props} onSelect={onSelect} />

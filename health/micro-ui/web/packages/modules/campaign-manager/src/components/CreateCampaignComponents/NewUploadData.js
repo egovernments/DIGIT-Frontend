@@ -1019,7 +1019,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             // For unified-console, check validationStatus/totalErrors; for others, check sheetErrors
-            const isUnifiedConsoleInvalid = type === "unified-console" &&
+            const isUnifiedConsoleInvalid =
+              type === "unified-console" &&
               (temp?.additionalDetails?.validationStatus === "invalid" || temp?.additionalDetails?.totalErrors > 0);
             const hasSheetErrors = temp?.additionalDetails?.sheetErrors?.length > 0;
             const isValidFile = !hasSheetErrors && !isUnifiedConsoleInvalid;
@@ -1169,9 +1170,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         }
         // Download the file directly using fileStoreId
         setDownloadError(false);
-        const customFileName = parentId
-          ? `${campaignName}_${t("HCM_FILLED")}_Unified_Template`
-          : `${campaignName}_Unified_Template`;
+        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_Unified_Template` : `${campaignName}_Unified_Template`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,
@@ -1306,7 +1305,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   return (
     <>
-      <div className="container-full" style={{width:"100%"}}>
+      <div className="container-full" style={{ width: "100%" }}>
         {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
         {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
@@ -1324,12 +1323,24 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facility" ? t("WBH_UPLOAD_FACILITY") : type === "unified-console" ? t("WBH_UPLOAD_UNIFIED_DATA") : t("WBH_UPLOAD_USER")}
+                {type === "boundary"
+                  ? t("WBH_UPLOAD_TARGET")
+                  : type === "facility"
+                  ? t("WBH_UPLOAD_FACILITY")
+                  : type === "unified-console"
+                  ? t("WBH_UPLOAD_UNIFIED_DATA")
+                  : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
-                {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facility" ? t("HCM_FACILITY_MESSAGE") : type === "unified-console" ? t("HCM_UNIFIED_DATA_MESSAGE") : t("HCM_USER_MESSAGE")}
+                {type === "boundary"
+                  ? t("HCM_BOUNDARY_MESSAGE")
+                  : type === "facility"
+                  ? t("HCM_FACILITY_MESSAGE")
+                  : type === "unified-console"
+                  ? t("HCM_UNIFIED_DATA_MESSAGE")
+                  : t("HCM_USER_MESSAGE")}
               </div>
             )}
             <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
@@ -1459,7 +1470,15 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         )}
         {showToast && (uploadedFile?.length > 0 || downloadError) && (
           <Toast
-            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+            type={
+              showToast?.key === "error"
+                ? "error"
+                : showToast?.key === "info"
+                ? "info"
+                : showToast?.key === "warning"
+                ? "warning"
+                : "success"
+            }
             // error={showToast.key === "error" ? true : false}
             // warning={showToast.key === "warning" ? true : false}
             // info={showToast.key === "info" ? true : false}
