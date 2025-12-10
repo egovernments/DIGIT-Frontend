@@ -52,7 +52,7 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
     };
     try {
       await Digit.UserService.sendOtp(requestData, data.city.code);
-      history.push(`/${window?.contextPath}/employee/user/change-password?userName=${data.username}&tenantId=${data.city.code}`);
+      history.push(`/${window?.contextPath}/employee/user/change-password?USERNAME=${data.username}&tenantId=${data.city.code}`);
     } catch (err) {
       setShowToast(err?.response?.data?.error?.fields?.[0]?.message || "Invalid login credentials!");
       setTimeout(closeToast, 5000);

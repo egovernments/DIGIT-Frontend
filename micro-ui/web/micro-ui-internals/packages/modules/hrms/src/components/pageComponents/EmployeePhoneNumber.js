@@ -6,6 +6,15 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
   const { pathname: url } = useLocation();
   const [iserror, setError] = useState(false);
   let isMobile = window.Digit.Utils.browser.isMobile();
+
+  // Get validation config from props or use defaults
+  const validationConfig = config?.validationConfig || {};
+  const prefix = validationConfig.prefix || "+91";
+  const pattern = validationConfig.pattern || "^[6-9][0-9]{9}$";
+  const maxLength = validationConfig.maxLength || 10;
+  const minLength = validationConfig.minLength || 10;
+  const errorMessage = validationConfig.errorMessage || "CORE_COMMON_MOBILE_ERROR";
+
   const inputs = [
     {
       label: t("HR_MOB_NO_LABEL"),
@@ -15,10 +24,12 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
       populators: {
         validation: {
           required: true,
-          pattern: /^[6-9]\d{9}$/,
+          pattern: new RegExp(pattern),
+          maxLength: maxLength,
+          minLength: minLength,
         },
-        componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
-        error: t("CORE_COMMON_MOBILE_ERROR"),
+        componentInFront: <div className="employee-card-input employee-card-input--front">{prefix}</div>,
+        error: t(errorMessage),
       },
     },
   ];
@@ -39,28 +50,24 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field-container" style={{ width:isMobile? "100%":"50%", display: "block" }}>
+            <div className="field-container" style={{ width: isMobile ? "100%" : "50%", display: "block" }}>
               <div>
                 <div style={{ display: "flex" }}>
-                  <div className="employee-card-input employee-card-input--front">+91</div>
+                  <div className="employee-card-input employee-card-input--front">{prefix}</div>
                   <TextInput
                     className="field desktop-w-full"
                     key={input.name}
                     value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
-                    onChange={(e) =>{ setValue(e.target.value, input.name,validate(e.target.value, input))}}
+                    onChange={(e) => { setValue(e.target.value, input.name, validate(e.target.value, input)) }}
                     disable={false}
                     defaultValue={undefined}
                     onBlur={(e) => validate(e.target.value, input)}
+                    maxLength={maxLength}
+                    minLength={minLength}
                     {...input.validation}
                   />
                 </div>
-                <div>{iserror ? <CardLabelError style={{ width: "100%" }}>{t(input.populators.error)}</CardLabelError> : <span style={{
-                  color: "gray", width: "100%", border: "none",
-                  background: "none",
-                  justifyContent: "start"
-                }}>
-                  {t("HR_MOBILE_NO_CHECK")}
-                </span>}</div>
+                <div>{iserror ? <CardLabelError style={{ width: "100%" }}>{t(input.populators.error)}</CardLabelError> : null}</div>
               </div>
             </div>
           </LabelFieldPair>

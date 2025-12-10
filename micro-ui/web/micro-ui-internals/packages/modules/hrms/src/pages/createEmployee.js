@@ -19,7 +19,7 @@ const CreateEmployee = () => {
   const isMobile = window.Digit.Utils.browser.isMobile();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
- const { data: mdmsData,isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
       return {
         config: data?.MdmsRes?.['egov-hrms']?.CommonFieldsConfig
@@ -28,6 +28,32 @@ const CreateEmployee = () => {
     retry: false,
     enable: false,
   });
+
+  // Fetch mobile validation config from MDMS
+  const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+    "ValidationConfigs",
+    [{ name: "mobileNumberValidation" }],
+    {
+      select: (data) => {
+        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const rules = validationData?.rules;
+
+        // Return validation rules with defaults
+        return {
+          prefix: rules?.prefix || "+91",
+          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
+          isActive: rules?.isActive !== false,
+          maxLength: rules?.maxLength || 10,
+          minLength: rules?.minLength || 10,
+          errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
+        };
+      },
+      staleTime: 300000, // Cache for 5 minutes
+    }
+  );
+
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
@@ -89,7 +115,7 @@ const CreateEmployee = () => {
   const onFormValueChange = (setValue = true, formData) => {
 
     if (!_.isEqual(sessionFormData, formData)) {
-        setSessionFormData({...sessionFormData,...formData});
+      setSessionFormData({ ...sessionFormData, ...formData });
     }
 
     if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
@@ -146,37 +172,37 @@ const CreateEmployee = () => {
 
 
   const ToastOverlay = ({ showToast, t, onClose }) => {
-  if (!showToast) return null;
-  return (
-    <div style={{
-      position: "fixed",
-      bottom: "100px",
-      left: "50%",
-      transform: "translateX(-50%)",
-      zIndex: 9999,
-      maxWidth: "90%",
-    }}>
-      <Toast
-        type={showToast.key}
-        label={t(showToast.label)}
-        onClose={onClose}
-      />
-    </div>
-  );
-};
+    if (!showToast) return null;
+    return (
+      <div style={{
+        position: "fixed",
+        bottom: "100px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 9999,
+        maxWidth: "90%",
+      }}>
+        <Toast
+          type={showToast.key}
+          label={t(showToast.label)}
+          onClose={onClose}
+        />
+      </div>
+    );
+  };
 
-function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
-  if (!Array.isArray(jurisdictions) || !parentCity) return false;
+  function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
+    if (!Array.isArray(jurisdictions) || !parentCity) return false;
 
-  return jurisdictions.some(j => j?.boundary === parentCity);
-}
+    return jurisdictions.some(j => j?.boundary === parentCity);
+  }
 
 
 
 
   const onSubmit = async (data) => {
-    const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
-    const selectedCity= data?.Jurisdictions?.[0]?.boundary;
+    const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true);
+    const selectedCity = data?.Jurisdictions?.[0]?.boundary;
     data.Jurisdictions = data?.Jurisdictions?.map((juris) => {
       return {
         ...juris,
@@ -184,13 +210,13 @@ function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
       };
     });
 
-    
-    if(!hasMatchingJurisdiction(data?.Jurisdictions,userInfo.info.tenantId)){
+
+    if (!hasMatchingJurisdiction(data?.Jurisdictions, userInfo.info.tenantId)) {
       setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
       return;
     }
 
-    if(!canSubmit){
+    if (!canSubmit) {
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
       return;
     }
@@ -219,10 +245,10 @@ function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
     }
     let roles = data?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        if(isMultiRootTenant){
+        if (isMultiRootTenant) {
           item["tenantId"] = tenantId;
         }
-        else{
+        else {
           item["tenantId"] = ele.boundary;
         }
         return item;
@@ -254,8 +280,8 @@ function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
         tests: [],
       },
     ];
-      /* use customiseCreateFormData hook to make some chnages to the Employee object */
-      Employees=Digit?.Customizations?.HRMS?.customiseCreateFormData?Digit.Customizations.HRMS.customiseCreateFormData(data,Employees):Employees;
+    /* use customiseCreateFormData hook to make some chnages to the Employee object */
+    Employees = Digit?.Customizations?.HRMS?.customiseCreateFormData ? Digit.Customizations.HRMS.customiseCreateFormData(data, Employees) : Employees;
 
     if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
       Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code }).then((result, err) => {
@@ -303,18 +329,28 @@ function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
       );
     }
   };
-  if (isLoading) {
+  if (isLoading || isValidationLoading) {
     return <Loader />;
   }
-  const config =mdmsData?.config?mdmsData.config: newConfig;
+
+  // Inject validation config into the phone number field
+  const config = (mdmsData?.config ? mdmsData.config : newConfig).map((section) => ({
+    ...section,
+    body: section.body.map((field) => {
+      if (field.component === "SelectEmployeePhoneNumber") {
+        return { ...field, validationConfig };
+      }
+      return field;
+    }),
+  }));
   return (
     <div>
-      <div style={isMobile ? {marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000"} :{ marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>
+      <div style={isMobile ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" } : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposer
         // defaultValues={defaultValues}
-        defaultValues = {sessionFormData}
+        defaultValues={sessionFormData}
         heading={t("")}
         config={config}
         onSubmit={onSubmit}

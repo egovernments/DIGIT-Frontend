@@ -33,7 +33,6 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     // setTotalReacords(res?.EmployeCount?.totalEmployee);
   }, [res]);
 
-  useEffect(() => {}, [hookLoading, rest]);
 
   useEffect(() => {
     setPageOffset(0);
@@ -65,6 +64,27 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     setPageSize(Number(e.target.value));
   };
 
+  // Fetch mobile validation config from MDMS
+  const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+    "ValidationConfigs",
+    [{ name: "mobileNumberValidation" }],
+    {
+      select: (data) => {
+        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const rules = validationData?.rules;
+        return {
+          prefix: rules?.prefix || "+91",
+          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: rules?.maxLength || 10,
+          minLength: rules?.minLength || 10,
+          errorMessage: rules?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID",
+        };
+      },
+      staleTime: 300000,
+    }
+  );
+
   const getSearchFields = () => {
     return [
       {
@@ -74,10 +94,10 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
       {
         label: t("HR_MOB_NO_LABEL"),
         name: "phone",
-        maxlength: 10,
-        pattern: "[6-9][0-9]{9}",
-        title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-        componentInFront: "+91",
+        maxlength: validationConfig?.maxLength || 10,
+        pattern: validationConfig?.pattern || "[6-9][0-9]{9}",
+        title: t(validationConfig?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        componentInFront: validationConfig?.prefix || "+91",
       },
       {
         label: t("HR_EMPLOYEE_ID_LABEL"),
@@ -114,7 +134,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
           searchParams={searchParams}
           sortParams={sortParams}
           totalRecords={totalRecords}
-          linkPrefix={ `/${window?.contextPath}/employee/hrms/details/`}
+          linkPrefix={`/${window?.contextPath}/employee/hrms/details/`}
           filterComponent={filterComponent}
         />
         // <div></div>
