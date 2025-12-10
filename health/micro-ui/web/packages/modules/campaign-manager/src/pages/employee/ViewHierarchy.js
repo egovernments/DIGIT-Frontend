@@ -466,6 +466,7 @@ const ViewHierarchy = () => {
                     setFirstPage(false);
                   }}
                   type="button"
+                  variation="primary"
                   textStyles={{ width: "unset" }}
                 />,
               ]}
@@ -557,6 +558,7 @@ const ViewHierarchy = () => {
                     createData();
                   }}
                   type="button"
+                  variation="primary"
                   textStyles={{ width: "unset" }}
                 />,
               ]}

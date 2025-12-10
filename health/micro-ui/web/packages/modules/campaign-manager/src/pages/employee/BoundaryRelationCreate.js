@@ -547,6 +547,7 @@ const BoundaryRelationCreate = () => {
                 label={t("CMN_BOUNDARY_REL_CREATE")}
                 // onClick={goToPreview}
                 isDisabled={creatingData}
+                variation="primary"
                 onClick={() => {
                   const checkValid = newBoundaryData?.every((obj) => obj?.boundaryType);
                   if (checkValid) {
