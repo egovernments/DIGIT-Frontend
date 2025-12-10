@@ -20,6 +20,8 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
 
         if (isUnifiedConsole) {
             resourceDetails.referenceId = id;
+            resourceDetails.locale = Digit?.Utils?.getDefaultLanguage();
+            resourceDetails.referenceType = "campaign"
         } else {
             resourceDetails.campaignId = id;
         }

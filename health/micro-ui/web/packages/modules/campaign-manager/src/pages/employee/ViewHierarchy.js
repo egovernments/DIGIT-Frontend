@@ -76,13 +76,14 @@ const ViewHierarchy = () => {
   }, []);
   const generateTemplate = async () => {
     const res = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/data/_download`,
+      // url: `/project-factory/v1/data/_download`,
+      url:`/boundary-management/v1/_generate-search`,
       body: {},
       params: {
         tenantId: tenantId,
-        type: "boundaryManagement",
+        // type: "boundaryManagement",
         hierarchyType: hierarchyType,
-        campaignId: "default",
+        // campaignId: "default",
       },
     });
     return res;
@@ -191,19 +192,25 @@ const ViewHierarchy = () => {
       setDataCreateToast(true);
 
       const createResponse = await Digit.CustomService.getResponse({
-        url: "/project-factory/v1/data/_create",
+        // url: "/project-factory/v1/data/_create",
+        url: "/boundary-management/v1/_process",
         params: {},
         body: {
           ResourceDetails: {
+            // tenantId: tenantId,
+            // type: "boundaryManagement",
+            // fileStoreId: fileStoreId,
+            // action: "create",
+            // hierarchyType: hierarchyType,
+            // additionalDetails: {
+            //   source: "boundary",
+            // },
+            // campaignId: "default",
             tenantId: tenantId,
-            type: "boundaryManagement",
             fileStoreId: fileStoreId,
             action: "create",
             hierarchyType: hierarchyType,
-            additionalDetails: {
-              source: "boundary",
-            },
-            campaignId: "default",
+            additionalDetails: {},
           },
         },
       });
@@ -267,7 +274,8 @@ const ViewHierarchy = () => {
           // }
 
           const searchResponse = await Digit.CustomService.getResponse({
-            url: "/project-factory/v1/data/_search",
+            // url: "/project-factory/v1/data/_search",
+            url: "/boundary-management/v1/_process-search",
             params: {},
             body: {
               SearchCriteria: {
@@ -279,7 +287,7 @@ const ViewHierarchy = () => {
           });
 
           const status = searchResponse?.ResourceDetails?.[0]?.status;
-          let errorString = searchResponse?.ResourceDetails?.[0]?.additionalDetails.error;
+          let errorString = searchResponse?.ResourceDetails?.[0]?.additionalDetails?.error;
           let errorObject = {};
           let errorCode = "HIERARCHY_FAILED";
           if (errorString) errorObject = JSON.parse(errorString);
@@ -290,7 +298,8 @@ const ViewHierarchy = () => {
             setDataCreationGoing(false);
             resolve(true);
           } else if (status === "failed") {
-            reject(new Error(errorCode));
+            const humanMessage = errorObject.description || errorObject.code || "WBH_HIERARCHY_STATUS_FAILED";
+            reject(new Error(humanMessage));
           } else {
             retries++;
             setTimeout(poll, pollInterval);
