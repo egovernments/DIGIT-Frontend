@@ -8,14 +8,15 @@ const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") 
 
 const generateFile = async (hierarchyType, tenantId) => {
   const res = await Digit.CustomService.getResponse({
-    url: `/project-factory/v1/data/_generate`,
+    // url: `/project-factory/v1/data/_generate`,
+    url:`/boundary-management/v1/_generate`,
     body: {},
     params: {
       tenantId: tenantId,
-      type: "boundaryManagement",
+      // type: "boundaryManagement",
       forceUpdate: true,
       hierarchyType: hierarchyType,
-      campaignId: "default",
+      // campaignId: "default",
     },
   });
   return res;

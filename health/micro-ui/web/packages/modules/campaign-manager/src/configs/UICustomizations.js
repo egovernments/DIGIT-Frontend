@@ -234,14 +234,15 @@ export const UICustomizations = {
           const tenantId = Digit?.ULBService?.getCurrentTenantId();
           const generateFile = async () => {
             const res = await Digit.CustomService.getResponse({
-              url: `/project-factory/v1/data/_generate`,
+              // url: `/project-factory/v1/data/_generate`,
+              url:`/boundary-management/v1/_generate`,
               body: {},
               params: {
                 tenantId: tenantId,
-                type: "boundaryManagement",
+                // type: "boundaryManagement",
                 forceUpdate: true,
                 hierarchyType: row?.hierarchyType,
-                campaignId: "default",
+                // campaignId: "default",
               },
             });
             return res;
@@ -253,13 +254,14 @@ export const UICustomizations = {
           const generateTemplate = async () => {
             try {
               const res = await Digit.CustomService.getResponse({
-                url: `/project-factory/v1/data/_download`,
+                // url: `/project-factory/v1/data/_download`,
+                url:`/boundary-management/v1/_generate-search`,
                 body: {},
                 params: {
                   tenantId: tenantId,
-                  type: "boundaryManagement",
+                  // type: "boundaryManagement",
                   hierarchyType: row?.hierarchyType,
-                  campaignId: "default",
+                  // campaignId: "default",
                 },
               });
               return res;

@@ -84,7 +84,8 @@ module.exports = merge(common, {
           "/fsm-calculator",
           "/product",
           "/health-service-request",
-          "/excel-ingestion"
+          "/excel-ingestion",
+          "/boundary-management"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
         changeOrigin: true,
