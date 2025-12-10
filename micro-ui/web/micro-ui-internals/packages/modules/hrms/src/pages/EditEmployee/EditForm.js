@@ -294,7 +294,7 @@ const EditForm = ({ tenantId, data }) => {
           }}
         />
       )}
-    </div >
+    </div>
   );
 };
 export default EditForm;

@@ -33,7 +33,6 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     // setTotalReacords(res?.EmployeCount?.totalEmployee);
   }, [res]);
 
-  useEffect(() => { }, [hookLoading, rest]);
 
   useEffect(() => {
     setPageOffset(0);

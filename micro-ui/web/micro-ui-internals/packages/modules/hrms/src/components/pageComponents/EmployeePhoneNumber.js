@@ -63,6 +63,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                     defaultValue={undefined}
                     onBlur={(e) => validate(e.target.value, input)}
                     maxLength={maxLength}
+                    minLength={minLength}
                     {...input.validation}
                   />
                 </div>
