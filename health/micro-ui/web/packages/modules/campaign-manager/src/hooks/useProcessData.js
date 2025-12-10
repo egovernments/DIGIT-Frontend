@@ -25,7 +25,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
         }
 
         const apiUrl = isUnifiedConsole
-            ? "/excel-ingestion/v1/data/_process"
+            ? "/excel-ingestion/v1/data/process/_validation"
             : "/project-factory/v2/data/_process";
 
         const responseTemp = await Digit.CustomService.getResponse({
@@ -61,7 +61,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     // For unified-console, use different search API and response structure
     const isUnifiedConsole = type === "unified-console-validation";
     const searchUrl = isUnifiedConsole
-        ? "/excel-ingestion/v1/data/_processSearch"
+        ? "/excel-ingestion/v1/data/process/_search"
         : "/project-factory/v1/data/_search";
 
     // Get the ID from the response - different field for unified-console

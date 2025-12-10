@@ -1,4 +1,10 @@
-import { Card, HeaderComponent, PopUp, Button, Loader } from "@egovernments/digit-ui-components";
+import {
+  Card,
+  HeaderComponent,
+  PopUp,
+  Button,
+  Loader,
+} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -115,7 +121,7 @@ const CampaignHome = () => {
     module: "application-module",
   };
 
-  const { data: CampaignRequirementsData, isLoading: CampaignRequirementsLoading } = Digit.Hooks.useCustomMDMS(
+  const { data: CampaignRequirementsData, isLoading: CampaignRequirementsLoading, } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
     [
@@ -131,19 +137,86 @@ const CampaignHome = () => {
     { schemaCode: CONSOLE_MDMS_MODULENAME.CampaignRequirements }
   );
 
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+
+  const reqCriteriaForm = {
+    url: `/${mdms_context_path}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        schemaCode: "HCM-CAMPAIGN-TEMPLATES.campaignTypeTemplates",
+        limit: "10000",
+        isActive: true
+      },
+    },
+    config: {
+      enabled: true ,
+    },
+  };
+  const { isLoading, data: templatesData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
+  const templatesDataLength = templatesData?.mdms?.length;
+
   if (CampaignRequirementsLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
-    <Card>
-      <HeaderComponent className="campaign-header-style">{t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}</HeaderComponent>
+    <Card className="digit-campaign-home-card-wrapper">
+      <HeaderComponent className="campaign-header-style">
+        {t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}
+      </HeaderComponent>
       <p className="name-description">{t(`HCM_CREATE_CAMPAIGN_DESCRIPTION`)}</p>
       <div className={"containerStyle"}>
-        <div
-          className="cardStyle"
-          role="button"
+        <Card
+          className="digit-campaign-home-card"
           tabIndex={0}
+          onClick={() => {
+            navigate(
+              `/${window.contextPath}/employee/campaign/campaign-templates`
+            );
+          }}
+        >
+          <div className="digit-campaign-home-icon">
+            <MobileLayout width="40" height="40" fill={"#C84C0E"} />
+          </div>
+          <div className="digit-campaign-home-text">
+            <div className="digit-campaign-home-text-header">
+              {t("HCM_START_WITH_CAMPAIGN_TEMPLATE")}
+            </div>
+            <div className="digit-campaign-home-text-description">
+              {t("HCM_START_WITH_CAMPAIGN_TEMPLATE_DES")}
+            </div>
+          </div>
+          <div className="digit-campaign-home-card-count">
+            <MobileLayout width="20" height="20" fill={"#0B4B66"} />
+            <div className="digit-campaign-home-card-count-text">{`${templatesDataLength} ${t("TEMPLATES_AVAILABLE")}`}</div>
+          </div>
+        </Card>
+        <Card
+          className="digit-campaign-home-card"
+          tabIndex={1}
+          onClick={() => {
+            navigate(
+              `/${window.contextPath}/employee/campaign/my-campaign-new`
+            );
+          }}
+        >
+          {" "}
+          <div className="digit-campaign-home-icon">
+            <CopyAll />
+          </div>
+          <div className="digit-campaign-home-text">
+            <div className="digit-campaign-home-text-header">
+              {t("HCM_IMPORT_EXISTING_CAMPAIGN")}
+            </div>
+            <div className="digit-campaign-home-text-description">
+              {t("HCM_IMPORT_EXISTING_CAMPAIGN_DES")}
+            </div>
+          </div>
+        </Card>
+        <Card
+          className="digit-campaign-home-card"
+          tabIndex={2}
           onClick={() => {
             setShowPopUp(true);
           }}
@@ -153,29 +226,19 @@ const CampaignHome = () => {
             }
           }}
         >
-          <NewWindow />
-          <div className={"descStyle "}>{t("HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH")}</div>
-        </div>
-        <div
-          className={"cardStyle"}
-          onClick={() => {
-            navigate(`/${window.contextPath}/employee/campaign/my-campaign-new`);
-          }}
-          tabIndex={1}
-        >
-          <CopyAll />
-          <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
-        </div>
-        <div
-          className={"cardStyle"}
-          onClick={() => {
-            navigate(`/${window.contextPath}/employee/campaign/campaign-templates`);
-          }}
-          tabIndex={2}
-        >
-          <MobileLayout width="40" height="40" fill={"#C84C0E"} />
-          <div className={"descStyle"}>{t("HCM_START_WITH_CAMPAIGN_TEMPLATE")}</div>
-        </div>
+          {" "}
+          <div className="digit-campaign-home-icon">
+            <NewWindow />
+          </div>
+          <div className="digit-campaign-home-text">
+            <div className="digit-campaign-home-text-header">
+              {t("HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH")}
+            </div>
+            <div className="digit-campaign-home-text-description">
+              {t("HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH_DES")}
+            </div>
+          </div>
+        </Card>
       </div>
       {showPopUp && (
         <PopUp
@@ -198,12 +261,17 @@ const CampaignHome = () => {
               variation={"primary"}
               label={t("HCM_CAMPAIGN_PROCEED")}
               onClick={() => {
-                navigate(`/${window.contextPath}/employee/campaign/create-campaign`);
+                navigate(
+                  `/${window.contextPath}/employee/campaign/create-campaign`
+                );
               }}
             />,
           ]}
         >
-          <AppHelpContent config={AppHelpConfig} groupTextBlocks={true}></AppHelpContent>
+          <AppHelpContent
+            config={AppHelpConfig}
+            groupTextBlocks={true}
+          ></AppHelpContent>
         </PopUp>
       )}
     </Card>
