@@ -1377,3 +1377,13 @@ textarea.light-placeholder::placeholder {
     position: absolute;
     bottom : 0px;
 }
+
+.appConfigLabelField {
+  position: relative;
+  padding: 1rem;
+  width: 18rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: unset;
+}
