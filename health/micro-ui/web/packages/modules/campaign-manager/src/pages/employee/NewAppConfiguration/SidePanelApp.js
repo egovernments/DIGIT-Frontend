@@ -77,8 +77,8 @@ const SidePanelApp = ({ showPanelProperties }) => {
           <Button
             className=""
             variation="secondary"
-            label={t("BACK")}
-            title={t("BACK")}
+            label={t("BACK_TO_PAGE_PROPERTIES")}
+            title={t("BACK_TO_PAGE_PROPERTIES")}
             icon="ArrowBack"
             size="small"
             onClick={handleBackClick}
