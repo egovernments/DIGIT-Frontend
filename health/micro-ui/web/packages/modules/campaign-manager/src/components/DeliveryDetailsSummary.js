@@ -111,8 +111,8 @@ function reverseDeliveryRemap(data, t) {
 
       // Handle "IN_BETWEEN" operator
       if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-        const toValue = parts[0];
-        const fromValue = parts[4];
+        const fromValue = parts[0];
+        const toValue = parts[4];
         attributes.push({
           key: attributes.length + 1,
           operator: { code: operatorMapping["IN_BETWEEN"] },
