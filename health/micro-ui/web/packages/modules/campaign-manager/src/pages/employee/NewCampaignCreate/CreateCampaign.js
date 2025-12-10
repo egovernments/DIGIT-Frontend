@@ -206,19 +206,25 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
   const onSubmit = async (formData) => {
     const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
+    const name = filteredCreateConfig?.[0]?.form?.[0]?.name;
+
+    // Check if project type changed early - before other validations
+    const prevProjectType = prevProjectTypeRef.current;
+    const isProjectTypeChanged = prevProjectType && prevProjectType !== projectType;
 
     const validDates = handleCreateValidate(formData);
     if (validDates?.label) {
       setShowToast({ key: "error", label: t(validDates.label) });
       return;
     }
-    const name = filteredCreateConfig?.[0]?.form?.[0]?.name;
+
     setTotalFormData((prevData) => ({
       ...prevData,
       [name]: formData,
     }));
 
-    if (formData?.CampaignName && !editName && !campaignNumber) {
+    // Skip campaign name validation if project type changed (name will be reset)
+    if (formData?.CampaignName && !editName && !campaignNumber && !isProjectTypeChanged) {
       const campaignNamePattern = /^(?!.*[ _-]{2})(?!^[\s_-])(?!.*[\s_-]$)(?=^[A-Za-z][A-Za-z0-9 _\-\(\)]{4,29}$)^.*$/;
       if (!campaignNamePattern.test(formData?.CampaignName)) {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_INVALID_FORMAT") });
@@ -256,9 +262,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       }
     }
 
-    const prevProjectType = prevProjectTypeRef.current;
-
-    const isProjectTypeChanged = prevProjectType && prevProjectType !== projectType;
     const isCampaignNameMissing = typeof params?.CampaignName === "object" || !params?.CampaignName;
 
     if (isCampaignNameMissing || isProjectTypeChanged) {
