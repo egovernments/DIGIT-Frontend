@@ -12,9 +12,9 @@
   if [ ! -d "$STUDIO_REPO" ]; then
       echo "Cloning DIGIT-Studio repository..."
       if [ -n "$GIT_TOKEN" ]; then
-          git clone -b develop "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+          git clone -b develop-ui "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
       else
-          git clone -b develop "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+          git clone -b develop-ui "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
       fi
   fi
   
