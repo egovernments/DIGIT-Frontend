@@ -4,6 +4,62 @@
 - **Consistent Validation**: Implemented consistent mobile number validation across Create Employee, Edit Employee, and Inbox Search forms.
 - **MDMS Integration**: Mobile number validation rules (max length, pattern, error messages) are now dynamically fetched from MDMS configuration.
 
+#### 📋 MDMS Configuration Details:
+- **Module Name**: `ValidationConfigs`
+- **Master Details**: `mobileNumberValidation`
+- **Tenant-Specific**: Configuration is tenant-aware and fetched based on the current tenant ID
+
+#### 🔧 Configuration Structure:
+The mobile number validation is configured in MDMS with the following structure:
+```json
+{
+  "validationName": "defaultMobileValidation",
+  "rules": {
+    "prefix": "+251",
+    "pattern": "^[79][0-9]{8}$",
+    "isActive": true,
+    "maxLength": 9,
+    "minLength": 9,
+    "errorMessage": "Please enter a valid 9-digit mobile number starting with 7 or 9",
+    "allowedStartingDigits": ["7", "9"]
+  }
+}
+```
+
+#### 🌐 API Integration:
+- **Endpoint**: `/egov-mdms-service/v1/_search`
+- **Request Payload**:
+  ```json
+  {
+    "MdmsCriteria": {
+      "tenantId": "{TENANT_ID}",
+      "moduleDetails": [{
+        "moduleName": "ValidationConfigs",
+        "masterDetails": [{
+          "name": "mobileNumberValidation"
+        }]
+      }]
+    },
+    "RequestInfo": {...}
+  }
+  ```
+
+#### ✅ Features Supported:
+- **Dynamic Pattern Validation**: Regex patterns fetched from MDMS for country-specific formats
+- **Custom Error Messages**: Localized error messages per tenant configuration
+- **Length Constraints**: Configurable min/max length restrictions
+- **Prefix Support**: Country code prefixes automatically handled
+- **Active/Inactive Status**: Ability to enable/disable validation per tenant
+- **Allowed Starting Digits**: Restrict mobile numbers to specific starting digits
+
+#### 📝 Usage:
+The validation configuration is automatically fetched when:
+1. Creating a new employee (Create Employee form)
+2. Editing existing employee details (Edit Employee form)  
+3. Searching employees by mobile number (Inbox Search)
+
+The system caches the MDMS configuration for optimal performance and updates when tenant context changes.
+
 
 ## [1.9.0] [28-October-2025]
 
