@@ -392,14 +392,18 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             // This allows expressions to reference properties directly (e.g., "range.max > range.min")
             const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
 
-            // Check if all fields referenced in the expression have non-empty values
-            // Skip validation if any field is null, undefined, or empty string
-            const hasEmptyFields = Object.values(plainFieldCopy).some(
-              (value) => value === null || value === undefined || value === ""
-            );
-            if (hasEmptyFields) {
-              return true; // Skip validation if any field is empty
-            }
+            // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
+            const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
+
+            // Helper to get nested value from path like "lengthRange.minLength"
+            const getNestedValue = (obj, path) => path.split(".").reduce((acc, key) => acc?.[key], obj);
+
+            // Check if ALL fields in expression have non-empty values - if any is empty, skip validation
+            const allFieldsFilled = fieldPaths.every((path) => {
+              const value = getNestedValue(plainFieldCopy, path);
+              return value !== null && value !== undefined && value !== "";
+            });
+            if (!allFieldsFilled) return true;
 
             // Get all property names and values from the plain copy
             // Replace dots in property names with underscores to make them valid JS parameter names
@@ -1251,6 +1255,20 @@ function NewDrawerFieldComposer() {
           try {
             const expression = panelItem.validationExpression;
             const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+
+            // Extract field paths from expression (e.g., "lengthRange.minLength", "lengthRange.maxLength")
+            const fieldPaths = expression.match(/[\w.]+/g)?.filter((p) => p.includes(".")) || [];
+
+            // Helper to get nested value from path like "lengthRange.minLength"
+            const getNestedValue = (obj, path) => path.split(".").reduce((acc, key) => acc?.[key], obj);
+
+            // Check if ALL fields in expression have non-empty values - if any is empty, skip validation
+            const allFieldsFilled = fieldPaths.every((path) => {
+              const value = getNestedValue(plainFieldCopy, path);
+              return value !== null && value !== undefined && value !== "";
+            });
+            if (!allFieldsFilled) return;
+
             const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
             const paramValues = Object.values(plainFieldCopy);
             const func = new Function(...paramNames, `return ${expression}`);
