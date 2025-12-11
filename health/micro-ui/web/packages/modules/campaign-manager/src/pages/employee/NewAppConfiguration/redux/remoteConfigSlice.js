@@ -1,6 +1,75 @@
 import { createSlice } from "@reduxjs/toolkit";
 import dummyConfig from "../configs/dummyConfig.json";
 
+// Helper function to check if all children of a node are hidden
+const areAllChildrenHidden = (node) => {
+  if (!node) return false;
+
+  // If node has children array
+  if (Array.isArray(node.children)) {
+    if (node.children.length === 0) return false;
+    return node.children.every((child) => {
+      // Check if child itself is hidden
+      if (child.hidden === true) return true;
+      // Recursively check if all of child's children are hidden
+      if (child.children || child.child) {
+        return areAllChildrenHidden(child);
+      }
+      return child.hidden === true;
+    });
+  }
+
+  // If node has child object
+  if (node.child && typeof node.child === "object") {
+    if (node.child.hidden === true) return true;
+    if (node.child.children || node.child.child) {
+      return areAllChildrenHidden(node.child);
+    }
+    return node.child.hidden === true;
+  }
+
+  return false;
+};
+
+// Helper function to update parent visibility based on children
+const updateParentVisibility = (node) => {
+  if (!node) return;
+
+  // Handle arrays
+  if (Array.isArray(node)) {
+    node.forEach((item) => updateParentVisibility(item));
+    return;
+  }
+
+  // Handle objects
+  if (typeof node === "object") {
+    // First, recursively update all nested children
+    if (node.children) {
+      updateParentVisibility(node.children);
+    }
+    if (node.child) {
+      updateParentVisibility(node.child);
+    }
+    if (node.primaryAction) {
+      updateParentVisibility(node.primaryAction);
+    }
+    if (node.secondaryAction) {
+      updateParentVisibility(node.secondaryAction);
+    }
+
+    // Then check if this node should be hidden based on its children
+    if ((node.children || node.child) && areAllChildrenHidden(node)) {
+      node.hidden = true;
+    } else if (node.children || node.child) {
+      // If not all children are hidden, ensure parent is visible
+      // Only set to false if it was previously true
+      if (node.hidden === true) {
+        node.hidden = false;
+      }
+    }
+  }
+};
+
 // Slice for storing app config data
 const remoteConfigSlice = createSlice({
   name: "remoteConfig",
@@ -264,8 +333,7 @@ const remoteConfigSlice = createSlice({
           }
         }
       } else {
-        // For template types, search in both body and footer
-        // Recursive function to toggle visibility in nested template structures
+        // For template types - toggle field and update parent visibility
         const toggleByFieldName = (node) => {
           if (!node) return false;
 
@@ -297,10 +365,12 @@ const remoteConfigSlice = createSlice({
           return false;
         };
 
-        // Search in body fields
+        // Toggle the field in body
         const card = state.currentData?.body?.[cardIndex];
         if (card && Array.isArray(card.fields)) {
           if (toggleByFieldName(card.fields)) {
+            // After toggling, update parent visibility based on children
+            updateParentVisibility(card.fields);
             state.currentData = { ...state.currentData };
             return;
           }
@@ -309,6 +379,8 @@ const remoteConfigSlice = createSlice({
         // If not found in body, search in footer
         if (state.currentData?.footer && Array.isArray(state.currentData.footer)) {
           if (toggleByFieldName(state.currentData.footer)) {
+            // After toggling, update parent visibility based on children
+            updateParentVisibility(state.currentData.footer);
             state.currentData = { ...state.currentData };
             return;
           }
@@ -438,12 +510,6 @@ const remoteConfigSlice = createSlice({
     },
   },
 });
-
-// slice to store field type
-
-// slice to store field panel properties
-
-// slice to store localisation data
 
 export const {
   initializeConfig,
