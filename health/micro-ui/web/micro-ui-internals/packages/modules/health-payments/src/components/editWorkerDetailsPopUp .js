@@ -26,12 +26,12 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
         const trimmedInput = inputValue?.trim();
         // Mobile number validation
         if (fieldKey === "mobileNumber") {
-            const mobileRegex = /^[0-9]{9}$/;
+            const mobileRegex = /^[0-9]{8}$/;
 
             if (!trimmedInput) {
                 setShowToast({
                     key: "error",
-                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 9-digit mobile number.",
+                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
                     transitionTime: 3000
                 });
                 return;
@@ -39,7 +39,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             else if (!mobileRegex.test(trimmedInput)) {
                 setShowToast({
                     key: "error",
-                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 9-digit mobile number.",
+                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
                     transitionTime: 3000
                 });
                 return;
