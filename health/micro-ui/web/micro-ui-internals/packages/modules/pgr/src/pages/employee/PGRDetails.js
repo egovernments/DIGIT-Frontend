@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag, Timeline, Toast, NoResultsFound } from "@egovernments/digit-ui-components";
+import {
+  HeaderComponent,
+  Button,
+  Card,
+  Footer,
+  ActionBar,
+  SummaryCard,
+  Tag,
+  Timeline,
+  Toast,
+  NoResultsFound,
+} from "@egovernments/digit-ui-components";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { convertEpochFormateToDate } from "../../utils";
 import TimelineWrapper from "../../components/TimeLineWrapper";
@@ -176,7 +187,10 @@ const PGRDetails = () => {
   );
 
   // Fetch complaint details
-  const { isLoading, isError, error, data: pgrData, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch({ serviceRequestId: id }, tenantId);
+  const { isLoading, isError, error, data: pgrData, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch(
+    { serviceRequestId: id },
+    tenantId
+  );
   // Hook to update the complaint
   const { mutate: UpdateComplaintMutation } = Digit.Hooks.pgr.usePGRUpdate(tenantId);
 
@@ -199,7 +213,7 @@ const PGRDetails = () => {
   const boundaryCode = React.useMemo(() => {
     try {
       const additionalDetail = pgrData?.ServiceWrappers?.[0]?.service?.additionalDetail;
-      if (typeof additionalDetail === 'string') {
+      if (typeof additionalDetail === "string") {
         const parsed = JSON.parse(additionalDetail);
         return parsed?.boundaryCode || null;
       }
@@ -253,38 +267,38 @@ const PGRDetails = () => {
   const handleActionSubmit = (_data) => {
     const actionConfig = ACTION_CONFIGS.find((config) => config.actionType === selectedAction.action);
 
-  if (!actionConfig) return;
+    if (!actionConfig) return;
 
-  const missingFields = [];
+    const missingFields = [];
 
-  actionConfig.formConfig.form.forEach((section) => {
-    section.body.forEach((field) => {
-      if (field.isMandatory) {
-        const fieldKey = field.key;
-        const fieldValue = _data?.[fieldKey];
+    actionConfig.formConfig.form.forEach((section) => {
+      section.body.forEach((field) => {
+        if (field.isMandatory) {
+          const fieldKey = field.key;
+          const fieldValue = _data?.[fieldKey];
 
-        // For dropdowns or components, also check if selected value is valid object or string
-        const isEmpty =
-          fieldValue === undefined ||
-          fieldValue === null ||
-          (typeof fieldValue === "string" && fieldValue.trim() === "") ||
-          (typeof fieldValue === "object" && Object.keys(fieldValue).length === 0);
+          // For dropdowns or components, also check if selected value is valid object or string
+          const isEmpty =
+            fieldValue === undefined ||
+            fieldValue === null ||
+            (typeof fieldValue === "string" && fieldValue.trim() === "") ||
+            (typeof fieldValue === "object" && Object.keys(fieldValue).length === 0);
 
-        if (isEmpty) {
-          missingFields.push(t(field.label));
+          if (isEmpty) {
+            missingFields.push(t(field.label));
+          }
         }
-      }
+      });
     });
-  });
 
-  if (missingFields.length > 0) {
-    setToast({
-      show: true,
-      label: t("CS_COMMON_REQUIRED_FIELDS_MISSING") + ": " + missingFields.join(", "),
-      type: "error",
-    });
-    return;
-  }
+    if (missingFields.length > 0) {
+      setToast({
+        show: true,
+        label: t("CS_COMMON_REQUIRED_FIELDS_MISSING") + ": " + missingFields.join(", "),
+        type: "error",
+      });
+      return;
+    }
     const updateRequest = {
       service: { ...pgrData?.ServiceWrappers[0].service },
       workflow: {
@@ -293,7 +307,7 @@ const PGRDetails = () => {
         hrmsAssignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         comments: _data?.SelectedComments || "",
         // Include documents array if complaint file is provided
-        verificationDocuments: _data?.complaintFile ? [_data.complaintFile] : null
+        verificationDocuments: _data?.complaintFile ? [_data.complaintFile] : null,
       },
     };
     handleResponseForUpdateComplaint(updateRequest);
@@ -322,8 +336,6 @@ const PGRDetails = () => {
       },
     });
   };
-
-
 
   // Enhance config with roles and department dynamically
   const getUpdatedConfig = (selectedAction, workflowData, configs, serviceDefs, complaintData) => {
@@ -355,7 +367,8 @@ const PGRDetails = () => {
     if (!matchingState) return [];
     const userRoles = userInfo?.info?.roles?.map((role) => role.code) || [];
     return matchingState.actions
-      ? matchingState.actions.filter((action) => action.roles.some((role) => userRoles.includes(role)))
+      ? matchingState.actions
+          .filter((action) => action.roles.some((role) => userRoles.includes(role)))
           .map((action) => ({
             action: action.action,
             roles: action.roles,
@@ -374,7 +387,7 @@ const PGRDetails = () => {
 
     if (boundaryHierarchy.length === 0) return [];
 
-    const codeParts = boundaryCode.split('.');
+    const codeParts = boundaryCode.split(".");
     const path = [];
 
     // Map each code part to its boundary type from hierarchy definition
@@ -383,9 +396,7 @@ const PGRDetails = () => {
       const code = codeParts[index] || "";
 
       if (code) {
-        const label = selectedHierarchy?.hierarchyType
-          ? `${selectedHierarchy.hierarchyType}_${boundaryType}`
-          : boundaryType;
+        const label = selectedHierarchy?.hierarchyType ? `${selectedHierarchy.hierarchyType}_${boundaryType}` : boundaryType;
 
         path.push({
           type: boundaryType,
@@ -400,7 +411,6 @@ const PGRDetails = () => {
 
   // Display loader until required data loads
   if (isLoading || isMDMSLoading || isWorkflowLoading) return <Loader />;
-
 
   return (
     <React.Fragment>
@@ -440,13 +450,14 @@ const PGRDetails = () => {
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_AREA"),
-                    value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code?.split('.')?.pop() || "NA"),
+                    value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code?.split(".")?.pop() || "NA"),
                   },
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
                     value: pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus
-                    ? t(`WF_INBOX_${pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus}`) : t("WF_INBOX_PENDING_ASSIGNMENT")
+                      ? t(`WF_INBOX_${pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus}`)
+                      : t("WF_INBOX_PENDING_ASSIGNMENT"),
                   },
                   {
                     inline: true,
@@ -474,14 +485,12 @@ const PGRDetails = () => {
                           inline: false,
                           type: "custom",
                           renderCustomContent: () => (
-                            <div className="boundary-hierarchy-container">
-                              <div style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
-                                {t("CS_COMPLAINT_BOUNDARY_HIERARCHY")}
-                              </div>
+                            <div className="boundary-hierarchy-container" style={{ marginBottom: "0rem", marginTop: "0rem", paddingTop: "0rem",paddingBottom:"0rem" }}>
+                              <div style={{ fontWeight: "bold", fontSize:"20px", marginBottom: "0.5rem" }}>{t("CS_COMPLAINT_BOUNDARY_HIERARCHY")}</div>
                               {isHierarchyLoading ? (
                                 <Loader />
                               ) : boundaryHierarchyPath.length > 0 ? (
-                                <div className="boundary-hierarchy-list">
+                                <div className="boundary-hierarchy-list" style={{ marginBottom: "0rem", paddingBottom:"0rem" }}>
                                   {boundaryHierarchyPath.map((boundary, index) => (
                                     <div key={index} className="boundary-hierarchy-item">
                                       <span className="boundary-hierarchy-label">{t(boundary.label)}</span>
@@ -501,7 +510,7 @@ const PGRDetails = () => {
                     inline: false,
                     type: "custom",
                     renderCustomContent: () => (
-                      <div style={{ marginTop: "1rem" }}>
+                      <div style={{ marginTop: "0rem" }}>
                         <Button
                           label={showMore ? t("HCM_AM_VIEW_LESS") : t("HCM_AM_VIEW_MORE")}
                           onClick={() => setShowMore((prev) => !prev)}
@@ -536,33 +545,33 @@ const PGRDetails = () => {
 
       {/* Footer Action Bar */}
       <Footer
-      actionFields={[
-        <Button
-          className="custom-class"
-          isSearchable={false}
-          onClick={function noRefCheck() {}}
-          menuStyles={{
-                  bottom: "40px",
-                  maxWidth: "fit-content",
-                  minWidth: "100%"
-                }}
-          isDisabled={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0]).length === 0}
-          key="action-button"
-          label={t("ES_COMMON_TAKE_ACTION")}
-          onOptionSelect={(selected) => {
-            setSelectedAction(selected);
-            setOpenModal(true);
-          }}
-          options={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0])}
-          optionsKey="action"
-          type="actionButton"
+        actionFields={[
+          <Button
+            className="custom-class"
+            isSearchable={false}
+            onClick={function noRefCheck() {}}
+            menuStyles={{
+              bottom: "40px",
+              maxWidth: "fit-content",
+              minWidth: "100%",
+            }}
+            isDisabled={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0]).length === 0}
+            key="action-button"
+            label={t("ES_COMMON_TAKE_ACTION")}
+            onOptionSelect={(selected) => {
+              setSelectedAction(selected);
+              setOpenModal(true);
+            }}
+            options={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0])}
+            optionsKey="action"
+            type="actionButton"
           />,
-      ]}
-      className=""
-      maxActionFieldsAllowed={5}
-      setactionFieldsToRight
-      sortActionFields
-      style={{}}
+        ]}
+        className=""
+        maxActionFieldsAllowed={5}
+        setactionFieldsToRight
+        sortActionFields
+        style={{}}
       />
 
       {/* Toast Message */}
