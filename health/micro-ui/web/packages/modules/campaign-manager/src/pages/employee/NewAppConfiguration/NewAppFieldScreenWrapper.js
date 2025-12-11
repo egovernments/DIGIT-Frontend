@@ -286,7 +286,7 @@ function NewAppFieldScreenWrapper() {
         );
       })}
 
-      {currentCard?.type !== "template" && (
+      {currentCard?.type !== "template" && currentCard?.conditionalNavigateTo?.length > 0 && (
         <>
           <Divider className="app-config-drawer-action-divider" />
           <div className="app-config-drawer-subheader">

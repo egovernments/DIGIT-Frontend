@@ -72,6 +72,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           summary: flow.summary || false,
           description: page.description,
           showAlertPopUp: page.showAlertPopUp,
+          conditionalNavigateTo: page.conditionalNavigateTo,
         };
 
         appConfig.push(transformedPage);

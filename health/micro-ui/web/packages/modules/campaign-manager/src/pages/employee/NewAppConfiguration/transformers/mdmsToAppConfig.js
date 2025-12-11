@@ -208,6 +208,12 @@ const transformFormPage = (pageData) => {
     page.showAlertPopUp = pageData.showAlertPopUp;
   }
 
+    // Add showAlertPopUp if exists
+  if (pageData.conditionalNavigateTo) {
+    page.conditionalNavigateTo = pageData.conditionalNavigateTo;
+  }
+
+
   return page;
 };
 
