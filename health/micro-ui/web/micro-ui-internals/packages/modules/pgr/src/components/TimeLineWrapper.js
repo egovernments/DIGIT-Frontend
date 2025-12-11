@@ -93,10 +93,10 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
     return (
       <div
         style={{
-          border: "1px solid #ddd",
+          border: "1px solid #D6D5D4",
           padding: "12px",
           borderRadius: "8px",
-          background: "#fff",
+          background: "#FAFAFA",
           width: "fit-content",
           maxWidth: "300px",
         }}
