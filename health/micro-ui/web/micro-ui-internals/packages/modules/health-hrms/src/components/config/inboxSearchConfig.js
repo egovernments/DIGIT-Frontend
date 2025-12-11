@@ -8,7 +8,7 @@ import Urls from "../../services/urls";
  * @link section: Provides navigation to the Create User screen.
  */
 
-const inboxSearchConfig = () => {
+const inboxSearchConfig = (tenantId) => {
   return {
     type: "inbox", // Defines the type of configuration (search functionality)
     label: "Search Employee", // Label for the search functionality
@@ -155,7 +155,7 @@ const inboxSearchConfig = () => {
             roles: "",
             offset: 0,
             //   /sortBy: "lastModifiedTime",
-            tenantId: "mz",
+            tenantId: tenantId || "mz",
             sortOrder: "DESC",
           },
 
@@ -225,7 +225,7 @@ const inboxSearchConfig = () => {
         roles: "",
         offset: 0,
         sortBy: "lastModifiedTime",
-        tenantId: "mz",
+        tenantId: tenantId || "mz",
         sortOrder: "DESC",
         //   includeUnassigned:true
       },
