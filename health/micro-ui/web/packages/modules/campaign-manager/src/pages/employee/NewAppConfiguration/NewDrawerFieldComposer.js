@@ -1065,6 +1065,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   switch (cField.type) {
     case "text":
     case "number":
+    case "textArea":
       return (
         <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
           <FieldV1

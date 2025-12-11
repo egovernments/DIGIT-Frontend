@@ -55,14 +55,6 @@ const Response = () => {
       />
       <Footer
         actionFields={[
-          state?.secondaryActionLabel && (
-            <Button
-              label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
-              onClick={() => navigation(state?.secondaryActionLink)}
-              type="button"
-              variation="secondary"
-            />
-          ),
           <Button
             icon="ArrowForward"
             isSuffix
@@ -71,6 +63,14 @@ const Response = () => {
             type="button"
             variation="secondary"
           />,
+          state?.secondaryActionLabel && (
+            <Button
+              label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
+              onClick={() => navigation(state?.secondaryActionLink)}
+              type="button"
+              variation="secondary"
+            />
+          )
         ]}
         className=""
         maxActionFieldsAllowed={5}

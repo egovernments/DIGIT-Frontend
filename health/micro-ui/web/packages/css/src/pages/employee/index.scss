@@ -393,7 +393,8 @@ tbody {
   overflow: auto;
 
   &.delivery-summary,
-  &.boundary-summary{
+  &.boundary-summary,
+  &.data-upload-summary{
     display: flex;
     flex-direction: column;
     gap:1.5rem;
@@ -1460,4 +1461,12 @@ tbody {
 .digit-submit-bar,
 .jk-digit-secondary-btn {
   border-radius: 0.5rem;
+}
+
+
+.upload-drag-drop-container {
+  .drag-drop-text {
+    display: flex;
+    gap: 0.25rem;
+  }
 }
