@@ -25,11 +25,15 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDataCreating, setIsDataCreating] = useState(false);
-  const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig(totalFormData, null, isSubmitting));
+  const isUnifiedCampaign = searchParams.get("isUnifiedCampaign") === "true";
+  // Summary key: 3 for unified, 5 for non-unified
+  const summaryKey = isUnifiedCampaign ? 3 : 5;
+  const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig({ totalFormData, isUnifiedCampaign }));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
@@ -37,7 +41,6 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
-  const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const parentId = searchParams.get("parentId");
   const isPreview = searchParams.get("preview");
@@ -119,7 +122,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading: draftLoading, data: draftData, error: draftError } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
@@ -167,11 +170,13 @@ const UpdateCampaign = ({ hierarchyData }) => {
     if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
+    const unifiedFiles = draftData?.resources?.filter((i) => i?.type === "unified-console" || i?.type === "unified-console-resources") || [];
     const restructureFormData = {
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
           boundaryData: groupByTypeRemap(draftData?.boundaries),
           selectedData: draftData?.boundaries,
+          isUnifiedCampaign: draftData?.additionalDetails?.isUnifiedCampaign || unifiedFiles.length > 0,
         },
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
@@ -190,6 +195,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
         uploadUser: {
           uploadedFile: draftData?.resources?.filter((i) => i?.type === "user"),
           isSuccess: draftData?.resources?.filter((i) => i?.type === "user").length > 0,
+        },
+      },
+      HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
+        uploadUnified: {
+          uploadedFile: unifiedFiles,
+          isSuccess: unifiedFiles.length > 0,
         },
       },
     };
@@ -226,10 +237,19 @@ const UpdateCampaign = ({ hierarchyData }) => {
         hierarchyData,
         projectType: CampaignData?.CampaignDetails?.[0]?.projectType,
         summaryErrors,
-        CampaignData: CampaignData,
+        campaignData: CampaignData,
+        isUnifiedCampaign,
       })
     );
-  }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, CampaignData?.CampaignDetails?.[0]?.projectType]);
+  }, [
+    totalFormData,
+    dataParams,
+    isSubmitting,
+    summaryErrors,
+    hierarchyData,
+    CampaignData?.CampaignDetails?.[0]?.projectType,
+    isUnifiedCampaign,
+  ]);
 
   useEffect(() => {
     setIsSubmitting(false);
@@ -277,8 +297,11 @@ const UpdateCampaign = ({ hierarchyData }) => {
             //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
 
             // );
-            const temp = CampaignData?.CampaignDetails?.[0].resources;
-
+            const temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
+              ...resource,
+              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+            }));
+            const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.resources = temp;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
@@ -287,6 +310,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                   (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
                 )?.beneficiaryType || null,
               key: currentKey,
+              isUnifiedCampaign: hasUnifiedResource,
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
@@ -305,9 +329,11 @@ const UpdateCampaign = ({ hierarchyData }) => {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 },
                 onSuccess: async (data) => {
-                  draftRefetch();
+                  // No need to refetch - navigating away immediately
                   navigate(
-                    `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
+                    `/${window.contextPath}/employee/campaign/response?campaignId=${
+                      data?.CampaignDetails?.campaignNumber
+                    }&isSuccess=${true}`,
                     {
                       state: {
                         message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
@@ -355,7 +381,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
             const temp = CampaignData?.CampaignDetails?.[0].resources;
 
-            payloadData.resources = temp;
+            payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
+            const tempResources = temp?.map((resource) => ({
+              ...resource,
+              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+            }));
+            const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
               beneficiaryType:
@@ -363,10 +394,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
                   (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
                 )?.beneficiaryType || null,
               key: currentKey,
+              isUnifiedCampaign: hasUnifiedResource,
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
             };
+            payloadData.resources = tempResources;
             if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
               payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
             } else {
@@ -384,7 +417,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
               onSuccess: async (data) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
                 setIsDraftCreated(true);
-                draftRefetch();
+                // Note: Don't call draftRefetch() here - the id just changed via URL params
+                // The hook will refetch automatically when id changes due to re-render
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                   setCurrentKey(currentKey + 1);
                 }
@@ -420,7 +454,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
             //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
             //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
             // );
-            const temp = CampaignData?.CampaignDetails?.[0].resources;
+            const temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
+              ...resource,
+              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+            }));
+            const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+
             payloadData.resources = temp;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
@@ -432,6 +471,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
               targetId: dataParams?.boundaryId,
               facilityId: dataParams?.facilityId,
               userId: dataParams?.userId,
+              isUnifiedCampaign: hasUnifiedResource,
             };
             if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
               payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
@@ -454,7 +494,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 },
                 onSuccess: async (data) => {
                   updateUrlParams({ id: data?.CampaignDetails?.id });
-                  draftRefetch();
+                  // Note: Don't call draftRefetch() here - URL params update will trigger re-render
+                  // and the hook will refetch with the updated id automatically
                   if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                     setCurrentKey(currentKey + 1);
                   }
@@ -539,9 +580,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
           } else if (recursiveParentFind(formData?.boundaryType?.selectedData).length > 0) {
             setShowToast({
               key: "error",
-              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
-                `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
-              )}`,
+              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(
+                missedType?.[0]?.code
+              )} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
             });
             return false;
           }
@@ -598,7 +639,35 @@ const UpdateCampaign = ({ hierarchyData }) => {
           setShowToast(null);
           return true;
         }
+      // case "uploadUnified":
+      //   if (formData?.uploadUnified?.isValidation) {
+      //     setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+      //     return false;
+      //   } else if (formData?.uploadUnified?.isError) {
+      //     if (formData?.uploadUnified?.apiError) {
+      //       setShowToast({ key: "error", label: formData?.uploadUnified?.apiError, transitionTime: 6000000000 });
+      //     } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+      //     return false;
+      //   } else {
+      //     setShowToast(null);
+      //     return true;
+      //   }
       case "summary":
+        // For unified campaigns, skip individual file checks
+        if (isUnifiedCampaign) {
+          const isUnifiedError = !totalFormData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.[0]?.filestoreId;
+          if (isUnifiedError) {
+            setSummaryErrors((prev) => ({
+              ...prev,
+              unified: [{ name: `unified`, error: t(`UNIFIED_FILE_MISSING`) }],
+            }));
+            setShowToast({ key: "error", label: "UNIFIED_FILE_MISSING" });
+            return false;
+          }
+          setShowToast(null);
+          return true;
+        }
+
         const updateBoundary = restructureBoundaryData(
           totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
           CampaignData?.CampaignDetails?.[0]?.boundaries
@@ -698,6 +767,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
         ["HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA"]: {},
       }));
       //to set the data in the local storage
       setParams({
@@ -706,6 +776,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
         ["HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA"]: {},
       });
     } else {
       setTotalFormData((prevData) => ({
@@ -799,8 +870,10 @@ const UpdateCampaign = ({ hierarchyData }) => {
       v.push(stepFind("HCM_CAMPAIGN_DATE"));
     if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData?.length) v.push(stepFind("HCM_CAMPAIGN_CYCLE_CONFIGURE"));
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule?.length) v.push(stepFind("HCM_CAMPAIGN_DELIVERY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length)
+      v.push(stepFind("HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"));
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length)
+      v.push(stepFind("HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"));
     if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length) v.push(stepFind("HCM_CAMPAIGN_UPLOAD_USER_DATA"));
 
     const highestNumber = Math.max(...v);
@@ -837,11 +910,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
   };
 
   const filterCampaignConfig = (campaignConfig, currentKey) => {
+    const keyToMatch = Number(currentKey);
     return campaignConfig
       .map((config) => {
         return {
           ...config,
-          form: config?.form.filter((step) => parseInt(step.key) === currentKey),
+          form: config?.form.filter((step) => Number(step.key) === keyToMatch),
         };
       })
       .filter((config) => config.form.length > 0);
@@ -908,7 +982,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
       />
       {showToast && (
         <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          type={
+            showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+          }
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}

@@ -379,21 +379,53 @@ function NewNavigationLogicWrapper({ t }) {
         targetPage: {},
     });
 
-    // ---------- normalization helpers ----------
+    // // ---------- normalization helpers ----------
+    // const allPageOptions = useMemo(() => {
+    //     const seen = new Set();
+    //     const list = [];
+    //     const exclude = new Set([currentPageName]); // don't include current page
+    //     const add = (p) => {
+    //         if (!p?.name) return;
+    //         if (exclude.has(p.name)) return;
+    //         if (seen.has(p.name)) return;
+    //         seen.add(p.name);
+    //         list.push({ code: p.name, name: p.name, type: p.type });
+    //     };
+    //     flowPages.forEach(add);
+    //     return list;
+    // }, [flowPages, currentPageName]);
+
+    //Temporary fix for allPageOptions to include only decimal order pages like 4.1, 4.2 etc. Till Navigation through AppConfig is implemented in Flutter App
     const allPageOptions = useMemo(() => {
-        const seen = new Set();
-        const list = [];
-        const exclude = new Set([currentPageName]); // don't include current page
-        const add = (p) => {
-            if (!p?.name) return;
-            if (exclude.has(p.name)) return;
-            if (seen.has(p.name)) return;
-            seen.add(p.name);
-            list.push({ code: p.name, name: p.name, type: p.type });
-        };
-        flowPages.forEach(add);
-        return list;
-    }, [flowPages, currentPageName]);
+    const seen = new Set();
+    const list = [];
+    const exclude = new Set([currentPageName]); // don't include current page
+    
+    const add = (p) => {
+        if (!p?.name) return;
+        if (exclude.has(p.name)) return;
+        if (seen.has(p.name)) return;
+        seen.add(p.name);
+        list.push({ code: p.name.split('.')?.[1], name: p.name, type: p.type, order: p.order });
+    };
+
+    // Find the current flow data
+    const currentFlow = flowPages?.find(flow => flow.flowId === currentData?.flow);
+    
+    if (currentFlow?.pages) {
+        // Filter pages with decimal orders (4.1, 4.2, etc.)
+        const decimalPages = currentFlow.pages.filter(page => {
+            // Check if order is a decimal number (has a decimal point)
+            return page.order && !Number.isInteger(page.order);
+        });
+        
+        // Add only decimal order pages to the options
+        decimalPages.forEach(add);
+    }
+    
+    return list;
+}, [flowPages, currentPageName, currentData?.flow]);
+
 
 
     const findFieldOptionByCode = (code) =>
@@ -662,14 +694,18 @@ function NewNavigationLogicWrapper({ t }) {
     // ---- small UI helpers to render the outside list with OR separators ----
     const JoinerRow = () => (
         <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <span
+            <Tag 
+            type={"monochrome"} 
+            label={`(${orText})`} 
+            />
+            {/* <span
                 style={{
                     background:"#EFF8FF",
                     height: "fit-content",
                 }}
             >
                 {orText.toUpperCase()}
-            </span>
+            </span> */}
         </div>
     );
 
@@ -714,7 +750,7 @@ function NewNavigationLogicWrapper({ t }) {
                     )}
                 </div>
 
-                <div
+                {idx !== 0 && (<div
                     role="button"
                     title={deleteRuleLabel}
                     aria-label={deleteRuleLabel}
@@ -722,7 +758,7 @@ function NewNavigationLogicWrapper({ t }) {
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
                     <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                </div>
+                </div>) }
             </div>
         </div>
     );
@@ -969,7 +1005,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                                 option={enumOptions}
                                                                                                 optionKey="name"
                                                                                                 name={`val-${editorIndex}-${idx}`}
-                                                                                                t={t}
+                                                                                                t={customT}
                                                                                                 select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
                                                                                                 disabled={!cond?.selectedField?.code}
                                                                                                 selected={selectedEnum}
@@ -983,7 +1019,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                                 schemaCode={selectedFieldObj.schemaCode}
                                                                                                 value={cond.fieldValue}
                                                                                                 onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
-                                                                                                t={customT}
+                                                                                                t={t}
                                                                                             />
                                                                                         );
                                                                                     }
