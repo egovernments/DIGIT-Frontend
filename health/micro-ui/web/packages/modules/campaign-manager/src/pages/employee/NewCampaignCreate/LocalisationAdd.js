@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useReducer, useMemo, useRef } from "react";
 import {
-  Card,
-  Button,
-  Header,
   LabelFieldPair,
   CardLabel,
   TextInput,
   ActionBar,
   SubmitBar,
   Table,
-  Loader,
   UploadIcon,
   DeleteIconv2,
   BreakLine,
@@ -17,7 +13,7 @@ import {
   InfoIconOutline,
 } from "@egovernments/digit-ui-react-components";
 
-import { Toast, PopUp, Dropdown, Button as ButtonNew } from "@egovernments/digit-ui-components";
+import { Toast,Card, PopUp, Dropdown, Button,HeaderComponent,Loader } from "@egovernments/digit-ui-components";
 
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
@@ -168,8 +164,7 @@ const LocalisationBulkUpload = () => {
 
   return (
     <React.Fragment>
-      <Header>{t("DIGIT_LOC_BULK_UPLOAD_XLS")}</Header>
-
+      <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>{t("DIGIT_LOC_BULK_UPLOAD_XLS")}</HeaderComponent>
       <Card>
         {/* Module selector */}
         <div style={{ marginBottom: "1rem" }}>
@@ -190,16 +185,16 @@ const LocalisationBulkUpload = () => {
           <Button
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
-            onButtonClick={() => inputRef.current.click()}
+            onClick={() => inputRef.current.click()}
             isDisabled={isDownloadDisabled}
-            icon={<UploadIcon />}
+            icon={"DownloadIcon"}
           />
           <Button
             variation="primary"
             label={t("DIGIT_LOC_BULK_UPLOAD_BUTTON")}
-            onButtonClick={() => setShowBulkUploadModal(true)}
+            onClick={() => setShowBulkUploadModal(true)}
             isDisabled={!choosenModule?.value}
-            icon={<UploadIcon />}
+            icon={"FileUpload"}
           />
         </div>
       </Card>

@@ -214,7 +214,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("checklist/search") ||
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
-        pathVar.includes("update-dates-boundary")
+        pathVar.includes("update-dates-boundary") ||
+        pathVar.includes("localization-add")
           ? true
           : false,
     },

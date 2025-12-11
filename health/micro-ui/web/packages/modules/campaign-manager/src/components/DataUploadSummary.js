@@ -338,7 +338,7 @@ const DataUploadSummary = (props) => {
           />
         )} */}
           </div>
-          <div className="campaign-summary-container">
+          <div className="campaign-summary-container data-upload-summary">
             <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
             {showToast && (
               <Toast

@@ -122,11 +122,14 @@ const NewAppModule = () => {
               }}
               type="button"
               variation="secondary"
+              style={{
+                marginLeft: "4rem",
+                minWidth: "12.5rem"
+              }}
             />
           ]
         }
         maxActionFieldsAllowed={5}
-        setactionFieldsToRight={true}
       />
     </div>
 
