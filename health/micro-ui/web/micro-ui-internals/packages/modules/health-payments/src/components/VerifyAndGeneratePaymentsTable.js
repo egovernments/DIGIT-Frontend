@@ -499,7 +499,7 @@ const getAvailableActions = (status) => {
                     </div>
                 );
             },
-            width: "200px",
+            width: "250px",
         };
 
         const actionsColumn = {
