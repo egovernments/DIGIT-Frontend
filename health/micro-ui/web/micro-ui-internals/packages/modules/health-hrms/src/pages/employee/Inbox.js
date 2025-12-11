@@ -33,7 +33,7 @@ const InboxSearch = () => {
 
 
   // const config = mdmsData ? mdmsData : inboxSearchConfig(); [TODO: Use this once MDMS is updated with the new config]
-  const config = inboxSearchConfig();
+  const config = inboxSearchConfig(tenantId);
 
   return (
     <div style={{ marginBottom: "80px" }}>
