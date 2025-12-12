@@ -57,6 +57,13 @@
                   }
                 }
               ],
+             "validation":[
+                {
+                  "key":"minSearchChars",
+                  "value": 3,
+                  "error": ""
+                }
+              ],
               "fieldName": "searchBar",
               "mandatory": true
             },
