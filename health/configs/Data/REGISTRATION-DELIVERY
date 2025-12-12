@@ -1,0 +1,484 @@
+{
+            "id": "dc782b34-9d04-49bf-bc83-90ebd89da7b4",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "uniqueIdentifier": "REGISTRATION-DELIVERY",
+            "data": {
+                "name": "REGISTRATION-DELIVERY",
+                "flows": [
+                    {
+                        "name": "MANAGESTOCK",
+                        "pages": [
+                            {
+                                "page": "stockProductDetails",
+                                "type": "object",
+                                "label": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_HEADING",
+                                "order": 3,
+                                "navigateTo": {
+                                    "name": "stock-acknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "wayBillNumber",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_BATCH_NUMBER_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_BATCH_NUMBER_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "batchNumber",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_SELECT_THE_EXPIRY_DATE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "expiryDate",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_SENT_BY_THE_WAREHOUSE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "quantitySent",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_LABEL",
+                                        "order": 5,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_ACTUAL_QUANTITY_RECEIVED_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "quantityReceived",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": "stockDetails.facilityFromWhich!=National Warehouse"
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_COMMENT_LABEL",
+                                        "order": 7,
+                                        "value": "",
+                                        "format": "textArea",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ADD_COMMENTS_IF_QUANTITIES_DIFFER_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "comment",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": "stockProductDetails.quantitySent!=stockProductDetails.quantityReceived"
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
+                                        "order": 8,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "scanResource",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "APP_CONFIG_INVENTORY_stockProductDetails_ACTION_BUTTON_LABEL_1",
+                                "description": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION"
+                            },
+                            {
+                                "page": "stockDetails",
+                                "type": "object",
+                                "label": "APP_CONFIG_INVENTORY_stockDetails_SCREEN_HEADING",
+                                "order": 2,
+                                "navigateTo": {
+                                    "name": "stockProductDetails",
+                                    "type": "form"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "dynamic",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_INVENTORY_productDetails_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_productDetails_SELECT_MULTIPLE_PRODUCTS_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "productdetail",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_productDetails_PRODUCT_SELECTION_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": true
+                                    },
+                                    {
+                                        "type": "dynamic",
+                                        "label": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_FACILITY_FROM_WHICH_THE_STOCK_IS_BEING_RECEIVED_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "facilityFromWhich",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_SCAN_TEAM_CODE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "deliveryTeam",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": "stockDetails.facilityFromWhich==Delivery Team"
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "BUS",
+                                                "name": "Bus"
+                                            },
+                                            {
+                                                "code": "TRUCK",
+                                                "name": "Truck"
+                                            }
+                                        ],
+                                        "label": "APP_CONFIG_INVENTORY_stockDetails_transportType_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "dropdown",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_TYPE_OF_TRANSPORT_USED_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "transportType",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockDetails_TRANSPORT_TYPE_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_stockDetails_vehicleNumber_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_ENTER_THE_VEHICLE_NUMBER_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "vehicleNumber",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_stockDetails_VEHICLE_NUMBER_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "APP_CONFIG_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
+                                "description": "APP_CONFIG_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION"
+                            },
+                            {
+                                "page": "warehouseDetails",
+                                "type": "object",
+                                "label": "APP_CONFIG_INVENTORY_warehouseDetails_WAREHOUSE_SCREEN_HEADING",
+                                "order": 1,
+                                "navigateTo": {
+                                    "name": "stockDetails",
+                                    "type": "form"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "integer",
+                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_ENTER_THE_DATE_ON_WHICH_THE_STOCK_WAS_RECEIVED_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "dateOfEntry",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": true,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "locality",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_ADMINISTRATIVE_AREA_OF_THE_WAREHOUSE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "administrativeArea",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "dynamic",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_FACILITY_TO_WHICH_THE_STOCK_IS_BEING_SENT_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "facilityToWhich",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SCAN_TEAM_CODE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "teamCode",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_IS_REQUIRED_MESSAGE"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": "warehouseDetails.facilityToWhich==Delivery Team"
+                                        }
+                                    }
+                                ],
+                                "actionLabel": "APP_CONFIG_INVENTORY_warehouseDetails_ACTION_BUTTON_LABEL_1",
+                                "description": "APP_CONFIG_INVENTORY_warehouseDetails_SCREEN_DESCRIPTION"
+                            }
+                        ],
+                        "version": 1,
+                        "disabled": false,
+                        "isSelected": true,
+                        "screenType": "FORM"
+                    }
+                ],
+                "order": 1,
+                "project": "Bednets",
+                "version": 1,
+                "disabled": false,
+                "isSelected": true,
+                "initialPage": "searchBeneficiary"
+            },
+            "isActive": false,
+            "auditDetails": {
+                "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+                "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+                "createdTime": 1762170065481,
+                "lastModifiedTime": 1763640947114
+            }
+        }
