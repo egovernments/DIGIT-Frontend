@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.9.7]  [12-DEC-2025]
+-Feature : Header.js component enhanced for secondary logo URL
+
 ## [1.9.6]  [26-November-2025]
 -Bug fix : minor logic enhancement in 1.9.5
 
