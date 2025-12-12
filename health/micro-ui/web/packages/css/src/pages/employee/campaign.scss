@@ -928,3 +928,117 @@
     align-items: center;
   }
 }
+.digit-campaign-home-card {
+  display: flex;
+  justify-content: flex-start;
+  width: 31.25rem;
+  border: 0.094rem solid #d6d5d4;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  flex-direction: column;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  gap: 1rem;
+  padding: 1rem;
+  box-shadow: 0rem 0.125rem 0.25rem 0rem #C84C0E26;
+
+  &:hover {
+    transform: translateY(-12px);
+    border: 0.094rem solid var(--Primary-1, #C84C0E);
+    box-shadow: 0rem 0.125rem 0.419rem 0rem #00000033;
+  }
+
+  .digit-campaign-home-icon {
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 0.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    background-color: #FBEEE8;
+  }
+
+  svg {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .digit-campaign-home-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .digit-campaign-home-text-header {
+      font-family: var(--digitv2-fontFamily-sans);
+      font-weight: var(--digitv2-fontWeight-bold);
+      font-style: Bold;
+      font-size: 1.5rem;
+      color: var(--digitv2-lightTheme-primary-2);
+
+    }
+
+    .digit-campaign-home-text-description {
+      font-family: var(--digitv2-fontFamily-sans);
+      font-weight: var(--digitv2-fontWeight-regular);
+      font-style: Regular;
+      font-size: 0.875rem;
+      color: var(--digitv2-lightTheme-text-secondary);
+
+    }
+  }
+
+  .digit-campaign-home-card-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #F5F2F2;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .digit-campaign-home-card-count-text {
+      font-family: "Roboto";
+      font-weight: var(--digitv2-fontWeight-bold);
+      font-style: Bold;
+      font-size: 0.875rem;
+      color: #0B4B66
+    }
+  }
+}
+
+.digit-nested-category:not(:first-child) {
+  margin-top: 0rem;
+}
+
+.language-button-container {
+  button {
+    border-radius: 0.5rem;
+  }
+}
+
+.digit-campaign-home-card-wrapper {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.employeeCard {
+  border-radius: 0.75rem;
+}
+
+.digit-button-primary,
+.digit-button-secondary {
+  &.small {
+    h2 {
+      line-height: normal;
+    }
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}

@@ -11,8 +11,8 @@ import HeaderFieldWrapper from "./HeaderFieldWrapper";
 import NewNavigationLogicWrapper from "./NewNavigationLogicWrapper";
 
 // Wrapper for footer label to avoid hook-in-loop violation
-const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t }) => {
-  const localizedLabel = useCustomT(label);
+const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale, dispatch, t }) => {
+  const localizedLabel = useCustomT(footerButtonConfig?.label);
   const [localValue, setLocalValue] = useState(localizedLabel || "");
   const debounceTimerRef = useRef(null);
 
@@ -41,10 +41,10 @@ const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t 
 
       // Debounce dispatch
       debounceTimerRef.current = setTimeout(() => {
-        if (label) {
+        if (footerButtonConfig?.label) {
           dispatch(
             updateLocalizationEntry({
-              code: label,
+              code: footerButtonConfig?.label,
               locale: currentLocale || "en_IN",
               message: value,
             })
@@ -52,29 +52,36 @@ const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t 
         }
       }, 800);
     },
-    [label, currentLocale, dispatch]
+    [footerButtonConfig?.label, currentLocale, dispatch]
   );
 
   const handleBlur = useCallback(() => {
     // Force immediate dispatch on blur
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
-      if (label) {
+      if (footerButtonConfig?.label) {
         dispatch(
           updateLocalizationEntry({
-            code: label,
+            code: footerButtonConfig?.label,
             locale: currentLocale || "en_IN",
             message: localValue,
           })
         );
       }
     }
-  }, [label, currentLocale, localValue, dispatch]);
+  }, [footerButtonConfig?.label, currentLocale, localValue, dispatch]);
+
+  const labelMap = {
+    primary: t("Primary"),
+    secondary: t("Secondary"),
+    teritiary:t("Teritiary"),
+    link:t("Link"),
+  }
 
   return (
     <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
       <div className="">
-        <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+        <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
       </div>
       <TextInput
         name={`footerLabel-${index}`}
@@ -314,8 +321,8 @@ function NewAppFieldScreenWrapper() {
         </div>)}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
-        currentCard?.footer?.map(({ label }, index) => (
-          <FooterLabelField key={`footer-${index}`} label={label} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} />
+        currentCard?.footer?.map((footerButtonConfig, index) => (
+          <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} />
         ))}
     </React.Fragment>
   );

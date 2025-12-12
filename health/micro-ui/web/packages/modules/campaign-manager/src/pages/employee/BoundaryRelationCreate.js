@@ -35,7 +35,7 @@ const BoundaryRelationCreate = () => {
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "hcm";
   const stateCode = Digit.ULBService.getCurrentTenantId();
-  const getModuleCode = (hierarchyType) => `boundary-${hierarchyType.toLowerCase().replace(/\s+/g, "_")}`;
+  const getModuleCode = (hierarchyType) => `boundary-${hierarchyType?.toLowerCase().replace(/\s+/g, "_")}`;
   const moduleCode = getModuleCode(defaultHierarchyType);
   const { isLoading, data } = Digit.Services.useStore({
     stateCode,
@@ -88,14 +88,15 @@ const BoundaryRelationCreate = () => {
 
   const generateFile = async () => {
     const res = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/data/_generate`,
+      // url: `/project-factory/v1/data/_generate`,
+      url:`/boundary-management/v1/_generate`,
       body: {},
       params: {
         tenantId: tenantId,
-        type: "boundaryManagement",
+        // type: "boundaryManagement",
         forceUpdate: true,
         hierarchyType: hierarchyType,
-        campaignId: "default",
+        // campaignId: "default",
       },
     });
     return res;
@@ -106,13 +107,14 @@ const BoundaryRelationCreate = () => {
   const generateTemplate = async () => {
     const hier = newHierarchy === false ? defaultHierarchyType : hierarchyType;
     const res = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/data/_download`,
+      // url: `/project-factory/v1/data/_download`,
+      url:`/boundary-management/v1/_generate-search`,
       body: {},
       params: {
         tenantId: tenantId,
-        type: "boundaryManagement",
+        // type: "boundaryManagement",
         hierarchyType: hier,
-        campaignId: "default",
+        // campaignId: "default",
       },
     });
     return res;
@@ -209,7 +211,8 @@ const BoundaryRelationCreate = () => {
           }
 
           const searchResponse = await Digit.CustomService.getResponse({
-            url: "/project-factory/v1/data/_search",
+            // url: "/project-factory/v1/data/_search",
+            url: "/boundary-management/v1/_process-search",
             params: {},
             body: {
               SearchCriteria: {
@@ -271,19 +274,26 @@ const BoundaryRelationCreate = () => {
   const callCreateDataApi = async (fid) => {
     try {
       const createResponse = await Digit.CustomService.getResponse({
-        url: "/project-factory/v1/data/_create",
+        // url: "/project-factory/v1/data/_create",
+        url: "/boundary-management/v1/_process",
         params: {},
         body: {
           ResourceDetails: {
+            // tenantId: tenantId,
+            // type: "boundaryManagement",
+            // fileStoreId: fid,
+            // action: "create",
+            // hierarchyType: hierarchyType,
+            // additionalDetails: {
+            //   source: "boundary",
+            // },
+            // campaignId: "default",
+
             tenantId: tenantId,
-            type: "boundaryManagement",
             fileStoreId: fid,
             action: "create",
             hierarchyType: hierarchyType,
-            additionalDetails: {
-              source: "boundary",
-            },
-            campaignId: "default",
+            additionalDetails: {},
           },
         },
       });
@@ -537,6 +547,7 @@ const BoundaryRelationCreate = () => {
                 label={t("CMN_BOUNDARY_REL_CREATE")}
                 // onClick={goToPreview}
                 isDisabled={creatingData}
+                variation="primary"
                 onClick={() => {
                   const checkValid = newBoundaryData?.every((obj) => obj?.boundaryType);
                   if (checkValid) {

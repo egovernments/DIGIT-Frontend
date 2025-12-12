@@ -1131,7 +1131,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     if (type === "unified-console") {
       try {
         const response = await Digit.CustomService.getResponse({
-          url: "/excel-ingestion/v1/data/_generationSearch",
+          url: "/excel-ingestion/v1/data/generate/_search",
           body: {
             GenerationSearchCriteria: {
               tenantId: tenantId,
@@ -1139,6 +1139,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               statuses: ["completed"],
               limit: 5,
               offset: 0,
+              locale:Digit?.Utils?.getDefaultLanguage(),
+              referenceTypes : ["campaign"],
             },
           },
         });

@@ -280,7 +280,8 @@ module.exports = {
           "/facility/v1/_create",
           "/product",
           "/health-service-request",
-          "/excel-ingestion"
+          "/excel-ingestion",
+          "/boundary-management"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,

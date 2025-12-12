@@ -296,7 +296,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {},
       {
         onSuccess: async (result) => {
-          navigate(`/${window?.contextPath}/employee/campaign/my-campaign-new`);
+          window.location.href = `/${window?.contextPath}/employee/campaign/my-campaign-new`;
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
