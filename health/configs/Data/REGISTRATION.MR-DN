@@ -1373,7 +1373,7 @@
                   "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
                   "order": 3,
                   "value": "",
-                  "format": "dropdown",
+                  "format": "idPopulator",
                   "hidden": false,
                   "tooltip": "",
                   "helpText": "",
