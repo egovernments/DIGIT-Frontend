@@ -1,0 +1,272 @@
+{
+            "id": "5bd55c23-147e-432b-b625-b50407927156",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "uniqueIdentifier": "STOCKRECONCILIATION.MR-DN",
+            "data": {
+                "name": "STOCKRECONCILIATION",
+                "flows": [
+                    {
+                        "name": "stockReconciliationDetails",
+                        "pages": [
+                            {
+                                "page": "stockRecon",
+                                "type": "object",
+                                "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_HEADING",
+                                "order": 1,
+                                "value": null,
+                                "hidden": null,
+                                "endDate": null,
+                                "tooltip": null,
+                                "helpText": null,
+                                "readOnly": null,
+                                "required": null,
+                                "charCount": null,
+                                "startDate": null,
+                                "autoEnable": null,
+                                "innerLabel": null,
+                                "properties": [
+                                    {
+                                        "type": "dynamic",
+                                        "enums": [],
+                                        "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "stockReconciliationCard",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "STOCKRECONCILIATION_STOCKRECONCILIATION_stockReconciliationCard_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "number",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "manualCount",
+                                        "mandatory": true,
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_REQUIRED_ERROR"
+                                            },
+                                            {
+                                                "type": "min",
+                                                "value": 0,
+                                                "message": "STOCKRECONCILIATION_STOCKRECONCILIATION_manualCount_MIN_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "textArea",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "STOCKRECONCILIATION_STOCKRECONCILIATION_comments_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "comments",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "systemDate": null,
+                                "actionLabel": "STOCKRECONCILIATION_STOCKRECONCILIATION_ACTION_LABEL",
+                                "description": "STOCKRECONCILIATION_STOCKRECONCILIATION_DESCRIPTION",
+                                "validations": null,
+                                "includeInForm": null,
+                                "isMultiSelect": null,
+                                "includeInSummary": null
+                            }
+                        ],
+                        "version": 1,
+                        "disabled": false,
+                        "onAction": [
+                            {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                    "data": [],
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to fetch config."
+                                            }
+                                        }
+                                    ],
+                                    "configName": "stockReconciliation"
+                                }
+                            },
+                            {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                    "entity": "STOCK_RECONCILIATION",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to create stock."
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                    "data": [],
+                                    "name": "stockReconciliationSuccess",
+                                    "type": "TEMPLATE",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Navigation failed."
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "isSelected": true,
+                        "screenType": "FORM",
+                        "initActions": [
+                            {
+                                "actionType": "SEARCH_EVENT",
+                                "properties": {
+                                    "data": [
+                                        {
+                                            "key": "projectId",
+                                            "value": "{{singleton.selectedProject.id}}",
+                                            "operation": "equals"
+                                        }
+                                    ],
+                                    "name": "projectFacility",
+                                    "type": "SEARCH_EVENT"
+                                }
+                            }
+                        ],
+                        "wrapperConfig": {
+                            "filters": [],
+                            "relations": [
+                                {
+                                    "name": "facility",
+                                    "match": {
+                                        "field": "id",
+                                        "equalsFrom": "facilityId"
+                                    },
+                                    "entity": "FacilityModel"
+                                },
+                                {
+                                    "name": "productVariant",
+                                    "match": {
+                                        "field": "id",
+                                        "equalsFrom": "resource"
+                                    },
+                                    "entity": "ProductVariantModel"
+                                }
+                            ],
+                            "rootEntity": "ProjectFacilityModel",
+                            "groupByType": true,
+                            "wrapperName": "InventoryWrapper",
+                            "searchConfig": {
+                                "select": [
+                                    "projectFacility",
+                                    "facility",
+                                    "productVariant",
+                                    "stock"
+                                ],
+                                "primary": "projectFacility"
+                            }
+                        }
+                    },
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "label": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_HEADING",
+                                "format": "panelCard",
+                                "properties": {
+                                    "type": "success"
+                                },
+                                "description": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_DESCRIPTION",
+                                "primaryAction": {
+                                    "type": "template",
+                                    "label": "STOCKRECONCILIATION_STOCKRECONCILIATIONSUCCESS_PRIMARY_ACTION_LABEL",
+                                    "format": "button",
+                                    "onAction": [
+                                        {
+                                            "actionType": "NAVIGATION",
+                                            "properties": {
+                                                "type": "HOME"
+                                            }
+                                        }
+                                    ],
+                                    "properties": {
+                                        "type": "primary"
+                                    }
+                                }
+                            }
+                        ],
+                        "name": "stockReconciliationSuccess",
+                        "footer": [],
+                        "header": [],
+                        "heading": "",
+                        "screenType": "TEMPLATE",
+                        "description": "",
+                        "initActions": []
+                    }
+                ],
+                "order": 5,
+                "active": true,
+                "project": "MR-DN",
+                "version": 1,
+                "disabled": false,
+                "isSelected": true,
+                "initialPage": "stockReconciliationDetails"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1764340024288,
+                "lastModifiedTime": 1764845485218
+            }
+        }
