@@ -1387,3 +1387,14 @@ textarea.light-placeholder::placeholder {
   align-items: center;
   margin-bottom: unset;
 }
+
+.login-container .secondaryBannerHeader{
+    flex-direction: row;
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+      .login-form-container .digit-card-component{
+        min-height: 600px !important;
+  }
+}
