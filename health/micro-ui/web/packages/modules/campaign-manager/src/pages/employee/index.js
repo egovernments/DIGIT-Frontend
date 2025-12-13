@@ -55,6 +55,12 @@ const ViewBoundary = lazyWithFallback(
   { loaderText: "Loading View Boundary..." }
 );
 
+const ViewBoundaryV2 = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-boundary-v2" */ "./boundaryTree/ViewBoundaryV2"),
+  () => require("./boundaryTree/ViewBoundaryV2").default,
+  { loaderText: "Loading View Boundary V2..." }
+);
+
 const ViewHierarchy = lazyWithFallback(
   () => import(/* webpackChunkName: "view-hierarchy" */ "./ViewHierarchy"),
   () => require("./ViewHierarchy").default,
@@ -397,6 +403,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`boundary/home`} element={<BoundaryHome />} />
           <Route path={`boundary/create`} element={<BoundaryRelationCreate />} />
           <Route path={`boundary/view-all-hierarchy`} element={<ViewBoundary />} />
+          <Route path={`boundary/view`} element={<ViewBoundaryV2 />} />
           <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
