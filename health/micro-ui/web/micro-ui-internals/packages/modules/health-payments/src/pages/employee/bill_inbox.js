@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header, } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 import BillInboxComponent from "../../components/bill_inbox/BillInbox";
 
@@ -34,20 +34,19 @@ import BillInboxComponent from "../../components/bill_inbox/BillInbox";
  */
 
 const BillInbox = () => {
+  const { t } = useTranslation();
+  const location = useLocation();
 
-    const { t } = useTranslation();
-    const location = useLocation();
-
-    return (
-        <React.Fragment>
-            <Header styles={{ fontSize: "32px" }}>
-                {t("HCM_AM_BILL_INBOX")}
-            </Header>
-            <div className="inbox-search-wrapper">
-                <BillInboxComponent></BillInboxComponent>
-            </div>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <Header styles={{ fontSize: "32px" }}>
+        <span style={{ color: "#0B4B66" }}>{t("HCM_AM_BILL_INBOX")}</span>
+      </Header>
+      <div className="inbox-search-wrapper">
+        <BillInboxComponent></BillInboxComponent>
+      </div>
+    </React.Fragment>
+  );
 };
 
 export default BillInbox;

@@ -1,7 +1,17 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
-import { Card, LabelFieldPair, Dropdown, CardText, HeaderComponent, TextInput, Button, Loader } from "@egovernments/digit-ui-components";
+import {
+  Card,
+  LabelFieldPair,
+  Dropdown,
+  CardText,
+  HeaderComponent,
+  TextInput,
+  Button,
+  Loader,
+  NoResultsFound,
+} from "@egovernments/digit-ui-components";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import RoleWageTable from "../../components/payment_setup/wageTable";
 import ProjectService from "../../services/project/ProjectService";
@@ -76,6 +86,7 @@ const PaymentSetUpPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [tableError, setTableError] = useState(false);
+  const [isFormModified, setIsFormModified] = useState(false);
 
   // Update cached state whenever state changes (only while mounted)
   useEffect(() => {
@@ -339,7 +350,11 @@ const PaymentSetUpPage = () => {
 
           // Set edit state if user rates exist
           if (userRatesData?.data?.rates?.length > 0) {
-            setEdit(true);
+            // INFO :: with edit button feature
+            //setEdit(true);
+
+            setEdit(false);
+            setUpdate(true);
           }
 
           setSkillsData(finalSkillsData);
@@ -381,6 +396,7 @@ const PaymentSetUpPage = () => {
   // Billing Cycle Selection Handler
   const handleBillingCycleSelect = useCallback((value) => {
     setBillingCycle(value);
+    setIsFormModified(true);
     if (value?.code !== "CUSTOM") {
       setCustomDays("");
     }
@@ -391,6 +407,7 @@ const PaymentSetUpPage = () => {
     const value = event.target.value;
     if (value === "" || /^\d+$/.test(value)) {
       setCustomDays(value);
+      setIsFormModified(true);
     }
   }, []);
 
@@ -401,6 +418,7 @@ const PaymentSetUpPage = () => {
         { Mdms: wagePayload.Mdms },
         {
           onError: (error) => {
+            setLoading(false);
             history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
               state: "error",
               info: "",
@@ -413,11 +431,13 @@ const PaymentSetUpPage = () => {
             });
           },
           onSuccess: (responseData) => {
+            setLoading(false);
+            const camData = `<strong>${selectedCampaign?.name}</strong>`;
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.name} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
@@ -429,6 +449,7 @@ const PaymentSetUpPage = () => {
         }
       );
     } catch (err) {
+      setLoading(false);
       history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
         state: "error",
         info: "",
@@ -449,6 +470,7 @@ const PaymentSetUpPage = () => {
         { Mdms: wagePayload.Mdms },
         {
           onError: (error) => {
+            setLoading(false);
             history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
               state: "error",
               info: "",
@@ -461,11 +483,13 @@ const PaymentSetUpPage = () => {
             });
           },
           onSuccess: (responseData) => {
+            setLoading(false);
+            const camData = `<strong>${selectedCampaign?.name}</strong>`;
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${selectedCampaign?.name} ${t(
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t(
                 "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
               )}`,
               message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
@@ -477,6 +501,7 @@ const PaymentSetUpPage = () => {
         }
       );
     } catch (err) {
+      setLoading(false);
       history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
         state: "error",
         info: "",
@@ -500,7 +525,7 @@ const PaymentSetUpPage = () => {
       billingConfig: billingConfigData,
       wageData: wagePayload,
     });
-
+    setLoading(true);
     try {
       if (update) {
         const billingConfig = {
@@ -520,6 +545,7 @@ const PaymentSetUpPage = () => {
           { billingConfig },
           {
             onError: (error) => {
+              setLoading(false);
               history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
                 state: "error",
                 info: "",
@@ -622,9 +648,9 @@ const PaymentSetUpPage = () => {
   );
 
   // Handle wage table data changes
-  const handleWageDataChange = useCallback(({ payload, errorFlag }) => {
+  const handleWageDataChange = useCallback(({ payload, errorFlag, isFormModified }) => {
     setWagePayload(payload);
-
+    setIsFormModified(isFormModified);
     setTableError(errorFlag);
   }, []);
 
@@ -645,11 +671,14 @@ const PaymentSetUpPage = () => {
       return;
     }
 
-    if (edit) {
-      handleEditClick();
-    } else {
-      setPopUp(true);
-    }
+    //INFO :: for edit functionality
+    // if (edit) {
+    //   handleEditClick();
+    // } else {
+    //setPopUp(true);
+    //}
+
+    setPopUp(true);
   }, [isCampaignStarted, edit, history, handleEditClick]);
 
   // Show loading state
@@ -659,6 +688,33 @@ const PaymentSetUpPage = () => {
 
   if (loading) {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
+  }
+
+  if (!CampaignData || CampaignData?.CampaignDetails?.length === 0) {
+    return (
+      <div>
+        <Card type="primary" className="bottom-gap-card-payment">
+          <NoResultsFound style={{ height: "35rem" }} text={t(`HCM_AM_NO_UPCOMING_CAMPAIGN_FOUND`)} />
+        </Card>
+
+        {/* Action Bar */}
+        <ActionBar className="mc_back">
+          <Button
+            style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "14rem" }}
+            variation="primary"
+            label={t("GO_BACK_TO_HOME")}
+            title={t("GO_BACK_TO_HOME")}
+            onClick={() => {
+              history.push(`/${window.contextPath}/employee`);
+              return;
+            }}
+            icon={"ArrowBack"}
+            isSuffix={false}
+            isDisabled={false}
+          />
+        </ActionBar>
+      </div>
+    );
   }
 
   return (
@@ -713,52 +769,74 @@ const PaymentSetUpPage = () => {
               inputMode="numeric"
               disabled={edit ? true : false}
               allowNegativeValues={false}
+              min={billingCycle.minDuration}
+              max={billingCycle.maxDuration}
             />
           )}
       </Card>
 
       {/* Role Wages Setup Card */}
-      <Card>
-        <HeaderComponent>
-          {" "}
-          <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</span>
-        </HeaderComponent>
-        <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
+      {selectedCampaign ? (
+        <Card>
+          <HeaderComponent>
+            {" "}
+            <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</span>
+          </HeaderComponent>
+          <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
 
-        {/* Conditional Rendering */}
-        {loadingSkills ? (
-          <div style={{ padding: "2rem", textAlign: "center" }}>
-            <Loader className={"digit-center-loader"} />
-          </div>
-        ) : skillsData ? (
-          <RoleWageTable
-            disabled={edit ? true : false}
-            skills={skillsData.skills}
-            rateBreakupSchema={skillsData.rateBreakupSchema}
-            rateMaxLimitSchema={skillsData.rateMaxLimitSchema}
-            onDataChange={handleWageDataChange}
-            campaignId={selectedCampaign?.projectId}
-            campaignName={selectedCampaign?.name}
-            existingRatesData={skillsData ? skillsData.existingRatesData : null}
-          />
-        ) : selectedCampaign ? (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
-        ) : (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN")}</div>
-        )}
-      </Card>
+          {/* Conditional Rendering */}
+          {loadingSkills ? (
+            <div style={{ padding: "2rem", textAlign: "center" }}>
+              <Loader className={"digit-center-loader"} />
+            </div>
+          ) : skillsData ? (
+            <RoleWageTable
+              disabled={edit ? true : false}
+              skills={skillsData.skills}
+              rateBreakupSchema={skillsData.rateBreakupSchema}
+              rateMaxLimitSchema={skillsData.rateMaxLimitSchema}
+              onDataChange={handleWageDataChange}
+              campaignId={selectedCampaign?.projectId}
+              campaignName={selectedCampaign?.name}
+              existingRatesData={skillsData ? skillsData.existingRatesData : null}
+            />
+          ) : selectedCampaign ? (
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
+          ) : (
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN")}</div>
+          )}
+        </Card>
+      ) : (
+        <div></div>
+      )}
 
       {/* Action Bar */}
       <ActionBar className="mc_back">
         <Button
           style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "12rem" }}
           variation="primary"
-          label={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
-          title={isCampaignStarted ? t("GO_BACK_TO_HOME") : edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
+          label={
+            isCampaignStarted
+              ? t("GO_BACK_TO_HOME")
+              : // edit ? t("HCM_AM_BTN_EDIT") :
+              update
+              ? t("HCM_AM_BTN_UPDATE")
+              : t("HCM_AM_BTN_SUBMIT")
+          }
+          title={
+            isCampaignStarted
+              ? t("GO_BACK_TO_HOME")
+              : //  edit ? t("HCM_AM_BTN_EDIT") :
+              update
+              ? t("HCM_AM_BTN_UPDATE")
+              : t("HCM_AM_BTN_SUBMIT")
+          }
           onClick={handlePrimaryButtonClick}
           icon={edit ? "" : "ArrowForward"}
           isSuffix={edit ? false : true}
-          isDisabled={!tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData}
+          isDisabled={
+            !isFormModified || !tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData
+          }
         />
       </ActionBar>
 

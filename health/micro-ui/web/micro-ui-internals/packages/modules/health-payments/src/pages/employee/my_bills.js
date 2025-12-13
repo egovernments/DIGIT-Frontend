@@ -8,6 +8,7 @@ import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
+import { formatDate } from "../../utils/time_conversion";
 
 const MyBills = () => {
   const { t } = useTranslation();
@@ -92,16 +93,8 @@ const MyBills = () => {
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   };
 
-  // Format date for display
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
+  
+  
 
   // Fetch billing config and periods
   const fetchBillingPeriods = useCallback(
@@ -185,7 +178,11 @@ const MyBills = () => {
 
   return (
     <React.Fragment>
-      {<Header styles={{ fontSize: "32px" }}>{t("HCM_AM_MY_BILLS")}</Header>}
+      {
+        <Header styles={{ fontSize: "32px" }}>
+          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MY_BILLS")}</span>
+        </Header>
+      }
 
       <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 

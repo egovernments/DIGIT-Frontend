@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 
-/*************  ✨ Codeium Command 🌟  *************/
+/*************   Codeium Command   *************/
 /**
  * AlertPopUp component is used to display a pop up with a message and
  * provides options to the user to perform primary and secondary actions.
