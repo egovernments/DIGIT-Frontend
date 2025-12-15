@@ -193,7 +193,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar.includes("campaign-home") ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
       content: t("CREATE_CAMPAIGN_HOME"),
-      show: pathVar.includes("campaign-home") || pathVar.includes("create-campaign") ? true : false,
+      show: pathVar.includes("campaign-home") || pathVar.includes("create-campaign") || (pathVar.includes("campaign-templates") && url?.from === "home") ? true : false,
     },
     {
       path: "",
