@@ -25,9 +25,42 @@ const EditForm = ({ tenantId, data }) => {
     retry: false,
     enable: false,
   });
+
+  // Fetch mobile validation config from MDMS
+  const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+    "ValidationConfigs",
+    [{ name: "mobileNumberValidation" }],
+    {
+      select: (data) => {
+        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const rules = validationData?.rules;
+        return {
+          prefix: rules?.prefix || "+91",
+          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
+          isActive: rules?.isActive !== false,
+          maxLength: rules?.maxLength || 10,
+          minLength: rules?.minLength || 10,
+          errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
+        };
+      },
+      staleTime: 300000,
+    }
+  );
+
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
+
+  // Store MDMS validation config globally for getPattern to use
+  useEffect(() => {
+    if (validationConfig) {
+      if (!window.Digit) window.Digit = {};
+      if (!window.Digit.MDMSValidationPatterns) window.Digit.MDMSValidationPatterns = {};
+      window.Digit.MDMSValidationPatterns.mobileNumberValidation = validationConfig;
+    }
+  }, [validationConfig]);
 
   useEffect(() => {
     setMutationHappened(false);
@@ -36,7 +69,13 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern("MobileNo"))) {
+    const maxLength = validationConfig?.maxLength || 10;
+    const minLength = validationConfig?.minLength || 10;
+    const pattern = validationConfig?.pattern
+      ? new RegExp(validationConfig.pattern, 'i')
+      : Digit.Utils.getPattern('MobileNo');
+
+    if (mobileNumber && mobileNumber.length >= minLength && mobileNumber.length <= maxLength && mobileNumber.match(pattern)) {
       setShowToast(null);
       if (data.user.mobileNumber == mobileNumber) {
         setPhonecheck(true);
@@ -53,7 +92,7 @@ const EditForm = ({ tenantId, data }) => {
     } else {
       setPhonecheck(false);
     }
-  }, [mobileNumber]);
+  }, [mobileNumber, validationConfig]);
 
   const defaultValues = {
     tenantId: tenantId,
@@ -121,7 +160,7 @@ const EditForm = ({ tenantId, data }) => {
 
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
-      if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
+      if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.roles?.length > 0)) {
         setcheck(false);
         break;
       } else {
@@ -166,6 +205,36 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
+    // Validate mobile number before submission
+    const mobileNum = input?.SelectEmployeePhoneNumber?.mobileNumber;
+
+    if (mobileNum) {
+      // Get validation parameters from MDMS or use defaults
+      const maxLength = validationConfig?.maxLength || 10;
+      const minLength = validationConfig?.minLength || 10;
+      const pattern = validationConfig?.pattern
+        ? new RegExp(validationConfig.pattern, 'i')
+        : Digit.Utils.getPattern('MobileNo');
+
+      // Check length
+      if (mobileNum.length < minLength || mobileNum.length > maxLength) {
+        setShowToast({
+          key: true,
+          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+
+      // Check pattern
+      if (!mobileNum.match(pattern)) {
+        setShowToast({
+          key: true,
+          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+    }
+
     // if (input.Jurisdictions.filter((juris) => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
     //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
     //   return;
@@ -237,28 +306,6 @@ const EditForm = ({ tenantId, data }) => {
 
     // history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "UPDATE" });
   };
-  // Fetch mobile validation config from MDMS
-  const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
-    {
-      select: (data) => {
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
-        const rules = validationData?.rules;
-        return {
-          prefix: rules?.prefix || "+91",
-          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          isActive: rules?.isActive !== false,
-          maxLength: rules?.maxLength || 10,
-          minLength: rules?.minLength || 10,
-          errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
-          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
-        };
-      },
-      staleTime: 300000,
-    }
-  );
 
   if (isLoading || isValidationLoading) {
     return <Loader />;
