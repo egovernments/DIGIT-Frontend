@@ -1141,6 +1141,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
               options: cField.options || [],
               optionsKey: dropdownOptionKey,
               fieldPairClassName: "drawer-toggle-conditional-field",
+              disablePortal:true,
+              optionsCustomStyle:{maxHeight:"10vh"}
             }}
           />
         </div>
