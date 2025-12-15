@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.9.3] [15-December-2025]
+
+### 🔧 Validation Pattern Enhancements:
+
+#### 📱 Mobile Number Validation Improvements:
+- **Simplified MDMS Pattern Retrieval**: Enhanced `getPattern()` function for mobile number validation
+  - Removed verbose console logging for production readiness
+  - Streamlined MDMS pattern retrieval logic
+  - Silent fallback to default pattern if MDMS not available
+  - Better error handling with try-catch for robustness
+
+#### ✅ Regex Pattern Fixes:
+- **Name Pattern**: Fixed invalid regex characters in Name validation
+  - Old: `/^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;""'']{1,50}$/i`
+  - New: `/^[^0-9\$\"<>?\\~!@#$%^()+={}\[\]*,/_:;]{1,50}$/i`
+  - Removed: `{0-9}` → `0-9`, extra `^`, double escapes `\\\\` → `\\`, smart quotes
+
+- **Address Pattern**: Fixed invalid regex characters in Address validation
+  - Old: `/^[^\$\"<>?\\\\~\`!@$%^()+={}\[\]*:;""'']{1,500}$/i`
+  - New: `/^[^\$\"<>?\\~\`!@$%^()+={}\[\]*:;]{1,500}$/i`
+  - Removed: Double escapes and smart quotes that caused regex syntax errors
+
+#### 🎯 Technical Improvements:
+- Enhanced pattern matching reliability across all form validations
+- Eliminated browser console regex syntax error warnings
+- Maintained backward compatibility with existing validation logic
+- Improved code maintainability with cleaner regex patterns
+
+#### 📋 Modified Files:
+- `packages/libraries/src/utils/index.js`:
+  - Simplified `getPattern()` function for MobileNo type
+  - Fixed Name pattern regex
+  - Fixed Address pattern regex
+  - Removed debug console logs
+
+### Impact:
+- Fixes console errors: "Pattern attribute value is not a valid regular expression"
+- Ensures proper form validation across all DIGIT-UI modules
+- Better MDMS integration for mobile number validation
+- Production-ready code without debug logging
+
+
 ## [1.9.2] [13-November-2025]
 ### Bug fix
  - Fixed the logout redirection issue

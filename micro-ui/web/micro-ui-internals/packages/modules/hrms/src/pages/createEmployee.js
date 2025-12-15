@@ -60,6 +60,16 @@ const CreateEmployee = () => {
   const mutationCreate = Digit.Hooks.hrms.useHRMSCreate(tenantId);
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
+
+  // Store MDMS validation config globally for getPattern to use
+  useEffect(() => {
+    if (validationConfig) {
+      if (!window.Digit) window.Digit = {};
+      if (!window.Digit.MDMSValidationPatterns) window.Digit.MDMSValidationPatterns = {};
+      window.Digit.MDMSValidationPatterns.mobileNumberValidation = validationConfig;
+    }
+  }, [validationConfig]);
+
   useEffect(() => {
     setMutationHappened(false);
     clearSuccessData();
@@ -82,7 +92,18 @@ const CreateEmployee = () => {
     return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
   }
   useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern('MobileNo'))) {
+    const maxLength = validationConfig?.maxLength || 10;
+    const minLength = validationConfig?.minLength || 10;
+    const pattern = validationConfig?.pattern
+      ? new RegExp(validationConfig.pattern, 'i')
+      : Digit.Utils.getPattern('MobileNo');
+
+    if (
+      mobileNumber &&
+      mobileNumber.length >= minLength &&
+      mobileNumber.length <= maxLength &&
+      mobileNumber.match(pattern)
+    ) {
       setShowToast(null);
       Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
         if (result.Employees.length > 0) {
@@ -91,11 +112,13 @@ const CreateEmployee = () => {
         } else {
           setPhonecheck(true);
         }
+      }).catch(err => {
+        setPhonecheck(false);
       });
     } else {
       setPhonecheck(false);
     }
-  }, [mobileNumber]);
+  }, [mobileNumber, validationConfig]);
 
   const defaultValues = {
 
@@ -125,7 +148,7 @@ const CreateEmployee = () => {
     }
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
-      if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
+      if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.roles?.length > 0)) {
         setcheck(false);
         break;
       } else {
@@ -148,6 +171,8 @@ const CreateEmployee = () => {
         setassigncheck = true;
       }
     }
+
+
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
@@ -201,6 +226,36 @@ const CreateEmployee = () => {
 
 
   const onSubmit = async (data) => {
+    // Validate mobile number before submission
+    const mobileNum = data?.SelectEmployeePhoneNumber?.mobileNumber;
+
+    if (mobileNum) {
+      // Get validation parameters from MDMS or use defaults
+      const maxLength = validationConfig?.maxLength || 10;
+      const minLength = validationConfig?.minLength || 10;
+      const pattern = validationConfig?.pattern
+        ? new RegExp(validationConfig.pattern, 'i')
+        : Digit.Utils.getPattern('MobileNo');
+
+      // Check length
+      if (mobileNum.length < minLength || mobileNum.length > maxLength) {
+        setShowToast({
+          key: "error",
+          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+
+      // Check pattern
+      if (!mobileNum.match(pattern)) {
+        setShowToast({
+          key: "error",
+          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+    }
+
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true);
     const selectedCity = data?.Jurisdictions?.[0]?.boundary;
     data.Jurisdictions = data?.Jurisdictions?.map((juris) => {

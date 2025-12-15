@@ -1,3 +1,54 @@
+## [1.9.2] [15-December-2025]
+
+### 🔧 Bug Fixes & Validation Improvements:
+
+#### 📱 Enhanced Mobile Number Validation:
+- **MDMS Pattern Integration**: Fixed mobile number validation to use MDMS pattern directly instead of relying on global window object
+  - Pattern is now retrieved directly from `validationConfig.pattern` in both real-time and pre-submission validation
+  - Eliminates timing issues with global window object initialization
+  - Ensures consistent validation across Create Employee and Edit Employee forms
+
+#### ✅ Fixed Validation Issues:
+- **Jurisdiction Validation**: Removed `tenantId` check from form value change validation as it's only added during submission
+- **Regex Pattern Fixes**: Corrected invalid regex patterns in Name and Address validation
+  - Fixed Name pattern: Removed `{0-9}`, extra `^`, and double escapes
+  - Fixed Address pattern: Removed smart quotes and invalid escape sequences
+- **Pre-submission Validation**: Added mobile number validation before form submission as final safety check
+  - Validates both length (min/max) and pattern matching
+  - Uses MDMS config with fallback to default 10-digit pattern
+  - Shows appropriate error messages from MDMS or default error
+
+#### 🎯 Technical Improvements:
+- Cleaned up all debug console logs for production readiness
+- Simplified MDMS pattern retrieval logic in `getPattern()` utility function
+- Enhanced error handling with silent fallback to default patterns
+- Added `validationConfig` to useEffect dependencies for proper reactivity
+
+#### 📋 Files Modified:
+- `createEmployee.js`: Enhanced mobile validation in both real-time (useEffect) and submission (onSubmit)
+- `EditForm.js`: Enhanced mobile validation with MDMS pattern integration
+- `packages/libraries/src/utils/index.js`: Simplified getPattern() for better MDMS integration
+- `SelectEmployeeName.js`: Real-time name validation with error display
+- `SelectEmployeeCorrespondenceAddress.js`: Real-time address validation with error display
+
+### Validation Flow:
+1. **Real-time Validation** (as user types):
+   - Mobile number validated against MDMS pattern and length constraints
+   - Duplicate phone number check via API call
+   - Name and Address validated with improved regex patterns
+
+2. **Pre-submission Validation** (before API call):
+   - Final mobile number validation check
+   - Length and pattern verification
+   - Error toast displayed if validation fails
+
+### Fallback Mechanism:
+- If MDMS config is unavailable, falls back to default validation:
+  - Pattern: `^[6-9][0-9]{9}$` (10-digit Indian mobile number)
+  - Min/Max Length: 10
+  - Error Message: "CORE_COMMON_MOBILE_ERROR"
+
+
 ## [1.9.1] [08-December-2025]
 
 ### 📱 Mobile Number Validation Enhancements:
