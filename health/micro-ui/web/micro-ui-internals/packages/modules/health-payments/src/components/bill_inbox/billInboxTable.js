@@ -182,9 +182,13 @@ const BillInboxTable = ({ ...props }) => {
   return (
     <React.Fragment>
       {props.isFetching || props.tableData.length === 0 ? (
-        <div style={{ height: props.infoDescription ? "38vh" : "52vh" }}>
+        <div style={{ height: props.infoDescription ? "36.8vh" : "52vh" }}>
           {" "}
-          {props.isFetching ? <Loader /> : <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />}{" "}
+          {props.isFetching ? (
+            <Loader className={"digit-center-loader"} />
+          ) : (
+            <NoResultsFound style={{ height: "40vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+          )}{" "}
         </div>
       ) : (
         <DataTable

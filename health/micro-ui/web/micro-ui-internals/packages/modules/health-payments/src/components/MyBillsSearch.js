@@ -53,7 +53,7 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
   };
 
   return (
-    <Card variant="search" style={{ marginBottom: "1.5rem" }}>
+    <Card variant="search" style={{ marginBottom: "1.5rem", alignItems: "center" }}>
       <div style={{ width: "80%" }}>
         <TextBlock body={`${t("HCM_AM_BILL_ID")}`}></TextBlock>
         <TextInput
@@ -99,13 +99,15 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
           }}
         />
       </div>
-
-      <ButtonGroup
-        buttonsArray={[
-          <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="large" />,
-          <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="large" />,
-        ]}
-      ></ButtonGroup>
+      <div style={{ alignItems: "center" ,margin:"0",padding:"0"}}>
+        <ButtonGroup
+          style={{ alignItems: "center" ,margin:"0",padding:"0"}}
+          buttonsArray={[
+            <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="large" />,
+            <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="large" />,
+          ]}
+        ></ButtonGroup>
+      </div>
     </Card>
   );
 };

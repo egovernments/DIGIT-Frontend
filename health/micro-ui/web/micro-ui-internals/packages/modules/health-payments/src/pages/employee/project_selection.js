@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button, Dropdown, Toast } from "@egovernments/digit-ui-components";
+import { Card, Header, Button, Dropdown, Toast, HeaderComponent } from "@egovernments/digit-ui-components";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 
 /* --------------------------- Media Query Hook --------------------------- */
@@ -42,6 +42,7 @@ const ProjectSelect = () => {
     display: "flex",
     flexDirection: "row",
     fontWeight: 500,
+    gap: isMobile ? "0.01rem" : "0.4rem",
   };
   const dropdownItemStyle = {
     width: isMobile ? "100%" : "60%",
@@ -127,6 +128,11 @@ const ProjectSelect = () => {
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Card type="primary" className="bottom-gap-card-payment" style={{ gap: "1.5rem" }}>
+          <HeaderComponent>
+            <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>
+              {billScreen ? t("HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD") : t("HCM_AM_PAYEMENT_PROJECT_HEAD")}
+            </span>
+          </HeaderComponent>
           <div style={{ marginBottom: "0.5rem" }}>
             {billScreen ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION") : t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION")}
           </div>
@@ -139,7 +145,15 @@ const ProjectSelect = () => {
             </div>
 
             <div style={dropdownItemStyle}>
-              <Dropdown t={t} option={project} name={"code"} optionKey={"name"} selected={selectedProject} select={handleProjectSelect} />
+              <Dropdown
+                t={t}
+                option={project}
+                name={"code"}
+                optionKey={"name"}
+                selected={selectedProject}
+                select={handleProjectSelect}
+                disabled={selectedProject != null && project.length === 1}
+              />
             </div>
           </div>
 

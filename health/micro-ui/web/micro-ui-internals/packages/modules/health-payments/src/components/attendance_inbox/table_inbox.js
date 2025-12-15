@@ -27,7 +27,7 @@ const CustomInboxTable = ({
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [commentLogs, setCommentLogs] = useState(false);
   const [activeLink, setActiveLink] = useState({
-    code: "PENDINGFORAPPROVAL",
+    code: "PENDING",
     name: "HCM_AM_PENDING_FOR_APPROVAL",
   });
   const [showToast, setShowToast] = useState(null);
@@ -117,12 +117,12 @@ const CustomInboxTable = ({
     {
       name: (
         <div className="custom-inbox-table-row">
-          {activeLink?.code === "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
+          {activeLink?.code === "PENDING" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
         </div>
       ),
       selector: (row) => (
-        <div className="ellipsis-cell" title={activeLink?.code === "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}>
-          {activeLink?.code === "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
+        <div className="ellipsis-cell" title={activeLink?.code === "PENDING" ? row?.markby : row?.approvedBy || t("NA")}>
+          {activeLink?.code === "PENDING" ? row?.markby : row?.approvedBy || t("NA")}
         </div>
       ),
     },
@@ -199,8 +199,12 @@ const CustomInboxTable = ({
 
   return (
     <React.Fragment>
-      <Card style={{ gap: "1.5rem", height: "80vh", display: "flex", flexDirection: "column" }}>
-        <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, selectedPeriod)}</div>
+      <Card style={{ gap: "0.8rem", height: "90vh", display: "flex", flexDirection: "column" }}>
+        <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
+          {renderProjectPeriod(t, selectedProject, selectedPeriod)?.[0]}
+          <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1] || ""}</div>
+        </div>
+        <div>{t(`ATTENDANCE_${Digit.SessionStorage.get("selectedProject")?.address?.boundaryType}`)}</div>
 
         {!tableData ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
