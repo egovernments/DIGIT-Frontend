@@ -10,8 +10,17 @@ import { ScreenTypeEnum } from "../utils/constants";
  * @param {object} props - Component props.
  */
 
-const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorage, selectedProject, onChange, lowestLevel, isRequired, disableChildOptions }) => {
-
+const BoundaryComponent = ({
+  reset,
+  makeReset,
+  initialValue,
+  updateSessionStorage,
+  selectedProject,
+  onChange,
+  lowestLevel,
+  isRequired,
+  disableChildOptions,
+}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "NEWTEST00222";
   // Get the hierarchy and boundary configurations from session storage
@@ -241,13 +250,13 @@ const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorag
  */
 const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired, disabled }) => {
   const { t } = useTranslation();
-
+  Digit.SessionStorage.set("paymentInbox", selected);
   return (
     <div style={{ width: "100%", marginTop: "1.5rem" }}>
       <div className="comment-label">
         {t(label)}
         {/* {temp disbale for boundary in v2} */}
-        {/* {isRequired && <span className="required"> *</span>} */}
+        {isRequired && <span className="required"> *</span>}
       </div>
       <Dropdown
         selected={selected}
@@ -258,7 +267,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequ
           setSelected(value);
           onChange(value);
         }}
-        disabled={disabled}
+        disabled={disabled || (data.length === 1 && selected != null)}
       />
     </div>
   );

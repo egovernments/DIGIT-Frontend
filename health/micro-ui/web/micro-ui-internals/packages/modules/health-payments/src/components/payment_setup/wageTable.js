@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -18,7 +17,8 @@ const RoleWageTable = ({
   const { t } = useTranslation();
 
   const [roles, setRoles] = useState([]);
-  const [errors, setErrors] = useState({}); //  Stores validation errors
+  const [errors, setErrors] = useState({});
+  const [isFormModified, setIsFormModified] = useState(false); // ⭐ NEW — Track if table was modified
 
   /** Convert rateBreakupSchema to dynamic columns */
   const rateColumns = useMemo(() => {
@@ -76,7 +76,7 @@ const RoleWageTable = ({
     [rateColumns]
   );
 
-  /** Generate payload for parent */
+  /** Generate payload */
   const generatePayload = useCallback(
     (currentRoles) => {
       const tenantId = Digit?.ULBService?.getCurrentTenantId();
@@ -113,39 +113,47 @@ const RoleWageTable = ({
     [rateColumns, campaignId, campaignName]
   );
 
-  /**  Compute error flag (true = no errors, false = has errors) */
+  /**  Compute error flag */
   const errorFlag = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
-  /** Notify parent on every change */
+  /** Notify parent */
   useEffect(() => {
     if (roles.length > 0 && onDataChange) {
       const payload = generatePayload(roles);
 
       onDataChange({
         payload,
-        errorFlag, //  send error state to parent
+        errorFlag,
+        isFormModified, //  NEW — send whether user edited table
       });
     }
-  }, [roles, generatePayload, onDataChange, errorFlag]);
+  }, [roles, generatePayload, onDataChange, errorFlag, isFormModified]); //  NEW: added isFormModified
 
-  /**  Handle field change + max-limit validation */
+  /** Handle change */
   const handleChange = useCallback(
     (id, field, rawValue) => {
       let value = rawValue;
 
-      if (!/^\d*\.?\d*$/.test(value)) return; // numeric only
+      if (!/^\d*\.?\d*$/.test(value)) return;
+      // If decimal exists, trim everything after dot
+      if (value.includes(".")) {
+        value = value.split(".")[0]; // take only the integer part
+      }
       if (value === "") value = "0";
 
       const numericValue = parseFloat(value) || 0;
       const maxLimit = rateMaxLimitSchema[field];
 
-      //  Manage errors
+      // Mark table as updated
+      setIsFormModified(true);
+
+      // Manage errors
       setErrors((prevErrors) => {
         const updated = { ...prevErrors };
 
         if (maxLimit !== undefined && numericValue > maxLimit) {
           if (!updated[id]) updated[id] = {};
-          updated[id][field] = `${t("HCM_AM_MAX_ALLOW")} ${t(`${"HCM_AM"}_${field}`)} ${t("HCM_AM_IS")} ${maxLimit}`;
+          updated[id][field] = `${t(`${"HCM_AM"}_${field}`)} ${t("HCM_AM_CAN_NOT_EXCEED")} ${maxLimit}`;
         } else {
           if (updated[id]) {
             delete updated[id][field];
@@ -155,7 +163,7 @@ const RoleWageTable = ({
         return updated;
       });
 
-      // Update roles data
+      // Update values
       setRoles((prevRoles) =>
         prevRoles.map((r) => {
           if (r.id === id) {
@@ -170,7 +178,7 @@ const RoleWageTable = ({
     [calculateRowTotal, rateMaxLimitSchema]
   );
 
-  /** Render input with error and red border */
+  /** Input Renderer */
   const renderNumericInput = useCallback(
     (row, field) => {
       const error = errors?.[row.id]?.[field];
@@ -178,8 +186,9 @@ const RoleWageTable = ({
       return (
         <div style={{ width: "100%" }}>
           <TextInput
-            disabled={disabled}
             type="text"
+            inputMode="numeric"
+            disabled={disabled}
             value={row[field] === 0 ? "0" : row[field] !== undefined && row[field] !== null ? String(row[field]) : "0"}
             onChange={(e) => handleChange(row.id, field, e.target.value)}
             populators={{ disableTextField: false }}
@@ -189,8 +198,7 @@ const RoleWageTable = ({
               borderRadius: "4px",
             }}
           />
-
-          {error && <div style={{ color: "red", fontSize: "0.8rem", marginTop: "2px" }}>{error}</div>}
+          {error && <div style={{ color: "red", fontSize: "0.8rem" }}>{error}</div>}
         </div>
       );
     },
@@ -217,9 +225,17 @@ const RoleWageTable = ({
 
     cols.push({
       name: <div style={{ textAlign: "start" }}>{t("HCM_AM_TOTAL_WAGE")}</div>,
-      selector: (row) => (
-        <div title={row.total.toFixed(2)} style={{ fontWeight: 500 }}>
-          {row.total.toFixed(2)}
+      cell: (row) => (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            fontWeight: 500,
+          }}
+          title={row.total || 0}
+        >
+          {row.total || 0}
         </div>
       ),
       width: "150px",
@@ -229,11 +245,11 @@ const RoleWageTable = ({
   }, [t, rateColumns, renderNumericInput]);
 
   if (!skills || skills.length === 0) {
-    return <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_NO_ROLES_FOUND")}</div>;
+    return <div style={{ padding: "1rem", textAlign: "center" }}>{t("HCM_AM_NO_ROLES_FOUND")}</div>;
   }
 
   if (!rateBreakupSchema || Object.keys(rateBreakupSchema).length === 0) {
-    return <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_NO_SCHEMA_RATE_FOUND")}</div>;
+    return <div style={{ padding: "1rem", textAlign: "center" }}>{t("HCM_AM_NO_SCHEMA_RATE_FOUND")}</div>;
   }
 
   return (

@@ -128,7 +128,6 @@ export const getValidPeriods = (t, periods, addingBool) => {
   // -----------------------------------------------------
   // CASE 1: If we are INSIDE any period → show only previous + current
   // -----------------------------------------------------
-  
 
   if (current) {
     const currentIndex = validPeriods.findIndex((p) => p.id === current.id);
@@ -165,12 +164,11 @@ export const getValidPeriods = (t, periods, addingBool) => {
       }
     }
   }
-  
   // If somehow we reach here (should not), return past periods
   return validPeriods;
 };
 
-const formatDate = (timestamp) => {
+export const formatDate = (timestamp) => {
   if (!timestamp) return "";
   const date = new Date(timestamp);
   return date.toLocaleDateString("en-GB", {
@@ -182,14 +180,14 @@ const formatDate = (timestamp) => {
 
 export const renderProjectPeriod = (t, selectedProject, period) => {
   if (!selectedProject?.name) return t(selectedProject?.name || "");
-  if (!period?.periodStartDate || !period?.periodEndDate) return t(selectedProject.name);
+  if (!period?.periodStartDate || !period?.periodEndDate) return [t(selectedProject.name)];
 
   const start = formatDate(period.periodStartDate);
   const end = formatDate(period.periodEndDate);
 
   if (period?.id === "AGGREGATE") {
-    return t(selectedProject.name);
+    return [`${t(selectedProject.name)}`, " "];
   }
 
-  return `${t(selectedProject.name)} (${start} - ${end})`;
+  return [`${t(selectedProject.name)}`, start && end ? `(${start} - ${end})` : ""];
 };
