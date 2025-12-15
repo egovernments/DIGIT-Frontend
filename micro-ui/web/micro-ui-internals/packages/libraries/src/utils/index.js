@@ -23,11 +23,23 @@ const GetParamFromUrl = (key, fallback, search) => {
 };
 
 const getPattern = (type) => {
+  // Check for MDMS validation config for MobileNo
+  if (type === "MobileNo") {
+    try {
+      const mdmsPattern = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.pattern;
+      if (mdmsPattern) {
+        return new RegExp(mdmsPattern, 'i');
+      }
+    } catch (e) {
+      // Silently fall back to default pattern
+    }
+  }
+
   switch (type) {
     case "Name":
-      return /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i;
+      return /^[^0-9\$\"<>?\\~!@#$%^()+={}\[\]*,/_:;]{1,50}$/i;
     case "SearchOwnerName":
-      return /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{3,50}$/i;
+      return /^[^0-9\$\"<>?\\~!@#$%^()+={}\[\]*,/_:;]{3,50}$/i;
     case "MobileNo":
       return /^[6789][0-9]{9}$/i;
     case "Amount":
@@ -39,7 +51,7 @@ const getPattern = (type) => {
     case "Email":
       return /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/i;
     case "Address":
-      return /^[^\$\"<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,500}$/i;
+      return /^[^\$\"<>?\\~`!@$%^()+={}\[\]*:;]{1,500}$/i;
     case "PAN":
       return /^[A-Za-z]{5}\d{4}[A-Za-z]{1}$/i;
     case "TradeName":
