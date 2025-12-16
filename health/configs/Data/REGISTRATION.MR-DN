@@ -190,17 +190,30 @@
             "format": "qrScanner",
             "onAction": [
               {
-                "actionType": "EVENT",
+                "actionType": "OPEN_SCANNER",
                 "properties": {
-                  "data": [
+                  "scanType": "qr",
+                  "fieldName": "beneficiaryTag",
+                  "singleValue": true,
+                  "scanLimit": 1,
+                  "isGS1": false,
+                  "onSuccess": [
                     {
-                      "key": "tag",
-                      "value": "field.value",
-                      "operation": "contains"
+                      "actionType": "SEARCH_EVENT",
+                      "properties": {
+                        "type": "SEARCH_EVENT",
+                        "name": "projectBeneficiary",
+                        "awaitResults": true,
+                        "data": [
+                          {
+                            "key": "tag",
+                            "value": "{{beneficiaryTag}}",
+                            "operation": "equals"
+                          }
+                        ]
+                      }
                     }
-                  ],
-                  "name": "ENTITY",
-                  "type": "SEARCH_EVENT"
+                  ]
                 }
               }
             ],
@@ -819,7 +832,8 @@
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": true
               }
             ],
             "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
@@ -1055,7 +1069,7 @@
                       "type": "template",
                       "label": "DELIVERY",
                       "format": "button",
-                      "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true",
+                      "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true  && {{fn:checkAllDoseDelivered(task)}} == false",
                       "onAction": [
                         {
                           "actionType": "NAVIGATION",
@@ -1087,6 +1101,42 @@
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
                       }
+                    },
+                    {
+                      "format": "button",
+                      "visible": "{{fn:checkAllDoseDelivered(task)}} == true",
+                      "properties": {
+                        "type": "primary",
+                        "size": "medium",
+                        "mainAxisSize": "max",
+                        "mainAxisAlignment": "center"
+                      },
+                      "fieldName": "viewDetails",
+                      "label": "REGISTRATION_VIEW_DETAILS",
+                      "icon": "add",
+                      "onAction": [
+                        {
+                          "actionType": "NAVIGATION",
+                          "properties": {
+                            "type": "TEMPLATE",
+                            "name": "beneficiaryDetails",
+                            "data": [
+                              {
+                                "key": "selectedIndividualClientReferenceId",
+                                "value": "{{individual.0.clientReferenceId}}"
+                              },
+                              {
+                                "key": "HouseholdClientReferenceId",
+                                "value": "{{member.0.householdClientReferenceId}}"
+                              },
+                              {
+                                "key": "ProjectBeneficiaryClientReferenceId",
+                                "value": "{{projectBeneficiary.0.clientReferenceId}}"
+                              }
+                            ]
+                          }
+                        }
+                      ]
                     }
                   ],
                   "fieldName": "memberCard",
@@ -1492,7 +1542,8 @@
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": true
               }
             ],
             "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
@@ -2353,7 +2404,7 @@
                   },
                   {
                     "key": "AGE",
-                    "value": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}"
+                    "value": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                   },
                   {
                     "key": "GENDER",
@@ -2365,7 +2416,7 @@
                   },
                   {
                     "key": "DATE_OF_REGISTRATION",
-                    "value": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}"
+                    "value": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                   }
                 ],
                 "type": "template",

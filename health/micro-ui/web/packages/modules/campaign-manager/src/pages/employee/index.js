@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
-import { lazyWithFallback } from "@egovernments/digit-ui-components";
+import { AppContainer } from "@egovernments/digit-ui-react-components";
+import { lazyWithFallback, BreadCrumb ,SVG} from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import FullConfigWrapper from "./NewAppConfiguration/FullConfigWrapper";
@@ -11,6 +11,7 @@ import AppConfigSaveLoader from "./NewAppConfiguration/AppConfigSaveLoader";
 import NewAppModule from "./NewCampaignCreate/NewAppModule";
 import AppConfigInitializer from "./NewCampaignCreate/AppConfigInitializer";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
+import { PRIMARY_COLOR } from "../../utils";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -43,24 +44,6 @@ const UpdateCampaign = lazyWithFallback(
   { loaderText: "Loading Update Campaign..." }
 );
 
-const BoundaryRelationCreate = lazyWithFallback(
-  () => import(/* webpackChunkName: "boundary-relation-create" */ "./BoundaryRelationCreate"),
-  () => require("./BoundaryRelationCreate").default,
-  { loaderText: "Loading Boundary Relation Create..." }
-);
-
-const ViewBoundary = lazyWithFallback(
-  () => import(/* webpackChunkName: "view-boundary" */ "./ViewBoundary"),
-  () => require("./ViewBoundary").default,
-  { loaderText: "Loading View Boundary..." }
-);
-
-const ViewHierarchy = lazyWithFallback(
-  () => import(/* webpackChunkName: "view-hierarchy" */ "./ViewHierarchy"),
-  () => require("./ViewHierarchy").default,
-  { loaderText: "Loading View Hierarchy..." }
-);
-
 const ViewChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "view-checklist" */ "./ViewChecklist"),
   () => require("./ViewChecklist").default,
@@ -71,12 +54,6 @@ const UpdateChecklist = lazyWithFallback(
   () => import(/* webpackChunkName: "update-checklist" */ "./UpdateChecklist"),
   () => require("./UpdateChecklist").default,
   { loaderText: "Loading Update Checklist..." }
-);
-
-const BoundaryHome = lazyWithFallback(
-  () => import(/* webpackChunkName: "boundary-home" */ "./BoundaryHome"),
-  () => require("./BoundaryHome").default,
-  { loaderText: "Loading Boundary Home..." }
 );
 
 const ApprovedMicroplans = lazyWithFallback(
@@ -169,39 +146,28 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      internalLink: `/${window?.contextPath}/employee`,
       content: t("CAMPAIGN_HOME"),
       show: true,
+      icon:<SVG.Home fill={PRIMARY_COLOR}/>
     },
-    // {
-    //   path: pathVar === "my-campaign" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
-    //   content: t("MY_CAMPAIGN"),
-    //   show:
-    //     pathVar === "my-campaign" ||
-    //     pathVar === "checklist/create" ||
-    //     pathVar === "checklist/view" ||
-    //     pathVar === "checklist/update" ||
-    //     pathVar === "update-dates-boundary"
-    //       ? true
-    //       : false,
-    // },
     {
-      path: pathVar.includes("my-campaign-new") ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      internalLink: pathVar.includes("campaign-home") ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
+      content: t("CREATE_CAMPAIGN_HOME"),
+      show: pathVar.includes("campaign-home") || pathVar.includes("create-campaign") || (pathVar.includes("campaign-templates") && url?.from === "home") || (pathVar.includes("my-campaign-new") && url?.from === "home") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("my-campaign-new") ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       content: t("MY_CAMPAIGN"),
       show: pathVar.includes("my-campaign-new") || pathVar.includes("checklist/update") ? true : false,
     },
     {
-      path: pathVar.includes("campaign-home") ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
-      content: t("CREATE_CAMPAIGN_HOME"),
-      show: pathVar.includes("campaign-home") || pathVar.includes("create-campaign") || (pathVar.includes("campaign-templates") && url?.from === "home") ? true : false,
-    },
-    {
-      path: "",
+      internalLink: "",
       content: t("CREATE_CAMPAIGN"),
       show: pathVar.includes("create-campaign") ? true : false,
     },
     {
-      path: pathVar.includes("view-details") ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
+      internalLink: pathVar.includes("view-details") ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
       content: t("VIEW_DETAILS"),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
@@ -220,86 +186,81 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
           : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("UPDATE_DATE_CHANGE"),
       show: pathVar.includes("update-dates-boundary") ? true : false,
     },
     {
-      path: pathVar.includes("checklist/search") ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
+      internalLink: pathVar.includes("checklist/search") ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
       content: t("SEARCH_CHECKLIST"),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&name=${name}&campaignId=${campaignId}&projectType=${projectType}&role=${role}`,
       show:
         pathVar.includes("checklist/search") || pathVar.includes("checklist/create") || pathVar.includes("checklist/view") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("CREATE_CHECKLIST"),
       show: pathVar.includes("checklist/create") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("ACTION_UPLOAD_SCREEN"),
       show: pathVar.includes("upload-screen") && !pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("ACTION_UPLOAD_SCREEN"),
       show: pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("VIEW_CHECKLIST"),
       show: pathVar.includes("checklist/view") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("UPDATE_CHECKLIST"),
       show: pathVar.includes("checklist/update") ? true : false,
     },
     {
-      path: pathVar.includes("boundary/home") ? "" : `/${window?.contextPath}/employee/campaign/boundary/home`,
-      content: t("BOUNDARY_DATA_MANAGEMENT"),
-      show: pathVar.includes("boundary/") ? true : false,
-    },
-    {
-      path: pathVar.includes("update-campaign") ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
+      internalLink: pathVar.includes("update-campaign") ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
       content: t("UPDATE_CAMPAIGN"),
       show: pathVar.includes("update-campaign") ? true : false,
     },
     {
-      path: pathVar.includes("setup-campaign") ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
+      internalLink: pathVar.includes("setup-campaign") ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
       content: t("CREATE_NEW_CAMPAIGN"),
       show: pathVar.includes("setup-campaign") ? true : false,
     },
     {
-      path: pathVar.includes("app-modules") ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
+      internalLink: pathVar.includes("app-modules") ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
       content: t("APP_CONFIGURATION"),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&projectType=${projectType}`,
       show: pathVar.includes("app-modules") || pathVar.includes("app-configuration-redesign") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("APP_FEATURES"),
       show: pathVar.includes("app-features") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("APP_CONFIGURATION_REDESIGN"),
       show: pathVar.includes("app-configuration-redesign") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("ADD_LOCALISATION_BREADCRUMB"),
       show: pathVar.includes("localization-add") ? true : false,
     },
     {
-      path: "",
+      internalLink: "",
       content: t("CAMPAIGN_TEMPLATES"),
       show: pathVar.includes("campaign-templates") ? true : false,
     },
   ];
 
-  return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
+  return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} />;
 };
 
 /**
@@ -394,10 +355,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`checklist/search`} element={<SearchChecklist />} />
           <Route path={`checklist/view`} element={<ViewChecklist />} />
           <Route path={`checklist/update`} element={<UpdateChecklist />} />
-          <Route path={`boundary/home`} element={<BoundaryHome />} />
-          <Route path={`boundary/create`} element={<BoundaryRelationCreate />} />
-          <Route path={`boundary/view-all-hierarchy`} element={<ViewBoundary />} />
-          <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
           <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper path={path} location={location} />} />
