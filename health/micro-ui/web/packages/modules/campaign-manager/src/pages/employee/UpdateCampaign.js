@@ -170,7 +170,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
     if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
-    const unifiedFiles = draftData?.resources?.filter((i) => i?.type === "unified-console" || i?.type === "unified-console-resources") || [];
+    const unifiedFiles =
+      draftData?.resources?.filter((i) => i?.type === "unified-console" || i?.type === "unified-console-resources") || [];
     const restructureFormData = {
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
@@ -297,10 +298,22 @@ const UpdateCampaign = ({ hierarchyData }) => {
             //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
 
             // );
-            const temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
-              ...resource,
-              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-            }));
+            // Check if there's a new unified upload file in totalFormData
+            const newUnifiedFiles = totalFormData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile;
+            let temp;
+            if (newUnifiedFiles && newUnifiedFiles.length > 0) {
+              // Use the new unified upload files
+              temp = newUnifiedFiles.map((resource) => ({
+                ...resource,
+                type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+              }));
+            } else {
+              // Fall back to CampaignData resources
+              temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
+                ...resource,
+                type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+              }));
+            }
             const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.resources = temp;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
