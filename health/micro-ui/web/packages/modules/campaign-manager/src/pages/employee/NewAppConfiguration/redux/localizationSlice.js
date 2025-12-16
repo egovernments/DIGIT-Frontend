@@ -28,38 +28,6 @@ export const fetchLocalization = createAsyncThunk("localization/fetch", async ({
   }
 });
 
-// Async thunk to fetch app screen localization config
-export const fetchAppScreenConfig = createAsyncThunk("localization/fetchAppScreenConfig", async ({ tenantId }, { rejectWithValue }) => {
-  try {
-    const mdmsContext = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "egov-mdms-service";
-    const url = `/${mdmsContext}/v1/_search`;
-
-    const response = await Digit.CustomService.getResponse({
-      url,
-      body: {
-        MdmsCriteria: {
-          tenantId,
-          moduleDetails: [
-            {
-              moduleName: MODULE_CONSTANTS,
-              masterDetails: [
-                {
-                  name: "AppScreenLocalisationConfig",
-                  limit: 1000,
-                },
-              ],
-            },
-          ],
-        },
-      },
-    });
-    const data = response?.MdmsRes?.[MODULE_CONSTANTS]?.["AppScreenLocalisationConfig"]?.[0] || null;
-    return data;
-  } catch (error) {
-    return rejectWithValue(error.message || "Failed to fetch app screen config");
-  }
-});
-
 // Async thunk to upsert localization
 export const upsertLocalization = createAsyncThunk(
   "localization/upsert",
@@ -77,13 +45,10 @@ const localizationSlice = createSlice({
   name: "localization",
   initialState: {
     data: [],
-    appScreenConfig: null,
     currentLocale: null,
     localeModule: null,
     status: "idle", // idle | loading | succeeded | failed
     error: null,
-    screenConfigStatus: "idle",
-    screenConfigError: null,
   },
   reducers: {
     setLocalizationData(state, action) {
@@ -140,19 +105,6 @@ const localizationSlice = createSlice({
       .addCase(fetchLocalization.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || action.error.message;
-      })
-      // Fetch app screen config
-      .addCase(fetchAppScreenConfig.pending, (state) => {
-        state.screenConfigStatus = "loading";
-        state.screenConfigError = null;
-      })
-      .addCase(fetchAppScreenConfig.fulfilled, (state, action) => {
-        state.screenConfigStatus = "succeeded";
-        state.appScreenConfig = action.payload;
-      })
-      .addCase(fetchAppScreenConfig.rejected, (state, action) => {
-        state.screenConfigStatus = "failed";
-        state.screenConfigError = action.payload || action.error.message;
       })
       // Upsert localization
       .addCase(upsertLocalization.pending, (state) => {
