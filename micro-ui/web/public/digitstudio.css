@@ -1404,3 +1404,19 @@ textarea.light-placeholder::placeholder {
     height: 4rem;
   }
 }
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap{
+  margin-top: 1.9px;
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container{
+  justify-content: unset;
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container .digit-tag-error-container{
+  margin-top: 0rem;
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container .digit-tag-error-container .digit-tag{
+  gap: 0px;
+}
