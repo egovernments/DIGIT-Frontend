@@ -1424,3 +1424,7 @@ textarea.light-placeholder::placeholder {
 .slider-footer .app-configure-drawer-footer-container{
   visibility: hidden;
 }
+
+.slider-content .camp-drawer-caption{
+    font-size: medium !important;
+}
