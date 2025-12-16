@@ -104,6 +104,36 @@ const MDMSManager = lazyWithFallback(
   { loaderText: "Loading MDMS Manager..." }
 );
 
+const BoundaryHome = lazyWithFallback(
+  () => import(/* webpackChunkName: "boundary-home" */ "./BoundaryHome"),
+  () => require("./BoundaryHome").default,
+  { loaderText: "Loading Boundary Home..." }
+);
+
+const BoundaryRelationCreate = lazyWithFallback(
+  () => import(/* webpackChunkName: "boundary-relation-create" */ "./BoundaryRelationCreate"),
+  () => require("./BoundaryRelationCreate").default,
+  { loaderText: "Loading Boundary Relation Create..." }
+);
+
+const ViewHierarchy = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-hierarchy" */ "./ViewHierarchy"),
+  () => require("./ViewHierarchy").default,
+  { loaderText: "Loading View Hierarchy..." }
+);
+
+const ViewBoundary = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-boundary" */ "./ViewBoundary"),
+  () => require("./ViewBoundary").default,
+  {loaderText: "Loading View Boundary"}
+)
+
+const Response = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-response" */ "./Response"),
+  () => require("./Response").default,
+  { loaderText: "Loading Response..." }
+);
+
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
@@ -151,8 +181,29 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     {
       internalLink: `/${window.contextPath}/employee/masters/response`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
-      show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
+      show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) && !pathVar.includes("response") && !pathVar.includes("boundary/") ? true : false,
     },
+    {
+      internalLink: pathVar.includes("boundary/home") ? null : `/${window?.contextPath}/employee/workbench/boundary/home`,
+      content: t("BOUNDARY_DATA_MANAGEMENT"),
+      show: pathVar.includes("boundary/") ? true : false,
+    },
+    {
+      content: t("BOUNDARY_DATA_VIEW"),
+      show: pathVar.includes("boundary/view-all-hierarchy") ? true : false,
+    },
+    {
+      content: t("BOUNDARY_DATA_UPDATE"),
+      show: pathVar.includes("boundary/data") ? true : false,
+    },
+    {
+      content: t("BOUNDARY_RELATION_CREATE"),
+      show: pathVar.includes("boundary/create") ? true : false,
+    },
+    {
+      content: t("WBH_RESPONSE"),
+      show: pathVar.includes("boundary/response") ? true : false,
+    }
   ];
   return <BreadCrumb crumbs={crumbs} />;
 };
@@ -165,7 +216,7 @@ const App = ({ path }) => {
   const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
   const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession;
   const endPoint = location.pathname.replace(path + "/", "").split("?")?.[0];
-  const isBoundaryPath = endPoint.includes("upload-boundary") || endPoint.includes("create-boundary-hierarchy-type");
+  const isBoundaryPath = endPoint.includes("upload-boundary") || endPoint.includes("create-boundary-hierarchy-type") || endPoint.includes("boundary/");
 
   useEffect(() => {
     // Function to clear session storage for keys with specific prefixes
@@ -222,6 +273,11 @@ const App = ({ path }) => {
           <Route path="sidebar-view" element={<PrivateRoute element={<SidebarView />} />} />
           <Route path="sidebar-add" element={<PrivateRoute element={<SidebarAdd />} />} />
           <Route path="manage-schema" element={<PrivateRoute element={<MDMSManager />} />} />
+          <Route path={`boundary/home`} element={<BoundaryHome />} />
+          <Route path={`boundary/create`} element={<BoundaryRelationCreate />} />
+          <Route path={`boundary/view-all-hierarchy`} element={<ViewBoundary />} />
+          <Route path={`boundary/data`} element={<ViewHierarchy />} />
+          <Route path={"boundary/response"} element={<Response />} />
         </Routes>
       </AppContainer>
     </React.Fragment>

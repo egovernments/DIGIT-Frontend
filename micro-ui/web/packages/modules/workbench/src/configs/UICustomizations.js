@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@egovernments/digit-ui-react-components";
+import { Button as ButtonNew,Toast } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -1009,5 +1010,116 @@ export const UICustomizations = {
       // delete data.displayName;      
       return data;
     },
-  }
+  },
+  MyBoundarySearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      data.body.BoundaryTypeHierarchySearchCriteria.hierarchyType = data?.state?.searchForm?.Name;
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [isActive, setIsActive] = useState(row?.isActive);
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      let res;
+      const callSearch = async () => {
+        const res = await Digit.CustomService.getResponse({
+          url: `/boundary-service/boundary-hierarchy-definition/_search`,
+          body: {
+            BoundaryTypeHierarchySearchCriteria: {
+              tenantId: tenantId,
+              limit: 2,
+              offset: 0,
+              hierarchyType: row?.hierarchyType,
+            },
+          },
+        });
+        return res;
+      };
+      const fun = async () => {
+        res = await callSearch();
+      };
+      // fun();
+      const [showToast, setShowToast] = useState(null);
+      switch (key) {
+        case "HIERARCHY_NAME":
+          return row?.hierarchyType;
+          break;
+        case "LEVELS":
+          return row?.boundaryHierarchy?.length;
+          break;
+        case "CREATION_DATE":
+          let epoch = row?.auditDetails?.createdTime;
+          return Digit.DateUtils.ConvertEpochToDate(epoch);
+          // return row?.auditDetails?.createdTime;
+          break;
+        case "ACTION":
+          const tenantId = Digit?.ULBService?.getCurrentTenantId();
+          const generateFile = async () => {
+            const res = await Digit.CustomService.getResponse({
+              url:`/boundary-management/v1/_generate`,
+              body: {},
+              params: {
+                tenantId: tenantId,
+                forceUpdate: true,
+                hierarchyType: row?.hierarchyType,
+              },
+            });
+            return res;
+          };
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          const closeToast = () => {
+            setShowToast(null);
+          };
+          const generateTemplate = async () => {
+            try {
+              const res = await Digit.CustomService.getResponse({
+                url:`/boundary-management/v1/_generate-search`,
+                body: {},
+                params: {
+                  tenantId: tenantId,
+                  hierarchyType: row?.hierarchyType,
+                },
+              });
+              return res;
+            } catch (error) {
+              setShowToast({ label: error?.response?.data?.Errors?.[0]?.code, type: "error" });
+              return error;
+            }
+          };
+          const downloadExcelTemplate = async () => {
+            // const res = await generateFile();
+            // await delay(2000);
+            const resFile = await generateTemplate();
+
+            if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
+              // Splitting filename before .xlsx or .xls
+              setShowToast({ label: "BOUNDARY_DOWNLOADING", type: "info" });
+              const fileNameWithoutExtension = row?.hierarchyType;
+
+              Digit.Utils.workbench.downloadExcelWithCustomName({
+                fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid,
+                customName: fileNameWithoutExtension,
+              });
+              setShowToast({ label: "BOUNDARY_DOWNLOADED", type: "success" });
+            }
+          };
+          return (
+            <>
+              {showToast && (
+                <Toast type={String(showToast?.type)} label={t(showToast?.label)} isDleteBtn={"true"} onClose={() => closeToast()} />
+              )}
+              <ButtonNew
+                type={"button"}
+                size={"medium"}
+                icon={"DownloadIcon"}
+                variation={"secondary"}
+                label={t("DOWNLOAD")}
+                onClick={() => {
+                  downloadExcelTemplate();
+                }}
+              />
+            </>
+          );
+      }
+    },
+  },
 };

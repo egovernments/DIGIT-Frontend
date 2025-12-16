@@ -6,6 +6,7 @@ const ROLES = {
   LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
   MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
   DSS: ["STADMIN"],
+  BOUNDARY_MANAGER: ["BOUNDARY_MANAGER"],
 };
 
 // Mukta Overrriding the Works Home screen card
@@ -25,6 +26,16 @@ const WorkbenchCard = () => {
       label: t("ACTION_TEST_LOCALISATION"),
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
+    },
+    {
+      label: t("ACTION_TEST_LOCALISATION"),
+      link: `/${window?.contextPath}/employee/workbench/localisation-search`,
+      roles: ROLES.LOCALISATION,
+    },
+    {
+      label: t("BOUNDARY_MANAGEMENT"),
+      link: `/${window?.contextPath}/employee/workbench/boundary/home`,
+      roles: ROLES.BOUNDARY_MANAGER,
     },
     // {
     //   label: t("ACTION_TEST_UPLOAD_BOUNDARY"),

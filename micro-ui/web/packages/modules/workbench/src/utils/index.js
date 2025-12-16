@@ -1,5 +1,5 @@
 import _ from "lodash";
-
+import { downloadExcelWithCustomName } from "./downloadExcel";
 
 const CONFIGS_TEMPLATE = {
   string: {
@@ -508,4 +508,6 @@ export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, upda
   getParent,
   generateDynamicParentType,
   getParentType,
-  transformBoundary,getMDMSActionURL };
+  transformBoundary,getMDMSActionURL,downloadExcelWithCustomName };
+
+export const PRIMARY_COLOR = "#C84C0E";
