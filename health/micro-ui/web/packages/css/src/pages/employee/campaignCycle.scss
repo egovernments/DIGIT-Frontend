@@ -144,6 +144,7 @@
     text-decoration: none;
 
     .browse-text {
+      text-align: center;
       text-decoration: none;
       color: var(--digitv2-lightTheme-primary);
       transition: color 0.3s;
@@ -165,6 +166,7 @@
   }
 
   .browse-text {
+    text-align: center;
     text-decoration: underline;
     color: var(--digitv2-lightTheme-primary);
     transition: color 0.3s;

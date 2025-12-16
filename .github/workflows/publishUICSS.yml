@@ -1,10 +1,10 @@
-name: Node.js Publish UI Packages
+name: Node.js Publish UI CSS Packages
 
 on:
   push:
-    branches: [ 'develop' ]
+    branches: [ 'console' ]
     paths:
-      - 'micro-ui/web/micro-ui-internals/**'
+      - 'health/micro-ui/web/packages/css/**'
 
 jobs:
   build:
@@ -13,8 +13,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: cd micro-ui/web/micro-ui-internals/ && bash ./publish-workbench.sh
+      - run: cd health/micro-ui/web/packages/css/ &&  yarn && yarn build && npm publish --tag console
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

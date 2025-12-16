@@ -314,8 +314,8 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           <div className="digit-results-card-heading">{rowData?.campaignName}</div>
           <div className="digit-results-card-tags">
             {showCancelCampaign ? (
-              <div className="digit-tag-container" style={{ margin: "0rem" }}>
-                <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+              <div className="digit-tag-container" onClick={handleCancelClick} style={{ margin: "0rem" }}>
+                <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} hideClose={false} />
               </div>
             ) : null}
             {tagElements &&
@@ -364,12 +364,22 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               renderCustomContent={({ status }) => {
                 if (rowData?.status === "created") {
                   return (
-                    <div className="digit-viewcard-value"><Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={false} /></div>)
-                    ;
+                    <div className="digit-viewcard-value">
+                      <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={false} />
+                    </div>
+                  );
                 } else if (rowData?.status === "creating") {
-                  return (<div className="digit-viewcard-value"><Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={false} /></div>);
+                  return (
+                    <div className="digit-viewcard-value">
+                      <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={false} />
+                    </div>
+                  );
                 } else {
-                  return (<div className="digit-viewcard-value"><Tag label={t(rowData?.status)} type="monochrome" showIcon={false} stroke={false} /></div>);
+                  return (
+                    <div className="digit-viewcard-value">
+                      <Tag label={t(rowData?.status)} type="monochrome" showIcon={false} stroke={false} />
+                    </div>
+                  );
                 }
               }}
             />
@@ -414,9 +424,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                   style={tag.style}
                   stroke={tag.stroke}
                   animationStyles={tag.animationStyle}
-                >
-                  {console.log("tag", tag)}
-                </Tag>
+                />
               ))}
             </div>
           )}

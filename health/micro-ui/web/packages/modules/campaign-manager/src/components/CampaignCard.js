@@ -79,7 +79,7 @@ const CampaignCard = () => {
     },
     {
       label: t("BOUNDARY_MANAGEMENT"),
-      link: `/${window?.contextPath}/employee/campaign/boundary/home`,
+      link: `/${window?.contextPath}/employee/workbench/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },

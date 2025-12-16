@@ -12,6 +12,36 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
 
   const footerChildren = [];
 
+    // Add primary action last (will appear at bottom)
+  if (field?.primaryAction && !(field?.primaryAction?.hidden) ) {
+    const primaryActionWithId = {
+      ...field?.primaryAction,
+      id: field?.primaryAction.id || field?.primaryAction.fieldName || `${field?.fieldName}-primary-action`,
+      properties: {
+        ...field?.primaryAction.properties,
+        type: "primary",
+        variation: "primary", // Make it primary style button
+        size: "large",
+        style: { width: "100%" }
+      }
+    };
+
+    footerChildren.push(
+      <div key="primary-action" style={{ width: "100%" }}>
+        {renderTemplateComponent(
+          primaryActionWithId,
+          fieldTypeMasterData,
+          selectedField,
+          t,
+          onFieldClick,
+          data,
+          `panelcard-${field?.fieldName}`,
+          1
+        )}
+      </div>
+    );
+  }
+
   // Add secondary action first (will appear above primary)
   if (field?.secondaryAction && !(field?.secondaryAction?.hidden) ) {
     const secondaryActionWithId = {
@@ -42,35 +72,6 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
     );
   }
 
-  // Add primary action last (will appear at bottom)
-  if (field?.primaryAction && !(field?.primaryAction?.hidden) ) {
-    const primaryActionWithId = {
-      ...field?.primaryAction,
-      id: field?.primaryAction.id || field?.primaryAction.fieldName || `${field?.fieldName}-primary-action`,
-      properties: {
-        ...field?.primaryAction.properties,
-        type: "primary",
-        variation: "primary", // Make it primary style button
-        size: "large",
-        style: { width: "100%" }
-      }
-    };
-
-    footerChildren.push(
-      <div key="primary-action" style={{ width: "100%" }}>
-        {renderTemplateComponent(
-          primaryActionWithId,
-          fieldTypeMasterData,
-          selectedField,
-          t,
-          onFieldClick,
-          data,
-          `panelcard-${field?.fieldName}`,
-          1
-        )}
-      </div>
-    );
-  }
 
   // Allow empty labels - only use defaults if undefined/null
   const message = field?.label !== undefined && field?.label !== null ? t(field?.label) : "";

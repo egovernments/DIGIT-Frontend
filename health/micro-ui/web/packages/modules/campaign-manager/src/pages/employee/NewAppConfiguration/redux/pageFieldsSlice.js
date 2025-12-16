@@ -17,7 +17,7 @@ export const fetchPageFields = createAsyncThunk(
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: `${moduleName}.NewFormConfig`,
+            schemaCode: `${moduleName}.TransformedFormConfig`,
             filters: {
               flow: flow,
               project: campaignNumber,

@@ -538,6 +538,32 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                             />
                           )
                         }
+                        {
+                          (field?.type?.code === "Text") && (
+                            <TextInput
+                              nonEditable={dis}
+                              className="example"
+                              type={"text"}
+                              name="Text"
+                              value={field.value || ""}
+                              onChange={(event) => handleUpdateField(event.target.value, "value", field.key, field.id)}
+                              placeholder={t("HCM_CHECKLIST_TEXT_PLACEHOLDER")}
+                            />
+                          )
+                        }
+                        {
+                          (field?.type?.code === "Number") && (
+                            <TextInput
+                              nonEditable={dis}
+                              className="example"
+                              type={"number"}
+                              name="Number"
+                              value={field.value || ""}
+                              onChange={(event) => handleUpdateField(event.target.value, "value", field.key, field.id)}
+                              placeholder={t("HCM_CHECKLIST_NUMBER_PLACEHOLDER")}
+                            />
+                          )
+                        }
                         {!dis && field.dependency && (
                           <CreateQuestion
                             onSelect={onSelect}

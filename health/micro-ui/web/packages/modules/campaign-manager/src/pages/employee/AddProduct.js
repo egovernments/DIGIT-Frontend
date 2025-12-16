@@ -129,7 +129,7 @@ function AddProduct() {
           onError: (error, variables) => {
             setShowToast({ key: "error", label: error, isError: true });
           },
-          onSuccess: async (data) => {s
+          onSuccess: async (data) => {
             // Determine the correct return path based on where we came from
             const returnPath = getReturnPath();
             

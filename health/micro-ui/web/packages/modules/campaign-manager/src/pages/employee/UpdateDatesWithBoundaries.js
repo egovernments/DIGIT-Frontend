@@ -128,11 +128,11 @@ function UpdateDatesWithBoundaries() {
         const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-          message: t("ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS"),
-          // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
-          // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
-          actionLabel: t("HCM_DATE_CHANGE_VIEW_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+          state: {
+            message: "ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS",
+            actionLabel: "HCM_DATE_CHANGE_VIEW_SUCCESS_RESPONSE_ACTION",
+            actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+          },
         });
       } else {
         const url = getProjectServiceUrl();
@@ -145,11 +145,11 @@ function UpdateDatesWithBoundaries() {
         });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-          message: t("ES_CAMPAIGN_DATE_CHANGE_SUCCESS"),
-          // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
-          // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
-          actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=16&summary=true`,
+          state: {
+            message: "ES_CAMPAIGN_DATE_CHANGE_SUCCESS",
+            actionLabel: "HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION",
+            actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=16&summary=true`,
+          },
         });
       }
     } catch (error) {

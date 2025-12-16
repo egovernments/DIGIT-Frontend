@@ -129,29 +129,17 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
                 label={t(action.label) || action.label}
                 size={action.properties?.size || "medium"}
                 variation={action.properties?.type || "primary"}
-                onClick={() => {
-                  console.log("footer action clicked", action);
-                }}
+                onClick={() => {}}
               />
             );
           })}
           showIcon={!!popupConfig?.titleIcon}
           customIcon={popupConfig?.titleIcon}
-
         >
           {/* Popup Body */}
           {popupConfig?.body?.map((section, index) => (
             <Fragment key={index}>
-              {renderTemplateComponent(
-                section,
-                fieldTypeMasterData,
-                selectedField,
-                t,
-                onFieldClick,
-                data,
-                "popupBody",
-                index
-              )}
+              {renderTemplateComponent(section, fieldTypeMasterData, selectedField, t, onFieldClick, data, "popupBody", index)}
             </Fragment>
           ))}
         </PopUp>
