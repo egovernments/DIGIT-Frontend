@@ -28,11 +28,6 @@ const WorkbenchCard = () => {
       roles: ROLES.LOCALISATION,
     },
     {
-      label: t("ACTION_TEST_LOCALISATION"),
-      link: `/${window?.contextPath}/employee/workbench/localisation-search`,
-      roles: ROLES.LOCALISATION,
-    },
-    {
       label: t("BOUNDARY_MANAGEMENT"),
       link: `/${window?.contextPath}/employee/workbench/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,

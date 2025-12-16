@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { useLocation, Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer } from "@egovernments/digit-ui-react-components";
-import { BreadCrumb } from "@egovernments/digit-ui-components";
+import { BreadCrumb,SVG } from "@egovernments/digit-ui-components";
 import WorkbenchHeader from "../../components/WorkbenchHeader";
 import { lazyWithFallback } from "@egovernments/digit-ui-components";
+import { PRIMARY_COLOR } from "../../utils";
 
 // Create lazy components with fallbacks using the utility
 const LocalisationSearch = lazyWithFallback(
@@ -146,6 +147,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       internalLink: `/${window?.contextPath}/employee`,
       content: t("WORKBENCH_HOME"),
       show: true,
+      icon:<SVG.Home fill={PRIMARY_COLOR}/>
     },
     {
       internalLink: `/${window.contextPath}/employee/workbench/manage-master-data`,
