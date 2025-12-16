@@ -931,9 +931,7 @@
 .digit-campaign-home-card {
   display: flex;
   justify-content: flex-start;
-  min-width: 31.25rem;
-  max-width: 100%;
-  flex: 1;
+  width: 31.25rem;
   border: 0.094rem solid #d6d5d4;
   border-radius: 0.75rem;
   cursor: pointer;
@@ -1028,8 +1026,6 @@
 .digit-campaign-home-card-wrapper {
   background-color: transparent;
   box-shadow: none;
-  gap: 1.5rem;
-  padding: 0rem;
 }
 
 .employeeCard {
