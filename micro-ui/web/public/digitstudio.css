@@ -1420,3 +1420,7 @@ textarea.light-placeholder::placeholder {
 .digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container .digit-tag-error-container .digit-tag{
   gap: 0px;
 }
+
+.slider-footer .app-configure-drawer-footer-container{
+  visibility: hidden;
+}
