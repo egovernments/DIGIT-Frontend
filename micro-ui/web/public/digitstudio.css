@@ -1398,3 +1398,9 @@ textarea.light-placeholder::placeholder {
         min-height: 600px !important;
   }
 }
+
+@media (max-width: 540px) {
+  .digit-action-bar-wrap {
+    height: 4rem;
+  }
+}
