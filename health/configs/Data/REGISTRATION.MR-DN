@@ -189,21 +189,34 @@
             "label": "SCAN_BENEFICIARY",
             "format": "qrScanner",
             "onAction": [
-              {
-                "actionType": "EVENT",
-                "properties": {
-                  "data": [
-                    {
-                      "key": "tag",
-                      "value": "field.value",
-                      "operation": "contains"
+            {
+              "actionType": "OPEN_SCANNER",
+              "properties": {
+                "scanType": "qr",
+                "fieldName": "beneficiaryTag",
+                "singleValue": true,
+                "scanLimit": 1,
+                "isGS1": false,
+                "onSuccess": [
+                  {
+                    "actionType": "SEARCH_EVENT",
+                    "properties": {
+                      "type": "SEARCH_EVENT",
+                      "name": "projectBeneficiary",
+                      "awaitResults": true,
+                      "data": [
+                        {
+                          "key": "tag",
+                          "value": "{{beneficiaryTag}}",
+                          "operation": "equals"
+                        }
+                      ]
                     }
-                  ],
-                  "name": "ENTITY",
-                  "type": "SEARCH_EVENT"
-                }
+                  }
+                ]
               }
-            ],
+            }
+          ],
             "fieldName": "qrScanner",
             "showLabel": false,
             "properties": {
@@ -819,7 +832,8 @@
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": true
               }
             ],
             "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
@@ -1492,7 +1506,8 @@
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
-                "isMultiSelect": false
+                "isMultiSelect": false,
+                "includeInSummary": true
               }
             ],
             "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
@@ -2353,7 +2368,7 @@
                   },
                   {
                     "key": "AGE",
-                    "value": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}"
+                    "value": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                   },
                   {
                     "key": "GENDER",
@@ -2365,7 +2380,7 @@
                   },
                   {
                     "key": "DATE_OF_REGISTRATION",
-                    "value": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}"
+                    "value": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                   }
                 ],
                 "type": "template",
