@@ -38,7 +38,7 @@ const NewAppModule = () => {
 
   const handleCardClick = (moduleName, version) => {
     navigate(
-      `/${window.contextPath}/employee/campaign/dummy-loader?campaignNumber=${campaignNumber}&flow=${moduleName}&version=${version}`
+      `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=${moduleName}&version=${version}`
     );
   };
 

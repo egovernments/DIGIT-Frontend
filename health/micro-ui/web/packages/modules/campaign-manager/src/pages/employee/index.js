@@ -9,7 +9,7 @@ import HelpInfoCard from "../../components/HelpInfoCard";
 import FullConfigWrapper from "./NewAppConfiguration/FullConfigWrapper";
 import AppConfigSaveLoader from "./NewAppConfiguration/AppConfigSaveLoader";
 import NewAppModule from "./NewCampaignCreate/NewAppModule";
-import DummyLoader from "./NewCampaignCreate/DummyLoader";
+import AppConfigInitializer from "./NewCampaignCreate/AppConfigInitializer";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
 
 // Create lazy components with fallbacks using the utility
@@ -413,7 +413,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-features`} element={<AppFeatures />} />
           <Route path={`upload-screen`} element={<NewUploadScreen />} />
           <Route path={`unified-upload-screen`} element={<UnifiedUploadScreen />} />
-          <Route path={`dummy-loader`} element={<DummyLoader />} />
+          <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}

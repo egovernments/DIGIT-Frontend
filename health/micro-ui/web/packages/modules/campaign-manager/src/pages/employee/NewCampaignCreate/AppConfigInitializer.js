@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { transformMdmsToAppConfig, transformMdmsToFlowConfig } from "./transformMdmsConfig";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-const DummyLoader = () => {
+const AppConfigInitializer = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
@@ -77,7 +77,7 @@ const DummyLoader = () => {
             };
 
             return Digit.CustomService.getResponse({
-              url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.FormConfig`,
+              url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.TransformedFormConfig`,
               body: {
                 Mdms: payload,
               },
@@ -98,7 +98,7 @@ const DummyLoader = () => {
           };
 
           const flowConfigApiCall = Digit.CustomService.getResponse({
-            url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.FormConfig`,
+            url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.AppFlowConfig`,
             body: {
               Mdms: flowConfigPayload,
             },
@@ -124,4 +124,4 @@ const DummyLoader = () => {
   return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING_MODULE", { module: flow, campaign: campaignNumber })} />;
 };
 
-export default DummyLoader;
+export default AppConfigInitializer;
