@@ -2368,7 +2368,7 @@
                   },
                   {
                     "key": "AGE",
-                    "value": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}"
+                    "value": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}"
                   },
                   {
                     "key": "GENDER",
@@ -2380,7 +2380,7 @@
                   },
                   {
                     "key": "DATE_OF_REGISTRATION",
-                    "value": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}"
+                    "value": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}"
                   }
                 ],
                 "type": "template",
