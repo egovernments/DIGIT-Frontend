@@ -189,34 +189,34 @@
             "label": "SCAN_BENEFICIARY",
             "format": "qrScanner",
             "onAction": [
-            {
-              "actionType": "OPEN_SCANNER",
-              "properties": {
-                "scanType": "qr",
-                "fieldName": "beneficiaryTag",
-                "singleValue": true,
-                "scanLimit": 1,
-                "isGS1": false,
-                "onSuccess": [
-                  {
-                    "actionType": "SEARCH_EVENT",
-                    "properties": {
-                      "type": "SEARCH_EVENT",
-                      "name": "projectBeneficiary",
-                      "awaitResults": true,
-                      "data": [
-                        {
-                          "key": "tag",
-                          "value": "{{beneficiaryTag}}",
-                          "operation": "equals"
-                        }
-                      ]
+              {
+                "actionType": "OPEN_SCANNER",
+                "properties": {
+                  "scanType": "qr",
+                  "fieldName": "beneficiaryTag",
+                  "singleValue": true,
+                  "scanLimit": 1,
+                  "isGS1": false,
+                  "onSuccess": [
+                    {
+                      "actionType": "SEARCH_EVENT",
+                      "properties": {
+                        "type": "SEARCH_EVENT",
+                        "name": "projectBeneficiary",
+                        "awaitResults": true,
+                        "data": [
+                          {
+                            "key": "tag",
+                            "value": "{{beneficiaryTag}}",
+                            "operation": "equals"
+                          }
+                        ]
+                      }
                     }
-                  }
-                ]
+                  ]
+                }
               }
-            }
-          ],
+            ],
             "fieldName": "qrScanner",
             "showLabel": false,
             "properties": {
@@ -1069,7 +1069,7 @@
                       "type": "template",
                       "label": "DELIVERY",
                       "format": "button",
-                      "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true",
+                      "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true  && {{fn:checkAllDoseDelivered(task)}} == false",
                       "onAction": [
                         {
                           "actionType": "NAVIGATION",
@@ -1101,6 +1101,42 @@
                         "mainAxisSize": "max",
                         "mainAxisAlignment": "center"
                       }
+                    },
+                    {
+                      "format": "button",
+                      "visible": "{{fn:checkAllDoseDelivered(task)}} == true",
+                      "properties": {
+                        "type": "primary",
+                        "size": "medium",
+                        "mainAxisSize": "max",
+                        "mainAxisAlignment": "center"
+                      },
+                      "fieldName": "viewDetails",
+                      "label": "REGISTRATION_VIEW_DETAILS",
+                      "icon": "add",
+                      "onAction": [
+                        {
+                          "actionType": "NAVIGATION",
+                          "properties": {
+                            "type": "TEMPLATE",
+                            "name": "beneficiaryDetails",
+                            "data": [
+                              {
+                                "key": "selectedIndividualClientReferenceId",
+                                "value": "{{individual.0.clientReferenceId}}"
+                              },
+                              {
+                                "key": "HouseholdClientReferenceId",
+                                "value": "{{member.0.householdClientReferenceId}}"
+                              },
+                              {
+                                "key": "ProjectBeneficiaryClientReferenceId",
+                                "value": "{{projectBeneficiary.0.clientReferenceId}}"
+                              }
+                            ]
+                          }
+                        }
+                      ]
                     }
                   ],
                   "fieldName": "memberCard",
