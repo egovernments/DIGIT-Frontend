@@ -172,7 +172,7 @@ const CampaignHome = () => {
           tabIndex={0}
           onClick={() => {
             navigate(
-              `/${window.contextPath}/employee/campaign/campaign-templates?from=home`
+              `/${window.contextPath}/employee/campaign/campaign-templates`
             );
           }}
         >

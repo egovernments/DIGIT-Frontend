@@ -19,13 +19,13 @@ const AppConfigSaveLoader = () => {
   useEffect(() => {
     const saveConfig = async () => {
       try {
-        // Step 1: Fetch NewFormConfig data and transform it
+        // Step 1: Fetch TransformedFormConfig data and transform it
         const response = await Digit.CustomService.getResponse({
           url: `/${mdmsContext}/v2/_search`,
           body: {
             MdmsCriteria: {
               tenantId: tenantId,
-              schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
+              schemaCode: "HCM-ADMIN-CONSOLE.TransformedFormConfig",
               filters: {
                 project: campaignNumber,
                 module: flowModule,
@@ -36,13 +36,13 @@ const AppConfigSaveLoader = () => {
           },
         });
 
-        // Step 2: Search for existing NewApkConfig with campaignNumber and flow
+        // Step 2: Search for existing FormConfig with campaignNumber and flow
         const appConfigResponse = await Digit.CustomService.getResponse({
           url: `/${mdmsContext}/v2/_search`,
           body: {
             MdmsCriteria: {
               tenantId: tenantId,
-              schemaCode: "HCM-ADMIN-CONSOLE.NewApkConfig",
+              schemaCode: "HCM-ADMIN-CONSOLE.FormConfig",
               filters: {
                 project: campaignNumber,
                 name: flowModule,
@@ -86,7 +86,7 @@ const AppConfigSaveLoader = () => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
           }, 3000);
         } else {
-          console.error("No existing NewApkConfig found for campaignNumber and flow");
+          console.error("No existing FormConfig found for campaignNumber and flow");
           setShowToast({ key: "error", label: "APP_CONFIG_UPDATE_FAILED" });
           // Navigate back after showing error
           setTimeout(() => {
