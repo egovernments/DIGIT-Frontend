@@ -82,6 +82,7 @@ module.exports = merge(common, {
           "/health-hrms",
           "/health-project",
           "/fsm-calculator",
+          "/boundary-management"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-qa.digit.org",
         changeOrigin: true,

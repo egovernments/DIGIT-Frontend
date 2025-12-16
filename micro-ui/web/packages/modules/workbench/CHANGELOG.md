@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-03"] [16-Dec-2025]
+-Added boundary management screens
+
 ## ["2.0.0-dev-01"] [26-Sep-2025]
 -Optimised packages of core with lazy implementation - republish
 

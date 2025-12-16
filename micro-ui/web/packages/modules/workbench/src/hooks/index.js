@@ -6,7 +6,7 @@ import {useWorkbenchFormContext} from "./useWorkbenchFormContext";
 import usePureSchemaDefinition from "./fetchPureSchemaDefinition";
 import useMDMSPopupSearch from "./inbox";
 import useUpsertLocalisation from "./useUpsertLocalisation";
-
+import useBoundaryHome from "./useBoundaryHome";
 const UserService = {
   logoutV1,
 };
@@ -19,7 +19,8 @@ const workbench = {
   getMDMSSchema,
   usePureSchemaDefinition,
   isSchemaCodeInMDMSAction,
-  useUpsertLocalisation
+  useUpsertLocalisation,
+  useBoundaryHome
 };
 
 const contracts = {};
