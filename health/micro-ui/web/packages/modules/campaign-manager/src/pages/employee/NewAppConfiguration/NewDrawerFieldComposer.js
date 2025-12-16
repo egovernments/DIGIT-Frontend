@@ -1065,7 +1065,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   switch (cField.type) {
     case "text":
     case "number":
-    case "textArea":
+    case "textarea":
       return (
         <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
           <FieldV1
@@ -1141,6 +1141,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
               options: cField.options || [],
               optionsKey: dropdownOptionKey,
               fieldPairClassName: "drawer-toggle-conditional-field",
+              disablePortal:true,
+              optionsCustomStyle:{maxHeight:"10vh"}
             }}
           />
         </div>

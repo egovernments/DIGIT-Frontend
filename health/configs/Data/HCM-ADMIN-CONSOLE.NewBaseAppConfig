@@ -1,4 +1,4 @@
-[
+ [
         {
             "id": "f0381a34-9118-47bc-a297-b6f32bf880ca",
             "tenantId": "mz",
@@ -2453,7 +2453,11 @@
                                     }
                                 ],
                                 "actionLabel": "APP_CONFIG_INVENTORY_stockProductDetails_ACTION_BUTTON_LABEL_1",
-                                "description": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION"
+                                "description": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION",
+                                "multiEntityConfig": {
+                                    "sourcePageKey": "stockDetails",
+                                    "sourceFieldKey": "productdetail"
+                                }
                             },
                             {
                                 "page": "stockDetails",
@@ -3160,7 +3164,7 @@
                 "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
                 "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
                 "createdTime": 1764240462821,
-                "lastModifiedTime": 1764919290017
+                "lastModifiedTime": 1765268373144
             }
         },
         {
@@ -10447,24 +10451,31 @@
                             {
                                 "type": "template",
                                 "label": "PROXIMITY_SEARCH_REGISTRATION",
-                                "format": "switch",
+                                "format": "proximitySearch",
                                 "onAction": [
                                     {
-                                        "actionType": "EVENT",
+                                        "actionType": "field.value==true ? SEARCH_EVENT : CLEAR_STATE",
                                         "properties": {
                                             "data": [
                                                 {
-                                                    "key": "lat & long",
-                                                    "value": "field.value",
+                                                    "key": "",
+                                                    "value": 5,
                                                     "operation": "within"
                                                 }
                                             ],
-                                            "name": "ENTITY",
-                                            "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                                            "name": "address",
+                                            "type": "field.value==true ? SEARCH_EVENT : CLEAR_STATE"
                                         }
                                     }
                                 ],
-                                "fieldName": "proximitySearch"
+                                "fieldName": "proximitySearch",
+                                "validations": [
+                                    {
+                                        "key": "proximityRadius",
+                                        "value": 5,
+                                        "errorMessage": "PROXIMITY_RADIUS_ERROR_MESSAGE"
+                                    }
+                                ]
                             },
                             {
                                 "type": "template",
@@ -10930,7 +10941,7 @@
                                         "tooltip": "",
                                         "helpText": "",
                                         "infoText": "",
-                                        "readOnly": false,
+                                        "readOnly": true,
                                         "fieldName": "dateOfRegistration",
                                         "mandatory": true,
                                         "deleteFlag": false,
@@ -11092,7 +11103,13 @@
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
-                                        "validations": [],
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message"
+                                            }
+                                        ],
                                         "errorMessage": "",
                                         "isMultiSelect": false
                                     },
@@ -11155,10 +11172,17 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "dobPicker",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
-                                        "validations": [],
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message"
+                                            }
+                                        ],
                                         "errorMessage": "",
                                         "isMultiSelect": false
                                     },
@@ -11228,8 +11252,8 @@
                                         "isMultiSelect": false
                                     }
                                 ],
-                                "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
-                                "description": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember"
+                                "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+                                "description": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION"
                             }
                         ],
                         "version": 1,
@@ -11740,6 +11764,32 @@
                                     },
                                     {
                                         "type": "string",
+                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "familyname",
+                                        "mandatory": true,
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message_addmember"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
                                         "enums": [
                                             {
                                                 "code": "DEFAULT",
@@ -11784,10 +11834,17 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "dobPicker",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
-                                        "validations": [],
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_mandatory_message_addmember"
+                                            }
+                                        ],
                                         "errorMessage": "",
                                         "isMultiSelect": false
                                     },
@@ -11865,8 +11922,8 @@
                                         "isMultiSelect": false
                                     }
                                 ],
-                                "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
-                                "description": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION"
+                                "actionLabel": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_addmember",
+                                "description": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION_addmember"
                             }
                         ],
                         "version": 1,
@@ -12066,7 +12123,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "ec1",
-                                        "mandatory": false,
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": true,
@@ -12080,16 +12137,6 @@
                                         "errorMessage": "",
                                         "includeInForm": true,
                                         "isMultiSelect": false,
-                                        "dropDownOptions": [
-                                            {
-                                                "code": "YES",
-                                                "name": "QUESTION_1_YES"
-                                            },
-                                            {
-                                                "code": "NO",
-                                                "name": "QUESTION_1_NO"
-                                            }
-                                        ],
                                         "includeInSummary": true
                                     },
                                     {
@@ -12097,11 +12144,11 @@
                                         "enums": [
                                             {
                                                 "code": "YES",
-                                                "name": "YES"
+                                                "name": "QUESTION_2_YES"
                                             },
                                             {
                                                 "code": "NO",
-                                                "name": "NO"
+                                                "name": "QUESTION_2_NO"
                                             }
                                         ],
                                         "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_2_LABEL",
@@ -12115,7 +12162,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "ec2",
-                                        "mandatory": false,
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": true,
@@ -12129,16 +12176,6 @@
                                         "errorMessage": "",
                                         "includeInForm": true,
                                         "isMultiSelect": false,
-                                        "dropDownOptions": [
-                                            {
-                                                "code": "YES",
-                                                "name": "YES"
-                                            },
-                                            {
-                                                "code": "NO",
-                                                "name": "NO"
-                                            }
-                                        ],
                                         "includeInSummary": true,
                                         "visibilityCondition": {
                                             "expression": [
@@ -12153,11 +12190,11 @@
                                         "enums": [
                                             {
                                                 "code": "YES",
-                                                "name": "QUESTION_2_YES"
+                                                "name": "QUESTION_3_YES"
                                             },
                                             {
                                                 "code": "NO",
-                                                "name": "QUESTION_2_NO"
+                                                "name": "QUESTION_3_NO"
                                             }
                                         ],
                                         "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_3_LABEL",
@@ -12171,7 +12208,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "ec3",
-                                        "mandatory": false,
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": true,
@@ -12185,16 +12222,6 @@
                                         "errorMessage": "",
                                         "includeInForm": true,
                                         "isMultiSelect": false,
-                                        "dropDownOptions": [
-                                            {
-                                                "code": "YES",
-                                                "name": "QUESTION_2_YES"
-                                            },
-                                            {
-                                                "code": "NO",
-                                                "name": "QUESTION_2_NO"
-                                            }
-                                        ],
                                         "includeInSummary": true
                                     },
                                     {
@@ -12202,11 +12229,11 @@
                                         "enums": [
                                             {
                                                 "code": "YES",
-                                                "name": "QUESTION_3_YES"
+                                                "name": "QUESTION_4_YES"
                                             },
                                             {
                                                 "code": "NO",
-                                                "name": "QUESTION_3_NO"
+                                                "name": "QUESTION_4_NO"
                                             }
                                         ],
                                         "label": "APPONE_ELIGIBILITYCHECKLIST_QUESTION_4_LABEL",
@@ -12220,7 +12247,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "ec4",
-                                        "mandatory": false,
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": true,
@@ -12234,16 +12261,6 @@
                                         "errorMessage": "",
                                         "includeInForm": true,
                                         "isMultiSelect": false,
-                                        "dropDownOptions": [
-                                            {
-                                                "code": "YES",
-                                                "name": "QUESTION_3_YES"
-                                            },
-                                            {
-                                                "code": "NO",
-                                                "name": "QUESTION_3_NO"
-                                            }
-                                        ],
                                         "includeInSummary": true
                                     }
                                 ],
@@ -12406,49 +12423,29 @@
                             {
                                 "actions": [
                                     {
-                                        "actionType": "FETCH_TRANSFORMER_CONFIG",
-                                        "properties": {
-                                            "onError": [
-                                                {
-                                                    "actionType": "SHOW_TOAST",
-                                                    "properties": {
-                                                        "message": "Failed to fetch referral config."
-                                                    }
-                                                }
-                                            ],
-                                            "configName": "referralConfig"
-                                        }
-                                    },
-                                    {
-                                        "actionType": "CREATE_EVENT",
-                                        "properties": {
-                                            "entity": "TASK",
-                                            "onError": [
-                                                {
-                                                    "actionType": "SHOW_TOAST",
-                                                    "properties": {
-                                                        "message": "Failed to create referral records."
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    },
-                                    {
                                         "actionType": "NAVIGATION",
                                         "properties": {
                                             "data": [
                                                 {
-                                                    "key": "referralReason",
-                                                    "value": "HEALTH_COMPLICATIONS"
+                                                    "key": "selectedIndividualClientReferenceId",
+                                                    "value": "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+                                                },
+                                                {
+                                                    "key": "HouseholdClientReferenceId",
+                                                    "value": "{{ contextData.navigation.HouseholdClientReferenceId }}"
+                                                },
+                                                {
+                                                    "key": "ProjectBeneficiaryClientReferenceId",
+                                                    "value": "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
                                                 }
                                             ],
-                                            "name": "REFERRAL",
+                                            "name": "REFER_BENEFICIARY",
                                             "type": "FORM",
                                             "onError": [
                                                 {
                                                     "actionType": "SHOW_TOAST",
                                                     "properties": {
-                                                        "message": "Navigation to referral flow failed."
+                                                        "message": "Navigation failed."
                                                     }
                                                 }
                                             ]
@@ -13108,7 +13105,7 @@
                             "wrapperName": "DeliveryWrapper",
                             "computedList": {
                                 "pastCycles": {
-                                    "from": "singleton.selectedProject.additionalDetails.projectType.cycles",
+                                    "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
                                     "order": 6,
                                     "where": {
                                         "left": "{{item.id}}",
@@ -13156,7 +13153,7 @@
                                 },
                                 "futureDeliveries": {
                                     "map": "{{item.deliveries}}",
-                                    "from": "singleton.selectedProject.additionalDetails.projectType.cycles",
+                                    "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
                                     "skip": {
                                         "from": "{{dose}}"
                                     },
@@ -13214,7 +13211,7 @@
                                 },
                                 "properties": [
                                     {
-                                        "type": "integer",
+                                        "type": "string",
                                         "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
                                         "order": 1,
                                         "value": "",
@@ -13225,6 +13222,7 @@
                                         "infoText": "",
                                         "readOnly": true,
                                         "fieldName": "dateOfRegistration",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": true,
@@ -13264,6 +13262,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "resourceCard",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
@@ -13493,9 +13492,9 @@
             "isActive": true,
             "auditDetails": {
                 "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
-                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
                 "createdTime": 1764239245176,
-                "lastModifiedTime": 1764917421991
+                "lastModifiedTime": 1765443580098
             }
         },
         {
