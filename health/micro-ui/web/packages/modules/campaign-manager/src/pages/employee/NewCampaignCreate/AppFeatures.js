@@ -100,7 +100,7 @@ const AppFeatures = () => {
     body: {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigCache`,
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.TransformedFormConfig`,
         isActive: true,
         limit: 1000,
         filters: {
@@ -228,7 +228,7 @@ const AppFeatures = () => {
             await clearCacheMutate(
               {
                 moduleName: "HCM-ADMIN-CONSOLE",
-                masterName: "AppConfigCache",
+                masterName: "TransformedFormConfig",
                 data: {
                   ...cacheData,
                   data: {

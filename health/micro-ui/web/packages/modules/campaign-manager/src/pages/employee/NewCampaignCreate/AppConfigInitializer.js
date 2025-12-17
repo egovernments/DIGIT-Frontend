@@ -15,7 +15,7 @@ const AppConfigInitializer = () => {
   const flow = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
 
-  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.NewApkConfig`;
+  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
     Digit.Utils.campaign.getMDMSV2Criteria(
       tenantId,
@@ -37,13 +37,13 @@ const AppConfigInitializer = () => {
     if (mdmsData && mdmsData.length > 0) {
       const processData = async () => {
         try {
-          // First check if NewFormConfig data already exists
+          // First check if TransformedFormConfig data already exists
           const searchResponse = await Digit.CustomService.getResponse({
             url: `/${mdmsContext}/v2/_search`,
             body: {
               MdmsCriteria: {
                 tenantId: tenantId,
-                schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
+                schemaCode: "HCM-ADMIN-CONSOLE.TransformedFormConfig",
                 filters: {
                   project: campaignNumber,
                   module: flow,
@@ -71,13 +71,13 @@ const AppConfigInitializer = () => {
           const apiCalls = appConfig.map((configData) => {
             const payload = {
               tenantId: tenantId,
-              schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
+              schemaCode: "HCM-ADMIN-CONSOLE.TransformedFormConfig",
               data: configData,
               isActive: true,
             };
 
             return Digit.CustomService.getResponse({
-              url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.FormConfig`,
+              url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.TransformedFormConfig`,
               body: {
                 Mdms: payload,
               },
@@ -98,7 +98,7 @@ const AppConfigInitializer = () => {
           };
 
           const flowConfigApiCall = Digit.CustomService.getResponse({
-            url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.FormConfig`,
+            url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.AppFlowConfig`,
             body: {
               Mdms: flowConfigPayload,
             },

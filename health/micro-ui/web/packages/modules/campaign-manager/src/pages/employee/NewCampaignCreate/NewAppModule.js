@@ -12,7 +12,7 @@ const NewAppModule = () => {
   const projectType = searchParams.get("projectType");
   const tenantId = searchParams.get("tenantId");
 
-  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.NewApkConfig`;
+  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
     Digit.Utils.campaign.getMDMSV2Criteria(
       tenantId,
