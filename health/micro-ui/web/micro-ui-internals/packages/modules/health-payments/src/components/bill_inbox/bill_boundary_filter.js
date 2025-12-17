@@ -403,7 +403,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
               <Dropdown
                 style={{ width: "100%" }}
                 t={t}
-                option={getValidPeriods(t,periods)}
+                option={getValidPeriods(t, periods, true)}
                 optionKey="name"
                 selected={selectedPeriod}
                 select={handlePeriodSelect}

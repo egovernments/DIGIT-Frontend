@@ -191,7 +191,7 @@ export const findAllOverlappingPeriods = (startDate, endDate) => {
 //   return result;
 // };
 
-export const getValidPeriods = (t, periods) => {
+export const getValidPeriods = (t, periods, addingBool) => {
   if (!Array.isArray(periods) || periods.length === 0) return [];
 
   const now = Date.now();
@@ -232,18 +232,24 @@ export const getValidPeriods = (t, periods) => {
   const lastPeriod = validPeriods[validPeriods.length - 1];
 
   // Only show AGGREGATE if current time passed last periodEndDate
-  if (now > lastPeriod.periodEndDate) {
-    const result = [...validPeriods];
+  if (addingBool) {
+    if (now > lastPeriod.periodEndDate) {
+      const result = [...validPeriods];
 
-    const aggregate = getPeriodAggregateObject(t, "AGGREGATE");
+      // TODO: ref(0) [Date: 17/11/2025]
+      //  Temporarily commented the aggregated period options for giving the build to QA for initial testing
+      //       It will be uncommented once the backend changes are done properly
+      //   const aggregate = getPeriodAggregateObject(t, "AGGREGATE");
 
-    // You said aggregate based on last period date
-    aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
-    aggregate.periodEndDate = lastPeriod.periodEndDate + 1;
+      //   // You said aggregate based on last period date
+      //   aggregate.periodStartDate = lastPeriod.periodEndDate + 1;
+      //   aggregate.periodEndDate = lastPeriod.periodEndDate + 1;
 
-    result.push(aggregate);
+      //   result.push(aggregate);
+      // ref(0), end of comment
 
-    return result;
+      return result;
+    }
   }
 
   // If somehow we reach here (should not), return past periods

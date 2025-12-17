@@ -258,7 +258,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
               <Dropdown
                 style={{ width: "100%" }}
                 t={t}
-                option={getValidPeriods(t,periods)}
+                option={getValidPeriods(t, periods, false)}
                 optionKey="name"
                 selected={selectedPeriod}
                 select={handlePeriodSelect}
