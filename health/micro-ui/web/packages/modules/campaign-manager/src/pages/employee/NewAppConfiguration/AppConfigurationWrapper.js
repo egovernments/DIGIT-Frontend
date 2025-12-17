@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
-import { fetchLocalization, fetchAppScreenConfig, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
+import { fetchLocalization, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput, Toast } from "@egovernments/digit-ui-components";
 import IntermediateWrapper from "./IntermediateWrapper";
@@ -226,8 +226,6 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           currentLocale,
         })
       );
-
-      dispatch(fetchAppScreenConfig({ tenantId }));
 
       // Set localization context data
       dispatch(
