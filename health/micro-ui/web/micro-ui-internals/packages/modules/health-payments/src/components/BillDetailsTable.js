@@ -124,8 +124,13 @@ const BillDetailsTable = ({ ...props }) => {
                 ),
                 selector: (row) => {
                     const showErrorName =
-                        (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") &&
-                        (["NAME_MISMATCH", "MTN_USERINFO_MISSING_NAME", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.errorDetails?.reasonForFailure));
+  ["VERIFICATION_FAILED", "PENDING_EDIT"].includes(row?.status) &&
+  ["NAME_MISMATCH", "MTN_USERINFO_MISSING_NAME", "MTN_USERINFO_FETCH_FAILED"]
+    .some(r =>
+      (row?.additionalDetails?.errorDetails?.reasonForFailure || "")
+        .toLowerCase()
+        .includes(r.toLowerCase())
+    );
 
                     return (
                         <div
@@ -229,9 +234,14 @@ const BillDetailsTable = ({ ...props }) => {
                 ),
                 selector: (row) => {
                     const showErrorMobileNumber =
-                        (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") &&
-                        (["MTN_ACCOUNT_VALIDATION_FAILED", "MTN_ACCOUNT_INACTIVE", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.errorDetails?.reasonForFailure));
-                    return (
+                        ["VERIFICATION_FAILED", "PENDING_EDIT"].includes(row?.status) &&
+["MTN_ACCOUNT_VALIDATION_FAILED", "MTN_ACCOUNT_INACTIVE", "MTN_USERINFO_FETCH_FAILED"]
+  .some(r =>
+    (row?.additionalDetails?.errorDetails?.reasonForFailure || "")
+      .toLowerCase()
+      .includes(r.toLowerCase())
+  );
+  return (
                         <div style={{
                             display: "flex",
                             alignItems: "center",

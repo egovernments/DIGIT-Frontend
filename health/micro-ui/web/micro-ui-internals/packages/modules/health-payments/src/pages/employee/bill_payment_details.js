@@ -448,8 +448,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             }
 
             let attempts = 0;
-            const POLLING_INTERVAL = 1.5 * 60 * 1000; // 1.5 minutes
-            const MAX_ATTEMPTS = 5;
+            const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
+            const MAX_ATTEMPTS = 10;
 
             const pollStatus = async () => {
               try {
