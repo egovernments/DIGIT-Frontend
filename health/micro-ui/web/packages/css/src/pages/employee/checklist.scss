@@ -363,6 +363,7 @@
   border-bottom: 1px solid #ccc;
   /* Standard border */
   padding: 0 0;
+  margin-bottom: 0.5rem;
 }
 
 .mobile-questions .mobile-question-item:last-child {
@@ -448,4 +449,21 @@
 
 .back-button-xlsxpreview {
   width: 170px;
+}
+
+/* Mobile Checklist Field Wrapper Styles using FieldV1 */
+.mobile-field-wrapper,
+.mobile-numeric-field {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  .digit-field-wrapper {
+    margin-bottom: 0;
+  }
+
+  .digit-text-input,
+  .digit-textarea-input,
+  .digit-number-input {
+    width: 100%;
+  }
 }
