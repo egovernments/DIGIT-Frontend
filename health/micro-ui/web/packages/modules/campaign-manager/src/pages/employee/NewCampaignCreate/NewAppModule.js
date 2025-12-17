@@ -1,4 +1,4 @@
-import { Card, HeaderComponent, Loader, SVG, Button,Footer } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -111,28 +111,25 @@ const NewAppModule = () => {
         </div>
       </EqualHeightWrapper>
       <Footer
-        actionFields={
-          [
-            <Button
-              icon="ArrowBack"
-              label={t("GO_BACK")}
-              onClick={() => {
+        actionFields={[
+          <Button
+            icon="ArrowBack"
+            label={t("GO_BACK")}
+            onClick={() => {
               // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
-              }}
-              type="button"
-              variation="secondary"
-              style={{
-                marginLeft: "4rem",
-                minWidth: "12.5rem"
-              }}
-            />
-          ]
-        }
+            }}
+            type="button"
+            variation="secondary"
+            style={{
+              marginLeft: "4rem",
+              minWidth: "12.5rem",
+            }}
+          />,
+        ]}
         maxActionFieldsAllowed={5}
       />
     </div>
-
   );
 };
 
