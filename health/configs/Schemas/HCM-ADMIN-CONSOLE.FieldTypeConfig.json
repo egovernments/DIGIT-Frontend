@@ -1,0 +1,52 @@
+{
+  "id": "uuid-to-be-generated",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.FieldTypeMappingConfig",
+  "description": "HCM-ADMIN-CONSOLE.FieldTypeMappingConfig",
+  "definition": {
+    "type": "object",
+    "title": "HCM-ADMIN-CONSOLE.FieldTypeMappingConfig",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["type", "order", "metadata", "fieldType"],
+    "x-unique": ["type"],
+    "properties": {
+      "type": {
+        "type": "string",
+        "description": "Unique identifier for the field type configuration"
+      },
+      "order": {
+        "type": "integer",
+        "description": "Display order for the field type"
+      },
+      "metadata": {
+        "type": "object",
+        "required": ["type", "format"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Metadata type (e.g., template)"
+          },
+          "format": {
+            "type": "string",
+            "description": "Metadata format identifier"
+          }
+        }
+      },
+      "component": {
+        "type": "string",
+        "description": "UI component to render (e.g., Toggle, TextInput)"
+      },
+      "fieldType": {
+        "type": "string",
+        "description": "Field type identifier"
+      }
+    }
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": null,
+    "lastModifiedTime": null
+  }
+}

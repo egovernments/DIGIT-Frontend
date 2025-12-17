@@ -17,20 +17,6 @@ export const fetchLocalization = createAsyncThunk(
         body: {},
       });
 
-      const result = [];
-      response?.messages?.forEach(({ code, message, module }) => {
-        let item = { code, module };
-        item[localeString] = message;
-        result.push(item);
-      });
-
-      return result;
-    } catch (error) {
-      return rejectWithValue(error.message || "Failed to fetch localization data");
-    }
-  }
-);
-
 // Async thunk to upsert localization
 export const upsertLocalization = createAsyncThunk(
   "localization/upsert",

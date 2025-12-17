@@ -96,7 +96,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
       // Make the update call
       const response = await Digit.CustomService.getResponse({
-        url: `/${mdmsContext}/v2/_update/${MODULE_CONSTANTS}.AppConfigCache`,
+        url: `/${mdmsContext}/v2/_update/${MODULE_CONSTANTS}.TransformedFormConfig`,
         body: updatePayload,
       });
 
@@ -160,7 +160,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           body: {
             MdmsCriteria: {
               tenantId: tenantId,
-              schemaCode: `${MODULE_CONSTANTS}.NewFormConfig`,
+              schemaCode: `${MODULE_CONSTANTS}.TransformedFormConfig`,
               filters: {
                 flow: flow,
                 project: campaignNumber,
@@ -198,7 +198,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       getFieldMaster({
         tenantId,
         moduleName: MODULE_CONSTANTS,
-        name: "NewFieldType",
+        name: "FieldTypeMappingConfig",
         mdmsContext: mdmsContext,
         limit: 10000,
       })
@@ -209,7 +209,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       getFieldPanelMaster({
         tenantId,
         moduleName: MODULE_CONSTANTS,
-        name: "NewDrawerPanelConfig",
+        name: "FieldPropertiesPanelConfig",
         mdmsContext: mdmsContext,
         limit: 10000,
       })
