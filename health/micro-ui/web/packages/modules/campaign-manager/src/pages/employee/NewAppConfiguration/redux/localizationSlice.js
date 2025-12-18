@@ -17,6 +17,20 @@ export const fetchLocalization = createAsyncThunk(
         body: {},
       });
 
+      const result = [];
+      response?.messages?.forEach(({ code, message, module }) => {
+        let item = { code, module };
+        item[localeString] = message;
+        result.push(item);
+      });
+
+      return result;
+    } catch (error) {
+      return rejectWithValue(error.message || "Failed to fetch localization data");
+    }
+  }
+);
+
 // Async thunk to upsert localization
 export const upsertLocalization = createAsyncThunk(
   "localization/upsert",
@@ -34,10 +48,13 @@ const localizationSlice = createSlice({
   name: "localization",
   initialState: {
     data: [],
+    appScreenConfig: null,
     currentLocale: null,
     localeModule: null,
     status: "idle", // idle | loading | succeeded | failed
     error: null,
+    screenConfigStatus: "idle",
+    screenConfigError: null,
   },
   reducers: {
     setLocalizationData(state, action) {
