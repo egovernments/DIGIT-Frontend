@@ -1,36 +1,20 @@
-import React, { useState, useEffect, useReducer, useMemo, useRef } from "react";
-import {
-  LabelFieldPair,
-  CardLabel,
-  TextInput,
-  ActionBar,
-  SubmitBar,
-  Table,
-  UploadIcon,
-  DeleteIconv2,
-  BreakLine,
-  FileUploadModal,
-  InfoIconOutline,
-} from "@egovernments/digit-ui-react-components";
-
-import { Toast,Card, PopUp, Dropdown, Button,HeaderComponent,Loader } from "@egovernments/digit-ui-components";
-
+import React, { useState, useEffect, useRef } from "react";
+import { Toast, Card, Button, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
-
-import GenerateXlsxNew from "../../../components/GenerateXlsx";
+import GenerateXlsx from "../../../components/GenerateXlsx";
+import BulkUpload from "../../../components/BulkUpload";
 
 const LocalisationBulkUpload = () => {
   const { t } = useTranslation();
   const stateId = Digit.ULBService.getStateId();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   // States
-  const [choosenModule, setChoosenModule] = useState(null);
   const [jsonResult, setJsonResult] = useState(null);
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
-  const [isDownloadDisabled, setIsDownloadDisabled] = useState(true);
-  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const inputRef = useRef(null);
 
   // Campaign from URL
@@ -46,38 +30,40 @@ const LocalisationBulkUpload = () => {
     },
   });
 
-  // Module options
-  const regexOption = [
-    { code: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
-    { code: t("DIGIT_HCM_REGISTRATION_MODULE"), value: `hcm-registration-${campaignNumber}` },
-    { code: t("DIGIT_HCM_DELIVERY_MODULE"), value: `hcm-delivery-${campaignNumber}` },
-    { code: t("DIGIT_HCM_HFREFERRAL_MODULE"), value: `hcm-hfreferral-${campaignNumber}` },
-    { code: t("DIGIT_HCM_COMPLAINTS_MODULE"), value: `hcm-complaints-${campaignNumber}` },
+  // Allowed modules for this campaign
+  const allowedModules = [
+    `hcm-inventory-${campaignNumber}`,
+    `hcm-registration-${campaignNumber}`,
+    `hcm-delivery-${campaignNumber}`,
+    `hcm-hfreferral-${campaignNumber}`,
+    `hcm-complaints-${campaignNumber}`,
   ];
 
-  // Fetch data for selected module (for XLSX download)
+  // Fetch localizations for allowed modules only
   useEffect(() => {
     const fetchLocalizations = async () => {
-      if (!choosenModule?.value || !localeData.length) return;
+      if (!localeData.length || !campaignNumber) return;
       setIsDownloadLoading(true);
 
       try {
+        // Fetch data for each locale and module combination
         const responses = await Promise.all(
-          localeData.map((lang) =>
-            Digit.CustomService.getResponse({
-              url: `/localization/messages/v1/_search`,
-              params: {
-                tenantId: stateId,
-                module: choosenModule.value,
-                locale: lang.value,
-              },
-            }).then((res) => res.messages || [])
+          localeData.flatMap((lang) =>
+            allowedModules.map((module) =>
+              Digit.CustomService.getResponse({
+                url: `/localization/messages/v1/_search`,
+                params: {
+                  tenantId: stateId,
+                  locale: lang.value,
+                  module: module,
+                },
+              }).then((res) => res.messages || [])
+            )
           )
         );
 
         const combinedResults = responses.flat();
         setJsonResult(combinedResults);
-        setIsDownloadDisabled(false);
       } catch (err) {
         console.error(err);
         setShowToast({
@@ -90,9 +76,9 @@ const LocalisationBulkUpload = () => {
     };
 
     fetchLocalizations();
-  }, [choosenModule?.value, localeData]);
+  }, [localeData, campaignNumber]);
 
-  // API mutation
+  // API mutation for upsert
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/localization/messages/v1/_upsert`,
     params: {},
@@ -100,122 +86,249 @@ const LocalisationBulkUpload = () => {
     config: { enabled: true },
   });
 
-  // 📁 File upload via popup
-  const onBulkUploadModalSubmit = async (file) => {
+  // Handle file upload from BulkUpload component
+  // const onBulkUploadSubmit = async (files) => {
+  //   if (!files || files.length === 0) return;
+
+  //   if (files.length > 1) {
+  //     setShowToast({ label: t("HCM_ERROR_MORE_THAN_ONE_FILE"), type: "error" });
+  //     return;
+  //   }
+
+  //   const file = files[0];
+  //   setIsUploading(true);
+
+  //   try {
+  //     const parseFn = Digit?.Utils?.parsingUtils?.parseXlsToJsonMultipleSheetsFile;
+  //     if (!parseFn) {
+  //       setShowToast({ label: t("DIGIT_LOC_PARSER_NOT_AVAILABLE"), type: "error" });
+  //       setIsUploading(false);
+  //       return;
+  //     }
+
+  //     const result = await parseFn(file);
+
+  //     // Each sheet represents a module - flatten all sheets
+  //     const allMessages = [];
+  //     Object.entries(result).forEach(([sheetName, rows]) => {
+  //       rows.forEach((row) => {
+  //         // Normalize headers to lowercase
+  //         const normalized = {};
+  //         Object.keys(row).forEach((key) => {
+  //           normalized[key.toLowerCase()] = row[key];
+  //         });
+
+  //         if (normalized.code && normalized.code.toString().trim()) {
+  //           allMessages.push({
+  //             code: normalized.code.toString().trim(),
+  //             message: normalized.message?.toString().trim() || "",
+  //             module: normalized.module?.toString().trim() || sheetName,
+  //             locale: normalized.locale?.toString().trim() || "default",
+  //           });
+  //         }
+  //       });
+  //     });
+
+  //     if (allMessages.length === 0) {
+  //       setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
+  //       setIsUploading(false);
+  //       return;
+  //     }
+
+  //     // Upload file to file storage
+  //     const module = "HCM-ADMIN-CONSOLE-CLIENT";
+  //     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, [file], tenantId);
+
+  //     if (!fileStoreIds || fileStoreIds.length === 0) {
+  //       setShowToast({ label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED"), type: "error" });
+  //       setIsUploading(false);
+  //       return;
+  //     }
+
+  //     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
+  //     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
+
+  //     // Upsert localization messages
+  //     await mutation.mutateAsync({
+  //       body: { tenantId: stateId, messages: allMessages },
+  //     });
+
+  //     // Set uploaded file data for display
+  //     const fileData = [{
+  //       filestoreId: fileStoreIds?.[0]?.fileStoreId,
+  //       filename: file.name,
+  //       type: "localization",
+  //       url: fileUrl?.[0]?.url,
+  //     }];
+
+  //     setUploadedFile(fileData);
+  //     setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+
+  //     // Refresh the localizations data for allowed modules only
+  //     const responses = await Promise.all(
+  //       localeData.flatMap((lang) =>
+  //         allowedModules.map((module) =>
+  //           Digit.CustomService.getResponse({
+  //             url: `/localization/messages/v1/_search`,
+  //             params: {
+  //               tenantId: stateId,
+  //               locale: lang.value,
+  //               module: module,
+  //             },
+  //           }).then((res) => res.messages || [])
+  //         )
+  //       )
+  //     );
+  //     setJsonResult(responses.flat());
+
+  //   } catch (error) {
+  //     console.error("Upload error:", error);
+  //     const msg = error?.response?.data?.Errors?.[0]?.message || error?.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR");
+  //     setShowToast({ label: msg, type: "error" });
+  //   } finally {
+  //     setIsUploading(false);
+  //   }
+  // };
+  const onBulkUploadSubmit = async (files) => {
+    if (!files?.length) return;
+
+    const file = files[0];
+    setIsUploading(true);
+
     try {
-      if (!file) {
-        setShowToast({ label: t("DIGIT_LOC_INVALID_FILE"), type: "error" });
-        return;
-      }
-      if (!choosenModule?.value) {
-        setShowToast({ label: t("DIGIT_LOC_SELECT_MODULE_FIRST"), type: "error" });
-        return;
-      }
+      const parseFn = Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheetsFile;
+      const parsed = await parseFn(file);
 
-      const parseFn = Digit?.Utils?.parsingUtils?.parseXlsToJsonMultipleSheetsFile;
-      if (!parseFn) {
-        setShowToast({ label: t("DIGIT_LOC_PARSER_NOT_AVAILABLE"), type: "error" });
-        return;
-      }
+      const allMessages = [];
 
-      const result = await parseFn(file);
-      const updatedResult = Object.values(result).flat();
-      if (!updatedResult?.length) {
-        setShowToast({ label: t("DIGIT_LOC_EMPTY_OR_INVALID_FILE"), type: "error" });
-        return;
-      }
+      Object.entries(parsed).forEach(([sheetName, rows]) => {
+        if (!allowedModules.includes(sheetName)) return;
 
-      // Normalize headers
-      const normalizedResult = updatedResult.map((row) => {
-        const normalized = {};
-        Object.keys(row).forEach((key) => {
-          normalized[key.toLowerCase()] = row[key];
+        rows.forEach((row) => {
+          const normalized = {};
+          Object.keys(row).forEach((k) => (normalized[k.toLowerCase()] = row[k]));
+
+          const code = normalized.code?.toString().trim();
+          const moduleName = normalized.module?.toString().trim() || sheetName;
+          if (!code) return;
+
+          localeData.forEach(({ value, label }) => {
+            const columnKey = `message_${label.toLowerCase()}`;
+            const message = normalized[columnKey];
+
+            if (message !== undefined && message !== null && message !== "") {
+              allMessages.push({
+                code,
+                module: moduleName,
+                locale: value,
+                message: message.toString().trim(),
+              });
+            }
+          });
         });
-        return normalized;
       });
 
-      // Build payload
-      const payload = normalizedResult
-        .map((row) => ({
-          code: row?.code?.trim(),
-          message: row?.message?.trim() || "",
-          module: row?.module?.trim() || choosenModule?.value,
-          locale: row?.locale?.trim() || "default",
-        }))
-        .filter((entry) => entry.code && entry.code.length > 0);
-
-      if (payload.length === 0) {
+      if (!allMessages.length) {
         setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
         return;
       }
 
-      await mutation.mutateAsync({
-        body: { tenantId: stateId, messages: payload },
-      });
-
-      setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS") });
-      setShowBulkUploadModal(false);
-    } catch (error) {
-      console.error("❌ Upload error:", error);
-      const msg = error?.response?.data?.Errors?.[0]?.message || error?.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR");
-      setShowToast({ label: msg, type: "error" });
+      await mutation.mutateAsync({ body: { tenantId: stateId, messages: allMessages } });
+      setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+    } catch (e) {
+      setShowToast({ label: e.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR"), type: "error" });
+    } finally {
+      setIsUploading(false);
     }
   };
 
+  // Handle file delete
+  const onFileDelete = () => {
+    setUploadedFile([]);
+  };
+
+  // Handle file download
+  const onFileDownload = async (file) => {
+    if (file?.url) {
+      window.open(file.url, "_blank");
+    } else if (file?.filestoreId) {
+      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([file.filestoreId], tenantId);
+      if (fileUrl?.[0]?.url) {
+        window.open(fileUrl[0].url, "_blank");
+      }
+    }
+  };
+
+  // Close toast after timeout
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   return (
     <React.Fragment>
-      <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>{t("DIGIT_LOC_BULK_UPLOAD_XLS")}</HeaderComponent>
-      <Card>
-        {/* Module selector */}
-        <div style={{ marginBottom: "1rem" }}>
-          <h3 style={{ marginBottom: "0.5rem" }}>{t("DIGIT_LOC_SELECT_MODULE_LABEL")}</h3>
-          <Dropdown
-            style={{ width: "60%" }}
-            t={t}
-            option={regexOption}
-            optionKey={"code"}
-            select={(value) => setChoosenModule(value)}
-            placeholder={t("DIGIT_LOC_SELECT_MODULE_PLACEHOLDER")}
-          />
-          {isDownloadLoading && <Loader variant="OverlayLoader" />}
-        </div>
+      <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>
+        {t("DIGIT_LOC_BULK_UPLOAD_XLS")}
+      </HeaderComponent>
 
-        {/* Download & Upload buttons */}
-        <div style={{ display: "flex", gap: "1rem" }}>
+      <Card>
+        {(isDownloadLoading || isUploading) && <Loader variant="OverlayLoader" />}
+
+        {/* Download Template Button */}
+        <div style={{ display: "flex", justifyContent: "flex-end"}}>
           <Button
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
-            onClick={() => inputRef.current.click()}
-            isDisabled={isDownloadDisabled}
-            icon={"DownloadIcon"}
-          />
-          <Button
-            variation="primary"
-            label={t("DIGIT_LOC_BULK_UPLOAD_BUTTON")}
-            onClick={() => setShowBulkUploadModal(true)}
-            isDisabled={!choosenModule?.value}
-            icon={"FileUpload"}
+            onClick={() => inputRef.current?.click()}
+            isDisabled={!jsonResult || jsonResult.length === 0}
+            icon={"FileDownload"}
           />
         </div>
+
+        {/* Header */}
+        <div className="campaign-bulk-upload">
+          <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
+            {t("DIGIT_LOC_UPLOAD_LOCALIZATION")}
+          </HeaderComponent>
+        </div>
+
+        {/* Info text when no file uploaded */}
+        {uploadedFile.length === 0 && (
+          <div className="info-text">
+            {t("DIGIT_LOC_UPLOAD_MESSAGE")}
+          </div>
+        )}
+
+        {/* BulkUpload Component */}
+        <BulkUpload
+          onSubmit={onBulkUploadSubmit}
+          fileData={uploadedFile}
+          onFileDelete={onFileDelete}
+          onFileDownload={onFileDownload}
+          multiple={false}
+        />
       </Card>
 
-      {/* Hidden XLSX generator */}
-      <GenerateXlsxNew sheetName={choosenModule?.value} inputRef={inputRef} jsonData={jsonResult} localeData={localeData} />
-
-      {/* 📤 File Upload Popup */}
-      {showBulkUploadModal && (
-        <FileUploadModal
-          heading={t("DIGIT_LOC_BULK_UPLOAD_HEADER")}
-          cancelLabel={t("DIGIT_LOC_MODAL_CANCEL")}
-          submitLabel={t("DIGIT_LOC_MODAL_SUBMIT")}
-          onSubmit={onBulkUploadModalSubmit}
-          onClose={() => setShowBulkUploadModal(false)}
-          t={t}
-        />
-      )}
+      {/* Hidden XLSX generator - generates one file with modules as separate sheets */}
+      <GenerateXlsx
+        inputRef={inputRef}
+        jsonData={jsonResult}
+        localeData={localeData}
+        sheetName="Localizations"
+        campaignNumber={campaignNumber}
+      />
 
       {/* Toast */}
-      {showToast && <Toast label={showToast.label} type={showToast.type} isDleteBtn onClose={() => setShowToast(null)} />}
+      {showToast && (
+        <Toast
+          label={showToast.label}
+          type={showToast.type}
+          isDleteBtn
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </React.Fragment>
   );
 };
