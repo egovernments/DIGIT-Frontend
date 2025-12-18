@@ -9,7 +9,7 @@ import BoundaryComponent from "./components/BoundaryComponent";
 import AttendanceInboxComponent from "./components/attendance_inbox/attendance_inbox";
 import InboxSearchLinkHeader from "./components/InboxSearchLinkHeader";
 import SearchResultsPlaceholder from "./components/SearchResultsPlaceholder";
-// import HierarchySelection from "./components/HierachySelection"; 
+// import HierarchySelection from "./components/HierachySelection";
 import AttendeeBoundaryComponent from "./components/SearchAttendeeBoundary";
 import CampaignCard from "./components/CampaignCard";
 
@@ -56,8 +56,11 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
   const paymentsConfig = mdmsData?.MdmsRes?.HCM?.paymentsConfig?.[0];
 
-
   Digit.SessionStorage.set("paymentsConfig", paymentsConfig);
+
+  if (window.location.pathname.includes("generate-bill" || "project-and-aggregation-selection" || "project-selection")) {
+    Digit.SessionStorage.del("selectedPeriod");
+  }
 
   // if (!hierarchySelected) {
   //   return (
