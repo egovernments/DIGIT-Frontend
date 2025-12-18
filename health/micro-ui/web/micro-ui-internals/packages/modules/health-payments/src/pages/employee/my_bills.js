@@ -93,9 +93,6 @@ const MyBills = () => {
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   };
 
-  
-  
-
   // Fetch billing config and periods
   const fetchBillingPeriods = useCallback(
     async (projectId) => {
@@ -194,7 +191,7 @@ const MyBills = () => {
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
             <MyBillsTable
-              data={tableData}
+              data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
               totalCount={totalCount}
               rowsPerPage={rowsPerPage}
               currentPage={currentPage}
