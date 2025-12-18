@@ -47,7 +47,7 @@ const MyBills = () => {
           limit: limitAndOffset.limit,
           offset: limitAndOffset.offset,
         },
-        billingPeriodId:
+        billingPeriodIds:
           periodType && periodType?.code == "FINAL_AGGREGATE"
             ? []
             : findAllOverlappingPeriods(
