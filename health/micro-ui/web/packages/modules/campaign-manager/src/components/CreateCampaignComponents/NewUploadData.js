@@ -413,7 +413,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         break;
       }
       case "unified-console": {
-        const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA", "unified-console");
+        const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA", "unified-console-resources");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
         setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
@@ -432,7 +432,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setDownloadError(false);
     setIsError(false);
-  }, [type, props?.props?.totalFormData, props?.props?.campaignData?.resources]);
+  }, [type, props?.props?.totalFormData, props?.props?.campaignData]);
 
   useEffect(() => {
     if (errorsType[type]) {
