@@ -99,7 +99,7 @@ const BillInboxTable = ({ ...props }) => {
                     )
             }
             title={t(`${row.id}`)}
-            variation="teritiary"
+            variation={props?.selectedPeriod?.id === "AGGREGATE" ? "teritiary" : "link"}
             size={"medium"}
             style={{ minWidth: "unset" }}
           />
