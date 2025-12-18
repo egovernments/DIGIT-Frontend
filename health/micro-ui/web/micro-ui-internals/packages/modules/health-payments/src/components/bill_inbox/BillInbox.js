@@ -188,7 +188,7 @@ const BillInboxComponent = () => {
       refetchAttendance();
       refetchBill();
     }
-  }, [selectedBoundaryCode, pId]);
+  }, [selectedBoundaryCode]);
 
   // Refetch data when navigating back from the view screen
   useEffect(() => {
