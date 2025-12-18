@@ -99,7 +99,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
   };
 
   // Show tabs only if showTabView is true and there are product variants
-  const showTabs = data.showTabView === true && productVariants.length > 0;
+  const showTabs = data.showTabView === true && productVariants.length > 1;
   return (
     <MobileBezelFrame>
       <div
