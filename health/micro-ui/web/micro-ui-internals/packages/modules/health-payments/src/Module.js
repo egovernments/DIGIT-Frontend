@@ -58,7 +58,11 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
   Digit.SessionStorage.set("paymentsConfig", paymentsConfig);
 
-  if (window.location.pathname.includes("generate-bill" || "project-and-aggregation-selection" || "project-selection")) {
+  const paths = window.location.pathname;
+
+  const isEmployeeHome = paths.endsWith("/employee");
+
+  if (isEmployeeHome) {
     Digit.SessionStorage.del("selectedPeriod");
   }
 
