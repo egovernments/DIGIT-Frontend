@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { Button, Card, AlertCard as InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
@@ -21,6 +21,8 @@ import { renderProjectPeriod } from "../../utils/time_conversion";
  *  It also handles the bill generation process.
  */
 const BillInboxComponent = () => {
+  const shouldFetchRef = useRef(false);
+
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { state: locationState } = window.location || {};
@@ -95,7 +97,7 @@ const BillInboxComponent = () => {
       billingPeriodId: pId,
     },
     config: {
-      enabled: selectedBoundaryCode && selectedProject ? true : false,
+      enabled: false,
       onError: (error) => {
         setApprovalCount(0);
         setPendingApprovalCount(0);
@@ -134,7 +136,7 @@ const BillInboxComponent = () => {
       },
     },
     config: {
-      enabled: selectedBoundaryCode ? true : false,
+      enabled: false,
       select: (data) => {
         return data;
       },
@@ -208,25 +210,57 @@ const BillInboxComponent = () => {
   }, [BillData]);
 
   // FIX: Update handleFilterUpdate to accept period
+  // const handleFilterUpdate = (boundaryCode, isDistrictSelected, period) => {
+  //   setSelectedBoundaryCode(()=>boundaryCode);
+  //   Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
+  //   // Update period in session storage and state
+  //   if (period) {
+  //     setSelectedPeriod(period);
+  //     Digit.SessionStorage.set("selectedPeriod", period);
+  //   } else if (period === null) {
+  //     setSelectedPeriod(null);
+  //     Digit.SessionStorage.del("selectedPeriod");
+  //   }
+
+  //   refetchAttendance();
+  //   refetchBill();
+
+  //   //setSelectedBoundaryCode(boundaryCode);
+  //   // Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
+
+  //   // if (period) {
+  //   //   setSelectedPeriod(period);
+  //   //   Digit.SessionStorage.set("selectedPeriod", period);
+  //   // }
+  // };
+
+  useEffect(() => {
+    if (!shouldFetchRef.current) return;
+    if (!selectedBoundaryCode) return;
+
+    shouldFetchRef.current = false;
+
+    setInfoDescription(null);
+    refetchAttendance();
+    refetchBill();
+  }, [selectedBoundaryCode, selectedPeriod]);
+
   const handleFilterUpdate = (boundaryCode, isDistrictSelected, period) => {
+    if (!boundaryCode) return;
+
     setSelectedBoundaryCode(boundaryCode);
     Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
-    // Update period in session storage and state
+
     if (period) {
       setSelectedPeriod(period);
       Digit.SessionStorage.set("selectedPeriod", period);
-    } else if (period === null) {
+    } else {
       setSelectedPeriod(null);
       Digit.SessionStorage.del("selectedPeriod");
     }
 
-    //setSelectedBoundaryCode(boundaryCode);
-    // Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
-
-    // if (period) {
-    //   setSelectedPeriod(period);
-    //   Digit.SessionStorage.set("selectedPeriod", period);
-    // }
+    //  mark fetch intent
+    shouldFetchRef.current = true;
   };
 
   // FIX: Update resetBoundaryFilter to clear period
