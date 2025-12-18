@@ -653,6 +653,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         ["HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA"]: {},
       }));
       //to set the data in the local storage
       setParams({
@@ -661,6 +662,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         ["HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
         ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA"]: {},
       });
     } else if (name === "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING" && formData?.uploadFacilityMapping?.data?.length > 0) {
       setLoader(true);
