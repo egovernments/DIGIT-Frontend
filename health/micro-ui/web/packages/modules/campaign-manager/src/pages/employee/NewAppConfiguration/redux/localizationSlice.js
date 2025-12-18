@@ -1,21 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-
 // Async thunk to fetch localization data
 export const fetchLocalization = createAsyncThunk(
   "localization/fetch",
   async ({ tenantId, localeModule, currentLocale }, { rejectWithValue }) => {
     try {
-      // Get current locale from parameter or session storage
       const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+
       const localeString = typeof locale === "string" ? locale : String(locale);
 
       const response = await Digit.CustomService.getResponse({
         url: "/localization/messages/v1/_search",
-        params: { tenantId, module: localeModule, locale: localeString },
+        params: {
+          tenantId,
+          module: localeModule,
+          locale: localeString,
+        },
         body: {},
       });
+
+      return response?.messages || [];
+    } catch (error) {
+      return rejectWithValue(error?.message || "Failed to fetch localization");
+    }
+  }
+);
 
 // Async thunk to upsert localization
 export const upsertLocalization = createAsyncThunk(
@@ -23,9 +32,10 @@ export const upsertLocalization = createAsyncThunk(
   async ({ tenantId, localeModule, currentLocale, data }, { rejectWithValue }) => {
     try {
       const response = await Digit.Hooks.campaign.useUpsertLocalisationParallel(tenantId, localeModule, currentLocale)(data);
+
       return response;
     } catch (error) {
-      return rejectWithValue(error.message || "Failed to upsert localization");
+      return rejectWithValue(error?.message || "Failed to upsert localization");
     }
   }
 );
@@ -42,67 +52,61 @@ const localizationSlice = createSlice({
   reducers: {
     setLocalizationData(state, action) {
       state.data = action.payload.localisationData || [];
-      // Ensure currentLocale is a string
       state.currentLocale =
         typeof action.payload.currentLocale === "string" ? action.payload.currentLocale : String(action.payload.currentLocale);
       state.localeModule = action.payload.localeModule;
     },
+
     addMissingKey(state, action) {
       const { code } = action.payload;
-      const existing = state.data.find((item) => item.code === code);
-      if (!existing) {
-        // Use only currentLocale from state instead of enabledModules
+      const exists = state.data.find((item) => item.code === code);
+
+      if (!exists) {
         const localeKey = typeof state.currentLocale === "string" ? state.currentLocale : String(state.currentLocale);
-        const newEntry = { code, [localeKey]: "" };
-        state.data.push(newEntry);
+
+        state.data.push({ code, [localeKey]: "" });
       }
     },
+
     updateLocalizationEntry(state, action) {
       const { code, locale, message } = action.payload;
-      // Ensure locale is a string
       const localeKey = typeof locale === "string" ? locale : String(locale);
-      const existingIndex = state.data.findIndex((item) => item.code === code);
 
-      if (existingIndex !== -1) {
-        state.data[existingIndex][localeKey] = message;
+      const index = state.data.findIndex((item) => item.code === code);
+
+      if (index !== -1) {
+        state.data[index][localeKey] = message;
       } else {
         state.data.push({ code, [localeKey]: message });
       }
     },
+
     removeLocalizationKey(state, action) {
-      const { code } = action.payload;
-      state.data = state.data.filter((item) => item.code !== code);
+      state.data = state.data.filter((item) => item.code !== action.payload.code);
     },
+
     clearLocalizationData(state) {
       state.data = [];
       state.status = "idle";
       state.error = null;
     },
   },
+
   extraReducers: (builder) => {
     builder
-      // Fetch localization
       .addCase(fetchLocalization.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
       .addCase(fetchLocalization.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload || [];
+        state.data = action.payload;
       })
       .addCase(fetchLocalization.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || action.error.message;
       })
-      // Upsert localization
-      .addCase(upsertLocalization.pending, (state) => {
-        // Could add a separate loading state for upsert if needed
-      })
-      .addCase(upsertLocalization.fulfilled, (state, action) => {
-        // Handle successful upsert if needed
-      })
       .addCase(upsertLocalization.rejected, (state, action) => {
-        // Handle upsert error if needed
         state.error = action.payload || action.error.message;
       });
   },
