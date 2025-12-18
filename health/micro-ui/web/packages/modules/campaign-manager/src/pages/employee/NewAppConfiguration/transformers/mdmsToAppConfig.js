@@ -333,6 +333,14 @@ const buildValidations = (field) => {
     });
   }
 
+    if (field.minSearchChars) {
+    validations.push({
+      type: "minSearchChars",
+      value: field?.minSearchChars,
+      message: field["minSearchChars.message"],
+    });
+  }
+
   // Handle grouped validations (range, lengthRange, dateRange)
   const validationGroups = {
     range: ["min", "max"],

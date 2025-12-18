@@ -83,7 +83,7 @@ function NewDependentFieldWrapper({ t }) {
     const moduleName = "HCM-ADMIN-CONSOLE";
     const masterName = "AppFlowConfig";
 
-    const flowId = currentData?.flow || "REGISTRATION";
+    const flowId =  currentData?.module  || "REGISTRATION";
     const campaignNumber = currentData?.project || "";
     const currentPageName = currentData?.page;
 
@@ -114,7 +114,7 @@ function NewDependentFieldWrapper({ t }) {
             dispatch(
                 fetchPageFields({
                     tenantId,
-                    flow: flowId,
+                    flow: currentFlow?.name,
                     campaignNumber,
                     pageName: currentPageName,
                 })
@@ -155,6 +155,7 @@ function NewDependentFieldWrapper({ t }) {
         { code: "<=", name: "LESS_THAN_OR_EQUALS_TO" },
         { code: ">", name: "GREATER_THAN" },
         { code: "<", name: "LESS_THAN" },
+        { code: "contains", name: "CONTAINS" },
     ];
     const PARSE_OPERATORS = useMemo(
         () => ["!=", ">=", "<=", "==", ">", "<"].sort((a, b) => b.length - a.length),
@@ -178,14 +179,16 @@ function NewDependentFieldWrapper({ t }) {
     // Find the current flow from flowPages
     const currentFlow = useMemo(() => {
         if (!flowPages || !flowId) return null;
-        return flowPages.find((flow) => flow.name === flowId || flow.flowId === flowId);
+        return flowPages.find((flow) => flow.name === currentData?.flow || flow.flowId === currentData?.flow);
     }, [flowPages, flowId]);
+
 
     // Extract pages from the current flow
     const currentFlowPages = useMemo(() => {
         if (!currentFlow || !currentFlow.pages) return [];
         return currentFlow.pages;
     }, [currentFlow]);
+
 
     // Prepare page options (only pages up to current page order)
     const pageOptions = useMemo(() => {
@@ -196,6 +199,7 @@ function NewDependentFieldWrapper({ t }) {
         const currentPage = currentFlowPages.find(
             (p) => p.name === currentPageFullName || p.name === currentPageName || p.name.endsWith(`.${currentPageName}`)
         );
+
 
         const currentPageOrder = currentPage?.order || Number.MAX_VALUE;
 
@@ -229,6 +233,53 @@ function NewDependentFieldWrapper({ t }) {
     const getCurrentEditingFieldCode = () =>
         selectedField?.fieldName || selectedField?.jsonPath || selectedField?.id || selectedField?.code || "";
 
+    // Extract product variants from session storage
+    const productVariants = useMemo(() => {
+        try {
+            const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+            if (!sessionData) return [];
+
+            const deliveryData = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+            
+            if (!deliveryData || !Array.isArray(deliveryData)) return [];
+
+            // Extract all product variants from all cycles and deliveries
+            const variantsMap = new Map();
+            
+            deliveryData?.forEach(campaign => {
+                if (campaign?.cycles && Array.isArray(campaign.cycles)) {
+                    campaign.cycles.forEach(cycle => {
+                        if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
+                            cycle.deliveries.forEach(delivery => {
+                                if (delivery?.doseCriteria && Array.isArray(delivery.doseCriteria)) {
+                                    delivery.doseCriteria.forEach(criteria => {
+                                        if (criteria?.ProductVariants && Array.isArray(criteria.ProductVariants)) {
+                                            criteria.ProductVariants.forEach(variant => {
+                                                if (variant?.productVariantId && variant?.name) {
+                                                    // Use productVariantId as key to avoid duplicates
+                                                    variantsMap.set(variant.productVariantId, {
+                                                        code: variant.productVariantId,
+                                                        name: variant.name,
+                                                        productVariantId: variant.productVariantId
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            return Array.from(variantsMap.values());
+        } catch (error) {
+            console.error("Error extracting product variants:", error);
+            return [];
+        }
+    }, []);
+
     // Get field options for a page
     // IMPORTANT: we exclude the selectedField (the one being configured) from options
     const getFieldOptions = (pageCode) => {
@@ -252,6 +303,7 @@ function NewDependentFieldWrapper({ t }) {
                 type: f.type || f.datatype || f.format || "string",
                 schemaCode: f.schemaCode,
                 enums: f.enums || f.dropDownOptions || f.options || [],
+                isMultiselect: f.isMultiselect || false,
             }))
             .filter((f) => f.code !== getCurrentEditingFieldCode()); // exclude the field being edited
     };
@@ -265,7 +317,7 @@ function NewDependentFieldWrapper({ t }) {
                 dispatch(
                     fetchPageFields({
                         tenantId,
-                        flow: flowId,
+                        flow: currentFlow?.name,
                         campaignNumber,
                         pageName: cleanPageCode,
                     })
@@ -316,6 +368,13 @@ function NewDependentFieldWrapper({ t }) {
         );
     };
 
+    const isProductVariantOrMultiselect = (field) => {
+        const code = field?.code || field?.fieldName || "";
+        const isProductVariant = code === "productdetail" || code === "resourceCard";
+        const isMultiselect = field?.isMultiselect === true;
+        return isProductVariant || isMultiselect;
+    };
+
     const toDDMMYYYY = (iso) => {
         const dateOnly = String(iso).split("T")[0];
         const [y, m, d] = dateOnly.split("-");
@@ -341,6 +400,12 @@ function NewDependentFieldWrapper({ t }) {
 
     const getOperatorOptions = (field) => {
         if (!field) return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
+        
+        // For product variant fields or multiselect, only show "contains"
+        if (isProductVariantOrMultiselect(field)) {
+            return [{ code: "contains", name: "CONTAINS" }];
+        }
+        
         if (isCheckboxField(field)) {
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         }
@@ -363,6 +428,45 @@ function NewDependentFieldWrapper({ t }) {
     // parseSingle: parse a simple comparison like `page.field==value` or `page.field==page2.field2`
     const parseSingle = (expression = "", defaultLeftPage = currentPageName) => {
         let expr = (expression || "").trim();
+        
+        // Check for contains() function (for product variants/multiselect)
+        const containsFn = "contains(";
+        if (expr.startsWith(containsFn) && expr.endsWith(")")) {
+            // Extract: contains(page.field, 'value')
+            const innerExpr = expr.slice(containsFn.length, -1).trim();
+            const commaIdx = innerExpr.indexOf(",");
+            if (commaIdx !== -1) {
+                const leftRaw = innerExpr.slice(0, commaIdx).trim();
+                const rightRaw = innerExpr.slice(commaIdx + 1).trim();
+                
+                // Parse left side (page.field)
+                const leftParts = leftRaw.split(".").map((s) => s.trim());
+                let leftPage = defaultLeftPage;
+                let leftField = "";
+                if (leftParts.length === 1) {
+                    leftField = leftParts[0];
+                } else if (leftParts.length >= 2) {
+                    leftPage = leftParts[0] || defaultLeftPage;
+                    leftField = leftParts.slice(1).join(".");
+                }
+                
+                // Parse right side (remove quotes if present)
+                let rightValue = rightRaw.replace(/^['"]|['"]$/g, "");
+                
+                return {
+                    leftPage,
+                    leftField,
+                    comparisonType: { code: "contains", name: "CONTAINS" },
+                    isFieldComparison: false,
+                    rightPage: null,
+                    rightField: null,
+                    fieldValue: rightValue,
+                    isAge: false,
+                    isContains: true,
+                };
+            }
+        }
+        
         for (const operator of PARSE_OPERATORS) {
             const i = expr.indexOf(operator);
             if (i !== -1) {
@@ -414,6 +518,7 @@ function NewDependentFieldWrapper({ t }) {
                     rightField,
                     fieldValue: isFieldComparison ? "" : rightValue,
                     isAge,
+                    isContains: false,
                 };
             }
         }
@@ -426,6 +531,7 @@ function NewDependentFieldWrapper({ t }) {
             rightField: null,
             fieldValue: "",
             isAge: false,
+            isContains: false,
         };
     };
 
@@ -472,16 +578,30 @@ function NewDependentFieldWrapper({ t }) {
     // Build serialized single condition from sub-condition object
     const serializeSingle = (c) => {
         if (!c?.leftPage || !c?.leftField || !c?.comparisonType?.code) return "";
+        
         // left
         let left = `${c.leftPage}.${c.leftField}`;
+        
+        // Handle contains() function for product variants/multiselect
+        if (c.isContains || c.comparisonType.code === "contains") {
+            if (String(c.fieldValue ?? "").trim() === "") return "";
+            return `contains(${left}, '${c.fieldValue}')`;
+        }
+        
+        // Handle age calculation
         if (c.isAge) {
             left = `calculateAgeInMonths(${left})`;
         }
+        
+        // Handle field comparison
         if (c.isFieldComparison) {
             if (!c.rightPage || !c.rightField) return "";
             return `${left}${c.comparisonType.code}${c.rightPage}.${c.rightField}`;
         }
+        
+        // Handle value comparison
         if (String(c.fieldValue ?? "").trim() === "") return "";
+        
         // for date types we expect dd/mm/yyyy format in UI; navigation did similar
         if (c.isDate) {
             return `${left}${c.comparisonType.code}${c.fieldValue}`;
@@ -526,7 +646,7 @@ function NewDependentFieldWrapper({ t }) {
                     conds.push({
                         ...parsed,
 
-                        // 🔥 FIX: AUTO-SELECT Compare-With-Field WHEN RIGHT-SIDE IS A FIELD
+                        // AUTO-SELECT Compare-With-Field WHEN RIGHT-SIDE IS A FIELD
                         isFieldComparison: parsed.isFieldComparison,
                         rightPage: parsed.isFieldComparison ? parsed.rightPage : null,
                         rightField: parsed.isFieldComparison ? parsed.rightField : null,
@@ -544,6 +664,9 @@ function NewDependentFieldWrapper({ t }) {
 
                         // Keep date info if useful
                         isDate: parsed.isDate || false,
+                        
+                        // Keep contains info
+                        isContains: parsed.isContains || false,
                     });
 
                     pendingJoin = "&&";
@@ -561,6 +684,7 @@ function NewDependentFieldWrapper({ t }) {
                     rightField: null,
                     fieldValue: "",
                     joiner: { code: "&&", name: "AND" },
+                    isContains: false,
                 });
             }
 
@@ -583,7 +707,7 @@ function NewDependentFieldWrapper({ t }) {
 
     // When user opens a rule editor, set draft to a deep copy
     const openEditor = (idx) => {
-        const r = rules[idx] || { conds: [{ leftPage: currentPageName, leftField: "", comparisonType: {}, isFieldComparison: false, fieldValue: "", joiner: { code: "&&", name: "AND" } }] };
+        const r = rules[idx] || { conds: [{ leftPage: currentPageName, leftField: "", comparisonType: {}, isFieldComparison: false, fieldValue: "", joiner: { code: "&&", name: "AND" }, isContains: false }] };
         // Normalize conds: resolve pages/fields metadata if needed later in UI
         const cloned = JSON.parse(JSON.stringify(r));
         setDraftRule(cloned);
@@ -609,6 +733,7 @@ function NewDependentFieldWrapper({ t }) {
                     rightField: null,
                     fieldValue: "",
                     joiner: { code: "&&", name: "AND" },
+                    isContains: false,
                 },
             ],
         };
@@ -668,6 +793,7 @@ function NewDependentFieldWrapper({ t }) {
                 rightField: null,
                 fieldValue: "",
                 joiner: { code: "&&", name: "AND" },
+                isContains: false,
             });
             return next;
         });
@@ -687,6 +813,7 @@ function NewDependentFieldWrapper({ t }) {
                     rightField: null,
                     fieldValue: "",
                     joiner: { code: "&&", name: "AND" },
+                    isContains: false,
                 });
             } else {
                 // Ensure first cond joiner is always defaulted to &&
@@ -902,6 +1029,7 @@ function NewDependentFieldWrapper({ t }) {
                                             const isCheckbox = selectedLeftFieldMeta && isCheckboxField(selectedLeftFieldMeta);
                                             const isDob = selectedLeftFieldMeta && isDobLike(selectedLeftFieldMeta);
                                             const isDate = selectedLeftFieldMeta && (isDatePickerNotDob(selectedLeftFieldMeta));
+                                            const isProductVariantOrMultiselectField = selectedLeftFieldMeta && isProductVariantOrMultiselect(selectedLeftFieldMeta);
                                             const useMdms = selectedLeftFieldMeta && (["dropdown", "radio"].includes((selectedLeftFieldMeta.format || "").toLowerCase())) && !!selectedLeftFieldMeta.schemaCode; // Option A behavior
 
                                             return (
@@ -1000,7 +1128,7 @@ function NewDependentFieldWrapper({ t }) {
                                                             <LabelFieldPair vertical removeMargin>
                                                                 <div className="digit-field" style={{ width: "100%" }}>
                                                                     {/* Toggle for field comparison */}
-                                                                    <div style={{ marginBottom: "0.25rem" }}>
+                                                                    {!isProductVariantOrMultiselectField && (<div style={{ marginBottom: "0.25rem" }}>
                                                                         <CheckBox
                                                                             mainClassName={"app-config-checkbox-main"}
                                                                             labelClassName={"app-config-checkbox-label"}
@@ -1020,7 +1148,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                             isLabelFirst={false}
                                                                             disabled={!cond.leftField}
                                                                         />
-                                                                    </div>
+                                                                    </div>)}
 
                                                                     {/* If field comparison: show Page + Field dropdowns */}
                                                                     {cond.isFieldComparison ? (
@@ -1120,7 +1248,23 @@ function NewDependentFieldWrapper({ t }) {
                                                                                             />
                                                                                         );
                                                                                     })()
-                                                                                ) : (
+                                                                                ) : isProductVariantOrMultiselectField && productVariants?.length > 0 ? (
+                                                                                    (() => {
+                                                                                        const selectedProductVariant = productVariants.find((eo) => eo.productVariantId === String(cond.fieldValue));
+                                                                                        return (
+                                                                                            <Dropdown
+                                                                                                option={productVariants}
+                                                                                                optionKey="name"
+                                                                                                name={`product-variant-${idx}`}
+                                                                                                t={t}
+                                                                                                select={(e) => updateSubCond(idx, { fieldValue: e.code })}
+                                                                                                selected={selectedProductVariant}
+                                                                                                disabled={!cond.leftField}
+                                                                                            />
+                                                                                        );
+                                                                                    })()
+                                                                                )
+                                                                                : (
                                                                                     <TextInput
                                                                                         type={isNumericField(selectedLeftFieldMeta) ? "number" : "text"}
                                                                                         placeholder={enterValueLabel}
