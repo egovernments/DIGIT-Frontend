@@ -73,6 +73,9 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           description: page.description,
           showAlertPopUp: page.showAlertPopUp,
           conditionalNavigateTo: page.conditionalNavigateTo,
+          showTabView: page?.multiEntityConfig !== null && page?.multiEntityConfig !== undefined ? Object.keys(page?.multiEntityConfig)?.length > 0 ? true : false : false,
+          multiEntityConfig: page.multiEntityConfig,
+
         };
 
         appConfig.push(transformedPage);

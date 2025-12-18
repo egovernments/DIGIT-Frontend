@@ -542,11 +542,30 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //TODO: Implement labelPairList field renderer
       case "labelPairList": {
         const switchRef = useRef(null);
+        const [selectionError, setSelectionError] = useState(false);
 
         // Fetch labelPairConfig from Redux
         const allLabelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
 
-        const labelPairConfig = allLabelPairConfig.filter((item) => item.modules?.includes(currentData?.module));
+        const isEnabledForModuleAndPage = (modules = [], module, page) =>
+          modules.some((m) => m?.[module]?.enabledPages?.includes(page));
+
+        const labelPairConfig = allLabelPairConfig
+          .map((entity) => {
+            const labelFields = (entity.labelFields || []).filter((field) =>
+              isEnabledForModuleAndPage(
+                field.modules,
+                currentData?.module,
+                currentData?.page
+              )
+            );
+
+            return labelFields.length
+              ? { ...entity, labelFields }
+              : null;
+          })
+          .filter(Boolean);
+
 
         // Get currently selected data from selectedField.data
         const selectedData = selectedField?.data || [];
@@ -600,27 +619,65 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 clearLabel={t("CLEAR_ALL")}
                 config={{ isDropdownWithChip: true }}
                 selected={selectedOptions} // Pass actual option objects directly
-                onSelect={(selectedArray) => {}}
-                onClose={(selectedArray) => {
-                  // Extract options from the array pairs: [null, [category, option]] -> option
-                  const extractedOptions = selectedArray?.map((arr) => arr?.[1]) || [];
+                onSelect={(selectedArray) => {
+                  // selectedArray = [[null, option], [null, option]]
+                  // const extractedOptions =
+                  //   selectedArray?.map((arr) => arr?.[1]) || [];
 
-                  // Transform to {key, value} format for storage
+                  // // 🚫 BLOCK removal of last remaining item
+                  // if (extractedOptions.length === 0 && selectedData.length === 1) {
+                  //   if (
+                  //     window.__appConfig_showToast &&
+                  //     typeof window.__appConfig_showToast === "function"
+                  //   ) {
+                  //     window.__appConfig_showToast({
+                  //       key: "error",
+                  //       label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
+                  //     });
+                  //   }
+
+                  //   // 🔁 Force restore current selection
+                  //   onFieldChange({
+                  //     ...selectedField,
+                  //     data: selectedData,
+                  //   });
+
+                  //   return;
+                  // }
+                }}
+
+                frozenData={
+                  selectedData.length === 1
+                    ? selectedOptions.map((opt) => ({ code: opt.code }))
+                    : []
+                }
+                onClose={(selectedArray) => {
+                  console.log("Selected Array from MultiSelectDropdown:", selectedArray);
+                  const extractedOptions =
+                    selectedArray?.map((arr) => arr?.[1]) || [];
+
+                  // 🚫 BLOCK deselect if only one already selected
+                  if (extractedOptions.length === 0 && selectedData.length === 1) {
+                    if (
+                      window.__appConfig_showToast &&
+                      typeof window.__appConfig_showToast === "function"
+                    ) {
+                      window.__appConfig_showToast({
+                        key: "error",
+                        label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
+                      });
+                    }
+                    return;
+                  }
+
                   const mappedData = extractedOptions
                     .map((item) => {
-                      // Handle nested format [category, option]
                       let option;
                       if (Array.isArray(item) && item.length >= 2) {
-                        option = item[1]; // Extract option from [category, option]
+                        option = item[1];
                       } else if (item?.name && item?.jsonPath) {
-                        option = item; // Already an option object
+                        option = item;
                       } else {
-                        console.warn("Invalid item:", item);
-                        return null;
-                      }
-
-                      if (!option?.name || !option?.jsonPath) {
-                        console.warn("Invalid option:", option);
                         return null;
                       }
 
@@ -632,13 +689,24 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     })
                     .filter(Boolean);
 
-                  // Only update if data actually changed
+                  // Safety check (extra guard)
+                  if (mappedData.length === 0) {
+                    if (
+                      window.__appConfig_showToast &&
+                      typeof window.__appConfig_showToast === "function"
+                    ) {
+                      window.__appConfig_showToast({
+                        key: "error",
+                        label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
+                      });
+                    }
+                    return;
+                  }
+
                   const currentStr = JSON.stringify(selectedData);
                   const newStr = JSON.stringify(mappedData);
 
-                  if (currentStr === newStr) {
-                    return;
-                  }
+                  if (currentStr === newStr) return;
 
                   onFieldChange({
                     ...selectedField,
@@ -1094,9 +1162,9 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             gap: "1.5rem",
           }}
         >
-          {(selectedField[cField.bindTo] || []).map((item, index) => (
+          {(selectedField[cField.bindTo] || [])?.map((item, index) => (
             <OptionItem
-              key={item.code || index}
+              key={item?.code || index}
               item={item}
               cField={cField}
               selectedField={selectedField}
@@ -1141,8 +1209,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
               options: cField.options || [],
               optionsKey: dropdownOptionKey,
               fieldPairClassName: "drawer-toggle-conditional-field",
-              disablePortal:true,
-              optionsCustomStyle:{maxHeight:"10vh"}
+              disablePortal: true,
+              optionsCustomStyle: { maxHeight: "10vh" }
             }}
           />
         </div>

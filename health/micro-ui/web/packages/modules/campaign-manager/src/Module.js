@@ -81,6 +81,7 @@ import DynamicSVG from "./components/DynamicSVGComponent";
 import IconTemplate from "./pages/employee/NewAppConfiguration/components/IconTemplate";
 import CampaignTemplateRowCard from "./pages/employee/campaignTemplateScreens/CampaignTemplateRowCard";
 import DropdownTemplate from "./pages/employee/NewAppConfiguration/components/DropdownTemplate";
+import SelectionCard from "./pages/employee/NewAppConfiguration/components/SelectionCard";
 
 /**
  * MDMS Module name
@@ -277,6 +278,7 @@ const componentsToRegister = {
   IconTemplate,
   CampaignTemplateRowCard,
   DropdownTemplate,
+  SelectionCard,
 };
 
 const overrideHooks = () => {

@@ -56,7 +56,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           const code = item?.code;
           const message = item?.[currentLocale];
           // Only accept string values for code and message
-          return typeof code === "string" && code.trim() !== "" && typeof message === "string" && message.trim() !== "";
+          return typeof code === "string" && code.trim() !== "" && typeof message === "string" && message !== "";
         })
         .map((item) => ({
           code: item.code,
