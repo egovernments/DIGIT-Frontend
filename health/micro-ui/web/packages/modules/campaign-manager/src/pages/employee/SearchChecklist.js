@@ -139,7 +139,7 @@ const SearchChecklist = () => {
           // className={"campaign-flow-stepper"}
         /> */}
         <TagComponent campaignName={campaignName} />
-        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1rem" }}>{t("CONFIGURE_CHECKLIST")}</div>
+        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1.5rem",color:"#0b4b66" }}>{t("CONFIGURE_CHECKLIST")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button

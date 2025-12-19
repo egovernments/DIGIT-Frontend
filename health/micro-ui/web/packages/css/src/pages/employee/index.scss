@@ -800,6 +800,11 @@ tbody {
   color: var(--digitv2-lightTheme-primary) !important;
 }
 
+.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent .section{
+   background-color: #ffffff !important;
+   border-radius: 0.75rem;
+}
+
 .boundary-header {
   @include typography-heading-s;
   color: var(--digitv2-lightTheme-header-sidenav);

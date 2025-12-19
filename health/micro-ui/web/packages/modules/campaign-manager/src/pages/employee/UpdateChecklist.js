@@ -563,7 +563,7 @@ const UpdateChecklist = () => {
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "1rem" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("UPDATE_CHECKLIST")}</h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t("UPDATE_CHECKLIST")}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button

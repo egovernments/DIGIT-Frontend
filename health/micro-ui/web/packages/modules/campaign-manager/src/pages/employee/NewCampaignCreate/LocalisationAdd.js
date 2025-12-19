@@ -1,36 +1,22 @@
-import React, { useState, useEffect, useReducer, useMemo, useRef } from "react";
-import {
-  LabelFieldPair,
-  CardLabel,
-  TextInput,
-  ActionBar,
-  SubmitBar,
-  Table,
-  UploadIcon,
-  DeleteIconv2,
-  BreakLine,
-  FileUploadModal,
-  InfoIconOutline,
-} from "@egovernments/digit-ui-react-components";
-
-import { Toast,Card, PopUp, Dropdown, Button,HeaderComponent,Loader } from "@egovernments/digit-ui-components";
-
+import React, { useState, useEffect, useRef } from "react";
+import { Toast, Card, Button, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
-
-import GenerateXlsxNew from "../../../components/GenerateXlsx";
+import * as XLSX from "xlsx";
+import GenerateXlsx from "../../../components/GenerateXlsx";
+import BulkUpload from "../../../components/BulkUpload";
 
 const LocalisationBulkUpload = () => {
   const { t } = useTranslation();
   const stateId = Digit.ULBService.getStateId();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   // States
-  const [choosenModule, setChoosenModule] = useState(null);
   const [jsonResult, setJsonResult] = useState(null);
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
-  const [isDownloadDisabled, setIsDownloadDisabled] = useState(true);
-  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const [isTemplateReady, setIsTemplateReady] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const inputRef = useRef(null);
 
   // Campaign from URL
@@ -46,38 +32,41 @@ const LocalisationBulkUpload = () => {
     },
   });
 
-  // Module options
-  const regexOption = [
-    { code: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
-    { code: t("DIGIT_HCM_REGISTRATION_MODULE"), value: `hcm-registration-${campaignNumber}` },
-    { code: t("DIGIT_HCM_DELIVERY_MODULE"), value: `hcm-delivery-${campaignNumber}` },
-    { code: t("DIGIT_HCM_HFREFERRAL_MODULE"), value: `hcm-hfreferral-${campaignNumber}` },
-    { code: t("DIGIT_HCM_COMPLAINTS_MODULE"), value: `hcm-complaints-${campaignNumber}` },
+  // Allowed modules for this campaign
+  const allowedModules = [
+    { name: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
+    { name: t("DIGIT_HCM_REGISTRATION_MODULE"), value: `hcm-registration-${campaignNumber}` },
+    { name: t("DIGIT_HCM_DELIVERY_MODULE"), value: `hcm-delivery-${campaignNumber}` },
+    { name: t("DIGIT_HCM_HFREFERRAL_MODULE"), value: `hcm-hfreferral-${campaignNumber}` },
+    { name: t("DIGIT_HCM_COMPLAINTS_MODULE"), value: `hcm-complaints-${campaignNumber}` },
   ];
 
-  // Fetch data for selected module (for XLSX download)
+  // Fetch localizations for allowed modules only
   useEffect(() => {
     const fetchLocalizations = async () => {
-      if (!choosenModule?.value || !localeData.length) return;
+      if (!localeData.length || !campaignNumber) return;
       setIsDownloadLoading(true);
+      setIsTemplateReady(false);
 
       try {
+        // Fetch data for each locale and module combination
         const responses = await Promise.all(
-          localeData.map((lang) =>
-            Digit.CustomService.getResponse({
-              url: `/localization/messages/v1/_search`,
-              params: {
-                tenantId: stateId,
-                module: choosenModule.value,
-                locale: lang.value,
-              },
-            }).then((res) => res.messages || [])
+          localeData.flatMap((lang) =>
+            allowedModules.map((mod) =>
+              Digit.CustomService.getResponse({
+                url: `/localization/messages/v1/_search`,
+                params: {
+                  tenantId: stateId,
+                  locale: lang.value,
+                  module: mod.value,
+                },
+              }).then((res) => res.messages || [])
+            )
           )
         );
 
         const combinedResults = responses.flat();
         setJsonResult(combinedResults);
-        setIsDownloadDisabled(false);
       } catch (err) {
         console.error(err);
         setShowToast({
@@ -86,136 +75,243 @@ const LocalisationBulkUpload = () => {
         });
       } finally {
         setIsDownloadLoading(false);
+        setIsTemplateReady(true);
       }
     };
 
     fetchLocalizations();
-  }, [choosenModule?.value, localeData]);
+  }, [localeData, campaignNumber]);
 
-  // API mutation
-  const mutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/localization/messages/v1/_upsert`,
-    params: {},
-    body: { tenantId: stateId },
-    config: { enabled: true },
-  });
-
-  // 📁 File upload via popup
-  const onBulkUploadModalSubmit = async (file) => {
+  const onBulkUploadSubmit = async (files) => {
     try {
-      if (!file) {
-        setShowToast({ label: t("DIGIT_LOC_INVALID_FILE"), type: "error" });
-        return;
-      }
-      if (!choosenModule?.value) {
-        setShowToast({ label: t("DIGIT_LOC_SELECT_MODULE_FIRST"), type: "error" });
-        return;
-      }
+      if (!files?.length) return;
 
-      const parseFn = Digit?.Utils?.parsingUtils?.parseXlsToJsonMultipleSheetsFile;
-      if (!parseFn) {
-        setShowToast({ label: t("DIGIT_LOC_PARSER_NOT_AVAILABLE"), type: "error" });
-        return;
-      }
+      const file = files[0];
+      setIsUploading(true);
 
-      const result = await parseFn(file);
-      const updatedResult = Object.values(result).flat();
-      if (!updatedResult?.length) {
-        setShowToast({ label: t("DIGIT_LOC_EMPTY_OR_INVALID_FILE"), type: "error" });
-        return;
-      }
+      // Create blob URL for download and set uploaded file info
+      const fileUrl = URL.createObjectURL(file);
+      setUploadedFile([{ filename: file.name, url: fileUrl }]);
+      // Helper to sanitize sheet name (same as GenerateXlsx)
+      const sanitizeSheetName = (name) => {
+        if (!name) return "Sheet1";
+        return name.replace(/[:\\/?*\[\]]/g, "_").substring(0, 31);
+      };
 
-      // Normalize headers
-      const normalizedResult = updatedResult.map((row) => {
-        const normalized = {};
-        Object.keys(row).forEach((key) => {
-          normalized[key.toLowerCase()] = row[key];
+      // Parse Excel file with multiple sheets
+      const parseExcelFile = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const data = new Uint8Array(e.target.result);
+              const workbook = XLSX.read(data, { type: "array" });
+              const result = {};
+              workbook.SheetNames.forEach((sheetName) => {
+                const sheet = workbook.Sheets[sheetName];
+                result[sheetName] = XLSX.utils.sheet_to_json(sheet);
+              });
+              resolve(result);
+            } catch (err) {
+              reject(err);
+            }
+          };
+          reader.onerror = (err) => reject(err);
+          reader.readAsArrayBuffer(file);
         });
-        return normalized;
+      };
+
+      const parsed = await parseExcelFile(file);
+      const allMessages = [];
+      let emptyMessageCount = 0;
+
+      Object.entries(parsed).forEach(([sheetName, rows]) => {
+        // Find matching module by checking various matching strategies
+        const sheetNameLower = sheetName.toLowerCase();
+        const matchedModule = allowedModules.find((mod) => {
+          const sanitizedName = sanitizeSheetName(mod.name);
+          const modNameLower = mod.name.toLowerCase();
+          const modValueLower = mod.value.toLowerCase();
+
+          return (
+            sanitizedName === sheetName ||
+            mod.name === sheetName ||
+            mod.value === sheetName ||
+            // Partial matching for flexibility
+            modNameLower.includes(sheetNameLower) ||
+            sheetNameLower.includes(modNameLower) ||
+            modValueLower.includes(sheetNameLower.replace(/\s+/g, "-"))
+          );
+        });
+        if (!matchedModule) return;
+
+        rows.forEach((row) => {
+          const normalized = {};
+          Object.keys(row).forEach((k) => (normalized[k.toLowerCase()] = row[k]));
+
+          const code = normalized.code?.toString().trim();
+          const moduleName = normalized.module?.toString().trim() || matchedModule.value;
+          if (!code) return;
+
+          localeData.forEach(({ value, label }) => {
+            const columnKey = `message_${label.toLowerCase()}`;
+            const message = normalized[columnKey];
+
+            const trimmedMessage = message?.toString().trim();
+            if (trimmedMessage) {
+              allMessages.push({
+                code,
+                module: moduleName,
+                locale: value,
+                message: trimmedMessage,
+              });
+            } else {
+              // Count empty messages for warning
+              emptyMessageCount++;
+            }
+          });
+        });
       });
 
-      // Build payload
-      const payload = normalizedResult
-        .map((row) => ({
-          code: row?.code?.trim(),
-          message: row?.message?.trim() || "",
-          module: row?.module?.trim() || choosenModule?.value,
-          locale: row?.locale?.trim() || "default",
-        }))
-        .filter((entry) => entry.code && entry.code.length > 0);
-
-      if (payload.length === 0) {
+      if (!allMessages.length) {
         setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
+        setUploadedFile([]); // Clear file on error
+        setIsUploading(false);
         return;
       }
 
-      await mutation.mutateAsync({
-        body: { tenantId: stateId, messages: payload },
+      // Group messages by module and locale for separate API calls
+      const groupedMessages = {};
+      allMessages.forEach((msg) => {
+        const key = `${msg.module}__${msg.locale}`;
+        if (!groupedMessages[key]) {
+          groupedMessages[key] = [];
+        }
+        groupedMessages[key].push(msg);
+      });
+      // Make separate API calls for each module-locale combination
+      const upsertPromises = Object.entries(groupedMessages).map(([key, messages]) => {
+        return Digit.CustomService.getResponse({
+          url: `/localization/messages/v1/_upsert`,
+          body: {
+            tenantId: stateId,
+            messages: messages,
+          },
+        });
       });
 
-      setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS") });
-      setShowBulkUploadModal(false);
-    } catch (error) {
-      console.error("❌ Upload error:", error);
-      const msg = error?.response?.data?.Errors?.[0]?.message || error?.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR");
-      setShowToast({ label: msg, type: "error" });
+      await Promise.all(upsertPromises);
+
+      // Show warning if some messages were empty, otherwise show success
+      if (emptyMessageCount > 0) {
+        setShowToast({ label: t("DIGIT_LOC_MESSAGES_EMPTY_WARNING"), type: "warning" });
+      } else {
+        setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+      }
+    } catch (e) {
+      console.error("Upload error:", e);
+      setShowToast({ label: t("DIGIT_LOC_UPSERT_FAILED"), type: "error" });
+      setUploadedFile([]); // Clear file on error
+    } finally {
+      setIsUploading(false);
     }
   };
 
+  // Handle file delete
+  const onFileDelete = () => {
+    setUploadedFile([]);
+  };
+
+  // Handle file download
+  const onFileDownload = async (file) => {
+    // Try to get URL from passed file or fall back to uploadedFile state
+    const fileToDownload = file?.url ? file : uploadedFile?.[0];
+    if (fileToDownload?.url) {
+      // Create download link and trigger download
+      const link = document.createElement("a");
+      link.href = fileToDownload.url;
+      link.download = fileToDownload.filename || "download.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (fileToDownload?.filestoreId) {
+      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([fileToDownload.filestoreId], tenantId);
+      if (fileUrl?.[0]?.url) {
+        window.open(fileUrl[0].url, "_blank");
+      }
+    }
+  };
+
+  // Close toast after timeout
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   return (
     <React.Fragment>
-      <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>{t("DIGIT_LOC_BULK_UPLOAD_XLS")}</HeaderComponent>
-      <Card>
-        {/* Module selector */}
-        <div style={{ marginBottom: "1rem" }}>
-          <h3 style={{ marginBottom: "0.5rem" }}>{t("DIGIT_LOC_SELECT_MODULE_LABEL")}</h3>
-          <Dropdown
-            style={{ width: "60%" }}
-            t={t}
-            option={regexOption}
-            optionKey={"code"}
-            select={(value) => setChoosenModule(value)}
-            placeholder={t("DIGIT_LOC_SELECT_MODULE_PLACEHOLDER")}
-          />
-          {isDownloadLoading && <Loader variant="OverlayLoader" />}
-        </div>
+      <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>
+        {t("DIGIT_LOC_BULK_UPLOAD_XLS")}
+      </HeaderComponent>
 
-        {/* Download & Upload buttons */}
-        <div style={{ display: "flex", gap: "1rem" }}>
+      <Card>
+        {(isDownloadLoading || isUploading) && <Loader variant="OverlayLoader" />}
+
+        {/* Download Template Button */}
+        <div style={{ display: "flex", justifyContent: "flex-end"}}>
           <Button
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
-            onClick={() => inputRef.current.click()}
-            isDisabled={isDownloadDisabled}
-            icon={"DownloadIcon"}
-          />
-          <Button
-            variation="primary"
-            label={t("DIGIT_LOC_BULK_UPLOAD_BUTTON")}
-            onClick={() => setShowBulkUploadModal(true)}
-            isDisabled={!choosenModule?.value}
-            icon={"FileUpload"}
+            onClick={() => inputRef.current?.click()}
+            isDisabled={!isTemplateReady}
+            icon={"FileDownload"}
           />
         </div>
+
+        {/* Header */}
+        <div className="campaign-bulk-upload">
+          <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
+            {t("DIGIT_LOC_UPLOAD_LOCALIZATION")}
+          </HeaderComponent>
+        </div>
+
+        {/* Info text when no file uploaded */}
+        {uploadedFile.length === 0 && (
+          <div className="info-text">
+            {t("DIGIT_LOC_UPLOAD_MESSAGE")}
+          </div>
+        )}
+
+        {/* BulkUpload Component */}
+        <BulkUpload
+          onSubmit={onBulkUploadSubmit}
+          fileData={uploadedFile}
+          onFileDelete={onFileDelete}
+          onFileDownload={onFileDownload}
+        />
       </Card>
 
-      {/* Hidden XLSX generator */}
-      <GenerateXlsxNew sheetName={choosenModule?.value} inputRef={inputRef} jsonData={jsonResult} localeData={localeData} />
-
-      {/* 📤 File Upload Popup */}
-      {showBulkUploadModal && (
-        <FileUploadModal
-          heading={t("DIGIT_LOC_BULK_UPLOAD_HEADER")}
-          cancelLabel={t("DIGIT_LOC_MODAL_CANCEL")}
-          submitLabel={t("DIGIT_LOC_MODAL_SUBMIT")}
-          onSubmit={onBulkUploadModalSubmit}
-          onClose={() => setShowBulkUploadModal(false)}
-          t={t}
-        />
-      )}
+      {/* Hidden XLSX generator - generates one file with modules as separate sheets */}
+      <GenerateXlsx
+        inputRef={inputRef}
+        jsonData={jsonResult}
+        localeData={localeData}
+        sheetName="Localizations"
+        campaignNumber={campaignNumber}
+        moduleOptions={allowedModules}
+      />
 
       {/* Toast */}
-      {showToast && <Toast label={showToast.label} type={showToast.type} isDleteBtn onClose={() => setShowToast(null)} />}
+      {showToast && (
+        <Toast
+          label={showToast.label}
+          type={showToast.type}
+          isDleteBtn
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </React.Fragment>
   );
 };
