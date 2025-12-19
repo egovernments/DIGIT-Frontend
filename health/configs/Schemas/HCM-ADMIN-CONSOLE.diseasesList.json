@@ -1,6 +1,6 @@
 {
   "tenantId": "{{tenantId}}",
-  "code": "HCM-ADMIN-CONSOLE.diseases",
+  "code": "HCM-ADMIN-CONSOLE.diseasesList",
   "description": "Schema for maintaining list of supported diseases across campaign templates and project types",
   "definition": {
     "type": "object",

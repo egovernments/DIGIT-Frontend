@@ -1285,7 +1285,7 @@ export const UICustomizations = {
       // Completely replace MdmsCriteria to avoid InboxSearchComposer merging raw form values
       data.body.MdmsCriteria = {
         tenantId: tenantId,
-        schemaCode: "HCM-CAMPAIGN-TEMPLATES.campaignTypeTemplates",
+        schemaCode: "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
         limit: 10000,
         isActive: true,
         ...(Object.keys(filters).length > 0 && { filters }),
@@ -1339,10 +1339,10 @@ export const UICustomizations = {
             tenantId: tenantId,
             moduleDetails: [
               {
-                moduleName: "HCM-DISEASES-LIST",
+                moduleName: "HCM-ADMIN-CONSOLE",
                 masterDetails: [
                   {
-                    name: "diseases",
+                    name: "diseasesList",
                   },
                 ],
               },
@@ -1353,7 +1353,7 @@ export const UICustomizations = {
         config: {
           enabled: true,
           select: (data) => {
-            return data?.MdmsRes?.["HCM-DISEASES-LIST"]?.diseases;
+            return data?.MdmsRes?.["HCM-ADMIN-CONSOLE"]?.diseasesList;
           },
         },
       };

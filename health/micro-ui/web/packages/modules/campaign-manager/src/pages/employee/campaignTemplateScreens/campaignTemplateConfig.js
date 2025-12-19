@@ -15,7 +15,7 @@ export const campaignTemplateConfig = {
         requestBody: {
           MdmsCriteria: {
             tenantId: tenantId,
-            schemaCode: "HCM-CAMPAIGN-TEMPLATES.campaignTypeTemplates",
+            schemaCode: "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
             limit: "10000",
             isActive: true
           },
