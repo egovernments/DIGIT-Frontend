@@ -1428,3 +1428,39 @@ textarea.light-placeholder::placeholder {
 .slider-content .camp-drawer-caption{
     font-size: medium !important;
 }
+
+ .digit-studio-landing-page-container .input-container{
+    max-width: 100%;
+  }
+  .digit-studio-landing-page-container .digit-employee-card-textarea-field{
+    max-width: 100%;
+  }
+
+  .digit-prefix{
+    border-radius: 4px 0 0 4px;
+  }
+
+  .digit-prefix + input{
+    border-radius: 0 4px 4px 0;
+  }
+
+  .digit-dropdown-select{
+    border-radius: 4px;
+    border-color : #787878 !important;
+  }
+
+  .input-container .digit-employeeCard-inputError{
+    border-color : #787878 !important;
+  }
+
+  .digit-toggle-toolbar{
+    max-width: 238px !important;
+  }
+
+  .digit-toggle-toolbar > .toggle-option-container:nth-child(1) label {
+  border-radius: 8px 0 0 8px;
+}
+
+.digit-toggle-toolbar > .toggle-option-container:nth-child(2) label {
+  border-radius: 0 8px 8px 0;
+}
