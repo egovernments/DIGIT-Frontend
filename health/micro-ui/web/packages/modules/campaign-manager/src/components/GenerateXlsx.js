@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
  * @param {Array} props.localeData - Array of available locales
  * @param {boolean} props.skipHeader - Whether to skip header row (default: false)
  * @param {string} props.sheetName - Base name for the Excel file (default: "Localizations")
+ * @param {Array} props.moduleOptions - Optional array of module objects for explicit module selection
  */
 const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = false, sheetName = "Localizations", moduleOptions = [] }) => {
   const { t } = useTranslation();
