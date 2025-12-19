@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Toast, Card, Button, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import * as XLSX from "xlsx";
 import GenerateXlsx from "../../../components/GenerateXlsx";
 import BulkUpload from "../../../components/BulkUpload";
 
@@ -12,6 +13,7 @@ const LocalisationBulkUpload = () => {
   // States
   const [jsonResult, setJsonResult] = useState(null);
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
+  const [isTemplateReady, setIsTemplateReady] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const [uploadedFile, setUploadedFile] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -32,11 +34,11 @@ const LocalisationBulkUpload = () => {
 
   // Allowed modules for this campaign
   const allowedModules = [
-    `hcm-inventory-${campaignNumber}`,
-    `hcm-registration-${campaignNumber}`,
-    `hcm-delivery-${campaignNumber}`,
-    `hcm-hfreferral-${campaignNumber}`,
-    `hcm-complaints-${campaignNumber}`,
+    { name: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
+    { name: t("DIGIT_HCM_REGISTRATION_MODULE"), value: `hcm-registration-${campaignNumber}` },
+    { name: t("DIGIT_HCM_DELIVERY_MODULE"), value: `hcm-delivery-${campaignNumber}` },
+    { name: t("DIGIT_HCM_HFREFERRAL_MODULE"), value: `hcm-hfreferral-${campaignNumber}` },
+    { name: t("DIGIT_HCM_COMPLAINTS_MODULE"), value: `hcm-complaints-${campaignNumber}` },
   ];
 
   // Fetch localizations for allowed modules only
@@ -44,18 +46,19 @@ const LocalisationBulkUpload = () => {
     const fetchLocalizations = async () => {
       if (!localeData.length || !campaignNumber) return;
       setIsDownloadLoading(true);
+      setIsTemplateReady(false);
 
       try {
         // Fetch data for each locale and module combination
         const responses = await Promise.all(
           localeData.flatMap((lang) =>
-            allowedModules.map((module) =>
+            allowedModules.map((mod) =>
               Digit.CustomService.getResponse({
                 url: `/localization/messages/v1/_search`,
                 params: {
                   tenantId: stateId,
                   locale: lang.value,
-                  module: module,
+                  module: mod.value,
                 },
               }).then((res) => res.messages || [])
             )
@@ -72,157 +75,99 @@ const LocalisationBulkUpload = () => {
         });
       } finally {
         setIsDownloadLoading(false);
+        setIsTemplateReady(true);
       }
     };
 
     fetchLocalizations();
   }, [localeData, campaignNumber]);
 
-  // API mutation for upsert
-  const mutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/localization/messages/v1/_upsert`,
-    params: {},
-    body: { tenantId: stateId },
-    config: { enabled: true },
-  });
-
-  // Handle file upload from BulkUpload component
-  // const onBulkUploadSubmit = async (files) => {
-  //   if (!files || files.length === 0) return;
-
-  //   if (files.length > 1) {
-  //     setShowToast({ label: t("HCM_ERROR_MORE_THAN_ONE_FILE"), type: "error" });
-  //     return;
-  //   }
-
-  //   const file = files[0];
-  //   setIsUploading(true);
-
-  //   try {
-  //     const parseFn = Digit?.Utils?.parsingUtils?.parseXlsToJsonMultipleSheetsFile;
-  //     if (!parseFn) {
-  //       setShowToast({ label: t("DIGIT_LOC_PARSER_NOT_AVAILABLE"), type: "error" });
-  //       setIsUploading(false);
-  //       return;
-  //     }
-
-  //     const result = await parseFn(file);
-
-  //     // Each sheet represents a module - flatten all sheets
-  //     const allMessages = [];
-  //     Object.entries(result).forEach(([sheetName, rows]) => {
-  //       rows.forEach((row) => {
-  //         // Normalize headers to lowercase
-  //         const normalized = {};
-  //         Object.keys(row).forEach((key) => {
-  //           normalized[key.toLowerCase()] = row[key];
-  //         });
-
-  //         if (normalized.code && normalized.code.toString().trim()) {
-  //           allMessages.push({
-  //             code: normalized.code.toString().trim(),
-  //             message: normalized.message?.toString().trim() || "",
-  //             module: normalized.module?.toString().trim() || sheetName,
-  //             locale: normalized.locale?.toString().trim() || "default",
-  //           });
-  //         }
-  //       });
-  //     });
-
-  //     if (allMessages.length === 0) {
-  //       setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
-  //       setIsUploading(false);
-  //       return;
-  //     }
-
-  //     // Upload file to file storage
-  //     const module = "HCM-ADMIN-CONSOLE-CLIENT";
-  //     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, [file], tenantId);
-
-  //     if (!fileStoreIds || fileStoreIds.length === 0) {
-  //       setShowToast({ label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED"), type: "error" });
-  //       setIsUploading(false);
-  //       return;
-  //     }
-
-  //     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
-  //     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-
-  //     // Upsert localization messages
-  //     await mutation.mutateAsync({
-  //       body: { tenantId: stateId, messages: allMessages },
-  //     });
-
-  //     // Set uploaded file data for display
-  //     const fileData = [{
-  //       filestoreId: fileStoreIds?.[0]?.fileStoreId,
-  //       filename: file.name,
-  //       type: "localization",
-  //       url: fileUrl?.[0]?.url,
-  //     }];
-
-  //     setUploadedFile(fileData);
-  //     setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
-
-  //     // Refresh the localizations data for allowed modules only
-  //     const responses = await Promise.all(
-  //       localeData.flatMap((lang) =>
-  //         allowedModules.map((module) =>
-  //           Digit.CustomService.getResponse({
-  //             url: `/localization/messages/v1/_search`,
-  //             params: {
-  //               tenantId: stateId,
-  //               locale: lang.value,
-  //               module: module,
-  //             },
-  //           }).then((res) => res.messages || [])
-  //         )
-  //       )
-  //     );
-  //     setJsonResult(responses.flat());
-
-  //   } catch (error) {
-  //     console.error("Upload error:", error);
-  //     const msg = error?.response?.data?.Errors?.[0]?.message || error?.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR");
-  //     setShowToast({ label: msg, type: "error" });
-  //   } finally {
-  //     setIsUploading(false);
-  //   }
-  // };
   const onBulkUploadSubmit = async (files) => {
-    if (!files?.length) return;
-
-    const file = files[0];
-    setIsUploading(true);
-
     try {
-      const parseFn = Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheetsFile;
-      const parsed = await parseFn(file);
+      if (!files?.length) return;
 
+      const file = files[0];
+      setIsUploading(true);
+
+      // Create blob URL for download and set uploaded file info
+      const fileUrl = URL.createObjectURL(file);
+      setUploadedFile([{ filename: file.name, url: fileUrl }]);
+      // Helper to sanitize sheet name (same as GenerateXlsx)
+      const sanitizeSheetName = (name) => {
+        if (!name) return "Sheet1";
+        return name.replace(/[:\\/?*\[\]]/g, "_").substring(0, 31);
+      };
+
+      // Parse Excel file with multiple sheets
+      const parseExcelFile = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const data = new Uint8Array(e.target.result);
+              const workbook = XLSX.read(data, { type: "array" });
+              const result = {};
+              workbook.SheetNames.forEach((sheetName) => {
+                const sheet = workbook.Sheets[sheetName];
+                result[sheetName] = XLSX.utils.sheet_to_json(sheet);
+              });
+              resolve(result);
+            } catch (err) {
+              reject(err);
+            }
+          };
+          reader.onerror = (err) => reject(err);
+          reader.readAsArrayBuffer(file);
+        });
+      };
+
+      const parsed = await parseExcelFile(file);
       const allMessages = [];
+      let emptyMessageCount = 0;
 
       Object.entries(parsed).forEach(([sheetName, rows]) => {
-        if (!allowedModules.includes(sheetName)) return;
+        // Find matching module by checking various matching strategies
+        const sheetNameLower = sheetName.toLowerCase();
+        const matchedModule = allowedModules.find((mod) => {
+          const sanitizedName = sanitizeSheetName(mod.name);
+          const modNameLower = mod.name.toLowerCase();
+          const modValueLower = mod.value.toLowerCase();
+
+          return (
+            sanitizedName === sheetName ||
+            mod.name === sheetName ||
+            mod.value === sheetName ||
+            // Partial matching for flexibility
+            modNameLower.includes(sheetNameLower) ||
+            sheetNameLower.includes(modNameLower) ||
+            modValueLower.includes(sheetNameLower.replace(/\s+/g, "-"))
+          );
+        });
+        if (!matchedModule) return;
 
         rows.forEach((row) => {
           const normalized = {};
           Object.keys(row).forEach((k) => (normalized[k.toLowerCase()] = row[k]));
 
           const code = normalized.code?.toString().trim();
-          const moduleName = normalized.module?.toString().trim() || sheetName;
+          const moduleName = normalized.module?.toString().trim() || matchedModule.value;
           if (!code) return;
 
           localeData.forEach(({ value, label }) => {
             const columnKey = `message_${label.toLowerCase()}`;
             const message = normalized[columnKey];
 
-            if (message !== undefined && message !== null && message !== "") {
+            const trimmedMessage = message?.toString().trim();
+            if (trimmedMessage) {
               allMessages.push({
                 code,
                 module: moduleName,
                 locale: value,
-                message: message.toString().trim(),
+                message: trimmedMessage,
               });
+            } else {
+              // Count empty messages for warning
+              emptyMessageCount++;
             }
           });
         });
@@ -230,13 +175,43 @@ const LocalisationBulkUpload = () => {
 
       if (!allMessages.length) {
         setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
+        setUploadedFile([]); // Clear file on error
+        setIsUploading(false);
         return;
       }
 
-      await mutation.mutateAsync({ body: { tenantId: stateId, messages: allMessages } });
-      setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+      // Group messages by module and locale for separate API calls
+      const groupedMessages = {};
+      allMessages.forEach((msg) => {
+        const key = `${msg.module}__${msg.locale}`;
+        if (!groupedMessages[key]) {
+          groupedMessages[key] = [];
+        }
+        groupedMessages[key].push(msg);
+      });
+      // Make separate API calls for each module-locale combination
+      const upsertPromises = Object.entries(groupedMessages).map(([key, messages]) => {
+        return Digit.CustomService.getResponse({
+          url: `/localization/messages/v1/_upsert`,
+          body: {
+            tenantId: stateId,
+            messages: messages,
+          },
+        });
+      });
+
+      await Promise.all(upsertPromises);
+
+      // Show warning if some messages were empty, otherwise show success
+      if (emptyMessageCount > 0) {
+        setShowToast({ label: t("DIGIT_LOC_MESSAGES_EMPTY_WARNING"), type: "warning" });
+      } else {
+        setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+      }
     } catch (e) {
-      setShowToast({ label: e.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR"), type: "error" });
+      console.error("Upload error:", e);
+      setShowToast({ label: t("DIGIT_LOC_UPSERT_FAILED"), type: "error" });
+      setUploadedFile([]); // Clear file on error
     } finally {
       setIsUploading(false);
     }
@@ -249,10 +224,18 @@ const LocalisationBulkUpload = () => {
 
   // Handle file download
   const onFileDownload = async (file) => {
-    if (file?.url) {
-      window.open(file.url, "_blank");
-    } else if (file?.filestoreId) {
-      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([file.filestoreId], tenantId);
+    // Try to get URL from passed file or fall back to uploadedFile state
+    const fileToDownload = file?.url ? file : uploadedFile?.[0];
+    if (fileToDownload?.url) {
+      // Create download link and trigger download
+      const link = document.createElement("a");
+      link.href = fileToDownload.url;
+      link.download = fileToDownload.filename || "download.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (fileToDownload?.filestoreId) {
+      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([fileToDownload.filestoreId], tenantId);
       if (fileUrl?.[0]?.url) {
         window.open(fileUrl[0].url, "_blank");
       }
@@ -282,7 +265,7 @@ const LocalisationBulkUpload = () => {
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
             onClick={() => inputRef.current?.click()}
-            isDisabled={!jsonResult || jsonResult.length === 0}
+            isDisabled={!isTemplateReady}
             icon={"FileDownload"}
           />
         </div>
@@ -307,7 +290,6 @@ const LocalisationBulkUpload = () => {
           fileData={uploadedFile}
           onFileDelete={onFileDelete}
           onFileDownload={onFileDownload}
-          multiple={false}
         />
       </Card>
 
@@ -318,6 +300,7 @@ const LocalisationBulkUpload = () => {
         localeData={localeData}
         sheetName="Localizations"
         campaignNumber={campaignNumber}
+        moduleOptions={allowedModules}
       />
 
       {/* Toast */}

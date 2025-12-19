@@ -113,10 +113,10 @@ const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = f
     });
 
     // Internal data keys (used in data objects)
-    const dataKeys = ["code", "module", ...allLocales.map((loc) => `message_${loc}`)];
+    const dataKeys = ["module","code", ...allLocales.map((loc) => `message_${loc}`)];
 
     // Display headers for Excel columns (using locale labels)
-    const displayHeaders = ["code", "module", ...allLocales.map((loc) => {
+    const displayHeaders = ["module","code", ...allLocales.map((loc) => {
       const label = localeLabelsMap[loc] || loc;
       return `message_${label}`;
     })];
