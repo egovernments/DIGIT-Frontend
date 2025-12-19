@@ -346,7 +346,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
             let attempts = 0;
             const POLLING_INTERVAL = 3000;
-            const MAX_ATTEMPTS = 5;
+            const MAX_ATTEMPTS = 20;
 
             const pollStatus = async () => {
               try {
