@@ -1,0 +1,425 @@
+[
+    {
+      "id": "ea8b1aa8-a3d5-4a90-ab48-374f04ee0bf4",
+      "tenantId": "mz",
+      "schemaCode": "HCM-ADMIN-CONSOLE.LabelFieldPairConfig",
+      "uniqueIdentifier": "HFReferralModel",
+      "data": {
+        "entity": "HFReferralModel",
+        "labelFields": [
+          {
+            "name": "REFERRAL_INBOX_NAME",
+            "fieldKey": "referralName",
+            "jsonPath": "{{0.HFReferralModel.name}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "HFREFERRAL": {
+                  "enabledPages": [
+                    "referralOverview"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
+            "fieldKey": "refrralSymptom",
+            "jsonPath": "{{0.HFReferralModel.symptom}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "HFREFERRAL": {
+                  "enabledPages": [
+                    "referralOverview"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isActive": true,
+      "auditDetails": {
+        "createdBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+        "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+        "createdTime": 1764314286932,
+        "lastModifiedTime": 1764314286932
+      }
+    },
+    {
+      "id": "0c1c59b7-f187-4671-a2a7-76fa76b1f019",
+      "tenantId": "mz",
+      "schemaCode": "HCM-ADMIN-CONSOLE.LabelFieldPairConfig",
+      "uniqueIdentifier": "ComplaintModel",
+      "data": {
+        "entity": "ComplaintModel",
+        "labelFields": [
+          {
+            "name": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
+            "fieldKey": "inboxComplaintNumber",
+            "jsonPath": "{{item.PgrServiceModel.serviceRequestId}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "COMPLAINTS": {
+                  "enabledPages": [
+                    "complaintInbox"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "COMPLAINT_INBOX_COMPLAINT_TYPE",
+            "fieldKey": "inboxComplaintType",
+            "jsonPath": "{{item.PgrServiceModel.serviceCode}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "COMPLAINTS": {
+                  "enabledPages": [
+                    "complaintInbox"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "COMPLAINT_INBOX_COMPLAINT_DATE",
+            "fieldKey": "complaintDate",
+            "jsonPath": "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "COMPLAINTS": {
+                  "enabledPages": [
+                    "complaintInbox"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "COMPLAINT_INBOX_COMPLAINT_AREA",
+            "fieldKey": "complaintArea",
+            "jsonPath": "{{item.PgrServiceModel.address.locality.code}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "COMPLAINTS": {
+                  "enabledPages": [
+                    "complaintInbox"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "COMPLAINT_INBOX_COMPLAINT_STATUS",
+            "fieldKey": "complaintStatus",
+            "jsonPath": "{{item.PgrServiceModel.applicationStatus}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "COMPLAINTS": {
+                  "enabledPages": [
+                    "complaintInbox"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+            "fieldKey": "complaintStatus",
+            "jsonPath": "{{item.PgrServiceModel.user.mobileNumber}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "COMPLAINTS": {
+                  "enabledPages": [
+                    "complaintInbox"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isActive": true,
+      "auditDetails": {
+        "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "createdTime": 1763115969876,
+        "lastModifiedTime": 1763534627418
+      }
+    },
+    {
+      "id": "da09a0f8-aa99-4f03-9088-63d4f33f1851",
+      "tenantId": "mz",
+      "schemaCode": "HCM-ADMIN-CONSOLE.LabelFieldPairConfig",
+      "uniqueIdentifier": "HouseholdModel",
+      "data": {
+        "entity": "HouseholdModel",
+        "labelFields": [
+          {
+            "name": "HOUSEHOLD_LOCALITY",
+            "fieldKey": "locality",
+            "jsonPath": "{{contextData.0.household.HouseholdModel.address.locality.code}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "householdOverview"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "MEMBER_COUNT",
+            "fieldKey": "memberCount",
+            "jsonPath": "{{contextData.0.household.HouseholdModel.memberCount}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "householdOverview"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isActive": true,
+      "auditDetails": {
+        "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "createdTime": 1763115953128,
+        "lastModifiedTime": 1763534694685
+      }
+    },
+    {
+      "id": "ea6ef624-fbea-4192-ac54-9521ba34de91",
+      "tenantId": "mz",
+      "schemaCode": "HCM-ADMIN-CONSOLE.LabelFieldPairConfig",
+      "uniqueIdentifier": "IndividualModel",
+      "data": {
+        "entity": "IndividualModel",
+        "labelFields": [
+          {
+            "name": "HOUSEHOLD_HEAD_NAME",
+            "fieldKey": "headName",
+            "jsonPath": "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "householdOverview"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "ID_TYPE",
+            "fieldKey": "idType",
+            "jsonPath": "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierType}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "beneficiaryDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "NAME_OF_INDIVIDUAL",
+            "fieldKey": "givenName",
+            "jsonPath": "{{contextData.0.individuals.IndividualModel.name.givenName}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "beneficiaryDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "ID_NUMBER",
+            "fieldKey": "idNumber",
+            "jsonPath": "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierId}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "beneficiaryDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "AGE",
+            "fieldKey": "age",
+            "jsonPath": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, age)}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "beneficiaryDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "GENDER",
+            "fieldKey": "gender",
+            "jsonPath": "{{contextData.0.individuals.IndividualModel.gender}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "beneficiaryDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "DATE_OF_REGISTRATION",
+            "fieldKey": "dateOfRegistration",
+            "jsonPath": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, date, dd MMMM yyyy)}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "REGISTRATION": {
+                  "enabledPages": [
+                    "beneficiaryDetails"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isActive": true,
+      "auditDetails": {
+        "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "createdTime": 1763115892929,
+        "lastModifiedTime": 1763534768572
+      }
+    },
+    {
+      "id": "246961e2-71b4-4c8b-add0-bb0b392126fd",
+      "tenantId": "mz",
+      "schemaCode": "HCM-ADMIN-CONSOLE.LabelFieldPairConfig",
+      "uniqueIdentifier": "StockModel",
+      "data": {
+        "entity": "StockModel",
+        "labelFields": [
+          {
+            "name": "RESOURCE",
+            "fieldKey": "sku",
+            "jsonPath": "{{item.additionalFields.fields.sku}}",
+            "mandatory": "false",
+            "additionalField": "true",
+            "modules": [
+              {
+                "INVENTORY": {
+                  "enabledPages": [
+                    "viewTransactionDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "RECEIVED_FROM",
+            "fieldKey": "receiverId",
+            "jsonPath": "{{item.receiverId}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "INVENTORY": {
+                  "enabledPages": [
+                    "viewTransactionDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "MRN_NUMBER",
+            "fieldKey": "mrnNumber",
+            "jsonPath": "{{item.additionalFields.fields.mrnNumber}}",
+            "mandatory": "false",
+            "modules": [
+              {
+                "INVENTORY": {
+                  "enabledPages": [
+                    "viewTransactionDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "WAYBILL_NUMBER",
+            "fieldKey": "wayBillNumber",
+            "jsonPath": "{{item.wayBillNumber}}",
+            "mandatory": "false",
+            "additionalField": "true",
+            "modules": [
+              {
+                "INVENTORY": {
+                  "enabledPages": [
+                    "viewTransactionDetails"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "BATCH_NUMBER",
+            "fieldKey": "wayBillNumber",
+            "jsonPath": "{{item.wayBillNumber}}",
+            "mandatory": "false",
+            "additionalField": "true",
+            "modules": [
+              {
+                "INVENTORY": {
+                  "enabledPages": [
+                    "viewTransactionDetails"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isActive": true,
+      "auditDetails": {
+        "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+        "createdTime": 1763115866933,
+        "lastModifiedTime": 1763534812487
+      }
+    }
+  ]
