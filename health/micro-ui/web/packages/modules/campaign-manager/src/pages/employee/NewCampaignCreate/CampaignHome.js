@@ -144,7 +144,7 @@ const CampaignHome = () => {
     body: {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        schemaCode: "HCM-CAMPAIGN-TEMPLATES.campaignTypeTemplates",
+        schemaCode: "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
         limit: "10000",
         isActive: true
       },
