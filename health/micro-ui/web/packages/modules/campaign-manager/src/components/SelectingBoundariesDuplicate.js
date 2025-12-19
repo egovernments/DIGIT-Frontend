@@ -2,7 +2,7 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip,TextBlock, Switch } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip, TextBlock, Switch } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -84,7 +84,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection, isUnifiedCampaign });
+    onSelect("boundaryType", {
+      selectedData: selectedData,
+      boundaryData: boundaryOptions,
+      updateBoundary: !restrictSelection,
+      isUnifiedCampaign,
+    });
   }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
 
   useEffect(() => {
@@ -100,7 +105,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   useEffect(() => {
     if (executionCount < 5) {
-      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection, isUnifiedCampaign });
+      onSelect("boundaryType", {
+        selectedData: selectedData,
+        boundaryData: boundaryOptions,
+        updateBoundary: !restrictSelection,
+        isUnifiedCampaign,
+      });
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -118,11 +128,13 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     setTimeout(() => setIsLoading(false), 10);
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType, campaignData]);
 
+  console.log("sdvjkhsdjk", props);
   useEffect(() => {
     if (
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
-      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
     ) {
       setRestrictSelection(true);
     }

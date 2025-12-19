@@ -1,407 +1,53 @@
 {
-  "id": "uuid-to-be-generated",
-  "tenantId": "mz",
-  "code": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
-  "description": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
-  "definition": {
-    "type": "object",
-    "title": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "required": ["body", "flow", "page", "type", "order", "module", "project", "version"],
-    "x-unique": ["flow", "page", "project"],
-    "properties": {
-      "body": {
-        "type": "array",
-        "description": "Array of body sections containing fields",
-        "items": {
-          "type": "object",
-          "properties": {
-            "fields": {
-              "type": "array",
-              "description": "Array of field configurations",
-              "items": {
+            "id": "e4d5c6ad-0a12-4113-86e3-34f80b6eefc0",
+            "tenantId": "mz",
+            "code": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
+            "description": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
+            "definition": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Form Configuration Schema",
                 "type": "object",
+                "required": [
+                    "flow",
+                    "page",
+                    "order",
+                    "project",
+                    "module",
+                    "version",
+                    "body"
+                ],
+                "x-unique": [
+                    "flow",
+                    "page",
+                    "project",
+                    "module"
+                ],
                 "properties": {
-                  "type": {
-                    "type": "string",
-                    "description": "Field type (e.g., string, dynamic, template)"
-                  },
-                  "label": {
-                    "type": "string",
-                    "description": "Field label key for localization"
-                  },
-                  "order": {
-                    "type": "integer",
-                    "description": "Display order of the field"
-                  },
-                  "value": {
-                    "type": "string",
-                    "description": "Default value for the field"
-                  },
-                  "format": {
-                    "type": "string",
-                    "description": "Field format (e.g., date, locality, scanner, listView)"
-                  },
-                  "hidden": {
-                    "type": "boolean",
-                    "description": "Whether the field is hidden"
-                  },
-                  "isMdms": {
-                    "type": "boolean",
-                    "description": "Whether field data comes from MDMS"
-                  },
-                  "tooltip": {
-                    "type": "string",
-                    "description": "Tooltip text"
-                  },
-                  "helpText": {
-                    "type": "string",
-                    "description": "Help text key for localization"
-                  },
-                  "infoText": {
-                    "type": "string",
-                    "description": "Info text"
-                  },
-                  "readOnly": {
-                    "type": "boolean",
-                    "description": "Whether the field is read-only"
-                  },
-                  "required": {
-                    "type": "boolean",
-                    "description": "Whether the field is required"
-                  },
-                  "fieldName": {
-                    "type": "string",
-                    "description": "Unique field name identifier"
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "description": "Whether the field is mandatory"
-                  },
-                  "deleteFlag": {
-                    "type": "boolean",
-                    "description": "Soft delete flag"
-                  },
-                  "innerLabel": {
-                    "type": "string",
-                    "description": "Inner label text"
-                  },
-                  "systemDate": {
-                    "type": "boolean",
-                    "description": "Whether to use system date"
-                  },
-                  "validations": {
-                    "type": "array",
-                    "description": "Array of validation rules",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "description": "Validation type (e.g., required)"
-                        },
-                        "value": {
-                          "type": ["string", "boolean", "number"],
-                          "description": "Validation value"
-                        },
-                        "message": {
-                          "type": "string",
-                          "description": "Validation error message key"
-                        }
-                      }
-                    }
-                  },
-                  "errorMessage": {
-                    "type": "string",
-                    "description": "Error message key"
-                  },
-                  "includeInForm": {
-                    "type": "boolean",
-                    "description": "Whether to include in form submission"
-                  },
-                  "isMultiSelect": {
-                    "type": "boolean",
-                    "description": "Whether field allows multiple selection"
-                  },
-                  "dropDownOptions": {
-                    "type": "array",
-                    "description": "Options for dropdown fields"
-                  },
-                  "enums": {
-                    "type": "array",
-                    "description": "Enum values for the field"
-                  },
-                  "dataSource": {
-                    "type": "string",
-                    "description": "Data source model name"
-                  },
-                  "child": {
-                    "type": "object",
-                    "description": "Child template configuration",
-                    "properties": {
-                      "type": {
+                    "flow": {
                         "type": "string"
-                      },
-                      "format": {
-                        "type": "string"
-                      },
-                      "fieldName": {
-                        "type": "string"
-                      },
-                      "children": {
-                        "type": "array",
-                        "description": "Nested children configurations"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "flow": {
-        "type": "string",
-        "description": "Flow identifier (e.g., RECORDSTOCK, viewTransactionDetails)"
-      },
-      "page": {
-        "type": "string",
-        "description": "Page identifier"
-      },
-      "type": {
-        "type": "string",
-        "description": "Configuration type (e.g., object, template)"
-      },
-      "order": {
-        "type": "integer",
-        "description": "Display order of the page"
-      },
-      "footer": {
-        "type": "array",
-        "description": "Footer action buttons",
-        "items": {
-          "type": "object",
-          "properties": {
-            "label": {
-              "type": "string",
-              "description": "Button label key"
-            },
-            "format": {
-              "type": "string",
-              "description": "Footer item format (e.g., button)"
-            },
-            "onAction": {
-              "type": "array",
-              "description": "Actions to execute on click",
-              "items": {
-                "$ref": "#/definitions/action"
-              }
-            },
-            "properties": {
-              "type": "object",
-              "description": "Button properties",
-              "properties": {
-                "size": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "mainAxisSize": {
-                  "type": "string"
-                },
-                "mainAxisAlignment": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "header": {
-        "type": "array",
-        "description": "Header elements",
-        "items": {
-          "type": "object",
-          "properties": {
-            "label": {
-              "type": "string",
-              "description": "Header label key"
-            },
-            "format": {
-              "type": "string",
-              "description": "Header format (e.g., backLink)"
-            },
-            "onAction": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/action"
-              }
-            }
-          }
-        }
-      },
-      "module": {
-        "type": "string",
-        "description": "Module name (e.g., INVENTORY)"
-      },
-      "heading": {
-        "type": "string",
-        "description": "Screen heading localization key"
-      },
-      "project": {
-        "type": "string",
-        "description": "Project identifier"
-      },
-      "version": {
-        "type": "integer",
-        "description": "Configuration version"
-      },
-      "summary": {
-        "type": "boolean",
-        "description": "Whether this is a summary screen"
-      },
-      "navigateTo": {
-        "type": ["object", "null"],
-        "description": "Navigation configuration",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "screenType": {
-        "type": "string",
-        "description": "Screen type (e.g., TEMPLATE)"
-      },
-      "description": {
-        "type": "string",
-        "description": "Screen description localization key"
-      },
-      "initActions": {
-        "type": "array",
-        "description": "Actions to execute on screen initialization",
-        "items": {
-          "$ref": "#/definitions/action"
-        }
-      },
-      "onAction": {
-        "type": "array",
-        "description": "Actions to execute on form submission",
-        "items": {
-          "$ref": "#/definitions/action"
-        }
-      },
-      "wrapperConfig": {
-        "type": "object",
-        "description": "Data wrapper configuration",
-        "properties": {
-          "filters": {
-            "type": "array"
-          },
-          "relations": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "entity": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "rootEntity": {
-            "type": "string"
-          },
-          "groupByType": {
-            "type": "boolean"
-          },
-          "wrapperName": {
-            "type": "string"
-          },
-          "searchConfig": {
-            "type": "object",
-            "properties": {
-              "select": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "primary": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "definitions": {
-      "action": {
-        "type": "object",
-        "properties": {
-          "actionType": {
-            "type": "string",
-            "description": "Type of action (e.g., NAVIGATION, CREATE_EVENT, SEARCH_EVENT)"
-          },
-          "properties": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "data": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "string"
                     },
-                    "value": {
-                      "type": "string"
+                    "page": {
+                        "type": "string"
                     },
-                    "operation": {
-                      "type": "string"
+                    "order": {},
+                    "project": {
+                        "type": "string"
+                    },
+                    "module": {
+                        "type": "string"
+                    },
+                    "version": {},
+                    "body": {
+                        "type": "array"
                     }
-                  }
-                }
-              },
-              "entity": {
-                "type": "string"
-              },
-              "message": {
-                "type": "string"
-              },
-              "configName": {
-                "type": "string"
-              },
-              "onError": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/action"
-                }
-              }
+                },
+                "additionalProperties": true
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": 1766122561439,
+                "lastModifiedTime": 1766122561439
             }
-          }
         }
-      }
-    }
-  },
-  "isActive": true,
-  "auditDetails": {
-    "createdBy": null,
-    "lastModifiedBy": null,
-    "createdTime": null,
-    "lastModifiedTime": null
-  }
-}

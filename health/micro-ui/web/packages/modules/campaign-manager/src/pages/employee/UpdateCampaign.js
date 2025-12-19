@@ -774,6 +774,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
         [name]: { ...formData },
       });
     } else if (name === "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA" && formData?.boundaryType?.updateBoundary === true) {
+      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
       setTotalFormData((prevData) => ({
         ...prevData,
         [name]: formData,

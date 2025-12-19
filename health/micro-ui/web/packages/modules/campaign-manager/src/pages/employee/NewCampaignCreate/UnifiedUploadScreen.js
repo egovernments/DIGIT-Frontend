@@ -33,6 +33,8 @@ const UnifiedUploadScreen = () => {
     config: {
       enabled: !!campaignNumber,
       select: (data) => data?.CampaignDetails?.[0],
+      staleTime: 0,
+      cacheTime: 0,
     },
   };
   const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
@@ -59,8 +61,7 @@ const UnifiedUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
-    const uploadedData = formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified ||
-      formData?.uploadUnified;
+    const uploadedData = formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified || formData?.uploadUnified;
 
     if (!uploadedData?.uploadedFile?.length) {
       return showErrorToast(t("PLEASE_UPLOAD_FILE"));
@@ -70,8 +71,7 @@ const UnifiedUploadScreen = () => {
       return showErrorToast(t("ENTER_VALID_FILE"));
     }
 
-    const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId ||
-      uploadedData?.uploadedFile?.[0]?.fileStoreId;
+    const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;
 
     if (!filestoreId) {
       return showErrorToast(t("PLEASE_UPLOAD_FILE"));
@@ -94,7 +94,6 @@ const UnifiedUploadScreen = () => {
     // When unified-console is used, only send unified resources (remove facility/user/boundary)
     // Unified and normal upload flows are mutually exclusive
     const allResources = resources;
-
 
     setLoader(true);
     await mutationUpdate.mutate(
@@ -152,7 +151,9 @@ const UnifiedUploadScreen = () => {
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          type={
+            showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+          }
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}
