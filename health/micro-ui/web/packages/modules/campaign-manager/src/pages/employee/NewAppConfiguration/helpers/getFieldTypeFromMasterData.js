@@ -8,6 +8,12 @@ export const getFieldTypeFromMasterData = (field, fieldTypeMasterData) => {
     const typeMatches = item?.metadata?.type === field.type;
     const formatMatches = item?.metadata?.format === field.format;
 
+    // Special handling for custom format with fieldName
+    if (field?.format === "custom" && field?.fieldName) {
+      const fieldNameMatches = item?.type === field?.fieldName;
+      return typeMatches && formatMatches && fieldNameMatches;
+    }
+
     // Handle different matching scenarios:
     // 1. If field has both type and format, match both
     if (field?.format) {
@@ -31,7 +37,20 @@ export const getFieldTypeFromMasterData2 = (field, fieldTypeMasterData) => {
   if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
     return "text";
   }
+
   // Find matching field type based on type, format, and fieldName
-  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
+  const matched = fieldTypeMasterData.find((item) => {
+    const typeMatches = item?.metadata?.type === field.type;
+    const formatMatches = item?.metadata?.format === field.format;
+
+    // Special handling for custom format with fieldName
+    if (field?.format === "custom" && field?.fieldName) {
+      const fieldNameMatches = item?.type === field?.fieldName;
+      return typeMatches && formatMatches && fieldNameMatches;
+    }
+
+    return typeMatches && formatMatches;
+  });
+
   return matched?.type || "text";
 };

@@ -15,7 +15,7 @@ import {
 import ReactDOM from "react-dom";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updatePageConditionalNav } from "./redux/remoteConfigSlice";
-import { fetchFlowPages , clearFlowPages} from "./redux/flowPagesSlice";
+import { fetchFlowPages, clearFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
@@ -76,7 +76,7 @@ function NewNavigationLogicWrapper({ t }) {
     const flowPagesStatus = useSelector((state) => state.flowPages.status);
     const pageConfigs = useSelector((state) => state.pageFields.byPage);
     const pageFieldsLoading = useSelector((state) => state.pageFields.loadingPages);
-    
+
     const moduleName = "HCM-ADMIN-CONSOLE";
     const masterName = "AppFlowConfig";
     const flowId = currentData?.module || "REGISTRATION";
@@ -84,11 +84,11 @@ function NewNavigationLogicWrapper({ t }) {
     const currentPageName = currentData?.page || currentData?.name || currentData?.pageName;
 
 
-// Clear flow pages when flowId or campaignNumber changes
+    // Clear flow pages when flowId or campaignNumber changes
 
     useEffect(() => {
-    dispatch(clearFlowPages());
-}, [dispatch, flowId, campaignNumber]);
+        dispatch(clearFlowPages());
+    }, [dispatch, flowId, campaignNumber]);
     // Fetch flows on mount or when campaign changes
     useEffect(() => {
         if (flowPagesStatus === 'idle' && campaignNumber) {
@@ -206,13 +206,13 @@ function NewNavigationLogicWrapper({ t }) {
     };
 
     const toDDMMYYYY = (iso) => {
-    const dateOnly = String(iso).split("T")[0];  // "2025-11-11"
-    
-    const [y, m, d] = dateOnly.split("-");
-    
-    if (!y || !m || !d) return "";
-    
-    return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`
+        const dateOnly = String(iso).split("T")[0];  // "2025-11-11"
+
+        const [y, m, d] = dateOnly.split("-");
+
+        if (!y || !m || !d) return "";
+
+        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`
     };
 
     const toISOFromDDMMYYYY = (ddmmyyyy) => {
@@ -397,40 +397,40 @@ function NewNavigationLogicWrapper({ t }) {
 
     //Temporary fix for allPageOptions to include only decimal order pages like 4.1, 4.2 etc. Till Navigation through AppConfig is implemented in Flutter App
     const allPageOptions = useMemo(() => {
-    const seen = new Set();
-    const list = [];
-    const exclude = new Set([currentPageName]); // don't include current page
-    
-    const add = (p) => {
-        if (!p?.name) return;
-        if (exclude.has(p.name)) return;
-        if (seen.has(p.name)) return;
-        seen.add(p.name);
-        list.push({ code: p.name.split('.')?.[1], name: p.name, type: p.type, order: p.order });
-    };
+        const seen = new Set();
+        const list = [];
+        const exclude = new Set([currentPageName]); // don't include current page
 
-    // Find the current flow data
-    const currentFlow = flowPages?.find(flow => flow.flowId === currentData?.flow);
-    
-    if (currentFlow?.pages) {
-        // Filter pages with decimal orders (4.1, 4.2, etc.)
-        const decimalPages = currentFlow.pages.filter(page => {
-            // Check if order is a decimal number (has a decimal point)
-            return page.order && !Number.isInteger(page.order);
-        });
-        
-        // Add only decimal order pages to the options
-        decimalPages.forEach(add);
-    }
-    
-    return list;
-}, [flowPages, currentPageName, currentData?.flow]);
+        const add = (p) => {
+            if (!p?.name) return;
+            if (exclude.has(p.name)) return;
+            if (seen.has(p.name)) return;
+            seen.add(p.name);
+            list.push({ code: p.name.split('.')?.[1], name: p.name, type: p.type, order: p.order });
+        };
+
+        // Find the current flow data
+        const currentFlow = flowPages?.find(flow => flow.flowId === currentData?.flow);
+
+        if (currentFlow?.pages) {
+            // Filter pages with decimal orders (4.1, 4.2, etc.)
+            const decimalPages = currentFlow.pages.filter(page => {
+                // Check if order is a decimal number (has a decimal point)
+                return page.order && !Number.isInteger(page.order);
+            });
+
+            // Add only decimal order pages to the options
+            decimalPages.forEach(add);
+        }
+
+        return list;
+    }, [flowPages, currentPageName, currentData?.flow]);
 
 
 
     const findFieldOptionByCode = (code) =>
         currentPageFieldOptions.find((f) => f.code === code) || (code ? { code, name: code, label: code } : {});
-    
+
     const findPageOptionByCode = (code) =>
         allPageOptions.find((p) => p.code === code) ||
         (code ? { code, name: code, type: flowPages.find((p) => p?.name === code)?.type } : {});
@@ -549,7 +549,7 @@ function NewNavigationLogicWrapper({ t }) {
         });
 
     // ----- condition operations -----
-    const updateCond = (ruleIdx, condIdx, patch) =>{
+    const updateCond = (ruleIdx, condIdx, patch) => {
         setRules((prev) =>
             prev.map((r, i) =>
                 i !== ruleIdx
@@ -557,7 +557,7 @@ function NewNavigationLogicWrapper({ t }) {
                     : { ...r, conds: r.conds.map((c, j) => (j === condIdx ? { ...c, ...patch } : c)) }
             )
         );
-    
+
     }
 
     const changeJoiner = (ruleIdx, condIdx, joinCode) =>
@@ -661,14 +661,13 @@ function NewNavigationLogicWrapper({ t }) {
         const op = c?.comparisonType?.code || "";
         let valueText = c?.fieldValue || "";
         valueText = `${valueText}`.replace(/[()]/g, "");
-        return `${customT(fieldLabel)} ${t(op)} ${
-            field?.format === "dropdown" ||
-            field?.format === "radio" ||
-            field?.type === "selection" ||
-            field?.type === "checkbox"
+        return `${customT(fieldLabel)} ${t(op)} ${field?.format === "dropdown" ||
+                field?.format === "radio" ||
+                field?.type === "selection" ||
+                field?.type === "checkbox"
                 ? customT(valueText)
                 : valueText
-        }`.trim();
+            }`.trim();
     };
 
     const formatRuleSummary = (_rule, idx) => `${logicLabel} ${idx + 1}`;
@@ -694,9 +693,9 @@ function NewNavigationLogicWrapper({ t }) {
     // ---- small UI helpers to render the outside list with OR separators ----
     const JoinerRow = () => (
         <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <Tag 
-            type={"monochrome"} 
-            label={`(${orText})`} 
+            <Tag
+                type={"monochrome"}
+                label={`(${orText})`}
             />
             {/* <span
                 style={{
@@ -758,7 +757,7 @@ function NewNavigationLogicWrapper({ t }) {
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
                     <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                </div>) }
+                </div>)}
             </div>
         </div>
     );
@@ -850,6 +849,15 @@ function NewNavigationLogicWrapper({ t }) {
                                                             }}
                                                         >
                                                             {idx > 0 && (
+                                                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0.5rem 0" }}>
+                                                                    <Tag
+                                                                        type={"monochrome"}
+                                                                        label={t(cond.joiner?.name || (cond.joiner?.code === "&&" ? "AND" : "OR"))}
+                                                                        stroke={true}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                            {/* {idx > 0 && (
                                                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                                                                     <span style={{ fontWeight: 600 }}>{joinWithLabel}</span>
                                                                     <div style={{ width: 160, maxWidth: "100%" }}>
@@ -863,7 +871,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                         />
                                                                     </div>
                                                                 </div>
-                                                            )}
+                                                            )} */}
 
                                                             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
                                                                 {/* Field */}
@@ -891,7 +899,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                             : (isCk ? nextOps.find((o) => o.code === "==") : {}),
                                                                                     });
                                                                                 }}
-                                                                                optionCardStyles={{maxHeight:"10vh"}}
+                                                                                optionCardStyles={{ maxHeight: "10vh" }}
                                                                                 selected={
                                                                                     cond?.selectedField?.code
                                                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
@@ -970,7 +978,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                                             className="appConfigLabelField-Input"
                                                                                             value={iso}
                                                                                             populators={{
-                                                                                                 newDateFormat: true,
+                                                                                                newDateFormat: true,
                                                                                             }}
                                                                                             onChange={(d) => {
 
@@ -1142,13 +1150,13 @@ function NewNavigationLogicWrapper({ t }) {
                                                                 option={allPageOptions}
                                                                 optionKey="code"
                                                                 name={`target-${editorIndex}`}
-                                                                optionCardStyles={{ maxHeight: "15vh"}}
+                                                                optionCardStyles={{ maxHeight: "15vh" }}
                                                                 t={t}
                                                                 select={(e) => updateRule(editorIndex, { targetPage: e })}
                                                                 selected={
                                                                     rules[editorIndex]?.targetPage?.code
                                                                         ? allPageOptions.find((p) => p.code === rules[editorIndex].targetPage.code) ||
-                                                                          rules[editorIndex].targetPage
+                                                                        rules[editorIndex].targetPage
                                                                         : rules[editorIndex].targetPage
                                                                 }
                                                             />

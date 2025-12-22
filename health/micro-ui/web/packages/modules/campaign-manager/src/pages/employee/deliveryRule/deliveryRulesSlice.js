@@ -22,7 +22,7 @@ const deliveryRulesSlice = createSlice({
       state.activeSubTabIndex = 0;
       state.error = null;
 
-      if (savedData && savedData.length > 0) {
+      if (savedData && savedData.length > 0 && savedData[0]?.cycles?.length > 0) {
         // Process saved data to ensure proper structure
         state.campaignData = savedData.map((cycle, cycleIndex) => ({
           ...cycle,
@@ -227,7 +227,7 @@ function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig
       let deliveryStrategy = null;
       
       // Check if we have cycles data in effectiveDeliveryConfig
-      if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles)) {
+      if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles) && effectiveDeliveryConfig.cycles.length > 0) {
         const cycle = effectiveDeliveryConfig.cycles[cycleIndex];
         if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
           const delivery = cycle.deliveries[deliveryIndex];

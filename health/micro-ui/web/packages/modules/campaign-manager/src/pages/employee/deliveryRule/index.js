@@ -52,8 +52,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
 
   // Get cycle configuration with proper delivery config priority
   const cycleData = useMemo(() => {
-    const data = config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure ||
-      sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
+    const data = sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure || config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
     return data;
   }, [config, sessionData]);
 

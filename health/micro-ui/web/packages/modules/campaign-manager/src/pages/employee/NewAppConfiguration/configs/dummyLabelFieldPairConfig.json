@@ -95,7 +95,7 @@
                 {
                     "REGISTRATION": {
                         "enabledPages": [
-                            "beneficiaryDetails"
+                            "householdOverview"
                         ]
                     }
                 }
@@ -185,7 +185,8 @@
                 {
                     "REGISTRATION": {
                         "enabledPages": [
-                            "beneficiaryDetails"
+                            "beneficiaryDetails",
+                            "householdOverview"
                         ]
                     }
                 }
@@ -206,7 +207,8 @@
                 {
                     "REGISTRATION": {
                         "enabledPages": [
-                            "householdOverview"
+                            "householdOverview",
+                            "beneficiaryDetails"
                         ]
                     }
                 }

@@ -83,7 +83,7 @@ function NewDependentFieldWrapper({ t }) {
     const moduleName = "HCM-ADMIN-CONSOLE";
     const masterName = "AppFlowConfig";
 
-    const flowId =  currentData?.module  || "REGISTRATION";
+    const flowId = currentData?.module || "REGISTRATION";
     const campaignNumber = currentData?.project || "";
     const currentPageName = currentData?.page;
 
@@ -240,12 +240,12 @@ function NewDependentFieldWrapper({ t }) {
             if (!sessionData) return [];
 
             const deliveryData = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-            
+
             if (!deliveryData || !Array.isArray(deliveryData)) return [];
 
             // Extract all product variants from all cycles and deliveries
             const variantsMap = new Map();
-            
+
             deliveryData?.forEach(campaign => {
                 if (campaign?.cycles && Array.isArray(campaign.cycles)) {
                     campaign.cycles.forEach(cycle => {
@@ -400,12 +400,12 @@ function NewDependentFieldWrapper({ t }) {
 
     const getOperatorOptions = (field) => {
         if (!field) return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
-        
+
         // For product variant fields or multiselect, only show "contains"
         if (isProductVariantOrMultiselect(field)) {
             return [{ code: "contains", name: "CONTAINS" }];
         }
-        
+
         if (isCheckboxField(field)) {
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         }
@@ -428,7 +428,7 @@ function NewDependentFieldWrapper({ t }) {
     // parseSingle: parse a simple comparison like `page.field==value` or `page.field==page2.field2`
     const parseSingle = (expression = "", defaultLeftPage = currentPageName) => {
         let expr = (expression || "").trim();
-        
+
         // Check for contains() function (for product variants/multiselect)
         const containsFn = "contains(";
         if (expr.startsWith(containsFn) && expr.endsWith(")")) {
@@ -438,7 +438,7 @@ function NewDependentFieldWrapper({ t }) {
             if (commaIdx !== -1) {
                 const leftRaw = innerExpr.slice(0, commaIdx).trim();
                 const rightRaw = innerExpr.slice(commaIdx + 1).trim();
-                
+
                 // Parse left side (page.field)
                 const leftParts = leftRaw.split(".").map((s) => s.trim());
                 let leftPage = defaultLeftPage;
@@ -449,10 +449,10 @@ function NewDependentFieldWrapper({ t }) {
                     leftPage = leftParts[0] || defaultLeftPage;
                     leftField = leftParts.slice(1).join(".");
                 }
-                
+
                 // Parse right side (remove quotes if present)
                 let rightValue = rightRaw.replace(/^['"]|['"]$/g, "");
-                
+
                 return {
                     leftPage,
                     leftField,
@@ -466,7 +466,7 @@ function NewDependentFieldWrapper({ t }) {
                 };
             }
         }
-        
+
         for (const operator of PARSE_OPERATORS) {
             const i = expr.indexOf(operator);
             if (i !== -1) {
@@ -578,30 +578,30 @@ function NewDependentFieldWrapper({ t }) {
     // Build serialized single condition from sub-condition object
     const serializeSingle = (c) => {
         if (!c?.leftPage || !c?.leftField || !c?.comparisonType?.code) return "";
-        
+
         // left
         let left = `${c.leftPage}.${c.leftField}`;
-        
+
         // Handle contains() function for product variants/multiselect
         if (c.isContains || c.comparisonType.code === "contains") {
             if (String(c.fieldValue ?? "").trim() === "") return "";
             return `contains(${left}, '${c.fieldValue}')`;
         }
-        
+
         // Handle age calculation
         if (c.isAge) {
             left = `calculateAgeInMonths(${left})`;
         }
-        
+
         // Handle field comparison
         if (c.isFieldComparison) {
             if (!c.rightPage || !c.rightField) return "";
             return `${left}${c.comparisonType.code}${c.rightPage}.${c.rightField}`;
         }
-        
+
         // Handle value comparison
         if (String(c.fieldValue ?? "").trim() === "") return "";
-        
+
         // for date types we expect dd/mm/yyyy format in UI; navigation did similar
         if (c.isDate) {
             return `${left}${c.comparisonType.code}${c.fieldValue}`;
@@ -664,7 +664,7 @@ function NewDependentFieldWrapper({ t }) {
 
                         // Keep date info if useful
                         isDate: parsed.isDate || false,
-                        
+
                         // Keep contains info
                         isContains: parsed.isContains || false,
                     });
@@ -1033,23 +1033,18 @@ function NewDependentFieldWrapper({ t }) {
                                             const useMdms = selectedLeftFieldMeta && (["dropdown", "radio"].includes((selectedLeftFieldMeta.format || "").toLowerCase())) && !!selectedLeftFieldMeta.schemaCode; // Option A behavior
 
                                             return (
-                                                <div key={`cond-row-${idx}`} style={{ background: "#FFF", border: "1px dashed #EAC5AD", borderRadius: 8, padding: "0.75rem", display: "grid", gap: "0.5rem" }}>
-                                                    {/* If not first cond, show joiner control (Option B: appears because there is a previous row) */}
+                                                <React.Fragment key={`cond-row-${idx}`}>
+                                                    {/* Show centered joiner Tag between conditions */}
                                                     {idx > 0 && (
-                                                        <div style={{ display: "flex", justifyContent: "flex-start", gap: "0.5rem", alignItems: "center" }}>
-                                                            <span style={{ fontWeight: 600 }}>{t("JOIN_WITH") || "Join with"}</span>
-                                                            <div style={{ width: 140 }}>
-                                                                <Dropdown
-                                                                    option={LOGICALS}
-                                                                    optionKey="name"
-                                                                    name={`joiner-${idx}`}
-                                                                    t={t}
-                                                                    select={(e) => changeJoinerForCond(idx, e.code)}
-                                                                    selected={cond.joiner || { code: "&&", name: "AND" }}
-                                                                />
-                                                            </div>
+                                                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0.5rem 0" }}>
+                                                            <Tag
+                                                                type={"monochrome"}
+                                                                label={t(cond.joiner?.name || (cond.joiner?.code === "&&" ? "AND" : "OR"))}
+                                                                stroke={true}
+                                                            />
                                                         </div>
                                                     )}
+                                                    <div style={{ background: "#FFF", border: "1px dashed #EAC5AD", borderRadius: 8, padding: "0.75rem", display: "grid", gap: "0.5rem" }}>
 
                                                     <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
                                                         {/* Left Page */}
@@ -1264,20 +1259,20 @@ function NewDependentFieldWrapper({ t }) {
                                                                                         );
                                                                                     })()
                                                                                 )
-                                                                                : (
-                                                                                    <TextInput
-                                                                                        type={isNumericField(selectedLeftFieldMeta) ? "number" : "text"}
-                                                                                        placeholder={enterValueLabel}
-                                                                                        value={cond.fieldValue}
-                                                                                        onChange={(ev) => {
-                                                                                            const v = ev?.target?.value ?? "";
-                                                                                            updateSubCond(idx, {
-                                                                                                fieldValue: isNumericField(selectedLeftFieldMeta) ? sanitizeIntegerInput(v) : v,
-                                                                                            });
-                                                                                        }}
-                                                                                        disabled={!cond.leftField}
-                                                                                    />
-                                                                                )}
+                                                                                    : (
+                                                                                        <TextInput
+                                                                                            type={isNumericField(selectedLeftFieldMeta) ? "number" : "text"}
+                                                                                            placeholder={enterValueLabel}
+                                                                                            value={cond.fieldValue}
+                                                                                            onChange={(ev) => {
+                                                                                                const v = ev?.target?.value ?? "";
+                                                                                                updateSubCond(idx, {
+                                                                                                    fieldValue: isNumericField(selectedLeftFieldMeta) ? sanitizeIntegerInput(v) : v,
+                                                                                                });
+                                                                                            }}
+                                                                                            disabled={!cond.leftField}
+                                                                                        />
+                                                                                    )}
                                                                         </>
                                                                     )}
                                                                 </div>
@@ -1285,42 +1280,37 @@ function NewDependentFieldWrapper({ t }) {
                                                         </div>
                                                     </div>
 
-                                                    {/* Footer row below each condition:
-                              Left: (empty) or AddCondition if this is last cond
-                              Right: DeleteCondition for this cond */}
-                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.5rem" }}>
-                                                        {/* Left side: Add Condition (only show for last cond) */}
-                                                        <div>
-                                                            {idx === (draftRule.conds.length - 1) && (
-                                                                <Button variation="secondary" label={addConditionLabel} onClick={addSubCondition} />
-                                                            )}
+                                                    {/* Footer row below each condition - only show Remove button for non-last conditions */}
+                                                    {idx !== (draftRule.conds.length - 1) && (
+                                                        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "0.5rem" }}>
+                                                            <div
+                                                                style={{
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    gap: "0.25rem",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                                onClick={() => removeSubCondition(idx)}
+                                                                title={removeConditionLabel}
+                                                                aria-label={removeConditionLabel}
+                                                                role="button"
+                                                            >
+                                                                <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
+                                                                <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
+                                                                    {removeConditionLabel}
+                                                                </span>
+                                                            </div>
                                                         </div>
-                                                        {idx !== (draftRule.conds.length - 1) && (<div
-                                                            style={{
-                                                                marginLeft: "auto",
-                                                                display: "flex",
-                                                                alignItems: "center",
-                                                                gap: "0.25rem",
-                                                                cursor: "pointer",
-                                                            }}
-                                                            onClick={() => removeSubCondition(idx)}
-                                                            title={removeConditionLabel}
-                                                            aria-label={removeConditionLabel}
-                                                            role="button"
-                                                        >
-                                                            <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
-                                                            <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
-                                                                {removeConditionLabel}
-                                                            </span>
-                                                        </div>)}
-                                                        {/* Right side: Delete Condition for every cond */}
-                                                        {/* <div>
-                                                            <Button variation="tertiary" label={removeConditionLabel} onClick={() => removeSubCondition(idx)} />
-                                                        </div> */}
-                                                    </div>
+                                                    )}
                                                 </div>
+                                                </React.Fragment>
                                             );
                                         })}
+
+                                        {/* Add Condition button after the last condition */}
+                                        <div style={{ marginTop: "0.5rem" }}>
+                                            <Button variation="secondary" label={addConditionLabel} onClick={addSubCondition} />
+                                        </div>
 
                                         {/* show any form-level error here */}
                                         {globalFormError ? (
