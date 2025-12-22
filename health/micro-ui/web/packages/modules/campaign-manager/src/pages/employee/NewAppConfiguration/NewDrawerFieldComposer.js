@@ -714,6 +714,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   });
                 }}
                 disabled={false}
+                disableClearAll={true}
                 t={t}
               />
 

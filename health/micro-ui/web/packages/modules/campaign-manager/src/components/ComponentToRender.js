@@ -1,5 +1,5 @@
 import { FieldV1 } from "@egovernments/digit-ui-components";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import {
@@ -40,6 +40,59 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
   }, [isFieldSelected]);
 
   const shouldCustomTranslate = !field?.isMdms && (fieldType === "dropdown" || fieldType === "radio" || fieldType === "checkbox");
+  
+  // Memoize mdmsConfig to ensure stable reference and prevent unnecessary re-renders
+  // This is critical to prevent React Hooks violation when field.isMdms or field.schemaCode changes
+  const mdmsConfig = useMemo(() => {
+    // Check if field has MDMS configuration
+    if (!field?.isMdms || !field?.schemaCode) {
+      return null;
+    }
+    
+    // Validate schemaCode is a string
+    if (typeof field.schemaCode !== 'string') {
+      console.warn("Invalid schemaCode type:", typeof field.schemaCode);
+      return null;
+    }
+    
+    // Parse schemaCode
+    const schemaParts = field.schemaCode.split(".");
+    
+    // Validate we have at least 2 parts and both are non-empty
+    if (schemaParts.length < 2) {
+      console.warn("Invalid schemaCode format (missing dot separator):", field.schemaCode);
+      return null;
+    }
+    
+    const moduleName = schemaParts[0]?.trim();
+    const masterName = schemaParts[1]?.trim();
+    
+    if (!moduleName || !masterName) {
+      console.warn("Invalid schemaCode format (empty parts):", field.schemaCode);
+      return null;
+    }
+    
+    return {
+      moduleName,
+      masterName,
+    };
+  }, [field?.isMdms, field?.schemaCode]); // Only recalculate when these specific values change
+  
+  // Memoize mdmsv2 flag separately
+  const mdmsv2 = useMemo(() => {
+    return mdmsConfig !== null;
+  }, [mdmsConfig]);
+  
+  // Memoize options to prevent unnecessary re-renders
+  const options = useMemo(() => {
+    return mdmsConfig ? null : field?.dropDownOptions;
+  }, [mdmsConfig, field?.dropDownOptions]);
+  
+  // Memoize optionsKey
+  const optionsKey = useMemo(() => {
+    return mdmsConfig ? "code" : "name";
+  }, [mdmsConfig]);
+  
   return (
     <div ref={fieldRef}>
       <FieldV1
@@ -73,15 +126,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           t: shouldCustomTranslate ? customT : null,
           fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
           labelStyles: field?.format === "checkbox" ? { width: "fit-content" } : null,
-          mdmsConfig: field?.isMdms
-            ? {
-                moduleName: field?.schemaCode?.split(".")[0],
-                masterName: field?.schemaCode?.split(".")[1],
-              }
-            : null,
-          mdmsv2: field?.isMdms ? true : false,
-          options: field?.isMdms ? null : field?.dropDownOptions,
-          optionsKey: field?.isMdms ? "code" : "name",
+          mdmsConfig: mdmsConfig,
+          mdmsv2: mdmsv2,
+          options: options,
+          optionsKey: optionsKey,
         }}
         withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
