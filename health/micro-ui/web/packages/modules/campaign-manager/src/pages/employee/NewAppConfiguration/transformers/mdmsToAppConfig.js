@@ -102,7 +102,7 @@ const transformTemplate = (screenData) => {
         value: field?.isGS1 || false,
       });
 
-      if (field["pattern.message"] !== undefined && field["pattern.message"] !== null && field["pattern.message"] !== "") {
+      if (field["pattern"] !== undefined && field["pattern"] !== null && field["pattern"] !== "") {
         validations.push({
           type: "pattern",
           value: field?.pattern,

@@ -475,6 +475,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const currentSelectedFieldType = fieldTypeOptions.find((item) => {
           const typeMatches = item?.metadata?.type === selectedField?.type;
           const formatMatches = item?.metadata?.format === selectedField?.format;
+
+          // Special handling for custom format with fieldName
+          if (selectedField?.format === "custom" && selectedField?.fieldName) {
+            const fieldNameMatches = item?.type === selectedField?.fieldName;
+            return typeMatches && formatMatches && fieldNameMatches;
+          }
+
           // Handle different matching scenarios:
           // 1. If field has both type and format, match both
           if (selectedField?.format) {
