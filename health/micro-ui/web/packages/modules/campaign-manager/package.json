@@ -22,7 +22,7 @@
     "react-router-dom": "6.25.1",
     "react-i18next": "15.0.0",
     "styled-components": "5.x",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-01",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-02",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
     "@egovernments/digit-ui-components": "2.0.0-dev-14"
   },
@@ -42,6 +42,7 @@
     "react-hook-form": "6.15.8",
     "react-select": "5.7.4",
     "xlsx": "0.17.5",
+    "xlsx-js-style": "^1.2.0",
     "react-table": "7.7.0",
     "react-dnd-html5-backend": "16.0.1",
     "react-dnd": "16.0.1",

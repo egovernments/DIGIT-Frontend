@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Toast, Card, Button, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
+import { Toast, Card, Button, HeaderComponent, Loader, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import GenerateXlsx from "../../../components/GenerateXlsx";
 import BulkUpload from "../../../components/BulkUpload";
 
 const LocalisationBulkUpload = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const stateId = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -34,11 +36,13 @@ const LocalisationBulkUpload = () => {
 
   // Allowed modules for this campaign
   const allowedModules = [
-    { name: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
     { name: t("DIGIT_HCM_REGISTRATION_MODULE"), value: `hcm-registration-${campaignNumber}` },
-    { name: t("DIGIT_HCM_DELIVERY_MODULE"), value: `hcm-delivery-${campaignNumber}` },
+    { name: t("DIGIT_HCM_STOCKREPORTS_MODULE"), value: `hcm-stockreports-${campaignNumber}` },
     { name: t("DIGIT_HCM_HFREFERRAL_MODULE"), value: `hcm-hfreferral-${campaignNumber}` },
     { name: t("DIGIT_HCM_COMPLAINTS_MODULE"), value: `hcm-complaints-${campaignNumber}` },
+    { name: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
+    { name: t("HCM_STOCKRECONCILIATION_MODULE"), value: `hcm-stockreconciliation-${campaignNumber}` },
+    { name: t("DIGIT_HCM_CLOSEHOUSEHOLD_MODULE"), value: `hcm-closehousehold-${campaignNumber}` },
   ];
 
   // Fetch localizations for allowed modules only
@@ -54,7 +58,7 @@ const LocalisationBulkUpload = () => {
           localeData.flatMap((lang) =>
             allowedModules.map((mod) =>
               Digit.CustomService.getResponse({
-                url: `/localization/messages/v1/_search`,
+              url: `/localization/messages/v1/_search`,
                 params: {
                   tenantId: stateId,
                   locale: lang.value,
@@ -189,8 +193,34 @@ const LocalisationBulkUpload = () => {
         }
         groupedMessages[key].push(msg);
       });
-      // Make separate API calls for each module-locale combination
-      const upsertPromises = Object.entries(groupedMessages).map(([key, messages]) => {
+
+      // Helper function to chunk array into smaller arrays
+      const chunkArray = (array, chunkSize) => {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+          chunks.push(array.slice(i, i + chunkSize));
+        }
+        return chunks;
+      };
+
+      const CHUNK_SIZE = 500;
+
+      // Make separate API calls for each module-locale combination, chunking if needed
+      const upsertPromises = Object.entries(groupedMessages).flatMap(([, messages]) => {
+        // If messages exceed chunk size, split into chunks
+        if (messages.length > CHUNK_SIZE) {
+          const chunks = chunkArray(messages, CHUNK_SIZE);
+          return chunks.map((chunk) =>
+            Digit.CustomService.getResponse({
+              url: `/localization/messages/v1/_upsert`,
+              body: {
+                tenantId: stateId,
+                messages: chunk,
+              },
+            })
+          );
+        }
+        // Otherwise, single API call
         return Digit.CustomService.getResponse({
           url: `/localization/messages/v1/_upsert`,
           body: {
@@ -207,6 +237,10 @@ const LocalisationBulkUpload = () => {
         setShowToast({ label: t("DIGIT_LOC_MESSAGES_EMPTY_WARNING"), type: "warning" });
       } else {
         setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+        // // Redirect to view details after showing success toast
+        // setTimeout(() => {
+        //   navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        // }, 2000);
       }
     } catch (e) {
       console.error("Upload error:", e);
@@ -290,6 +324,7 @@ const LocalisationBulkUpload = () => {
           fileData={uploadedFile}
           onFileDelete={onFileDelete}
           onFileDownload={onFileDownload}
+          disablePreview={true}
         />
       </Card>
 
@@ -301,6 +336,23 @@ const LocalisationBulkUpload = () => {
         sheetName="Localizations"
         campaignNumber={campaignNumber}
         moduleOptions={allowedModules}
+      />
+
+      {/* Footer with Go Back button */}
+      <Footer
+        actionFields={[
+          <Button
+            key="go-back"
+            label={t("GO_BACK")}
+            title={t("GO_BACK")}
+            variation="secondary"
+            style={{marginLeft:'4rem',minWidth:"12.5rem"}}
+            icon={"ArrowBack"}
+            onClick={() => {
+              navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+            }}
+          />,
+        ]}
       />
 
       {/* Toast */}

@@ -982,14 +982,21 @@ tbody {
 }
 .app-configuration-side-panel {
   position: fixed;
-  top: 9rem;
+  top: 8.75rem;
   width: 24rem;
   z-index: 99;
   background-color: #ffffff;
+  overflow: hidden;
+  border-radius: 1rem 0 0 1rem;
+  min-height: 70vh;
+  bottom: 4.5rem;
+  box-shadow: -1px 2px 8.8px 0px #00000017;
+  border: 1px solid #C5C5C5;
+
   .slider-content {
     .slider-footer {
       padding: 0;
-      margin-bottom: 5rem;
+      margin-bottom: 0;
     }
   }
 }
@@ -1144,6 +1151,10 @@ tbody {
     .digit-radio-options-wrap {
       flex-direction: column;
     }
+  }
+
+  &.dropdown-template{
+    padding: 0rem;
   }
 }
 .app-preview-field-pair.app-preview-selected {

@@ -308,15 +308,17 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   <SVG.Close fill="#787878" />
                 </button>
               </div>
-              {currentPageRoles.length > 0 ? (
-                currentPageRoles.map((role, index) => (
-                  <div key={index} className="full-config-wrapper__role-item">
-                    {t(role)}
-                  </div>
-                ))
-              ) : (
-                <div className="full-config-wrapper__no-roles">{t("APP_CONFIG_NO_ROLES_ASSIGNED")}</div>
-              )}
+              <div className="full-config-wrapper__slide-panel-items-wrapper">
+                {currentPageRoles.length > 0 ? (
+                  currentPageRoles.map((role, index) => (
+                    <div key={index} className="full-config-wrapper__role-item">
+                      {t(role)}
+                    </div>
+                  ))
+                ) : (
+                  <div className="full-config-wrapper__no-roles">{t("APP_CONFIG_NO_ROLES_ASSIGNED")}</div>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -340,25 +342,26 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   <SVG.Close fill="#787878" />
                 </button>
               </div>
-              {flowConfig.flows
-                ?.slice()
-                .sort((a, b) => {
-                  const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
-                  const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
-                  return orderA - orderB;
-                })
-                ?.map((flow, index) => (
-                  <div
-                    key={index}
-                    className={`full-config-wrapper__flow-item ${
-                      selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
-                    }`}
-                    onClick={() => handleFlowClick(flow)}
-                  >
-                    {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
-                    <div className="full-config-wrapper__flow-item-border" />
-                  </div>
-                ))}
+              <div className="full-config-wrapper__slide-panel-items-wrapper">
+                {flowConfig.flows
+                  ?.slice()
+                  .sort((a, b) => {
+                    const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
+                    const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
+                    return orderA - orderB;
+                  })
+                  ?.map((flow, index) => (
+                    <div
+                      key={index}
+                      className={`full-config-wrapper__flow-item ${selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                        }`}
+                      onClick={() => handleFlowClick(flow)}
+                    >
+                      {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                      <div className="full-config-wrapper__flow-item-border" />
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
         )}

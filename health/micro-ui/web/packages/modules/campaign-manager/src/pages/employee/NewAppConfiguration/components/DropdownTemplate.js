@@ -17,7 +17,7 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected}) => 
                   title: dropdownLabel,
                   prefix: field?.prefixText || null,
                   suffix: field?.suffixText || null,
-                  fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
+                  fieldPairClassName: `app-preview-field-pair dropdown-template ${isFieldSelected ? `app-preview-selected` : ``}`,
                   mdmsConfig: field?.isMdms
                     ? {
                         moduleName: field?.schemaCode?.split(".")[0],

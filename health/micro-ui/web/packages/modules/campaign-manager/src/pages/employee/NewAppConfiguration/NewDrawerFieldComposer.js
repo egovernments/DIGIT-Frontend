@@ -1292,15 +1292,15 @@ function NewDrawerFieldComposer() {
     });
   }, [currentTabProperties, fieldType]);
 
-  // Filter properties based on field type visibility
+  // Filter properties based on field type visibility - only show popup-specific properties
   const visiblePopupProperties = useMemo(() => {
     return currentTabProperties.filter((panelItem) => {
-      // If visibilityEnabledFor is empty, the field is always visible
-      if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
-        return true;
+      // Only include properties explicitly marked as popup properties
+      if (panelItem?.isPopupProperty !== true) {
+        return false;
       }
       // Check if current field type matches any of the enabled types
-      return panelItem.visibilityEnabledFor.includes("actionPopup") && panelItem?.isPopupProperty === true;
+      return !panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0 || panelItem.visibilityEnabledFor.includes("actionPopup");
     });
   }, [currentTabProperties, fieldType]);
 

@@ -110,7 +110,11 @@ export const renderTemplateComponent = (
         padding: "8px",
       }}
     >
-      {`${fieldType} Component will be available soon...`}
+      {`${
+        fieldType
+          ? fieldType.charAt(0).toUpperCase() + fieldType.slice(1).toLowerCase()
+          : "This"
+      } component will be available soon...`}
     </div>
   );
 };

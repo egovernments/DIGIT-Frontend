@@ -19,7 +19,7 @@ import { Button as ButtonNew } from "@egovernments/digit-ui-components";
  * each file with options to download and delete. Additionally, it includes a preview component for
  * Excel files
  */
-const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileDownload }) => {
+const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileDownload, disablePreview = false }) => {
   const { t } = useTranslation();
   const [files, setFiles] = useState([]);
   const fileTypes = ["XLS", "XLSX", "csv", "CSV"];
@@ -39,6 +39,9 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           url: fileUrl?.[0]?.url,
         }));
         setFileUrl(temp?.[0]);
+      } else if (fileData?.[0]?.url) {
+        // If file already has a URL (e.g., blob URL), use it directly
+        setFileUrl(fileData?.[0]);
       }
     };
     fetch();
@@ -135,15 +138,14 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         key={index}
         onClick={(e) => {
           e.stopPropagation();
-          setShowPreview(true);
+          if (!disablePreview) {
+            setShowPreview(true);
+          }
         }}
       >
         <div
           className="uploaded-file-container-sub"
-          style={{ cursor: "pointer" }}
-          // onClick={() => {
-          //   setShowPreview(true);
-          // }}
+          style={{ cursor: disablePreview ? "default" : "pointer" }}
         >
           <XlsxFile styles={{ width: "3rem", height: "3rem" }} />
           <div style={{ marginLeft: "0.5rem", color: "#505A5F", fontWeight: "700" }}>{file.filename}</div>
@@ -175,7 +177,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         </div>
       </div>
     ));
-  }, [fileData, fileUrl]);
+  }, [fileData, fileUrl, disablePreview]);
 
   return (
     <React.Fragment>

@@ -1,5 +1,5 @@
 import React from "react";
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -17,17 +17,32 @@ import { useTranslation } from "react-i18next";
  * @param {string} props.sheetName - Base name for the Excel file (default: "Localizations")
  * @param {Array} props.moduleOptions - Optional array of module objects for explicit module selection
  */
-const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = false, sheetName = "Localizations", moduleOptions = [] }) => {
+const GenerateXlsx = ({
+  inputRef,
+  jsonData = [],
+  localeData = [],
+  skipHeader = false,
+  sheetName = "Localizations",
+  moduleOptions = [],
+}) => {
   const { t } = useTranslation();
 
   /**
    * Calculate optimal column widths based on content
+   * For message columns, use a fixed width to encourage text wrapping
    * @param {Array} data - Array of row objects
    * @param {Array} headers - Array of header names
    * @returns {Array} Array of column width objects
    */
   const calculateColumnWidths = (data, headers) => {
     const columnWidths = headers.map((header) => {
+      // For message columns, use a fixed width of 50 characters
+      // This encourages text wrapping in Excel
+      if (header.startsWith("message_")) {
+        return { wch: 100 };
+      }
+
+      // For other columns (code, module), calculate based on content
       let maxLength = header.toString().length;
 
       data.forEach((row) => {
@@ -44,6 +59,49 @@ const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = f
     });
 
     return columnWidths;
+  };
+
+  /**
+   * Apply text wrap styling to all cells in the worksheet
+   * @param {Object} worksheet - The worksheet to style
+   * @param {number} rowCount - Number of data rows
+   * @param {number} colCount - Number of columns
+   */
+  const applyTextWrapToWorksheet = (worksheet, rowCount, colCount) => {
+    // Style for header row (first row)
+    const headerStyle = {
+      font: { bold: true, color: { rgb: "FFFFFF" } },
+      fill: { fgColor: { rgb: "C84C0E" } },
+      alignment: { wrapText: true, vertical: "center", horizontal: "center" },
+      border: {
+        top: { style: "thin", color: { rgb: "000000" } },
+        bottom: { style: "thin", color: { rgb: "000000" } },
+        left: { style: "thin", color: { rgb: "000000" } },
+        right: { style: "thin", color: { rgb: "000000" } },
+      },
+    };
+
+    // Style for data cells
+    const cellStyle = {
+      alignment: { wrapText: true, vertical: "top" },
+      border: {
+        top: { style: "thin", color: { rgb: "CCCCCC" } },
+        bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+        left: { style: "thin", color: { rgb: "CCCCCC" } },
+        right: { style: "thin", color: { rgb: "CCCCCC" } },
+      },
+    };
+
+    // Iterate through all cells and apply styles
+    for (let row = 0; row <= rowCount; row++) {
+      for (let col = 0; col < colCount; col++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+        if (worksheet[cellAddress]) {
+          // Apply header style for first row, cell style for others
+          worksheet[cellAddress].s = row === 0 ? headerStyle : cellStyle;
+        }
+      }
+    }
   };
 
   /**
@@ -101,6 +159,9 @@ const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = f
     return grouped;
   };
 
+  /**
+   * Main export handler
+   */
   const handleExport = async () => {
     // Get all locales from localeData
     const allLocales = localeData?.length > 0
@@ -174,6 +235,9 @@ const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = f
       // Calculate and set column widths based on content
       const columnWidths = calculateColumnWidths(sheetData, displayHeaders);
       worksheet["!cols"] = columnWidths;
+
+      // Apply text wrap styling to all cells
+      applyTextWrapToWorksheet(worksheet, sheetData.length, displayHeaders.length);
 
       // Use display name for sheet tab, sanitized for Excel
       const safeSheetName = sanitizeSheetName(moduleDisplayName);
