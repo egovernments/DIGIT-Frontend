@@ -1464,3 +1464,16 @@ textarea.light-placeholder::placeholder {
 .digit-toggle-toolbar > .toggle-option-container:nth-child(2) label {
   border-radius: 0 8px 8px 0;
 }
+
+.app-configuration-side-panel .slider-content .slider-body{
+  margin-bottom: 5rem;
+}
+
+.app-configuration-side-panel .slider-content .slider-footer{
+  display: none;
+}
+
+.slider-header .close-icon{
+  position: absolute;
+  top: 1.6rem;
+}
