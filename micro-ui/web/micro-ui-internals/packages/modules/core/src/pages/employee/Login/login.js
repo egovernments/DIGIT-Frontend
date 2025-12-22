@@ -30,8 +30,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-   //checking for custom login components
-   const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent("DynamicLoginComponent");
+  //checking for custom login components
+  const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent("DynamicLoginComponent");
   // const { t } = useTranslation();
 
   const history = useHistory();
@@ -166,11 +166,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     config[0].body[2].populators.defaultValue = defaultValue;
   }
 
-  const defaultValues = useMemo(()=>Object.fromEntries(
+  const defaultValues = useMemo(() => Object.fromEntries(
     config[0].body
       .filter(field => field?.populators?.defaultValue && field?.populators?.name)
       .map(field => [field.populators.name, field.populators.defaultValue])
-  ),[])
+  ), [])
 
   const onFormValueChange = (setValue, formData, formState) => {
 
@@ -185,15 +185,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     setDisable(hasEmptyFields);
   };
 
-  const updatedConfig = config.map(section => ({
-  ...section,
-  body: section.body.map(field =>
-    field.key === "check"
-      ? { ...field, isMandatory: true }
-      : field
-  ),
-}));
-
   const renderLoginForm = (extraClasses = "", cardClassName = "", wrapperClass = "") => (
     <FormComposerV2
       onSubmit={loginOTPBased ? onOtpLogin : onLogin}
@@ -201,7 +192,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       noBoxShadow
       inline
       submitInForm
-      config={updatedConfig}
+      config={config}
       label={propsConfig?.texts?.submitButtonLabel}
       secondaryActionLabel={
         propsConfig?.texts?.secondaryButtonLabel +
@@ -219,7 +210,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
     </FormComposerV2>
   );
-  
+
   const renderFooter = (footerClassName) => (
     <div className={footerClassName} style={{ backgroundColor: "unset" }}>
       <ImageComponent
@@ -232,10 +223,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       />
     </div>
   );
-  
 
-  if(isLoading || isStoreLoading ){
-   return  <Loader page={true} variant="PageLoader" />
+
+  if (isLoading || isStoreLoading) {
+    return <Loader page={true} variant="PageLoader" />
   }
   return propsConfig?.bannerImages ? (
     <div className="login-container">
@@ -262,7 +253,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       {renderFooter("employee-login-home-footer")}
     </Background>
   );
-  
+
 };
 
 Login.propTypes = {

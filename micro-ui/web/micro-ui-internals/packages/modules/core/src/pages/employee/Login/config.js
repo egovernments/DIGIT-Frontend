@@ -32,7 +32,7 @@ export const loginConfig = [
           error: "ERR_PASSWORD_REQUIRED",
         },
       },
-    {
+      {
         isMandatory: true,
         type: "dropdown",
         key: "city",
@@ -62,7 +62,7 @@ export const loginConfig = [
         customProps: {
           module: "HCM"
         },
-        isMandatory: false,
+        isMandatory: true,
         withoutLabel: true
       },
     ],
