@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.9.1]  [22-December-2025]
+- Updated MobileNumber atom to support configurable prefix (default: +91) via props.
+
 ## [1.9.0] [28-October-2025]
 
 ### 🚀 Enhanced React Component Library
