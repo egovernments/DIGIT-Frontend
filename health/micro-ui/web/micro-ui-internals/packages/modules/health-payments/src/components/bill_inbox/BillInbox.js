@@ -33,6 +33,8 @@ const BillInboxComponent = () => {
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
   const expenseCalculatorContextPath = window?.globalConfigs?.getConfig("EXPENSE_CALCULATOR_CONTEXT_PATH") || "health-expense-calculator";
 
+  const hierachyTypeContextPath = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+
   // State Variables
   const [showToast, setShowToast] = useState(null);
   const [tableData, setTableData] = useState(null);
@@ -299,6 +301,7 @@ const BillInboxComponent = () => {
               localityCode: selectedBoundaryCode,
               referenceId: selectedProject.id,
               billingPeriodId: pId,
+              hierarchyType: hierachyTypeContextPath,
               //billingType: pId === "FINAL_AGGREGATE" ? "FINAL_AGGREGATE" : "INTERMEDIATE",
             },
           },
