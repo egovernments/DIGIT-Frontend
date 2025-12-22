@@ -1,5 +1,13 @@
 # Changelog 
 
+## [1.9.9]  [22-December-2025]
+-Enhanced mobile number validation in User Profile:
+  - Added support for dynamic prefix (e.g., country code) from MDMS configuration.
+  - Implemented MDMS-driven validation rules (length, pattern, error messages) with priority logic.
+  - Updated MobileNumber component to accept and display configurable prefix.
+-Updated Login configuration:
+  - Made the privacy policy checkbox mandatory by default in the employee login screen.
+
 ## [1.9.7]  [12-DEC-2025]
 -Feature : Header.js component enhanced for secondary logo URL
 

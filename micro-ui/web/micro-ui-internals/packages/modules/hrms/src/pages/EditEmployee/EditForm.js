@@ -30,7 +30,7 @@ const EditForm = ({ tenantId, data }) => {
   const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
     "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    [{ name: "mobileNumberValidation", filter: "[?(@.rules.isActive==true)]" }],
     {
       select: (data) => {
         const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];

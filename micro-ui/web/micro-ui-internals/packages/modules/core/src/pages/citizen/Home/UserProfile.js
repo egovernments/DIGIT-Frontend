@@ -22,7 +22,7 @@ import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
 
-const DEFAULT_TENANT=Digit?.ULBService?.getStateId?.();
+const DEFAULT_TENANT = Digit?.ULBService?.getStateId?.();
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -96,7 +96,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               const lastSlashIndex = value.lastIndexOf("/");
               const pattern = value.slice(1, lastSlashIndex); // Extracting regex pattern
               const flags = value.slice(lastSlashIndex + 1); // Extracting regex flags
-  
+
               acc[key] = new RegExp(pattern, flags); // Converting properly
             } else {
               acc[key] = new RegExp(value); // Treating it as a normal regex pattern (no flags)
@@ -116,21 +116,51 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
   const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
-    stateCode,
-    "commonUiConfig",
-    [{ name: "UserProfileValidationConfig" }],
+    Digit.ULBService.getStateId(),
+    "ValidationConfigs",
+    [
+      { name: "mobileNumberValidation", filter: "[?(@.rules.isActive==true)]" },
+      { name: "UserProfileValidationConfig" }
+    ],
     {
       select: (data) => {
-        return data?.commonUiConfig;
+        // Since we filtered at MDMS level, we can just take the first item
+        const mobileRules = data?.ValidationConfigs?.mobileNumberValidation?.[0]?.rules;
+        const userProfileRules = data?.ValidationConfigs?.UserProfileValidationConfig?.[0];
+
+        return {
+          mobileValidation: {
+            pattern: mobileRules?.pattern || "^[6-9][0-9]{9}$",
+            maxLength: mobileRules?.maxLength || 10,
+            minLength: mobileRules?.minLength || 10,
+            errorMessage: mobileRules?.errorMessage || "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID",
+            prefix: mobileRules?.prefix || "+91",
+          },
+          UserProfileValidationConfig: [userProfileRules]
+        };
       },
+      staleTime: 300000,
     }
   );
 
   useEffect(() => {
-    if (mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]) {
-      const updatedValidationConfig = mapConfigToRegExp(mdmsValidationData);
-      setValidationConfig(updatedValidationConfig);
+    let combinedConfig = mapConfigToRegExp(defaultValidationConfig) || {};
+
+    if (mdmsValidationData) {
+      // 1. First apply generic rules from UserProfileValidationConfig
+      // This handles Name, Password, and legacy mobile rules
+      const otherConfigs = mapConfigToRegExp(mdmsValidationData);
+      combinedConfig = { ...combinedConfig, ...otherConfigs };
+
+      // 2. Then OVERRIDE with specific mobileValidation if available
+      // This ensures the new config (with prefix, specific pattern) is the source of truth
+      if (mdmsValidationData.mobileValidation) {
+        combinedConfig.mobileNumber = new RegExp(mdmsValidationData.mobileValidation.pattern);
+        combinedConfig.mobileValidation = mdmsValidationData.mobileValidation;
+      }
     }
+
+    setValidationConfig(combinedConfig);
   }, [mdmsValidationData]);
 
   const getUserInfo = async () => {
@@ -216,7 +246,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         ...errors,
         mobileNumber: {
           type: "pattern",
-          message: "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID",
+          message: validationConfig?.mobileValidation?.errorMessage || "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID",
         },
       });
     } else {
@@ -292,8 +322,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         photo: profilePic,
       };
 
-      if(name){
-        setName((prev)=>prev.trim());
+      if (name) {
+        setName((prev) => prev.trim());
       }
 
       if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
@@ -303,10 +333,16 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         });
       }
 
-      if (userType === "employee" && !validationConfig?.mobileNumber.test(mobileNumber)) {
+      const maxLength = validationConfig?.mobileValidation?.maxLength || 10;
+      const minLength = validationConfig?.mobileValidation?.minLength || 10;
+
+      if (
+        userType === "employee" &&
+        (!validationConfig?.mobileNumber?.test(mobileNumber) || mobileNumber.length > maxLength || mobileNumber.length < minLength)
+      ) {
         throw JSON.stringify({
           type: "error",
-          message: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
+          message: t(validationConfig?.mobileValidation?.errorMessage || "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
         });
       }
 
@@ -324,7 +360,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       setCurrentPassword(trimmedCurrentPassword);
       setNewPassword(trimmedNewPassword);
       setConfirmPassword(trimmedConfirmPassword);
-      
+
 
       if (changepassword && (trimmedCurrentPassword && trimmedNewPassword && trimmedConfirmPassword)) {
         if (trimmedNewPassword !== trimmedConfirmPassword) {
@@ -741,11 +777,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     disable={Digit.Utils.getMultiRootTenant() ? false : true}
                     {...{
                       required: true,
-                      pattern:
-                        mdmsValidationData?.UserProfileValidationConfig?.[0]?.mobileNumber ||
-                        defaultValidationConfig?.UserProfileValidationConfig?.[0]?.mobileNumber,
+                      pattern: validationConfig?.mobileValidation?.pattern || "^[6-9][0-9]{9}$",
                       type: "tel",
-                      title: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
+                      title: t(validationConfig?.mobileValidation?.errorMessage || "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
+                      maxLength: validationConfig?.mobileValidation?.maxLength || 10,
+                      minLength: validationConfig?.mobileValidation?.minLength || 10,
+                      prefix: validationConfig?.mobileValidation?.prefix || "+91",
                     }}
                   />
                   {errors?.mobileNumber && (
