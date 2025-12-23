@@ -12,7 +12,7 @@ export const getComponentFromMasterData = (field, fieldTypeMasterData = []) => {
   const matched = fieldTypeMasterData.find((item) => {
     const typeMatch = item?.metadata?.type === field.type;
     const formatMatch = item?.metadata?.format === field.format;
-    const fieldNameMatch = field?.fieldName ? item?.type === field?.fieldName : true;
+    const fieldNameMatch = field?.format === "custom" && field?.fieldName ? item?.type === field?.fieldName : true;
     
     return typeMatch && formatMatch && fieldNameMatch;
   });
