@@ -1,4 +1,4 @@
-  {
+ {
             "id": "b168f2de-0603-4dec-bbb7-d68db29fd2c0",
             "tenantId": "mz",
             "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
@@ -1200,7 +1200,7 @@
                                                     "icon": "add",
                                                     "label": "REGISTRATION_VIEW_DETAILS",
                                                     "format": "button",
-                                                    "visible": "{{fn:checkAllDoseDelivered(task)}} == true",
+                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true &&  {{fn:checkAllDoseDelivered(task)}} == true",
                                                     "onAction": [
                                                         {
                                                             "actionType": "NAVIGATION",
@@ -2269,7 +2269,14 @@
                                         "systemDate": false,
                                         "errorMessage": "",
                                         "includeInForm": true,
-                                        "isMultiSelect": false
+                                        "isMultiSelect": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
+                                            }
+                                        ]
                                     },
                                     {
                                         "type": "string",
@@ -3321,6 +3328,6 @@
                 "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
                 "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
                 "createdTime": 1766043074377,
-                "lastModifiedTime": 1766481245754
+                "lastModifiedTime": 1766483469703
             }
-        },
+        }
