@@ -166,9 +166,10 @@ const MyBills = () => {
       ).map((x) => x?.id);
 
       if (filteredPeriods.length == 0) {
-        setShowToast(null);
-
-        setShowToast({ key: "error", label: t("HCM_AM_SELECT_PERIODS_EMPTY"), transitionTime: 3000 });
+        // setShowToast(null);
+        setTableData([]);
+        setTotalCount(0);
+        //setShowToast({ key: "error", label: t("HCM_AM_SELECT_PERIODS_EMPTY"), transitionTime: 3000 });
 
         return;
       }
