@@ -30,6 +30,16 @@ const BillDetailsTable = ({ ...props }) => {
         setTableData(props?.data || []);
     }, [props?.data]);
 
+    const calculateTotalWithFees = (amount, percent) => {
+        if (!amount || !percent) return amount;
+
+        const total = Number(amount);
+        const additional = (total * percent) / 100;
+        const finalAmount = total + additional;
+
+        return Math.round(finalAmount);
+};
+
     const columns = useMemo(() => {
         const baseColumns = [
             {
@@ -404,6 +414,32 @@ const BillDetailsTable = ({ ...props }) => {
                             justifyContent: "flex-end",
                         },
             },
+            {
+            name: (
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                {t("HCM_AM_TOTAL_AMOUNT_WITH_FEES")}
+                </div>
+            ),
+            selector: (row) => {
+                const finalAmount = row?.totalAmount
+                ? calculateTotalWithFees(
+                    row.totalAmount,
+                    3.5
+                    )
+                : null;
+
+                return (
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                    {finalAmount !== null
+                    ? `${finalAmount} ${workerRatesData?.currency}`
+                    : t("NA")}
+                </div>
+                );
+            },
+            style: {
+                justifyContent: "flex-end",
+            },
+            }
 
 
         ];
