@@ -1,8 +1,9 @@
 import React from "react";
 import { SummaryCardFieldPair } from "@egovernments/digit-ui-components";
 
-const LabelFieldPairTemplate = ({ field, t }) => {
-  const { data = [] } = field;
+const LabelFieldPairTemplate = ({ field, t, props }) => {
+  const selectedField = field || props?.field;
+  const { data = [] } = selectedField;
 
   return (
     <div>
@@ -17,7 +18,7 @@ const LabelFieldPairTemplate = ({ field, t }) => {
             }}
             key={index}
             inline={true}
-            label={t(pair.key)}
+            label={(field ? t : props?.t)(pair.key)}
             value="*****"
           />
         </div>

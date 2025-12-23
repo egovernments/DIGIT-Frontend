@@ -159,8 +159,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   //   Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
   //   campaignData?.additionalDetails?.cycleData || filteredDeliveryConfig?.cycleConfig;
   // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-  const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.additionalDetails?.cycleData;
-  const campaignCycleData = campaignData?.additionalDetails?.cycleData;
+  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate;
+  // const campaignCycleData = campaignData?.additionalDetails?.cycleData;
   const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 
   let saved = sessionData?.cycleData?.length > 0 ? sessionData : filteredCycleConfig;
@@ -216,7 +216,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   useEffect(() => {
     // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-    const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.additionalDetails?.cycleData;
+    const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate;
     const campaignCycleData = campaignData?.additionalDetails?.cycleData;
     const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 

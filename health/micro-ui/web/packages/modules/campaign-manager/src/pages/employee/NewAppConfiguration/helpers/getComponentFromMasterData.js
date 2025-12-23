@@ -8,7 +8,15 @@ export const getComponentFromMasterData = (field, fieldTypeMasterData = []) => {
   if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
     return null;
   }
-  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
+  
+  const matched = fieldTypeMasterData.find((item) => {
+    const typeMatch = item?.metadata?.type === field.type;
+    const formatMatch = item?.metadata?.format === field.format;
+    const fieldNameMatch = field?.format === "custom" && field?.fieldName ? item?.type === field?.fieldName : true;
+    
+    return typeMatch && formatMatch && fieldNameMatch;
+  });
+
 
   return matched?.component || null;
 };

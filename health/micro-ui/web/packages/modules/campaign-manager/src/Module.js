@@ -82,6 +82,8 @@ import IconTemplate from "./pages/employee/NewAppConfiguration/components/IconTe
 import CampaignTemplateRowCard from "./pages/employee/campaignTemplateScreens/CampaignTemplateRowCard";
 import DropdownTemplate from "./pages/employee/NewAppConfiguration/components/DropdownTemplate";
 import SelectionCard from "./pages/employee/NewAppConfiguration/components/SelectionCard";
+import TextInputTemplate from "./pages/employee/NewAppConfiguration/components/TextInputTemplate";
+import RadioListTemplate from "./pages/employee/NewAppConfiguration/components/RadioListTemplate";
 
 /**
  * MDMS Module name
@@ -279,6 +281,8 @@ const componentsToRegister = {
   CampaignTemplateRowCard,
   DropdownTemplate,
   SelectionCard,
+  TextInputTemplate,
+  RadioListTemplate,
 };
 
 const overrideHooks = () => {
