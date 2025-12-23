@@ -1,34 +1,37 @@
 import React from "react";
 import { RadioButtons } from "@egovernments/digit-ui-components";
 
-const RadioListTemplate = ({ field, t, isFieldSelected }) => {
+const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
+  const selectedField = field || props?.field;
+  const selected = isFieldSelected || props?.isFieldSelected;
+
   // Allow empty labels - only use defaults if undefined/null
-  const radioLabel = field?.label !== undefined && field?.label !== null ? t(field?.label) : "";
+  const radioLabel = selectedField?.label !== undefined && selectedField?.label !== null ? (field ? t : props?.t)(selectedField?.label) : "";
 
   // Get radio options from field data
-  const options = field?.data || [];
+  const options = selectedField?.data || [];
 
   // Transform options to include translated names
   const transformedOptions = options.map((option) => ({
     ...option,
-    name: t(option.name),
+    name: (field ? t : props?.t)(option.name),
   }));
 
   return (
-    <div className={`radio-list-template ${isFieldSelected ? `app-preview-selected` : ``}`}>
+    <div className={`radio-list-template ${selected ? `app-preview-selected` : ``}`}>
       {radioLabel && (
         <div style={{ marginBottom: "8px", fontSize: "14px", fontWeight: 500 }}>
           {radioLabel}
-          {field?.required && <span style={{ color: "red" }}> *</span>}
+          {selectedField?.required && <span style={{ color: "red" }}> *</span>}
         </div>
       )}
       <RadioButtons
         options={transformedOptions}
         optionsKey="code"
-        t={t}
+        t={field ? t : props?.t}
         onSelect={() => {}}
-        selectedOption={field?.value || null}
-        disabled={field?.readOnly || false}
+        selectedOption={selectedField?.value || null}
+        disabled={selectedField?.readOnly || false}
         additionalWrapperClass="radio-list-wrapper"
         style={{
           display: "flex",
@@ -36,14 +39,14 @@ const RadioListTemplate = ({ field, t, isFieldSelected }) => {
           gap: "8px",
         }}
       />
-      {field?.helpText && (
+      {selectedField?.helpText && (
         <div style={{ marginTop: "4px", fontSize: "12px", color: "#666" }}>
-          {t(field?.helpText)}
+          {(field ? t : props?.t)(selectedField?.helpText)}
         </div>
       )}
-      {field?.errorMessage && (
+      {selectedField?.errorMessage && (
         <div style={{ marginTop: "4px", fontSize: "12px", color: "#d32f2f" }}>
-          {t(field?.errorMessage)}
+          {(field ? t : props?.t)(selectedField?.errorMessage)}
         </div>
       )}
     </div>

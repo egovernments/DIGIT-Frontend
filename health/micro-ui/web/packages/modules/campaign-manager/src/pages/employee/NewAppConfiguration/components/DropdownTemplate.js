@@ -1,37 +1,40 @@
 import React from "react";
-import { Button, CustomSVG, Dropdown, FieldV1 } from "@egovernments/digit-ui-components";
-import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHelpers";
+import {FieldV1 } from "@egovernments/digit-ui-components";
 
-const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected}) => {
+const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, props }) => {
+    const selectedField = field || props?.field;
+    const fieldType = fieldTypeMasterData || props?.fieldTypeMasterData;
+    const selected = isFieldSelected || props?.isFieldSelected;
+
     // Allow empty labels - only use defaults if undefined/null
-    const dropdownLabel = field?.label !== undefined && field?.label !== null ? t(field?.label) : "";
+    const dropdownLabel = selectedField?.label !== undefined && selectedField?.label !== null ? (field ? t : props?.t)(selectedField?.label) : "";
 
     return (
         <FieldV1
-        description={t(field?.helpText)}
-                error={t(field?.errorMessage)}
-                infoMessage={t(field?.tooltip)}
+        description={(field ? t : props?.t)(selectedField?.helpText)}
+                error={(field ? t : props?.t)(selectedField?.errorMessage)}
+                infoMessage={(field ? t : props?.t)(selectedField?.tooltip)}
                 label={dropdownLabel}
                 onChange={function noRefCheck() {}}
                 populators={{
                   title: dropdownLabel,
-                  prefix: field?.prefixText || null,
-                  suffix: field?.suffixText || null,
-                  fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
-                  mdmsConfig: field?.isMdms
+                  prefix: selectedField?.prefixText || null,
+                  suffix: selectedField?.suffixText || null,
+                  fieldPairClassName: `app-preview-field-pair ${selected ? `app-preview-selected` : ``}`,
+                  mdmsConfig: selectedField?.isMdms
                     ? {
-                        moduleName: field?.schemaCode?.split(".")[0],
-                        masterName: field?.schemaCode?.split(".")[1],
+                        moduleName: selectedField?.schemaCode?.split(".")[0],
+                        masterName: selectedField?.schemaCode?.split(".")[1],
                       }
                     : null,
-                  mdmsv2: field?.isMdms ? true : false,
-                  options: field?.isMdms ? null : field?.dropDownOptions,
-                  optionsKey: field?.isMdms ? "code" : "name",
+                  mdmsv2: selectedField?.isMdms ? true : false,
+                  options: selectedField?.isMdms ? null : selectedField?.dropDownOptions,
+                  optionsKey: selectedField?.isMdms ? "code" : "name",
                 }}
-                required={field?.required}
+                required={selectedField?.required}
                 type={"dropdown"}
-                value={field?.value}
-                disabled={field?.readOnly || false}
+                value={selectedField?.value}
+                disabled={selectedField?.readOnly || false}
         ></FieldV1>
     );
 };
