@@ -1,6 +1,8 @@
 /**
  * This file contains all the validations for create campaign flow
  */
+import { VALIDATION_FUNCTIONS, allRulesMet } from "./campaignNameValidators";
+
  const  validateCycleData=(data,t)=> {
   const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
   const cycleData = data.cycleConfigure.cycleData;
@@ -204,13 +206,16 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       if (typeof formData?.campaignName !== "string" || !formData?.campaignName.trim()) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_MISSING_TYPE_ERROR" });
         return false;
-      } else if (formData.campaignName.length > 30) {
-        setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
-        return false;
-      } else {
-        setShowToast(null);
-        return true;
       }
+      
+      // Validate against all naming rules
+      const validationResults = VALIDATION_FUNCTIONS.map((validator) => validator(formData.campaignName));
+      if (!allRulesMet(validationResults.map((isValid) => ({ isValid })))) {
+        setShowToast({ key: "error", label: "CAMPAIGN_NAME_RULES_NOT_MET" });
+        return false;
+      }
+      setShowToast(null);
+      return true;
     case "projectType":
       if (!formData?.projectType) {
         setShowToast({ key: "error", label: "PROJECT_TYPE_UNDEFINED_ERROR" });

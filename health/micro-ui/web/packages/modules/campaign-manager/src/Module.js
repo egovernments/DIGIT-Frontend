@@ -11,6 +11,7 @@ import DeliverySetup from "./pages/employee/deliveryRule";
 import CampaignDates from "./components/CampaignDates";
 import CampaignType from "./components/CampaignType";
 import CampaignName from "./components/CampaignName";
+import CampaignNameInput from "./components/CampaignNameInput";
 import MyCampaign from "./pages/employee/MyCampaign";
 import CampaignSummary from "./components/CampaignSummary";
 import CycleDetaisPreview from "./components/CycleDetaisPreview";
@@ -210,6 +211,7 @@ const componentsToRegister = {
   CampaignDates,
   CampaignType,
   CampaignName,
+  CampaignNameInput,
   MyCampaign,
   CampaignSummary,
   CycleDetaisPreview,
