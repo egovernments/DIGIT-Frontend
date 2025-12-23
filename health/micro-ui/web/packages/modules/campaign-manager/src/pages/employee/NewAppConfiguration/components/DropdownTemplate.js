@@ -20,7 +20,7 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
                   title: dropdownLabel,
                   prefix: selectedField?.prefixText || null,
                   suffix: selectedField?.suffixText || null,
-                  fieldPairClassName: `app-preview-field-pair ${selected ? `app-preview-selected` : ``}`,
+                  fieldPairClassName: `app-preview-field-pair dropdown-template ${selected ? `app-preview-selected` : ``}`,
                   mdmsConfig: selectedField?.isMdms
                     ? {
                         moduleName: selectedField?.schemaCode?.split(".")[0],

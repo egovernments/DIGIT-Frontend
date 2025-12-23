@@ -698,7 +698,7 @@ const CreateChecklist = () => {
               />
             </div>
           </Card>
-          <div style={{ height: "1rem" }}></div>
+          <div style={{ height: "1.5rem" }}></div>
           <FormComposerV2
             showMultipleCardsWithoutNavs={true}
             label={t("CREATE_CHECKLIST")}

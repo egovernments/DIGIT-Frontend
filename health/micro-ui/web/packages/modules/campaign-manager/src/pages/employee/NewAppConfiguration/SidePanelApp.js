@@ -69,7 +69,6 @@ const SidePanelApp = ({ showPanelProperties }) => {
       isDraggable={false}
       position="right"
       sections={[]}
-      styles={{ top: "9rem", borderRadius: "1rem 0 0 0" }}
       type="static"
     >
       {showPanelProperties ? (

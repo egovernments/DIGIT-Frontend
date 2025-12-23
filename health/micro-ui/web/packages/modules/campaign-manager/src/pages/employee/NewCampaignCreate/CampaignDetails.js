@@ -382,7 +382,7 @@ const CampaignDetails = () => {
               type: "primary",
               type: "primary",
               icon: (
-                <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />
+                <UploadCloud fill={"#C84C0E"} />
               ),
               disabled: false,
             },

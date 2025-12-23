@@ -1,13 +1,15 @@
 import React from "react";
-import * as XLSX from "xlsx-js-style";
+import ExcelJS from "exceljs";
 import { useTranslation } from "react-i18next";
 
 /**
- * GenerateXlsx Component
+ * GenerateExcelJs Component
  *
  * Generates a single Excel file with all locales as separate message columns.
  * Within the file, messages are grouped by module with each module as a separate sheet/tab.
- * Columns: code, module, message_default, message_en_MZ, message_fr_MZ, etc.
+ * Columns: code, module, message_en_MZ, message_fr_MZ, etc.
+ *
+ * Uses ExcelJS library for better column protection support.
  *
  * @param {Object} props
  * @param {React.RefObject} props.inputRef - Reference to trigger the export
@@ -18,7 +20,7 @@ import { useTranslation } from "react-i18next";
  * @param {Array} props.moduleOptions - Optional array of module objects for explicit module selection
  * @param {Object} props.baseModuleMessages - Map of moduleValue -> { code -> message } for default locale from base modules
  */
-const GenerateXlsx = ({
+const GenerateExcelJs = ({
   inputRef,
   jsonData = [],
   languages = [],
@@ -28,22 +30,41 @@ const GenerateXlsx = ({
   baseModuleMessages = {},
 }) => {
   const { t } = useTranslation();
+
+  /**
+   * Sanitize sheet name for Excel compatibility
+   * Excel sheet names cannot contain: : \ / ? * [ ]
+   * and must be <= 31 characters
+   */
+  const sanitizeSheetName = (name) => {
+    if (!name) return "Sheet1";
+    return name
+      .replace(/[:\\/?*\[\]]/g, "_")
+      .substring(0, 31);
+  };
+
   /**
    * Calculate optimal column widths based on content
    * For message columns, use a fixed width to encourage text wrapping
    * @param {Array} data - Array of row objects
    * @param {Array} headers - Array of header names
-   * @returns {Array} Array of column width objects
+   * @returns {Array} Array of column width values
    */
   const calculateColumnWidths = (data, headers) => {
-    const columnWidths = headers.map((header) => {
-      // For message columns, use a fixed width of 50 characters
+    return headers.map((header) => {
+      // For message columns, use a fixed width of 100 characters
       // This encourages text wrapping in Excel
-      if (header.startsWith("message_")) {
-        return { wch: 100 };
+      if (header.startsWith("message_") || header.startsWith("code")) {
+        return 100;
       }
 
-      // For other columns (code, module), calculate based on content
+      // For module column, use fixed width of 50 to prevent wrapping
+      if (header === "module") {
+        return 50;
+      }
+
+      // For code column, calculate based on actual content length (no cap)
+      // Code values can be very long and should not wrap
       let maxLength = header.toString().length;
 
       data.forEach((row) => {
@@ -56,98 +77,9 @@ const GenerateXlsx = ({
         }
       });
 
-      return { wch: Math.min(maxLength + 2, 100) };
+      // Add padding - no cap for code column to ensure it fits
+      return maxLength + 5;
     });
-
-    return columnWidths;
-  };
-
-  /**
-   * Apply text wrap styling to all cells in the worksheet
-   * @param {Object} worksheet - The worksheet to style
-   * @param {number} rowCount - Number of data rows
-   * @param {number} colCount - Number of columns
-   * @param {number} protectedColIndex - Index of the column to mark as protected/read-only (optional)
-   */
-  const applyTextWrapToWorksheet = (worksheet, rowCount, colCount, protectedColIndex = -1) => {
-    // Style for header row (first row)
-    const headerStyle = {
-      font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "C84C0E" } },
-      alignment: { wrapText: true, vertical: "center", horizontal: "center" },
-      border: {
-        top: { style: "thin", color: { rgb: "000000" } },
-        bottom: { style: "thin", color: { rgb: "000000" } },
-        left: { style: "thin", color: { rgb: "000000" } },
-        right: { style: "thin", color: { rgb: "000000" } },
-      },
-    };
-
-    // Style for protected header (first locale column) - Gray to indicate read-only
-    const protectedHeaderStyle = {
-      font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "808080" } }, // Gray background for protected column
-      alignment: { wrapText: true, vertical: "center", horizontal: "center" },
-      border: {
-        top: { style: "thin", color: { rgb: "000000" } },
-        bottom: { style: "thin", color: { rgb: "000000" } },
-        left: { style: "thin", color: { rgb: "000000" } },
-        right: { style: "thin", color: { rgb: "000000" } },
-      },
-    };
-
-    // Style for data cells (editable - white background)
-    const cellStyle = {
-      alignment: { wrapText: true, vertical: "top" },
-      fill: { fgColor: { rgb: "FFFFFF" } }, // Explicit white background for editable cells
-      border: {
-        top: { style: "thin", color: { rgb: "CCCCCC" } },
-        bottom: { style: "thin", color: { rgb: "CCCCCC" } },
-        left: { style: "thin", color: { rgb: "CCCCCC" } },
-        right: { style: "thin", color: { rgb: "CCCCCC" } },
-      },
-    };
-
-    // Style for protected data cells (read-only, gray background)
-    const protectedCellStyle = {
-      alignment: { wrapText: true, vertical: "top" },
-      fill: { fgColor: { rgb: "E8E8E8" } }, // Light gray background for protected cells
-      border: {
-        top: { style: "thin", color: { rgb: "CCCCCC" } },
-        bottom: { style: "thin", color: { rgb: "CCCCCC" } },
-        left: { style: "thin", color: { rgb: "CCCCCC" } },
-        right: { style: "thin", color: { rgb: "CCCCCC" } },
-      },
-    };
-
-    // Iterate through all cells and apply styles
-    for (let row = 0; row <= rowCount; row++) {
-      for (let col = 0; col < colCount; col++) {
-        const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-        if (worksheet[cellAddress]) {
-          const isProtectedCol = col === protectedColIndex;
-          if (row === 0) {
-            // Header row
-            worksheet[cellAddress].s = isProtectedCol ? protectedHeaderStyle : headerStyle;
-          } else {
-            // Data rows
-            worksheet[cellAddress].s = isProtectedCol ? protectedCellStyle : cellStyle;
-          }
-        }
-      }
-    }
-  };
-
-  /**
-   * Sanitize sheet name for Excel compatibility
-   * Excel sheet names cannot contain: : \ / ? * [ ]
-   * and must be <= 31 characters
-   */
-  const sanitizeSheetName = (name) => {
-    if (!name) return "Sheet1";
-    return name
-      .replace(/[:\\/?*\[\]]/g, "_")
-      .substring(0, 31);
   };
 
   /**
@@ -239,18 +171,18 @@ const GenerateXlsx = ({
     });
 
     // Internal data keys (used in data objects)
-    const dataKeys = ["module","code", ...allLocales.map((loc) => `message_${loc}`)];
+    const dataKeys = ["module", "code", ...allLocales.map((loc) => `message_${loc}`)];
 
     // Display headers for Excel columns (using locale labels)
-    const displayHeaders = ["module","code", ...allLocales.map((loc) => {
+    const displayHeaders = ["module", "code", ...allLocales.map((loc) => {
       const label = localeLabelsMap[loc] || loc;
       return `message_${label}`;
     })];
 
     // Find the index of the first locale column (languages[0])
     // Headers are: module, code, message_<first_locale>, message_<second_locale>, etc.
-    // So first locale column index is 2 (0-based): module=0, code=1, first_locale=2
-    const firstLocaleColIndex = 2;
+    // So first locale column index is 3 (1-based in ExcelJS): module=1, code=2, first_locale=3
+    const firstLocaleColIndex = 3; // 1-based for ExcelJS
 
     // Flatten if wrapped in an array
     const flatMessages = jsonData && jsonData.length
@@ -266,14 +198,17 @@ const GenerateXlsx = ({
     }
 
     // Create a new workbook
-    const workbook = XLSX.utils.book_new();
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = "DIGIT HCM";
+    workbook.created = new Date();
 
     // Add a sheet for each module
     const modulesToExport = moduleOptions.length > 0
       ? moduleOptions
       : Object.keys(messagesByModule).sort().map((m) => ({ name: m, value: m }));
 
-    modulesToExport.forEach((moduleOption) => {
+    for (let modIndex = 0; modIndex < modulesToExport.length; modIndex++) {
+      const moduleOption = modulesToExport[modIndex];
       const moduleValue = moduleOption.value;
       const moduleDisplayName = moduleOption.name;
 
@@ -294,34 +229,142 @@ const GenerateXlsx = ({
         return newRow;
       });
 
-      // Create worksheet from JSON
-      const worksheet = XLSX.utils.json_to_sheet(sheetData, {
-        header: displayHeaders,
-        skipHeader: skipHeader,
-      });
-
-      // Calculate and set column widths based on content
-      const columnWidths = calculateColumnWidths(sheetData, displayHeaders);
-      worksheet["!cols"] = columnWidths;
-
-      // Apply text wrap styling to all cells, with visual styling for first locale column (gray background)
-      // Note: xlsx-js-style doesn't support column-level protection (only sheet-level)
-      // The gray background visually indicates read-only, and upload logic enforces it by skipping first locale
-      applyTextWrapToWorksheet(worksheet, sheetData.length, displayHeaders.length, firstLocaleColIndex);
-
       // Use display name for sheet tab, sanitized for Excel
       const safeSheetName = sanitizeSheetName(moduleDisplayName);
 
-      // Append sheet to workbook
-      XLSX.utils.book_append_sheet(workbook, worksheet, safeSheetName);
-    });
+      // Create worksheet
+      const worksheet = workbook.addWorksheet(safeSheetName, {
+        properties: { defaultColWidth: 30 },
+      });
 
-    // Download the single file
+      // Calculate column widths based on content (like GenerateXlsx)
+      const columnWidths = calculateColumnWidths(sheetData, displayHeaders);
+
+      // Define columns with headers and calculated widths
+      worksheet.columns = displayHeaders.map((header, index) => ({
+        header: header,
+        key: header,
+        width: columnWidths[index],
+      }));
+
+      // Add data rows (skip header if needed)
+      if (!skipHeader) {
+        // Header row is automatically added by ExcelJS when defining columns
+      }
+
+      // Add data rows
+      sheetData.forEach((row) => {
+        worksheet.addRow(row);
+      });
+
+      // Only the first locale column (column 3, 1-based) should be visually marked as protected/read-only
+      // Columns: module=1, code=2, first_locale=3, other_locales=4+
+
+      // Style the header row (row 1) - Orange background for all headers, Gray for first locale
+      const headerRow = worksheet.getRow(1);
+      headerRow.eachCell((cell, colNumber) => {
+        const isFirstLocaleCol = colNumber === firstLocaleColIndex;
+        const isModuleOrCodeCol = colNumber === 1 || colNumber === 2;
+
+        cell.font = { name: "Roboto", bold: true, color: { argb: "FFFFFFFF" } };
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: isFirstLocaleCol ? "FF808080" : "FFC84C0E" }, // Gray for first locale header, Orange for others
+        };
+        // Module and code headers should not wrap
+        cell.alignment = { wrapText: !isModuleOrCodeCol, vertical: "center", horizontal: "center" };
+        cell.border = {
+          top: { style: "thin", color: { argb: "FF000000" } },
+          bottom: { style: "thin", color: { argb: "FF000000" } },
+          left: { style: "thin", color: { argb: "FF000000" } },
+          right: { style: "thin", color: { argb: "FF000000" } },
+        };
+        // Lock all header cells to prevent editing
+        cell.protection = { locked: true };
+      });
+
+      // Style data rows - ONLY first locale column (column 3) gets gray background and is locked
+      // All other columns are ALWAYS editable regardless of their content
+      for (let rowNum = 2; rowNum <= worksheet.rowCount; rowNum++) {
+        const row = worksheet.getRow(rowNum);
+
+        // Iterate through all columns using column count from headers
+        for (let colNum = 1; colNum <= displayHeaders.length; colNum++) {
+          const cell = row.getCell(colNum);
+          // IMPORTANT: Protection is based ONLY on column position, NOT on cell content
+          const isFirstLocaleCol = colNum === firstLocaleColIndex;
+
+          // Set font for all data cells
+          cell.font = { name: "Roboto" };
+
+          // Apply fill color - gray ONLY for first locale column (column 3)
+          // All other columns get no fill (white) regardless of whether they have content
+          if (isFirstLocaleCol) {
+            cell.fill = {
+              type: "pattern",
+              pattern: "solid",
+              fgColor: { argb: "FFE8E8E8" }, // Light gray for protected column
+            };
+          }
+          // Non-first-locale columns: no explicit fill (uses default/white)
+
+          // Module column (1) and code column (2) should NOT wrap text
+          // Message columns should wrap text
+          const isModuleOrCodeCol = colNum === 1 || colNum === 2;
+          cell.alignment = { wrapText: !isModuleOrCodeCol, vertical: "top" };
+          cell.border = {
+            top: { style: "thin", color: { argb: "FFCCCCCC" } },
+            bottom: { style: "thin", color: { argb: "FFCCCCCC" } },
+            left: { style: "thin", color: { argb: "FFCCCCCC" } },
+            right: { style: "thin", color: { argb: "FFCCCCCC" } },
+          };
+
+          // CRITICAL: Protection is based ONLY on column position
+          // Column 3 (first locale) = locked
+          // All other columns (1, 2, 4, 5, ...) = unlocked (editable)
+          cell.protection = { locked: isFirstLocaleCol };
+        }
+      }
+
+      // Enable sheet protection - cells with locked:false will be editable
+      await worksheet.protect("", {
+        selectLockedCells: true,
+        selectUnlockedCells: true,
+        formatCells: false,
+        formatColumns: false,
+        formatRows: false,
+        insertColumns: false,
+        insertRows: false,
+        insertHyperlinks: false,
+        deleteColumns: false,
+        deleteRows: false,
+        sort: false,
+        autoFilter: false,
+        pivotTables: false,
+      });
+    }
+
+    // Generate and download the file
     const fileName = `${sheetName}.xlsx`;
     try {
-      XLSX.writeFile(workbook, fileName);
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      });
+
+      // Create download link and trigger download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
     } catch (error) {
-      console.error(`Failed to download ${fileName}:`, error);
+      // Download failed - error handled silently
     }
   };
 
@@ -334,4 +377,4 @@ const GenerateXlsx = ({
   );
 };
 
-export default GenerateXlsx;
+export default GenerateExcelJs;
