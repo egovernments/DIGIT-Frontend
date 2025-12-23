@@ -159,17 +159,19 @@ const MyBills = () => {
   }, [billID, dateRange, limitAndOffset, periodType]);
 
   const onSubmit = (billID, dateRange, selectedBillType) => {
-    const filteredPeriods = findAllOverlappingPeriods(
-      dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
-      dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
-    ).map((x) => x?.id);
+    if (dateRange.startDate !== "" && dateRange.endDate !== "") {
+      const filteredPeriods = findAllOverlappingPeriods(
+        dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
+        dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+      ).map((x) => x?.id);
 
-    if (filteredPeriods.length == 0) {
-      setShowToast(null);
+      if (filteredPeriods.length == 0) {
+        setShowToast(null);
 
-      setShowToast({ key: "error", label: t("HCM_AM_SELECT_PERIODS_EMPTY"), transitionTime: 3000 });
+        setShowToast({ key: "error", label: t("HCM_AM_SELECT_PERIODS_EMPTY"), transitionTime: 3000 });
 
-      return;
+        return;
+      }
     }
     setBillID(billID);
     setDateRange(dateRange);
