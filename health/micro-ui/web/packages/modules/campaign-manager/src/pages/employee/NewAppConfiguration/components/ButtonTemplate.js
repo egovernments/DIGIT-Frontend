@@ -1,19 +1,18 @@
 import React from "react";
-import { Button, CustomSVG } from "@egovernments/digit-ui-components";
-import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHelpers";
+import { Button, } from "@egovernments/digit-ui-components";
+import { getFieldPropertyValue, } from "../helpers/propertyHelpers";
 
-const ButtonTemplate = ({ field, t, fieldTypeMasterData }) => {
+const ButtonTemplate = ({ field, t, fieldTypeMasterData, props }) => {
+  const selectedField = field || props?.field;
+  const fieldType = fieldTypeMasterData || props?.fieldTypeMasterData;
+
   // Get variation and icon from field with fallback to defaults
-  const variation = getFieldPropertyValue(field, "type", fieldTypeMasterData);
-  const iconName = getFieldPropertyValue(field, "icon", fieldTypeMasterData);
-
-  // Get available options from master config
-  const availableVariations = getPropertyOptions(field?.format, "variation", fieldTypeMasterData);
-  const availableIcons = getPropertyOptions(field?.format, "icon", fieldTypeMasterData);
+  const variation = getFieldPropertyValue(selectedField, "type", fieldType);
+  const iconName = getFieldPropertyValue(selectedField, "icon", fieldType);
 
   // Get translated label - allow empty string, only use default if undefined/null
-  const buttonLabel = field?.label !== undefined && field?.label !== null
-    ? t(field?.label)
+  const buttonLabel = selectedField?.label !== undefined && selectedField?.label !== null
+    ? (field ? t : props?.t)(selectedField?.label)
     : "Button";
 
   return (

@@ -56,10 +56,10 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     }
     
     // Parse schemaCode
-    const schemaParts = field.schemaCode.split(".");
+    const schemaParts = field?.schemaCode?.split(".");
     
     // Validate we have at least 2 parts and both are non-empty
-    if (schemaParts.length < 2) {
+    if (schemaParts?.length < 2) {
       console.warn("Invalid schemaCode format (missing dot separator):", field.schemaCode);
       return null;
     }

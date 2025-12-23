@@ -1,9 +1,11 @@
 import React from "react";
 
-const TextTemplate = ({ field, t }) => {
+const TextTemplate = ({ field, t, props }) => {
+  const selectedField = field || props?.field;
+
   // Allow empty labels - only use defaults if undefined/null
-  const label = field?.fieldName !== undefined && field?.fieldName !== null ? field?.fieldName : "";
-  const translatedLabel = label ? t(label) : "";
+  const label = selectedField?.fieldName !== undefined && selectedField?.fieldName !== null ? selectedField?.fieldName : "";
+  const translatedLabel = label ? (field ? t : props?.t)(label) : "";
 
   return (
     <div

@@ -8,8 +8,6 @@ const SelectionCard = ({ field, t, props }) => {
   // Check if this is a resourceCard field
   const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom") && (field?.fieldName === "resourceCard" || props?.field?.fieldName === "resourceCard");
 
-  console.log("Is Resource Card:", isResourceCard, "for field:", field);
-
   // Fetch product variants from session storage for resourceCard
   const productVariants = useMemo(() => {
     if (!isResourceCard) return [];
@@ -97,7 +95,7 @@ const SelectionCard = ({ field, t, props }) => {
       selected={[]}
       withContainer={true}
       populators={{
-        t: t,
+        t: isResourceCard ? t : props?.t,
       }
     }
     />

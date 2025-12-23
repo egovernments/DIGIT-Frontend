@@ -1,28 +1,31 @@
 import React from "react";
 import { FieldV1 } from "@egovernments/digit-ui-components";
 
-const TextInputTemplate = ({ field, t, isFieldSelected }) => {
+const TextInputTemplate = ({ field, t, isFieldSelected, props }) => {
+  const selectedField = field || props?.field;
+  const selected = isFieldSelected || props?.isFieldSelected;
+
   // Allow empty labels - only use defaults if undefined/null
-  const inputLabel = field?.label !== undefined && field?.label !== null ? t(field?.label) : "";
+  const inputLabel = selectedField?.label !== undefined && selectedField?.label !== null ? (field ? t : props?.t)(selectedField?.label) : "";
 
   return (
     <FieldV1
-      description={t(field?.helpText)}
-      error={t(field?.errorMessage)}
-      infoMessage={t(field?.tooltip)}
+      description={(field ? t : props?.t)(selectedField?.helpText)}
+      error={(field ? t : props?.t)(selectedField?.errorMessage)}
+      infoMessage={(field ? t : props?.t)(selectedField?.tooltip)}
       label={inputLabel}
       onChange={function noRefCheck() {}}
       populators={{
         title: inputLabel,
-        prefix: field?.prefixText || null,
-        suffix: field?.suffixText || null,
-        fieldPairClassName: `app-preview-field-pair ${isFieldSelected ? `app-preview-selected` : ``}`,
+        prefix: selectedField?.prefixText || null,
+        suffix: selectedField?.suffixText || null,
+        fieldPairClassName: `app-preview-field-pair ${selected ? `app-preview-selected` : ``}`,
       }}
-      required={field?.required}
+      required={selectedField?.required}
       type={"text"}
-      value={field?.value}
-      disabled={field?.readOnly || false}
-      placeholder={field?.placeholder ? t(field?.placeholder) : ""}
+      value={selectedField?.value}
+      disabled={selectedField?.readOnly || false}
+      placeholder={selectedField?.placeholder ? (field ? t : props?.t)(selectedField?.placeholder) : ""}
     ></FieldV1>
   );
 };
