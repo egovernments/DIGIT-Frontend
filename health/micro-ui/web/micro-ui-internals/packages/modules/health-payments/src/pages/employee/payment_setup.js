@@ -760,6 +760,7 @@ const PaymentSetUpPage = () => {
         {billingCycle?.code === "CUSTOM" &&
           renderLabelPair(
             "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_LABEL",
+            <div>
             <TextInput
               name="customDays"
               value={customDays}
@@ -772,6 +773,8 @@ const PaymentSetUpPage = () => {
               min={billingCycle.minDuration}
               max={billingCycle.maxDuration}
             />
+            {billingCycle?.code === "CUSTOM" && customDays!=""&& Number(customDays) < Number(billingCycle.minDuration) && <span style={{ color: "red", fontSize: "0.8rem" }}>{`${t("HCM_AM_MINIMUM_BILLING_CYCLE_DURATION")} ${billingCycle.minDuration}${t("HCM_AM_DAYS")}`}</span>}
+            </div>
           )}
       </Card>
 
@@ -835,7 +838,7 @@ const PaymentSetUpPage = () => {
           icon={edit ? "" : "ArrowForward"}
           isSuffix={edit ? false : true}
           isDisabled={
-            !isFormModified || !tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData
+            !isFormModified || !tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && Number(customDays) < Number(billingCycle.minDuration)) || !skillsData
           }
         />
       </ActionBar>
