@@ -1046,3 +1046,129 @@
     padding-bottom: 0.25rem;
   }
 }
+
+// Campaign Name Validation Rules Styling
+.campaign-name-validation-container {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f7fafc;
+  border: 1px solid #d6d5d4;
+  border-radius: 0.5rem;
+
+  .validation-header {
+    margin-bottom: 1rem;
+
+    .validation-title {
+      font-family: var(--digitv2-fontFamily-sans);
+      font-weight: var(--digitv2-fontWeight-bold);
+      font-size: 1rem;
+      color: var(--digitv2-lightTheme-primary-2);
+    }
+  }
+
+  .validation-rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .validation-rule-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    transition: all 0.2s ease-in-out;
+
+    .validation-icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .validation-text {
+      font-family: var(--digitv2-fontFamily-sans);
+      font-size: 0.875rem;
+      line-height: 1.4;
+      color: var(--digitv2-lightTheme-text-color-secondary);
+      transition: color 0.2s ease-in-out;
+    }
+
+    // Valid state
+    &.rule-valid {
+      .validation-icon svg {
+        fill: #00703C;
+      }
+      .validation-text {
+        color: #00703C;
+      }
+    }
+
+    // Invalid state
+    &.rule-invalid {
+      .validation-icon svg {
+        fill: #D4351C;
+      }
+      .validation-text {
+        color: #D4351C;
+      }
+    }
+
+    // Neutral state (before user starts typing)
+    &.rule-neutral {
+      .validation-icon svg {
+        fill: #787878;
+      }
+      .validation-text {
+        color: var(--digitv2-lightTheme-text-color-secondary);
+      }
+    }
+  }
+
+  // All rules met success state
+  .validation-success-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: rgba(0, 112, 60, 0.1);
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    .success-text {
+      font-family: var(--digitv2-fontFamily-sans);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #00703C;
+    }
+  }
+}
+
+// Mobile responsiveness for validation rules
+@media (max-width: 768px) {
+  .campaign-name-validation-container {
+    padding: 0.75rem;
+
+    .validation-rule-item {
+      padding: 0.375rem 0;
+
+      .validation-text {
+        font-size: 0.8125rem;
+      }
+    }
+
+    .validation-success-banner {
+      padding: 0.5rem 0.75rem;
+
+      .success-text {
+        font-size: 0.8125rem;
+      }
+    }
+  }
+}

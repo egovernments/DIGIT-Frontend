@@ -224,15 +224,20 @@ const LocalisationBulkUpload = () => {
           const normalized = {};
           Object.keys(row).forEach((k) => (normalized[k.toLowerCase()] = row[k]));
 
-          const code = normalized.code?.toString().trim();
+          // Support both hardcoded "code" and localized header for backward compatibility
+          const codeHeader = t("DIGIT_LOC_CODE_HEADER").toLowerCase();
+          const code = (normalized[codeHeader] || normalized.code)?.toString().trim();
           const moduleName = normalized.module?.toString().trim() || matchedModule.value;
           if (!code) return;
 
           // Skip the default locale (first element in languages) during upload
           // Default column is read-only and populated from base modules
+          const messageHeader = t("DIGIT_LOC_MESSAGE_HEADER").toLowerCase();
           languages.slice(1).forEach(({ value, label }) => {
-            const columnKey = `message_${label.toLowerCase()}`;
-            const message = normalized[columnKey];
+            // Support both localized and hardcoded column keys for backward compatibility
+            const localizedColumnKey = `${messageHeader}_${label.toLowerCase()}`;
+            const hardcodedColumnKey = `message_${label.toLowerCase()}`;
+            const message = normalized[localizedColumnKey] || normalized[hardcodedColumnKey];
 
             // Check if message exists (not undefined/null)
             if (message !== undefined && message !== null) {

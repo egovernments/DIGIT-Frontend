@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
  *
  * Generates a single Excel file with all locales as separate message columns.
  * Within the file, messages are grouped by module with each module as a separate sheet/tab.
- * Columns: code, module, message_en_MZ, message_fr_MZ, etc.
+ * Columns: code, message_en_MZ, message_fr_MZ, etc. (module column hidden from UI but used internally)
  *
  * Uses ExcelJS library for better column protection support.
  *
@@ -45,26 +45,16 @@ const GenerateExcelJs = ({
 
   /**
    * Calculate optimal column widths based on content
-   * For message columns, use a fixed width to encourage text wrapping
+   * All columns have minimum width of 100, but can extend to fit longer content
    * @param {Array} data - Array of row objects
    * @param {Array} headers - Array of header names
    * @returns {Array} Array of column width values
    */
   const calculateColumnWidths = (data, headers) => {
+    const MIN_WIDTH = 100;
+
     return headers.map((header) => {
-      // For message columns, use a fixed width of 100 characters
-      // This encourages text wrapping in Excel
-      if (header.startsWith("message_") || header.startsWith("code")) {
-        return 100;
-      }
-
-      // For module column, use fixed width of 50 to prevent wrapping
-      if (header === "module") {
-        return 50;
-      }
-
-      // For code column, calculate based on actual content length (no cap)
-      // Code values can be very long and should not wrap
+      // Calculate width based on content
       let maxLength = header.toString().length;
 
       data.forEach((row) => {
@@ -77,8 +67,8 @@ const GenerateExcelJs = ({
         }
       });
 
-      // Add padding - no cap for code column to ensure it fits
-      return maxLength + 5;
+      // Add padding and ensure minimum width of 100
+      return Math.max(maxLength + 5, MIN_WIDTH);
     });
   };
 
@@ -170,19 +160,20 @@ const GenerateExcelJs = ({
       localeLabelsMap[loc.value] = loc.label;
     });
 
-    // Internal data keys (used in data objects)
-    const dataKeys = ["module", "code", ...allLocales.map((loc) => `message_${loc}`)];
+    // Internal data keys (used in data objects) - module is kept internally but hidden from UI
+    const dataKeys = ["code", ...allLocales.map((loc) => `message_${loc}`)];
 
-    // Display headers for Excel columns (using locale labels)
-    const displayHeaders = ["module", "code", ...allLocales.map((loc) => {
+    // Display headers for Excel columns (using translated labels) - module column hidden
+    // Use localization codes for headers to support all languages
+    const displayHeaders = [t("DIGIT_LOC_CODE_HEADER"), ...allLocales.map((loc) => {
       const label = localeLabelsMap[loc] || loc;
-      return `message_${label}`;
+      return `${t("DIGIT_LOC_MESSAGE_HEADER")}_${label}`;
     })];
 
     // Find the index of the first locale column (languages[0])
-    // Headers are: module, code, message_<first_locale>, message_<second_locale>, etc.
-    // So first locale column index is 3 (1-based in ExcelJS): module=1, code=2, first_locale=3
-    const firstLocaleColIndex = 3; // 1-based for ExcelJS
+    // Headers are: code, message_<first_locale>, message_<second_locale>, etc.
+    // So first locale column index is 2 (1-based in ExcelJS): code=1, first_locale=2
+    const firstLocaleColIndex = 2; // 1-based for ExcelJS
 
     // Flatten if wrapped in an array
     const flatMessages = jsonData && jsonData.length
@@ -257,14 +248,14 @@ const GenerateExcelJs = ({
         worksheet.addRow(row);
       });
 
-      // Only the first locale column (column 3, 1-based) should be visually marked as protected/read-only
-      // Columns: module=1, code=2, first_locale=3, other_locales=4+
+      // Only the first locale column (column 2, 1-based) should be visually marked as protected/read-only
+      // Columns: code=1, first_locale=2, other_locales=3+
 
       // Style the header row (row 1) - Orange background for all headers, Gray for first locale
       const headerRow = worksheet.getRow(1);
       headerRow.eachCell((cell, colNumber) => {
         const isFirstLocaleCol = colNumber === firstLocaleColIndex;
-        const isModuleOrCodeCol = colNumber === 1 || colNumber === 2;
+        const isCodeCol = colNumber === 1; // code column is now column 1 (module removed)
 
         cell.font = { name: "Roboto", bold: true, color: { argb: "FFFFFFFF" } };
         cell.fill = {
@@ -272,8 +263,8 @@ const GenerateExcelJs = ({
           pattern: "solid",
           fgColor: { argb: isFirstLocaleCol ? "FF808080" : "FFC84C0E" }, // Gray for first locale header, Orange for others
         };
-        // Module and code headers should not wrap
-        cell.alignment = { wrapText: !isModuleOrCodeCol, vertical: "center", horizontal: "center" };
+        // Code header should not wrap
+        cell.alignment = { wrapText: !isCodeCol, vertical: "center", horizontal: "center" };
         cell.border = {
           top: { style: "thin", color: { argb: "FF000000" } },
           bottom: { style: "thin", color: { argb: "FF000000" } },
@@ -284,8 +275,9 @@ const GenerateExcelJs = ({
         cell.protection = { locked: true };
       });
 
-      // Style data rows - ONLY first locale column (column 3) gets gray background and is locked
+      // Style data rows - ONLY first locale column (column 2) gets gray background and is locked
       // All other columns are ALWAYS editable regardless of their content
+      // Columns: code=1, first_locale=2, other_locales=3+
       for (let rowNum = 2; rowNum <= worksheet.rowCount; rowNum++) {
         const row = worksheet.getRow(rowNum);
 
@@ -298,7 +290,7 @@ const GenerateExcelJs = ({
           // Set font for all data cells
           cell.font = { name: "Roboto" };
 
-          // Apply fill color - gray ONLY for first locale column (column 3)
+          // Apply fill color - gray ONLY for first locale column (column 2)
           // All other columns get no fill (white) regardless of whether they have content
           if (isFirstLocaleCol) {
             cell.fill = {
@@ -309,10 +301,10 @@ const GenerateExcelJs = ({
           }
           // Non-first-locale columns: no explicit fill (uses default/white)
 
-          // Module column (1) and code column (2) should NOT wrap text
+          // Code column (1) should NOT wrap text
           // Message columns should wrap text
-          const isModuleOrCodeCol = colNum === 1 || colNum === 2;
-          cell.alignment = { wrapText: !isModuleOrCodeCol, vertical: "top" };
+          const isCodeCol = colNum === 1;
+          cell.alignment = { wrapText: !isCodeCol, vertical: "top" };
           cell.border = {
             top: { style: "thin", color: { argb: "FFCCCCCC" } },
             bottom: { style: "thin", color: { argb: "FFCCCCCC" } },
@@ -321,8 +313,8 @@ const GenerateExcelJs = ({
           };
 
           // CRITICAL: Protection is based ONLY on column position
-          // Column 3 (first locale) = locked
-          // All other columns (1, 2, 4, 5, ...) = unlocked (editable)
+          // Column 2 (first locale) = locked
+          // All other columns (1, 3, 4, 5, ...) = unlocked (editable)
           cell.protection = { locked: isFirstLocaleCol };
         }
       }

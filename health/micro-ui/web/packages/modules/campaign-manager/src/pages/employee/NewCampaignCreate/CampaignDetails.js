@@ -360,31 +360,20 @@ const CampaignDetails = () => {
               buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
               type: "primary",
               navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
-              icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
-              disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),
-            },
-          },
-        ],
-      },
-      {
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            component: "ViewDetailComponent",
-            noCardStyle: true,
-            props: {
-              headingName: t("HCM_UPLOAD_LOCALIZATION_DATA_HEADING"),
-              desc: t("HCM_UPLOAD_LOCALIZATION_DATA_DESC"),
-              buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_LOCALIZATIONS_DATA_BUTTON") : t("HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON"),
-              navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
-              navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
-              type: "primary",
-              type: "primary",
               icon: (
-                <UploadCloud fill={"#C84C0E"} />
+                <AdUnits
+                  fill={
+                    campaignData?.status === "created" &&
+                    campaignData?.startDate < Date.now()
+                      ? "#c5c5c5"
+                      : "#C84C0E"
+                  }
+                />
               ),
-              disabled: false,
+              disabled:
+                (campaignData?.status === "created" ||
+                  campaignData?.parentId) &&
+                campaignData?.startDate < Date.now(),
             },
           },
         ],
@@ -446,6 +435,27 @@ const CampaignDetails = () => {
               ],
             },
           ]),
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: {
+              headingName: t("HCM_UPLOAD_LOCALIZATION_DATA_HEADING"),
+              desc: t("HCM_UPLOAD_LOCALIZATION_DATA_DESC"),
+              buttonLabel: t("HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON"),
+              navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
+              navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
+              type: "primary",
+              type: "primary",
+              icon: <UploadCloud fill={"#C84C0E"} />,
+              disabled: false,
+            },
+          },
+        ],
+      },
       {
         noCardStyle: true,
         sections: [
