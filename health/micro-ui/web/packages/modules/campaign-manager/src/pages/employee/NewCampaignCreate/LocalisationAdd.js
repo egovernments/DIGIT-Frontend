@@ -3,7 +3,8 @@ import { Toast, Card, Button, HeaderComponent, Loader, Footer } from "@egovernme
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
-import GenerateXlsx from "../../../components/GenerateXlsx";
+// import GenerateXlsx from "../../../components/GenerateXlsx";
+import GenerateExcelJs from "../../../components/GenerateExcelJs";
 import BulkUpload from "../../../components/BulkUpload";
 
 const LocalisationBulkUpload = () => {
@@ -11,9 +12,12 @@ const LocalisationBulkUpload = () => {
   const navigate = useNavigate();
   const stateId = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-
+  // Load locale data
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { languages = [] } = storeData || {};
   // States
   const [jsonResult, setJsonResult] = useState(null);
+  const [baseModuleMessages, setBaseModuleMessages] = useState({});
   const [isDownloadLoading, setIsDownloadLoading] = useState(false);
   const [isTemplateReady, setIsTemplateReady] = useState(false);
   const [showToast, setShowToast] = useState(null);
@@ -25,40 +29,73 @@ const LocalisationBulkUpload = () => {
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
 
-  // Load locale data
-  const { data: localeData = [] } = Digit.Hooks.useCustomMDMS(stateId, "common-masters", [{ name: "StateInfo" }], {
-    select: (data) => {
-      const languages = data["common-masters"].StateInfo?.[0]?.languages || [];
-      const defaultLanguage = { label: t("DIGIT_DEFAULT_MESSAGE"), value: "default" };
-      return [defaultLanguage, ...languages];
+  // Fetch campaign details to get projectType
+  const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.campaign.useSearchCampaign({
+    tenantId: tenantId,
+    filter: { campaignNumber: campaignNumber },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => data?.[0],
     },
   });
 
-  // Allowed modules for this campaign
+  // Get projectType suffix (e.g., "mr-dn" from "MR-DN")
+  const projectTypeSuffix = campaignData?.projectType?.toLowerCase() || "";
+
+  // Allowed modules for this campaign with their base module mappings
+  // Base modules contain default messages (e.g., hcm-base-complaints-mr-dn)
   const allowedModules = [
-    { name: t("DIGIT_HCM_REGISTRATION_MODULE"), value: `hcm-registration-${campaignNumber}` },
-    { name: t("DIGIT_HCM_STOCKREPORTS_MODULE"), value: `hcm-stockreports-${campaignNumber}` },
-    { name: t("DIGIT_HCM_HFREFERRAL_MODULE"), value: `hcm-hfreferral-${campaignNumber}` },
-    { name: t("DIGIT_HCM_COMPLAINTS_MODULE"), value: `hcm-complaints-${campaignNumber}` },
-    { name: t("DIGIT_HCM_INVENTORY_MODULE"), value: `hcm-inventory-${campaignNumber}` },
-    { name: t("HCM_STOCKRECONCILIATION_MODULE"), value: `hcm-stockreconciliation-${campaignNumber}` },
-    { name: t("DIGIT_HCM_CLOSEHOUSEHOLD_MODULE"), value: `hcm-closehousehold-${campaignNumber}` },
+    {
+      name: t("DIGIT_HCM_REGISTRATION_MODULE"),
+      value: `hcm-registration-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-registrationflow-${projectTypeSuffix}` : null
+    },
+    {
+      name: t("DIGIT_HCM_STOCKREPORTS_MODULE"),
+      value: `hcm-stockreports-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-stockreports-${projectTypeSuffix}` : null
+    },
+    {
+      name: t("DIGIT_HCM_HFREFERRAL_MODULE"),
+      value: `hcm-hfreferral-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-hfreferralflow-${projectTypeSuffix}` : null
+    },
+    {
+      name: t("DIGIT_HCM_COMPLAINTS_MODULE"),
+      value: `hcm-complaints-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-complaints-${projectTypeSuffix}` : null
+    },
+    {
+      name: t("DIGIT_HCM_INVENTORY_MODULE"),
+      value: `hcm-inventory-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-inventory-${projectTypeSuffix}` : null
+    },
+    {
+      name: t("HCM_STOCKRECONCILIATION_MODULE"),
+      value: `hcm-stockreconciliation-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-stockreconciliation-${projectTypeSuffix}` : null
+    },
+    {
+      name: t("DIGIT_HCM_CLOSEHOUSEHOLD_MODULE"),
+      value: `hcm-closehousehold-${campaignNumber}`,
+      baseModule: projectTypeSuffix ? `hcm-base-closehousehold-${projectTypeSuffix}` : null
+    },
   ];
 
   // Fetch localizations for allowed modules only
   useEffect(() => {
     const fetchLocalizations = async () => {
-      if (!localeData.length || !campaignNumber) return;
+      if (!languages.length || !campaignNumber || !projectTypeSuffix) return;
       setIsDownloadLoading(true);
       setIsTemplateReady(false);
 
       try {
         // Fetch data for each locale and module combination
         const responses = await Promise.all(
-          localeData.flatMap((lang) =>
+          languages.flatMap((lang) =>
             allowedModules.map((mod) =>
               Digit.CustomService.getResponse({
-              url: `/localization/messages/v1/_search`,
+                url: `/localization/messages/v1/_search`,
                 params: {
                   tenantId: stateId,
                   locale: lang.value,
@@ -69,10 +106,42 @@ const LocalisationBulkUpload = () => {
           )
         );
 
+        // Fetch base module messages for the first locale (languages[0]) only
+        // These will be used to pre-fill the first locale column (read-only)
+        const firstLocale = languages[0]?.value;
+        const baseModuleResponses = await Promise.all(
+          allowedModules
+            .filter((mod) => mod.baseModule) // Only modules with base module mapping
+            .map((mod) =>
+              Digit.CustomService.getResponse({
+                url: `/localization/messages/v1/_search`,
+                params: {
+                  tenantId: stateId,
+                  locale: firstLocale, // Fetch only for first locale
+                  module: mod.baseModule,
+                },
+              }).then((res) => ({
+                moduleValue: mod.value, // Campaign-specific module
+                baseModule: mod.baseModule,
+                messages: res.messages || [],
+              }))
+            )
+        );
+
+        // Create a map: moduleValue -> { code -> message }
+        const baseMessagesMap = {};
+        baseModuleResponses.forEach(({ moduleValue, messages }) => {
+          baseMessagesMap[moduleValue] = {};
+          messages.forEach((msg) => {
+            baseMessagesMap[moduleValue][msg.code] = msg.message;
+          });
+        });
+
+        setBaseModuleMessages(baseMessagesMap);
+
         const combinedResults = responses.flat();
         setJsonResult(combinedResults);
       } catch (err) {
-        console.error(err);
         setShowToast({
           label: t("DIGIT_LOC_MODULE_DATA_LOAD_FAILED"),
           type: "error",
@@ -84,7 +153,7 @@ const LocalisationBulkUpload = () => {
     };
 
     fetchLocalizations();
-  }, [localeData, campaignNumber]);
+  }, [languages, campaignNumber, projectTypeSuffix]);
 
   const onBulkUploadSubmit = async (files) => {
     try {
@@ -130,6 +199,7 @@ const LocalisationBulkUpload = () => {
       let emptyMessageCount = 0;
 
       Object.entries(parsed).forEach(([sheetName, rows]) => {
+
         // Find matching module by checking various matching strategies
         const sheetNameLower = sheetName.toLowerCase();
         const matchedModule = allowedModules.find((mod) => {
@@ -147,6 +217,7 @@ const LocalisationBulkUpload = () => {
             modValueLower.includes(sheetNameLower.replace(/\s+/g, "-"))
           );
         });
+
         if (!matchedModule) return;
 
         rows.forEach((row) => {
@@ -157,20 +228,41 @@ const LocalisationBulkUpload = () => {
           const moduleName = normalized.module?.toString().trim() || matchedModule.value;
           if (!code) return;
 
-          localeData.forEach(({ value, label }) => {
+          // Skip the default locale (first element in languages) during upload
+          // Default column is read-only and populated from base modules
+          languages.slice(1).forEach(({ value, label }) => {
             const columnKey = `message_${label.toLowerCase()}`;
             const message = normalized[columnKey];
 
-            const trimmedMessage = message?.toString().trim();
-            if (trimmedMessage) {
-              allMessages.push({
-                code,
-                module: moduleName,
-                locale: value,
-                message: trimmedMessage,
-              });
+            // Check if message exists (not undefined/null)
+            if (message !== undefined && message !== null) {
+              const messageStr = message.toString();
+              const trimmedMessage = messageStr.trim();
+
+              // If message has content after trimming, upsert normally
+              // If message is ONLY spaces (like " "), upsert a single space to "clear" it
+              // This allows users to delete/clear a message by entering a space
+              if (trimmedMessage) {
+                allMessages.push({
+                  code,
+                  module: moduleName,
+                  locale: value,
+                  message: trimmedMessage,
+                });
+              } else if (messageStr.length > 0) {
+                // Message is only whitespace - upsert single space to clear/delete the message
+                allMessages.push({
+                  code,
+                  module: moduleName,
+                  locale: value,
+                  message: " ", // Single space to clear the message
+                });
+              } else {
+                // Completely empty cell - skip
+                emptyMessageCount++;
+              }
             } else {
-              // Count empty messages for warning
+              // No value in cell - skip
               emptyMessageCount++;
             }
           });
@@ -243,7 +335,6 @@ const LocalisationBulkUpload = () => {
         // }, 2000);
       }
     } catch (e) {
-      console.error("Upload error:", e);
       setShowToast({ label: t("DIGIT_LOC_UPSERT_FAILED"), type: "error" });
       setUploadedFile([]); // Clear file on error
     } finally {
@@ -291,7 +382,7 @@ const LocalisationBulkUpload = () => {
       </HeaderComponent>
 
       <Card>
-        {(isDownloadLoading || isUploading) && <Loader variant="OverlayLoader" />}
+        {(isDownloadLoading || isUploading || isCampaignLoading) && <Loader variant="OverlayLoader" />}
 
         {/* Download Template Button */}
         <div style={{ display: "flex", justifyContent: "flex-end"}}>
@@ -328,14 +419,24 @@ const LocalisationBulkUpload = () => {
         />
       </Card>
 
-      {/* Hidden XLSX generator - generates one file with modules as separate sheets */}
-      <GenerateXlsx
+      {/* XLSX generator - generates one file with modules as separate sheets */}
+      {/* <GenerateXlsx
         inputRef={inputRef}
         jsonData={jsonResult}
-        localeData={localeData}
+        languages={languages}
         sheetName="Localizations"
         campaignNumber={campaignNumber}
         moduleOptions={allowedModules}
+        baseModuleMessages={baseModuleMessages}
+      /> */}
+      <GenerateExcelJs
+        inputRef={inputRef}
+        jsonData={jsonResult}
+        languages={languages}
+        sheetName="Localizations"
+        campaignNumber={campaignNumber}
+        moduleOptions={allowedModules}
+        baseModuleMessages={baseModuleMessages}
       />
 
       {/* Footer with Go Back button */}

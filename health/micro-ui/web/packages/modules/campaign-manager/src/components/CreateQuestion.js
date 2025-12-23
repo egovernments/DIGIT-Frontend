@@ -582,7 +582,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                   <div className="heading-bar">
                   </div>
                 </Card>
-                <div style={{ height: "1rem" }}></div>
+                <div style={{ height: "1.5rem" }}></div>
               </div>
             );
           })}

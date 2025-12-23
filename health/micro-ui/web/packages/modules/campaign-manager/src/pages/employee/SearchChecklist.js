@@ -1,4 +1,4 @@
-import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { InboxSearchComposer } from "@egovernments/digit-ui-components";
 import { Dropdown, Toast, Button, PopUp, Footer } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -227,7 +227,7 @@ const SearchChecklist = () => {
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
             </Card>
           </div> */}
-          <div className="inbox-search-wrapper card-container1" style={{ width: "100%" }}>
+          <div className="digit-inbox-search-wrapper card-container1" style={{ width: "100%" }}>
             {/* Pass defaultValues as props to InboxSearchComposer */}
             {configWithOptions && (
               <InboxSearchComposer
