@@ -112,6 +112,20 @@ const PaymentSetUpPage = () => {
   const { mutate: mDMSRatesCreate } = Digit.Hooks.payments.useMDMSRatesCreate(tenantId);
   const { mutate: mDMSRatesUpdate } = Digit.Hooks.payments.useMDMSRatesUpdate(tenantId);
 
+  // for calculation of billingCycle maxDiration
+
+  function getMaxBillingDuration({ campaignStartEpoch, campaignEndEpoch, billingCycleMaxDuration }) {
+    if (!campaignStartEpoch || !campaignEndEpoch || !billingCycleMaxDuration) {
+      return 0;
+    }
+
+    // Calculate campaign duration in days
+    const campaignDurationDays = Math.ceil((campaignEndEpoch - campaignStartEpoch) / (24 * 60 * 60 * 1000));
+
+    // Return the minimum of campaign duration and billing max duration
+    return Math.min(campaignDurationDays, billingCycleMaxDuration);
+  }
+
   // Campaign Search Configuration
   const CampaignSearchCri = useMemo(
     () => ({
@@ -771,7 +785,15 @@ const PaymentSetUpPage = () => {
               />
               {billingCycle?.code === "CUSTOM" &&
                 customDays !== "" &&
-                (Number(customDays) < Number(billingCycle?.minDuration) || Number(customDays) > Number(billingCycle?.maxDuration)) && (
+                (Number(customDays) < Number(billingCycle?.minDuration) ||
+                  Number(customDays) >
+                    Number(
+                      getMaxBillingDuration({
+                        campaignStartEpoch: selectedCampaign.startDate,
+                        campaignEndEpoch: selectedCampaign.endDate,
+                        billingCycleMaxDuration: billingCycle?.maxDuration,
+                      })
+                    )) && (
                   <span style={{ color: "red", fontSize: "0.8rem" }}>
                     {`${t("HCM_AM_BILLING_CYCLE_DURATION_BETWEEN")} 
         ${billingCycle.minDuration} 
@@ -849,7 +871,15 @@ const PaymentSetUpPage = () => {
             !selectedCampaign ||
             !billingCycle ||
             (billingCycle?.code === "CUSTOM" &&
-              (Number(customDays) < Number(billingCycle?.minDuration) || Number(customDays) > Number(billingCycle?.maxDuration))) ||
+              (Number(customDays) < Number(billingCycle?.minDuration) ||
+                Number(customDays) >
+                  Number(
+                    getMaxBillingDuration({
+                      campaignStartEpoch: selectedCampaign.startDate,
+                      campaignEndEpoch: selectedCampaign.endDate,
+                      billingCycleMaxDuration: billingCycle?.maxDuration,
+                    })
+                  ))) ||
             !skillsData
           }
         />
