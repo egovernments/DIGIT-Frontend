@@ -1170,7 +1170,7 @@
                                                             }
                                                         }
                                                     ],
-                                                  "type":"template",
+                                                    "type": "template",
                                                     "fieldName": "viewDetails",
                                                     "properties": {
                                                         "size": "medium",
@@ -2215,7 +2215,7 @@
                                         "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
                                         "systemDate": false,
                                         "errorMessage": "",
-                                      "validations": [
+                                        "validations": [
                                             {
                                                 "type": "required",
                                                 "value": true,
@@ -3275,6 +3275,6 @@
                 "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
                 "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
                 "createdTime": 1766042913927,
-                "lastModifiedTime": 1766481404007
+                "lastModifiedTime": 1766483267269
             }
         }
