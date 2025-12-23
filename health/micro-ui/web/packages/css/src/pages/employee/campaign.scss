@@ -1047,7 +1047,6 @@
   }
 }
 
-// Campaign Name Validation Rules Styling
 .campaign-name-validation-container {
   width: 100%;
   padding: 1rem;
@@ -1096,7 +1095,6 @@
       transition: color 0.2s ease-in-out;
     }
 
-    // Valid state
     &.rule-valid {
       .validation-icon svg {
         fill: #00703C;
@@ -1106,7 +1104,6 @@
       }
     }
 
-    // Invalid state
     &.rule-invalid {
       .validation-icon svg {
         fill: #D4351C;
@@ -1116,7 +1113,6 @@
       }
     }
 
-    // Neutral state (before user starts typing)
     &.rule-neutral {
       .validation-icon svg {
         fill: #787878;
@@ -1127,7 +1123,6 @@
     }
   }
 
-  // All rules met success state
   .validation-success-banner {
     display: flex;
     align-items: center;
@@ -1150,7 +1145,6 @@
   }
 }
 
-// Mobile responsiveness for validation rules
 @media (max-width: 768px) {
   .campaign-name-validation-container {
     padding: 0.75rem;
