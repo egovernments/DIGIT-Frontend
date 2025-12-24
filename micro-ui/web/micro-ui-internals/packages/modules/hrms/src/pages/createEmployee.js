@@ -30,19 +30,21 @@ const CreateEmployee = () => {
   });
 
   // Fetch mobile validation config from MDMS
-  // Fetch mobile validation config from MDMS
+  const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
         console.log("MDMS Response in createEmployee:", data);
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         console.log("Validation Data in createEmployee:", validationData);
         const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
         return {
-          prefix: rules?.prefix || "+91",
+          prefix: attributes?.prefix || "+91",
           pattern: rules?.pattern || "^[6-9][0-9]{9}$",
           maxLength: rules?.maxLength || 10,
           minLength: rules?.minLength || 10,
@@ -50,6 +52,7 @@ const CreateEmployee = () => {
         };
       },
       staleTime: 300000, // Cache for 5 minutes
+      enabled: !!stateLvlTenantId,
     }
   );
 
