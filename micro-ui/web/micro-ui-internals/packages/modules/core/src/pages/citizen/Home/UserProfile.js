@@ -115,24 +115,28 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
+  const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
-    stateCode,
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
         console.log("MDMS Response in UserProfile:", data);
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
         return {
           UserProfileValidationConfig: [
             {
               mobileNumber: rules?.pattern,
             },
           ],
-          prefix: rules?.prefix || "+91",
+          prefix: attributes?.prefix || "+91",
         };
       },
+      enabled: !!stateLvlTenantId,
     }
   );
 

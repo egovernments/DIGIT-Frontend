@@ -52,22 +52,26 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   // Check if individual service context path is configured
   const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
 
+  const stateId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    stateId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
         return {
-          prefix: rules?.prefix || "+91",
-          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          maxLength: rules?.maxLength || 10,
-          minLength: rules?.minLength || 10,
+          prefix: attributes?.prefix,
+          pattern: rules?.pattern,
+          maxLength: rules?.maxLength,
+          minLength: rules?.minLength,
         };
       },
       staleTime: 300000,
+      enabled: !!stateId,
     }
   );
 
