@@ -11,6 +11,7 @@ import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import PopupConfigEditor from "./PopUpConfigEditor";
 
 // Utility functions for date conversion
 const convertEpochToDateString = (epoch) => {
@@ -659,7 +660,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     : []
                 }
                 onClose={(selectedArray) => {
-                  console.log("Selected Array from MultiSelectDropdown:", selectedArray);
                   const extractedOptions =
                     selectedArray?.map((arr) => arr?.[1]) || [];
 
@@ -1486,28 +1486,7 @@ function NewDrawerFieldComposer() {
       </div>
       {/* Popup Properties Section - Only for actionPopup field type */}
       {fieldType === "actionPopup" && activeTab === "content" && (
-        <>
-          <Divider />
-          <div className="app-config-drawer-subheader">
-            <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_POPUP_PROPERTIES")}</div>
-            <span className="icon-wrapper new">
-              <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_POPUP_PROPERTIES")} />
-            </span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {visiblePopupProperties.map((panelItem) => (
-              <div key={panelItem.id} className="drawer-toggle-field-container">
-                <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
-              </div>
-            ))}
-            {/* No properties message */}
-            {visiblePopupProperties.length === 0 && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <Tag showIcon={true} label={t(`CMP_DRAWER_NO_CONFIG_ERROR_${activeTab.toUpperCase()}`)} type="error" />
-              </div>
-            )}
-          </div>
-        </>
+        <PopupConfigEditor selectedField={selectedField} />
       )}
     </Fragment>
   );
