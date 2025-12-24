@@ -51,7 +51,43 @@ export const transformMdmsToAppConfig = (mdmsData) => {
 
     // Handle FORM screenType (like HOUSEHOLD, ADD_MEMBER, DELIVERY)
     if (flow.screenType === "FORM" && flow.pages) {
+      // Find the last page (page with highest order)
+      const lastPage = flow.pages.reduce((max, page) => {
+        const pageOrder = page.order !== undefined ? page.order : 0;
+        const maxOrder = max.order !== undefined ? max.order : 0;
+        return pageOrder > maxOrder ? page : max;
+      }, flow.pages[0]);
+
       flow.pages.forEach((page, pageIndex) => {
+        // Check if this is the last page
+        const isLastPage = page === lastPage;
+        
+        // Transform onAction to conditionalNavigateTo if:
+        // 1. This is the last page
+        // 2. onAction exists at flow level
+        // 3. conditionalNavigateTo doesn't already exist on the page
+        // 4. This flow is configured for conditional navigate transformation
+        let conditionalNavigateTo = page.conditionalNavigateTo;
+        let conditionalNavigationProperties = page.conditionalNavigationProperties;
+        
+        if (
+          isLastPage &&
+          flow.onAction && 
+          !conditionalNavigateTo 
+        ) {
+          conditionalNavigateTo = transformOnActionToConditionalNavigateTo(flow.onAction);
+          
+          // Only add conditionalNavigationProperties if conditionalNavigateTo was successfully created
+          if (conditionalNavigateTo && !conditionalNavigationProperties) {
+            const targetPages = extractTargetPagesFromOnAction(flow.onAction);
+            if (targetPages) {
+              conditionalNavigationProperties = {
+                targetPages: targetPages
+              };
+            }
+          }
+        }
+
         const transformedPage = {
           body: [
             {
@@ -72,7 +108,8 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           summary: flow.summary || false,
           description: page.description,
           showAlertPopUp: page.showAlertPopUp,
-          conditionalNavigateTo: page.conditionalNavigateTo,
+          conditionalNavigateTo: conditionalNavigateTo,
+          conditionalNavigationProperties: conditionalNavigationProperties,
           showTabView: page?.multiEntityConfig !== null && page?.multiEntityConfig !== undefined ? Object.keys(page?.multiEntityConfig)?.length > 0 ? true : false : false,
           multiEntityConfig: page.multiEntityConfig,
 
@@ -417,6 +454,90 @@ export const extractFlowMetadata = (mdmsData) => {
   });
 
   return metadata;
+};
+
+/**
+ * Transform onAction array to conditionalNavigateTo format
+ * Extracts NAVIGATION actions and their conditions
+ * Skips conditions with "DEFAULT" expression or missing expression
+ */
+const transformOnActionToConditionalNavigateTo = (onAction) => {
+  if (!onAction || !Array.isArray(onAction)) return null;
+
+  const conditionalNavigateTo = [];
+
+  onAction.forEach((item) => {
+    if (!item.actions || !Array.isArray(item.actions)) return;
+
+    // Find NAVIGATION action in the actions array
+    const navigationAction = item.actions.find(
+      (action) => action.actionType === "NAVIGATION"
+    );
+
+    if (navigationAction && navigationAction.properties) {
+      const { name, type } = navigationAction.properties;
+      const condition = item.condition?.expression;
+
+      // Skip if:
+      // 1. No condition expression present
+      // 2. Condition expression is "DEFAULT"
+      if (!condition || condition === "DEFAULT") {
+        return;
+      }
+
+      if (name && type) {
+        conditionalNavigateTo.push({
+          condition: condition,
+          navigateTo: {
+            name: name,
+            type: type,
+          },
+        });
+      }
+    }
+  });
+
+  // Only return if we have valid conditional navigations
+  return conditionalNavigateTo.length > 0 ? conditionalNavigateTo : null;
+};
+
+/**
+ * Extract target pages from onAction array for conditionalNavigationProperties
+ * Extracts all unique NAVIGATION targets (name and type)
+ */
+const extractTargetPagesFromOnAction = (onAction) => {
+  if (!onAction || !Array.isArray(onAction)) return null;
+
+  const targetPages = [];
+  const seen = new Set(); // To track unique combinations
+
+  onAction.forEach((item) => {
+    if (!item.actions || !Array.isArray(item.actions)) return;
+
+    // Find NAVIGATION action in the actions array
+    const navigationAction = item.actions.find(
+      (action) => action.actionType === "NAVIGATION"
+    );
+
+    if (navigationAction && navigationAction.properties) {
+      const { name, type } = navigationAction.properties;
+
+      if (name && type) {
+        // Create unique key to avoid duplicates
+        const key = `${name}|${type}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          targetPages.push({
+            name: name,
+            code: name,
+            type: type?.toLowerCase() || "form",
+          });
+        }
+      }
+    }
+  });
+
+  return targetPages.length > 0 ? targetPages : null;
 };
 
 /**

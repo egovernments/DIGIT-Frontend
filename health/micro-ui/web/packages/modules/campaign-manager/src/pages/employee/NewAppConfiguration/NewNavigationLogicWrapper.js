@@ -65,7 +65,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
     );
 }
 
-function NewNavigationLogicWrapper({ t }) {
+function NewNavigationLogicWrapper({ t, targetPages = []}) {
     const customT = useCustomTranslate();
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
@@ -1077,7 +1077,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                 </div>
 
                                                                 {/* Remove condition */}
-                                                                <div
+                                                                {(editorIndex > 0 || idx > 0) && <div
                                                                     style={{
                                                                         marginLeft: "auto",
                                                                         display: "flex",
@@ -1094,7 +1094,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                                     <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
                                                                         {removeConditionLabel}
                                                                     </span>
-                                                                </div>
+                                                                </div>}
                                                             </div>
 
                                                             {/* Per-condition error */}
@@ -1147,7 +1147,7 @@ function NewNavigationLogicWrapper({ t }) {
                                                         <p style={{ margin: 0 }}>{targetPageLabel}</p>
                                                         <div className="digit-field" style={{ width: "100%" }}>
                                                             <Dropdown
-                                                                option={allPageOptions}
+                                                                option={targetPages?.length > 0 ? targetPages : allPageOptions}
                                                                 optionKey="code"
                                                                 name={`target-${editorIndex}`}
                                                                 optionCardStyles={{ maxHeight: "15vh" }}
