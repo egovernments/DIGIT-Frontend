@@ -59,9 +59,8 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
             optionKey="code"
             name={`mdms-${module}-${master}`}
             t={t}
-            optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+            optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
             select={(e) => onChange(e.code)}
-            disabled={isLoading || !module || !master}
             selected={selectedOption}
         />
     );
@@ -1226,7 +1225,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                                         onChange={(d) => updateSubCond(idx, { fieldValue: toDDMMYYYY(d) })}
                                                                                         disabled={!cond.leftField}
                                                                                     />
-                                                                                ) : isSelect ? (
+                                                                                ) : isSelect && !useMdms? (
                                                                                     // select from enum values
                                                                                     (() => {
                                                                                         const enumOptions = (selectedLeftFieldMeta?.enums || []).map((en) => ({ code: String(en.code), name: en.name || en.code }));
