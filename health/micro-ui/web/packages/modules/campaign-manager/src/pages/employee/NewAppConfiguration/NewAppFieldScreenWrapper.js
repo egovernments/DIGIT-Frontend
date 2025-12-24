@@ -300,7 +300,7 @@ function NewAppFieldScreenWrapper() {
             <div>{t("NAVIGATION_LOGIC")}</div>
             <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
           </div>
-          <NewNavigationLogicWrapper t={t} />
+          <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages}/>
         </>
       )}
       {currentCard?.type !== "template" && currentCard?.config?.enableSectionAddition && (

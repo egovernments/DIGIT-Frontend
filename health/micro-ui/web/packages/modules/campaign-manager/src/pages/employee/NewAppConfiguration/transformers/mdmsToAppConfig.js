@@ -48,6 +48,88 @@ export const transformMdmsToAppConfig = (fullData, version) => {
     }
   });
 
+  // Process forms: Update onAction based on conditionalNavigateTo from last page
+  Object.values(forms).forEach((form) => {
+    // Find the last page (highest order)
+    const lastPage = form.pages.reduce((max, page) => {
+      return (page.order > max.order) ? page : max;
+    }, form.pages[0]);
+
+    // Check if last page has conditionalNavigationProperties with targetPages
+    if (
+      lastPage &&
+      lastPage.conditionalNavigationProperties &&
+      lastPage.conditionalNavigationProperties.targetPages &&
+      lastPage.conditionalNavigationProperties.targetPages.length > 0
+    ) {
+      // Create a map of name+type -> condition from conditionalNavigateTo
+      const conditionMap = new Map();
+      
+      if (lastPage.conditionalNavigateTo && Array.isArray(lastPage.conditionalNavigateTo)) {
+        lastPage.conditionalNavigateTo.forEach((navItem) => {
+          const key = `${navItem.navigateTo.name}|${navItem.navigateTo.type}`;
+          conditionMap.set(key, navItem.condition);
+        });
+      }
+
+      // Update form's onAction based on the condition map
+      if (form.onAction && Array.isArray(form.onAction)) {
+        form.onAction = form.onAction.map((actionItem) => {
+          if (!actionItem.actions || !Array.isArray(actionItem.actions)) {
+            return actionItem;
+          }
+
+          // Skip if this action doesn't have a condition - don't add one
+          if (!actionItem.condition) {
+            return actionItem;
+          }
+
+          // Skip if this action already has DEFAULT condition - don't update it
+          if (actionItem?.condition?.expression === "DEFAULT") {
+            return actionItem;
+          }
+
+          // Find NAVIGATION action
+          const navigationAction = actionItem?.actions.find(
+            (action) => action.actionType === "NAVIGATION"
+          );
+
+          if (navigationAction && navigationAction.properties) {
+            const { name, type } = navigationAction.properties;
+            const key = `${name}|${type?.toLowerCase() || "form"}`;
+
+            // Check if we have a condition for this navigation target
+            if (conditionMap.has(key)) {
+              // Update the condition with the one from conditionalNavigateTo
+              return {
+                ...actionItem,
+                condition: {
+                  expression: conditionMap.get(key)
+                }
+              };
+            }
+          else {
+              // Navigation target exists but not in conditionalNavigateTo - set as NOT_CONFIGURED
+              return {
+                ...actionItem,
+                condition: {
+                  expression: "NOT_CONFIGURED"
+                }
+              };
+            }
+          }
+
+          // No NAVIGATION action found, return original
+          return actionItem;
+        });
+      }
+
+      // Remove conditionalNavigateTo and conditionalNavigationProperties from last page
+      delete lastPage.conditionalNavigateTo;
+      delete lastPage.conditionalNavigationProperties;
+    }
+  });
+
   // Clean up temporary fields
   Object.values(forms).forEach((form) => {
     delete form.lastOrder;
@@ -208,11 +290,15 @@ const transformFormPage = (pageData) => {
     page.showAlertPopUp = pageData.showAlertPopUp;
   }
 
-    // Add showAlertPopUp if exists
+  // Add conditionalNavigateTo if exists
   if (pageData.conditionalNavigateTo) {
     page.conditionalNavigateTo = pageData.conditionalNavigateTo;
   }
 
+  // Add conditionalNavigationProperties if exists
+  if (pageData.conditionalNavigationProperties) {
+    page.conditionalNavigationProperties = pageData.conditionalNavigationProperties;
+  }
 
   return page;
 };
