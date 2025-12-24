@@ -1,3 +1,8 @@
+## [1.9.4] [24-December-2025]
+### 🔄 Search & Validation Update:
+- **Inbox Search**: Updated `Inbox.js` to fetch mobile number validation rules from `UserValidation` MDMS master, ensuring consistency with 'Create' and 'Edit' flows.
+- **Cleanup**: Removed legacy mobile validation logic from `Inbox.js` to prevent conflicts.
+
 ## [1.9.3] [24-December-2025]
 ### 🔄 Configuration Standardization:
 - **Unified MDMS Config**: Updated `createEmployee` and `EditForm` to use the standardized `UserValidation` MDMS config.
