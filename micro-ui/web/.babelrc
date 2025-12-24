@@ -5,5 +5,10 @@
   ],
   "plugins": [
     "@babel/plugin-proposal-optional-chaining"
+  ],
+   "ignore": [
+    "node_modules",
+    "node_modules/canvg",
+    "**/node_modules/canvg/**"
   ]
 }

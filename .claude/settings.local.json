@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn cache:*)",
+      "Bash(if exist \".cache\" rd /s /q \".cache\")",
+      "Bash(if exist \"node_modules\\.cache\" rd /s /q \"node_modules\\.cache\")",
+      "Bash(yarn build)",
+      "Bash(yarn add:*)",
+      "Bash(yarn build:*)",
+      "Bash(yarn why:*)",
+      "Bash(fnm:*)",
+      "Bash(npm rebuild:*)",
+      "Bash(rm:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(git stash push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git stash:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
