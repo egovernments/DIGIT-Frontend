@@ -112,6 +112,20 @@ const PaymentSetUpPage = () => {
   const { mutate: mDMSRatesCreate } = Digit.Hooks.payments.useMDMSRatesCreate(tenantId);
   const { mutate: mDMSRatesUpdate } = Digit.Hooks.payments.useMDMSRatesUpdate(tenantId);
 
+  // for calculation of billingCycle maxDiration
+
+  function getMaxBillingDuration({ campaignStartEpoch, campaignEndEpoch, billingCycleMaxDuration }) {
+    if (!campaignStartEpoch || !campaignEndEpoch || !billingCycleMaxDuration) {
+      return 0;
+    }
+
+    // Calculate campaign duration in days
+    const campaignDurationDays = Math.ceil((campaignEndEpoch - campaignStartEpoch) / (24 * 60 * 60 * 1000));
+
+    // Return the minimum of campaign duration and billing max duration
+    return Math.min(campaignDurationDays, billingCycleMaxDuration);
+  }
+
   // Campaign Search Configuration
   const CampaignSearchCri = useMemo(
     () => ({
@@ -437,9 +451,7 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t(
-                "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
-              )}`,
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
               message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
@@ -489,9 +501,7 @@ const PaymentSetUpPage = () => {
               state: "success",
               info: "",
               fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t(
-                "HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2"
-              )}`,
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
               message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
@@ -760,18 +770,39 @@ const PaymentSetUpPage = () => {
         {billingCycle?.code === "CUSTOM" &&
           renderLabelPair(
             "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_LABEL",
-            <TextInput
-              name="customDays"
-              value={customDays}
-              onChange={handleCustomDaysChange}
-              placeholder={t("HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS")}
-              type="text"
-              inputMode="numeric"
-              disabled={edit ? true : false}
-              allowNegativeValues={false}
-              min={billingCycle.minDuration}
-              max={billingCycle.maxDuration}
-            />
+            <div>
+              <TextInput
+                name="customDays"
+                value={customDays}
+                onChange={handleCustomDaysChange}
+                placeholder={t("HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS")}
+                type="text"
+                inputMode="numeric"
+                disabled={edit ? true : false}
+                allowNegativeValues={false}
+                min={billingCycle.minDuration}
+                max={billingCycle.maxDuration}
+              />
+              {billingCycle?.code === "CUSTOM" &&
+                customDays !== "" &&
+                (Number(customDays) < Number(billingCycle?.minDuration) ||
+                  Number(customDays) >
+                    Number(
+                      getMaxBillingDuration({
+                        campaignStartEpoch: selectedCampaign.startDate,
+                        campaignEndEpoch: selectedCampaign.endDate,
+                        billingCycleMaxDuration: billingCycle?.maxDuration,
+                      })
+                    )) && (
+                  <span style={{ color: "red", fontSize: "0.8rem" }}>
+                    {`${t("HCM_AM_BILLING_CYCLE_DURATION_BETWEEN")} 
+        ${billingCycle.minDuration} 
+        ${t("HCM_AM_TO")} 
+        ${billingCycle.maxDuration} 
+        ${t("HCM_AM_DAYS")}`}
+                  </span>
+                )}
+            </div>
           )}
       </Card>
 
@@ -835,7 +866,21 @@ const PaymentSetUpPage = () => {
           icon={edit ? "" : "ArrowForward"}
           isSuffix={edit ? false : true}
           isDisabled={
-            !isFormModified || !tableError || !selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData
+            !isFormModified ||
+            !tableError ||
+            !selectedCampaign ||
+            !billingCycle ||
+            (billingCycle?.code === "CUSTOM" &&
+              (Number(customDays) < Number(billingCycle?.minDuration) ||
+                Number(customDays) >
+                  Number(
+                    getMaxBillingDuration({
+                      campaignStartEpoch: selectedCampaign.startDate,
+                      campaignEndEpoch: selectedCampaign.endDate,
+                      billingCycleMaxDuration: billingCycle?.maxDuration,
+                    })
+                  ))) ||
+            !skillsData
           }
         />
       </ActionBar>

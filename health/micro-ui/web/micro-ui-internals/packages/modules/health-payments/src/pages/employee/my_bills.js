@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, NoResultsFound, Loader } from "@egovernments/digit-ui-components";
+import { Card, NoResultsFound, Loader, Toast } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
@@ -14,6 +14,7 @@ const MyBills = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [showToast, setShowToast] = useState(null);
 
   // context path variables
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
@@ -44,9 +45,9 @@ const MyBills = () => {
         tenantId: tenantId,
         referenceIds: [project?.[0]?.id],
         ...(billID ? { billNumbers: [billID] } : {}),
-        ...(dateRange.startDate && dateRange.endDate
-          ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() }
-          : {}),
+        // ...(dateRange.startDate && dateRange.endDate
+        //   ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() }
+        //   : {}),
         pagination: {
           limit: limitAndOffset.limit,
           offset: limitAndOffset.offset,
@@ -92,9 +93,6 @@ const MyBills = () => {
     setCurrentPage(1);
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   };
-
-  
-  
 
   // Fetch billing config and periods
   const fetchBillingPeriods = useCallback(
@@ -161,6 +159,21 @@ const MyBills = () => {
   }, [billID, dateRange, limitAndOffset, periodType]);
 
   const onSubmit = (billID, dateRange, selectedBillType) => {
+    if (dateRange.startDate !== "" && dateRange.endDate !== "") {
+      const filteredPeriods = findAllOverlappingPeriods(
+        dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
+        dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+      ).map((x) => x?.id);
+
+      if (filteredPeriods.length == 0) {
+        // setShowToast(null);
+        setTableData([]);
+        setTotalCount(0);
+        //setShowToast({ key: "error", label: t("HCM_AM_SELECT_PERIODS_EMPTY"), transitionTime: 3000 });
+
+        return;
+      }
+    }
     setBillID(billID);
     setDateRange(dateRange);
     setPeriodType(selectedBillType);
@@ -194,7 +207,7 @@ const MyBills = () => {
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
             <MyBillsTable
-              data={tableData}
+              data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
               totalCount={totalCount}
               rowsPerPage={rowsPerPage}
               currentPage={currentPage}
@@ -204,6 +217,7 @@ const MyBills = () => {
           )}
         </Card>
       }
+      {showToast && <Toast style={{ zIndex: 10001 }} label={showToast.label} type={showToast.key} onClose={() => setShowToast(null)} />}
     </React.Fragment>
   );
 };

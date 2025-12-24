@@ -45,7 +45,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
     }
 
     if (periods.length > 0) {
-      onFilterChange(boundary.code);
+      onFilterChange(boundary.code,"",selectedPeriod);
     } else {
       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_PAYMENT_PERIOD_FAILED"), transitionTime: 3000 });
       return;
@@ -168,10 +168,10 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
   }, [selectedProject, fetchBillingPeriods]);
 
   // Handle period selection manually
-  const handlePeriodSelect = useCallback((period) => {
+  const handlePeriodSelect = (period) => {
     setSelectedPeriod(period);
     Digit.SessionStorage.set("selectedPeriod", period);
-  }, []);
+  };
 
   return (
     <Card

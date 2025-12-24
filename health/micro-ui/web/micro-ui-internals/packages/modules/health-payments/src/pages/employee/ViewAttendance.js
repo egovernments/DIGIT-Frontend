@@ -490,7 +490,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     mutation.isLoading ||
     isrefetching
   ) {
-    return <Loader />;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
   return (
