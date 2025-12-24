@@ -42,6 +42,7 @@ The system expects an array of validation objects in `UserValidation`. It looks 
 -   **HRMS:**
     -   `packages/modules/hrms/src/pages/createEmployee.js`
     -   `packages/modules/hrms/src/pages/EditEmployee/EditForm.js`
+    -   `packages/modules/hrms/src/pages/Inbox.js`
 
 ### Verification
 -   **Login/Profile/HRMS:** Verify validation rules (regex, length, prefix) align with your MDMS data in `UserValidation`.
