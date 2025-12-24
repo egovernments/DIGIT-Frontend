@@ -655,7 +655,7 @@
   width: 12rem;
 }
 .app-config-drawer-button {
-  width: 100%;
+  width: 50%;
 }
 .app-preview-sub-heading {
   font-family: "Roboto";
@@ -1476,4 +1476,26 @@ textarea.light-placeholder::placeholder {
 .slider-header .close-icon{
   position: absolute;
   top: 1.6rem;
+}
+
+.form-name-popup-fields .digit-field-container textarea{
+  min-height: 200px;
+  max-height: 200px;
+  resize: vertical;
+}
+
+.card-section-header{
+  color: #0B4B66
+}
+
+.digit-popup-heading{
+  color: #0B4B66 !important;
+}
+
+.digit-popup-children-wrap .digit-text-block-header {
+  color: #0B4B66 !important;
+}
+
+.app-configuration-side-panel textarea{
+  resize: none;
 }
