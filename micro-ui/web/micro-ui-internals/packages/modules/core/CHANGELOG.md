@@ -1,5 +1,11 @@
 # Changelog 
 
+## [1.9.9]  [24-DEC-2025]
+- **Feature**: Mobile number validation in Login and User Profile now driven by `UserValidation` MDMS master.
+- **Refactor**: Removed dependency on `CORE_MOBILE_CONFIGS` global object.
+- **Configurability**: The MDMS module name for validation is configurable via `UICONFIG_MODULENAME` in global configs, defaulting to `commonUiConfig` if not set.
+- **Compatibility**: `UserProfileValidationConfig` is mapped from the `UserValidation` response within the `UserProfile` component.
+
 ## [1.9.7]  [12-DEC-2025]
 -Feature : Header.js component enhanced for secondary logo URL
 

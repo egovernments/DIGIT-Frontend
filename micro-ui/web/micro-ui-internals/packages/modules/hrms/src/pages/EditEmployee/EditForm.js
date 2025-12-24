@@ -27,27 +27,32 @@ const EditForm = ({ tenantId, data }) => {
   });
 
   // Fetch mobile validation config from MDMS
+  // Fetch mobile validation config from MDMS
+  const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        console.log("MDMS Response in EditForm:", data);
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
         return {
-          prefix: rules?.prefix || "+91",
+          prefix: attributes?.prefix || "+91",
           pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          isActive: rules?.isActive !== false,
           maxLength: rules?.maxLength || 10,
           minLength: rules?.minLength || 10,
           errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
-          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
         };
       },
       staleTime: 300000,
+      enabled: !!stateLvlTenantId,
     }
   );
+
 
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
