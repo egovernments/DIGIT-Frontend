@@ -123,7 +123,6 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        console.log("MDMS Response in UserProfile:", data);
         const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
         const attributes = validationData?.attributes;

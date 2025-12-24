@@ -36,7 +36,6 @@ const EditForm = ({ tenantId, data }) => {
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        console.log("MDMS Response in EditForm:", data);
         const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
         const attributes = validationData?.attributes;

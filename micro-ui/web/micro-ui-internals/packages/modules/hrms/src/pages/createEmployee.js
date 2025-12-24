@@ -38,9 +38,7 @@ const CreateEmployee = () => {
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        console.log("MDMS Response in createEmployee:", data);
         const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
-        console.log("Validation Data in createEmployee:", validationData);
         const rules = validationData?.rules;
         const attributes = validationData?.attributes;
         return {
