@@ -139,7 +139,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           {/* Popup Body */}
           {popupConfig?.body?.map((section, index) => (
             <Fragment key={index}>
-              {renderTemplateComponent(section, fieldTypeMasterData, selectedField, t, onFieldClick, data, "popupBody", index)}
+              {renderTemplateComponent(section, fieldTypeMasterData, selectedField, t, null, data, "popupBody", index)}
             </Fragment>
           ))}
         </PopUp>
