@@ -65,16 +65,19 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
   };
 
   // Fetch mobile validation config from MDMS
+  const stateId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    stateId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
         return {
-          prefix: rules?.prefix || "+91",
+          prefix: attributes?.prefix || "+91",
           pattern: rules?.pattern || "^[6-9][0-9]{9}$",
           maxLength: rules?.maxLength || 10,
           minLength: rules?.minLength || 10,
@@ -82,6 +85,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
         };
       },
       staleTime: 300000,
+      enabled: !!stateId,
     }
   );
 
