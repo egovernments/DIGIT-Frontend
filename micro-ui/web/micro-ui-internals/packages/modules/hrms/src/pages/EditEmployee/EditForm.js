@@ -27,25 +27,25 @@ const EditForm = ({ tenantId, data }) => {
   });
 
   // Fetch mobile validation config from MDMS
+  // Fetch mobile validation config from MDMS
   const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
     "ValidationConfigs",
     [{ name: "mobileNumberValidation" }],
     {
       select: (data) => {
+        console.log("MDMS Response in EditForm:", data);
         const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
         const rules = validationData?.rules;
         return {
           prefix: rules?.prefix || "+91",
           pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          isActive: rules?.isActive !== false,
           maxLength: rules?.maxLength || 10,
           minLength: rules?.minLength || 10,
           errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
-          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
         };
       },
-      staleTime: 300000,
+      staleTime: 300000, // Cache for 5 minutes
     }
   );
 

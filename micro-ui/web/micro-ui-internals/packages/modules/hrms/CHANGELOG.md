@@ -1,3 +1,8 @@
+## [1.9.3] [24-December-2025]
+### 🔄 Configuration Standardization:
+- **Unified MDMS Config**: Updated `createEmployee` and `EditForm` to use the standardized `ValidationConfigs` module (master: `mobileNumberValidation`) instead of `UserValidation`.
+- **Consistency**: Aligned validation logic with the Inbox and Core Login modules for a uniform experience throughout the application.
+
 ## [1.9.2] [15-December-2025]
 
 ### 🔧 Bug Fixes & Validation Improvements:
