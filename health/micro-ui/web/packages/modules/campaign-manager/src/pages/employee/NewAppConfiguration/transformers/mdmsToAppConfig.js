@@ -108,9 +108,18 @@ export const transformMdmsToAppConfig = (fullData, version) => {
                 }
               };
             }
+          else {
+              // Navigation target exists but not in conditionalNavigateTo - set as NOT_CONFIGURED
+              return {
+                ...actionItem,
+                condition: {
+                  expression: "NOT_CONFIGURED"
+                }
+              };
+            }
           }
 
-          // No matching condition found, return original
+          // No NAVIGATION action found, return original
           return actionItem;
         });
       }
