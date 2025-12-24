@@ -30,27 +30,27 @@ const CreateEmployee = () => {
   });
 
   // Fetch mobile validation config from MDMS
+  const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getStateId(),
-    "ValidationConfigs",
-    [{ name: "mobileNumberValidation" }],
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.ValidationConfigs?.mobileNumberValidation?.[0];
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
         const rules = validationData?.rules;
-
-        // Return validation rules with defaults
+        const attributes = validationData?.attributes;
         return {
-          prefix: rules?.prefix || "+91",
+          prefix: attributes?.prefix || "+91",
           pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          isActive: rules?.isActive !== false,
           maxLength: rules?.maxLength || 10,
           minLength: rules?.minLength || 10,
           errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
-          allowedStartingDigits: rules?.allowedStartingDigits || ["6", "7", "8", "9"],
         };
       },
       staleTime: 300000, // Cache for 5 minutes
+      enabled: !!stateLvlTenantId,
     }
   );
 

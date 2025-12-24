@@ -22,7 +22,7 @@ import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
 
-const DEFAULT_TENANT=Digit?.ULBService?.getStateId?.();
+const DEFAULT_TENANT = Digit?.ULBService?.getStateId?.();
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -96,7 +96,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               const lastSlashIndex = value.lastIndexOf("/");
               const pattern = value.slice(1, lastSlashIndex); // Extracting regex pattern
               const flags = value.slice(lastSlashIndex + 1); // Extracting regex flags
-  
+
               acc[key] = new RegExp(pattern, flags); // Converting properly
             } else {
               acc[key] = new RegExp(value); // Treating it as a normal regex pattern (no flags)
@@ -115,21 +115,37 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
+  const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
   const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
-    stateCode,
-    "commonUiConfig",
-    [{ name: "UserProfileValidationConfig" }],
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
-        return data?.commonUiConfig;
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
+        const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
+        return {
+          UserProfileValidationConfig: [
+            {
+              mobileNumber: rules?.pattern,
+            },
+          ],
+          prefix: attributes?.prefix || "+91",
+        };
       },
+      enabled: !!stateLvlTenantId,
     }
   );
 
   useEffect(() => {
     if (mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]) {
       const updatedValidationConfig = mapConfigToRegExp(mdmsValidationData);
-      setValidationConfig(updatedValidationConfig);
+      if (mdmsValidationData?.prefix) {
+        updatedValidationConfig.prefix = mdmsValidationData.prefix;
+      }
+      setValidationConfig((prev) => ({ ...prev, ...updatedValidationConfig }));
     }
   }, [mdmsValidationData]);
 
@@ -292,8 +308,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         photo: profilePic,
       };
 
-      if(name){
-        setName((prev)=>prev.trim());
+      if (name) {
+        setName((prev) => prev.trim());
       }
 
       if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
@@ -324,7 +340,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       setCurrentPassword(trimmedCurrentPassword);
       setNewPassword(trimmedNewPassword);
       setConfirmPassword(trimmedConfirmPassword);
-      
+
 
       if (changepassword && (trimmedCurrentPassword && trimmedNewPassword && trimmedConfirmPassword)) {
         if (trimmedNewPassword !== trimmedConfirmPassword) {
@@ -746,6 +762,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                         defaultValidationConfig?.UserProfileValidationConfig?.[0]?.mobileNumber,
                       type: "tel",
                       title: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
+                      prefix: validationConfig?.prefix || "+91",
                     }}
                   />
                   {errors?.mobileNumber && (

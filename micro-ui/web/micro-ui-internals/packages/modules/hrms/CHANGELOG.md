@@ -1,3 +1,9 @@
+## [1.9.3] [24-December-2025]
+### 🔄 Configuration Standardization:
+- **Unified MDMS Config**: Updated `createEmployee` and `EditForm` to use the standardized `UserValidation` MDMS config.
+- **Configurability**: Implemented support for `UICONFIG_MODULENAME` global config to dynamically set the MDMS module name (defaults to `commonUiConfig`).
+- **Consistency**: Aligned validation logic across Login, Profile, and HRMS forms.
+
 ## [1.9.2] [15-December-2025]
 
 ### 🔧 Bug Fixes & Validation Improvements:
