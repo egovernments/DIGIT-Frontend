@@ -1,13 +1,317 @@
- {
-            "id": "1724adca-b92a-4689-a1d5-6e50b89206f3",
+{
+            "id": "2982b6db-c55e-499a-b168-8d6948772d13",
             "tenantId": "mz",
-            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
             "uniqueIdentifier": "COMPLAINTS.MR-DN",
             "data": {
                 "name": "COMPLAINTS",
                 "flows": [
                     {
                         "body": [
+                            {
+                                "format": "row",
+                                "children": [
+                                    {
+                                        "type": "template",
+                                        "label": "COMPLAINT_INBOX_SEARCH_LABEL",
+                                        "format": "actionPopup",
+                                        "properties": {
+                                            "icon": "Search",
+                                            "size": "medium",
+                                            "type": "tertiary",
+                                            "suffixIcon": "Search",
+                                            "popupConfig": {
+                                                "body": [
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_SEARCH_COMPLAINT_NUMBER_LABEL",
+                                                        "format": "textInput",
+                                                        "fieldName": "complaintNumber"
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_SEARCH_MOBILE_NUMBER_LABEL",
+                                                        "format": "textInput",
+                                                        "fieldName": "mobileNumber"
+                                                    }
+                                                ],
+                                                "type": "default",
+                                                "title": "COMPLAINT_INBOX_SEARCH_LABEL",
+                                                "titleIcon": "Search",
+                                                "footerActions": [
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
+                                                        "format": "button",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "CLEAR_STATE",
+                                                                "properties": {}
+                                                            },
+                                                            {
+                                                                "actionType": "CLOSE_POPUP",
+                                                                "properties": {}
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "large",
+                                                            "type": "secondary",
+                                                            "mainAxisSize": "max"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
+                                                        "format": "button",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "CLOSE_POPUP",
+                                                                "properties": {}
+                                                            },
+                                                            {
+                                                                "actionType": "SEARCH_EVENT",
+                                                                "properties": {
+                                                                    "data": [
+                                                                        {
+                                                                            "key": "serviceRequestId",
+                                                                            "value": "{{ widgetData.complaintNumber }}",
+                                                                            "operation": "in"
+                                                                        },
+                                                                        {
+                                                                            "key": "serviceRequestId",
+                                                                            "value": "{{ widgetData.mobileNumber }}",
+                                                                            "operation": "in"
+                                                                        }
+                                                                    ],
+                                                                    "name": "PgrServiceModel"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "large",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "max"
+                                                        }
+                                                    }
+                                                ],
+                                                "showCloseButton": true,
+                                                "barrierDismissible": true
+                                            },
+                                            "mainAxisSize": "min",
+                                            "mainAxisAlignment": "start"
+                                        }
+                                    },
+                                    {
+                                        "icon": "FilterAlt",
+                                        "type": "template",
+                                        "label": "COMPLAINT_INBOX_FILTER_LABEL",
+                                        "format": "actionPopup",
+                                        "properties": {
+                                            "icon": "FilterAlt",
+                                            "size": "medium",
+                                            "type": "tertiary",
+                                            "popupConfig": {
+                                                "body": [
+                                                    {
+                                                        "data": [
+                                                            {
+                                                                "code": "ASSIGN_TO_ME",
+                                                                "name": "ASSIGN_TO_ME"
+                                                            },
+                                                            {
+                                                                "code": "ASSIGN_TO_ALL",
+                                                                "name": "ASSIGN_TO_ALL"
+                                                            }
+                                                        ],
+                                                        "type": "template",
+                                                        "format": "radioList",
+                                                        "fieldName": "assignTo"
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "enums": "{{fn:getUniqueComplaintTypes()}}",
+                                                        "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
+                                                        "format": "dropdownTemplate",
+                                                        "fieldName": "complaintType"
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "enums": "{{fn:getUniqueLocalities()}}",
+                                                        "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
+                                                        "format": "dropdownTemplate",
+                                                        "fieldName": "locality"
+                                                    }
+                                                ],
+                                                "type": "default",
+                                                "title": "COMPLAINT_INBOX_FILTER_LABEL",
+                                                "titleIcon": "FilterAlt",
+                                                "footerActions": [
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
+                                                        "format": "button",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "CLEAR_STATE",
+                                                                "properties": {}
+                                                            },
+                                                            {
+                                                                "actionType": "CLOSE_POPUP",
+                                                                "properties": {}
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "large",
+                                                            "type": "secondary",
+                                                            "mainAxisSize": "max"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
+                                                        "format": "button",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "CLOSE_POPUP",
+                                                                "properties": {}
+                                                            },
+                                                            {
+                                                                "actionType": "SEARCH_EVENT",
+                                                                "properties": {
+                                                                    "data": [
+                                                                        {
+                                                                            "key": "name",
+                                                                            "root": "pgrComplainant",
+                                                                            "value": "{{singleton.loggedInUserName}}",
+                                                                            "applyIf": "{{ widgetData.assignTo == 'ASSIGN_TO_ME' }}",
+                                                                            "operation": "equals"
+                                                                        },
+                                                                        {
+                                                                            "key": "serviceCode",
+                                                                            "value": "{{ widgetData.complaintType }}",
+                                                                            "applyIf": "{{ widgetData.complaintType.isNotEmpty }}",
+                                                                            "operation": "equals"
+                                                                        },
+                                                                        {
+                                                                            "key": "locality.code",
+                                                                            "root": "address",
+                                                                            "value": "{{ widgetData.locality }}",
+                                                                            "applyIf": "{{ widgetData.locality.isNotEmpty }}",
+                                                                            "operation": "equals"
+                                                                        }
+                                                                    ],
+                                                                    "defaultRoot": "pgrService"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "large",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "max"
+                                                        }
+                                                    }
+                                                ],
+                                                "showCloseButton": true,
+                                                "barrierDismissible": true
+                                            },
+                                            "mainAxisSize": "min",
+                                            "mainAxisAlignment": "start"
+                                        }
+                                    },
+                                    {
+                                        "type": "template",
+                                        "label": "COMPLAINT_INBOX_SORT_LABEL",
+                                        "format": "actionPopup",
+                                        "properties": {
+                                            "icon": "SortSvg",
+                                            "size": "medium",
+                                            "type": "tertiary",
+                                            "popupConfig": {
+                                                "body": [
+                                                    {
+                                                        "data": [
+                                                            {
+                                                                "code": "LATEST_FIRST",
+                                                                "name": "COMPLAINT_INBOX_SORT_LATEST_FIRST"
+                                                            },
+                                                            {
+                                                                "code": "LATEST_LAST",
+                                                                "name": "COMPLAINT_INBOX_SORT_LATEST_LAST"
+                                                            }
+                                                        ],
+                                                        "type": "template",
+                                                        "format": "radioList",
+                                                        "fieldName": "sotyBy"
+                                                    }
+                                                ],
+                                                "type": "default",
+                                                "title": "COMPLAINT_INBOX_SORT_POPUP_LABEL",
+                                                "titleIcon": "SortSvg",
+                                                "footerActions": [
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
+                                                        "format": "button",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "CLEAR_STATE",
+                                                                "properties": {}
+                                                            },
+                                                            {
+                                                                "actionType": "CLOSE_POPUP",
+                                                                "properties": {}
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "large",
+                                                            "type": "secondary",
+                                                            "mainAxisSize": "max"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
+                                                        "format": "button",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "CLOSE_POPUP",
+                                                                "properties": {}
+                                                            },
+                                                            {
+                                                                "actionType": "SEARCH_EVENT",
+                                                                "properties": {
+                                                                    "data": [
+                                                                        {
+                                                                            "key": "status",
+                                                                            "value": "{{ widgetData.selectedStatus }}",
+                                                                            "operation": "in"
+                                                                        }
+                                                                    ],
+                                                                    "name": "IndividualModel"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "large",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "max"
+                                                        }
+                                                    }
+                                                ],
+                                                "showCloseButton": true,
+                                                "barrierDismissible": true
+                                            },
+                                            "mainAxisSize": "min",
+                                            "mainAxisAlignment": "start"
+                                        },
+                                        "suffixIcon": "SortSvg"
+                                    }
+                                ],
+                                "properties": {
+                                    "mainAxisSize": "max",
+                                    "mainAxisAlignment": "spaceBetween"
+                                }
+                            },
                             {
                                 "data": "ComplaintWrapper",
                                 "type": "template",
@@ -807,9 +1111,9 @@
             },
             "isActive": true,
             "auditDetails": {
-                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
-                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
-                "createdTime": 1764240423588,
-                "lastModifiedTime": 1764911667127
+                "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1766043263734,
+                "lastModifiedTime": 1766397270697
             }
         }
