@@ -336,6 +336,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "number": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
+        // Check if this is a length-related field (should not allow negative values)
+        const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length");
         return (
           <FieldV1
             type="number"
@@ -351,6 +353,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 const value = parseInt(inputValue);
                 // Only set if it's a valid number
                 if (!isNaN(value)) {
+                  // Prevent negative values for length-related fields
+                  if (isLengthField && value < 0) {
+                    return;
+                  }
                   setLocalValue(value);
                   handleNumberChange(value);
                 }
@@ -358,7 +364,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            populators={{
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              validation: { min: isLengthField ? 0 : undefined },
+            }}
             disabled={isDisabled}
           />
         );
