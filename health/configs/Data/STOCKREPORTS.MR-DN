@@ -372,6 +372,7 @@
                                 "type": "template",
                                 "label": "STOCK_REPORT_INFO_REPORTS_TITLE",
                                 "format": "infoCard",
+                                "fieldName: "selectedEmptyInfo",
                                 "visible": "{{selectedFacility}} == null || {{selectedProduct}} == null",
                                 "properties": {
                                     "type": "info"
@@ -382,6 +383,7 @@
                                 "type": "template",
                                 "label": "STOCK_REPORT_INFO_NO_RESULTS_TITLE",
                                 "format": "infoCard",
+                                 "fieldName: "noResultsInfo",
                                 "visible": "{{stock.length}} == 0 && {{selectedFacility}} != null && {{selectedProduct}} != null && {{navigation.reportType}} != 'reconciliation'",
                                 "properties": {
                                     "type": "info"
