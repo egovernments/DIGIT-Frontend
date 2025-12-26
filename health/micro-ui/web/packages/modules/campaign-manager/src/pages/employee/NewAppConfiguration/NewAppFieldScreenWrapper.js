@@ -265,7 +265,7 @@ function NewAppFieldScreenWrapper() {
                   isDelete={deleteFlag === true ? true : false}
                   onDelete={() => handleDeleteField(actualFieldIndex, actualCardIndex)}
                   onHide={() => handleHideField(fieldName, actualCardIndex)}
-                  onSelectField={() => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
+                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}
                   rest={rest}

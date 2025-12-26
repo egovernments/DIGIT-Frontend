@@ -75,6 +75,17 @@ export const getComponentName = (format, fieldTypeMasterData) => {
   return fieldTypeConfig?.component || null;
 };
 
+export const isEditableComponent = (format, fieldTypeMasterData) => {
+  const fieldTypeConfig = getFieldTypeConfig(format, fieldTypeMasterData);  
+  // If fieldTypeConfig.editable is explicitly false, return false
+  if (fieldTypeConfig?.editable === false) {
+    return false;
+  }
+  
+  // Otherwise, return true (editable is true or undefined)
+  return true;
+};
+
 /**
  * Get default value for a property
  * @param {string} format - The format
