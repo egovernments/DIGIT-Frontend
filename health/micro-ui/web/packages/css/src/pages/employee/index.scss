@@ -965,6 +965,17 @@ tbody {
     font-weight: 700;
     color: #ffffff;
   }
+
+  .configure-app-tab-head:first-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+
+  .configure-app-tab-head:last-child {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
 }
 .digit-card-component.appConfigScreenCard {
   width: 50%;
@@ -1422,6 +1433,11 @@ tbody {
       width: fit-content !important;
     }
   }
+  .app-preview-card-header {
+    color: #0b4b66;
+  }
+}
+.app-card{
   .app-preview-card-header {
     color: #0b4b66;
   }

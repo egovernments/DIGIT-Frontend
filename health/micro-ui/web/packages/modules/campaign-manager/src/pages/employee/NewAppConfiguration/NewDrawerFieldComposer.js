@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons } from "@egovernments/digit-ui-components";
+import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -291,6 +291,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               isCheckedInitially={localToggle}
               shapeOnOff
               disabled={isDisabled}
+              isLabelFirst={true}
+              className={"digit-sidepanel-switch-wrap"}
             />
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
@@ -334,6 +336,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "number": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
+        // Check if this is a length-related field (should not allow negative values)
+        const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length");
         return (
           <FieldV1
             type="number"
@@ -349,6 +353,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 const value = parseInt(inputValue);
                 // Only set if it's a valid number
                 if (!isNaN(value)) {
+                  // Prevent negative values for length-related fields
+                  if (isLengthField && value < 0) {
+                    return;
+                  }
                   setLocalValue(value);
                   handleNumberChange(value);
                 }
@@ -356,7 +364,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            populators={{
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              validation: { min: isLengthField ? 0 : undefined },
+            }}
             disabled={isDisabled}
           />
         );
@@ -539,6 +550,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   return true;
                 }),
                 optionsKey: "type",
+                isSearchable:true
               }}
               type={"dropdown"}
               value={currentSelectedFieldType}
@@ -547,14 +559,36 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           </div>
         );
       }
-      //TODO: Implement labelPairList field renderer
       case "labelPairList": {
         const switchRef = useRef(null);
-        const [selectionError, setSelectionError] = useState(false);
 
-        // Fetch labelPairConfig from Redux
-        const allLabelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
+        // Fetch labelPairConfig state from Redux with all metadata
+        const labelFieldPairState = useSelector((state) => state?.labelFieldPair);
+        const {
+          config: allLabelPairConfig = [],
+          status,
+          dataSource,
+          error
+        } = labelFieldPairState;
+        // Show loading state while fetching from MDMS
+        if (status === 'loading') {
+          return (
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <Loader />
+            </div>
+          );
+        }
 
+        // Don't render until we have data (either from MDMS or fallback)
+        // This prevents dummy config from being applied prematurely
+        const shouldRender = status === 'succeeded' || status === 'failed';
+
+        if (!shouldRender) {
+          // Still in idle state, return null to prevent rendering
+          return null;
+        }
+
+        // Filter label pairs based on module and page
         const isEnabledForModuleAndPage = (modules = [], module, page) =>
           modules.some((m) => m?.[module]?.enabledPages?.includes(page));
 
@@ -921,6 +955,8 @@ const LocalizationInput = React.memo(
                 isCheckedInitially={toggleState}
                 key={`toggle-${columnIndex}-${toggleState}`} // Force re-render when state changes
                 shapeOnOff
+                isLabelFirst={true}
+                className={"digit-sidepanel-switch-wrap"}
               />
             </div>
           )}

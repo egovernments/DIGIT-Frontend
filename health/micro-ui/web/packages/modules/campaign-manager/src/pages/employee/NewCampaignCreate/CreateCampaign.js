@@ -55,10 +55,19 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSecondayActionClick = () => {
-    if (currentKey > 1) {
-      setCurrentKey(currentKey - 1);
+  if (currentKey > 1) {
+    // Clear campaign name when going back to step 1
+    if (currentKey === 2) {
+      setParams((prev) => {
+        const { CampaignName, ...rest } = prev;
+        return rest;
+      });
+      // Reset project type reference for proper change detection
+      prevProjectTypeRef.current = null;
     }
-  };
+    setCurrentKey(currentKey - 1);
+  }
+};
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,

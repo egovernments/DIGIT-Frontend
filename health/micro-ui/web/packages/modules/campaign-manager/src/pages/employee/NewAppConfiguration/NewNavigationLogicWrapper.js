@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback,Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     Dropdown,
@@ -57,10 +57,13 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
             option={options}
             optionKey="code"
             name={`mdms-${module}-${master}`}
+            optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
             t={t}
             select={(e) => onChange(e.code)}
             disabled={isLoading || !module || !master}
             selected={selectedOption}
+            showToolTip={true}
+            isSearchable={true}
         />
     );
 }
@@ -117,7 +120,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
 
     // ----- labels -----
     const navLogicTitle = t("NAVIGATION_LOGIC") || "Navigation Logic";
-    const addRuleLabel = t("HCM_ADD_RULE") || "Add Logic";
+    const addRuleLabel = t("ADD_NAVIGATION_LOGIC") || "Add Rule";
     const editLabel = t("EDIT") || "Edit";
     const deleteRuleLabel = t("HCM_REMOVE_RULE") || "Delete Rule";
     const noRulesYet = t("HCM_NO_RULES_YET") || "No navigation rules added yet.";
@@ -130,7 +133,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
     const removeConditionLabel = t("REMOVE_CONDITION") || "Delete Condition";
     const addConditionLabel = t("ADD_CONDITION") || "Add Condition";
     const closeLabel = t("CLOSE") || "Cancel";
-    const submitLabel = t("SUBMIT") || "Submit";
+    const submitLabel = t("CONFIRM_NAVIGATION_LOGIC") || "Submit";
     const andText = t("AND") || "And";
     const orText = t("OR") || "Or";
     const incompleteExprLabel = t("INCOMPLETE_EXPRESSION") || "(incomplete)";
@@ -815,12 +818,8 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                             <div
                                                 key={`rule-card-${editorIndex}`}
                                                 style={{
-                                                    background: "#FAFAFA",
-                                                    border: "1px solid #F5D8C6",
-                                                    borderRadius: 8,
-                                                    padding: "0.75rem",
                                                     display: "grid",
-                                                    gap: "0.75rem",
+                                                    gap: "1rem",
                                                 }}
                                             >
                                                 {/* Conditions */}
@@ -837,17 +836,8 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                     const numericField = isNumericLike(selectedFieldObj);
 
                                                     return (
-                                                        <div
-                                                            key={`cond-row-${editorIndex}-${idx}`}
-                                                            style={{
-                                                                background: "#FFF",
-                                                                border: "1px dashed #EAC5AD",
-                                                                borderRadius: 8,
-                                                                padding: "0.75rem",
-                                                                display: "grid",
-                                                                gap: "0.5rem",
-                                                            }}
-                                                        >
+                                                        <React.Fragment key={`cond-row-${editorIndex}-${idx}`}>
+                                                            {/* "And" tag OUTSIDE the card */}
                                                             {idx > 0 && (
                                                                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0.5rem 0" }}>
                                                                     <Tag
@@ -872,8 +862,17 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                     </div>
                                                                 </div>
                                                             )} */}
-
-                                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
+                                                            <div
+                                                                style={{
+                                                                    background: "#FAFAFA",
+                                                                    border: "1px solid #D6D5D4",
+                                                                    borderRadius: 4,
+                                                                    padding: "0.75rem",
+                                                                    display: "grid",
+                                                                    gap: "0.5rem",
+                                                                }}
+                                                            >
+                                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", alignItems: "flex-end" }}>
                                                                 {/* Field */}
                                                                 <div style={{ minWidth: 260, flex: "1 1 280px" }}>
                                                                     <LabelFieldPair vertical removeMargin>
@@ -899,12 +898,13 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                             : (isCk ? nextOps.find((o) => o.code === "==") : {}),
                                                                                     });
                                                                                 }}
-                                                                                optionCardStyles={{ maxHeight: "10vh" }}
+                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                 selected={
                                                                                     cond?.selectedField?.code
                                                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
                                                                                         : cond.selectedField
                                                                                 }
+                                                                                showToolTip={true}
                                                                             />
                                                                         </div>
                                                                     </LabelFieldPair>
@@ -919,10 +919,12 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                 option={operatorOptions}
                                                                                 optionKey="name"
                                                                                 name={`op-${editorIndex}-${idx}`}
+                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                 t={t}
                                                                                 select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
                                                                                 // disabled={!cond?.selectedField?.code}
                                                                                 selected={selectedOperator}
+                                                                                showToolTip={true}
                                                                             />
                                                                         </div>
                                                                     </LabelFieldPair>
@@ -1014,9 +1016,12 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                                 optionKey="name"
                                                                                                 name={`val-${editorIndex}-${idx}`}
                                                                                                 t={customT}
+                                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                                 select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
                                                                                                 disabled={!cond?.selectedField?.code}
                                                                                                 selected={selectedEnum}
+                                                                                                showToolTip={true}
+                                                                                                isSearchable={true}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1076,25 +1081,28 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                     </LabelFieldPair>
                                                                 </div>
 
-                                                                {/* Remove condition */}
-                                                                {(editorIndex > 0 || idx > 0) && <div
-                                                                    style={{
-                                                                        marginLeft: "auto",
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        gap: "0.25rem",
-                                                                        cursor: "pointer",
-                                                                    }}
-                                                                    onClick={() => removeCondition(editorIndex, idx)}
-                                                                    title={removeConditionLabel}
-                                                                    aria-label={removeConditionLabel}
-                                                                    role="button"
-                                                                >
-                                                                    <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
-                                                                    <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
-                                                                        {removeConditionLabel}
-                                                                    </span>
-                                                                </div>}
+                                                                {/* Remove condition - only show when more than 1 condition exists */}
+                                                                {rule.conds.length > 1 && (
+                                                                    <div
+                                                                        style={{
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            gap: "0.25rem",
+                                                                            cursor: "pointer",
+                                                                            alignSelf: "flex-end",
+                                                                            paddingBottom: "0.5rem",
+                                                                        }}
+                                                                        onClick={() => removeCondition(editorIndex, idx)}
+                                                                        title={removeConditionLabel}
+                                                                        aria-label={removeConditionLabel}
+                                                                        role="button"
+                                                                    >
+                                                                        <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
+                                                                        <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
+                                                                            {removeConditionLabel}
+                                                                        </span>
+                                                                    </div>
+                                                                )}
                                                             </div>
 
                                                             {/* Per-condition error */}
@@ -1126,7 +1134,8 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                     />
                                                                 </div>
                                                             )}
-                                                        </div>
+                                                            </div>
+                                                        </React.Fragment>
                                                     );
                                                 })}
 
@@ -1150,7 +1159,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                 option={targetPages?.length > 0 ? targetPages : allPageOptions}
                                                                 optionKey="code"
                                                                 name={`target-${editorIndex}`}
-                                                                optionCardStyles={{ maxHeight: "15vh" }}
+                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                 t={t}
                                                                 select={(e) => updateRule(editorIndex, { targetPage: e })}
                                                                 selected={
@@ -1159,6 +1168,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                         rules[editorIndex].targetPage
                                                                         : rules[editorIndex].targetPage
                                                                 }
+                                                                showToolTip={true}
                                                             />
                                                         </div>
                                                     </LabelFieldPair>
@@ -1193,7 +1203,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                             </div>
                                         );
                                     })()}
-                                </div>,
+                                </div>
                             ]}
                             onOverlayClick={discardAndCloseEditor}
                             onClose={discardAndCloseEditor}
@@ -1216,6 +1226,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                     onClick={submitAndClose}
                                 />,
                             ]}
+                            style={{maxWidth:"60%"}}
                         />
                     </div>
                 </BodyPortal>

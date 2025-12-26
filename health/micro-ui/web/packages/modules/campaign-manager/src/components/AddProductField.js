@@ -57,7 +57,7 @@ const AddProductField = ({ onSelect }) => {
 
   return (
     <React.Fragment>
-      <HeaderComponent styles={{ marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
+      <HeaderComponent className={"add-new-resource"} styles={{ marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
       <p className="name-description">
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT`)} <b> {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT`)} </b>
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT`)}
@@ -88,7 +88,7 @@ const AddProductField = ({ onSelect }) => {
                 </div>
               )}
             </div>
-            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }} removeMargin={true}>
               <div
                 className="product-label-field"
                 style={{
@@ -111,7 +111,7 @@ const AddProductField = ({ onSelect }) => {
               </div>
             </LabelFieldPair>
 
-            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }} removeMargin={true}>
               <div
                 className="product-label-field"
                 style={{
@@ -137,7 +137,7 @@ const AddProductField = ({ onSelect }) => {
               </div>
             </LabelFieldPair>
 
-            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }} removeMargin={true}>
               <div
                 className="product-label-field"
                 style={{

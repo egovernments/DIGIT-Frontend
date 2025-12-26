@@ -61,7 +61,7 @@ function NewDraggableField({
         isDelete={isDelete}
         dropDownOptions={dropDownOptions}
         onDelete={() => onDelete()}
-        onSelectField={() => onSelectField()}
+        onSelectField={onSelectField}
         onHide={() => onHide()}
         config={config}
         Mandatory={Mandatory}

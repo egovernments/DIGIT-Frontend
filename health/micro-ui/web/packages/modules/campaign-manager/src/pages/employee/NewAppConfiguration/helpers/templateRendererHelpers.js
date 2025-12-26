@@ -1,7 +1,7 @@
 import React from "react";
 import { FieldV1 } from "@egovernments/digit-ui-components";
 import { getFieldTypeFromMasterData } from "./getFieldTypeFromMasterData";
-import { getComponentName as getComponentNameFromHelper } from "./propertyHelpers.js";
+import { getComponentName as getComponentNameFromHelper, isEditableComponent } from "./propertyHelpers.js";
 
 /**
  * Get component name from field master data
@@ -53,6 +53,7 @@ export const renderTemplateComponent = (
 
   // Get component name from field master
   const componentName = getComponentName(field, fieldTypeMasterData);
+  const editableComponent = isEditableComponent(field?.format, fieldTypeMasterData);
 
   // Try to get component from ComponentRegistryService
   let Component = null;
@@ -73,13 +74,13 @@ export const renderTemplateComponent = (
 
   const handleClick = (e) => {
     e.stopPropagation();
-    onFieldClick && onFieldClick(field, data, null, index, null);
+    onFieldClick && editableComponent && onFieldClick(field, data, null, index, null);
   };
 
   // If custom component found, render it
   if (Component) {
     return (
-      <div key={uniqueKey} onClick={handleClick} style={wrapperStyle}>
+      <div key={uniqueKey} onClick={editableComponent ? handleClick : null} style={wrapperStyle}>
         <Component
           field={field}
           t={t}

@@ -65,7 +65,10 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
       ref={componentRef}
       onClick={(e) => {
         e.stopPropagation();
-        onSelectField();
+        if(onSelectField != null)
+        {
+          onSelectField();
+        }
       }}
       className="app-config-field-wrapper"
       style={{}}

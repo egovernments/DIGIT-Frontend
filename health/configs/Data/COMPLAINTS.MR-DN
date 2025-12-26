@@ -43,6 +43,7 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
                                                         "format": "button",
+                                                        "fieldName": "cancel",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLEAR_STATE",
@@ -63,6 +64,7 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
                                                         "format": "button",
+                                                        "fieldName": "search",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
@@ -150,6 +152,7 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
                                                         "format": "button",
+                                                        "fieldName": "cancel",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLEAR_STATE",
@@ -170,6 +173,7 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
                                                         "format": "button",
+                                                        "fieldName": "filter",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
@@ -252,6 +256,7 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
                                                         "format": "button",
+                                                        "fieldName": "cancel",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLEAR_STATE",
@@ -272,6 +277,7 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
                                                         "format": "button",
+                                                        "fieldName": "sort",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLOSE_POPUP",

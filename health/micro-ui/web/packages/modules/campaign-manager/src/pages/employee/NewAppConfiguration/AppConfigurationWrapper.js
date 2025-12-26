@@ -339,6 +339,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 }}
                 placeholder={t("SELECT_FIELD_TYPE")}
                 t={t}
+                isSearchable={true}
               />
             </LabelFieldPair>
 

@@ -63,7 +63,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           }}
         >
           {/* HEADER */}
-          {data?.heading && <CardHeader>{t(data.heading)}</CardHeader>}
+          {data?.heading && <CardHeader className="app-preview-card-header">{t(data.heading)}</CardHeader>}
           {data?.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
           {/* BODY */}
@@ -126,7 +126,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
               <Button
                 key={idx}
                 type={action?.format || "button"}
-                label={t(action.label) || action.label}
+                label={t(action.label) || ""}
                 size={action.properties?.size || "medium"}
                 variation={action.properties?.type || "primary"}
                 onClick={() => {}}

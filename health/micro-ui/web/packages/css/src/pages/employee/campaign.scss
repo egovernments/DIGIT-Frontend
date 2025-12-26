@@ -871,7 +871,9 @@
 .select-boundary {
   color: var(--digitv2-lightTheme-primary-2) !important;
 }
-.select-boundary-screen-heading {
+.select-boundary-screen-heading ,
+.cycle-configuration-heading,
+.add-new-resource{
   font-family: var(--digitv2-fontFamily-rc);
   font-weight: var(--digitv2-fontWeight-bold);
   font-style: Bold;
