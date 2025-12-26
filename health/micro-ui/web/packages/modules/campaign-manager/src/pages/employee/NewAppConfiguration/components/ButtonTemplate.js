@@ -13,7 +13,7 @@ const ButtonTemplate = ({ field, t, fieldTypeMasterData, props }) => {
   // Get translated label - allow empty string, only use default if undefined/null
   const buttonLabel = selectedField?.label !== undefined && selectedField?.label !== null
     ? (field ? t : props?.t)(selectedField?.label)
-    : "Button";
+    : "";
 
   return (
     <Button

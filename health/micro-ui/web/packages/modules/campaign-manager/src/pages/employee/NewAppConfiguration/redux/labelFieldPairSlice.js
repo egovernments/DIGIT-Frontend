@@ -14,10 +14,10 @@ export const getLabelFieldPairConfig = createAsyncThunk(
     { getState, rejectWithValue }
   ) => {
     try {
-      // Check if we already have the config cached
-      const existing = getState()?.labelFieldPair?.config;
-      if (existing && Array.isArray(existing) && existing.length > 0) {
-        return existing;
+      // Check if we already have the config cached from MDMS
+      const existing = getState()?.labelFieldPair;
+      if (existing?.config && Array.isArray(existing.config) && existing.config.length > 0 && existing.dataSource === 'mdms') {
+        return existing.config;
       }
 
       const response = await Digit.CustomService.getResponse({
@@ -41,12 +41,12 @@ export const getLabelFieldPairConfig = createAsyncThunk(
         }
       }
 
-      // Return dummy data if no data found
-      return dummyLabelFieldPairConfig;
+      // Reject when no MDMS data is found, will fallback to dummy in rejected case
+      return rejectWithValue("No data found in MDMS");
     } catch (err) {
-      console.error("Failed to fetch LabelFieldPairConfig from MDMS, using fallback:", err);
-      // Fallback to dummy data on error
-      return dummyLabelFieldPairConfig;
+      console.error("Failed to fetch LabelFieldPairConfig from MDMS:", err);
+      // Reject on error, will fallback to dummy in rejected case
+      return rejectWithValue(err.message || "Failed to fetch from MDMS");
     }
   }
 );
@@ -54,20 +54,23 @@ export const getLabelFieldPairConfig = createAsyncThunk(
 const labelFieldPairSlice = createSlice({
   name: "labelFieldPair",
   initialState: {
-    config: dummyLabelFieldPairConfig, // Initialize with the ARRAY
+    config: [], // Initialize with empty array
     status: "idle", // idle | loading | succeeded | failed
     error: null,
+    dataSource: null, // Track data source: 'mdms' | 'dummy' | null
   },
   reducers: {
     clearLabelFieldPairConfig(state) {
       state.config = [];
       state.status = "idle";
       state.error = null;
+      state.dataSource = null;
     },
     setLabelFieldPairConfig(state, action) {
       // Ensure we're always storing an array
-      state.config = Array.isArray(action.payload) ? action.payload : dummyLabelFieldPairConfig;
+      state.config = Array.isArray(action.payload) ? action.payload : [];
       state.status = "succeeded";
+      state.dataSource = "manual"; // Manually set config
     },
   },
   extraReducers: (builder) => {
@@ -75,17 +78,22 @@ const labelFieldPairSlice = createSlice({
       .addCase(getLabelFieldPairConfig.pending, (state) => {
         state.status = "loading";
         state.error = null;
+        // Don't clear config or dataSource during loading
+        // This prevents dummy data from being applied prematurely
       })
       .addCase(getLabelFieldPairConfig.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Store the array
-        state.config = Array.isArray(action.payload) ? action.payload : dummyLabelFieldPairConfig;
+        // Store the array from MDMS
+        state.config = Array.isArray(action.payload) ? action.payload : [];
+        state.dataSource = "mdms"; // Mark as MDMS data
+        state.error = null;
       })
       .addCase(getLabelFieldPairConfig.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || action.error.message;
-        // Keep dummy data on failure
+        // Only use dummy data on failure/error
         state.config = dummyLabelFieldPairConfig;
+        state.dataSource = "dummy"; // Mark as dummy data
       });
   },
 });

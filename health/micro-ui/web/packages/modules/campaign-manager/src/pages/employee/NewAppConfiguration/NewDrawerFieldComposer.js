@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons } from "@egovernments/digit-ui-components";
+import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioButtons, Loader } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -547,14 +547,36 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           </div>
         );
       }
-      //TODO: Implement labelPairList field renderer
       case "labelPairList": {
         const switchRef = useRef(null);
-        const [selectionError, setSelectionError] = useState(false);
 
-        // Fetch labelPairConfig from Redux
-        const allLabelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
+        // Fetch labelPairConfig state from Redux with all metadata
+        const labelFieldPairState = useSelector((state) => state?.labelFieldPair);
+        const {
+          config: allLabelPairConfig = [],
+          status,
+          dataSource,
+          error
+        } = labelFieldPairState;
+        // Show loading state while fetching from MDMS
+        if (status === 'loading') {
+          return (
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <Loader />
+            </div>
+          );
+        }
 
+        // Don't render until we have data (either from MDMS or fallback)
+        // This prevents dummy config from being applied prematurely
+        const shouldRender = status === 'succeeded' || status === 'failed';
+
+        if (!shouldRender) {
+          // Still in idle state, return null to prevent rendering
+          return null;
+        }
+
+        // Filter label pairs based on module and page
         const isEnabledForModuleAndPage = (modules = [], module, page) =>
           modules.some((m) => m?.[module]?.enabledPages?.includes(page));
 
