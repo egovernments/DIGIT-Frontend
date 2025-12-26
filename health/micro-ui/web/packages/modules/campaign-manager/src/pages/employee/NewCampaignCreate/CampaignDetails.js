@@ -619,7 +619,7 @@ const CampaignDetails = () => {
           )}
         </div>
       </div>
-      <div style={{ display: "flex", gap: "1rem", marginBottom: "0.5rem" }}>
+      <div style={{ display: "flex", gap: "1rem"}}>
         <div className="dates">{week}</div>
         <div
           className="hover"

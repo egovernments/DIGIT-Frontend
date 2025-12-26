@@ -1,7 +1,6 @@
 import React, { useReducer, Fragment, useEffect, useState, act } from "react";
-import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header, Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard, Stepper, TextBlock, Loader, FieldV1 } from "@egovernments/digit-ui-components";
+import { TextInput, Loader, FieldV1,Card,LabelFieldPair,CardText,CardLabel, HeaderComponent } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
@@ -313,26 +312,26 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           <div style={{ marginBottom: "1.5rem" }}>
             <Card>
               <TagComponent campaignName={campaignName} />
-              <Header styles={{ marginTop: "1.5rem", color: "#0b4b66" }} className="select-boundary">
+              <HeaderComponent className="cycle-configuration-heading">
                 {t(`CAMPAIGN_PROJECT_${selectedProjectType.toUpperCase()}`)}
-              </Header>
-              <p
-                className="dates-description"
-                value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
-                  tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-                )}`}
-              />
-              {/* <Card className="campaign-counter-container"> */}
-              <CardText>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
-              <LabelFieldPair style={{ marginBottom: "1.5rem" }}>
-                <CardLabel className="cycleBold" style={{ fontWeight: "700" }}>
+              </HeaderComponent>
+              {tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate && tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate && (
+                <p className="dates-description" style={{margin:"0rem"}}>
+                  {`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
+                    tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+                  )}`}
+                </p>
+              )}
+              <CardText style={{fontSize:"19px"}}>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
+              <LabelFieldPair>
+                <CardLabel className="cycleBold" style={{ fontWeight: "700",width:"40%" }}>
                   {t(`CAMPAIGN_NO_OF_CYCLE`)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
               </LabelFieldPair>
               <LabelFieldPair>
-                <CardLabel className="cycleBold" style={{ fontWeight: "700" }}>
+                <CardLabel className="cycleBold" style={{ fontWeight: "700" ,width:"40%"}}>
                   {t(`CAMPAIGN_NO_OF_DELIVERY`)}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
@@ -346,12 +345,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             </Card>
           </div>
           <Card className="campaign-counter-container">
-            <CardSubHeader className={"start-header"} style={{ marginBottom: "1.5rem" }}>
+            <HeaderComponent className="cycle-configuration-heading" style={{ marginBottom: "1.5rem" }}>
               {t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}
-            </CardSubHeader>
+            </HeaderComponent>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
-                <CardLabel>
+                <CardLabel style={{width:"40%"}}>
                   {t(`CAMPAIGN_CYCLE`)} {index + 1}
                   <span className="mandatory-span">*</span>
                 </CardLabel>

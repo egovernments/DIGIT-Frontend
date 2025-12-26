@@ -249,7 +249,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             ]}
             label={"Info"}
           /> */}
-          <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
+          <Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <TextBlock
                 subHeader={t("HCM_UNIFIED_UPLOAD_OPTION")}
