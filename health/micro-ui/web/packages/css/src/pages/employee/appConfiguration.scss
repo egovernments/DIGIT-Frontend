@@ -506,3 +506,12 @@
     background-color: #D6D5D4;
     border-radius: 8px;
 }
+
+.digit-sidepanel-switch-wrap{
+  width: 100%;
+  .digit-switch-label{
+    &.labelFirst{
+      margin-right: auto !important;
+    }
+  }
+}

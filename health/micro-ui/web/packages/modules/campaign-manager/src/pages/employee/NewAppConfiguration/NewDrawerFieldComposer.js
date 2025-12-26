@@ -291,6 +291,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               isCheckedInitially={localToggle}
               shapeOnOff
               disabled={isDisabled}
+              isLabelFirst={true}
+              className={"digit-sidepanel-switch-wrap"}
             />
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
@@ -539,6 +541,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   return true;
                 }),
                 optionsKey: "type",
+                isSearchable:true
               }}
               type={"dropdown"}
               value={currentSelectedFieldType}
@@ -921,6 +924,8 @@ const LocalizationInput = React.memo(
                 isCheckedInitially={toggleState}
                 key={`toggle-${columnIndex}-${toggleState}`} // Force re-render when state changes
                 shapeOnOff
+                isLabelFirst={true}
+                className={"digit-sidepanel-switch-wrap"}
               />
             </div>
           )}

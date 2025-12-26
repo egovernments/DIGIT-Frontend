@@ -149,11 +149,11 @@ const CloneCampaignWrapper = (props) => {
             label={t("SUBMIT")}
             onClick={onNextClick}
             isDisabled={isLoading || isValidatingName}
-          />,
+          />
         ]}
       >
         {(isLoading || isValidatingName) && (
-          <Loader loaderText={isValidatingName ? t("VALIDATING_CAMPAIGN_NAME") : t("CREATING_CAMPAIGN_COPY")} />
+          <Loader className="digit-center-loader" loaderText={isValidatingName ? t("VALIDATING_CAMPAIGN_NAME") : t("CREATING_CAMPAIGN_COPY")} />
         )}
         {!isLoading && !isValidatingName && (
           <div className="container">
