@@ -1107,6 +1107,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                     <Dropdown
                                                                         option={operatorOptions}
                                                                         optionKey="name"
+                                                                        optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                         name={`op-${idx}`}
                                                                         t={t}
                                                                         select={(e) => updateSubCond(idx, { comparisonType: e })}
@@ -1235,6 +1236,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                                                 option={enumOptions}
                                                                                                 optionKey="name"
                                                                                                 name={`enum-${idx}`}
+                                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                                 t={useT}
                                                                                                 select={(e) => updateSubCond(idx, { fieldValue: e.code })}
                                                                                                 selected={selectedEnum}
@@ -1249,6 +1251,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                                             <Dropdown
                                                                                                 option={productVariants}
                                                                                                 optionKey="name"
+                                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                                 name={`product-variant-${idx}`}
                                                                                                 t={t}
                                                                                                 select={(e) => updateSubCond(idx, { fieldValue: e.code })}

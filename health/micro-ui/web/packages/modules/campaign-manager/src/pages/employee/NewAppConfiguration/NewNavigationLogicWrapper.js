@@ -57,6 +57,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
             option={options}
             optionKey="code"
             name={`mdms-${module}-${master}`}
+            optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
             t={t}
             select={(e) => onChange(e.code)}
             disabled={isLoading || !module || !master}
@@ -899,7 +900,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                             : (isCk ? nextOps.find((o) => o.code === "==") : {}),
                                                                                     });
                                                                                 }}
-                                                                                optionCardStyles={{ maxHeight: "10vh" }}
+                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                 selected={
                                                                                     cond?.selectedField?.code
                                                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
@@ -919,6 +920,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                 option={operatorOptions}
                                                                                 optionKey="name"
                                                                                 name={`op-${editorIndex}-${idx}`}
+                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                 t={t}
                                                                                 select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
                                                                                 // disabled={!cond?.selectedField?.code}
@@ -1014,6 +1016,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                                 optionKey="name"
                                                                                                 name={`val-${editorIndex}-${idx}`}
                                                                                                 t={customT}
+                                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                                 select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
                                                                                                 disabled={!cond?.selectedField?.code}
                                                                                                 selected={selectedEnum}
@@ -1150,7 +1153,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                 option={targetPages?.length > 0 ? targetPages : allPageOptions}
                                                                 optionKey="code"
                                                                 name={`target-${editorIndex}`}
-                                                                optionCardStyles={{ maxHeight: "15vh" }}
+                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                 t={t}
                                                                 select={(e) => updateRule(editorIndex, { targetPage: e })}
                                                                 selected={
