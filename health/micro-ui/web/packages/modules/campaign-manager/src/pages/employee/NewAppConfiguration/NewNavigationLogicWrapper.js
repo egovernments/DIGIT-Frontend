@@ -62,6 +62,8 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
             select={(e) => onChange(e.code)}
             disabled={isLoading || !module || !master}
             selected={selectedOption}
+            showToolTip={true}
+            isSearchable={true}
         />
     );
 }
@@ -902,6 +904,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
                                                                                         : cond.selectedField
                                                                                 }
+                                                                                showToolTip={true}
                                                                             />
                                                                         </div>
                                                                     </LabelFieldPair>
@@ -921,6 +924,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                 select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
                                                                                 // disabled={!cond?.selectedField?.code}
                                                                                 selected={selectedOperator}
+                                                                                showToolTip={true}
                                                                             />
                                                                         </div>
                                                                     </LabelFieldPair>
@@ -1016,6 +1020,8 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                                 select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
                                                                                                 disabled={!cond?.selectedField?.code}
                                                                                                 selected={selectedEnum}
+                                                                                                showToolTip={true}
+                                                                                                isSearchable={true}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1162,6 +1168,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                         rules[editorIndex].targetPage
                                                                         : rules[editorIndex].targetPage
                                                                 }
+                                                                showToolTip={true}
                                                             />
                                                         </div>
                                                     </LabelFieldPair>

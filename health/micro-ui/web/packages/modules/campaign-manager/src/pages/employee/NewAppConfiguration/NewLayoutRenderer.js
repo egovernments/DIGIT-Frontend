@@ -63,7 +63,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           }}
         >
           {/* HEADER */}
-          {data?.heading && <CardHeader>{t(data.heading)}</CardHeader>}
+          {data?.heading && <CardHeader className="app-preview-card-header">{t(data.heading)}</CardHeader>}
           {data?.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
           {/* BODY */}
