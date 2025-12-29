@@ -31,6 +31,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     selectedProjectType,
   } = useDeliveryRuleData();
 
+
   const {
     campaignData,
     initializeData,
@@ -59,11 +60,11 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // Get effective delivery configuration - prioritize cycle data over project config
   const effectiveDeliveryConfig = useMemo(() => {
     const cycleDeliveryConfig = cycleData?.deliveryConfig;
-    
+
     if (cycleDeliveryConfig) {
       return cycleDeliveryConfig;
     }
-    
+
     return projectConfig;
   }, [cycleData, projectConfig]);
 
@@ -104,31 +105,29 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   }, [selectedProjectType, currentCampaignId, resetData]);
 
   // Initialize campaign data when dependencies are ready
- // Around line 85-95, modify to:
-useEffect(() => {
-  if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
-    return;
-  }
+  useEffect(() => {
+    if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
+      return;
+    }
 
-  if (initialized) {
-    return;
-  }
+    if (initialized) {
+      return;
+    }
 
-  const cycles = cycleData.cycleConfgureDate.cycle;
-  const deliveries = cycleData.cycleConfgureDate.deliveries;
+    const cycles = cycleData.cycleConfgureDate.cycle;
+    const deliveries = cycleData.cycleConfgureDate.deliveries;
 
-  if (!cycles || !deliveries) {
-    return;
-  }
+    if (!cycles || !deliveries) {
+      return;
+    }
 
-
-  try {
-    initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
-  } catch (error) {
-    console.error('Error initializing campaign data:', error);
-    setErrorState(error.message);
-  }
-}, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState]);
+    try {
+      initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
+    } catch (error) {
+      console.error('Error initializing campaign data:', error);
+      setErrorState(error.message);
+    }
+  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState]);
 
   // Wrap onSelect in useCallback to prevent dependency issues
   const handleDataUpdate = useCallback((data) => {
