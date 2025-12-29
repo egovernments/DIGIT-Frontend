@@ -283,6 +283,17 @@
       }
     }
   }
+
+  &.delivery-preview-screen {
+    margin-bottom: 0rem;
+    h2 {
+      margin-bottom: 0rem;
+    }
+
+    .campaign-attribute-table {
+      margin-bottom: 0rem;
+    }
+  }
 }
 
 .cycle-paragraph {
