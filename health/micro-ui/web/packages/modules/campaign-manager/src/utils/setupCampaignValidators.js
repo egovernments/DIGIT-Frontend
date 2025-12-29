@@ -357,15 +357,43 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
       if (validateMaxCondition) {
         setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });
-        return false; 
+        return false;
       }
       const isAttributeValid = checkAttributeValidity(formData);
       if (isAttributeValid) {
         setShowToast({ key: "error", label: isAttributeValid });
         return false;
       }
+
+      // Validate that all deliveries have at least one product
+      let productValidationFailed = false;
+      let productErrorMessage = "";
+
+      for (const cycle of deliveryRules || []) {
+        for (const delivery of cycle.deliveries || []) {
+          for (const rule of delivery.deliveryRules || []) {
+            if (!rule.products || rule.products.length === 0) {
+              productValidationFailed = true;
+              productErrorMessage = t("CAMPAIGN_SUMMARY_PRODUCT_MISSING_ERROR", {
+                CONDITION_NO: rule?.ruleKey,
+                DELIVERY_NO: delivery?.deliveryIndex,
+                CYCLE_NO: cycle?.cycleIndex,
+              });
+              break;
+            }
+          }
+          if (productValidationFailed) break;
+        }
+        if (productValidationFailed) break;
+      }
+
+      if (productValidationFailed) {
+        setShowToast({ key: "error", label: productErrorMessage });
+        return false;
+      }
+
       setShowToast(null);
-      return;
+      return true;
     case "DeliveryDetailsSummary":
       const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
       const isCycleError = validateCycleData(cycleConfigureData, t);
