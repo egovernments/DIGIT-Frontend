@@ -1639,7 +1639,8 @@ function NewDependentFieldWrapper({ t }) {
                                                                                             cond.fieldValue
                                                                                         )}
                                                                                         populators={{
-                                                                                            newDateFormat: true
+                                                                                            newDateFormat: true,
+                                                                                            useFixedPosition: true
                                                                                         }}
                                                                                         onChange={(
                                                                                             d

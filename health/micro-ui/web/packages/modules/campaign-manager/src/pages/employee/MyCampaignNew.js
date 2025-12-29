@@ -42,6 +42,11 @@ const MyCampaignNew = ({ showDashboardLink }) => {
   }, []);
 
   const onTabChange = (n) => {
+    // Prevent duplicate calls when clicking on the already active tab
+    const isAlreadyActive = tabData?.find((tab) => tab.key === n)?.active;
+    if (isAlreadyActive) {
+      return;
+    }
     sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", n); // Save to sessionStorage
     setSelectedTabIndex(n);
     setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n ? true : false })));
