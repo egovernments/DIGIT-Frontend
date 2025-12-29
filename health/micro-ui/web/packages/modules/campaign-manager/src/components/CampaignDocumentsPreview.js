@@ -4,9 +4,9 @@ import { DocumentIcon } from "./DocumentIcon";
 import XlsPreview from "./XlsPreview";
 import { XlsxFile } from "./icons/XlsxFile";
 import { downloadExcelWithCustomName } from "../utils";
-import { AlertCard } from "@egovernments/digit-ui-components";
+import { AlertCard ,Button} from "@egovernments/digit-ui-components";
 
-function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenerate = false, cardErrors }) {
+function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenerate = false, cardErrors,showAsButton }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [filesArray, setFilesArray] = useState(null);
@@ -32,34 +32,71 @@ function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenera
   };
   return (
     <div>
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "flex-start",
+        }}
+      >
         {documents?.length > 0 ? (
           documents?.map(
             (document, index) =>
               (document?.id || document?.filestoreId) && (
-                <div key={index} style={{ marginRight: "1rem" , display: "flex"  }}>
-                  <div onClick={() => setShowPreview(true)} className="campaign-preview">
+                <div
+                  key={index}
+                  style={{ marginRight: "1rem", display: "flex" }}
+                >
+                  <div
+                    onClick={() => setShowPreview(true)}
+                    className="campaign-preview"
+                  >
                     <div style={{ display: "flex" }}>
                       <XlsxFile />
                     </div>
-                    <p className="campaign-document-title">
-                      {isUserGenerate
-                        ? document?.type
-                        : document?.filename
-                        ? t(document?.filename)
-                        : t("CAMPAIGN_DOCUMENT_TITLE", { INDEX: index + 1 })}
-                    </p>
+                    {showAsButton ? (
+                      <Button
+                        variation={"link"}
+                        size={"medium"}
+                        label={
+                          isUserGenerate
+                            ? document?.type
+                            : document?.filename
+                            ? t(document?.filename)
+                            : t("CAMPAIGN_DOCUMENT_TITLE", { INDEX: index + 1 })
+                        }
+                        onClick={() => {}}
+                        className=""
+                      />
+                    ) : (
+                      <p className="campaign-document-title">
+                        {isUserGenerate
+                          ? document?.type
+                          : document?.filename
+                          ? t(document?.filename)
+                          : t("CAMPAIGN_DOCUMENT_TITLE", { INDEX: index + 1 })}
+                      </p>
+                    )}
                   </div>
                   {showPreview && (
                     <XlsPreview
                       file={{
-                        url: pdfFiles[document?.id ? document?.id : document?.filestoreId],
-                        filename: isUserGenerate ? document?.type : document?.filename,
+                        url:
+                          pdfFiles[
+                            document?.id ? document?.id : document?.filestoreId
+                          ],
+                        filename: isUserGenerate
+                          ? document?.type
+                          : document?.filename,
                       }}
                       onDownload={() =>
                         handleFileDownload({
-                          id: document?.id ? document?.id : document?.filestoreId,
-                          name: isUserGenerate ? document?.type : document?.filename,
+                          id: document?.id
+                            ? document?.id
+                            : document?.filestoreId,
+                          name: isUserGenerate
+                            ? document?.type
+                            : document?.filename,
                         })
                       }
                       onBack={() => setShowPreview(false)}

@@ -200,6 +200,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
             component: "CampaignDocumentsPreview",
             props: {
               documents: unifiedFiles,
+              showAsButton:true
             },
             cardHeader: { value: t("UNIFIED_DATA_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.unified?.length > 0 && {
@@ -219,6 +220,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
             component: "CampaignDocumentsPreview",
             props: {
               documents: facilityFiles,
+              showAsButton:true
             },
             cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.facility?.length > 0 && {
@@ -237,6 +239,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
             component: "CampaignDocumentsPreview",
             props: {
               documents: userFiles,
+              showAsButton:true
             },
             cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.user?.length > 0 && {
@@ -255,6 +258,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
             component: "CampaignDocumentsPreview",
             props: {
               documents: targetFiles,
+              showAsButton:true
             },
             cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.target?.length > 0 && {
@@ -333,7 +337,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
         <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
       </div>
 
-      <div className="campaign-summary-container">
+      <div className="campaign-summary-container campaign-update-summary">
         <ViewComposer data={viewComposerData} cardErrors={summaryErrors} />
 
         {showToast && (

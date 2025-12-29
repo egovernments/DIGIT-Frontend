@@ -1168,3 +1168,14 @@
     }
   }
 }
+.digit-infobanner-wrap .additional-elements-column .individualElement {
+  .digit-button-secondary {
+    &.alert-card-error-button {
+      .icon-label-container {
+        h2 {
+          color: var(--digitv2-lightTheme-primary) !important;
+        }
+      }
+    }
+  }
+}

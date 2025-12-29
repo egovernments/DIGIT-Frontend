@@ -58,10 +58,11 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           populators={{
             name: "infocard",
           }}
+          style={{marginBottom:"0rem"}}
           variant="error"
           text={t(i?.error ? i?.error : i?.message)}
           hasAdditionalElements={true}
-          additionalElements={[<Button className={"error"} label={i?.button} onClick={i.onClick} />]}
+          additionalElements={[<Button className={"error alert-card-error-button"} label={i?.button} variation="secondary" onClick={i.onClick} />]}
         />
       ))}
       <div className="employee-data-table ">
@@ -94,7 +95,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
       {deliveryData?.find((i) => i?.active === true)
         ?.deliveryRules?.map((rules, ruleIndex) => {
           return (
-            <Card className="delivery-preview-card">
+            <Card className="delivery-preview-card delivery-preview-screen" style={{marginBottom:"0rem"}}>
               {rules?.attributes?.length > 0 && (
                 <DetailsTable
                   className="campaign-attribute-table"

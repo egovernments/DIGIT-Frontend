@@ -24,7 +24,7 @@
     "styled-components": "5.x",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-02",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
-    "@egovernments/digit-ui-components": "2.0.0-dev-19"
+    "@egovernments/digit-ui-components": "2.0.0-dev-21"
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",

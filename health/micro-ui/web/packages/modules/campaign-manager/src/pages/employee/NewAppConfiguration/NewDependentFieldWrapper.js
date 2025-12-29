@@ -377,8 +377,26 @@ function NewDependentFieldWrapper({ t }) {
     };
 
     const toDDMMYYYY = (iso) => {
-        const dateOnly = String(iso).split("T")[0];
-        const [y, m, d] = dateOnly.split("-");
+        // Handle both event objects and direct values
+        const dateValue = iso?.target?.value || iso;
+        if (!dateValue) return "";
+
+        // Check if it's an ISO timestamp string (contains 'T')
+        const dateStr = String(dateValue);
+
+        if (dateStr.includes('T')) {
+            // It's an ISO timestamp - convert to local date to avoid timezone issues
+            // Create a Date object and extract local date parts
+            const dateObj = new Date(dateStr);
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+
+            return `${day}/${month}/${year}`;
+        }
+
+        // Simple YYYY-MM-DD format
+        const [y, m, d] = dateStr.split("-");
         if (!y || !m || !d) return "";
         return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
     };
@@ -1631,32 +1649,37 @@ function NewDependentFieldWrapper({ t }) {
                                                                                         }
                                                                                     />
                                                                                 ) : isDate ? (
-                                                                                    <TextInput
-                                                                                        type="date"
-                                                                                        name={`date-${idx}`}
-                                                                                        className="appConfigLabelField-Input"
-                                                                                        value={toISOFromDDMMYYYY(
-                                                                                            cond.fieldValue
-                                                                                        )}
-                                                                                        populators={{
-                                                                                            newDateFormat: true
-                                                                                        }}
+                                                                                    (() => {
+                                                                                        const isoValue = toISOFromDDMMYYYY(cond.fieldValue);
+                                                                                        return (
+                                                                                            <TextInput
+                                                                                                type="date"
+                                                                                                name={`date-${idx}`}
+                                                                                                className="appConfigLabelField-Input"
+                                                                                                value={isoValue}
+                                                                                                populators={{
+                                                                                                    newDateFormat: true
+                                                                                                }}
                                                                                         onChange={(
                                                                                             d
-                                                                                        ) =>
+                                                                                        ) => {
+                                                                                            // Convert to DD/MM/YYYY, handling ISO timestamps with local timezone
+                                                                                            const ddmmyyyy = toDDMMYYYY(d);
                                                                                             updateSubCond(
                                                                                                 idx,
                                                                                                 {
-                                                                                                    fieldValue: toDDMMYYYY(
-                                                                                                        d
-                                                                                                    ),
+                                                                                                    fieldValue: ddmmyyyy,
+                                                                                                    isDate: true,
                                                                                                 }
-                                                                                            )
-                                                                                        }
-                                                                                        disabled={
-                                                                                            !cond.leftField
-                                                                                        }
-                                                                                    />
+                                                                                            );
+                                                                                        }}
+                                                                                                disabled={
+                                                                                                    !cond.leftField
+                                                                                                }
+                                                                                            />
+                                                                                        );
+                                                                                    })()
+
                                                                                 ) : isSelect &&
                                                                                     !useMdms ? (
                                                                                     // select from enum values
