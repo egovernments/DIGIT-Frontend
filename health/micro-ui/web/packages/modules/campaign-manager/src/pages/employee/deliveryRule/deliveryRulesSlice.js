@@ -22,7 +22,7 @@ const deliveryRulesSlice = createSlice({
       state.activeSubTabIndex = 0;
       state.error = null;
 
-      if (savedData && savedData.length > 0 && savedData[0]?.cycles?.length > 0) {
+      if (savedData && savedData.length > 0 && savedData[0]?.deliveries?.length > 0) {
         // Process saved data to ensure proper structure
         state.campaignData = savedData.map((cycle, cycleIndex) => ({
           ...cycle,
