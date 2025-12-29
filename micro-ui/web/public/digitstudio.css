@@ -579,7 +579,7 @@
 }
 .draggableField-cont {
   margin-bottom: 1rem;
-  width: fit-content;
+  width: 100%;
   border-radius: 0.5rem;
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
