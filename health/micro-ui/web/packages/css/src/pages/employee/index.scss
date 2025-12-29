@@ -405,14 +405,26 @@ tbody {
 
   &.delivery-summary,
   &.boundary-summary,
-  &.data-upload-summary{
+  &.data-upload-summary {
     display: flex;
     flex-direction: column;
-    gap:1.5rem;
+    gap: 1.5rem;
 
     .view-composer-header-section {
       .employee-card-sub-header {
         margin-bottom: 0rem !important;
+      }
+    }
+  }
+
+  &.campaign-update-summary {
+    .digit-card-component {
+      margin-bottom: 1.5rem;
+
+      .view-composer-header-section {
+        .employee-card-sub-header {
+          margin-bottom: 0rem !important;
+        }
       }
     }
   }
