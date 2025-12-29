@@ -209,13 +209,28 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
     };
 
     const toDDMMYYYY = (iso) => {
-        const dateOnly = String(iso).split("T")[0];  // "2025-11-11"
+        // Handle both event objects and direct values
+        const dateValue = iso?.target?.value || iso;
+        if (!dateValue) return "";
 
-        const [y, m, d] = dateOnly.split("-");
+        // Check if it's an ISO timestamp string (contains 'T')
+        const dateStr = String(dateValue);
 
+        if (dateStr.includes('T')) {
+            // It's an ISO timestamp - convert to local date to avoid timezone issues
+            // Create a Date object and extract local date parts
+            const dateObj = new Date(dateStr);
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+
+            return `${day}/${month}/${year}`;
+        }
+
+        // Simple YYYY-MM-DD format
+        const [y, m, d] = dateStr.split("-");
         if (!y || !m || !d) return "";
-
-        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`
+        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
     };
 
     const toISOFromDDMMYYYY = (ddmmyyyy) => {
