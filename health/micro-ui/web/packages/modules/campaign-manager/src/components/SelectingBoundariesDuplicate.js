@@ -2,7 +2,7 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip, TextBlock, Switch } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText, TextBlock, Switch } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -128,7 +128,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     setTimeout(() => setIsLoading(false), 10);
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType, campaignData]);
 
-  console.log("sdvjkhsdjk", props);
   useEffect(() => {
     if (
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
@@ -137,6 +136,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
     ) {
       setRestrictSelection(true);
+      setShowPopUp(true); // Show popup immediately on initial load if data is present
     }
   }, [props?.props?.sessionData]);
 
@@ -163,6 +163,36 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     if (action === false) {
       setShowPopUp(false);
       setRestrictSelection(false);
+
+      // Clear upload session data when updating boundaries
+      const currentSessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+      const formData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+      const campaignSetupData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
+      const unifiedUploadData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
+      if (currentSessionData || formData || campaignSetupData || unifiedUploadData) {
+        Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", {
+          ...currentSessionData,
+          HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
+            uploadFacility: {
+              uploadedFile: [],
+              isSuccess: false,
+            },
+          },
+          HCM_CAMPAIGN_UPLOAD_USER_DATA: {
+            uploadUser: {
+              uploadedFile: [],
+              isSuccess: false,
+            },
+          },
+          HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA: {
+            uploadUnified: {
+              uploadedFile: [],
+              isSuccess: false,
+            },
+          },
+        });
+      }
+
       return;
     }
     if (action === true) {
