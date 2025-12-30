@@ -280,8 +280,23 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           const isHiddenField = bindTo === "hidden" || bindTo.includes(".hidden");
           const valueToSet = isHiddenField ? !Boolean(value) : Boolean(value);
 
-          // Always update Redux store with the toggle value'
-          handleFieldChange(valueToSet);
+          // Special handling for systemDate toggle
+          if (bindTo === "systemDate" && Boolean(value) === true) {
+            // When systemDate is toggled ON, clear startDate and endDate
+            const updatedField = {
+              ...selectedField,
+              [bindTo]: valueToSet,
+              dateRange: {
+                ...selectedField.dateRange,
+                startDate: null,
+                endDate: null,
+              },
+            };
+            onFieldChange(updatedField);
+          } else {
+            // Always update Redux store with the toggle value
+            handleFieldChange(valueToSet);
+          }
         };
         return (
           <>
@@ -376,17 +391,56 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "date": {
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
+
+        // Check if systemDate is enabled, and if so, disable this date field
+        const isSystemDateEnabled = selectedField?.systemDate === true;
+        const shouldDisable = isDisabled || isSystemDateEnabled;
+
         return (
           <FieldV1
             type="date"
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={getFieldValue() ? convertEpochToDateString(getFieldValue()) : ""}
             onChange={(event) => {
-              handleFieldChange(convertDateStringToEpoch(event.target.value));
+              const epochValue = convertDateStringToEpoch(event.target.value);
+
+              // Check if this is part of dateRange (startDate or endDate)
+              const isDateRangeField = panelItem.bindTo?.includes("dateRange.");
+
+              if (isDateRangeField) {
+                // Update the date field
+                if (panelItem.bindTo.includes(".")) {
+                  const keys = panelItem.bindTo.split(".");
+                  const newField = JSON.parse(JSON.stringify(selectedField));
+                  let current = newField;
+                  for (let i = 0; i < keys.length - 1; i++) {
+                    if (!current[keys[i]]) {
+                      current[keys[i]] = {};
+                    }
+                    current = current[keys[i]];
+                  }
+                  current[keys[keys.length - 1]] = epochValue;
+
+                  // Check if both startDate and endDate are now filled
+                  const hasStartDate = newField.dateRange?.startDate !== null && newField.dateRange?.startDate !== undefined;
+                  const hasEndDate = newField.dateRange?.endDate !== null && newField.dateRange?.endDate !== undefined;
+
+                  // If both date fields have values, turn off systemDate
+                  if (hasStartDate && hasEndDate) {
+                    newField.systemDate = false;
+                  }
+
+                  onFieldChange(newField);
+                } else {
+                  onFieldChange({ ...selectedField, [panelItem.bindTo]: epochValue });
+                }
+              } else {
+                handleFieldChange(epochValue);
+              }
             }}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
-            disabled={isDisabled}
+            disabled={shouldDisable}
           />
         );
       }
