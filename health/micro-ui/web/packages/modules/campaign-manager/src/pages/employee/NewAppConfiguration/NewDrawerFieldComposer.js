@@ -596,18 +596,39 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               populators={{
                 title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
                 fieldPairClassName: "drawer-toggle-conditional-field",
-                options: fieldTypeOptions.filter((item) => {
-                  // Always filter out dynamic types
-                  if (item?.metadata?.type === "dynamic") return false;
-                  // Filter out template types only for forms (pageType === "object")
-                  if (pageType === "object" && item?.metadata?.type === "template") return false;
-                  return true;
-                }),
-                optionsKey: "type",
-                isSearchable:true
+                options: (() => {
+                  const filteredOptions = fieldTypeOptions.filter((item) => {
+                    // Always filter out dynamic types
+                    if (item?.metadata?.type === "dynamic") return false;
+                    // Filter out template types only for forms (pageType === "object")
+                    if (pageType === "object" && item?.metadata?.type === "template") return false;
+                    return true;
+                  });
+
+                  const basicOptions = filteredOptions.filter((item) => item?.category === "basic");
+                  const advancedOptions = filteredOptions.filter((item) => item?.category === "advanced");
+
+                  return [
+                    {
+                      name: t("FIELD_CATEGORY_BASIC"),
+                      code: "basic",
+                      options: basicOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
+                    },
+                    {
+                      name: t("FIELD_CATEGORY_ADVANCED"),
+                      code: "advanced",
+                      options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
+                    },
+                  ].filter((group) => group.options.length > 0);
+                })(),
+                optionsKey: "name",
+                variant: "nesteddropdown",
+                isSearchable: true,
+                optionsCustomStyle:{maxHeight:"15vh"}
               }}
               type={"dropdown"}
-              value={currentSelectedFieldType}
+              variant="nesteddropdown"
+              value={currentSelectedFieldType ? { ...currentSelectedFieldType, name: currentSelectedFieldType.type, code: t(`${currentSelectedFieldType.category}.${currentSelectedFieldType.type}`) } : null}
               disabled={isDisabled}
             />
           </div>

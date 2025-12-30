@@ -323,14 +323,33 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               </span>
               <Dropdown
                 className="app-config-pop-dropdown"
-                option={fieldTypeMaster?.fieldTypeMappingConfig?.filter((item) => {
-                  // Always filter out dynamic types
-                  if (item?.metadata?.type === "dynamic") return false;
-                  // Filter out template types only for forms (pageType === "object")
-                  if (pageType === "object" && item?.metadata?.type === "template") return false;
-                  return true;
-                })}
-                optionKey="type"
+                option={(() => {
+                  const filteredOptions = fieldTypeMaster?.fieldTypeMappingConfig?.filter((item) => {
+                    // Always filter out dynamic types
+                    if (item?.metadata?.type === "dynamic") return false;
+                    // Filter out template types only for forms (pageType === "object")
+                    if (pageType === "object" && item?.metadata?.type === "template") return false;
+                    return true;
+                  }) || [];
+
+                  const basicOptions = filteredOptions.filter((item) => item?.category === "basic");
+                  const advancedOptions = filteredOptions.filter((item) => item?.category === "advanced");
+
+                  return [
+                    {
+                      name: t("FIELD_CATEGORY_BASIC"),
+                      code: "basic",
+                      options: basicOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
+                    },
+                    {
+                      name: t("FIELD_CATEGORY_ADVANCED"),
+                      code: "advanced",
+                      options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
+                    },
+                  ].filter((group) => group.options.length > 0);
+                })()}
+                optionKey="name"
+                variant="nesteddropdown"
                 selected={newFieldType?.field || null}
                 select={(value) => {
                   // Update the newdata state with the selected value from the dropdown
@@ -340,6 +359,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 placeholder={t("SELECT_FIELD_TYPE")}
                 t={t}
                 isSearchable={true}
+                optionCardStyles={{maxHeight:"20vh"}}
               />
             </LabelFieldPair>
 
