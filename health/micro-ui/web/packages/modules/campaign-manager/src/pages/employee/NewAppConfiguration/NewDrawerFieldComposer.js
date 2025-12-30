@@ -747,6 +747,30 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     ? selectedOptions.map((opt) => ({ code: opt.code }))
                     : []
                 }
+                onChipClose={(value) => {
+                  // 🚫 BLOCK removal of last remaining item
+                  if (selectedData.length === 1) {
+                    if (
+                      window.__appConfig_showToast &&
+                      typeof window.__appConfig_showToast === "function"
+                    ) {
+                      window.__appConfig_showToast({
+                        key: "error",
+                        label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
+                      });
+                    }
+                    return;
+                  }
+
+                  // Filter out the removed item from selectedData
+                  const updatedData = selectedData.filter((item) => item.key !== value.name);
+
+                  // Update the field with the new data
+                  onFieldChange({
+                    ...selectedField,
+                    data: updatedData,
+                  });
+                }}
                 onClose={(selectedArray) => {
                   const extractedOptions =
                     selectedArray?.map((arr) => arr?.[1]) || [];
