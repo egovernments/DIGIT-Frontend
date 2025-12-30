@@ -218,6 +218,31 @@ const CampaignDetails = () => {
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  // MDMS call for Form Config to check if all forms are configured
+  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
+  const { isLoading: isFormConfigLoading, data: formConfigData } = Digit.Hooks.useCustomAPIHook(
+    Digit.Utils.campaign.getMDMSV2Criteria(
+      tenantId,
+      schemaCode,
+      {
+        project: campaignData?.campaignNumber,
+      },
+      `MDMSDATA-${schemaCode}-${campaignData?.campaignNumber}`,
+      {
+        enabled: !!campaignData?.campaignNumber,
+        cacheTime: 0,
+        staleTime: 0,
+      }
+    )
+  );
+
+  // Check if all form configs have version > 1
+  const isFormConfigured = useMemo(() => {
+    if (!formConfigData?.length > 0) return false;
+    const formConfigs = formConfigData;
+    return formConfigs?.length > 0 && formConfigs?.filter((flow) => flow?.data?.active)?.every((item) => item?.data?.version > 1);
+  }, [formConfigData]);
+
   useEffect(() => {
     if (campaignData) {
       sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
@@ -357,8 +382,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
-              type: "primary",
+              buttonLabel: isFormConfigured ? t("HCM_EDIT_MOBILE_APP_BUTTON") : t("HCM_MOBILE_APP_BUTTON"),
+              type: isFormConfigured ? "secondary" : "primary",
               navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: (
                 <AdUnits
@@ -578,7 +603,7 @@ const CampaignDetails = () => {
     setShowQRPopUp(true);
   };
 
-  if (isLoading) {
+  if (isLoading || isFormConfigLoading || hierarchyTypeLoading ) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
