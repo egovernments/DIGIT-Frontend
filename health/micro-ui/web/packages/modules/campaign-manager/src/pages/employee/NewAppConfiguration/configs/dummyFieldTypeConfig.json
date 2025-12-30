@@ -2,6 +2,7 @@
   {
     "type": "latLng",
     "order": 1,
+    "category": "advanced",
     "metadata": {
       "type": "string",
       "format": "latLng"
@@ -11,6 +12,7 @@
   {
     "type": "locality",
     "order": 2,
+    "category": "advanced",
     "metadata": {
       "type": "string",
       "format": "locality"
@@ -18,8 +20,19 @@
     "fieldType": "text"
   },
   {
+    "type": "textarea",
+    "order": 2,
+    "category": "basic",
+    "metadata": {
+      "type": "string",
+      "format": "textArea"
+    },
+    "fieldType": "textarea"
+  },
+  {
     "type": "text",
     "order": 3,
+    "category": "basic",
     "metadata": {
       "type": "string",
       "format": "text"
@@ -29,6 +42,7 @@
   {
     "type": "date",
     "order": 4,
+    "category": "basic",
     "metadata": {
       "type": "string",
       "format": "date"
@@ -38,6 +52,7 @@
   {
     "type": "dropdown",
     "order": 5,
+    "category": "basic",
     "metadata": {
       "type": "string",
       "format": "dropdown"
@@ -47,6 +62,7 @@
   {
     "type": "number",
     "order": 6,
+    "category": "basic",
     "metadata": {
       "type": "integer",
       "format": "text"
@@ -54,54 +70,59 @@
     "fieldType": "number"
   },
   {
-    "type": "email",
-    "order": 7,
-    "metadata": {
-      "type": "string",
-      "format": "email"
-    },
-    "fieldType": "email"
-  },
-  {
-    "type": "phone",
+    "type": "mobileNumber",
     "order": 8,
+    "category": "basic",
     "metadata": {
       "type": "string",
-      "format": "phone"
+      "format": "mobileNumber"
     },
-    "fieldType": "phone"
+    "fieldType": "mobileNumber"
   },
   {
     "type": "switch",
     "order": 9,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "switch"
-    }
+    },
+    "component": "Toggle",
+    "fieldType": "switch"
+  },
+  {
+    "type": "listView",
+    "order": 9,
+    "category": "advanced",
+    "editable": false,
+    "metadata": {
+      "type": "template",
+      "format": "listView"
+    },
+    "component": "ListView",
+    "fieldType": "listView"
   },
   {
     "type": "searchBar",
     "order": 10,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "searchBar"
-    }
-  },
-  {
-    "type": "filter",
-    "order": 11,
-    "metadata": {
-      "type": "template",
-      "format": "filter"
-    }
+    },
+    "component": "SearchBar",
+    "fieldType": "searchBar"
   },
   {
     "type": "button",
     "order": 12,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "button"
     },
+    "component": "ButtonTemplate",
+    "fieldType": "button",
     "properties": [
       {
         "code": "variation",
@@ -109,17 +130,111 @@
       },
       {
         "code": "icon",
-        "options": ["Add", "Edit", "Delete", "Search", "Download", "QrCodeScanner"]
+        "options": [
+          "Add",
+          "Edit",
+          "Delete",
+          "Search",
+          "Download",
+          "QrCodeScanner"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "textTemplate",
+    "order": 12,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "textTemplate"
+    },
+    "component": "TextTemplate",
+    "fieldType": "textTemplate"
+  },
+  {
+    "type": "table",
+    "order": 12,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "table"
+    },
+    "component": "TableTemplate",
+    "fieldType": "table"
+  },
+  {
+    "type": "labelPairList",
+    "order": 12,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "labelPairList"
+    },
+    "component": "LabelFieldPair",
+    "fieldType": "labelPairList"
+  },
+  {
+    "type": "menu_card",
+    "order": 12,
+    "category": "advanced",
+    "editable": true,
+    "metadata": {
+      "type": "template",
+      "format": "menu_card"
+    },
+    "component": "MenuCardTemplate",
+    "fieldType": "menu_card"
+  },
+  {
+    "type": "filter",
+    "order": 13,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "filter"
+    },
+    "component": "Filter",
+    "fieldType": "filter"
+  },
+  {
+    "type": "buttonTemplate",
+    "order": 14,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "button"
+    },
+    "component": "ButtonTemplate",
+    "fieldType": "component",
+    "properties": [
+      {
+        "code": "type",
+        "options": ["primary", "secondary"]
+      },
+      {
+        "code": "icon",
+        "options": [
+          "Add",
+          "Edit",
+          "Delete",
+          "Search",
+          "Download",
+          "QrCodeScanner"
+        ]
       }
     ]
   },
   {
     "type": "panelCard",
-    "order": 13,
+    "order": 15,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "panelCard"
     },
+    "component": "PanelCard",
+    "fieldType": "panelCard",
     "properties": [
       {
         "code": "panelType",
@@ -129,11 +244,15 @@
   },
   {
     "type": "card",
-    "order": 14,
+    "order": 16,
+    "category": "advanced",
+    "editable": false,
     "metadata": {
       "type": "template",
       "format": "card"
     },
+    "component": "CardTemplate",
+    "fieldType": "card",
     "properties": [
       {
         "code": "cardType",
@@ -142,26 +261,39 @@
     ]
   },
   {
-    "type": "infoCard",
-    "order": 15,
+    "type": "icon",
+    "order": 16,
+    "category": "advanced",
+    "editable": false,
     "metadata": {
       "type": "template",
-      "format": "infoCard"
+      "format": "icon"
     },
-    "properties": [
-      {
-        "code": "infoCardType",
-        "options": ["info", "success", "error", "warning"]
-      }
-    ]
+    "component": "IconTemplate",
+    "fieldType": "icon"
+  },
+  {
+    "type": "dropdownTemplate",
+    "order": 16,
+    "category": "advanced",
+    "editable": true,
+    "metadata": {
+      "type": "template",
+      "format": "dropdownTemplate"
+    },
+    "component": "DropdownTemplate",
+    "fieldType": "dropdownTemplate"
   },
   {
     "type": "tag",
-    "order": 16,
+    "order": 17,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "tag"
     },
+    "component": "Tag",
+    "fieldType": "tag",
     "properties": [
       {
         "code": "tagType",
@@ -170,41 +302,338 @@
     ]
   },
   {
-    "type": "Column",
+    "type": "textInput",
     "order": 17,
+    "category": "advanced",
+    "editable": false,
+    "metadata": {
+      "type": "template",
+      "format": "textInput"
+    },
+    "component": "TextInputTemplate",
+    "fieldType": "textInput"
+  },
+  {
+    "type": "Column",
+    "order": 18,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "Column"
     },
+    "component": "Column",
+    "fieldType": "Column",
     "properties": [
       {
         "code": "children",
-        "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
+        "options": [
+          "Card",
+          "infoCard",
+          "panelCard",
+          "button",
+          "Row",
+          "Column",
+          "switch",
+          "searchBar",
+          "filter"
+        ]
       }
     ]
   },
   {
-    "type": "Row",
+    "type": "column",
     "order": 18,
+    "category": "advanced",
+    "editable": false,
+    "metadata": {
+      "type": "template",
+      "format": "column"
+    },
+    "component": "Column",
+    "fieldType": "column",
+    "properties": [
+      {
+        "code": "children",
+        "options": [
+          "Card",
+          "infoCard",
+          "textTemplate",
+          "panelCard",
+          "button",
+          "Row",
+          "Column",
+          "row",
+          "column",
+          "switch",
+          "searchBar",
+          "icon",
+          "filter"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "radioList",
+    "order": 18,
+    "category": "advanced",
+    "editable": false,
+    "metadata": {
+      "type": "template",
+      "format": "radioList"
+    },
+    "component": "RadioListTemplate",
+    "fieldType": "radioList"
+  },
+  {
+    "type": "scanner",
+    "order": 18,
+    "category": "advanced",
+    "metadata": {
+      "type": "string",
+      "format": "scanner"
+    },
+    "component": "QRScanner",
+    "fieldType": "component",
+    "attributeToRename": {}
+  },
+  {
+    "type": "Row",
+    "order": 19,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "Row"
     },
+    "component": "Row",
+    "fieldType": "Row",
     "properties": [
       {
         "code": "children",
-        "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
+        "options": [
+          "Card",
+          "infoCard",
+          "panelCard",
+          "button",
+          "Row",
+          "Column",
+          "switch",
+          "searchBar",
+          "tag",
+          "filter",
+          "textTemplate"
+        ]
       }
     ]
   },
   {
-    "type": "actionPopup",
+    "type": "row",
     "order": 19,
+    "category": "advanced",
+    "editable": false,
+    "metadata": {
+      "type": "template",
+      "format": "row"
+    },
+    "component": "Row",
+    "fieldType": "row",
+    "properties": [
+      {
+        "code": "children",
+        "options": [
+          "Card",
+          "infoCard",
+          "panelCard",
+          "button",
+          "Row",
+          "row",
+          "tag",
+          "column",
+          "Column",
+          "switch",
+          "searchBar",
+          "icon",
+          "filter",
+          "textTemplate",
+          "actionPopup"
+        ]
+      }
+    ]
+  },
+  {
+    "type": "radio",
+    "order": 20,
+    "category": "basic",
+    "metadata": {
+      "type": "string",
+      "format": "radio"
+    },
+    "fieldType": "radio"
+  },
+  {
+    "type": "searchByProximity",
+    "order": 20,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "toggle"
+    },
+    "component": "Toggle",
+    "fieldType": "searchByProximity"
+  },
+  {
+    "type": "proximitySearch",
+    "order": 20,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "proximitySearch"
+    },
+    "component": "Toggle",
+    "fieldType": "proximitySearch"
+  },
+  {
+    "type": "searchByID",
+    "order": 21,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "toggle"
+    },
+    "component": "Toggle",
+    "fieldType": "searchByID"
+  },
+  {
+    "type": "checkbox",
+    "order": 22,
+    "category": "basic",
+    "metadata": {
+      "type": "boolean",
+      "format": "checkbox"
+    },
+    "fieldType": "checkbox"
+  },
+  {
+    "type": "PrimaryButton",
+    "order": 22,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "button"
+    },
+    "component": "PrimaryButton",
+    "fieldType": "PrimaryButton"
+  },
+  {
+    "type": "qrScanner",
+    "order": 22,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "qrScanner"
+    },
+    "component": "QRScanner",
+    "fieldType": "qrScanner"
+  },
+  {
+    "type": "numeric",
+    "order": 23,
+    "category": "basic",
+    "metadata": {
+      "type": "integer",
+      "format": "numeric"
+    },
+    "fieldType": "numeric"
+  },
+  {
+    "type": "infoCard",
+    "order": 23,
+    "category": "advanced",
+    "metadata": {
+      "type": "template",
+      "format": "infoCard"
+    },
+    "component": "InfoCard",
+    "fieldType": "infoCard",
+    "properties": [
+      {
+        "code": "infoCardType",
+        "options": ["info", "success", "error", "warning"]
+      }
+    ]
+  },
+  {
+    "type": "idPopulator",
+    "order": 25,
+    "category": "advanced",
+    "metadata": {
+      "type": "string",
+      "format": "idPopulator"
+    },
+    "fieldType": "dropdown"
+  },
+  {
+    "type": "dob",
+    "order": 26,
+    "category": "basic",
+    "metadata": {
+      "type": "string",
+      "format": "dob"
+    },
+    "fieldType": "date"
+  },
+  {
+    "type": "actionPopup",
+    "order": 26,
+    "category": "advanced",
     "metadata": {
       "type": "template",
       "format": "actionPopup"
     },
     "component": "Button",
     "fieldType": "button"
+  },
+  {
+    "type": "select",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "string",
+      "format": "select"
+    },
+    "component": "SelectionCard",
+    "fieldType": "component"
+  },
+  {
+    "type": "resourceCard",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "dynamic",
+      "format": "custom"
+    },
+    "component": "SelectionCard",
+    "fieldType": "component"
+  },
+  {
+    "type": "facilityToWhich",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "dynamic",
+      "format": "custom"
+    },
+    "component": "DropdownTemplate",
+    "fieldType": "component"
+  },
+  {
+    "type": "evaluationFacility",
+    "order": 27,
+    "category": "advanced",
+    "metadata": {
+      "type": "dynamic",
+      "format": "custom"
+    },
+    "component": "DropdownTemplate",
+    "fieldType": "component"
   }
 ]
