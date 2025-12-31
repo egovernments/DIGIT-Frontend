@@ -243,6 +243,30 @@ const CampaignDetails = () => {
     return formConfigs?.length > 0 && formConfigs?.filter((flow) => flow?.data?.active)?.every((item) => item?.data?.version > 1);
   }, [formConfigData]);
 
+  // Using the checklist search hook to check if any checklists are configured
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+  const { data: checklistData } = Digit.Hooks.campaign.useMDMSServiceSearch({
+    url: `/${mdms_context_path}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.ChecklistTemplates`,
+        isActive: true,
+        filters: {},
+        limit: 1000,
+      },
+    },
+    campaignName: campaignData?.campaignName,
+    campaignType: campaignData?.projectType,
+    serviceDefinitionLimit: 1,
+    enabled: !!campaignData?.campaignName && !!campaignData?.projectType,
+  });
+
+  // Checking if any checklists are configured (have ServiceRequest in merged data)
+  const isChecklistConfigured = useMemo(() => {
+    return checklistData?.mdmsData?.some((item) => item?.ServiceRequest?.length > 0);
+  }, [checklistData]);
+
   useEffect(() => {
     if (campaignData) {
       sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
@@ -491,8 +515,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_CHECKLIST_HEADING"),
               desc: t("HCM_CHECKLIST_DESC"),
-              buttonLabel: t("HCM_CHECKLIST_BUTTON"),
-              type: "primary",
+              buttonLabel: isChecklistConfigured ? t("HCM_EDIT_CHECKLIST_BUTTON") : t("HCM_CHECKLIST_BUTTON"),
+              type: isChecklistConfigured ? "secondary" : "primary",
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
               icon: <ListAltCheck />,
             },
