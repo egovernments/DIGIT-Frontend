@@ -22,11 +22,8 @@ const fetchServiceDefinition = async (serviceCodes, tenantId) => {
   }
 };
 
-const mergeData = (mdmsData) => {
+const mergeData = (mdmsData, campaignName) => {
   return mdmsData.map((item) => {
-    const searchParams = new URLSearchParams(location.search);
-    const campaignName = searchParams.get("name");
-
     const cl_code = item.data.checklistType.replace("HCM_CHECKLIST_TYPE_", "");
     const role_code = item.data.role.replace("ACCESSCONTROL_ROLES_ROLES_", "");
     const serviceCode = `${campaignName}.${cl_code}.${role_code}`;
@@ -34,10 +31,12 @@ const mergeData = (mdmsData) => {
   });
 };
 
-const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessRequest, changeQueryName = "Random", state }) => {
+const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessRequest, changeQueryName = "Random", state, campaignName: campaignNameProp, campaignType: campaignTypeProp }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-  const campaignType = searchParams.get("projectType");
+  // Using props if provided, otherwise fallback to URL params
+  const campaignName = campaignNameProp || searchParams.get("name");
+  const campaignType = campaignTypeProp || searchParams.get("projectType");
   const updatedMdmsCriteria = body?.MdmsCriteria;
   updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, 
     campaignType
@@ -52,7 +51,7 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
       });
 
       // Second API Call: Merge MDMS Data with Service Definition
-      const final = mergeData(mdmsResponse?.mdms);
+      const final = mergeData(mdmsResponse?.mdms,campaignName);
       const serviceData = await fetchServiceDefinition(final, tenantId);
 
 
