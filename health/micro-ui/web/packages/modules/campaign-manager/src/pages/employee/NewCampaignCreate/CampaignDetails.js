@@ -258,6 +258,8 @@ const CampaignDetails = () => {
     },
     campaignName: campaignData?.campaignName,
     campaignType: campaignData?.projectType,
+    serviceDefinitionLimit: 1,
+    enabled: !!campaignData?.campaignName && !!campaignData?.projectType,
   });
 
   // Checking if any checklists are configured (have ServiceRequest in merged data)
