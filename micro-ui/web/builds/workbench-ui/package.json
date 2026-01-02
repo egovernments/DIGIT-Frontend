@@ -14,11 +14,11 @@
   ],
   "dependencies": {
     "@egovernments/digit-ui-libraries": "2.0.0-dev-07",
-    "@egovernments/digit-ui-module-core": "2.0.0-dev-03",
+    "@egovernments/digit-ui-module-core": "2.0.0-dev-04",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-03",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
     "@egovernments/digit-ui-components": "2.0.0-dev-22",
-    "@egovernments/digit-ui-module-workbench": "2.0.0-dev-04",
+    "@egovernments/digit-ui-module-workbench": "2.0.0-dev-05",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "4.0.0",
