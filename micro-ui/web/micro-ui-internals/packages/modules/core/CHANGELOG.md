@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.9.10]  [02-JAN-2026]
+-userProfile has been changed according to the new api /health-individual/v1
+
 ## [1.9.9]  [24-DEC-2025]
 - **Feature**: Mobile number validation in Login and User Profile now driven by `UserValidation` MDMS master.
 - **Refactor**: Removed dependency on `CORE_MOBILE_CONFIGS` global object.
