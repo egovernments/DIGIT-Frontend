@@ -579,7 +579,7 @@
 }
 .draggableField-cont {
   margin-bottom: 1rem;
-  width: 100%;
+  width: 100% !important;
   border-radius: 0.5rem;
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
@@ -1497,5 +1497,13 @@ textarea.light-placeholder::placeholder {
 }
 
 .app-configuration-side-panel textarea{
+  resize: none;
+}
+
+.notifications-chip .close-icon{
+  visibility: hidden;
+}
+
+.digit-field-container textarea{
   resize: none;
 }
