@@ -1,5 +1,4 @@
-import { InboxSearchComposer } from "@egovernments/digit-ui-components";
-import { Dropdown, Toast, Button, PopUp, Footer } from "@egovernments/digit-ui-components";
+import { Dropdown, Toast, Button, PopUp, Footer,InboxSearchComposer } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";

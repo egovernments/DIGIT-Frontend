@@ -102,7 +102,9 @@
                 additionalCustomization: true
               }
             ],
-  
+            tableProps: {
+              tableClassName:"results-data-table-for-checklist"
+            },
             enableColumnSort: true,
             resultsJsonPath: "mdmsData"
           },
