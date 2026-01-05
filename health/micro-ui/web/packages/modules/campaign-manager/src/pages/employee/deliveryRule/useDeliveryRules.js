@@ -24,6 +24,8 @@ import {
   updateDeliveryTypeForDelivery,
   setLoading,
   setError,
+  syncCycles,
+  syncDeliveries,
 } from './deliveryRulesSlice';
 import { CONSOLE_MDMS_MODULENAME } from '../../../Module';
 
@@ -135,6 +137,14 @@ export const useDeliveryRules = () => {
     dispatch(setError(errorMessage));
   }, [dispatch]);
 
+  const syncCycleCount = useCallback((newCycleCount, effectiveDeliveryConfig, attributeConfig, operatorConfig) => {
+    dispatch(syncCycles({ newCycleCount, effectiveDeliveryConfig, attributeConfig, operatorConfig }));
+  }, [dispatch]);
+
+  const syncDeliveryCount = useCallback((newDeliveryCount, effectiveDeliveryConfig, attributeConfig, operatorConfig) => {
+    dispatch(syncDeliveries({ newDeliveryCount, effectiveDeliveryConfig, attributeConfig, operatorConfig }));
+  }, [dispatch]);
+
   return {
     // State
     campaignData,
@@ -162,6 +172,8 @@ export const useDeliveryRules = () => {
     setLoadingState,
     setErrorState,
     updateDeliveryTypeForEachDelivery,
+    syncCycleCount,
+    syncDeliveryCount,
   };
 };
 
