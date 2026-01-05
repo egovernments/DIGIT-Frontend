@@ -762,81 +762,81 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
         {/* Show ARV and rented fields when occupancy is RENTED */}
         {((isSharedProp && unitsData?.[unitIndex]?.occupancy?.code === "RENTED") ||
           (!isSharedProp && floorsData?.[floorIndex]?.units?.[unitIndex]?.occupancy?.code === "RENTED")) && (
-          <>
-            {/* ARV (Annual Rental Value) */}
-            <LabelFieldPair style={{ marginBottom: "8px" }}>
-              <HeaderComponent className="label" style={{ margin: "0rem" }}>
-                <div className={`label-container`}>
-                  <label className={`label-styles`}>
-                    {t("PT_FORM2_TOTAL_ANNUAL_RENT")}
-                  </label>
-                  <div style={{ color: "#B91900" }}>{" * "}</div>
+            <>
+              {/* ARV (Annual Rental Value) */}
+              <LabelFieldPair style={{ marginBottom: "8px" }}>
+                <HeaderComponent className="label" style={{ margin: "0rem" }}>
+                  <div className={`label-container`}>
+                    <label className={`label-styles`}>
+                      {t("PT_FORM2_TOTAL_ANNUAL_RENT")}
+                    </label>
+                    <div style={{ color: "#B91900" }}>{" * "}</div>
+                  </div>
+                </HeaderComponent>
+                <div className="digit-field">
+                  <TextInput
+                    type="number"
+                    t={t}
+                    value={
+                      isSharedProp
+                        ? unitsData?.[unitIndex]?.arv || ""
+                        : floorsData?.[floorIndex]?.units?.[unitIndex]?.arv || ""
+                    }
+                    onChange={(e) => handleUnitFieldChange(floorIndex, unitIndex, "arv", e.target.value)}
+                    placeholder={t("PT_FORM2_TOTAL_ANNUAL_RENT_PLACEHOLDER")}
+                  />
                 </div>
-              </HeaderComponent>
-              <div className="digit-field">
-                <TextInput
-                  type="number"
+              </LabelFieldPair>
+              {/* Rented for Months */}
+              <LabelFieldPair style={{ marginBottom: "8px" }}>
+                <HeaderComponent className="label" style={{ margin: "0rem" }}>
+                  <div className={`label-container`}>
+                    <label className={`label-styles`}>
+                      {t("PT_FORM2_RENTED_FOR_MONTHS")}
+                    </label>
+                  </div>
+                </HeaderComponent>
+                <div className="digit-field">
+                  <TextInput
+                    type="number"
+                    t={t}
+                    value={
+                      isSharedProp
+                        ? unitsData?.[unitIndex]?.rentedForMonths || ""
+                        : floorsData?.[floorIndex]?.units?.[unitIndex]?.rentedForMonths || ""
+                    }
+                    onChange={(e) => handleUnitFieldChange(floorIndex, unitIndex, "rentedForMonths", e.target.value)}
+                    placeholder={t("PT_FORM2_RENTED_FOR_MONTHS_PLACEHOLDER")}
+                  />
+                </div>
+              </LabelFieldPair>
+              {/* Usage for Due Months (Dropdown) */}
+              <LabelFieldPair style={{ marginBottom: "8px" }}>
+                <HeaderComponent className="label" style={{ margin: "0rem" }}>
+                  <div className={`label-container`}>
+                    <label className={`label-styles`}>
+                      {t("PT_FORM2_USAGE_FOR_DUE_MONTHS")}
+                    </label>
+                  </div>
+                </HeaderComponent>
+                <Dropdown
                   t={t}
-                  value={
+                  option={[
+                    { code: "UNOCCUPIED", name: t("PT_UNOCCUPIED") || "Unoccupied" },
+                    { code: "SELFOCCUPIED", name: t("PT_SELFOCCUPIED") || "Self Occupied" }
+                  ]}
+                  optionKey="name"
+                  selected={
                     isSharedProp
-                      ? unitsData?.[unitIndex]?.arv || ""
-                      : floorsData?.[floorIndex]?.units?.[unitIndex]?.arv || ""
+                      ? unitsData?.[unitIndex]?.usageForDueMonths
+                      : floorsData?.[floorIndex]?.units?.[unitIndex]?.usageForDueMonths
                   }
-                  onChange={(e) => handleUnitFieldChange(floorIndex, unitIndex, "arv", e.target.value)}
-                  placeholder={t("PT_FORM2_TOTAL_ANNUAL_RENT_PLACEHOLDER")}
+                  select={(value) => handleUnitFieldChange(floorIndex, unitIndex, "usageForDueMonths", value)}
+                  placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
                 />
-              </div>
-            </LabelFieldPair>
-            {/* Rented for Months */}
-            <LabelFieldPair style={{ marginBottom: "8px" }}>
-              <HeaderComponent className="label" style={{ margin: "0rem" }}>
-                <div className={`label-container`}>
-                  <label className={`label-styles`}>
-                    {t("PT_FORM2_RENTED_FOR_MONTHS")}
-                  </label>
-                </div>
-              </HeaderComponent>
-              <div className="digit-field">
-                <TextInput
-                  type="number"
-                  t={t}
-                  value={
-                    isSharedProp
-                      ? unitsData?.[unitIndex]?.rentedForMonths || ""
-                      : floorsData?.[floorIndex]?.units?.[unitIndex]?.rentedForMonths || ""
-                  }
-                  onChange={(e) => handleUnitFieldChange(floorIndex, unitIndex, "rentedForMonths", e.target.value)}
-                  placeholder={t("PT_FORM2_RENTED_FOR_MONTHS_PLACEHOLDER")}
-                />
-              </div>
-            </LabelFieldPair>
-            {/* Usage for Due Months (Dropdown) */}
-            <LabelFieldPair style={{ marginBottom: "8px" }}>
-              <HeaderComponent className="label" style={{ margin: "0rem" }}>
-                <div className={`label-container`}>
-                  <label className={`label-styles`}>
-                    {t("PT_FORM2_USAGE_FOR_DUE_MONTHS")}
-                  </label>
-                </div>
-              </HeaderComponent>
-              <Dropdown
-                t={t}
-                option={[
-                  { code: "UNOCCUPIED", name: t("PT_UNOCCUPIED") || "Unoccupied" },
-                  { code: "SELFOCCUPIED", name: t("PT_SELFOCCUPIED") || "Self Occupied" }
-                ]}
-                optionKey="name"
-                selected={
-                  isSharedProp
-                    ? unitsData?.[unitIndex]?.usageForDueMonths
-                    : floorsData?.[floorIndex]?.units?.[unitIndex]?.usageForDueMonths
-                }
-                select={(value) => handleUnitFieldChange(floorIndex, unitIndex, "usageForDueMonths", value)}
-                placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
-              />
-            </LabelFieldPair>
-          </>
-        )}
+              </LabelFieldPair>
+            </>
+          )}
         {/* Built Area */}
         <LabelFieldPair>
           <HeaderComponent className="label" style={{ margin: "0rem" }}>

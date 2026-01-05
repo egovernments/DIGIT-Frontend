@@ -495,7 +495,7 @@ export const setPropertyDetails = (data) => {
       units: data?.units,
       landArea: data?.landArea?.floorarea,
       propertyType: data?.PropertyType?.code,
-      noOfFloors: data?.noOfFloors?.code+1,
+      noOfFloors: data?.noOfFloors?.code + 1,
       superBuiltUpArea: null,
       usageCategory: data?.units?.[0]?.usageCategory,
     };
@@ -582,30 +582,27 @@ export const convertToProperty = (data = {}) => {
 
 export const CompareTwoObjects = (ob1, ob2) => {
   let comp = 0;
-Object.keys(ob1).map((key) =>{
-  if(typeof ob1[key] == "object")
-  {
-    if(key == "institution")
-    {
-      if((ob1[key].name || ob2[key].name) && ob1[key]?.name !== ob2[key]?.name)
-      comp=1
-      else if(ob1[key]?.type?.code !== ob2[key]?.type?.code)
-      comp=1
-      
+  Object.keys(ob1).map((key) => {
+    if (typeof ob1[key] == "object") {
+      if (key == "institution") {
+        if ((ob1[key].name || ob2[key].name) && ob1[key]?.name !== ob2[key]?.name)
+          comp = 1
+        else if (ob1[key]?.type?.code !== ob2[key]?.type?.code)
+          comp = 1
+
+      }
+      else if (ob1[key]?.code !== ob2[key]?.code)
+        comp = 1
     }
-    else if(ob1[key]?.code !== ob2[key]?.code)
-    comp=1
-  }
+    else {
+      if ((ob1[key] || ob2[key]) && ob1[key] !== ob2[key])
+        comp = 1
+    }
+  });
+  if (comp == 1)
+    return false
   else
-  {
-    if((ob1[key] || ob2[key]) && ob1[key] !== ob2[key])
-    comp=1
-  }
-});
-if(comp==1)
-return false
-else
-return true;
+    return true;
 }
 
 export const setUpdateOwnerDetails = (data = []) => {
@@ -723,16 +720,18 @@ export const convertToUpdateProperty = (data = {}, t) => {
   let noOfFloors = data?.noOfFloors;
   let noOofBasements = data?.noOofBasements;
   let unit = data?.units;
-  data.units = data?.units?.map((ob) => {return({
-    ...ob, unitType : ob?.unitType?.code
-  })})
+  data.units = data?.units?.map((ob) => {
+    return ({
+      ...ob, unitType: ob?.unitType?.code
+    })
+  })
   let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
   let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
   data = setAddressDetails(data);
   data = setUpdateOwnerDetails(data);
   data = setUpdatedDocumentDetails(data);
   data = setPropertyDetails(data);
-  data.address.city = data.address.city ? data.address.city : t(`TENANT_TENANTS_${stringReplaceAll(data?.tenantId.toUpperCase(),".","_")}`);
+  data.address.city = data.address.city ? data.address.city : t(`TENANT_TENANTS_${stringReplaceAll(data?.tenantId.toUpperCase(), ".", "_")}`);
 
   const formdata = {
     Property: {
@@ -868,7 +867,7 @@ export const pdfDocumentName = (documentLink = "", index = 0) => {
 };
 
 /* methid to get date from epoch */
-export const convertEpochToDate = (dateEpoch,businessService) => {
+export const convertEpochToDate = (dateEpoch, businessService) => {
   // Returning null in else case because new Date(null) returns initial date from calender
   if (dateEpoch) {
     const dateFromApi = new Date(dateEpoch);
@@ -877,10 +876,10 @@ export const convertEpochToDate = (dateEpoch,businessService) => {
     let year = dateFromApi.getFullYear();
     month = (month > 9 ? "" : "0") + month;
     day = (day > 9 ? "" : "0") + day;
-    if(businessService == "PT")
-    return `${day}-${month}-${year}`;
+    if (businessService == "PT")
+      return `${day}-${month}-${year}`;
     else
-    return `${day}/${month}/${year}`;
+      return `${day}/${month}/${year}`;
   } else {
     return null;
   }
@@ -915,7 +914,7 @@ export const getWorkflow = (data = {}) => {
 };
 
 export const getCreationReason = (data = {}) => {
-  return data?.isUpdateProperty  ? "UPDATE" : "CREATE";
+  return data?.isUpdateProperty ? "UPDATE" : "CREATE";
 };
 
 
