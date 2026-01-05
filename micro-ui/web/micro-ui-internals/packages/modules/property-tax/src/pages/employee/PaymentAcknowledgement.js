@@ -88,7 +88,7 @@ const PaymentAcknowledgement = () => {
               method: "POST",
               params: {
                 tenantId: tenantId,
-                key: "consolidatedreceipt"
+                key: "property-receipt"
               },
               body: {
                 Payments: [payment]
@@ -174,7 +174,7 @@ const PaymentAcknowledgement = () => {
               method: "POST",
               params: {
                 tenantId: tenantId,
-                key: "consolidatedreceipt"
+                key: "property-receipt"
               },
               body: {
                 Payments: [payment]

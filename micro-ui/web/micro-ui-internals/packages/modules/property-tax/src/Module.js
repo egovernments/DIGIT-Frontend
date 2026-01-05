@@ -42,7 +42,7 @@ import { overrideHooks, updateCustomConfigs } from "./utils";
 export const PTModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
-  const moduleCode = ["PT", "pt-new","pt"];
+  const moduleCode = ["PT", "pt-new", "pt"];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
