@@ -3,7 +3,7 @@ const currentMonth = new Date().getMonth() + 1; // Jan = 1, Dec = 12
 const financialYearEnd = currentMonth > 3 ? currentYear : currentYear - 1; // FY starts in April
 
 export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessmentProps = {}) => {
-  const { isReassessMode, taxCalculation, existingAssessment, financialYear, assessmentId, importantDates, billingSlabs, isCitizen, termsAccepted, termsError, onTermsChange, allFormData, isUpdateMode } = reassessmentProps;
+  const { isReassessMode, taxCalculation, existingAssessment, financialYear, assessmentId, importantDates, billingSlabs, isCitizen, termsAccepted, termsError, onTermsChange, allFormData, isUpdateMode, onStepClick } = reassessmentProps;
 
   return [
     // Step 1: Property Address
@@ -368,7 +368,7 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
           key: "propertySummary",
           withoutLabel: true,
           populators: {
-            name:"summary"
+            name: "summary"
           },
           customProps: {
             sessionData: allFormData || formData, // Use allFormData (all steps) instead of formData (current step only)
@@ -378,7 +378,8 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             financialYear: financialYear || "",
             assessmentId: assessmentId || "",
             importantDates: importantDates || null,
-            billingSlabs: billingSlabs || []
+            billingSlabs: billingSlabs || [],
+            onStepClick: onStepClick // Pass onStepClick to PropertySummary
           }
         },
         // Citizen-specific declaration component

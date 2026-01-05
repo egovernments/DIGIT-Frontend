@@ -374,10 +374,22 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
     setFloors(newFloors);
 
     // Initialize units array
-    const initialUnits = newFloors.map((floor, floorIdx) => ({
-      floorNo: floorIdx.toString(),
-      units: [{}]
-    }));
+    const initialUnits = newFloors.map((floor, floorIdx) => {
+      let floorNoValue = floorIdx.toString();
+
+      // If only 1 floor, auto-select Ground Floor
+      if (floorCount === 1 && floorMasterData?.length > 0) {
+        const groundFloor = floorMasterData.find(f => f.code === "0" || f.code === 0);
+        if (groundFloor) {
+          floorNoValue = groundFloor;
+        }
+      }
+
+      return {
+        floorNo: floorNoValue,
+        units: [{}]
+      };
+    });
 
     // Update local state
     setFloorsData(initialUnits);
@@ -982,6 +994,15 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
     return null;
   }
 
+  const getFloorOptions = (index) => {
+    if (!floorMasterData) return [];
+    const floorCount = parseInt(noOfFloors?.code || noOfFloors || 0);
+    if (floorCount > 1 && index === 0) {
+      return floorMasterData.filter(floor => floor.code === "0" || floor.code === 0);
+    }
+    return floorMasterData;
+  };
+
   return (
     <>
       {showToast && (
@@ -1084,7 +1105,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
                       </HeaderComponent>
                       <Dropdown
                         t={t}
-                        option={floorMasterData || []}
+                        option={getFloorOptions(floorIndex)}
                         optionKey="name"
                         optionCardStyles={{ maxHeight: "15vh" }}
                         selected={floorsData?.[floorIndex]?.floorNo}

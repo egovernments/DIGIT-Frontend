@@ -38,10 +38,10 @@ const PTAcknowledgmentEmployee = () => {
     }
   }, [showDownloadMenu, showPrintMenu]);
 
-  // Fetch property data for mutation acknowledgements
+  // Fetch property data for mutation, create, and update acknowledgements
   useEffect(() => {
     const fetchPropertyData = async () => {
-      if (purpose === "apply" && acknowldgementNumber && tenantId) {
+      if ((purpose === "apply" || purpose === "create" || purpose === "update") && acknowldgementNumber && tenantId) {
         console.log("Fetching property data for:", acknowldgementNumber, tenantId);
         setIsLoadingData(true);
         try {
@@ -140,97 +140,269 @@ const PTAcknowledgmentEmployee = () => {
       return null;
     }
 
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const fontName = "helvetica";
+    pdf.setFont(fontName);
 
-    let yPos = 20;
-    const margin = 20;
+    const margin = 15;
     const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const contentWidth = pageWidth - 2 * margin;
+    const halfWidth = contentWidth / 2;
+    const lineHeight = 7;
+    let yPos = 20;
 
-    // Header
-    pdf.setFontSize(16);
-    pdf.setFont("helvetica", "bold");
-    pdf.text(t("PT_MUTATION_APPLICATION_HEADER") || "Application for Transfer of Ownership", pageWidth / 2, yPos, { align: "center" });
-    yPos += 15;
+    const getText = (key, fallback) => {
+      const translated = t(key);
+      return translated !== key ? translated : (fallback || key);
+    };
 
-    // Property ID and Application Number
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(`${t("PT_PROPERTY_ID")}: ${propertyData.propertyId || ""}`, margin, yPos);
-    yPos += 6;
-    pdf.text(`${t("PT_MUTATION_APPLICATION_NO")}: ${acknowldgementNumber || ""}`, margin, yPos);
-    yPos += 10;
+    const checkForNA = (value) => (value ? value : "NA");
 
-    // Property Address
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "bold");
-    pdf.text(t("PT_PROPERTY_ADDRESS_SUB_HEADER") || "Property Address", margin, yPos);
-    yPos += 6;
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    if (propertyData.address) {
-      const address = propertyData.address;
-      pdf.text(`${t("PT_PROPERTY_ADDRESS_CITY")}: ${address.city || ""}`, margin, yPos);
-      yPos += 5;
-      pdf.text(`${t("PT_PROPERTY_ADDRESS_MOHALLA")}: ${address.locality?.name || ""}`, margin, yPos);
-      yPos += 10;
-    }
-
-    // Transferor Details (Old Owners)
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "bold");
-    pdf.text(t("PT_MUTATION_TRANSFEROR_DETAILS") || "Transferor Details", margin, yPos);
-    yPos += 6;
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    if (propertyData.ownersInit && propertyData.ownersInit.length > 0) {
-      propertyData.ownersInit.forEach((owner, index) => {
-        pdf.text(`${t("PT_OWNER")} ${index + 1}:`, margin, yPos);
-        yPos += 5;
-        pdf.text(`  ${t("PT_OWNER_NAME")}: ${owner.name || ""}`, margin, yPos);
-        yPos += 5;
-        pdf.text(`  ${t("PT_MOBILE_NUMBER")}: ${owner.mobileNumber || ""}`, margin, yPos);
-        yPos += 8;
-      });
-    }
-
-    // Transferee Details (New Owners)
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "bold");
-    pdf.text(t("PT_MUTATION_TRANSFEREE_DETAILS") || "Transferee Details", margin, yPos);
-    yPos += 6;
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
-    if (propertyData.ownersTemp && propertyData.ownersTemp.length > 0) {
-      propertyData.ownersTemp.forEach((owner, index) => {
-        pdf.text(`${t("PT_OWNER")} ${index + 1}:`, margin, yPos);
-        yPos += 5;
-        pdf.text(`  ${t("PT_OWNER_NAME")}: ${owner.name || ""}`, margin, yPos);
-        yPos += 5;
-        pdf.text(`  ${t("PT_MOBILE_NUMBER")}: ${owner.mobileNumber || ""}`, margin, yPos);
-        yPos += 8;
-      });
-    }
-
-    // Registration Details
-    if (propertyData.additionalDetails) {
-      pdf.setFontSize(12);
-      pdf.setFont("helvetica", "bold");
-      pdf.text(t("PT_MUTATION_REGISTRATION_DETAILS") || "Registration Details", margin, yPos);
-      yPos += 6;
+    const addSectionHeader = (title) => {
+      if (yPos + 15 > pageHeight - margin) {
+        pdf.addPage();
+        yPos = 20;
+      }
+      pdf.setFillColor(230, 230, 230);
+      pdf.rect(margin, yPos, contentWidth, 8, "F");
+      pdf.setFontSize(11);
+      pdf.setFont(fontName, "bold");
+      pdf.setTextColor(0);
+      pdf.text(title.toUpperCase(), margin + 3, yPos + 5.5);
+      yPos += 14;
+      pdf.setFont(fontName, "normal");
       pdf.setFontSize(10);
-      pdf.setFont("helvetica", "normal");
-      if (propertyData.additionalDetails.reasonForTransfer) {
-        pdf.text(`${t("PT_MUTATION_REASON_FOR_TRANSFER")}: ${propertyData.additionalDetails.reasonForTransfer}`, margin, yPos);
-        yPos += 5;
+    };
+
+    const addDetailRow = (key1, value1, key2 = null, value2 = null) => {
+      if (yPos + lineHeight > pageHeight - margin) {
+        pdf.addPage();
+        yPos = 20;
       }
-      if (propertyData.additionalDetails.marketValue) {
-        pdf.text(`${t("PT_MUTATION_MARKET_VALUE")}: ${propertyData.additionalDetails.marketValue}`, margin, yPos);
-        yPos += 5;
+
+      pdf.setFontSize(9);
+
+      // Col 1
+      if (key1) {
+        pdf.setFont(fontName, "bold");
+        pdf.text(`${key1}:`, margin, yPos);
+        pdf.setFont(fontName, "normal");
+        const entry1 = pdf.splitTextToSize(checkForNA(value1), halfWidth - 35);
+        pdf.text(entry1, margin + 35, yPos);
       }
+
+      // Col 2
+      if (key2) {
+        const col2X = margin + halfWidth + 5;
+        pdf.setFont(fontName, "bold");
+        pdf.text(`${key2}:`, col2X, yPos);
+        pdf.setFont(fontName, "normal");
+        const entry2 = pdf.splitTextToSize(checkForNA(value2), halfWidth - 35);
+        pdf.text(entry2, col2X + 35, yPos);
+      }
+
+      yPos += lineHeight;
+    };
+
+    // --- MUTATION PDF ---
+    if (purpose === "apply") {
+      // Header
+      pdf.setFontSize(16);
+      pdf.setFont(fontName, "bold");
+      pdf.text(getText("PT_MUTATION_APPLICATION_HEADER", "Application for Transfer of Ownership"), pageWidth / 2, yPos, { align: "center" });
+      yPos += 15;
+
+      // Basic Info
+      addDetailRow(getText("PT_PROPERTY_ID", "Property ID"), propertyData.propertyId);
+      addDetailRow(getText("PT_MUTATION_APPLICATION_NO", "Application No"), acknowldgementNumber);
+      yPos += 5;
+
+      // Address
+      addSectionHeader(getText("PT_PROPERTY_ADDRESS_SUB_HEADER", "Property Address"));
+      if (propertyData.address) {
+        addDetailRow(getText("PT_PROPERTY_ADDRESS_CITY", "City"), propertyData.address.city);
+        addDetailRow(getText("PT_PROPERTY_ADDRESS_MOHALLA", "Mohalla"), propertyData.address.locality?.name);
+      }
+      yPos += 5;
+
+      // Transferor
+      addSectionHeader(getText("PT_MUTATION_TRANSFEROR_DETAILS", "Transferor Details"));
+      if (propertyData.ownersInit && propertyData.ownersInit.length > 0) {
+        propertyData.ownersInit.forEach((owner, index) => {
+          pdf.setFont(fontName, "bold");
+          pdf.text(`${getText("PT_OWNER", "Owner")} ${index + 1}`, margin, yPos);
+          yPos += lineHeight;
+          addDetailRow(getText("PT_OWNER_NAME", "Name"), owner.name, getText("PT_MOBILE_NUMBER", "Mobile No"), owner.mobileNumber);
+          yPos += 2;
+        });
+      }
+
+      // Transferee
+      yPos += 5;
+      addSectionHeader(getText("PT_MUTATION_TRANSFEREE_DETAILS", "Transferee Details"));
+      const activeOwners = propertyData.ownersTemp && propertyData.ownersTemp.length > 0 ? propertyData.ownersTemp : propertyData.owners;
+      if (activeOwners && activeOwners.length > 0) {
+        activeOwners.forEach((owner, index) => {
+          if (owner.status === "INACTIVE") return;
+          pdf.setFont(fontName, "bold");
+          pdf.text(`${getText("PT_OWNER", "Owner")} ${index + 1}`, margin, yPos);
+          yPos += lineHeight;
+          addDetailRow(getText("PT_OWNER_NAME", "Name"), owner.name, getText("PT_MOBILE_NUMBER", "Mobile No"), owner.mobileNumber);
+          yPos += 2;
+        });
+      }
+
+      // Registration
+      if (propertyData.additionalDetails) {
+        yPos += 5;
+        addSectionHeader(getText("PT_MUTATION_REGISTRATION_DETAILS", "Registration Details"));
+        addDetailRow(
+          getText("PT_MUTATION_REASON_FOR_TRANSFER", "Reason for Transfer"), propertyData.additionalDetails.reasonForTransfer,
+          getText("PT_MUTATION_MARKET_VALUE", "Market Value"), propertyData.additionalDetails.marketValue
+        );
+      }
+    } else {
+      // --- ASSESSMENT PDF (Create/Update) ---
+
+      // Page Border
+      pdf.setLineWidth(0.5);
+      pdf.rect(5, 5, pageWidth - 10, pageHeight - 10);
+
+      // Header: Tenant Name
+      const tenantKey = `TENANT_TENANTS_${tenantId?.toUpperCase().replace(/\./g, "_")}`;
+      const tenantName = getText(tenantKey, tenantId?.toUpperCase().replace(/\./g, " "));
+      pdf.setFontSize(14);
+      pdf.setFont(fontName, "bold");
+      pdf.text(tenantName, pageWidth / 2, yPos, { align: "center" });
+      yPos += 8;
+
+      // Title
+      pdf.setFontSize(12);
+      pdf.text(getText("PT_ACK_PROPERTY_TAX_ASSESS_ACKNOWLEDGEMENT", "Property Tax Assessment Acknowledgement"), pageWidth / 2, yPos, { align: "center" });
+      yPos += 15;
+
+      const today = new Date().toLocaleDateString();
+      addDetailRow(getText("PT_PROPERTY_ID", "Property ID"), propertyData.propertyId, getText("DATE", "Date"), today);
+      addDetailRow(getText("PT_APPLICATION_NO", "Application No"), acknowldgementNumber);
+      yPos += 5;
+
+      // Address
+      addSectionHeader(getText("PT_PROPERTY_ADDRESS_SUB_HEADER", "Property Address"));
+      const addr = propertyData.address || {};
+      addDetailRow(getText("PT_PROPERTY_ADDRESS_HOUSE_NO", "Door/House No"), addr.doorNo, getText("PT_PROPERTY_ADDRESS_BUILDING_NAME", "Building Name"), addr.buildingName);
+      addDetailRow(getText("PT_PROPERTY_ADDRESS_STREET_NAME", "Street Name"), addr.street, getText("PT_PROPERTY_ADDRESS_MOHALLA", "Mohalla"), addr.locality?.name);
+      addDetailRow(getText("PT_PROPERTY_ADDRESS_PINCODE", "Pincode"), addr.pincode, getText("PT_EXISTING_PROPERTY_ID", "Existing Property ID"), propertyData.oldPropertyId);
+
+      // Assessment Info
+      addSectionHeader(getText("PT_ASSESMENT_INFO_SUB_HEADER", "Assessment Information"));
+      const propTypeKey = `COMMON_PROPTYPE_${propertyData.propertyType?.replace(/\./g, "_")}`;
+      const propType = getText(propTypeKey, propertyData.propertyType);
+
+      addDetailRow(
+        getText("PT_ASSESMENT_INFO_TYPE_OF_BUILDING", "Property Type"), propType,
+        getText("PT_ASSESMENT_INFO_PLOT_SIZE", "Plot Size"),
+        `${propertyData.landArea ? propertyData.landArea : "NA"} ${getText("PT_COMMON_SQ_YARDS", "sq yards")}`
+      );
+
+      // Built-Up Area Table
+      addSectionHeader(getText("PT_BUILT_UP_AREA_DETAILS", "Built-Up Area Details"));
+
+      // Table Header using rect
+      pdf.setFillColor(240, 240, 240);
+      pdf.rect(margin, yPos - 3, contentWidth, 7, "F");
+      pdf.setFont(fontName, "bold");
+      pdf.setFontSize(9);
+
+      const cols = [
+        { name: getText("PT_COMMON_FLOOR", "Floor"), x: margin + 2, w: 25 },
+        { name: getText("PT_FORM2_USAGE_TYPE", "Usage Type"), x: margin + 27, w: 40 },
+        { name: getText("PT_FORM2_SUB_USAGE_TYPE", "Sub Usage"), x: margin + 67, w: 30 },
+        { name: getText("PT_FORM2_OCCUPANCY", "Occupancy"), x: margin + 97, w: 30 },
+        { name: getText("PT_FORM2_BUILT_UP_AREA", "Built Up Area"), x: margin + 127, w: 30 },
+      ];
+
+      cols.forEach((col) => pdf.text(col.name, col.x, yPos + 1.5));
+      yPos += 6;
+
+      // Table Body
+      pdf.setFont(fontName, "normal");
+      if (propertyData.units && propertyData.units.length > 0) {
+        propertyData.units.forEach((unit, idx) => {
+          if (yPos + 15 > pageHeight - margin) {
+            pdf.addPage();
+            yPos = 20;
+          }
+
+          const floor = getText(`PROPERTYTAX_FLOOR_${unit.floorNo}`, unit.floorNo);
+          const usage = getText(`PROPERTYTAX_BILLING_SLAB_${unit.usageCategory}`, unit.usageCategory);
+          const subUsage = "NA";
+          const occupancy = getText(`PROPERTYTAX_OCCUPANCYTYPE_${unit.occupancyType}`, unit.occupancyType);
+          const area = unit.constructionDetail?.builtUpArea || unit.landArea || "NA";
+
+          pdf.text(checkForNA(floor), cols[0].x, yPos);
+          const usageLines = pdf.splitTextToSize(checkForNA(usage), cols[1].w - 2);
+          pdf.text(usageLines, cols[1].x, yPos);
+          pdf.text(checkForNA(subUsage), cols[2].x, yPos);
+          pdf.text(checkForNA(occupancy), cols[3].x, yPos);
+          pdf.text(checkForNA(String(area)), cols[4].x, yPos);
+
+          const rowHeight = usageLines.length * 4 + 4;
+          pdf.setDrawColor(200);
+          pdf.line(margin, yPos + rowHeight - 2, pageWidth - margin, yPos + rowHeight - 2);
+          yPos += rowHeight;
+        });
+      } else {
+        pdf.text(getText("PT_NO_UNITS", "No Built-Up Details"), margin + 2, yPos);
+        yPos += 8;
+      }
+      yPos += 2;
+
+      // Ownership Info
+      addSectionHeader(getText("PT_OWNERSHIP_INFO_SUB_HEADER", "Ownership Information"));
+      if (propertyData.owners && propertyData.owners.length > 0) {
+        propertyData.owners.forEach((owner, idx) => {
+          if (owner.status === "INACTIVE") return;
+          if (yPos + 35 > pageHeight - margin) {
+            pdf.addPage();
+            yPos = 20;
+          }
+
+          if (idx > 0) {
+            pdf.setDrawColor(200);
+            pdf.line(margin, yPos - 2, pageWidth - margin, yPos - 2);
+            yPos += 4;
+          }
+
+          // Fix gender translation
+          const gender = owner.gender ? getText(`PT_FORM3_${owner.gender.toUpperCase()}`, owner.gender) : "NA";
+          // Fix Owner Relation translation if needed
+          const relation = owner.relationship ? getText(`PT_FORM3_${owner.relationship.toUpperCase()}`, owner.relationship) : "NA";
+
+          addDetailRow(getText("PT_OWNER_NAME", "Owner Name"), owner.name, getText("PT_FATHER_HUSBAND_NAME", "Father/Husband Name"), owner.fatherOrHusbandName);
+          addDetailRow(getText("PT_COMMON_GENDER", "Gender"), gender, getText("PT_DOB", "DOB"), owner.dob ? new Date(owner.dob).toLocaleDateString() : "NA");
+          addDetailRow(getText("PT_MOBILE_NUMBER", "Mobile No"), owner.mobileNumber, getText("PT_EMAIL_ID", "Email ID"), owner.emailId);
+          addDetailRow(getText("PT_OWNER_TYPE", "Owner Type"), owner.ownerType, getText("PT_CORRESPONDENCE_ADDRESS", "Correspondence Address"), owner.permanentAddress);
+          yPos += 2;
+        });
+      }
+
+      // Additional Details
+      if (propertyData.additionalDetails) {
+        addSectionHeader(getText("PT_COMMON_ADDITIONAL_DETAILS", "Additional Details"));
+        const details = propertyData.additionalDetails;
+        addDetailRow(getText("PT_REGISTRATION_VASIKA_NO", "Vasika No"), details.vasikaNo, getText("PT_REGISTRATION_VASIKA_DATE", "Vasika Date"), details.vasikaDate);
+        addDetailRow(getText("PT_REGISTRATION_ALLOTMENT_NO", "Allotment No"), details.allotmentNo, getText("PT_REGISTRATION_ALLOTMENT_DATE", "Allotment Date"), details.allotmentDate);
+        addDetailRow(getText("PT_COMMON_REMARKS", "Remarks"), details.remarks || "NA");
+      }
+
+      // Footer
+      const footerY = pageHeight - 20;
+      pdf.setFontSize(9);
+      pdf.setFont(fontName, "italic");
+      pdf.text(`* ${getText("PT_ACK_DISCLAIMER", "This document does not certify payment of Property Tax")}`, margin, footerY);
+      pdf.setFont(fontName, "bold");
+      pdf.text(getText("PT_COMMISSIONER_EO", "Commissioner/EO"), pageWidth - margin - 40, footerY + 5);
     }
 
     return pdf;
@@ -245,7 +417,7 @@ const PTAcknowledgmentEmployee = () => {
     try {
       const pdf = generatePTApplicationPDF();
       if (pdf) {
-        pdf.save(`mutation-acknowledgement-${acknowldgementNumber}.pdf`);
+        pdf.save(`${purpose}-acknowledgement-${acknowldgementNumber}.pdf`);
       }
     } catch (error) {
       console.error("Download failed:", error);
@@ -307,8 +479,8 @@ const PTAcknowledgmentEmployee = () => {
   return (
     <>
       <div>
-        {/* Download and Print buttons for mutation acknowledgement */}
-        {purpose === "apply" && isSuccess && (
+        {/* Download and Print buttons for mutation/create/update acknowledgement */}
+        {(purpose === "apply" || purpose === "create" || purpose === "update") && isSuccess && (
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginBottom: "16px" }}>
             <div style={{ position: "relative" }}>
               <Button
@@ -449,6 +621,7 @@ const PTAcknowledgmentEmployee = () => {
               onClick={handleViewProperty}
             />
           ] : []),
+
           // Show "Proceed to payment" button only for successful reassessment
           ...(purpose === "reassess" && isSuccess && propertyId ? [
             <Button

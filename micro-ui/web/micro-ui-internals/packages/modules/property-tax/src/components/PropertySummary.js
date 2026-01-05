@@ -1,13 +1,39 @@
 import React, { useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory, useLocation } from "react-router-dom";
 import { SummaryCard, Card, Button, PopUp, TextInput, LabelFieldPair, HeaderComponent, Dropdown, Tag } from "@egovernments/digit-ui-components";
 
 const PropertySummary = ({ onSelect, config, formData, errors }) => {
 
   const { t } = useTranslation();
+  const history = useHistory();
+  const location = useLocation();
 
   // Get session data from customProps (same pattern as TransferOwnership)
   const sessionData = config?.customProps?.sessionData || {};
+  const onStepClick = config?.customProps?.onStepClick;
+
+  const handleEdit = (step) => {
+    if (onStepClick) {
+      onStepClick(step - 1);
+      return;
+    }
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("step", step);
+    history.push(`${location.pathname}?${searchParams.toString()}`);
+  };
+
+  const getHeaderWithEdit = (label, step) => (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <span>{label}</span>
+      <span
+        style={{ cursor: "pointer", color: "#F47738", fontSize: "16px", fontWeight: "600" }}
+        onClick={() => handleEdit(step)}
+      >
+        {t("PT_EDIT")}
+      </span>
+    </div>
+  );
 
   // Check if we're in reassessment mode
   const isReassessMode = config?.customProps?.isReassessMode || false;
@@ -83,6 +109,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   const propertyAddressSections = [
     {
       cardType: "primary",
+      header: getHeaderWithEdit(t("PT_PROPERTY_ADDRESS_SUB_HEADER"), 1),
       fieldPairs: [
         { inline: true, label: t("CORE_COMMON_CITY"), value: propertyAddress.tenantId ? t(propertyAddress.tenantId) : t("ES_COMMON_NA") },
         { inline: true, label: t("PT_PROPERTY_DETAILS_DOOR_NUMBER"), value: propertyAddress.doorNo || t("ES_COMMON_NA") },
@@ -116,18 +143,53 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
     { inline: true, label: t("PT_COMMON_HEIGHT_OF_PROPERTY"), value: assessmentInfo.heightOfProperty ? t("COMMON_YES") : t("COMMON_NO") },
   ];
 
-  // Add plot size and floor/unit details
-  if (assessmentInfo.plotSize) {
-    assessmentInfoFields.push({ inline: true, label: t("PT_FORM2_PLOT_SIZE"), value: `${assessmentInfo.plotSize} sq yards` });
+  // Add plot size and floor/unit details from conditionalFields
+  const conditionalFields = assessmentInfo.conditionalFields || {};
+
+  if (conditionalFields.plotSize) {
+    assessmentInfoFields.push({ inline: true, label: t("PT_FORM2_PLOT_SIZE"), value: `${conditionalFields.plotSize} sq yards` });
   }
 
-  if (isIndependent && assessmentInfo.noOfFloors) {
-    assessmentInfoFields.push({ inline: true, label: t("PT_FORM2_NUMBER_OF_FLOORS"), value: getDisplayValue(assessmentInfo.noOfFloors) });
+  if (isIndependent && conditionalFields.noOfFloors) {
+    assessmentInfoFields.push({ inline: true, label: t("PT_FORM2_NUMBER_OF_FLOORS"), value: getDisplayValue(conditionalFields.noOfFloors) });
+  }
+
+  // Helper to format unit details
+  const formatUnitDetails = (unit) => {
+    const usage = getDisplayValue(unit.subUsageType || unit.usageCategory || unit.usageType);
+    const occupancy = getDisplayValue(unit.occupancy);
+    const area = unit.builtUpArea ? `${unit.builtUpArea} sq ft` : t("ES_COMMON_NA");
+    const annualRent = unit.arv ? `₹${unit.arv}` : "";
+
+    let details = `${usage}, ${occupancy}, ${area}`;
+    if (annualRent) details += `, ${annualRent}`;
+    return details;
+  };
+
+  // Display Floors and Units for Independent Property
+  if (isIndependent && conditionalFields.floors?.length > 0) {
+    conditionalFields.floors.forEach((floor) => {
+      const floorTitle = getDisplayValue(floor.floorNo);
+      floor.units?.forEach((unit, unitIndex) => {
+        const unitLabel = `${floorTitle} ${t("PT_UNIT")} ${unitIndex + 1}`;
+        assessmentInfoFields.push({ inline: true, label: unitLabel, value: formatUnitDetails(unit) });
+      });
+    });
+  }
+
+  // Display Units for Shared Property
+  if (isShared && conditionalFields.units?.length > 0) {
+    conditionalFields.units.forEach((unit, unitIndex) => {
+      const floorTitle = getDisplayValue(unit.floorNo);
+      const unitLabel = `${floorTitle} ${t("PT_UNIT")} ${unitIndex + 1}`;
+      assessmentInfoFields.push({ inline: true, label: unitLabel, value: formatUnitDetails(unit) });
+    });
   }
 
   const assessmentInfoSections = [
     {
       cardType: "primary",
+      header: getHeaderWithEdit(t("PT_ASSESMENT_INFO_SUB_HEADER"), 2),
       fieldPairs: assessmentInfoFields
     }
   ];
@@ -185,7 +247,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       return [
         {
           cardType: "secondary",
-          header: t("PT_OWNER_DETAILS"),
+          header: getHeaderWithEdit(t("PT_OWNER_DETAILS"), 3),
           fieldPairs: fieldPairs,
         },
       ];
@@ -196,7 +258,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
         return [
           {
             cardType: "secondary",
-            header: t("PT_OWNER_DETAILS"),
+            header: getHeaderWithEdit(t("PT_OWNER_DETAILS"), 3),
             fieldPairs: [
               { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
               { inline: true, label: t("PT_OWNER_NAME"), value: t("ES_COMMON_NA") },
@@ -209,7 +271,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       const sections = [
         {
           cardType: "secondary",
-          header: t("PT_OWNER_DETAILS"),
+          header: getHeaderWithEdit(t("PT_OWNER_DETAILS"), 3),
           fieldPairs: [
             { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
             { inline: true, label: t("PT_MUTATION_NUMBER_OF_OWNERS"), value: owners.length },
@@ -254,7 +316,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       return [
         {
           cardType: "secondary",
-          header: t("PT_OWNER_DETAILS"),
+          header: getHeaderWithEdit(t("PT_OWNER_DETAILS"), 3),
           fieldPairs: [
             { inline: true, label: t("PT_FORM3_OWNERSHIP_TYPE"), value: getDisplayValue(ownershipInfo.ownershipType) },
             { inline: true, label: t("PT_INSTITUTION_NAME"), value: ownershipDetails?.institutionName || t("ES_COMMON_NA") },
@@ -302,7 +364,7 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
   const documentSections = [
     {
       cardType: "secondary",
-      header: t("PT_DOCUMENT_DETAILS"),
+      header: getHeaderWithEdit(t("PT_DOCUMENT_DETAILS"), 4),
       fieldPairs: documents.length > 0
         ? documents.map((doc, index) => ({
           inline: true,
@@ -471,7 +533,6 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       )}
 
       <SummaryCard
-        header={t("PT_PROPERTY_ADDRESS_SUB_HEADER")}
         type="secondary"
         layout={2}
         sections={propertyAddressSections}
@@ -479,7 +540,6 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       />
 
       <SummaryCard
-        header={t("PT_ASSESMENT_INFO_SUB_HEADER")}
         type="secondary"
         layout={2}
         sections={assessmentInfoSections}
@@ -487,7 +547,6 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       />
 
       <SummaryCard
-        header={t("PT_OWNERSHIP_INFO_SUB_HEADER")}
         type={ownershipInfo?.ownershipType?.[0]?.code === "MULTIPLEOWNERS" ? "primary" : "secondary"}
         layout={1}
         sections={onwerSections}
@@ -496,7 +555,6 @@ const PropertySummary = ({ onSelect, config, formData, errors }) => {
       />
 
       <SummaryCard
-        header={t("PT_DOCUMENT_INFO")}
         type="secondary"
         layout={2}
         sections={documentSections}

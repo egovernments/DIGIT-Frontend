@@ -30,84 +30,22 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   // Initialize state from URL or session storage
   const getInitialState = () => {
     try {
-      // In reassess or assess mode, always start at step 4 (summary) unless step is specified
-      if (isReassessMode || isAssessMode) {
-        const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 4; // Default to summary step
-        return {
-          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 4,
-          formData: {},
-        };
-      }
-
-      // In update mode, check if this is a fresh navigation from property details
-      if (isUpdateMode) {
-        const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 0;
-
-        // Check session storage first to see if we already have form data in progress
-        const savedData = Digit.SessionStorage.get(sessionKey);
-        const dataLoadedKey = `PT_DATA_LOADED_${tenantId}_${propertyIdFromUrl}`;
-        const hasLoadedData = Digit.SessionStorage.get(dataLoadedKey);
-
-        // Check if saved data has actual property data (not empty)
-        const hasValidFormData = savedData?.formData && Object.keys(savedData.formData).length > 0;
-
-        // Clear session data if:
-        // 1. On step 1 AND
-        // 2. Either no saved data exists OR saved data is empty (even if loaded flag is set)
-        // This handles both fresh loads and stale session scenarios
-        const shouldClearSession = (!stepFromUrl || stepFromUrl === '1') && !hasValidFormData;
-
-        if (shouldClearSession) {
-          Digit.SessionStorage.del(sessionKey);
-          Digit.SessionStorage.del(dataLoadedKey);
-          return {
-            currentStep: 0,
-            formData: {}, // Empty formData - will be populated by API call
-          };
-        }
-
-        // If we have valid saved data, use it for step navigation
-        return {
-          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
-          formData: savedData?.formData || {}, // Load from session if available
-        };
-      }
-
-      // Check if coming from a fresh URL without any referrer context
-      // If user navigates directly to assessment-form (not from within the app flow),
-      // clear any stale session data
-      const isDirectNavigation = !document.referrer ||
-        !document.referrer.includes('assessment-form') ||
-        document.referrer.includes('pt-acknowledgment');
-
+      const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 0;
       const savedData = Digit.SessionStorage.get(sessionKey);
 
-      // Clear stale data if user is coming from acknowledgment page or direct navigation to step 1
-      if (isDirectNavigation && (!stepFromUrl || stepFromUrl === '1')) {
-        Digit.SessionStorage.del(sessionKey);
-        Digit.SessionStorage.del(popupSeenKey);
-        return {
-          currentStep: 0,
-          formData: {},
-        };
-      }
-
-      // If URL has step parameter, use it
-      if (stepFromUrl) {
-        const stepNumber = parseInt(stepFromUrl) - 1; // Convert to 0-based index
-        return {
-          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
-          formData: savedData?.formData || {},
-        };
-      }
-
-      // If no URL parameter but session data exists, use session data
+      // If we have saved data, merge it with current step from URL
       if (savedData) {
         return {
-          currentStep: savedData.currentStep || 0,
+          currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : (savedData.currentStep || 0),
           formData: savedData.formData || {},
         };
       }
+
+      // Default state if no session data
+      return {
+        currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 0,
+        formData: {},
+      };
     } catch (e) {
       console.error("Error loading session data:", e);
     }
@@ -132,6 +70,16 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   const [currentStep, setCurrentStep] = useState(initialState.currentStep);
   const [formData, setFormData] = useState(initialState.formData);
 
+  // Sync state with URL step parameter (handles back/forward navigation and edit links)
+  useEffect(() => {
+    if (stepFromUrl) {
+      const stepNumber = parseInt(stepFromUrl) - 1;
+      if (stepNumber !== currentStep && stepNumber >= 0 && stepNumber < 5) {
+        setCurrentStep(stepNumber);
+      }
+    }
+  }, [stepFromUrl]);
+
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [showRequiredDocsPopup, setShowRequiredDocsPopup] = useState(!isUpdateMode && !isReassessMode && !isAssessMode && !hasSeenPopup());
@@ -149,6 +97,12 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   // Citizen-specific state for declaration
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [termsError, setTermsError] = useState("");
+
+  const handleStepClick = (stepIndex) => {
+    if (stepIndex < currentStep) {
+      setCurrentStep(stepIndex);
+    }
+  };
 
   const config = PropertyRegistrationConfig(t, formData, loading, {
     isReassessMode: isReassessMode || isAssessMode, // Treat assess mode same as reassess for config
@@ -168,7 +122,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
       }
     },
     allFormData: formData, // Pass entire formData for components that need data from other steps
-    isUpdateMode: isUpdateMode // Pass update mode flag to config
+    isUpdateMode: isUpdateMode, // Pass update mode flag to config
+    onStepClick: handleStepClick
   });
   const currentConfig = config[currentStep];
 
@@ -1623,11 +1578,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     return payloadToReturn;
   };
 
-  const handleStepClick = (stepIndex) => {
-    if (stepIndex < currentStep) {
-      setCurrentStep(stepIndex);
-    }
-  };
+
 
   const handlePopupProceed = () => {
     // Mark popup as seen in session storage
