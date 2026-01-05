@@ -39,6 +39,8 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     loading: storeLoading,
     setErrorState,
     resetData,
+    syncCycleCount,
+    syncDeliveryCount,
   } = useDeliveryRules();
 
   // Track previous project type and campaign ID to detect changes
@@ -86,19 +88,28 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     operatorConfigRef.current = operatorConfig;
   }, [operatorConfig]);
 
+  // Track previous cycle and delivery counts to detect changes
+  const prevCycleCountRef = useRef(null);
+  const prevDeliveryCountRef = useRef(null);
+  const hasInitialSyncRef = useRef(false);
+
   // Detect when project type or campaign changes and reset if necessary
   useEffect(() => {
-    const hasProjectTypeChanged = prevProjectTypeRef.current !== null && 
+    const hasProjectTypeChanged = prevProjectTypeRef.current !== null &&
                                   prevProjectTypeRef.current !== selectedProjectType;
-    const hasCampaignIdChanged = prevCampaignIdRef.current !== null && 
+    const hasCampaignIdChanged = prevCampaignIdRef.current !== null &&
                                   prevCampaignIdRef.current !== currentCampaignId;
-    
+
     if (hasProjectTypeChanged || hasCampaignIdChanged) {
-      
+
       // Reset the Redux state to force re-initialization
       resetData();
+      // Reset sync flags
+      hasInitialSyncRef.current = false;
+      prevCycleCountRef.current = null;
+      prevDeliveryCountRef.current = null;
     }
-    
+
     // Update refs for next comparison
     prevProjectTypeRef.current = selectedProjectType;
     prevCampaignIdRef.current = currentCampaignId;
@@ -128,6 +139,76 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
       setErrorState(error.message);
     }
   }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState]);
+
+  // Perform initial sync after initialization to handle saved data with different counts
+  useEffect(() => {
+    if (!initialized || hasInitialSyncRef.current || !cycleData?.cycleConfgureDate || !effectiveDeliveryConfig || !campaignData.length) {
+      return;
+    }
+
+    const currentCycles = cycleData.cycleConfgureDate.cycle;
+    const currentDeliveries = cycleData.cycleConfgureDate.deliveries;
+    const savedCycles = campaignData.length;
+    const savedDeliveries = campaignData[0]?.deliveries?.length || 0;
+
+    // Sync if saved data has different structure than current configuration
+    if (savedCycles !== currentCycles) {
+      try {
+        syncCycleCount(currentCycles, effectiveDeliveryConfig, attributeConfigRef.current, operatorConfigRef.current);
+      } catch (error) {
+        console.error('Error performing initial cycle sync:', error);
+        setErrorState(error.message);
+      }
+    }
+
+    if (savedDeliveries !== currentDeliveries) {
+      try {
+        syncDeliveryCount(currentDeliveries, effectiveDeliveryConfig, attributeConfigRef.current, operatorConfigRef.current);
+      } catch (error) {
+        console.error('Error performing initial delivery sync:', error);
+        setErrorState(error.message);
+      }
+    }
+
+    // Set initial refs
+    prevCycleCountRef.current = currentCycles;
+    prevDeliveryCountRef.current = currentDeliveries;
+    hasInitialSyncRef.current = true;
+  }, [initialized, campaignData, cycleData?.cycleConfgureDate, effectiveDeliveryConfig, syncCycleCount, syncDeliveryCount, setErrorState]);
+
+  // Sync cycles and deliveries when their counts change after initialization
+  useEffect(() => {
+    if (!initialized || !hasInitialSyncRef.current || !cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
+      return;
+    }
+
+    const currentCycles = cycleData.cycleConfgureDate.cycle;
+    const currentDeliveries = cycleData.cycleConfgureDate.deliveries;
+
+    // Check if cycle count has changed
+    if (prevCycleCountRef.current !== null && prevCycleCountRef.current !== currentCycles) {
+      try {
+        syncCycleCount(currentCycles, effectiveDeliveryConfig, attributeConfigRef.current, operatorConfigRef.current);
+      } catch (error) {
+        console.error('Error syncing cycle count:', error);
+        setErrorState(error.message);
+      }
+    }
+
+    // Check if delivery count has changed
+    if (prevDeliveryCountRef.current !== null && prevDeliveryCountRef.current !== currentDeliveries) {
+      try {
+        syncDeliveryCount(currentDeliveries, effectiveDeliveryConfig, attributeConfigRef.current, operatorConfigRef.current);
+      } catch (error) {
+        console.error('Error syncing delivery count:', error);
+        setErrorState(error.message);
+      }
+    }
+
+    // Update refs for next comparison
+    prevCycleCountRef.current = currentCycles;
+    prevDeliveryCountRef.current = currentDeliveries;
+  }, [cycleData?.cycleConfgureDate?.cycle, cycleData?.cycleConfgureDate?.deliveries, initialized, effectiveDeliveryConfig, syncCycleCount, syncDeliveryCount, setErrorState]);
 
   // Wrap onSelect in useCallback to prevent dependency issues
   const handleDataUpdate = useCallback((data) => {

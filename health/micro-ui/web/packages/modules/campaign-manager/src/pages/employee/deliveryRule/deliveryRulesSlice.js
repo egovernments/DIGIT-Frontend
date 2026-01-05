@@ -213,6 +213,92 @@ const deliveryRulesSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+
+    syncCycles: (state, action) => {
+      const { newCycleCount, effectiveDeliveryConfig, attributeConfig, operatorConfig } = action.payload;
+      const currentCycleCount = state.campaignData.length;
+
+      if (newCycleCount > currentCycleCount) {
+        // Add new cycles
+        const deliveriesCount = state.campaignData[0]?.deliveries?.length || 1;
+        for (let i = currentCycleCount; i < newCycleCount; i++) {
+          state.campaignData.push({
+            cycleIndex: (i + 1).toString(),
+            active: false,
+            deliveries: Array.from({ length: deliveriesCount }, (_, deliveryIndex) => {
+              let deliveryStrategy = null;
+
+              if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles) && effectiveDeliveryConfig.cycles.length > 0) {
+                const cycle = effectiveDeliveryConfig.cycles[i];
+                if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
+                  const delivery = cycle.deliveries[deliveryIndex];
+                  deliveryStrategy = delivery?.deliveryStrategy || "DIRECT";
+                }
+              }
+
+              return {
+                deliveryIndex: (deliveryIndex + 1).toString(),
+                active: deliveryIndex === 0,
+                deliveryType: deliveryStrategy || "DIRECT",
+                deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig),
+              };
+            }),
+          });
+        }
+      } else if (newCycleCount < currentCycleCount) {
+        // Remove cycles from the end
+        state.campaignData = state.campaignData.slice(0, newCycleCount);
+
+        // Ensure active tab is still valid
+        if (state.activeTabIndex >= newCycleCount) {
+          state.activeTabIndex = newCycleCount - 1;
+          state.campaignData.forEach((cycle, index) => {
+            cycle.active = index === state.activeTabIndex;
+          });
+        }
+      }
+    },
+
+    syncDeliveries: (state, action) => {
+      const { newDeliveryCount, effectiveDeliveryConfig, attributeConfig, operatorConfig } = action.payload;
+
+      state.campaignData.forEach((cycle, cycleIndex) => {
+        const currentDeliveryCount = cycle.deliveries?.length || 0;
+
+        if (newDeliveryCount > currentDeliveryCount) {
+          // Add new deliveries
+          for (let i = currentDeliveryCount; i < newDeliveryCount; i++) {
+            let deliveryStrategy = null;
+
+            if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles) && effectiveDeliveryConfig.cycles.length > 0) {
+              const configCycle = effectiveDeliveryConfig.cycles[cycleIndex];
+              if (configCycle?.deliveries && Array.isArray(configCycle.deliveries)) {
+                const delivery = configCycle.deliveries[i];
+                deliveryStrategy = delivery?.deliveryStrategy || "DIRECT";
+              }
+            }
+
+            cycle.deliveries.push({
+              deliveryIndex: (i + 1).toString(),
+              active: false,
+              deliveryType: deliveryStrategy || "DIRECT",
+              deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, i, attributeConfig, operatorConfig),
+            });
+          }
+        } else if (newDeliveryCount < currentDeliveryCount) {
+          // Remove deliveries from the end
+          cycle.deliveries = cycle.deliveries.slice(0, newDeliveryCount);
+
+          // Ensure active sub-tab is still valid for the active cycle
+          if (cycle.active && state.activeSubTabIndex >= newDeliveryCount) {
+            state.activeSubTabIndex = newDeliveryCount - 1;
+            cycle.deliveries.forEach((delivery, index) => {
+              delivery.active = index === state.activeSubTabIndex;
+            });
+          }
+        }
+      });
+    },
   },
 });
 
@@ -502,6 +588,8 @@ export const {
   updateDeliveryTypeForDelivery,
   setLoading,
   setError,
+  syncCycles,
+  syncDeliveries,
 } = deliveryRulesSlice.actions;
 
 export default deliveryRulesSlice.reducer;
