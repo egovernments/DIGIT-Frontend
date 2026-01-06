@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 // import GenerateXlsx from "../../../components/GenerateXlsx";
 import GenerateExcelJs from "../../../components/GenerateExcelJs";
 import BulkUpload from "../../../components/BulkUpload";
+import TagComponent from "../../../components/TagComponent";
 
 const LocalisationBulkUpload = () => {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ const LocalisationBulkUpload = () => {
   // Campaign from URL
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
+  const campaignName = searchParams.get("campaignName") || "";
 
   // Fetch campaign details to get projectType
   const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.campaign.useSearchCampaign({
@@ -390,7 +392,8 @@ const LocalisationBulkUpload = () => {
         {(isDownloadLoading || isUploading || isCampaignLoading) && <Loader variant="OverlayLoader" />}
 
         {/* Download Template Button */}
-        <div style={{ display: "flex", justifyContent: "flex-end"}}>
+        <div style={{ display: "flex", justifyContent: "space-between"}}>
+                      <TagComponent campaignName={campaignName} />
           <Button
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
