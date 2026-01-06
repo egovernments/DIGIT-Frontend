@@ -64,10 +64,10 @@ export const transformMdmsToAppConfig = (fullData, version) => {
     ) {
       // Create a map of name+type -> condition from conditionalNavigateTo
       const conditionMap = new Map();
-      
+
       if (lastPage.conditionalNavigateTo && Array.isArray(lastPage.conditionalNavigateTo)) {
         lastPage.conditionalNavigateTo.forEach((navItem) => {
-          const key = `${navItem.navigateTo.name}|${navItem.navigateTo.type}`;
+          const key = `${navItem.navigateTo.name}|${navItem.navigateTo.type?.toLowerCase() || "form"}`;
           conditionMap.set(key, navItem.condition);
         });
       }

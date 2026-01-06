@@ -108,7 +108,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
           backgroundColor: "#eee",
           display: "flex",
           flexDirection: "column",
-          height: "100%",
+          height: "90%",
         }}
       >
         <Card
