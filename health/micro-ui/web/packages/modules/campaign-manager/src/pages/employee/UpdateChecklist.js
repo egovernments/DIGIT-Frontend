@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, Button, PopUp,Loader ,TextArea} from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -520,7 +520,7 @@ const UpdateChecklist = () => {
           state: {
             message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
             preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
-            actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+            // actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
             actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
             secondaryActionLabel: "MY_CAMPAIGN",
             secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
@@ -561,7 +561,7 @@ const UpdateChecklist = () => {
       {!submitting && (
         <div>
           <TagComponent campaignName={campaignName} />
-          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "1rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t("UPDATE_CHECKLIST")}</h2>
             </div>
@@ -571,7 +571,7 @@ const UpdateChecklist = () => {
                 variation="secondary"
                 label={t("PREVIEW_CHECKLIST")}
                 className={"hover"}
-                style={{ marginTop: "2rem", marginBottom: "2rem" }}
+                style={{ marginTop: "10px", marginBottom: "1.5rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
                 onClick={popShow}
               />
@@ -603,7 +603,7 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CREATE_CHECKLIST")}
+                  label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
@@ -630,21 +630,20 @@ const UpdateChecklist = () => {
               <div>
                 <SummaryCardFieldPair
                   key={index} // Provide a unique key for each item
-                  className=""
+                  className="checklist-screen"
                   inline
                   label={t(pair.label)} // Dynamically set the label
                   value={t(pair.value)} // Dynamically set the value
                 />
-                {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
               </div>
             ))}
             {
-              <div style={{ display: "flex" }}>
-                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
-                <TextInput
+              <div style={{ display: "flex" ,gap:"1.5rem"}}>
+                <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
+                <TextArea
                   disabled={false}
                   className="tetxinput-example"
-                  type={"text"}
+                  // type={"text"}
                   name={t("CHECKLIST_HELP_TEXT")}
                   value={helpText}
                   onChange={(event) => setHelpText(event.target.value)}

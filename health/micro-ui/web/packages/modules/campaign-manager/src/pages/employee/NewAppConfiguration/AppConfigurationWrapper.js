@@ -305,7 +305,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           }}
         >
           <>
-            <LabelFieldPair>
+            <LabelFieldPair removeMargin={true}>
               <span style={{ fontWeight: "600", width: "33%" }}>
                 {t("FIELD_LABEL")} <span style={{ color: "red" }}>*</span>
               </span>
@@ -317,7 +317,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               />
             </LabelFieldPair>
 
-            <LabelFieldPair>
+            <LabelFieldPair removeMargin={true}>
               <span style={{ fontWeight: "600", width: "33%" }}>
                 {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
               </span>

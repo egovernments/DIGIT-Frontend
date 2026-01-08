@@ -384,16 +384,16 @@ const LocalisationBulkUpload = () => {
 
   return (
     <React.Fragment>
-      <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>
+      {/* <HeaderComponent className="summary-header" styles={{ marginBottom: "1.5rem" }}>
         {t("DIGIT_LOC_BULK_UPLOAD_XLS")}
-      </HeaderComponent>
+      </HeaderComponent> */}
 
       <Card>
         {(isDownloadLoading || isUploading || isCampaignLoading) && <Loader variant="OverlayLoader" />}
 
         {/* Download Template Button */}
         <div style={{ display: "flex", justifyContent: "space-between"}}>
-                      <TagComponent campaignName={campaignName} />
+          <TagComponent campaignName={campaignName} />
           <Button
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
@@ -406,7 +406,7 @@ const LocalisationBulkUpload = () => {
         {/* Header */}
         <div className="campaign-bulk-upload">
           <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-            {t("DIGIT_LOC_UPLOAD_LOCALIZATION")}
+            {t("DIGIT_LOC_BULK_UPLOAD_XLS")}
           </HeaderComponent>
         </div>
 

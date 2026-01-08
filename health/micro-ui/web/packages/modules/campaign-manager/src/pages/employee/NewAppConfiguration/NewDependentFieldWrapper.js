@@ -1892,7 +1892,7 @@ function NewDependentFieldWrapper({ t }) {
 
                                         {/* Add Condition button after the last condition */}
                                         <div style={{ marginTop: "0.5rem" }}>
-                                            <Button variation="secondary" label={addConditionLabel} onClick={addSubCondition} />
+                                            <Button variation="secondary" icon={"Add"} label={addConditionLabel} onClick={addSubCondition} />
                                         </div>
 
                                         {/* show any form-level error here */}

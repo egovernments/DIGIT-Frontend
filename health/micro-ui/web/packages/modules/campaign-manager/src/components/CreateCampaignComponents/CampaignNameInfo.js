@@ -26,26 +26,26 @@ const CampaignNameInfo = () => {
     // Listening for custom event
     window.addEventListener("campaignNameChange", handleNameChange);
 
-    // checking session storage on mount for initial value
-    const storedName = sessionStorage.getItem("Digit.CAMPAIGN_NAME_REALTIME");
-    if (storedName) {
-      try {
-        const parsed = JSON.parse(storedName);
-        if (parsed) {
-          setCampaignName(parsed);
-          if (parsed.length > 0) {
-            setHasStartedTyping(true);
-          }
-        }
-      } catch (e) {
-        // Ignoring errors
-      }
+    // Check session storage on mount for initial value from the campaign form data
+    const formData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+    const sessionName = formData?.HCM_CAMPAIGN_NAME?.CampaignName || formData?.HCM_CAMPAIGN_NAME?.campaignName;
+    if (sessionName && sessionName.length > 0) {
+      setCampaignName(sessionName);
+      setHasStartedTyping(true);
     }
 
     return () => {
       window.removeEventListener("campaignNameChange", handleNameChange);
     };
   }, []);
+
+  // Set hasStartedTyping to true if campaignName already has a value on mount/update
+  // This handles the case when navigating back to the screen with existing data
+  useEffect(() => {
+    if (campaignName && campaignName.length > 0 && !hasStartedTyping) {
+      setHasStartedTyping(true);
+    }
+  }, [campaignName]);
 
   // Fetch MDMS rules
   const { data: infoData, isLoading: infoLoading } = Digit.Hooks.useCustomMDMS(
@@ -116,13 +116,6 @@ const CampaignNameInfo = () => {
           </div>
         ))}
       </div>
-
-      {isAllRulesMet && (
-        <div className="validation-success-banner">
-          <CheckCircle fill="#00703C" width="1.5rem" height="1.5rem" />
-          <span className="success-text">{t("ALL_NAMING_RULES_MET")}</span>
-        </div>
-      )}
     </div>
   );
 };

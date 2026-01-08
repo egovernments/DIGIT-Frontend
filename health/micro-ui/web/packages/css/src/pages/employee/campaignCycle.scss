@@ -268,6 +268,16 @@
   }
 }
 
+.campaign-sub-tab-head:first-child {
+  border-top-left-radius: var(--digitv2-borderRadius-radius2);
+  border-bottom-left-radius: var(--digitv2-borderRadius-radius2);
+}
+
+.campaign-sub-tab-head:last-child {
+  border-top-right-radius: var(--digitv2-borderRadius-radius2);
+  border-bottom-right-radius: var(--digitv2-borderRadius-radius2);
+}
+
 .tab-content-header {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem !important;
@@ -276,10 +286,6 @@
 .card-header-delivery {
   display: flex;
   justify-content: space-between;
-}
-
-.deliveryType-labelfield {
-  margin-top: 0.565rem;
 }
 
 .delivery-rule-container {

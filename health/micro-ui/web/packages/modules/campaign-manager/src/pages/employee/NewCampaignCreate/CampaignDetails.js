@@ -4,7 +4,7 @@ import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit,Translate } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -499,7 +499,7 @@ const CampaignDetails = () => {
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}&campaignName=${campaignData?.campaignName}`,
               type: "primary",
               type: "primary",
-              icon: <UploadCloud fill={"#C84C0E"} />,
+              icon: <Translate fill={"#C84C0E"} width={"40px"} height={"40px"}/>,
               disabled: false,
             },
           },

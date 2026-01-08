@@ -21,12 +21,15 @@ function NewDraggableField({
   cardIndex,
   moveField,
   onHide,
+  isTemplate
 }) {
   const ref = useRef(null);
   const localizedLabel = useCustomT(label);
-   const isDragEnabled = typeof moveField === 'function';
+  const isDragEnabled = typeof moveField === 'function' && !isTemplate;
+
   const [, drop] = useDrop({
     accept: FIELD_TYPE,
+    canDrop: () => isDragEnabled,
     hover: (draggedItem) => {
       if (isDragEnabled && draggedItem.index !== fieldIndex) {
         moveField(draggedItem.index, fieldIndex, cardIndex);
@@ -38,21 +41,24 @@ function NewDraggableField({
   const [{ isDragging }, drag] = useDrag({
     type: FIELD_TYPE,
     item: { index: fieldIndex },
+    canDrag: () => isDragEnabled,
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   });
 
-  drag(drop(ref));
+  if (isDragEnabled) {
+    drag(drop(ref));
+  }
 
   return (
     <div className="draggableField-cont" ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
-      <div className="drag-handle">
+      {!isTemplate && (<div className="drag-handle">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-      </div>
+      </div>)}
       <PanelFieldDisplay
         type={type}
         label={localizedLabel}

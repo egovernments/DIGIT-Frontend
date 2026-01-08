@@ -1380,30 +1380,28 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   }
 });
 
-// Simple tabs component
-const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
+// Simple tabs component - exported for use in SidePanelApp header
+export const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   const { t } = useTranslation();
 
   return (
     <div className="configure-app-tabs">
       {tabs.map((tab) => (
         <button key={tab} className={`configure-app-tab-head ${activeTab === tab ? "active" : ""} hover`} onClick={() => onTabChange(tab)}>
-          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(`TAB_${tab.toUpperCase()}`)}</p>
+          <p style={{ margin: 0, position: "relative"}}>{t(`TAB_${tab.toUpperCase()}`)}</p>
         </button>
       ))}
     </div>
   );
 });
 
-function NewDrawerFieldComposer() {
+function NewDrawerFieldComposer({ activeTab, onTabChange }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   // Get data from Redux
   const { selectedField } = useSelector((state) => state.remoteConfig);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
-  // Local state for tabs
-  const [activeTab, setActiveTab] = useState("content");
   // State to track validation errors
   const [validationErrors, setValidationErrors] = useState([]);
 
@@ -1545,7 +1543,7 @@ function NewDrawerFieldComposer() {
       }
       return;
     }
-    setActiveTab(newTab);
+    onTabChange(newTab);
   };
 
   // Don't render if no field selected
@@ -1559,16 +1557,17 @@ function NewDrawerFieldComposer() {
 
   return (
     <Fragment>
-      <div className="app-config-drawer-subheader">
+      {/* Moved to SidePanelApp header for sticky behavior */}
+      {/* <div className="app-config-drawer-subheader">
         <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_PROPERTIES")}</div>
         <span className="icon-wrapper new">
           <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
         </span>
       </div>
-      <Divider />
+      <Divider /> */}
 
-      {/* Tabs */}
-      <Tabs tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+      {/* Tabs - Moved to SidePanelApp header for sticky behavior */}
+      {/* <Tabs tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} /> */}
 
       {/* Tab Description */}
       <TextBlock

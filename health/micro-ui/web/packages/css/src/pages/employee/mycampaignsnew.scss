@@ -78,6 +78,12 @@
     grid-auto-columns: 1fr;
     gap: 1rem;
   }
+
+  .digit-results-card-buttons-clone-delete{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
 }
 
 .digit-viewcard-field-pair {
@@ -94,6 +100,12 @@
 .digit-viewcard-field-pair.inline {
   .digit-viewcard-label {
     width: 60%;
+  }
+
+  &.checklist-screen {
+    .digit-viewcard-label {
+      width: 20%;
+    }
   }
 }
 .digit-viewcard-field-pair {

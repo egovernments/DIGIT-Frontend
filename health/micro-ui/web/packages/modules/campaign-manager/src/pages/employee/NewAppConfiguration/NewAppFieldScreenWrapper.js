@@ -197,15 +197,15 @@ function NewAppFieldScreenWrapper() {
 
   return (
     <React.Fragment>
-      <div className="app-config-drawer-subheader">
+      {/* <div className="app-config-drawer-subheader">
         <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
       </div>
-      <Divider />
+      <Divider /> */}
       {/* Heading Field */}
       <HeaderFieldWrapper
         key="header-heading"
-        label="heading"
+        label={"PAGE_HEADING"}
         type="text"
         value={currentCard?.heading}
         currentCard={currentCard}
@@ -216,7 +216,7 @@ function NewAppFieldScreenWrapper() {
       {/* Description Field */}
       <HeaderFieldWrapper
         key="header-description"
-        label="description"
+        label={"PAGE_DESCRIPTION"}
         type="textarea"
         value={currentCard?.description}
         currentCard={currentCard}
@@ -226,8 +226,8 @@ function NewAppFieldScreenWrapper() {
       />
       <Divider />
       <div className="app-config-drawer-subheader">
-        <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+        <div> {currentCard?.type === "template" ? t("APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("APPCONFIG_SUBHEAD_FIELDS")}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t("TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
       {currentCard?.body?.map((section, index, card) => {
 
@@ -276,6 +276,7 @@ function NewAppFieldScreenWrapper() {
                   moveField={type !== "template" ? moveField : null}
                   key={`field-${i}`}
                   fields={c}
+                  isTemplate={currentCard?.type === "template"}
                 // isFooterField={isFooterField}
                 />
               );

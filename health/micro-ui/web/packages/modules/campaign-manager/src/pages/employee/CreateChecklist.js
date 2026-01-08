@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader,TextArea } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useNavigate } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
@@ -537,7 +537,7 @@ const CreateChecklist = () => {
           state: {
             message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
             preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-            actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+            // actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
             actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
             secondaryActionLabel: "VIEW_DETAILS",
             secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
@@ -631,7 +631,7 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CREATE_CHECKLIST")}
+                  label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
@@ -661,19 +661,19 @@ const CreateChecklist = () => {
               <div>
                 <SummaryCardFieldPair
                   key={index} // Provide a unique key for each item
-                  className=""
+                  className="checklist-screen"
                   inline
                   label={t(pair.label)} // Dynamically set the label
                   value={t(pair.value)} // Dynamically set the value
                   // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                 />
-                {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
               </div>
             ))}
             {<hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />}
-            <div style={{ display: "flex" }}>
-              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
-              <TextInput
+            <div style={{ display: "flex",gap:"1.5rem" }}>
+              <div style={{ width: "20%", fontWeight: "500"}}>{t("NAME_OF_CHECKLIST")}</div>
+              <div className="digit-field" style={{width:"80%"}}>
+                <TextInput
                 disabled={true}
                 className="tetxinput-example"
                 type={"text"}
@@ -682,14 +682,16 @@ const CreateChecklist = () => {
                 value={`${clTranslated} ${rlTranslated}`}
                 // onChange={(event) => addChecklistName(event.target.value)}
                 placeholder={"Checklist Name"}
+                textInputStyle={{width:"80%"}}
               />
+              </div>
             </div>
-            <div style={{ display: "flex" }}>
-              <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
-              <TextInput
+            <div style={{ display: "flex" ,gap:"1.5rem"}}>
+              <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
+              <TextArea
                 disabled={false}
                 className="tetxinput-example"
-                type={"text"}
+                // type={"text"}
                 name={t("CHECKLIST_HELP_TEXT")}
                 value={helpText}
                 // value={`${clTranslated} ${rlTranslated}`}

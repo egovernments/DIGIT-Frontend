@@ -1,7 +1,7 @@
 import React, { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
-import { SummaryCardFieldPair, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
+import { SummaryCardFieldPair, Card, Button, PopUp,Loader,TextArea } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
@@ -180,9 +180,9 @@ const ViewChecklist = () => {
   return (
     <div style={{ marginBottom: "2rem" }}>
       <TagComponent campaignName={campaignName} />
-      <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "1rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
         <div>
-          <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("VIEW_CHECKLIST")}</h2>
+          <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" ,color:"#0b4b66"}}>{t("VIEW_CHECKLIST")}</h2>
         </div>
         <div style={{ display: "flex", gap: "1rem" }}>
           <Button
@@ -190,7 +190,7 @@ const ViewChecklist = () => {
             variation="secondary"
             label={t("PREVIEW_CHECKLIST")}
             className={"hover"}
-            style={{ marginTop: "2rem", marginBottom: "2rem" }}
+            style={{ marginTop: "10px", marginBottom: "1.5rem" }}
             // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
             onClick={popShow}
           />
@@ -236,21 +236,20 @@ const ViewChecklist = () => {
           <div>
             <SummaryCardFieldPair
               key={index} // Provide a unique key for each item
-              className=""
+              className="checklist-screen"
               inline
               label={t(pair.label)} // Dynamically set the label
               value={t(pair.value)} // Dynamically set the value
             />
-            {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
           </div>
         ))}
         {
-          <div style={{ display: "flex" }}>
-            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
-            <TextInput
+          <div style={{ display: "flex",gap:"1.5rem" }}>
+            <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
+            <TextArea
               disabled={true}
               className="tetxinput-example"
-              type={"text"}
+              // type={"text"}
               name={t("CHECKLIST_HELP_TEXT")}
               value={helpText}
               placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
