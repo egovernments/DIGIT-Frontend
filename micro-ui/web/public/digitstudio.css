@@ -1507,3 +1507,20 @@ textarea.light-placeholder::placeholder {
 .digit-field-container textarea{
   resize: none;
 }
+
+.digit-inbox-search-link {
+  &, a, a:link, a:visited, a:hover, a:active {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
+  &::after,
+  &::before,
+  a::after,
+  a::before {
+    display: none !important;
+    content: none !important;
+  }
+}
