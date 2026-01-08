@@ -5,7 +5,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
     let value = "";
 
     const betweenRegex = /(\d+)\s*<=?\s*([a-zA-Z]+)\s*<\s*(\d+)/;
-    const operatorRegex = /([a-zA-Z_]+)\s*(<=?|>=?|=|<|>)\s*([a-zA-Z0-9_]+)/;
+    const operatorRegex = /([a-zA-Z_]+)\s*(==|<=?|>=?|=|<|>)\s*([a-zA-Z0-9_]+)/;
 
     if (betweenRegex.test(condition)) {
       const match = condition.match(betweenRegex);
@@ -21,6 +21,10 @@ const getDeliveryConfig = ({ data, projectType }) => {
       const comparisonValue = match[3];
 
       switch (operator) {
+        case "==":
+        case "=":
+          operatorValue = "EQUAL_TO";
+          break;
         case "<=":
           operatorValue = "LESS_THAN_EQUAL_TO";
           break;
@@ -33,13 +37,12 @@ const getDeliveryConfig = ({ data, projectType }) => {
         case ">":
           operatorValue = "GREATER_THAN";
           break;
-        case "=":
-          operatorValue = "EQUAL_TO";
-          break;
         default:
           operatorValue = "UNKNOWN";
       }
       value = { variable, comparisonValue };
+    } else {
+      console.warn("Failed to parse condition:", condition);
     }
 
     return { operatorValue, value };
@@ -56,9 +59,15 @@ const generateConfig = (data) => {
         value: variant.productVariantId
       }));
       
-      // Split the condition by 'and' to handle multiple conditions
-      const conditions = dose.condition.split('and');
-      
+      // Normalize and split the condition by 'and' to handle multiple conditions
+      // Replace all "and" with " and " to ensure proper splitting
+      const normalizedCondition = dose.condition
+        .replace(/and/gi, ' and ')  // Replace all "and" with " and " (with spaces)
+        .replace(/\s+/g, ' ')       // Collapse multiple spaces into single space
+        .trim();                     // Remove leading/trailing spaces
+
+      const conditions = normalizedCondition.split(' and ').filter(c => c.trim());
+
       const attributeConfigs = conditions.map(condition => {
         // Use the parseCondition function to extract operatorValue and value
         const { operatorValue, value } = parseCondition(condition);
@@ -91,6 +100,7 @@ const generateConfig = (data) => {
         disableDeliveryType: index === 0
       };
     });
+
 
     return {
       delivery: delivery.id,
