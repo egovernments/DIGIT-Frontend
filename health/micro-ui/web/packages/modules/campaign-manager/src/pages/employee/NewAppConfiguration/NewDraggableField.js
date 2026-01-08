@@ -23,8 +23,8 @@ function NewDraggableField({
   onHide,
 }) {
   const ref = useRef(null);
-  const localizedLabel = useCustomT(label);
-   const isDragEnabled = typeof moveField === 'function';
+  const localizedLabel = useCustomT(label) || useCustomT(rest?.fieldName);
+  const isDragEnabled = typeof moveField === 'function';
   const [, drop] = useDrop({
     accept: FIELD_TYPE,
     hover: (draggedItem) => {

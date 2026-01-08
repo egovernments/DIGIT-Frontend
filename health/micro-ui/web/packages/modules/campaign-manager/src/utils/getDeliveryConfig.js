@@ -5,7 +5,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
     let value = "";
 
     const betweenRegex = /(\d+)\s*<=?\s*([a-zA-Z]+)\s*<\s*(\d+)/;
-    const operatorRegex = /([a-zA-Z_]+)\s*(<=?|>=?|=|<|>)\s*([a-zA-Z0-9_]+)/;
+    const operatorRegex = /([a-zA-Z_]+)\s*(==|<=?|>=?|=|<|>)\s*([a-zA-Z0-9_]+)/;
 
     if (betweenRegex.test(condition)) {
       const match = condition.match(betweenRegex);
@@ -15,12 +15,17 @@ const getDeliveryConfig = ({ data, projectType }) => {
       operatorValue = "IN_BETWEEN";
       value = { minValue, maxValue, variable };
     } else if (operatorRegex.test(condition)) {
+      console.log("Parsing operator condition:", {condition});
       const match = condition.match(operatorRegex);
       const variable = match[1];
       const operator = match[2];
       const comparisonValue = match[3];
 
       switch (operator) {
+        case "==":
+        case "=":
+          operatorValue = "EQUAL_TO";
+          break;
         case "<=":
           operatorValue = "LESS_THAN_EQUAL_TO";
           break;
@@ -33,13 +38,12 @@ const getDeliveryConfig = ({ data, projectType }) => {
         case ">":
           operatorValue = "GREATER_THAN";
           break;
-        case "=":
-          operatorValue = "EQUAL_TO";
-          break;
         default:
           operatorValue = "UNKNOWN";
       }
       value = { variable, comparisonValue };
+    } else {
+      console.warn("Failed to parse condition:", condition);
     }
 
     return { operatorValue, value };
@@ -48,6 +52,75 @@ const getDeliveryConfig = ({ data, projectType }) => {
 const generateConfig = (data) => {
   
   return data?.deliveries?.map(delivery => {
+    console.log("Generating config for delivery:", {delivery});
+    //OUTPUT: {
+//     "delivery": {
+//         "id": 1,
+//         "doseCriteria": [
+//             {
+//                 "condition": "60 <= age < 180 and 90 <= height < 119 and 12 <= weight < 45 andisPregnant==false",
+//                 "ProductVariants": [
+//                     {
+//                         "name": "Ivermectin 100mg",
+//                         "quantity": 1,
+//                         "productVariantId": "PVAR-2025-09-14-000582"
+//                     }
+//                 ]
+//             },
+//             {
+//                 "condition": "60 <= age < 180 and 120 <= height < 139 and 12 <= weight < 45 andisPregnant==false",
+//                 "ProductVariants": [
+//                     {
+//                         "name": "Ivermectin 100mg",
+//                         "quantity": 1,
+//                         "productVariantId": "PVAR-2025-09-14-000582"
+//                     }
+//                 ]
+//             },
+//             {
+//                 "condition": "age>=180 and 140 <= height < 159 and 45 <= weight < 75 and isPregnant==trueandgender==FEMALE",
+//                 "ProductVariants": [
+//                     {
+//                         "name": "Albendazole 400mg",
+//                         "quantity": 1,
+//                         "productVariantId": "PVAR-2025-09-14-000583"
+//                     }
+//                 ]
+//             },
+//             {
+//                 "condition": "age>=180 and 140 <= height < 159 and 45 <= weight < 75 andisPregnant==false",
+//                 "ProductVariants": [
+//                     {
+//                         "name": "Albendazole 400mg",
+//                         "quantity": 1,
+//                         "productVariantId": "PVAR-2025-09-14-000583"
+//                     }
+//                 ]
+//             },
+//             {
+//                 "condition": "age>=180 and height>=159 and weight>=75 andisPregnant==trueandgender==FEMALE",
+//                 "ProductVariants": [
+//                     {
+//                         "name": "Albendazole 400mg",
+//                         "quantity": 1,
+//                         "productVariantId": "PVAR-2025-09-14-000583"
+//                     }
+//                 ]
+//             },
+//             {
+//                 "condition": "age>=180 and height>=159 and weight>=75 andisPregnant==false",
+//                 "ProductVariants": [
+//                     {
+//                         "name": "Albendazole 400mg",
+//                         "quantity": 1,
+//                         "productVariantId": "PVAR-2025-09-14-000583"
+//                     }
+//                 ]
+//             }
+//         ],
+//         "deliveryStrategy": "DIRECT"
+//     }
+// }
     const conditionConfig = delivery.doseCriteria.map((dose, index) => {
       const productConfig = dose.ProductVariants.map(variant => ({
         key: 1,
@@ -56,9 +129,25 @@ const generateConfig = (data) => {
         value: variant.productVariantId
       }));
       
-      // Split the condition by 'and' to handle multiple conditions
-      const conditions = dose.condition.split('and');
-      
+      // Normalize and split the condition by 'and' to handle multiple conditions
+      // Replace all "and" with " and " to ensure proper splitting
+      const normalizedCondition = dose.condition
+        .replace(/and/gi, ' and ')  // Replace all "and" with " and " (with spaces)
+        .replace(/\s+/g, ' ')       // Collapse multiple spaces into single space
+        .trim();                     // Remove leading/trailing spaces
+
+      const conditions = normalizedCondition.split(' and ').filter(c => c.trim());
+      console.log("Parsed conditions for dose:", {original: dose.condition, normalized: normalizedCondition, conditions});  
+//       //OUTPUT: {
+//     "original": "60 <= age < 180 and 90 <= height < 119 and 12 <= weight < 45 andisPregnant==false",
+//     "normalized": "60 <= age < 180 and 90 <= height < 119 and 12 <= weight < 45 andisPregnant==false",
+//     "conditions": [
+//         "60 <= age < 180",
+//         "90 <= height < 119",
+//         "12 <= weight < 45 andisPregnant==false"
+//     ]
+// }
+
       const attributeConfigs = conditions.map(condition => {
         // Use the parseCondition function to extract operatorValue and value
         const { operatorValue, value } = parseCondition(condition);
@@ -91,6 +180,8 @@ const generateConfig = (data) => {
         disableDeliveryType: index === 0
       };
     });
+
+    console.log("Completed conditionConfig for delivery:", {conditionConfig});
 
     return {
       delivery: delivery.id,
