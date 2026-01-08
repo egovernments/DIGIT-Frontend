@@ -516,15 +516,15 @@ const AddDeliveryRuleWrapper = React.memo(({
   const canAddMore = useMemo(() => {
     if (projectConfig?.projectType === "IRS-mz") {
       const selectedStructureCodes = campaignData
-        ?.flatMap(cycle => cycle?.deliveries?.flatMap(delivery => 
-          delivery?.deliveryRules?.flatMap(rule => 
+        ?.flatMap(cycle => cycle?.deliveries?.flatMap(delivery =>
+          delivery?.deliveryRules?.flatMap(rule =>
             rule?.attributes?.map(attribute => attribute?.value)
           )
         )) || [];
       return selectedStructureCodes.length < 4;
     }
-    
-    return !projectConfig?.deliveryAddDisable && activeDeliveryRules.length < 5;
+
+    return !projectConfig?.deliveryAddDisable;
   }, [projectConfig, activeDeliveryRules.length, campaignData]);
 
   if (!attributeConfig || !operatorConfig) {

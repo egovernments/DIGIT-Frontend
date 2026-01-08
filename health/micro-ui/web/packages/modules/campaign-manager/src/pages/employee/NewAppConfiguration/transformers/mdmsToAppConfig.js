@@ -64,10 +64,10 @@ export const transformMdmsToAppConfig = (fullData, version) => {
     ) {
       // Create a map of name+type -> condition from conditionalNavigateTo
       const conditionMap = new Map();
-      
+
       if (lastPage.conditionalNavigateTo && Array.isArray(lastPage.conditionalNavigateTo)) {
         lastPage.conditionalNavigateTo.forEach((navItem) => {
-          const key = `${navItem.navigateTo.name}|${navItem.navigateTo.type}`;
+          const key = `${navItem.navigateTo.name}|${navItem.navigateTo.type?.toLowerCase() || "form"}`;
           conditionMap.set(key, navItem.condition);
         });
       }
@@ -222,6 +222,8 @@ const transformTemplate = (screenData) => {
     template.screenType = "TEMPLATE";
   }
 
+  template.preventScreenCapture = screenData.preventScreenCapture || false;
+
   return template;
 };
 
@@ -272,6 +274,7 @@ const transformFormPage = (pageData) => {
     label: pageData.heading,
     order: pageData.order,
     description: pageData.description,
+    preventScreenCapture: pageData.preventScreenCapture || false,
     properties: transformFormProperties(pageData.body),
   };
 

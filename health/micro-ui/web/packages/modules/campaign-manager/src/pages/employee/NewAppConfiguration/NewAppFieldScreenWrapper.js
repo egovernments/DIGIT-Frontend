@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Divider, LabelFieldPair, TextInput, Switch } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup } from "./redux/remoteConfigSlice";
+import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup, updateHeaderProperty } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
@@ -74,8 +74,8 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
   const labelMap = {
     primary: t("Primary"),
     secondary: t("Secondary"),
-    teritiary:t("Teritiary"),
-    link:t("Link"),
+    teritiary: t("Teritiary"),
+    link: t("Link"),
   }
 
   return (
@@ -141,6 +141,10 @@ function NewAppFieldScreenWrapper() {
     dispatch(addSection());
   }, [dispatch]);
 
+  const handleTogglePreventScreenCapture = useCallback((checked) => {
+    dispatch(updateHeaderProperty({ fieldKey: 'preventScreenCapture', value: checked }));
+  }, [dispatch]);
+
   const extractTemplateFields = (node) => {
     if (!node) return [];
 
@@ -197,6 +201,14 @@ function NewAppFieldScreenWrapper() {
 
   return (
     <React.Fragment>
+      <Switch
+        className={"app-config-drawer-subheader"}
+        isLabelFirst={true}
+        label={t("PREVENT_SCREEN_CAPTURE")}
+        isCheckedInitially={currentCard?.preventScreenCapture || false}
+        onToggle={handleTogglePreventScreenCapture}
+      />
+      <Divider />
       {/* <div className="app-config-drawer-subheader">
         <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
@@ -301,7 +313,7 @@ function NewAppFieldScreenWrapper() {
             <div>{t("NAVIGATION_LOGIC")}</div>
             <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
           </div>
-          <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages}/>
+          <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages} />
         </>
       )}
       {currentCard?.type !== "template" && currentCard?.config?.enableSectionAddition && (

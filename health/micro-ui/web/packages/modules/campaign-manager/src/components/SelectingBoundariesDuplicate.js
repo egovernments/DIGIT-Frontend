@@ -7,6 +7,12 @@ import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
+  // Stabilize props reference to prevent unnecessary re-renders
+  const sessionData = useMemo(
+    () => props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType,
+    [JSON.stringify(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType)]
+  );
+
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -115,7 +121,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     }
   });
   useEffect(() => {
-    const sessionData = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType;
     if (sessionData || campaignData?.boundaries) {
       setSelectedData(sessionData?.selectedData || campaignData?.boundaries);
       setBoundaryOptions(sessionData?.boundaryData || {});
@@ -126,7 +131,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       }
     }
     setTimeout(() => setIsLoading(false), 10);
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType, campaignData]);
+  }, [sessionData, campaignData]);
 
   useEffect(() => {
     if (
