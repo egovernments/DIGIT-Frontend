@@ -151,7 +151,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
 
   if (currentTab === "CAMPAIGN_FAILED") {
     actions.editCampaign = {
-      label: "SHOW_ERROR",
+      label: "SHOW_REASON_FOR_ERROR",
       size: "medium",
       onClick: () => setShowErrorPopUp(true),
       icon: "",
@@ -313,11 +313,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         <div className="digit-results-card-heading-tags-wrapper">
           <div className="digit-results-card-heading">{rowData?.campaignName}</div>
           <div className="digit-results-card-tags">
-            {showCancelCampaign ? (
+            {/* {showCancelCampaign ? (
               <div className="digit-tag-container" onClick={handleCancelClick} style={{ margin: "0rem" }}>
                 <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} hideClose={false} />
               </div>
-            ) : null}
+            ) : null} */}
             {tagElements &&
               Object.entries(tagElements)?.map(([key, tag]) => (
                 <Tag
@@ -374,10 +374,16 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                       <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={false} />
                     </div>
                   );
+                } else if (rowData?.status === "failed") {
+                  return (
+                    <div className="digit-viewcard-value">
+                      <Tag label={t("CAMPAIGN_CREATION_FAILED")} type="error" showIcon={false} stroke={false} />
+                    </div>
+                  );
                 } else {
                   return (
                     <div className="digit-viewcard-value">
-                      <Tag label={t(rowData?.status)} type="monochrome" showIcon={false} stroke={false} />
+                      <Tag label={t(rowData?.status)} type="monochrome" showIcon={false} stroke={false} style={{backgroundColor:"#C7E0F1"}} />
                     </div>
                   );
                 }
@@ -388,25 +394,39 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       </Card>
       {/* Action Buttons */}
       <div className="digit-results-card-buttons">
-        {currentTab != "CAMPAIGN_FAILED" && (
-          <Button
-            key={"DuplicateCampaign"}
-            icon={"TabInactive"}
-            label={t("DUPLICATE_CAMPAIGN")}
-            onClick={() => setCloneCampaign(true)}
-            variation={"teritiary"}
-            size={"medium"}
-            title={t("DUPLICATE_CAMPAIGN")}
-          />
-        )}
-        {cloneCampaign && (
-          <CloneCampaignWrapper
-            row={rowData}
-            campaignId={rowData?.id}
-            campaignName={rowData?.campaignName}
-            setCampaignCopying={setCloneCampaign}
-          />
-        )}
+        <div className="digit-results-card-buttons-clone-delete">
+          {currentTab != "CAMPAIGN_FAILED" && (
+            <Button
+              key={"DuplicateCampaign"}
+              icon={"TabInactive"}
+              label={t("DUPLICATE_CAMPAIGN")}
+              onClick={() => setCloneCampaign(true)}
+              variation={"teritiary"}
+              size={"medium"}
+              title={t("DUPLICATE_CAMPAIGN")}
+            />
+          )}
+          {showCancelCampaign && (
+            <Button
+              key={"DeleteCampaign"}
+              icon={"Delete"}
+              label={t("CANCEL_CAMPAIGN")}
+              onClick={handleCancelClick}
+              variation={"teritiary"}
+              size={"medium"}
+              title={t("CANCEL_CAMPAIGN")}
+            />
+          )}
+          {cloneCampaign && (
+            <CloneCampaignWrapper
+              row={rowData}
+              campaignId={rowData?.id}
+              campaignName={rowData?.campaignName}
+              setCampaignCopying={setCloneCampaign}
+            />
+          )}
+
+        </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           {actionTags && Object.keys(actionTags).length > 0 && (
             <div className="digit-results-card-buttons-internal">

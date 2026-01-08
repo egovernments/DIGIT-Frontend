@@ -201,7 +201,7 @@
   .custom-table-label {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #505a5f;
+    color: #0b4b66;
     margin-bottom: 1rem;
   }
 
@@ -290,7 +290,8 @@
       margin-bottom: 0rem;
     }
 
-    .campaign-attribute-table {
+    .campaign-attribute-table,
+    .campaign-product-table{
       margin-bottom: 0rem;
     }
   }
@@ -676,10 +677,13 @@ tbody {
   margin-bottom: 0 !important;
   margin-top: 0 !important;
   gap: 5rem;
+  display: flex;
+  align-items: center;
 
   .digit-radio-options-wrap {
     gap: 2rem;
     margin-bottom: 0 !important;
+    margin-top: 0 !important;
 
     .radio-option-container {
       margin-bottom: 0;
@@ -971,6 +975,7 @@ tbody {
   display: flex;
   gap: 0rem;
   width: 100%;
+
   .configure-app-tab-head {
     display: flex;
     justify-content: center;
@@ -982,11 +987,24 @@ tbody {
     height: 2rem;
     background-color: #ffffff;
     width: 10rem;
+
+    p {
+      font-family: Roboto;
+      font-weight: 400;
+      font-style: Regular;
+      font-size: 16px;
+      color: #787878;
+      text-align: center;
+    }
   }
   .configure-app-tab-head.active {
     background-color: #c84c0e;
-    font-weight: 700;
-    color: #ffffff;
+
+    p {
+      font-weight: 700;
+      font-style: Bold;
+      color: #ffffff;
+    }
   }
 
   .configure-app-tab-head:first-child {
@@ -1044,7 +1062,7 @@ tbody {
 .appConfigLabelField {
   position: relative;
   padding: 1rem;
-  width: 18rem;
+  width: 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -1052,7 +1070,7 @@ tbody {
 }
 .draggableField-cont {
   margin-bottom: 1rem;
-  width: fit-content;
+  width: 100%;
   border-radius: 0.5rem;
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
@@ -1578,5 +1596,11 @@ tbody {
 .results-data-table-for-checklist{
   .rdt_TableBody{
     border: none !important;
+  }
+}
+
+.view-composer-header-section{
+  .card-sub-header{
+    color: #0b4b66;
   }
 }

@@ -414,6 +414,9 @@
   border-top-right-radius: 1rem;
 }
 
+.app-config-field-wrapper{
+  width: 100%;
+}
 .appConfiglabelField {
   position: relative;
   padding: 1rem;
@@ -866,7 +869,7 @@
 }
 .update-boundary-header {
   color: var(--digitv2-lightTheme-primary-2);
-  font-size: var(--fontSize-heading-xl);
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
 }
 .select-boundary {
   color: var(--digitv2-lightTheme-primary-2) !important;
@@ -1077,7 +1080,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.5rem 0;
+    padding: 0rem;
     transition: all 0.2s ease-in-out;
 
     .validation-icon {
@@ -1112,6 +1115,7 @@
       }
       .validation-text {
         color: #D4351C;
+        font-weight: var(--digitv2-fontWeight-bold);
       }
     }
 

@@ -370,9 +370,9 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         isDisabled={isDataCreating}
         label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
         noBreakLine={true}
-        // secondaryActionIcon={"ArrowBack"}
-        // primaryActionIconAsSuffix={true}
-        // primaryActionIcon={"ArrowDirection"}
+        secondaryActionIcon={"ArrowBack"}
+        primaryActionIconAsSuffix={true}
+        primaryActionIcon={"ArrowForward"}
       />
       {showPopUp && (
         <PopUp
