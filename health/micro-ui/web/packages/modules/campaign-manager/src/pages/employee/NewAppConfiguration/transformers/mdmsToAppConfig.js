@@ -223,6 +223,7 @@ const transformTemplate = (screenData) => {
   }
 
   template.preventScreenCapture = screenData.preventScreenCapture || false;
+  template.order = screenData.order;
 
   return template;
 };
@@ -274,6 +275,7 @@ const transformFormPage = (pageData) => {
     label: pageData.heading,
     order: pageData.order,
     description: pageData.description,
+    order: pageData.order,
     preventScreenCapture: pageData.preventScreenCapture || false,
     properties: transformFormProperties(pageData.body),
   };
