@@ -15,7 +15,6 @@ const getDeliveryConfig = ({ data, projectType }) => {
       operatorValue = "IN_BETWEEN";
       value = { minValue, maxValue, variable };
     } else if (operatorRegex.test(condition)) {
-      console.log("Parsing operator condition:", {condition});
       const match = condition.match(operatorRegex);
       const variable = match[1];
       const operator = match[2];
@@ -52,75 +51,6 @@ const getDeliveryConfig = ({ data, projectType }) => {
 const generateConfig = (data) => {
   
   return data?.deliveries?.map(delivery => {
-    console.log("Generating config for delivery:", {delivery});
-    //OUTPUT: {
-//     "delivery": {
-//         "id": 1,
-//         "doseCriteria": [
-//             {
-//                 "condition": "60 <= age < 180 and 90 <= height < 119 and 12 <= weight < 45 andisPregnant==false",
-//                 "ProductVariants": [
-//                     {
-//                         "name": "Ivermectin 100mg",
-//                         "quantity": 1,
-//                         "productVariantId": "PVAR-2025-09-14-000582"
-//                     }
-//                 ]
-//             },
-//             {
-//                 "condition": "60 <= age < 180 and 120 <= height < 139 and 12 <= weight < 45 andisPregnant==false",
-//                 "ProductVariants": [
-//                     {
-//                         "name": "Ivermectin 100mg",
-//                         "quantity": 1,
-//                         "productVariantId": "PVAR-2025-09-14-000582"
-//                     }
-//                 ]
-//             },
-//             {
-//                 "condition": "age>=180 and 140 <= height < 159 and 45 <= weight < 75 and isPregnant==trueandgender==FEMALE",
-//                 "ProductVariants": [
-//                     {
-//                         "name": "Albendazole 400mg",
-//                         "quantity": 1,
-//                         "productVariantId": "PVAR-2025-09-14-000583"
-//                     }
-//                 ]
-//             },
-//             {
-//                 "condition": "age>=180 and 140 <= height < 159 and 45 <= weight < 75 andisPregnant==false",
-//                 "ProductVariants": [
-//                     {
-//                         "name": "Albendazole 400mg",
-//                         "quantity": 1,
-//                         "productVariantId": "PVAR-2025-09-14-000583"
-//                     }
-//                 ]
-//             },
-//             {
-//                 "condition": "age>=180 and height>=159 and weight>=75 andisPregnant==trueandgender==FEMALE",
-//                 "ProductVariants": [
-//                     {
-//                         "name": "Albendazole 400mg",
-//                         "quantity": 1,
-//                         "productVariantId": "PVAR-2025-09-14-000583"
-//                     }
-//                 ]
-//             },
-//             {
-//                 "condition": "age>=180 and height>=159 and weight>=75 andisPregnant==false",
-//                 "ProductVariants": [
-//                     {
-//                         "name": "Albendazole 400mg",
-//                         "quantity": 1,
-//                         "productVariantId": "PVAR-2025-09-14-000583"
-//                     }
-//                 ]
-//             }
-//         ],
-//         "deliveryStrategy": "DIRECT"
-//     }
-// }
     const conditionConfig = delivery.doseCriteria.map((dose, index) => {
       const productConfig = dose.ProductVariants.map(variant => ({
         key: 1,
@@ -137,16 +67,6 @@ const generateConfig = (data) => {
         .trim();                     // Remove leading/trailing spaces
 
       const conditions = normalizedCondition.split(' and ').filter(c => c.trim());
-      console.log("Parsed conditions for dose:", {original: dose.condition, normalized: normalizedCondition, conditions});  
-//       //OUTPUT: {
-//     "original": "60 <= age < 180 and 90 <= height < 119 and 12 <= weight < 45 andisPregnant==false",
-//     "normalized": "60 <= age < 180 and 90 <= height < 119 and 12 <= weight < 45 andisPregnant==false",
-//     "conditions": [
-//         "60 <= age < 180",
-//         "90 <= height < 119",
-//         "12 <= weight < 45 andisPregnant==false"
-//     ]
-// }
 
       const attributeConfigs = conditions.map(condition => {
         // Use the parseCondition function to extract operatorValue and value
@@ -181,7 +101,6 @@ const generateConfig = (data) => {
       };
     });
 
-    console.log("Completed conditionConfig for delivery:", {conditionConfig});
 
     return {
       delivery: delivery.id,
