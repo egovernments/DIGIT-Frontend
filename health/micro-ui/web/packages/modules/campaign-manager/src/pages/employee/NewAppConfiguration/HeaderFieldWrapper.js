@@ -82,7 +82,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   }, [localValue, dispatchUpdates]);
 
   return (
-    <LabelFieldPair className={type === "textarea" ? "appConfigHeaderLabelField desc" : "appConfigHeaderLabelField"}>
+    <LabelFieldPair className={type === "textarea" ? "appConfigHeaderLabelField desc" : "appConfigHeaderLabelField"} removeMargin={true}>
       <div className="appConfigLabelField-label-container">
         <div className="appConfigLabelField-label">
           <span>{t(label)}</span>
