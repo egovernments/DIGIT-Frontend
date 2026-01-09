@@ -382,7 +382,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           </div>
 
           {/* Preview Area with Navigation Arrows */}
-          <div className="full-config-wrapper__preview-area">
+          <div className={`full-config-wrapper__preview-area ${activeSidePanel === "flows" || activeSidePanel === "roles" ? "opened" : ""}`}>
             {/* Flow Tag */}
             <div className="full-config-wrapper__flow-tag">
               {/* <ConversionPath fill="#0057BD" /> */}

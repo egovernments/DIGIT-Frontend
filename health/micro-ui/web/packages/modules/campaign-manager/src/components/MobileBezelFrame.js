@@ -90,7 +90,7 @@ const styles = {
   },
   deviceWrapper: {
     width: "29rem",
-    height: "calc(100vh - 12rem)",
+    height: "40rem",
     backgroundColor: "#000",
     borderRadius: "40px",
     boxShadow: "0 0 40px rgba(0,0,0,0.6)",
