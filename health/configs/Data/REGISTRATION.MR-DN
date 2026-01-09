@@ -1,7 +1,7 @@
 {
-  "id": "2ad3cb71-45b0-4a5f-9c03-759876ea4c7a",
+  "id": "ec1f69d0-4db7-4dbb-a446-05cb602cab16",
   "tenantId": "mz",
-  "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
   "uniqueIdentifier": "REGISTRATION.MR-DN",
   "data": {
     "name": "REGISTRATION",
@@ -29,6 +29,7 @@
               }
             ],
             "fieldName": "proximitySearch",
+            "mandatory": true,
             "validations": [
               {
                 "key": "proximityRadius",
@@ -57,16 +58,167 @@
                 }
               }
             ],
+            "fieldName": "searchBar",
+            "mandatory": true,
             "validation": [
               {
                 "key": "minSearchChars",
-                "value": 3,
-                "error": ""
+                "error": "",
+                "value": 3
               }
-            ],
-            "fieldName": "searchBar",
-            "mandatory": true
+            ]
           },
+          {
+          "format": "actionPopup",
+          "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_LABEL",
+          "properties": {
+            "type": "tertiary",
+            "size": "medium",
+            "mainAxisSize": "min",
+            "mainAxisAlignment": "start",
+            "popupConfig": {
+              "type": "default",
+              "title": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_TITLE_LABEL",
+              "titleIcon": "filter",
+              "showCloseButton": true,
+              "barrierDismissible": true,
+              "body": [
+                {
+                  "format": "selectionCard",
+                   "type" : "template",
+                  "fieldName": "selectedStatus",
+                  "enums": [
+                    {
+                      "code": "ADMINISTRATION_SUCCESS",
+                      "name": "REGISTRATION_ADMINISTRATION_SUCCESS"
+                    },
+                    {
+                      "code": "ADMINISTRATION_FAILED",
+                      "name": "REGISTRATION_ADMINISTRATION_FAILED"
+                    },
+                    {"code": "CLOSED_HOUSEHOLD", "name": "REGISTRATION_CLOSED_HOUSEHOLD"},
+                    {"code": "NOT_REGISTERED", "name": "REGISTRATION_NOT_REGISTERD"},
+                    {"code": "NOT_ADMINISTERED", "name": "REGISTRATION_NOT_ADMINISTERED"}
+                  ]
+                }
+              ],
+              "footerActions": [
+                {
+                  "format": "button",
+                   "type" : "template",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_CLEAR_LABEL",
+                  "properties": {
+                    "type": "secondary",
+                    "size": "large",
+                    "mainAxisSize": "max"
+                  },
+                  "onAction": [
+                    {
+                          "actionType": "CLEAR_STATE",
+                          "properties": {
+                            "name": "pgrService",
+                            "filterKeys": ["status", "projectBeneficiary", "projectId"],
+                            "widgetKeys": ["selectedStatus"],
+                            "triggerSearch": true
+                          }
+                        },
+                    {"actionType": "CLOSE_POPUP", "properties": {}}
+                  ]
+                },
+                {
+                  "format": "button",
+                  "type" : "template",
+                  "label": "REGISTRATION_SEARCH_BENEFICIARY_FILTER_FILTER_LABEL",
+                  "properties": {
+                    "type": "primary",
+                    "size": "large",
+                    "mainAxisSize": "max"
+                  },
+                  "onAction": [
+                    {
+                      "actionType": "CLOSE_POPUP",
+                      "properties": {"parentScreenKey": "searchBeneficiary"}
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "task",
+                            "data": [
+                              {
+                                "key": "status",
+                                "value": "{{selectedStatus}}",
+                                "operation": "in"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression":
+                            "selectedStatus == ADMINISTRATION_SUCCESS || selectedStatus == CLOSED_HOUSEHOLD || selectedStatus == ADMINISTRATION_FAILED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "name": "projectBeneficiary",
+                            "data": [
+                              {
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "notEqual"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_REGISTERED"
+                      }
+                    },
+                    {
+                      "actions": [
+                        {
+                          "actionType": "SEARCH_EVENT",
+                          "properties": {
+                            "filterLogic": "and",
+                            "data": [
+                              {
+                                "root": "projectBeneficiary",
+                                "key": "projectId",
+                                "value": "{{singleton.selectedProject.id}}",
+                                "operation": "equals"
+                              },
+                              {
+                                "root": "task",
+                                "key": "status",
+                                "value": [
+                                  "ADMINISTRATION_SUCCESS",
+                                  "ADMINISTRATION_FAILED",
+                                  "CLOSED_HOUSEHOLD"
+                                ],
+                                "operation": "notIn"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "condition": {
+                        "expression": "selectedStatus == NOT_ADMINISTERED"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "suffixIcon": "filter",
+          "type":"template"
+        },
           {
             "data": "members",
             "type": "template",
@@ -145,12 +297,12 @@
               ],
               "fieldName": "memberCard"
             },
-            "properties": {
-              "spacing": "spacer4"
-            },
             "format": "listView",
             "hidden": false,
-            "fieldName": "listView"
+            "fieldName": "listView",
+            "properties": {
+              "spacing": "spacer4"
+            }
           }
         ],
         "name": "searchBeneficiary",
@@ -192,28 +344,28 @@
               {
                 "actionType": "OPEN_SCANNER",
                 "properties": {
+                  "isGS1": false,
                   "scanType": "qr",
                   "fieldName": "beneficiaryTag",
-                  "singleValue": true,
-                  "scanLimit": 1,
-                  "isGS1": false,
                   "onSuccess": [
                     {
                       "actionType": "SEARCH_EVENT",
                       "properties": {
-                        "type": "SEARCH_EVENT",
-                        "name": "projectBeneficiary",
-                        "awaitResults": true,
                         "data": [
                           {
                             "key": "tag",
                             "value": "{{beneficiaryTag}}",
                             "operation": "equals"
                           }
-                        ]
+                        ],
+                        "name": "projectBeneficiary",
+                        "type": "SEARCH_EVENT",
+                        "awaitResults": true
                       }
                     }
-                  ]
+                  ],
+                  "scanLimit": 1,
+                  "singleValue": true
                 }
               }
             ],
@@ -239,6 +391,33 @@
             ]
           }
         ],
+        "scrollListener": {
+          "triggerMode": "bidirectional",
+          "debounceMs": 0,
+          "showLoadingIndicator": true,
+          "onScrollDown": [
+            {
+              "actionType": "REFRESH_SEARCH",
+              "properties": {
+                "pagination": {
+                  "limit": 5,
+                  "maxItems": 15
+                }
+              }
+            }
+          ],
+          "onScrollUp": [
+            {
+              "actionType": "REFRESH_SEARCH",
+              "properties": {
+                "pagination": {
+                  "limit": 5,
+                  "maxItems": 15
+                }
+              }
+            }
+          ]
+        },
         "header": [
           {
             "label": "BACK",
@@ -338,7 +517,11 @@
               "projectBeneficiary",
               "task"
             ],
-            "primary": "household"
+            "primary": "household",
+            "pagination": {
+            "limit": 5,
+            "maxItems": 15
+          }
           }
         }
       },
@@ -350,7 +533,7 @@
             "page": "beneficiaryLocation",
             "type": "object",
             "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
-            "order": 2,
+            "order": 1,
             "navigateTo": {
               "name": "householdDetails",
               "type": "form"
@@ -774,16 +957,55 @@
                 "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
                 "order": 5,
                 "value": "",
-                "format": "dropdown",
+                "format": "select",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "gender",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": "common-masters.GenderType",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height",
+                "order": 6,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "height",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight",
+                "order": 7,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "weight",
+                "deleteFlag": false,
+                "innerLabel": "",
                 "systemDate": false,
                 "validations": [],
                 "errorMessage": "",
@@ -1103,23 +1325,15 @@
                       }
                     },
                     {
-                      "format": "button",
-                      "visible": "{{fn:checkAllDoseDelivered(task)}} == true",
-                      "properties": {
-                        "type": "primary",
-                        "size": "medium",
-                        "mainAxisSize": "max",
-                        "mainAxisAlignment": "center"
-                      },
-                      "fieldName": "viewDetails",
-                      "label": "REGISTRATION_VIEW_DETAILS",
                       "icon": "add",
+                      "type": "template",
+                      "label": "REGISTRATION_VIEW_DETAILS",
+                      "format": "button",
+                      "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true &&  {{fn:checkAllDoseDelivered(task)}} == true",
                       "onAction": [
                         {
                           "actionType": "NAVIGATION",
                           "properties": {
-                            "type": "TEMPLATE",
-                            "name": "beneficiaryDetails",
                             "data": [
                               {
                                 "key": "selectedIndividualClientReferenceId",
@@ -1133,10 +1347,19 @@
                                 "key": "ProjectBeneficiaryClientReferenceId",
                                 "value": "{{projectBeneficiary.0.clientReferenceId}}"
                               }
-                            ]
+                            ],
+                            "name": "beneficiaryDetails",
+                            "type": "TEMPLATE"
                           }
                         }
-                      ]
+                      ],
+                      "fieldName": "viewDetails",
+                      "properties": {
+                        "size": "medium",
+                        "type": "secondary",
+                        "mainAxisSize": "max",
+                        "mainAxisAlignment": "center"
+                      }
                     }
                   ],
                   "fieldName": "memberCard",
@@ -1145,13 +1368,13 @@
                     "cardType": "secondary"
                   }
                 },
-                "properties": {
-                  "spacing": "spacer4"
-                },
                 "format": "listView",
                 "hidden": false,
                 "fieldName": "listViewMembers",
-                "dataSource": "members"
+                "dataSource": "members",
+                "properties": {
+                  "spacing": "spacer4"
+                }
               },
               {
                 "type": "template",
@@ -1490,13 +1713,14 @@
                 "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender_addmember",
                 "order": 5,
                 "value": "",
-                "format": "dropdown",
+                "format": "select",
                 "hidden": false,
                 "tooltip": "",
                 "helpText": "",
                 "infoText": "",
                 "readOnly": false,
                 "fieldName": "gender",
+                "mandatory": true,
                 "deleteFlag": false,
                 "innerLabel": "",
                 "schemaCode": "common-masters.GenderType",
@@ -1507,10 +1731,48 @@
               },
               {
                 "type": "integer",
-                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height_addmember",
                 "order": 6,
                 "value": "",
                 "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "height",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "integer",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight_addmember",
+                "order": 7,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "weight",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_addmember",
+                "order": 8,
+                "value": "",
+                "format": "mobileNumber",
                 "hidden": false,
                 "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip_addmember",
                 "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText_addmember",
@@ -1527,7 +1789,7 @@
               {
                 "type": "string",
                 "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner_addmember",
-                "order": 7,
+                "order": 9,
                 "value": "",
                 "format": "scanner",
                 "hidden": false,
@@ -2134,6 +2396,13 @@
                 "innerLabel": "",
                 "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
                 "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "REFER_BENEFICIARY_ADMINISTRATIVE_UNIT_REQUIRED"
+                  }
+                ],
                 "errorMessage": "",
                 "includeInForm": true,
                 "isMultiSelect": false
@@ -2430,56 +2699,116 @@
             }
           },
           {
-            "type": "template",
-            "format": "card",
-            "children": [
-              {
-                "data": {
-                  "rows": "{{contextData.0.targetCycle.0.deliveries}}",
-                  "source": "contextData.targetCycle.deliveries",
-                  "columns": [
-                    {
-                      "header": "DOSE",
-                      "hidden": false,
-                      "cellValue": "Dose {{item.id}}"
-                    },
-                    {
-                      "header": "DELIVERY_STATUS",
-                      "hidden": false,
-                      "cellValue": {
-                        "@default": "Unknown",
-                        "@condition": [
-                          {
-                            "when": "{{currentItem.id}} <= {{contextData.0.dose}}",
-                            "value": "Administered"
-                          },
-                          {
-                            "when": "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
-                            "value": "To be administered"
-                          },
-                          {
-                            "when": "{{currentItem.id}} > {{contextData.0.nextDoseId}}",
-                            "value": "Pending"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "header": "COMPLETED_ON",
-                      "hidden": false,
-                      "cellValue": "{{fn:getTaskCompletionDate(currentItem.id, contextData.0.cycle)}}"
-                    }
-                  ]
-                },
-                "type": "template",
-                "format": "table",
-                "fieldName": "deliveryTable"
-              }
-            ],
-            "properties": {
-              "type": "primary"
-            }
-          }
+                            "type": "template",
+                            "format": "card",
+                            "children": [
+                                {
+                                    "data": {
+                                        "rows": "{{contextData.0.targetCycle.0.deliveries}}",
+                                        "source": "contextData.targetCycle.deliveries",
+                                        "columns": [
+                                            {
+                                                "header": "DOSE",
+                                                "hidden": false,
+                                                "cellValue": "Dose {{item.id}}"
+                                            },
+                                            {
+                                                "header": "DELIVERY_STATUS",
+                                                "hidden": false,
+                                                "cellValue": {
+                                                    "@default": "Pending",
+                                                    "@condition": [
+                                                        {
+                                                            "when": "{{fn:isDoseCompleted(currentItem.id, contextData.0.currentRunningCycle)}} == true",
+                                                            "value": "Administered"
+                                                        },
+                                                        {
+                                                            "when": "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
+                                                            "value": "To be administered"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "header": "COMPLETED_ON",
+                                                "hidden": false,
+                                                "cellValue": "{{fn:getTaskCompletionDate(currentItem.id, contextData.0.cycle)}}"
+                                            }
+                                        ]
+                                    },
+                                    "type": "template",
+                                    "format": "table",
+                                    "fieldName": "deliveryTable"
+                                },
+                                {
+                                    "type": "template",
+                                    "format": "listView",
+                                    "dataSource": "pastCycles",
+                                    "visible": "{{fn:length(contextData.0.pastCycles)}} > 0",
+                                    "fieldName": "pastCyclesList",
+                                    "properties": {
+                                        "spacing": "spacer4"
+                                    },
+                                    "child": {
+                                        "type": "template",
+                                        "format": "card",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "textTemplate",
+                                                "value": "Cycle {{item.id}}",
+                                                "properties": {
+                                                    "style": "headingS"
+                                                }
+                                            },
+                                            {
+                                                "data": {
+                                                    "rows": "{{deliveries}}",
+                                                    "columns": [
+                                                        {
+                                                            "header": "DOSE",
+                                                            "hidden": false,
+                                                            "cellValue": "Dose {{currentItem.id}}"
+                                                        },
+                                                        {
+                                                            "header": "DELIVERY_STATUS",
+                                                            "hidden": false,
+                                                            "cellValue": {
+                                                                "@default": "Pending",
+                                                                "@condition": [
+                                                                    {
+                                                                        "when": "{{fn:isDoseCompleted(currentItem.id, item.id)}} == true",
+                                                                        "value": "Administered"
+                                                                    },
+                                                                    {
+                                                                        "when": "{{currentItem.id}} == {{contextData.0.nextDoseId}}",
+                                                                        "value": "To be administered"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "header": "COMPLETED_ON",
+                                                            "hidden": false,
+                                                            "cellValue": "{{fn:getTaskCompletionDate(currentItem.id, item.id)}}"
+                                                        }
+                                                    ]
+                                                },
+                                                "type": "template",
+                                                "format": "table",
+                                                "fieldName": "pastCycleTable"
+                                            }
+                                        ],
+                                        "properties": {
+                                            "type": "secondary"
+                                        }
+                                    }
+                                }
+                            ],
+                            "properties": {
+                                "type": "primary"
+                            }
+                        }
         ],
         "name": "beneficiaryDetails",
         "order": 8,
@@ -2562,268 +2891,268 @@
           }
         ],
         "wrapperConfig": {
-          "fields": {
-            "dose": {
-              "from": "{{tasks.additionalFields.fields}}",
-              "where": {
-                "left": "{{key}}",
-                "right": "doseIndex",
-                "operator": "eq"
-              },
-              "select": "{{value}}",
-              "default": 0,
-              "takeLast": true
-            },
-            "cycle": {
-              "from": "{{tasks.additionalFields.fields}}",
-              "where": {
-                "left": "{{key}}",
-                "right": "cycleIndex",
-                "operator": "eq"
-              },
-              "select": "{{value}}",
-              "default": 1,
-              "takeLast": true
-            }
-          },
-          "filters": [
-            {
-              "field": "clientReferenceId",
-              "equalsFrom": "{{navigation.selectedIndividualClientReferenceId}}"
-            }
-          ],
-          "computed": {
-            "nextDoseId": {
-              "order": 4,
-              "fallback": 0,
-              "condition": {
-                "if": {
-                  "left": {
-                    "value": "{{dose}}",
-                    "operation": "increment"
-                  },
-                  "right": "{{deliveryLength}}",
-                  "operator": "lte"
-                },
-                "else": 0,
-                "then": {
-                  "value": "{{dose}}",
-                  "operation": "increment"
-                }
-              }
-            },
-            "nextCycleId": {
-              "order": 5,
-              "fallback": "{{cycle}}",
-              "condition": {
-                "if": {
-                  "left": {
-                    "value": "{{dose}}",
-                    "operation": "increment"
-                  },
-                  "right": "{{deliveryLength}}",
-                  "operator": "lte"
-                },
-                "else": {
-                  "value": "{{cycle}}",
-                  "operation": "increment"
-                },
-                "then": "{{cycle}}"
-              }
-            },
-            "deliveryLength": {
-              "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-              "order": 3,
-              "where": {
-                "left": "{{id}}",
-                "right": "{{currentRunningCycle}}",
-                "operator": "equals"
-              },
-              "select": "{{deliveries.length}}",
-              "default": 0,
-              "takeFirst": true
-            },
-            "hasCycleArrived": {
-              "order": 2,
-              "fallback": false,
-              "condition": {
-                "left": "{{cycle}}",
-                "right": "{{currentRunningCycle}}",
-                "operator": "equals"
-              }
-            },
-            "currentRunningCycle": {
-              "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-              "order": 1,
-              "where": [
-                {
-                  "left": "{{startDate}}",
-                  "right": "{{now}}",
-                  "operator": "lt"
-                },
-                {
-                  "left": "{{endDate}}",
-                  "right": "{{now}}",
-                  "operator": "gt"
-                }
-              ],
-              "select": "{{id}}",
-              "default": -1,
-              "takeFirst": true
-            }
-          },
-          "relations": [
-            {
-              "name": "members",
-              "match": {
-                "field": "individualClientReferenceId",
-                "equalsFrom": "IndividualModel.clientReferenceId"
-              },
-              "entity": "HouseholdMemberModel"
-            },
-            {
-              "name": "household",
-              "match": {
-                "field": "clientReferenceId",
-                "equalsFrom": "members.householdClientReferenceId"
-              },
-              "entity": "HouseholdModel"
-            },
-            {
-              "name": "individuals",
-              "match": {
-                "field": "clientReferenceId",
-                "inFrom": "members.individualClientReferenceId"
-              },
-              "entity": "IndividualModel"
-            },
-            {
-              "name": "projectBeneficiaries",
-              "match": {
-                "field": "beneficiaryClientReferenceId",
-                "equalsFrom": "individuals.clientReferenceId"
-              },
-              "entity": "ProjectBeneficiaryModel"
-            },
-            {
-              "name": "tasks",
-              "match": {
-                "field": "projectBeneficiaryClientReferenceId",
-                "inFrom": "projectBeneficiaries.clientReferenceId"
-              },
-              "entity": "TaskModel"
-            },
-            {
-              "name": "sideEffects",
-              "match": {
-                "field": "clientReferenceId",
-                "equalsFrom": "projectBeneficiaries.clientReferenceId"
-              },
-              "entity": "SideEffectModel"
-            },
-            {
-              "name": "referrals",
-              "match": {
-                "field": "clientReferenceId",
-                "equalsFrom": "projectBeneficiaries.clientReferenceId"
-              },
-              "entity": "ReferralModel"
-            }
-          ],
-          "rootEntity": "IndividualModel",
-          "wrapperName": "DeliveryWrapper",
-          "computedList": {
-            "pastCycles": {
-              "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-              "order": 6,
-              "where": {
-                "left": "{{item.id}}",
-                "right": "{{cycle}}",
-                "operator": "lt"
-              },
-              "includeCurrentIf": {
-                "condition": {
-                  "left": "{{dose}}",
-                  "right": "{{deliveryLength}}",
-                  "operator": "eq"
-                }
-              }
-            },
-            "futureTasks": {
-              "from": "{{tasks}}",
-              "order": 2,
-              "where": {
-                "left": "{{item.additionalFields.deliveryStrategy}}",
-                "right": "INDIRECT",
-                "operator": "equals"
-              }
-            },
-            "targetCycle": {
-              "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-              "order": 1,
-              "where": {
-                "left": "{{id}}",
-                "right": "{{currentRunningCycle}}",
-                "operator": "equals"
-              },
-              "fallback": null,
-              "takeLast": true
-            },
-            "currentDelivery": {
-              "from": "{{targetCycle.0.deliveries}}",
-              "order": 4,
-              "where": {
-                "left": "{{id}}",
-                "right": "{{nextDoseId}}",
-                "operator": "equals"
-              },
-              "fallback": null,
-              "takeLast": true
-            },
-            "futureDeliveries": {
-              "map": "{{item.deliveries}}",
-              "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
-              "skip": {
-                "from": "{{dose}}"
-              },
-              "order": 3,
-              "takeWhile": {
-                "left": "{{item.deliveryStrategy}}",
-                "right": "INDIRECT",
-                "operator": "equals"
-              }
-            },
-            "eligibleProductVariants": {
-              "from": "{{currentDelivery.0.doseCriteria}}",
-              "order": 5,
-              "fallback": [],
-              "takeLast": false,
-              "evaluateCondition": {
-                "context": [
-                  "{{individuals.0}}",
-                  "{{household.0}}"
-                ],
-                "condition": "{{item.condition}}",
-                "transformations": {
-                  "age": {
-                    "type": "ageInMonths",
-                    "source": "dateOfBirth"
-                  }
-                }
-              }
-            }
-          },
-          "searchConfig": {
-            "select": [
-              "individual",
-              "household",
-              "householdMember",
-              "projectBeneficiary",
-              "task"
-            ],
-            "primary": "individual"
-          }
-        }
+                        "fields": {
+                            "dose": {
+                                "from": "{{tasks.additionalFields.fields}}",
+                                "where": {
+                                    "left": "{{key}}",
+                                    "right": "doseIndex",
+                                    "operator": "eq"
+                                },
+                                "select": "{{value}}",
+                                "default": 0,
+                                "takeLast": true
+                            },
+                            "cycle": {
+                                "from": "{{tasks.additionalFields.fields}}",
+                                "where": {
+                                    "left": "{{key}}",
+                                    "right": "cycleIndex",
+                                    "operator": "eq"
+                                },
+                                "select": "{{value}}",
+                                "default": 1,
+                                "takeLast": true
+                            }
+                        },
+                        "filters": [
+                            {
+                                "field": "clientReferenceId",
+                                "equalsFrom": "{{navigation.selectedIndividualClientReferenceId}}"
+                            }
+                        ],
+                        "computed": {
+                            "nextDoseId": {
+                                "order": 4,
+                                "fallback": 1,
+                                "condition": {
+                                    "if": {
+                                        "left": {
+                                            "value": "{{dose}}",
+                                            "operation": "increment"
+                                        },
+                                        "right": "{{deliveryLength}}",
+                                        "operator": "lte"
+                                    },
+                                    "else": 1,
+                                    "then": {
+                                        "value": "{{dose}}",
+                                        "operation": "increment"
+                                    }
+                                }
+                            },
+                            "nextCycleId": {
+                                "order": 5,
+                                "fallback": "{{cycle}}",
+                                "condition": {
+                                    "if": {
+                                        "left": {
+                                            "value": "{{dose}}",
+                                            "operation": "increment"
+                                        },
+                                        "right": "{{deliveryLength}}",
+                                        "operator": "lte"
+                                    },
+                                    "else": {
+                                        "value": "{{cycle}}",
+                                        "operation": "increment"
+                                    },
+                                    "then": "{{cycle}}"
+                                }
+                            },
+                            "deliveryLength": {
+                                "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                                "order": 3,
+                                "where": {
+                                    "left": "{{id}}",
+                                    "right": "{{currentRunningCycle}}",
+                                    "operator": "equals"
+                                },
+                                "select": "{{deliveries.length}}",
+                                "default": 0,
+                                "takeFirst": true
+                            },
+                            "hasCycleArrived": {
+                                "order": 2,
+                                "fallback": false,
+                                "condition": {
+                                    "left": "{{cycle}}",
+                                    "right": "{{currentRunningCycle}}",
+                                    "operator": "equals"
+                                }
+                            },
+                            "currentRunningCycle": {
+                                "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                                "order": 1,
+                                "where": [
+                                    {
+                                        "left": "{{startDate}}",
+                                        "right": "{{now}}",
+                                        "operator": "lt"
+                                    },
+                                    {
+                                        "left": "{{endDate}}",
+                                        "right": "{{now}}",
+                                        "operator": "gt"
+                                    }
+                                ],
+                                "select": "{{id}}",
+                                "default": -1,
+                                "takeFirst": true
+                            }
+                        },
+                        "relations": [
+                            {
+                                "name": "members",
+                                "match": {
+                                    "field": "individualClientReferenceId",
+                                    "equalsFrom": "IndividualModel.clientReferenceId"
+                                },
+                                "entity": "HouseholdMemberModel"
+                            },
+                            {
+                                "name": "household",
+                                "match": {
+                                    "field": "clientReferenceId",
+                                    "equalsFrom": "members.householdClientReferenceId"
+                                },
+                                "entity": "HouseholdModel"
+                            },
+                            {
+                                "name": "individuals",
+                                "match": {
+                                    "field": "clientReferenceId",
+                                    "inFrom": "members.individualClientReferenceId"
+                                },
+                                "entity": "IndividualModel"
+                            },
+                            {
+                                "name": "projectBeneficiaries",
+                                "match": {
+                                    "field": "beneficiaryClientReferenceId",
+                                    "equalsFrom": "individuals.clientReferenceId"
+                                },
+                                "entity": "ProjectBeneficiaryModel"
+                            },
+                            {
+                                "name": "tasks",
+                                "match": {
+                                    "field": "projectBeneficiaryClientReferenceId",
+                                    "inFrom": "projectBeneficiaries.clientReferenceId"
+                                },
+                                "entity": "TaskModel"
+                            },
+                            {
+                                "name": "sideEffects",
+                                "match": {
+                                    "field": "clientReferenceId",
+                                    "equalsFrom": "projectBeneficiaries.clientReferenceId"
+                                },
+                                "entity": "SideEffectModel"
+                            },
+                            {
+                                "name": "referrals",
+                                "match": {
+                                    "field": "clientReferenceId",
+                                    "equalsFrom": "projectBeneficiaries.clientReferenceId"
+                                },
+                                "entity": "ReferralModel"
+                            }
+                        ],
+                        "rootEntity": "IndividualModel",
+                        "wrapperName": "DeliveryWrapper",
+                        "computedList": {
+                            "pastCycles": {
+                                "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                                "order": 6,
+                                "where": {
+                                    "left": "{{item.id}}",
+                                    "right": "{{nextCycleId}}",
+                                    "operator": "lt"
+                                },
+                                "includeCurrentIf": {
+                                    "condition": {
+                                        "left": "{{dose}}",
+                                        "right": "{{deliveryLength}}",
+                                        "operator": "eq"
+                                    }
+                                }
+                            },
+                            "futureTasks": {
+                                "from": "{{tasks}}",
+                                "order": 2,
+                                "where": {
+                                    "left": "{{item.additionalFields.deliveryStrategy}}",
+                                    "right": "INDIRECT",
+                                    "operator": "equals"
+                                }
+                            },
+                            "targetCycle": {
+                                "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                                "order": 1,
+                                "where": {
+                                    "left": "{{id}}",
+                                    "right": "{{currentRunningCycle}}",
+                                    "operator": "equals"
+                                },
+                                "fallback": null,
+                                "takeLast": true
+                            },
+                            "currentDelivery": {
+                                "from": "{{targetCycle.0.deliveries}}",
+                                "order": 4,
+                                "where": {
+                                    "left": "{{id}}",
+                                    "right": "{{nextDoseId}}",
+                                    "operator": "equals"
+                                },
+                                "fallback": null,
+                                "takeLast": true
+                            },
+                            "futureDeliveries": {
+                                "map": "{{item.deliveries}}",
+                                "from": "{{singleton.selectedProject.additionalDetails.projectType.cycles}}",
+                                "skip": {
+                                    "from": "{{dose}}"
+                                },
+                                "order": 3,
+                                "takeWhile": {
+                                    "left": "{{item.deliveryStrategy}}",
+                                    "right": "INDIRECT",
+                                    "operator": "equals"
+                                }
+                            },
+                            "eligibleProductVariants": {
+                                "from": "{{currentDelivery.0.doseCriteria}}",
+                                "order": 5,
+                                "fallback": [],
+                                "takeLast": false,
+                                "evaluateCondition": {
+                                    "context": [
+                                        "{{individuals.0}}",
+                                        "{{household.0}}"
+                                    ],
+                                    "condition": "{{item.condition}}",
+                                    "transformations": {
+                                        "age": {
+                                            "type": "ageInMonths",
+                                            "source": "dateOfBirth"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "searchConfig": {
+                            "select": [
+                                "individual",
+                                "household",
+                                "householdMember",
+                                "projectBeneficiary",
+                                "task"
+                            ],
+                            "primary": "individual"
+                        }
+                    }
       },
       {
         "name": "DELIVERY",
@@ -2835,7 +3164,7 @@
             "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
             "order": 1,
             "navigateTo": {
-              "name": "household-acknowledgement",
+              "name": "DeliveryChecklist",
               "type": "template"
             },
             "properties": [
@@ -2948,6 +3277,71 @@
             ],
             "actionLabel": "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
             "description": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
+          },
+          {
+            "page": "DeliveryChecklist",
+            "type": "object",
+            "label": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_HEADING",
+            "order": 2,
+            "navigateTo": {
+              "name": "household-acknowledgement",
+              "type": "template"
+            },
+            "properties": [
+              {
+                "type": "boolean",
+                "label": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_GIVE_TABLET",
+                "order": 1,
+                "value": "",
+                "format": "checkbox",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "ACTION1",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": []
+              },
+              {
+                "type": "boolean",
+                "label": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_WRITE_CODE",
+                "order": 1,
+                "value": "",
+                "format": "checkbox",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "ACTION2",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": []
+              },
+              {
+                "type": "boolean",
+                "label": "APPONE_DELIVERYFLOW_DELIVERYDETAIL_ACTIONS_SPAQ",
+                "order": 1,
+                "value": "",
+                "format": "checkbox",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "ACTION3",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": []
+              }
+            ],
+            "actionLabel": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SUBMIT_LABEL",
+            "description": "APPONE_DELIVERYFLOW_DELIVERYDETAILS_ACTIONS_SCREEN_DESCRIPTION"
           }
         ],
         "version": 1,
@@ -3120,9 +3514,9 @@
   },
   "isActive": true,
   "auditDetails": {
-    "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
-    "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
-    "createdTime": 1764239245176,
-    "lastModifiedTime": 1765443580098
+    "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+    "createdTime": 1766042913927,
+    "lastModifiedTime": 1767869086644
   }
 }
