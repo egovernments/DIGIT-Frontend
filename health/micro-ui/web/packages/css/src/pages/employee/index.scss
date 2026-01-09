@@ -1352,7 +1352,7 @@ tbody {
 .mobile-bezel-flexContainer {
   display: flex;
   flex-direction: row-reverse;
-  height: 20rem;
+  height: fit-content;
   .mobile-bezel-zoom-container {
     display: none;
     height: fit-content;
