@@ -1509,6 +1509,7 @@ textarea.light-placeholder::placeholder {
 }
 
 .digit-inbox-search-link {
+  font-size: 16px;
   &, a, a:link, a:visited, a:hover, a:active {
     text-decoration: none !important;
     border-bottom: none !important;
