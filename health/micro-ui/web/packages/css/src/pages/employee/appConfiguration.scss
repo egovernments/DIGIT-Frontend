@@ -342,6 +342,11 @@
     padding: 24px;
     overflow: auto;
     box-sizing: border-box;
+    transition: left 0.3s ease-out;
+
+    &.opened{
+      left: 547px !important;
+    }
   }
 
   &__preview-with-tag {
