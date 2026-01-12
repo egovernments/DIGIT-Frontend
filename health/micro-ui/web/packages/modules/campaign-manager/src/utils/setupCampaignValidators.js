@@ -76,24 +76,51 @@ import { VALIDATION_FUNCTIONS, allRulesMet } from "./campaignNameValidators";
         }
 
         rule.attributes.forEach((attribute) => {
-          // Check if attribute, operator, and value are empty
-          if (attribute.attribute === "" || attribute.operator === null || attribute.value === "") {
-            if (attribute?.operator?.code === "IN_BETWEEN" && attribute?.toValue !== "" && attribute?.fromValue !== "") {
-              isValid = true;
-            } else {
-              deliveryRulesError?.push({
-                name: `CYCLE_${cycle?.cycleIndex}`,
-                cycle: cycle?.cycleIndex,
-                error: t(`CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR`, {
-                  CONDITION_NO: rule?.ruleKey,
-                  DELIVERY_NO: delivery?.deliveryIndex,
-                  CYCLE_NO: cycle?.cycleIndex,
-                }),
-                // error: `Attributes missing in delivery condition ${rule?.ruleKey} delivery ${delivery?.deliveryIndex}`,
-                button: t(`CAMPAIGN_SUMMARY_ADD_ATTRIBUTES_ACTION`),
-              });
-              isValid = false;
+          // Check if attribute field is empty or null
+          const isAttributeEmpty = !attribute.attribute || attribute.attribute === "" ||
+                                    (typeof attribute.attribute === 'object' && !attribute.attribute.code);
+
+          // Check if operator is empty or null
+          const isOperatorEmpty = !attribute.operator || attribute.operator === null ||
+                                  (typeof attribute.operator === 'object' && !attribute.operator.code);
+
+          // Check if value is empty or null
+          const isValueEmpty = attribute.value === "" || attribute.value === null || attribute.value === undefined;
+
+          // For IN_BETWEEN operator, check from and to values
+          const isRangeOperator = attribute?.operator?.code === "IN_BETWEEN";
+          const isFromEmpty = !attribute?.fromValue || attribute?.fromValue === "" || attribute?.fromValue === null;
+          const isToEmpty = !attribute?.toValue || attribute?.toValue === "" || attribute?.toValue === null;
+
+          // Determine if there's an error
+          let hasError = false;
+
+          if (isAttributeEmpty || isOperatorEmpty) {
+            hasError = true;
+          } else if (isRangeOperator) {
+            // For range operator, both from and to must be filled
+            if (isFromEmpty || isToEmpty) {
+              hasError = true;
             }
+          } else {
+            // For non-range operators, value must be filled
+            if (isValueEmpty) {
+              hasError = true;
+            }
+          }
+
+          if (hasError) {
+            deliveryRulesError?.push({
+              name: `CYCLE_${cycle?.cycleIndex}`,
+              cycle: cycle?.cycleIndex,
+              error: t(`CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR`, {
+                CONDITION_NO: rule?.ruleKey,
+                DELIVERY_NO: delivery?.deliveryIndex,
+                CYCLE_NO: cycle?.cycleIndex,
+              }),
+              button: t(`CAMPAIGN_SUMMARY_ADD_ATTRIBUTES_ACTION`),
+            });
+            isValid = false;
           }
         });
 
@@ -362,6 +389,75 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       const isAttributeValid = checkAttributeValidity(formData);
       if (isAttributeValid) {
         setShowToast({ key: "error", label: isAttributeValid });
+        return false;
+      }
+
+      // Validate that all attribute fields are filled
+      let attributeFieldsEmpty = false;
+      let attributeErrorMessage = "";
+
+      for (const cycle of deliveryRules || []) {
+        for (const delivery of cycle.deliveries || []) {
+          for (const rule of delivery.deliveryRules || []) {
+            for (const attribute of rule.attributes || []) {
+              // Check if attribute field is empty or null
+              const isAttributeEmpty = !attribute.attribute || attribute.attribute === "" ||
+                                        (typeof attribute.attribute === 'object' && !attribute.attribute.code);
+
+              // Check if operator is empty or null
+              const isOperatorEmpty = !attribute.operator || attribute.operator === null ||
+                                      (typeof attribute.operator === 'object' && !attribute.operator.code);
+
+              // Check if value is empty or null
+              const isValueEmpty = attribute.value === "" || attribute.value === null || attribute.value === undefined;
+
+              // For IN_BETWEEN operator, check from and to values
+              const isRangeOperator = attribute?.operator?.code === "IN_BETWEEN";
+              const isFromEmpty = !attribute?.fromValue || attribute?.fromValue === "" || attribute?.fromValue === null;
+              const isToEmpty = !attribute?.toValue || attribute?.toValue === "" || attribute?.toValue === null;
+
+              // Determine if there's an error
+              if (isAttributeEmpty || isOperatorEmpty) {
+                attributeFieldsEmpty = true;
+                attributeErrorMessage = t("CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR", {
+                  CONDITION_NO: rule?.ruleKey,
+                  DELIVERY_NO: delivery?.deliveryIndex,
+                  CYCLE_NO: cycle?.cycleIndex,
+                });
+                break;
+              } else if (isRangeOperator) {
+                // For range operator, both from and to must be filled
+                if (isFromEmpty || isToEmpty) {
+                  attributeFieldsEmpty = true;
+                  attributeErrorMessage = t("CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR", {
+                    CONDITION_NO: rule?.ruleKey,
+                    DELIVERY_NO: delivery?.deliveryIndex,
+                    CYCLE_NO: cycle?.cycleIndex,
+                  });
+                  break;
+                }
+              } else {
+                // For non-range operators, value must be filled
+                if (isValueEmpty) {
+                  attributeFieldsEmpty = true;
+                  attributeErrorMessage = t("CAMPAIGN_SUMMARY_ATTRIBUTES_MISSING_ERROR", {
+                    CONDITION_NO: rule?.ruleKey,
+                    DELIVERY_NO: delivery?.deliveryIndex,
+                    CYCLE_NO: cycle?.cycleIndex,
+                  });
+                  break;
+                }
+              }
+            }
+            if (attributeFieldsEmpty) break;
+          }
+          if (attributeFieldsEmpty) break;
+        }
+        if (attributeFieldsEmpty) break;
+      }
+
+      if (attributeFieldsEmpty) {
+        setShowToast({ key: "error", label: attributeErrorMessage });
         return false;
       }
 

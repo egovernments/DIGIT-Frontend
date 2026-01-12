@@ -3,12 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { TextInput, Tag , Divider} from "@egovernments/digit-ui-components";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import PopupFieldConfigurator from "../../../components/PopupFieldConfigurator";
 
 const PopupConfigEditor = ({ selectedField }) => {
   const { t } = useTranslation();
+  const customTranslate = useCustomTranslate();
 
   if (!selectedField?.properties?.popupConfig) {
     return null;
@@ -103,7 +104,7 @@ const PopupConfigEditor = ({ selectedField }) => {
                       <label
                         style={{ fontWeight: "500", fontSize: "14px" }}
                       >
-                        {t("CONFIGURE_OPTIONS_FOR") + ` "${bodyItem.label ? (useCustomT(bodyItem.label) || t(bodyItem.format)) : useCustomT(bodyItem.fieldName)}"`}
+                        {t("CONFIGURE_OPTIONS_FOR") + `${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}`}
                       </label>
                       <PopupFieldConfigurator
                         field={bodyItem}
@@ -162,6 +163,7 @@ const PopupConfigEditor = ({ selectedField }) => {
 // Individual label field component with debouncing and localization
 const PopupLabelField = ({ label, path, value, selectedField }) => {
   const { t } = useTranslation();
+  const customTranslate = useCustomTranslate();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
 
@@ -170,7 +172,7 @@ const PopupLabelField = ({ label, path, value, selectedField }) => {
   const debounceTimerRef = useRef(null);
 
   // Get localized value using custom hook
-  const localizedValue = useCustomT(value);
+  const localizedValue = customTranslate(value);
 
   // Initialize local value when value changes
   useEffect(() => {

@@ -11,11 +11,11 @@ export const useCustomT = (code) => {
       return "";
     }
 
-    if (!Array.isArray(locState)) {
+    if (!locState || !Array.isArray(locState)) {
       return ""; // Return empty string if locState not ready
     }
 
-    const entry = locState.find((item) => item.code === code);
+    const entry = locState?.find((item) => item.code === code);
 
     if (!entry) {
       // Add the missing key to Redux store with empty message for current locale
@@ -44,7 +44,7 @@ export const useCustomTranslate = () => {
         return "";
       }
 
-      if (!Array.isArray(locState)) {
+      if (!locState || !Array.isArray(locState)) {
         return ""; // Return empty string if locState not ready
       }
 

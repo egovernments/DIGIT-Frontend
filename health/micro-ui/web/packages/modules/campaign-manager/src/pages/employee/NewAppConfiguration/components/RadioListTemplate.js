@@ -14,7 +14,7 @@ const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
   // Transform options to include translated names
   const transformedOptions = options.map((option) => ({
     ...option,
-    name: (field ? t : props?.t)(option.name),
+    name: option.name,
   }));
 
   return (
