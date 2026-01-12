@@ -52,7 +52,9 @@ const BillDetailsTable = ({ ...props }) => {
                     const showErrorPayments =
                         (row?.status === "PAYMENT_FAILED")
                     const showErrorNotProcessed =
-                        (row?.status === "PENDING_VERIFICATION" && row?.additionalDetails?.errorDetails?.reasonForFailure === "MTN_SERVICE_EXCEPTION")
+                        ( (row?.status === "PENDING_VERIFICATION" ||
+     row?.status === "VERIFICATION_FAILED" ||
+     row?.status === "EDITED") && row?.additionalDetails?.errorDetails?.reasonForFailure === "MTN_SERVICE_EXCEPTION")
                     return (
                         <div className="ellipsis-cell"
                             style={{
