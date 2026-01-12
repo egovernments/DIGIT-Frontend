@@ -1,10 +1,33 @@
 import React from "react";
-import {FieldV1 } from "@egovernments/digit-ui-components";
+import { FieldV1, Loader } from "@egovernments/digit-ui-components";
 
 const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, props }) => {
     const selectedField = field || props?.field;
     const fieldType = fieldTypeMasterData || props?.fieldTypeMasterData;
     const selected = isFieldSelected || props?.isFieldSelected;
+
+    // Check if MDMS is enabled
+    const isMdmsEnabled = !!selectedField?.isMdms && !!selectedField?.schemaCode;
+
+    // Fetch MDMS data if schemaCode exists
+    const { isLoading, data } = Digit?.Hooks.useCustomMDMS(
+      Digit?.ULBService?.getStateId(),
+      selectedField?.schemaCode?.split(".")[0],
+      [{ name: selectedField?.schemaCode?.split(".")[1] }],
+      {
+        select: (data) => {
+          const optionsData = _.get(data, `${selectedField?.schemaCode?.split(".")[0]}.${selectedField?.schemaCode?.split(".")[1]}`, []);
+          return optionsData
+            .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+            .map((opt) => ({
+              ...opt,
+              name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
+            }));
+        },
+        enabled: isMdmsEnabled,
+      },
+      isMdmsEnabled // mdmsv2
+    );
 
     // Check if field is null but props?.field is not null
     const shouldHideLabels = !field && props?.field;
@@ -13,6 +36,15 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
     const dropdownLabel = shouldHideLabels
       ? ""
       : (selectedField?.label !== undefined && selectedField?.label !== null ? (field ? t : props?.t)(selectedField?.label) : "");
+
+    if (isLoading) return <Loader />;
+
+    // Determine options based on MDMS or enums
+    const options = isMdmsEnabled && data
+      ? data
+      : (Array.isArray(selectedField?.enums) ? selectedField.enums.filter((o) => o.isActive !== false) : null)
+        || selectedField?.dropDownOptions
+        || [];
 
     return (
         <FieldV1
@@ -26,15 +58,8 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
                   prefix: selectedField?.prefixText || null,
                   suffix: selectedField?.suffixText || null,
                   fieldPairClassName: `app-preview-field-pair dropdown-template ${selected ? `app-preview-selected` : ``}`,
-                  mdmsConfig: selectedField?.isMdms
-                    ? {
-                        moduleName: selectedField?.schemaCode?.split(".")[0],
-                        masterName: selectedField?.schemaCode?.split(".")[1],
-                      }
-                    : null,
-                  mdmsv2: selectedField?.isMdms ? true : false,
-                  options: selectedField?.isMdms ? null : selectedField?.dropDownOptions,
-                  optionsKey: selectedField?.isMdms ? "code" : "name",
+                  options: options,
+                  optionsKey: "name",
                 }}
                 withoutLabel={shouldHideLabels ? true : false}
                 required={selectedField?.required}

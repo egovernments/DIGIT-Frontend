@@ -85,6 +85,7 @@ import DropdownTemplate from "./pages/employee/NewAppConfiguration/components/Dr
 import SelectionCard from "./pages/employee/NewAppConfiguration/components/SelectionCard";
 import TextInputTemplate from "./pages/employee/NewAppConfiguration/components/TextInputTemplate";
 import RadioListTemplate from "./pages/employee/NewAppConfiguration/components/RadioListTemplate";
+import ExpandableTemplate from "./pages/employee/NewAppConfiguration/components/ExpandableTemplate";
 
 /**
  * MDMS Module name
@@ -285,6 +286,7 @@ const componentsToRegister = {
   SelectionCard,
   TextInputTemplate,
   RadioListTemplate,
+  ExpandableTemplate,
 };
 
 const overrideHooks = () => {

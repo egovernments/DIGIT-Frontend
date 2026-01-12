@@ -223,6 +223,7 @@ const transformTemplate = (screenData) => {
   }
 
   template.preventScreenCapture = screenData.preventScreenCapture || false;
+  template.submitCondition = screenData.submitCondition || null;
   template.order = screenData.order;
 
   return template;
@@ -277,7 +278,10 @@ const transformFormPage = (pageData) => {
     description: pageData.description,
     order: pageData.order,
     preventScreenCapture: pageData.preventScreenCapture || false,
+    submitCondition: pageData.submitCondition || null,
     properties: transformFormProperties(pageData.body),
+    ...pageData
+
   };
 
   // Add navigateTo if exists
