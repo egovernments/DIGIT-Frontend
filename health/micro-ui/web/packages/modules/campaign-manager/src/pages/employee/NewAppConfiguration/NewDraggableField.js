@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import PanelFieldDisplay from "./PanelFieldDisplay";
 import { useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 const FIELD_TYPE = "FIELD";
 
 function NewDraggableField({
@@ -24,7 +24,9 @@ function NewDraggableField({
   isTemplate
 }) {
   const ref = useRef(null);
-  const localizedLabel = useCustomT(label) || useCustomT(rest?.fieldName);
+
+  const customTranslate = useCustomTranslate();
+  const localizedLabel = label ? customTranslate(label): rest?.fieldName ? customTranslate(rest?.fieldName) : "";
   const isDragEnabled = typeof moveField === 'function' && !isTemplate;
   const [, drop] = useDrop({
     accept: FIELD_TYPE,

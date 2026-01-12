@@ -353,7 +353,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isDisabled = panelItem?.disableForRequired && isMandatory;
         // Check if this is a length-related field (should not allow negative values)
         const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length") ;
-        const isRangeField=  panelItem.label?.toLowerCase()?.includes("range");
+        const isRangeField=  panelItem.label?.toLowerCase()?.includes("minimum") || panelItem.label?.toLowerCase()?.includes("maximum");
         return (
           <FieldV1
             type="number"
@@ -368,7 +368,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               } else {
                 const value = parseInt(inputValue);
                 // Only set if it's a valid number
-                if (!isNaN(value)) {
+                if (!isNaN(value) || typeof inputValue === "string") {
                   // Prevent negative values for length-related fields
                   if ((isLengthField || isRangeField) && value < 0) {
                     return;

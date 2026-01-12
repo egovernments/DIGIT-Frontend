@@ -14,7 +14,7 @@ const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
   // Transform options to include translated names
   const transformedOptions = options.map((option) => ({
     ...option,
-    name: (field ? t : props?.t)(option.name),
+    name: option.name,
   }));
 
   return (
@@ -27,7 +27,7 @@ const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
       )}
       <RadioButtons
         options={transformedOptions}
-        optionsKey="code"
+        optionsKey="name"
         t={field ? t : props?.t}
         onSelect={() => {}}
         selectedOption={selectedField?.value || null}
