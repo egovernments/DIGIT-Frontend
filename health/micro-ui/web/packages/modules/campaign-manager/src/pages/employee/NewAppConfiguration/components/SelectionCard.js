@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 
 const SelectionCard = ({ field, t, props }) => {
-  console.log("Rendering SelectionCard with field:", field, "and props:", props);
   const selectionField = field || props?.field;
   const isMdmsEnabled = !!selectionField?.isMdms && !!selectionField?.schemaCode;
 
