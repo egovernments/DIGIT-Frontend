@@ -617,13 +617,13 @@ const PTAcknowledgmentEmployee = () => {
             <Button
               key="view-property"
               label={t("PT_VIEW_PROPERTY")}
-              variation={purpose === "reassess" && isSuccess ? "secondary" : "primary"}
+              variation={(purpose === "reassess" || purpose === "assess") && isSuccess ? "secondary" : "primary"}
               onClick={handleViewProperty}
             />
           ] : []),
 
-          // Show "Proceed to payment" button only for successful reassessment
-          ...(purpose === "reassess" && isSuccess && propertyId ? [
+          // Show "Proceed to payment" button only for successful reassessment or assessment
+          ...((purpose === "reassess" || purpose === "assess") && isSuccess && propertyId ? [
             <Button
               key="proceed-payment"
               label={t("PT_PROCEED_TO_PAYMENT")}

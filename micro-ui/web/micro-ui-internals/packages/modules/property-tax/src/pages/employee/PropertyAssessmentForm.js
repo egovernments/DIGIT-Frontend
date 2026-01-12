@@ -1207,7 +1207,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         channel: "CFC_COUNTER",
         creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "STATUS" : "CREATE"),
         noOfFloors: (() => {
-          if (propertyTypeCode === 'VACANT') return 0;
+          if (propertyTypeCode === 'VACANT') return 1;
           const rawFloor = parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1;
           return rawFloor + 1;
         })(),
@@ -1419,6 +1419,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
           }
         })(),
         units: (() => {
+          if (propertyTypeCode === 'VACANT') return [];
           const existingUnits = isUpdateMode && propertyMetadata ? propertyMetadata.units || [] : [];
 
           // Try floors first (for INDEPENDENTPROPERTY), then units (for SHAREDPROPERTY)

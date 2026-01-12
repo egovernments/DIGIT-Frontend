@@ -30,7 +30,7 @@ const PropertyDetails = () => {
   const searchParams = new URLSearchParams(location.search);
   const tenantId = searchParams.get('tenantId') || Digit?.ULBService?.getCurrentTenantId();
 
-  const userType = Digit.SessionStorage.get("userType") || window.sessionStorage.getItem("userType") || "employee"; 
+  const userType = Digit.SessionStorage.get("userType") || window.sessionStorage.getItem("userType") || "employee";
   const [propertyData, setPropertyData] = useState(null);
   const [toast, setToast] = useState(null);
   const [totalDues, setTotalDues] = useState(0);
@@ -337,10 +337,14 @@ const PropertyDetails = () => {
       return;
     }
 
+    // Clear session storage to ensure fresh data load for assessment
+    const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${propertyId}`;
+    Digit.SessionStorage.del(sessionKey);
+
     // Always use purpose=assess with assessmentId=0 (matching mono-ui behavior exactly)
     // Mono-ui URL pattern: ?assessmentId=0&purpose=assess&propertyId=...&tenantId=...&FY=...
-    // This works for both: existing assessments and new financial years
-    const assessmentUrl = `/${window.contextPath}/${userType}/pt/assessment-form?assessmentId=0&purpose=assess&propertyId=${propertyId}&tenantId=${tenantId}&FY=${selectedFinancialYear}`;
+    // Added step=5 to navigate directly to summary page
+    const assessmentUrl = `/${window.contextPath}/${userType}/pt/assessment-form?assessmentId=0&purpose=assess&propertyId=${propertyId}&tenantId=${tenantId}&FY=${selectedFinancialYear}&step=5`;
 
     // Close popup and navigate
     setShowFinancialYearPopup(false);
@@ -1926,7 +1930,7 @@ const PropertyDetails = () => {
         <PopUp
           heading={t("PT_UPDATE_MOBILE_NUMBER")}
           onClose={() => setShowMobileUpdatePopup(false)}
-          style={{maxHeight:"600px"}}
+          style={{ maxHeight: "600px" }}
           onOverlayClick={() => setShowMobileUpdatePopup(false)}
           footerChildren={[
             <Button
@@ -2098,7 +2102,7 @@ const PropertyDetails = () => {
           heading={t("PT_REQUIRED_DOCUMENTS_TRANSFER_OWNERSHIP")}
           onClose={() => setShowTransferOwnershipPopup(false)}
           onOverlayClick={() => setShowTransferOwnershipPopup(false)}
-          style={{maxHeight:"600px"}}
+          style={{ maxHeight: "600px" }}
           footerChildren={[
             <Button
               key="print"
@@ -2146,7 +2150,7 @@ const PropertyDetails = () => {
           heading={t("PT_FINANCIAL_YEAR_PLACEHOLDER") || "Select Financial Year"}
           onClose={() => setShowFinancialYearPopup(false)}
           onOverlayClick={() => setShowFinancialYearPopup(false)}
-          style={{maxHeight:"500px"}}
+          style={{ maxHeight: "500px" }}
           footerChildren={[
             <Button
               key="cancel"
