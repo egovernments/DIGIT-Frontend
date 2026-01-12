@@ -296,6 +296,77 @@ const remoteConfigSlice = createSlice({
         }
       }
     },
+    /**
+     * Generic function to update popup field properties
+     * Finds the field by fieldName and format, then applies updates
+     *
+     * @param {Object} action.payload
+     * @param {string} action.payload.fieldName - The fieldName to search for
+     * @param {string} action.payload.format - The format to match
+     * @param {Object} action.payload.updates - Object containing properties to update
+     */
+    updatePopupFieldProperty(state, action) {
+      const { fieldName, format, updates } = action.payload;
+
+      if (!fieldName || !format || !updates) return;
+
+      // Helper function to find and update the field
+      const findAndUpdateField = (node) => {
+        if (!node) return false;
+
+        // Handle arrays
+        if (Array.isArray(node)) {
+          for (const item of node) {
+            if (findAndUpdateField(item)) return true;
+          }
+          return false;
+        }
+
+        // Handle objects
+        if (typeof node === "object") {
+          // Check if this node matches fieldName and format
+          if (node.fieldName === fieldName && node.format === format) {
+            // Apply updates
+            for (const key in updates) {
+              node[key] = updates[key];
+            }
+            // Also update selectedField if it matches
+            if (state.selectedField?.fieldName === fieldName && state.selectedField?.format === format) {
+              for (const key in updates) {
+                state.selectedField[key] = updates[key];
+              }
+            }
+            return true;
+          }
+
+          // Check primaryAction and secondaryAction
+          if (node.primaryAction && findAndUpdateField(node.primaryAction)) return true;
+          if (node.secondaryAction && findAndUpdateField(node.secondaryAction)) return true;
+
+          // Recursively search in child and children
+          if (node.child && findAndUpdateField(node.child)) return true;
+          if (node.children && findAndUpdateField(node.children)) return true;
+        }
+
+        return false;
+      };
+
+      // Search in body
+      if (state.currentData?.body && Array.isArray(state.currentData.body)) {
+        for (const card of state.currentData.body) {
+          if (card.fields && findAndUpdateField(card.fields)) {
+            state.currentData = { ...state.currentData };
+            return;
+          }
+        }
+      }
+
+      // Search in footer
+      if (state.currentData?.footer && findAndUpdateField(state.currentData.footer)) {
+        state.currentData = { ...state.currentData };
+        return;
+      }
+    },
     // Field management actions
     deleteField(state, action) {
       const { fieldIndex, cardIndex } = action.payload;
@@ -518,6 +589,7 @@ export const {
   selectField,
   deselectField,
   updateSelectedField,
+  updatePopupFieldProperty,
   deleteField,
   hideField,
   reorderFields,

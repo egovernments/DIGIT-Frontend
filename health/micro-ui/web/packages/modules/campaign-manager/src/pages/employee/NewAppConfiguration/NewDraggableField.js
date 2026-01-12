@@ -24,7 +24,7 @@ function NewDraggableField({
   isTemplate
 }) {
   const ref = useRef(null);
-  const localizedLabel = useCustomT(label) || useCustomT(rest?.fieldName);
+  const localizedLabel = label ? useCustomT(label): rest?.fieldName ? useCustomT(rest?.fieldName) : "";
   const isDragEnabled = typeof moveField === 'function' && !isTemplate;
   const [, drop] = useDrop({
     accept: FIELD_TYPE,

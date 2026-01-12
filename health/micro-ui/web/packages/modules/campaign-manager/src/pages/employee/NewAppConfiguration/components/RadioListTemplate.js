@@ -27,7 +27,7 @@ const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
       )}
       <RadioButtons
         options={transformedOptions}
-        optionsKey="code"
+        optionsKey="name"
         t={field ? t : props?.t}
         onSelect={() => {}}
         selectedOption={selectedField?.value || null}

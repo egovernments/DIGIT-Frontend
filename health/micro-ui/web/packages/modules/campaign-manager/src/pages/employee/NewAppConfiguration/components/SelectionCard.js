@@ -2,11 +2,16 @@ import React, { useMemo } from "react";
 import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 
 const SelectionCard = ({ field, t, props }) => {
+  console.log("Rendering SelectionCard with field:", field, "and props:", props);
   const selectionField = field || props?.field;
   const isMdmsEnabled = !!selectionField?.isMdms && !!selectionField?.schemaCode;
 
   // Check if this is a resourceCard field
-  const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom") && (field?.fieldName === "resourceCard" || props?.field?.fieldName === "resourceCard");
+  const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom")
+    && (field?.fieldName?.toLowerCase()?.includes("resource")
+      || props?.field?.fieldName?.toLowerCase()?.includes("resource")
+      || field?.fieldName?.toLowerCase()?.includes("product")
+      || props?.field?.fieldName?.toLowerCase()?.includes("product"));
 
   // Fetch product variants from session storage for resourceCard
   const productVariants = useMemo(() => {
@@ -83,21 +88,21 @@ const SelectionCard = ({ field, t, props }) => {
   const options = isResourceCard
     ? productVariants
     : !!selectionField?.isMdms && !!selectionField?.schemaCode && data
-    ? data
-    : selectionField?.data || [];
+      ? data
+      : selectionField?.enums?.filter((o) => o.isActive !== false) || [];
 
   return (
     <SelectionTag
       errorMessage=""
-      onSelectionChanged={() => {}}
+      onSelectionChanged={() => { }}
       options={options}
-      optionsKey={isResourceCard ? "name" :  "code"}
+      optionsKey={"name"}
       selected={[]}
       withContainer={true}
       populators={{
-        t: isResourceCard ? t : props?.t,
+        t: isResourceCard ? t : field ? t : props?.t,
       }
-    }
+      }
     />
   );
 };
