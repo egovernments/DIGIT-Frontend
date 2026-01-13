@@ -8,17 +8,16 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/modules/*",
-    "micro-ui-internals/packages/ui-components"
+    "micro-ui-internals/packages/modules/*"
   ],
   "homepage": "/digit-studio",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.19",
-    "@egovernments/digit-ui-module-core": "1.9.7",
+    "@egovernments/digit-ui-module-core": "1.9.8",
     "@egovernments/digit-ui-module-workbench": "1.0.26",
     "@egovernments/digit-ui-module-hrms": "1.8.17",
     "@egovernments/digit-ui-module-open-payment": "0.0.5",
-    "@egovernments/digit-ui-components": "0.2.0-studio.1",
+    "@egovernments/digit-ui-components": "0.2.5",
     "@egovernments/digit-ui-module-public-services": "0.0.1",
     "@egovernments/digit-ui-module-service-designer": "0.0.1",
     "@egovernments/digit-ui-react-components": "1.8.19",
