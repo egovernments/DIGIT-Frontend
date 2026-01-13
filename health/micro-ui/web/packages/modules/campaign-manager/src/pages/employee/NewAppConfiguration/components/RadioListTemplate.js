@@ -24,13 +24,14 @@ const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
   // Get radio options from field data, or generate fallback if no valid data
   const hasValidData = Array.isArray(selectedField?.data) && selectedField.data.length > 0;
   const options = hasValidData
-    ? selectedField.data
+    ? selectedField?.data?.filter((o) => o.isActive !== false)
     : generateFallbackOptions(selectedField?.label || selectedField?.fieldName);
 
   // Transform options to include translated names
   const transformedOptions = options.map((option) => ({
     ...option,
     name: option.name,
+    isActive: option.isActive !== false,
   }));
 
   return (

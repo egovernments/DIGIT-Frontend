@@ -921,7 +921,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             // Create updated columns array
             const updatedColumns = columns.map((col, idx) => {
               if (idx === columnIndex) {
-                return { ...col, hidden: hiddenValue };
+                return { ...col, hidden: hiddenValue, isActive: !hiddenValue };
               }
               return col;
             });
