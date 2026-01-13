@@ -579,7 +579,7 @@
 }
 .draggableField-cont {
   margin-bottom: 1rem;
-  width: fit-content;
+  width: 100% !important;
   border-radius: 0.5rem;
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
@@ -655,7 +655,7 @@
   width: 12rem;
 }
 .app-config-drawer-button {
-  width: 100%;
+  width: 50%;
 }
 .app-preview-sub-heading {
   font-family: "Roboto";
@@ -1376,4 +1376,152 @@ textarea.light-placeholder::placeholder {
 .login-form-container .citizen-linking-card{
     position: absolute;
     bottom : 0px;
+}
+
+.appConfigLabelField {
+  position: relative;
+  padding: 1rem;
+  width: 18rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: unset;
+}
+
+.login-container .secondaryBannerHeader{
+    flex-direction: row;
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+      .login-form-container .digit-card-component{
+        min-height: 600px !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .digit-action-bar-wrap {
+    height: 4rem;
+  }
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap{
+  margin-top: 1.9px;
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container{
+  justify-content: unset;
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container .digit-tag-error-container{
+  margin-top: 0rem;
+}
+
+.digit-field .digit-upload-file .digit-upload-file-button-wrap .digit-tag-container .digit-tag-error-container .digit-tag{
+  gap: 0px;
+}
+
+.slider-footer .app-configure-drawer-footer-container{
+  visibility: hidden;
+}
+
+.slider-content .camp-drawer-caption{
+    font-size: medium !important;
+}
+
+ .digit-studio-landing-page-container .input-container{
+    max-width: 100%;
+  }
+  .digit-studio-landing-page-container .digit-employee-card-textarea-field{
+    max-width: 100%;
+  }
+
+  .digit-prefix{
+    border-radius: 4px 0 0 4px;
+  }
+
+  .digit-prefix + input{
+    border-radius: 0 4px 4px 0;
+  }
+
+  .digit-dropdown-select{
+    border-radius: 4px;
+    border-color : #787878 !important;
+  }
+
+  .input-container .digit-employeeCard-inputError{
+    border-color : #787878 !important;
+  }
+
+  .digit-toggle-toolbar{
+    max-width: 238px !important;
+  }
+
+  .digit-toggle-toolbar > .toggle-option-container:nth-child(1) label {
+  border-radius: 8px 0 0 8px;
+}
+
+.digit-toggle-toolbar > .toggle-option-container:nth-child(2) label {
+  border-radius: 0 8px 8px 0;
+}
+
+.app-configuration-side-panel .slider-content .slider-body{
+  margin-bottom: 5rem;
+}
+
+.app-configuration-side-panel .slider-content .slider-footer{
+  display: none;
+}
+
+.slider-header .close-icon{
+  position: absolute;
+  top: 1.6rem;
+}
+
+.form-name-popup-fields .digit-field-container textarea{
+  min-height: 200px;
+  max-height: 200px;
+  resize: vertical;
+}
+
+.card-section-header{
+  color: #0B4B66
+}
+
+.digit-popup-heading{
+  color: #0B4B66 !important;
+}
+
+.digit-popup-children-wrap .digit-text-block-header {
+  color: #0B4B66 !important;
+}
+
+.app-configuration-side-panel textarea{
+  resize: none;
+}
+
+.notifications-chip .close-icon{
+  visibility: hidden;
+}
+
+.digit-field-container textarea{
+  resize: none;
+}
+
+.digit-inbox-search-link {
+  &, a, a:link, a:visited, a:hover, a:active {
+    text-decoration: none !important;
+    font-size: 16px;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
+  &::after,
+  &::before,
+  a::after,
+  a::before {
+    display: none !important;
+    content: none !important;
+  }
 }
