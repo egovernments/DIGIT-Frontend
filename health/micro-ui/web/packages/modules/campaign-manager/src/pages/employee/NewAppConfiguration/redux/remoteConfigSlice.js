@@ -297,74 +297,235 @@ const remoteConfigSlice = createSlice({
       }
     },
     /**
-     * Generic function to update popup field properties
-     * Finds the field by fieldName and format, then applies updates
+     * Update popup field properties within selectedField.popupConfig
+     * Works specifically with actionPopup fields and their popup body/footer fields
      *
      * @param {Object} action.payload
-     * @param {string} action.payload.fieldName - The fieldName to search for
+     * @param {Object} action.payload.selectedField - The actionPopup field containing popupConfig
+     * @param {string} action.payload.fieldName - The fieldName of the field to update inside popup
      * @param {string} action.payload.format - The format to match
      * @param {Object} action.payload.updates - Object containing properties to update
      */
     updatePopupFieldProperty(state, action) {
-      const { fieldName, format, updates } = action.payload;
+      const { selectedField, fieldName, format, updates } = action.payload;
 
-      if (!fieldName || !format || !updates) return;
+      if (!selectedField || !fieldName || !format || !updates) return;
 
-      // Helper function to find and update the field
+      const popupConfig = selectedField?.properties?.popupConfig;
+      if (!popupConfig) return;
+
+      // Helper function to find and update the field in popup body/footer
+      // Returns a new copy of the array/object with updates applied
       const findAndUpdateField = (node) => {
-        if (!node) return false;
+        if (!node) return { updated: false, result: node };
 
         // Handle arrays
         if (Array.isArray(node)) {
-          for (const item of node) {
-            if (findAndUpdateField(item)) return true;
-          }
-          return false;
+          let updated = false;
+          const newArray = node.map(item => {
+            const result = findAndUpdateField(item);
+            if (result.updated) {
+              updated = true;
+              return result.result;
+            }
+            return item;
+          });
+          return { updated, result: updated ? newArray : node };
         }
 
         // Handle objects
         if (typeof node === "object") {
           // Check if this node matches fieldName and format
           if (node.fieldName === fieldName && node.format === format) {
-            // Apply updates
-            for (const key in updates) {
-              node[key] = updates[key];
-            }
-            // Also update selectedField if it matches
-            if (state.selectedField?.fieldName === fieldName && state.selectedField?.format === format) {
-              for (const key in updates) {
-                state.selectedField[key] = updates[key];
-              }
-            }
-            return true;
+            // Create new object with updates applied
+            return { updated: true, result: { ...node, ...updates } };
           }
 
-          // Check primaryAction and secondaryAction
-          if (node.primaryAction && findAndUpdateField(node.primaryAction)) return true;
-          if (node.secondaryAction && findAndUpdateField(node.secondaryAction)) return true;
-
           // Recursively search in child and children
-          if (node.child && findAndUpdateField(node.child)) return true;
-          if (node.children && findAndUpdateField(node.children)) return true;
+          let updated = false;
+          let newNode = { ...node };
+
+          if (node.child) {
+            const childResult = findAndUpdateField(node.child);
+            if (childResult.updated) {
+              newNode.child = childResult.result;
+              updated = true;
+            }
+          }
+
+          if (node.children) {
+            const childrenResult = findAndUpdateField(node.children);
+            if (childrenResult.updated) {
+              newNode.children = childrenResult.result;
+              updated = true;
+            }
+          }
+
+          return { updated, result: updated ? newNode : node };
         }
 
-        return false;
+        return { updated: false, result: node };
       };
 
-      // Search in body
-      if (state.currentData?.body && Array.isArray(state.currentData.body)) {
-        for (const card of state.currentData.body) {
-          if (card.fields && findAndUpdateField(card.fields)) {
-            state.currentData = { ...state.currentData };
+      let bodyResult = null;
+      let footerResult = null;
+
+      // Search in popupConfig.body
+      if (popupConfig.body && Array.isArray(popupConfig.body)) {
+        bodyResult = findAndUpdateField(popupConfig.body);
+      }
+
+      // If not found in body, search in popupConfig.footerActions
+      if (!bodyResult?.updated && popupConfig.footerActions && Array.isArray(popupConfig.footerActions)) {
+        footerResult = findAndUpdateField(popupConfig.footerActions);
+      }
+
+      // If field was found and updated, apply the changes
+      if (bodyResult?.updated || footerResult?.updated) {
+        // Helper to find and update the actionPopup field in currentData
+        const updateFieldInCurrentData = (node) => {
+          if (!node) return { updated: false, result: node };
+
+          if (Array.isArray(node)) {
+            let updated = false;
+            const newArray = node.map(item => {
+              const result = updateFieldInCurrentData(item);
+              if (result.updated) {
+                updated = true;
+                return result.result;
+              }
+              return item;
+            });
+            return { updated, result: updated ? newArray : node };
+          }
+
+          if (typeof node === "object") {
+            // Check if this is the actionPopup field that matches selectedField
+            if (node.fieldName === selectedField.fieldName && node.format === selectedField.format) {
+              const newPopupConfig = { ...popupConfig };
+              if (bodyResult?.updated) {
+                newPopupConfig.body = bodyResult.result;
+              }
+              if (footerResult?.updated) {
+                newPopupConfig.footerActions = footerResult.result;
+              }
+
+              return {
+                updated: true,
+                result: {
+                  ...node,
+                  properties: {
+                    ...node.properties,
+                    popupConfig: newPopupConfig
+                  }
+                }
+              };
+            }
+
+            // Recursively search
+            let updated = false;
+            let newNode = { ...node };
+
+            if (node.child) {
+              const childResult = updateFieldInCurrentData(node.child);
+              if (childResult.updated) {
+                newNode.child = childResult.result;
+                updated = true;
+              }
+            }
+
+            if (node.children) {
+              const childrenResult = updateFieldInCurrentData(node.children);
+              if (childrenResult.updated) {
+                newNode.children = childrenResult.result;
+                updated = true;
+              }
+            }
+
+            if (node.primaryAction) {
+              const actionResult = updateFieldInCurrentData(node.primaryAction);
+              if (actionResult.updated) {
+                newNode.primaryAction = actionResult.result;
+                updated = true;
+              }
+            }
+
+            if (node.secondaryAction) {
+              const actionResult = updateFieldInCurrentData(node.secondaryAction);
+              if (actionResult.updated) {
+                newNode.secondaryAction = actionResult.result;
+                updated = true;
+              }
+            }
+
+            return { updated, result: updated ? newNode : node };
+          }
+
+          return { updated: false, result: node };
+        };
+
+        // Search in body
+        if (state.currentData?.body && Array.isArray(state.currentData.body)) {
+          let bodyUpdated = false;
+          const newBody = state.currentData.body.map(card => {
+            if (card.fields) {
+              const result = updateFieldInCurrentData(card.fields);
+              if (result.updated) {
+                bodyUpdated = true;
+                return { ...card, fields: result.result };
+              }
+            }
+            return card;
+          });
+
+          if (bodyUpdated) {
+            state.currentData.body = newBody;
+            // Also update selectedField if it matches
+            if (state.selectedField?.fieldName === selectedField.fieldName) {
+              const newPopupConfig = { ...popupConfig };
+              if (bodyResult?.updated) {
+                newPopupConfig.body = bodyResult.result;
+              }
+              if (footerResult?.updated) {
+                newPopupConfig.footerActions = footerResult.result;
+              }
+              state.selectedField = {
+                ...state.selectedField,
+                properties: {
+                  ...state.selectedField.properties,
+                  popupConfig: newPopupConfig
+                }
+              };
+            }
             return;
           }
         }
-      }
 
-      // Search in footer
-      if (state.currentData?.footer && findAndUpdateField(state.currentData.footer)) {
-        state.currentData = { ...state.currentData };
-        return;
+        // Search in footer
+        if (state.currentData?.footer) {
+          const result = updateFieldInCurrentData(state.currentData.footer);
+          if (result.updated) {
+            state.currentData.footer = result.result;
+            // Also update selectedField if it matches
+            if (state.selectedField?.fieldName === selectedField.fieldName) {
+              const newPopupConfig = { ...popupConfig };
+              if (bodyResult?.updated) {
+                newPopupConfig.body = bodyResult.result;
+              }
+              if (footerResult?.updated) {
+                newPopupConfig.footerActions = footerResult.result;
+              }
+              state.selectedField = {
+                ...state.selectedField,
+                properties: {
+                  ...state.selectedField.properties,
+                  popupConfig: newPopupConfig
+                }
+              };
+            }
+            return;
+          }
+        }
       }
     },
     // Field management actions

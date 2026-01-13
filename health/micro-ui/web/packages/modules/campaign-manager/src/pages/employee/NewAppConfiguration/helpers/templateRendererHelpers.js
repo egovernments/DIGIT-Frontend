@@ -67,7 +67,7 @@ export const renderTemplateComponent = (
     border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
     borderRadius: "4px",
     padding: "4px",
-    // margin: "4px 0",
+    width: "100%",
     backgroundColor: isSelected ? "#C84C0E08" : "transparent",
     transition: "all 0.2s ease",
   };

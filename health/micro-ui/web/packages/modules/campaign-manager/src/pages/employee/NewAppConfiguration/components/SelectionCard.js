@@ -1,9 +1,11 @@
 import React, { useMemo } from "react";
 import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
+import { useCustomT, useCustomTranslate } from "../hooks/useCustomT";
 
 const SelectionCard = ({ field, t, props }) => {
   const selectionField = field || props?.field;
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const customT = useCustomTranslate();
 
   // Check if this is a resourceCard field
   const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom")
@@ -107,12 +109,38 @@ const SelectionCard = ({ field, t, props }) => {
 
   if (isLoading) return <Loader />;
 
+  // Helper function to generate fallback options based on label
+  const generateFallbackOptions = (label) => {
+    if (!label) return [];
+    const baseLabel = label;
+    return [
+      { code: `${baseLabel}_OPTION_1`, name: `${customT(baseLabel)} 1` },
+      { code: `${baseLabel}_OPTION_2`, name: `${customT(baseLabel)} 2` },
+      { code: `${baseLabel}_OPTION_3`, name: `${customT(baseLabel)} 3` },
+    ];
+  };
+
+  // Check if we have valid static data
+  const hasValidEnums = Array.isArray(selectionField?.enums) && selectionField.enums.length > 0;
+  const hasValidDropdownOptions = Array.isArray(selectionField?.dropDownOptions) && selectionField.dropDownOptions.length > 0;
+  const hasValidMdmsData = isValidSchema && mdmsData && mdmsData.length > 0;
+  const hasValidResourceData = isResourceCard && productVariants && productVariants.length > 0;
+
   // Determine options based on field type
-  const options = isResourceCard
-    ? productVariants
-    : isValidSchema && mdmsData
-      ? mdmsData
-      : selectionField?.enums?.length > 0 ? selectionField?.enums?.filter((o) => o.isActive !== false) || [] : selectionField?.dropDownOptions?.filter((o) => o?.isActive !== false) || [];
+  let options = [];
+
+  if (hasValidResourceData) {
+    options = productVariants;
+  } else if (hasValidMdmsData) {
+    options = mdmsData;
+  } else if (hasValidEnums) {
+    options = selectionField.enums.filter((o) => o.isActive !== false);
+  } else if (hasValidDropdownOptions) {
+    options = selectionField.dropDownOptions.filter((o) => o?.isActive !== false);
+  } else {
+    // No valid static data - generate fallback options from label
+    options = generateFallbackOptions(selectionField?.label || selectionField?.fieldName);
+  }
 
   return (
     <SelectionTag

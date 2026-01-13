@@ -1,11 +1,13 @@
 import React, { useMemo } from "react";
 import { FieldV1, Loader } from "@egovernments/digit-ui-components";
+import { useCustomT, useCustomTranslate } from "../hooks/useCustomT";
 
 const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, props }) => {
     const selectedField = field || props?.field;
     const fieldType = fieldTypeMasterData || props?.fieldTypeMasterData;
     const selected = isFieldSelected || props?.isFieldSelected;
     const tenantId = Digit.ULBService.getCurrentTenantId();
+    const customT = useCustomTranslate();
 
     // Parse schemaCode to get moduleName and masterName
     const { moduleName, masterName, isValidSchema } = useMemo(() => {
@@ -61,12 +63,35 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
 
     if (isLoading) return <Loader />;
 
+    // Helper function to generate fallback options based on label
+    const generateFallbackOptions = (label) => {
+      if (!label) return [];
+      const baseLabel = label;
+      return [
+        { code: `${baseLabel}_OPTION_1`, name: `${customT(baseLabel)} 1` },
+        { code: `${baseLabel}_OPTION_2`, name: `${customT(baseLabel)} 2` },
+        { code: `${baseLabel}_OPTION_3`, name: `${customT(baseLabel)} 3` },
+      ];
+    };
+
+    // Check if we have valid static data
+    const hasValidMdmsData = isValidSchema && mdmsData && mdmsData.length > 0;
+    const hasValidEnums = Array.isArray(selectedField?.enums) && selectedField.enums.length > 0;
+    const hasValidDropdownOptions = Array.isArray(selectedField?.dropDownOptions) && selectedField.dropDownOptions.length > 0;
+
     // Determine options based on MDMS or enums
-    const options = isValidSchema && mdmsData
-      ? mdmsData
-      : (Array.isArray(selectedField?.enums) && selectedField?.enums?.length > 0 ? selectedField.enums.filter((o) => o.isActive !== false) : null)
-        || selectedField?.dropDownOptions.filter((o) => o.isActive !== false)
-        || [];
+    let options = [];
+
+    if (hasValidMdmsData) {
+      options = mdmsData;
+    } else if (hasValidEnums) {
+      options = selectedField.enums.filter((o) => o.isActive !== false);
+    } else if (hasValidDropdownOptions) {
+      options = selectedField.dropDownOptions.filter((o) => o.isActive !== false);
+    } else {
+      // No valid static data - generate fallback options from label
+      options = generateFallbackOptions(selectedField?.label || selectedField?.fieldName);
+    }
 
     return (
         <FieldV1
