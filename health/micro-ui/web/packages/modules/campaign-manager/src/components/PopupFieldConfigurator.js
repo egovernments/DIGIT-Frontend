@@ -123,10 +123,12 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
     const updates = {};
     updates[propertyPath] = updatedItems;
 
+
     dispatch(
       updatePopupFieldProperty({
-        fieldName: selectedField?.fieldName,
-        format: selectedField?.format,
+        selectedField,  // Pass the actionPopup field (the parent field with popupConfig)
+        fieldName: field?.fieldName,  // Use the inner popup body/footer field
+        format: field?.format,
         updates,
       })
     );

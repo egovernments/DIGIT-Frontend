@@ -17,17 +17,46 @@ const PopupConfigEditor = ({ selectedField }) => {
 
   const popupConfig = selectedField.properties.popupConfig;
 
+  // Helper function to check if a field has valid static configuration data
+  const hasValidStaticData = (item) => {
+    // For table format, check if columns exist and are an array
+    if (item.format === "table") {
+      return item.data?.columns && Array.isArray(item.data.columns) && item.data.columns.length > 0;
+    }
+
+    // For radioList, check if data exists and is an array
+    if (item.format === "radioList") {
+      return item.data && Array.isArray(item.data) && item.data.length > 0;
+    }
+
+    // For dropdown/select/selectionCard/dropdownTemplate - check enums, dropdownOptions, and schemaCode
+    const configurableFormats = ["dropdown", "dropdownTemplate", "select", "selectionCard"];
+    if (configurableFormats.includes(item.format)) {
+      // Check if enums exists and is an actual array (not a string like "{{fn:...}}")
+      const hasValidEnums = item.enums && Array.isArray(item.enums) && item.enums.length > 0;
+
+      // Check if dropdownOptions exists and is an array
+      const hasValidDropdownOptions = item.dropdownOptions && Array.isArray(item.dropdownOptions) && item.dropdownOptions.length > 0;
+
+      // Check if schemaCode exists and is valid (not empty/undefined)
+      const hasValidSchemaCode = item.schemaCode && typeof item.schemaCode === "string" && item.schemaCode.trim().length > 0;
+
+      // At least one of these should be valid
+      return hasValidEnums || hasValidDropdownOptions || hasValidSchemaCode;
+    }
+
+    return false;
+  };
+
   // Check if there are any body items with labels
   const hasBodyLabels = Array.isArray(popupConfig.body) &&
     popupConfig.body.some((item) => item.label !== undefined);
 
-  // Check if there are any configurable body items (with enums or columns)
+  // Check if there are any configurable body items (with valid static enums or columns)
   const hasConfigurableBodyItems = Array.isArray(popupConfig.body) &&
     popupConfig.body.some((item) => {
       const configurableFormats = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList", "table"];
-      const hasEnums = item.format === "radioList" ? item.data && Array.isArray(item.data) && item.data.length > 0 : item.enums && Array.isArray(item.enums) && item.enums.length > 0;
-      const hasColumns = item.data?.columns && Array.isArray(item.data.columns) && item.data.columns.length > 0;
-      return item.format && configurableFormats.includes(item.format) && (hasEnums || hasColumns);
+      return item.format && configurableFormats.includes(item.format) && hasValidStaticData(item);
     });
 
   // Check if there are any footer actions with labels
@@ -74,12 +103,10 @@ const PopupConfigEditor = ({ selectedField }) => {
               // Check if this field has a label
               const hasLabel = bodyItem.label !== undefined;
 
-              // Check if this field is configurable (has enums for dropdown/select/radio or columns for table)
-              const hasEnums = bodyItem.format === "radioList" ? bodyItem.data && Array.isArray(bodyItem.data) && bodyItem.data.length > 0 : bodyItem.enums && Array.isArray(bodyItem.enums) && bodyItem.enums.length > 0;
-              const hasColumns = bodyItem.data?.columns && Array.isArray(bodyItem.data.columns) && bodyItem.data.columns.length > 0;
+              // Check if this field is configurable using the helper function
               const configurableFormats = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList", "table"];
               const isConfigurableType = bodyItem.format && configurableFormats.includes(bodyItem.format);
-              const canConfigure = isConfigurableType && (hasEnums || hasColumns);
+              const canConfigure = isConfigurableType && hasValidStaticData(bodyItem);
 
               // Only render if item has label OR is configurable
               if (!hasLabel && !canConfigure) {
