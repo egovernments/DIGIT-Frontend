@@ -3,7 +3,7 @@ import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 
 const SelectionCard = ({ field, t, props }) => {
   const selectionField = field || props?.field;
-  const isMdmsEnabled = !!selectionField?.isMdms && !!selectionField?.schemaCode;
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   // Check if this is a resourceCard field
   const isResourceCard = (field?.format === "custom" || props?.field?.format === "custom")
@@ -61,24 +61,48 @@ const SelectionCard = ({ field, t, props }) => {
     }
   }, [isResourceCard]);
 
+  // Parse schemaCode to get moduleName and masterName
+  const { moduleName, masterName, isValidSchema } = useMemo(() => {
+    if (!selectionField?.isMdms || !selectionField?.schemaCode || typeof selectionField.schemaCode !== 'string') {
+      return { moduleName: null, masterName: null, isValidSchema: false };
+    }
 
-  const { isLoading, data } = Digit?.Hooks.useCustomMDMS(
-    Digit?.ULBService?.getStateId(),
-    selectionField?.schemaCode?.split(".")[0],
-    [{ name: selectionField?.schemaCode?.split(".")[1] }],
+    const schemaParts = selectionField.schemaCode.split(".");
+    if (schemaParts.length < 2) {
+      return { moduleName: null, masterName: null, isValidSchema: false };
+    }
+
+    return {
+      moduleName: schemaParts[0]?.trim(),
+      masterName: schemaParts[1]?.trim(),
+      isValidSchema: true,
+    };
+  }, [selectionField?.isMdms, selectionField?.schemaCode]);
+
+  // Fetch MDMS data if field has valid MDMS configuration
+  const { isLoading, data: mdmsData } = Digit?.Hooks.useCustomMDMS(
+    tenantId,
+    moduleName,
+    [{ name: masterName }],
     {
+      enabled: isValidSchema && !!moduleName && !!masterName,
       select: (data) => {
-        const optionsData = _.get(data, `${selectionField?.schemaCode?.split(".")[0]}.${selectionField?.schemaCode?.split(".")[1]}`, []);
-        return optionsData
-          .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
-          .map((opt) => ({
-            ...opt,
-            name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
-          }));
+        // Extract the data from the MDMS response
+        if (data && moduleName && masterName) {
+          const optionsData = data?.[moduleName]?.[masterName] || [];
+          return optionsData
+            .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+            .map((opt) => ({
+              ...opt,
+              name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
+            }));
+        }
+        return [];
       },
-      enabled: isMdmsEnabled,
     },
-    isMdmsEnabled // mdmsv2
+    {
+      schemaCode: isValidSchema ? `${moduleName}.${masterName}` : undefined,
+    }
   );
 
   if (isLoading) return <Loader />;
@@ -86,9 +110,9 @@ const SelectionCard = ({ field, t, props }) => {
   // Determine options based on field type
   const options = isResourceCard
     ? productVariants
-    : !!selectionField?.isMdms && !!selectionField?.schemaCode && data
-      ? data
-      : selectionField?.enums?.filter((o) => o.isActive !== false) || [];
+    : isValidSchema && mdmsData
+      ? mdmsData
+      : selectionField?.enums?.length > 0 ? selectionField?.enums?.filter((o) => o.isActive !== false) || [] : selectionField?.dropDownOptions?.filter((o) => o?.isActive !== false) || [];
 
   return (
     <SelectionTag

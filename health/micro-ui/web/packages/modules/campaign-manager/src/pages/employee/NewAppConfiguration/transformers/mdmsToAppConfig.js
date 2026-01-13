@@ -198,6 +198,11 @@ const transformTemplate = (screenData) => {
       };
     }
 
+     if (field.dropDownOptions) field.enums = field.dropDownOptions;
+     if(!!field.isMdms && !!field.schemaCode) {
+       field.schemaCode = field.schemaCode;
+     }
+
     return field;
   });
 
@@ -342,14 +347,14 @@ const transformFormProperties = (body) => {
           systemDate: field.systemDate !== undefined ? field.systemDate : false,
           validations: buildValidations(field),
           errorMessage: field.errorMessage || "",
-          isMultiSelect: field.isMultiSelect !== undefined ? field.isMultiSelect : false,
           mandatory: field?.mandatory ? field?.mandatory : false,
           ...restField,
         };
 
+
         // Add optional fields
         if (field.dropDownOptions) property.enums = field.dropDownOptions;
-        if (field.schemaCode) property.schemaCode = field.schemaCode;
+        if (!!field.isMdms && !!field.schemaCode) property.schemaCode = field.schemaCode;
         if (field.includeInForm !== undefined) property.includeInForm = field.includeInForm;
         if (field.includeInSummary !== undefined) property.includeInSummary = field.includeInSummary;
         if (field.visibilityCondition) property.visibilityCondition = field.visibilityCondition;
