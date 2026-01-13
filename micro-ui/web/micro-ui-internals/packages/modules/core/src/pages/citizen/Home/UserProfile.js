@@ -419,7 +419,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
 
         const response = await Digit.CustomService.getResponse({
-          url: "/health-individual/v1/_update",
+          url: `${individualServicePath}/v1/_update`,
           useCache: false,
           method: "POST",
           userService: true,
