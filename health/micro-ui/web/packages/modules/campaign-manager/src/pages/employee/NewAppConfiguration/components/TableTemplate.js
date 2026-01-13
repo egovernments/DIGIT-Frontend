@@ -62,7 +62,7 @@ const TableTemplate = ({ field, t, fieldTypeMasterData }) => {
   }, []);
 
   // Get columns from field.data.columns
-  const columnsConfig = field?.data?.columns?.filter((column) => column?.hidden !== true ) || [];
+  const columnsConfig = field?.data?.columns?.filter((column) => column?.isActive !== false ) || [];
 
 
   // Format columns for ResultsDataTable
