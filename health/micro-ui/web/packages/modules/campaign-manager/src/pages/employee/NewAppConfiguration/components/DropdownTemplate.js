@@ -1,32 +1,54 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { FieldV1, Loader } from "@egovernments/digit-ui-components";
 
 const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, props }) => {
     const selectedField = field || props?.field;
     const fieldType = fieldTypeMasterData || props?.fieldTypeMasterData;
     const selected = isFieldSelected || props?.isFieldSelected;
+    const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    // Check if MDMS is enabled
-    const isMdmsEnabled = !!selectedField?.isMdms && !!selectedField?.schemaCode;
+    // Parse schemaCode to get moduleName and masterName
+    const { moduleName, masterName, isValidSchema } = useMemo(() => {
+      if (!selectedField?.isMdms || !selectedField?.schemaCode || typeof selectedField.schemaCode !== 'string') {
+        return { moduleName: null, masterName: null, isValidSchema: false };
+      }
 
-    // Fetch MDMS data if schemaCode exists
-    const { isLoading, data } = Digit?.Hooks.useCustomMDMS(
-      Digit?.ULBService?.getStateId(),
-      selectedField?.schemaCode?.split(".")[0],
-      [{ name: selectedField?.schemaCode?.split(".")[1] }],
+      const schemaParts = selectedField.schemaCode.split(".");
+      if (schemaParts.length < 2) {
+        return { moduleName: null, masterName: null, isValidSchema: false };
+      }
+
+      return {
+        moduleName: schemaParts[0]?.trim(),
+        masterName: schemaParts[1]?.trim(),
+        isValidSchema: true,
+      };
+    }, [selectedField?.isMdms, selectedField?.schemaCode]);
+
+    // Fetch MDMS data if field has valid MDMS configuration
+    const { isLoading, data: mdmsData } = Digit?.Hooks.useCustomMDMS(
+      tenantId,
+      moduleName,
+      [{ name: masterName }],
       {
+        enabled: isValidSchema && !!moduleName && !!masterName,
         select: (data) => {
-          const optionsData = _.get(data, `${selectedField?.schemaCode?.split(".")[0]}.${selectedField?.schemaCode?.split(".")[1]}`, []);
-          return optionsData
-            .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
-            .map((opt) => ({
-              ...opt,
-              name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
-            }));
+          // Extract the data from the MDMS response
+          if (data && moduleName && masterName) {
+            const optionsData = data?.[moduleName]?.[masterName] || [];
+            return optionsData
+              .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+              .map((opt) => ({
+                ...opt,
+                name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
+              }));
+          }
+          return [];
         },
-        enabled: isMdmsEnabled,
       },
-      isMdmsEnabled // mdmsv2
+      {
+        schemaCode: isValidSchema ? `${moduleName}.${masterName}` : undefined,
+      }
     );
 
     // Check if field is null but props?.field is not null
@@ -40,10 +62,10 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
     if (isLoading) return <Loader />;
 
     // Determine options based on MDMS or enums
-    const options = isMdmsEnabled && data
-      ? data
-      : (Array.isArray(selectedField?.enums) ? selectedField.enums.filter((o) => o.isActive !== false) : null)
-        || selectedField?.dropDownOptions
+    const options = isValidSchema && mdmsData
+      ? mdmsData
+      : (Array.isArray(selectedField?.enums) && selectedField?.enums?.length > 0 ? selectedField.enums.filter((o) => o.isActive !== false) : null)
+        || selectedField?.dropDownOptions.filter((o) => o.isActive !== false)
         || [];
 
     return (

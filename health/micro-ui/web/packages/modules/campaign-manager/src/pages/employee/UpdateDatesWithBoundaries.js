@@ -15,6 +15,7 @@ function UpdateDatesWithBoundaries() {
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
   const [showPopUp, setShowPopUp] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const campaignName = searchParams.get("campaignName");
@@ -105,6 +106,7 @@ function UpdateDatesWithBoundaries() {
 
   const onConfirm = async (formData) => {
     setShowPopUp(null);
+    setIsUpdating(true);
     try {
       if (DateWithBoundary) {
         // updating the endDate by +1 sec and -1 sec so that backend logic for ancestor update work
@@ -127,6 +129,7 @@ function UpdateDatesWithBoundaries() {
         // const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: payload });
         const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
+        setIsUpdating(false);
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           state: {
             message: "ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS",
@@ -144,6 +147,7 @@ function UpdateDatesWithBoundaries() {
           },
         });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
+        setIsUpdating(false);
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           state: {
             message: "ES_CAMPAIGN_DATE_CHANGE_SUCCESS",
@@ -153,6 +157,7 @@ function UpdateDatesWithBoundaries() {
         });
       }
     } catch (error) {
+      setIsUpdating(false);
       setShowToast({
         isError: true,
         label: error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error,
@@ -163,8 +168,8 @@ function UpdateDatesWithBoundaries() {
     return;
   };
 
-  if (DateWithBoundaryLoading) {
-    return <Loader />;
+  if (DateWithBoundaryLoading || isUpdating) {
+    return <Loader page={true} variant={"PageLoader"}/>;
   }
   return (
     <div>
