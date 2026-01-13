@@ -898,7 +898,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const columns = selectedField?.data?.columns || [];
 
         // Count visible columns
-        const visibleColumnsCount = columns.filter((col) => col.hidden !== true).length;
+        const visibleColumnsCount = columns.filter((col) => col.isActive !== false).length;
 
         const handleColumnVisibilityToggle = useCallback(
           (columnIndex, toggleValue) => {
@@ -952,7 +952,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {columns.map((column, index) => {
                     // Check if this is the last visible column
-                    const isLastVisible = visibleColumnsCount === 1 && column.hidden !== true;
+                    const isLastVisible = visibleColumnsCount === 1 && column.isActive !== false;
 
                     return (
                       <LocalizationInput
