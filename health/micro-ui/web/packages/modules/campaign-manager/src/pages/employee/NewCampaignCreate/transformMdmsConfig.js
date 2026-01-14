@@ -372,6 +372,7 @@ const transformValidations = (validations) => {
     range: ["min", "max"],
     lengthRange: ["minLength", "maxLength"],
     dateRange: ["startDate", "endDate"],
+    ageRange: ["minAge", "maxAge"],
   };
 
   // Create reverse lookup: type -> groupName

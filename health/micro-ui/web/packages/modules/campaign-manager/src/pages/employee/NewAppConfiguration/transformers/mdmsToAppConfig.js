@@ -446,6 +446,7 @@ const buildValidations = (field) => {
     range: ["min", "max"],
     lengthRange: ["minLength", "maxLength"],
     dateRange: ["startDate", "endDate"],
+    ageRange: ["minAge", "maxAge"],
   };
 
   Object.entries(validationGroups).forEach(([groupName, types]) => {
