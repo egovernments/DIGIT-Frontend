@@ -1,1151 +1,1298 @@
-  {
-            "id": "15447ba6-7b63-414e-bdf1-d533c2ed390e",
-            "tenantId": "mz",
-            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
-            "uniqueIdentifier": "INVENTORY.MR-DN",
-            "data": {
-                "name": "INVENTORY",
-                "flows": [
+{
+  "id": "4c254d50-8872-4e48-8287-4a2359edb1a7",
+  "tenantId": "mz",
+  "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "uniqueIdentifier": "INVENTORY.MR-DN",
+  "data": {
+    "name": "INVENTORY",
+    "flows": [
+      {
+        "body": [
+          {
+            "icon": "FileUpload",
+            "type": "template",
+            "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+            "format": "menu_card",
+            "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
                     {
-                        "body": [
-                            {
-                                "icon": "FileUpload",
-                                "type": "template",
-                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
-                                "format": "menu_card",
-                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
-                                "onAction": [
-                                    {
-                                        "actionType": "NAVIGATION",
-                                        "properties": {
-                                            "data": [
-                                                {
-                                                    "key": "stockEntryType",
-                                                    "value": "RECEIPT"
-                                                },
-                                                {
-                                                    "key": "transactionType",
-                                                    "value": "RECEIVED"
-                                                },
-                                                {
-                                                    "key": "mrnNumber",
-                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                                                }
-                                            ],
-                                            "name": "RECORDSTOCK",
-                                            "type": "FORM"
-                                        }
-                                    }
-                                ],
-                                "fieldName": "stockReceivedMenuCard",
-                                "mandatory": true,
-                                "properties": {
-                                    "icon": "FileUpload"
-                                },
-                                "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION"
-                            },
-                            {
-                                "icon": "FileDownload",
-                                "type": "template",
-                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
-                                "format": "menu_card",
-                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
-                                "onAction": [
-                                    {
-                                        "actionType": "NAVIGATION",
-                                        "properties": {
-                                            "data": [
-                                                {
-                                                    "key": "stockEntryType",
-                                                    "value": "ISSUED"
-                                                },
-                                                {
-                                                    "key": "transactionType",
-                                                    "value": "DISPATCHED"
-                                                },
-                                                {
-                                                    "key": "mrnNumber",
-                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                                                }
-                                            ],
-                                            "name": "RECORDSTOCK",
-                                            "type": "FORM"
-                                        }
-                                    }
-                                ],
-                                "fieldName": "stockIssuedMenuCard",
-                                "properties": {
-                                    "icon": "FileDownload"
-                                },
-                                "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION"
-                            },
-                            {
-                                "icon": "Restore",
-                                "type": "template",
-                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
-                                "format": "menu_card",
-                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
-                                "onAction": [
-                                    {
-                                        "actionType": "NAVIGATION",
-                                        "properties": {
-                                            "data": [
-                                                {
-                                                    "key": "stockEntryType",
-                                                    "value": "RETURNED"
-                                                },
-                                                {
-                                                    "key": "transactionType",
-                                                    "value": "RECEIVED"
-                                                },
-                                                {
-                                                    "key": "mrnNumber",
-                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                                                }
-                                            ],
-                                            "name": "RECORDSTOCK",
-                                            "type": "FORM"
-                                        }
-                                    }
-                                ],
-                                "fieldName": "stockReturnedMenuCard",
-                                "properties": {
-                                    "icon": "Restore"
-                                },
-                                "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION"
-                            },
-                            {
-                                "icon": "Store",
-                                "type": "template",
-                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
-                                "format": "menu_card",
-                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
-                                "onAction": [
-                                    {
-                                        "actionType": "NAVIGATION",
-                                        "properties": {
-                                            "data": [
-                                                {
-                                                    "key": "stockEntryType",
-                                                    "value": "DAMAGED"
-                                                },
-                                                {
-                                                    "key": "transactionType",
-                                                    "value": "DISPATCHED"
-                                                },
-                                                {
-                                                    "key": "mrnNumber",
-                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                                                }
-                                            ],
-                                            "name": "RECORDSTOCK",
-                                            "type": "FORM"
-                                        }
-                                    }
-                                ],
-                                "fieldName": "stockDamagedMenuCard",
-                                "properties": {
-                                    "icon": "Store"
-                                },
-                                "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION"
-                            },
-                            {
-                                "icon": "Store",
-                                "type": "template",
-                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
-                                "format": "menu_card",
-                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
-                                "onAction": [
-                                    {
-                                        "actionType": "NAVIGATION",
-                                        "properties": {
-                                            "data": [
-                                                {
-                                                    "key": "stockEntryType",
-                                                    "value": "LOSS"
-                                                },
-                                                {
-                                                    "key": "transactionType",
-                                                    "value": "DISPATCHED"
-                                                },
-                                                {
-                                                    "key": "mrnNumber",
-                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
-                                                }
-                                            ],
-                                            "name": "RECORDSTOCK",
-                                            "type": "FORM"
-                                        }
-                                    }
-                                ],
-                                "fieldName": "stockLostMenuCard",
-                                "properties": {
-                                    "icon": "Store"
-                                },
-                                "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION"
-                            }
-                        ],
-                        "name": "manageStock",
-                        "order": 1,
-                        "footer": [
-                            {
-                                "type": "template",
-                                "label": "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
-                                "format": "button",
-                                "onAction": [
-                                    {
-                                        "actionType": "NAVIGATION",
-                                        "properties": {
-                                            "data": [],
-                                            "name": "viewTransaction",
-                                            "type": "TEMPLATE"
-                                        }
-                                    }
-                                ],
-                                "properties": {
-                                    "size": "large",
-                                    "type": "primary",
-                                    "mainAxisSize": "max",
-                                    "mainAxisAlignment": "center"
-                                }
-                            }
-                        ],
-                        "header": [
-                            {
-                                "label": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
-                                "format": "backLink",
-                                "onAction": [
-                                    {
-                                        "actionType": "BACK_NAVIGATION",
-                                        "properties": {}
-                                    }
-                                ]
-                            }
-                        ],
-                        "heading": "APP_CONFIG_INVENTORY_manageStock_HEADING",
-                        "navigateTo": null,
-                        "screenType": "TEMPLATE",
-                        "initActions": [
-                            {
-                                "actionType": "SEARCH_EVENT",
-                                "properties": {
-                                    "data": [
-                                        {
-                                            "key": "projectId",
-                                            "value": "{{singleton.selectedProject.id}}",
-                                            "operation": "equals"
-                                        }
-                                    ],
-                                    "name": "projectFacility",
-                                    "type": "SEARCH_EVENT"
-                                }
-                            }
-                        ],
-                        "wrapperConfig": {
-                            "filters": [],
-                            "relations": [
-                                {
-                                    "name": "facility",
-                                    "match": {
-                                        "field": "id",
-                                        "equalsFrom": "facilityId"
-                                    },
-                                    "entity": "FacilityModel"
-                                },
-                                {
-                                    "name": "productVariant",
-                                    "match": {
-                                        "field": "id",
-                                        "equalsFrom": "resource"
-                                    },
-                                    "entity": "ProductVariantModel"
-                                }
-                            ],
-                            "rootEntity": "ProjectFacilityModel",
-                            "groupByType": true,
-                            "wrapperName": "InventoryWrapper",
-                            "searchConfig": {
-                                "select": [
-                                    "projectFacility",
-                                    "productVariant"
-                                ],
-                                "primary": "projectFacility"
-                            }
+                      "key": "stockEntryType",
+                      "value": "RECEIPT"
+                    },
+                    {
+                      "key": "transactionType",
+                      "value": "RECEIVED"
+                    },
+                    {
+                      "key": "mrnNumber",
+                      "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                    }
+                  ],
+                  "name": "RECORDSTOCK",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "stockReceivedMenuCard",
+            "mandatory": true,
+            "properties": {
+              "icon": "FileUpload"
+            },
+            "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION"
+          },
+          {
+            "icon": "FileDownload",
+            "type": "template",
+            "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+            "format": "menu_card",
+            "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "stockEntryType",
+                      "value": "ISSUED"
+                    },
+                    {
+                      "key": "transactionType",
+                      "value": "DISPATCHED"
+                    },
+                    {
+                      "key": "mrnNumber",
+                      "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                    }
+                  ],
+                  "name": "RECORDSTOCK",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "stockIssuedMenuCard",
+            "properties": {
+              "icon": "FileDownload"
+            },
+            "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION"
+          },
+          {
+            "icon": "Restore",
+            "type": "template",
+            "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+            "format": "menu_card",
+            "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "stockEntryType",
+                      "value": "RETURNED"
+                    },
+                    {
+                      "key": "transactionType",
+                      "value": "RECEIVED"
+                    },
+                    {
+                      "key": "mrnNumber",
+                      "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                    }
+                  ],
+                  "name": "RECORDSTOCK",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "stockReturnedMenuCard",
+            "properties": {
+              "icon": "Restore"
+            },
+            "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION"
+          },
+          {
+            "icon": "Store",
+            "type": "template",
+            "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
+            "format": "menu_card",
+            "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "stockEntryType",
+                      "value": "DAMAGED"
+                    },
+                    {
+                      "key": "transactionType",
+                      "value": "DISPATCHED"
+                    },
+                    {
+                      "key": "mrnNumber",
+                      "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                    }
+                  ],
+                  "name": "RECORDSTOCK",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "stockDamagedMenuCard",
+            "properties": {
+              "icon": "Store"
+            },
+            "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION"
+          },
+          {
+            "icon": "Store",
+            "type": "template",
+            "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+            "format": "menu_card",
+            "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [
+                    {
+                      "key": "stockEntryType",
+                      "value": "LOSS"
+                    },
+                    {
+                      "key": "transactionType",
+                      "value": "DISPATCHED"
+                    },
+                    {
+                      "key": "mrnNumber",
+                      "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                    }
+                  ],
+                  "name": "RECORDSTOCK",
+                  "type": "FORM"
+                }
+              }
+            ],
+            "fieldName": "stockLostMenuCard",
+            "properties": {
+              "icon": "Store"
+            },
+            "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION"
+          }
+        ],
+        "name": "manageStock",
+        "order": 1,
+        "footer": [
+          {
+            "type": "template",
+            "label": "APP_CONFIG_INVENTORY_manageStock_VIEW_TRANSACTIONS_FOOTER_BUTTON_LABEL",
+            "format": "button",
+            "onAction": [
+              {
+                "actionType": "NAVIGATION",
+                "properties": {
+                  "data": [],
+                  "name": "viewTransaction",
+                  "type": "TEMPLATE"
+                }
+              }
+            ],
+            "properties": {
+              "size": "large",
+              "type": "primary",
+              "mainAxisSize": "max",
+              "mainAxisAlignment": "center"
+            }
+          }
+        ],
+        "header": [
+          {
+            "label": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {}
+              }
+            ]
+          }
+        ],
+        "heading": "APP_CONFIG_INVENTORY_manageStock_HEADING",
+        "navigateTo": null,
+        "screenType": "TEMPLATE",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "projectId",
+                  "value": "{{singleton.selectedProject.id}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "projectFacility",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [],
+          "relations": [
+            {
+              "name": "facility",
+              "match": {
+                "field": "id",
+                "equalsFrom": "facilityId"
+              },
+              "entity": "FacilityModel"
+            },
+            {
+              "name": "productVariant",
+              "match": {
+                "field": "id",
+                "equalsFrom": "resource"
+              },
+              "entity": "ProductVariantModel"
+            }
+          ],
+          "rootEntity": "ProjectFacilityModel",
+          "groupByType": true,
+          "wrapperName": "InventoryWrapper",
+          "searchConfig": {
+            "select": [
+              "projectFacility",
+              "productVariant"
+            ],
+            "primary": "projectFacility"
+          }
+        }
+      },
+      {
+        "name": "RECORDSTOCK",
+        "order": 2,
+        "pages": [
+          {
+            "page": "stockProductDetails",
+            "type": "object",
+            "label": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_HEADING",
+            "order": 3,
+            "navigateTo": {
+              "name": "stock-acknowledgement",
+              "type": "template"
+            },
+            "properties": [
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "wayBillNumber",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_BATCH_NUMBER_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_BATCH_NUMBER_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "batchNumber",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_SELECT_THE_EXPIRY_DATE_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "expiryDate",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_SENT_BY_THE_WAREHOUSE_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "quantitySent",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "navigation.stockEntryType == 'ISSUED'",
+                      "type": "custom"
+                    }
+                  ]
+                },
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_LOST_BY_THE_WAREHOUSE_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "quantityLost",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_LOST_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "navigation.stockEntryType == 'LOSS'",
+                      "type": "custom"
+                    }
+                  ]
+                },
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_DAMAGED_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_DAMAGED_BY_THE_WAREHOUSE_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "quantityDamaged",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_DAMAGED_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "navigation.stockEntryType == 'DAMAGED'",
+                      "type": "custom"
+                    }
+                  ]
+                },
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RETURNED_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_RETURNED_BY_THE_WAREHOUSE_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "quantityReturned",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RETURNED_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "navigation.stockEntryType == 'RETURNED'",
+                      "type": "custom"
+                    }
+                  ]
+                },
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_LABEL",
+                "order": 5,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_ACTUAL_QUANTITY_RECEIVED_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "quantityReceived",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "visibilityCondition": {
+                  "expression": [
+                    {
+                      "condition": "navigation.stockEntryType == 'RECEIPT'",
+                      "type": "custom"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_COMMENT_LABEL",
+                "order": 7,
+                "value": "",
+                "format": "textArea",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ADD_COMMENTS_IF_QUANTITIES_DIFFER_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "comment",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false,
+                "visibilityCondition": {
+                  "expression": "stockProductDetails.quantitySent!=stockProductDetails.quantityReceived"
+                }
+              },
+              {
+                "type": "string",
+                "enums": [],
+                "label": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
+                "order": 8,
+                "value": "",
+                "format": "scanner",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "Scan Resource",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "scanResource",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "isGS1",
+                    "value": true,
+                    "message": ""
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": false
+              }
+            ],
+            "actionLabel": "APP_CONFIG_INVENTORY_stockProductDetails_ACTION_BUTTON_LABEL_1",
+            "description": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION",
+            "multiEntityConfig": {
+              "sourcePageKey": "stockDetails",
+              "sourceFieldKey": "productdetail"
+            }
+          },
+          {
+            "page": "stockDetails",
+            "type": "object",
+            "label": "APP_CONFIG_INVENTORY_stockDetails_SCREEN_HEADING",
+            "order": 2,
+            "navigateTo": {
+              "name": "stockProductDetails",
+              "type": "form"
+            },
+            "properties": [
+              {
+                "type": "dynamic",
+                "enums": [],
+                "label": "APP_CONFIG_INVENTORY_productDetails_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "custom",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_productDetails_SELECT_MULTIPLE_PRODUCTS_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "productdetail",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_productDetails_PRODUCT_SELECTION_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "errorMessage": "",
+                "isMultiSelect": true
+              },
+              {
+                "type": "dynamic",
+                "label": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "custom",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_FACILITY_FROM_WHICH_THE_STOCK_IS_BEING_RECEIVED_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "facilityFromWhich",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_IS_REQUIRED_MESSAGE"
+                  },
+                  {
+                    "type": "notEqualTo",
+                    "value": "warehouseDetails.facilityToWhich",
+                    "message": "Facility_from_and_to_must_be_different"
+                  }
+                ],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "enums": [],
+                "label": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "scanner",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "deliveryTeam",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "enums": [
+                  {
+                    "code": "BUS",
+                    "name": "Bus"
+                  },
+                  {
+                    "code": "TRUCK",
+                    "name": "Truck"
+                  }
+                ],
+                "label": "APP_CONFIG_INVENTORY_stockDetails_transportType_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "dropdown",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_TYPE_OF_TRANSPORT_USED_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "transportType",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_stockDetails_vehicleNumber_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "text",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_stockDetails_ENTER_THE_VEHICLE_NUMBER_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "vehicleNumber",
+                "mandatory": false,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              }
+            ],
+            "actionLabel": "APP_CONFIG_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
+            "description": "APP_CONFIG_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION"
+          },
+          {
+            "page": "warehouseDetails",
+            "type": "object",
+            "label": "APP_CONFIG_INVENTORY_warehouseDetails_WAREHOUSE_SCREEN_HEADING",
+            "order": 1,
+            "navigateTo": {
+              "name": "stockDetails",
+              "type": "form"
+            },
+            "properties": [
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_LABEL",
+                "order": 1,
+                "value": "",
+                "format": "date",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_ENTER_THE_DATE_ON_WHICH_THE_STOCK_WAS_RECEIVED_HELP_TEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "dateOfEntry",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": true,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "label": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
+                "order": 2,
+                "value": "",
+                "format": "locality",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_ADMINISTRATIVE_AREA_OF_THE_WAREHOUSE_HELP_TEXT",
+                "infoText": "",
+                "readOnly": true,
+                "fieldName": "administrativeArea",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false
+              },
+              {
+                "type": "dynamic",
+                "enums": [],
+                "label": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
+                "order": 3,
+                "value": "",
+                "format": "custom",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_FACILITY_TO_WHICH_THE_STOCK_IS_BEING_SENT_HELP_TEXT",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "facilityToWhich",
+                "mandatory": true,
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [
+                  {
+                    "type": "required",
+                    "value": true,
+                    "message": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_IS_REQUIRED_MESSAGE"
+                  }
+                ],
+                "errorMessage": "",
+                "includeInForm": true,
+                "isMultiSelect": false
+              },
+              {
+                "type": "string",
+                "enums": [],
+                "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
+                "order": 4,
+                "value": "",
+                "format": "scanner",
+                "hidden": false,
+                "tooltip": "",
+                "helpText": "",
+                "infoText": "",
+                "readOnly": false,
+                "fieldName": "teamCode",
+                "deleteFlag": false,
+                "innerLabel": "",
+                "systemDate": false,
+                "validations": [],
+                "errorMessage": "",
+                "isMultiSelect": false
+              }
+            ],
+            "actionLabel": "APP_CONFIG_INVENTORY_warehouseDetails_ACTION_BUTTON_LABEL_1",
+            "description": "APP_CONFIG_INVENTORY_warehouseDetails_SCREEN_DESCRIPTION"
+          }
+        ],
+        "version": 1,
+        "disabled": false,
+        "onAction": [
+          {
+            "actionType": "FETCH_TRANSFORMER_CONFIG",
+            "properties": {
+              "data": [
+                {
+                  "key": "stockEntryType",
+                  "value": "{{navigation.stockEntryType}}"
+                },
+                {
+                  "key": "transactionType",
+                  "value": "{{navigation.transactionType}}"
+                },
+                {
+                  "key": "mrnNumber",
+                  "value": "{{navigation.mrnNumber}}"
+                }
+              ],
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "Failed to fetch config."
+                  }
+                }
+              ],
+              "configName": "stock"
+            }
+          },
+          {
+            "actionType": "CREATE_EVENT",
+            "properties": {
+              "entity": "STOCK",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "Failed to create stock."
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "data": [
+                {
+                  "key": "mrnNumber",
+                  "value": "{{navigation.mrnNumber}}"
+                }
+              ],
+              "name": "stockSuccess",
+              "type": "TEMPLATE",
+              "onError": [
+                {
+                  "actionType": "SHOW_TOAST",
+                  "properties": {
+                    "message": "Navigation failed."
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "isSelected": true,
+        "screenType": "FORM"
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "label": "INVENTORY_STOCK_SUCCESS_LABEL",
+            "format": "panelCard",
+            "mandatory": true,
+            "properties": {
+              "type": "success"
+            },
+            "description": "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION {{navigation.mrnNumber}}",
+            "primaryAction": {
+              "type": "template",
+              "label": "INVENTORY_VIEW_TRANSACTION_LABEL",
+              "format": "button",
+              "hidden": false,
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "data": [
+                      {
+                        "key": "selectedStock",
+                        "value": "{{navigation.mrnNumber}}"
+                      }
+                    ],
+                    "name": "viewTransactionDetails",
+                    "type": "TEMPLATE"
+                  }
+                }
+              ],
+              "mandatory": true
+            },
+            "secondaryAction": {
+              "type": "template",
+              "label": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
+              "format": "button",
+              "hidden": false,
+              "onAction": [
+                {
+                  "actionType": "NAVIGATION",
+                  "properties": {
+                    "name": "manageStock",
+                    "type": "TEMPLATE"
+                  }
+                }
+              ],
+              "mandatory": true
+            }
+          }
+        ],
+        "name": "stockSuccess",
+        "order": 3,
+        "heading": "",
+        "screenType": "TEMPLATE",
+        "description": ""
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "child": {
+              "type": "template",
+              "format": "card",
+              "children": [
+                {
+                  "data": [
+                    {
+                      "key": "RESOURCE",
+                      "value": "{{item.additionalFields.fields.sku}}"
+                    },
+                    {
+                      "key": "RECEIVED_FROM",
+                      "value": "{{item.receiverId}}"
+                    },
+                    {
+                      "key": "MRN_NUMBER",
+                      "value": "{{item.additionalFields.fields.mrnNumber}}"
+                    },
+                    {
+                      "key": "WAYBILL_NUMBER",
+                      "value": "{{item.wayBillNumber}}"
+                    },
+                    {
+                      "key": "BATCH_NUMBER",
+                      "value": "{{item.additionalFields.fields.batchNumber}}"
+                    },
+                    {
+                      "key": "STOCK_EXPIRY",
+                      "value": "{{fn:formatDate(item.additionalFields.fields.expiryDate, date, dd MMM yyyy)}}"
+                    },
+                    {
+                      "key": "QUANTITY_RECEIVED",
+                      "value": "{{item.quantity}}"
+                    },
+                    {
+                      "key": "COMMENTS",
+                      "value": "{{item.additionalFields.fields.comments}}"
+                    }
+                  ],
+                  "type": "template",
+                  "format": "labelPairList",
+                  "fieldName": "stockFieldPair",
+                  "mandatory": true
+                }
+              ],
+              "fieldName": "stockCard"
+            },
+            "format": "listView",
+            "fieldName": "stockItems",
+            "dataSource": "StockModel"
+          }
+        ],
+        "name": "viewTransactionDetails",
+        "order": 4,
+        "footer": [],
+        "header": [
+          {
+            "label": "APP_CONFIG_INVENTORY_viewTransactionDetails_BACK_TO_TRANSACTIONS",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {
+                  "name": "viewTransaction",
+                  "type": "TEMPLATE"
+                }
+              }
+            ]
+          }
+        ],
+        "heading": "APP_CONFIG_INVENTORY_viewTransactionDetails_TRANSACTION_DETAILS_SCREEN_HEADING",
+        "navigateTo": null,
+        "screenType": "TEMPLATE",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "additionalFields",
+                  "value": "{{navigation.selectedStock}}",
+                  "operation": "contains"
+                }
+              ],
+              "name": "stock",
+              "type": "SEARCH_EVENT"
+            }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [],
+          "relations": [
+            {
+              "name": "stock",
+              "entity": "StockModel"
+            }
+          ],
+          "rootEntity": "StockModel",
+          "groupByType": true,
+          "wrapperName": "ViewStockWrapper",
+          "searchConfig": {
+            "select": [
+              "stock"
+            ],
+            "primary": "stock"
+          }
+        }
+      },
+      {
+        "body": [
+          {
+            "type": "template",
+            "child": {
+              "type": "template",
+              "format": "card",
+              "children": [
+                {
+                  "type": "template",
+                  "format": "row",
+                  "children": [
+                    {
+                      "type": "template",
+                      "label": "MRN - {{item.groupKey}}",
+                      "format": "tag",
+                      "fieldName": "mrnTag",
+                      "properties": {
+                        "icon": "Info",
+                        "tagType": "monochrome"
+                      }
+                    },
+                    {
+                      "type": "template",
+                      "value": "{{fn:formatDate(item.items[0].dateOfEntry, date, dd MMM yyyy)}}",
+                      "format": "textTemplate",
+                      "fieldName": "dateOfEntry"
+                    }
+                  ],
+                  "properties": {
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "spaceBetween"
+                  }
+                },
+                {
+                  "type": "template",
+                  "format": "row",
+                  "children": [
+                    {
+                      "type": "template",
+                      "format": "column",
+                      "children": [
+                        {
+                          "type": "template",
+                          "value": "Issued to",
+                          "format": "textTemplate",
+                          "fieldName": "issuedTo"
+                        },
+                        {
+                          "type": "template",
+                          "value": "{{item.items[0].receiverId}}",
+                          "format": "textTemplate",
+                          "fieldName": "receiverId"
                         }
+                      ],
+                      "properties": {
+                        "mainAxisSize": "min",
+                        "mainAxisAlignment": "spaceBetween"
+                      }
                     },
                     {
-                        "name": "RECORDSTOCK",
-                        "order": 2,
-                        "pages": [
+                      "label": "INVENTORY_VIEW_QR_LABEL",
+                      "format": "actionPopup",
+                      "properties": {
+                        "size": "medium",
+                        "type": "tertiary",
+                        "popupConfig": {
+                          "body": [
                             {
-                                "page": "stockProductDetails",
-                                "type": "object",
-                                "label": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_HEADING",
-                                "order": 3,
-                                "navigateTo": {
-                                    "name": "stock-acknowledgement",
-                                    "type": "template"
-                                },
-                                "properties": [
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_WAYBILL_LABEL",
-                                        "order": 1,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_WAYBILL_NUMBER_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "wayBillNumber",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_BATCH_NUMBER_LABEL",
-                                        "order": 2,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_BATCH_NUMBER_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "batchNumber",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_LABEL",
-                                        "order": 3,
-                                        "value": "",
-                                        "format": "date",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_SELECT_THE_EXPIRY_DATE_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "expiryDate",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_stockProductDetails_EXPIRY_DATE_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "integer",
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_SENT_LABEL",
-                                        "order": 4,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_QUANTITY_SENT_BY_THE_WAREHOUSE_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "quantitySent",
-                                        "mandatory": false,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "integer",
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_QUANTITY_RECEIVED_LABEL",
-                                        "order": 5,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ENTER_THE_ACTUAL_QUANTITY_RECEIVED_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "quantityReceived",
-                                        "mandatory": false,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_COMMENT_LABEL",
-                                        "order": 7,
-                                        "value": "",
-                                        "format": "textArea",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockProductDetails_ADD_COMMENTS_IF_QUANTITIES_DIFFER_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "comment",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false,
-                                        "visibilityCondition": {
-                                            "expression": "stockProductDetails.quantitySent!=stockProductDetails.quantityReceived"
-                                        }
-                                    },
-                                    {
-                                        "type": "string",
-                                        "enums": [],
-                                        "label": "APP_CONFIG_INVENTORY_stockProductDetails_SCAN_RESOURCE_LABEL",
-                                        "order": 8,
-                                        "value": "",
-                                        "format": "scanner",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "scanResource",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    }
-                                ],
-                                "actionLabel": "APP_CONFIG_INVENTORY_stockProductDetails_ACTION_BUTTON_LABEL_1",
-                                "description": "APP_CONFIG_INVENTORY_stockProductDetails_SCREEN_DESCRIPTION",
-                                "multiEntityConfig": {
-                                    "sourcePageKey": "stockDetails",
-                                    "sourceFieldKey": "productdetail"
-                                }
-                            },
-                            {
-                                "page": "stockDetails",
-                                "type": "object",
-                                "label": "APP_CONFIG_INVENTORY_stockDetails_SCREEN_HEADING",
-                                "order": 2,
-                                "navigateTo": {
-                                    "name": "stockProductDetails",
-                                    "type": "form"
-                                },
-                                "properties": [
-                                    {
-                                        "type": "dynamic",
-                                        "enums": [],
-                                        "label": "APP_CONFIG_INVENTORY_productDetails_LABEL",
-                                        "order": 1,
-                                        "value": "",
-                                        "format": "custom",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_productDetails_SELECT_MULTIPLE_PRODUCTS_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "productdetail",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_productDetails_PRODUCT_SELECTION_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "isMultiSelect": true
-                                    },
-                                    {
-                                        "type": "dynamic",
-                                        "label": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_LABEL",
-                                        "order": 2,
-                                        "value": "",
-                                        "format": "custom",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_FACILITY_FROM_WHICH_THE_STOCK_IS_BEING_RECEIVED_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "facilityFromWhich",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_stockDetails_facilityFromWhich_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "includeInForm": true,
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "enums": [],
-                                        "label": "APP_CONFIG_INVENTORY_stockDetails_deliveryTeamCode_LABEL",
-                                        "order": 4,
-                                        "value": "",
-                                        "format": "scanner",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "deliveryTeam",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "enums": [
-                                            {
-                                                "code": "BUS",
-                                                "name": "Bus"
-                                            },
-                                            {
-                                                "code": "TRUCK",
-                                                "name": "Truck"
-                                            }
-                                        ],
-                                        "label": "APP_CONFIG_INVENTORY_stockDetails_transportType_LABEL",
-                                        "order": 3,
-                                        "value": "",
-                                        "format": "dropdown",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_SELECT_THE_TYPE_OF_TRANSPORT_USED_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "transportType",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_stockDetails_TRANSPORT_TYPE_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_stockDetails_vehicleNumber_LABEL",
-                                        "order": 4,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_stockDetails_ENTER_THE_VEHICLE_NUMBER_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "vehicleNumber",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_stockDetails_VEHICLE_NUMBER_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    }
-                                ],
-                                "actionLabel": "APP_CONFIG_INVENTORY_STOCKDETAILS_ACTION_BUTTON_LABEL",
-                                "description": "APP_CONFIG_INVENTORY_STOCKDETAILS_SCREEN_DESCRIPTION"
-                            },
-                            {
-                                "page": "warehouseDetails",
-                                "type": "object",
-                                "label": "APP_CONFIG_INVENTORY_warehouseDetails_WAREHOUSE_SCREEN_HEADING",
-                                "order": 1,
-                                "navigateTo": {
-                                    "name": "stockDetails",
-                                    "type": "form"
-                                },
-                                "properties": [
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_LABEL",
-                                        "order": 1,
-                                        "value": "",
-                                        "format": "date",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_ENTER_THE_DATE_ON_WHICH_THE_STOCK_WAS_RECEIVED_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "dateOfEntry",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": true,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_dateOfReceipt_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "includeInForm": true,
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_LABEL",
-                                        "order": 2,
-                                        "value": "",
-                                        "format": "locality",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_ADMINISTRATIVE_AREA_OF_THE_WAREHOUSE_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "administrativeArea",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_administrativeArea_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "includeInForm": true,
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "dynamic",
-                                        "enums": [],
-                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_LABEL",
-                                        "order": 3,
-                                        "value": "",
-                                        "format": "custom",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "APP_CONFIG_INVENTORY_warehouseDetails_SELECT_THE_FACILITY_TO_WHICH_THE_STOCK_IS_BEING_SENT_HELP_TEXT",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "facilityToWhich",
-                                        "mandatory": true,
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [
-                                            {
-                                                "type": "required",
-                                                "value": true,
-                                                "message": "APP_CONFIG_INVENTORY_warehouseDetails_facilityToWhich_IS_REQUIRED_MESSAGE"
-                                            }
-                                        ],
-                                        "errorMessage": "",
-                                        "includeInForm": true,
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "string",
-                                        "enums": [],
-                                        "label": "APP_CONFIG_INVENTORY_warehouseDetails_teamCode_LABEL",
-                                        "order": 4,
-                                        "value": "",
-                                        "format": "scanner",
-                                        "hidden": false,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "teamCode",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    }
-                                ],
-                                "actionLabel": "APP_CONFIG_INVENTORY_warehouseDetails_ACTION_BUTTON_LABEL_1",
-                                "description": "APP_CONFIG_INVENTORY_warehouseDetails_SCREEN_DESCRIPTION"
+                              "data": "{{item.items[0].additionalFields.fields.mrnNumber}}",
+                              "size": "medium",
+                              "format": "qr_view",
+                              "padding": 16,
+                              "backgroundColor": "white",
+                              "dataModuleColor": "black",
+                              "errorCorrectionLevel": "M"
                             }
-                        ],
-                        "version": 1,
-                        "disabled": false,
-                        "onAction": [
-                            {
-                                "actionType": "FETCH_TRANSFORMER_CONFIG",
-                                "properties": {
-                                    "data": [
-                                        {
-                                            "key": "stockEntryType",
-                                            "value": "{{navigation.stockEntryType}}"
-                                        },
-                                        {
-                                            "key": "transactionType",
-                                            "value": "{{navigation.transactionType}}"
-                                        },
-                                        {
-                                            "key": "mrnNumber",
-                                            "value": "{{navigation.mrnNumber}}"
-                                        }
-                                    ],
-                                    "onError": [
-                                        {
-                                            "actionType": "SHOW_TOAST",
-                                            "properties": {
-                                                "message": "Failed to fetch config."
-                                            }
-                                        }
-                                    ],
-                                    "configName": "stock"
-                                }
-                            },
-                            {
-                                "actionType": "CREATE_EVENT",
-                                "properties": {
-                                    "entity": "STOCK",
-                                    "onError": [
-                                        {
-                                            "actionType": "SHOW_TOAST",
-                                            "properties": {
-                                                "message": "Failed to create stock."
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "actionType": "NAVIGATION",
-                                "properties": {
-                                    "data": [
-                                        {
-                                            "key": "mrnNumber",
-                                            "value": "{{navigation.mrnNumber}}"
-                                        }
-                                    ],
-                                    "name": "stockSuccess",
-                                    "type": "TEMPLATE",
-                                    "onError": [
-                                        {
-                                            "actionType": "SHOW_TOAST",
-                                            "properties": {
-                                                "message": "Navigation failed."
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        "isSelected": true,
-                        "screenType": "FORM"
-                    },
+                          ],
+                          "type": "default",
+                          "title": "INVENTORY_QR_CODE_TITLE",
+                          "titleIcon": "qr",
+                          "footerActions": [],
+                          "showCloseButton": true,
+                          "barrierDismissible": true
+                        },
+                        "mainAxisSize": "min",
+                        "mainAxisAlignment": "start"
+                      },
+                      "suffixIcon": "qr"
+                    }
+                  ],
+                  "properties": {
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "spaceBetween"
+                  }
+                },
+                {
+                  "type": "template",
+                  "child": {
+                    "type": "template",
+                    "value": "{{item.additionalFields.fields.sku}}: {{item.quantity}}",
+                    "format": "textTemplate",
+                    "fieldName": "productVariant"
+                  },
+                  "format": "listView",
+                  "fieldName": "groupedItems",
+                  "dataSource": "item.items"
+                },
+                {
+                  "type": "template",
+                  "label": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_TRANSACTION",
+                  "format": "button",
+                  "onAction": [
                     {
-                        "body": [
-                            {
-                                "type": "template",
-                                "label": "INVENTORY_STOCK_SUCCESS_LABEL",
-                                "format": "panelCard",
-                                "properties": {
-                                    "type": "success"
-                                },
-                                "description": "INVENTORY_STOCK_SUCCESS_MRN_DESCRIPTION {{navigation.mrnNumber}}",
-                                "primaryAction": {
-                                    "type": "template",
-                                    "label": "INVENTORY_VIEW_TRANSACTION_LABEL",
-                                    "format": "button",
-                                    "hidden": false,
-                                    "onAction": [
-                                        {
-                                            "actionType": "NAVIGATION",
-                                            "properties": {
-                                                "data": [
-                                                    {
-                                                        "key": "selectedStock",
-                                                        "value": "{{navigation.mrnNumber}}"
-                                                    }
-                                                ],
-                                                "name": "viewTransactionDetails",
-                                                "type": "TEMPLATE"
-                                            }
-                                        }
-                                    ]
-                                },
-                                "secondaryAction": {
-                                    "type": "template",
-                                    "label": "INVENTORY_CREATE_NEW_TRANSACTION_LABEL",
-                                    "format": "button",
-                                    "hidden": false,
-                                    "onAction": [
-                                        {
-                                            "actionType": "NAVIGATION",
-                                            "properties": {
-                                                "name": "manageStock",
-                                                "type": "TEMPLATE"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        "name": "stockSuccess",
-                        "order": 3,
-                        "heading": "",
-                        "screenType": "TEMPLATE",
-                        "description": ""
-                    },
-                    {
-                        "body": [
-                            {
-                                "type": "template",
-                                "child": {
-                                    "type": "template",
-                                    "format": "card",
-                                    "children": [
-                                        {
-                                            "data": [
-                                                {
-                                                    "key": "RESOURCE",
-                                                    "value": "{{item.additionalFields.fields.sku}}"
-                                                },
-                                                {
-                                                    "key": "RECEIVED_FROM",
-                                                    "value": "{{item.receiverId}}"
-                                                },
-                                                {
-                                                    "key": "MRN_NUMBER",
-                                                    "value": "{{item.additionalFields.fields.mrnNumber}}"
-                                                },
-                                                {
-                                                    "key": "WAYBILL_NUMBER",
-                                                    "value": "{{item.wayBillNumber}}"
-                                                },
-                                                {
-                                                    "key": "BATCH_NUMBER",
-                                                    "value": "{{item.additionalFields.fields.batchNumber}}"
-                                                },
-                                                {
-                                                    "key": "STOCK_EXPIRY",
-                                                    "value": "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
-                                                },
-                                                {
-                                                    "key": "QUANTITY_RECEIVED",
-                                                    "value": "{{item.quantity}}"
-                                                },
-                                                {
-                                                    "key": "COMMENTS",
-                                                    "value": "{{item.additionalFields.fields.comments}}"
-                                                }
-                                            ],
-                                            "type": "template",
-                                            "format": "labelPairList",
-                                            "fieldName": "stockFieldPair",
-                                            "mandatory": true
-                                        }
-                                    ],
-                                    "fieldName": "stockCard"
-                                },
-                                "format": "listView",
-                                "fieldName": "stockItems",
-                                "dataSource": "StockModel"
-                            }
+                      "actionType": "NAVIGATION",
+                      "properties": {
+                        "data": [
+                          {
+                            "key": "selectedStock",
+                            "value": "{{item.groupKey}}"
+                          }
                         ],
                         "name": "viewTransactionDetails",
-                        "order": 4,
-                        "footer": [],
-                        "header": [
-                            {
-                                "label": "APP_CONFIG_INVENTORY_viewTransactionDetails_BACK_TO_TRANSACTIONS",
-                                "format": "backLink",
-                                "onAction": [
-                                    {
-                                        "actionType": "BACK_NAVIGATION",
-                                        "properties": {
-                                            "name": "viewTransaction",
-                                            "type": "TEMPLATE"
-                                        }
-                                    }
-                                ]
-                            }
-                        ],
-                        "heading": "APP_CONFIG_INVENTORY_viewTransactionDetails_TRANSACTION_DETAILS_SCREEN_HEADING",
-                        "navigateTo": null,
-                        "screenType": "TEMPLATE",
-                        "initActions": [
-                            {
-                                "actionType": "SEARCH_EVENT",
-                                "properties": {
-                                    "data": [
-                                        {
-                                            "key": "additionalFields",
-                                            "value": "{{navigation.selectedStock}}",
-                                            "operation": "contains"
-                                        }
-                                    ],
-                                    "name": "stock",
-                                    "type": "SEARCH_EVENT"
-                                }
-                            }
-                        ],
-                        "wrapperConfig": {
-                            "filters": [],
-                            "relations": [
-                                {
-                                    "name": "stock",
-                                    "entity": "StockModel"
-                                }
-                            ],
-                            "rootEntity": "StockModel",
-                            "groupByType": true,
-                            "wrapperName": "ViewStockWrapper",
-                            "searchConfig": {
-                                "select": [
-                                    "stock"
-                                ],
-                                "primary": "stock"
-                            }
-                        }
-                    },
-                    {
-                        "body": [
-                            {
-                                "type": "template",
-                                "child": {
-                                    "type": "template",
-                                    "format": "card",
-                                    "children": [
-                                        {
-                                            "type": "template",
-                                            "format": "row",
-                                            "children": [
-                                                {
-                                                    "type": "template",
-                                                    "label": "MRN - {{item.groupKey}}",
-                                                    "format": "tag",
-                                                    "fieldName": "mrnTag",
-                                                    "properties": {
-                                                        "icon": "Info",
-                                                        "tagType": "monochrome"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "template",
-                                                    "value": "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}",
-                                                    "format": "textTemplate",
-                                                    "fieldName": "dateOfEntry"
-                                                }
-                                            ],
-                                            "properties": {
-                                                "mainAxisSize": "max",
-                                                "mainAxisAlignment": "spaceBetween"
-                                            }
-                                        },
-                                        {
-                                            "type": "template",
-                                            "format": "row",
-                                            "children": [
-                                                {
-                                                    "type": "template",
-                                                    "format": "column",
-                                                    "children": [
-                                                        {
-                                                            "type": "template",
-                                                            "value": "Issued to",
-                                                            "format": "textTemplate",
-                                                            "fieldName": "issuedTo"
-                                                        },
-                                                        {
-                                                            "type": "template",
-                                                            "value": "{{item.items[0].receiverId}}",
-                                                            "format": "textTemplate",
-                                                            "fieldName": "receiverId"
-                                                        }
-                                                    ],
-                                                    "properties": {
-                                                        "mainAxisSize": "min",
-                                                        "mainAxisAlignment": "spaceBetween"
-                                                    }
-                                                },
-                                                {
-                                                    "type": "template",
-                                                    "label": "APP_CONFIG_INVENTORY_viewTransaction_VIEW_QR",
-                                                    "format": "button",
-                                                    "onAction": [],
-                                                    "fieldName": "viewQR",
-                                                    "properties": {
-                                                        "icon": "QrCodeScanner",
-                                                        "size": "small",
-                                                        "type": "secondary",
-                                                        "mainAxisSize": "min",
-                                                        "mainAxisAlignment": "center"
-                                                    }
-                                                }
-                                            ],
-                                            "properties": {
-                                                "mainAxisSize": "max",
-                                                "mainAxisAlignment": "spaceBetween"
-                                            }
-                                        },
-                                        {
-                                            "type": "template",
-                                            "child": {
-                                                "type": "template",
-                                                "value": "{{item.additionalFields.fields.sku}}: {{item.quantity}}",
-                                                "format": "textTemplate",
-                                                "fieldName": "productVariant"
-                                            },
-                                            "format": "listView",
-                                            "fieldName": "groupedItems",
-                                            "dataSource": "item.items"
-                                        },
-                                        {
-                                            "type": "template",
-                                            "label": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_TRANSACTION",
-                                            "format": "button",
-                                            "onAction": [
-                                                {
-                                                    "actionType": "NAVIGATION",
-                                                    "properties": {
-                                                        "data": [
-                                                            {
-                                                                "key": "selectedStock",
-                                                                "value": "{{item.groupKey}}"
-                                                            }
-                                                        ],
-                                                        "name": "viewTransactionDetails",
-                                                        "type": "TEMPLATE"
-                                                    }
-                                                }
-                                            ],
-                                            "fieldName": "viewTransactionButton",
-                                            "properties": {
-                                                "size": "large",
-                                                "type": "primary",
-                                                "mainAxisSize": "max",
-                                                "mainAxisAlignment": "center"
-                                            }
-                                        }
-                                    ],
-                                    "fieldName": "stockCard"
-                                },
-                                "format": "listView",
-                                "hidden": false,
-                                "fieldName": "listView",
-                                "dataSource": "StockModel"
-                            }
-                        ],
-                        "name": "viewTransaction",
-                        "order": 5,
-                        "footer": [],
-                        "header": [
-                            {
-                                "label": "APP_CONFIG_INVENTORY_viewTransaction_BACK",
-                                "format": "backLink",
-                                "onAction": [
-                                    {
-                                        "actionType": "BACK_NAVIGATION",
-                                        "properties": {}
-                                    }
-                                ]
-                            }
-                        ],
-                        "heading": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_THE_MRN_NUMBER",
-                        "navigateTo": null,
-                        "screenType": "TEMPLATE",
-                        "initActions": [
-                            {
-                                "actionType": "SEARCH_EVENT",
-                                "properties": {
-                                    "data": [
-                                        {
-                                            "key": "clientCreatedBy",
-                                            "value": "{{singleton.loggedInUserUuid}}",
-                                            "operation": "equals"
-                                        }
-                                    ],
-                                    "name": "stock",
-                                    "type": "SEARCH_EVENT"
-                                }
-                            }
-                        ],
-                        "wrapperConfig": {
-                            "filters": [],
-                            "groupBy": "additionalFields.fields.mrnNumber",
-                            "relations": [
-                                {
-                                    "name": "stock",
-                                    "match": {
-                                        "field": "clientAuditDetails.createdBy",
-                                        "equalsFrom": "{{singleton.loggedInUserUuid}}"
-                                    },
-                                    "entity": "StockModel"
-                                }
-                            ],
-                            "rootEntity": "StockModel",
-                            "groupByType": true,
-                            "wrapperName": "ViewStockWrapper",
-                            "searchConfig": {
-                                "select": [
-                                    "stock"
-                                ],
-                                "primary": "stock"
-                            }
-                        }
+                        "type": "TEMPLATE"
+                      }
                     }
-                ],
-                "order": 4,
-                "active": true,
-                "project": "MR-DN",
-                "version": 1,
-                "disabled": false,
-                "isSelected": true,
-                "initialPage": "manageStock"
+                  ],
+                  "fieldName": "viewTransactionButton",
+                  "properties": {
+                    "size": "large",
+                    "type": "primary",
+                    "mainAxisSize": "max",
+                    "mainAxisAlignment": "center"
+                  }
+                }
+              ],
+              "fieldName": "stockCard"
             },
-            "isActive": true,
-            "auditDetails": {
-                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
-                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
-                "createdTime": 1764240462821,
-                "lastModifiedTime": 1765268373144
+            "format": "listView",
+            "hidden": false,
+            "fieldName": "listView",
+            "dataSource": "StockModel"
+          }
+        ],
+        "name": "viewTransaction",
+        "order": 5,
+        "footer": [],
+        "header": [
+          {
+            "label": "APP_CONFIG_INVENTORY_viewTransaction_BACK",
+            "format": "backLink",
+            "onAction": [
+              {
+                "actionType": "BACK_NAVIGATION",
+                "properties": {}
+              }
+            ]
+          }
+        ],
+        "heading": "APP_CONFIG_INVENTORY_viewTransaction_SELECT_THE_MRN_NUMBER",
+        "navigateTo": null,
+        "screenType": "TEMPLATE",
+        "initActions": [
+          {
+            "actionType": "SEARCH_EVENT",
+            "properties": {
+              "data": [
+                {
+                  "key": "clientCreatedBy",
+                  "value": "{{singleton.loggedInUserUuid}}",
+                  "operation": "equals"
+                }
+              ],
+              "name": "stock",
+              "type": "SEARCH_EVENT"
             }
+          }
+        ],
+        "wrapperConfig": {
+          "filters": [],
+          "groupBy": "additionalFields.fields.mrnNumber",
+          "relations": [
+            {
+              "name": "stock",
+              "match": {
+                "field": "clientAuditDetails.createdBy",
+                "equalsFrom": "{{singleton.loggedInUserUuid}}"
+              },
+              "entity": "StockModel"
+            }
+          ],
+          "rootEntity": "StockModel",
+          "groupByType": true,
+          "wrapperName": "ViewStockWrapper",
+          "searchConfig": {
+            "select": [
+              "stock"
+            ],
+            "primary": "stock"
+          }
         }
+      }
+    ],
+    "order": 5,
+    "active": true,
+    "project": "MR-DN",
+    "version": 1,
+    "disabled": false,
+    "isSelected": true,
+    "initialPage": "manageStock"
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+    "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+    "createdTime": 1766043316949,
+    "lastModifiedTime": 1768217818664
+  }
+}
