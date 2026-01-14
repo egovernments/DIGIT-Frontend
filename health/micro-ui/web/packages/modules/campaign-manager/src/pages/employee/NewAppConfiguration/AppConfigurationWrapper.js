@@ -128,7 +128,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       required: false,
       active: true,
       order: (currentData?.body?.[0]?.fields?.length || 0) + 1,
-      jsonPath: `field_${Date.now()}`, // Generate a unique jsonPath
+      jsonPath: `field_${Date.now()}`,
+      fieldName: `${newFieldType.fieldName}_${(currentData?.body?.[0]?.fields?.length || 0) + 1}`, // Generate a unique fieldName
       ...selectedFieldType?.metadata, // Include any metadata from field type
     };
 
@@ -281,9 +282,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         message: value,
       })
     );
+    // Replace spaces with underscores and convert to lowercase
+    const sanitizedValue = value?.replace(/\s+/g, '_')?.toLowerCase();
+    const fieldName = `${sanitizedValue}_${campaignNumber}_${pageName}`.toLowerCase();
     setNewFieldType((prev) => ({
       ...prev,
       label: locVal,
+      fieldName: fieldName,
     }));
   };
   return (

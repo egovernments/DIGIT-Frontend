@@ -662,6 +662,11 @@ const remoteConfigSlice = createSlice({
           newField.showLabel = false;
         }
 
+        if (fieldData?.format === "idPopulator") {
+          newField.isMdms = true;
+          newField.schemaCode = "HCM.ID_TYPE_OPTIONS_POPULATOR";
+        }
+
         state.currentData.body[cardIndex].fields.push(newField);
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
