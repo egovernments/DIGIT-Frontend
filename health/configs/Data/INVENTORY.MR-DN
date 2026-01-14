@@ -866,7 +866,7 @@
                                                 },
                                                 {
                                                     "key": "STOCK_EXPIRY",
-                                                    "value": "{{fn:formatDate(item.additionalFields.fields.expiryDate, dateTime, dd MMMM yyyy)}}"
+                                                    "value": "{{fn:formatDate(item.additionalFields.fields.expiryDate, 'date', dd MMM yyyy)}}"
                                                 },
                                                 {
                                                     "key": "QUANTITY_RECEIVED",
@@ -970,7 +970,7 @@
                                                 },
                                                 {
                                                     "type": "template",
-                                                    "value": "{{fn:formatDate(item.items[0].dateOfEntry, dateTime, dd MMMM yyyy)}}",
+                                                    "value": "{{fn:formatDate(item.items[0].dateOfEntry, 'date', dd MMM yyyy)}}",
                                                     "format": "textTemplate",
                                                     "fieldName": "dateOfEntry"
                                                 }
