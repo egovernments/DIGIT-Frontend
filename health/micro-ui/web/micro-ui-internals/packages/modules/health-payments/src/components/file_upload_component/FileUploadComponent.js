@@ -9,9 +9,8 @@ import { set } from "lodash";
 
 const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , mockFile}) => {
   const { t } = useTranslation();
-  const [file, setFile] = useState(null);
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const uploadedFile1 = value;
+  const [files, setFiles] = useState([]);
+  const uploadedFiles = value || [];
   const [error, setError] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const user = Digit.UserService.getUser();
@@ -38,68 +37,132 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
 
   const maxFileSize = maxFileSizeData || 5242880; // Default to 5MB (5242880 bytes)
   const maxFileSizeMB = (maxFileSize / 1048576).toFixed(0); // Convert bytes to MB for display
-  useEffect(() => {
-    if (mockFile && !value) {
-      onSelect(config.key, mockFile);
-      setUploadedFile(mockFile);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (mockFile && !value) {
+  //     onSelect(config.key, mockFile);
+  //     setUploadedFile(mockFile);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     setError(null);
+  //     if (file) {
+  //       // Added: Validate file type
+  //       const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg'];
+  //       if (!validTypes.includes(file.type)) {
+  //         setError(t("CS_INVALID_FILE_TYPE"));
+  //         return;
+  //       }
+
+  //       if (file.size >= maxFileSize) {
+  //         setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`);
+  //       } else {
+  //         try {
+  //           // Convert JPEG/JPG to PDF before uploading
+  //           let fileToUpload = file;
+  //           // if (file.type === "image/jpeg" || file.type === "image/jpg") {
+  //           //   fileToUpload = await convertImageToPdf(file);
+  //           // }
+  //           const response = await Digit.UploadServices.Filestorage("test", fileToUpload, "cg");
+  //           console.log("FilestorageResponse123",response)
+  //           if (response?.data?.files?.length > 0) {
+  //             const uploaded = response?.data?.files[0];
+  //             // setUploadedFile(uploaded);
+  //             if (config?.key) {
+  //               const auditDetails = {
+  //                 createdBy: user?.info?.uuid,
+  //                 lastModifiedBy: user?.info?.uuid,
+  //                 createdTime: timestamp,
+  //                 lastModifiedTime: timestamp
+  //               };
+  //               // onSelect(config.key, { ...uploaded, auditDetails });
+  //               onSelect(config.key, {
+  //                 ...uploaded,
+  //                 auditDetails
+  //               });
+  //             }
+  //           } else {
+  //             setError(t("CS_FILE_UPLOAD_ERROR"));
+  //           }
+  //         } catch (err) {
+  //           // Modified: Enhanced error handling for corrupted files
+  //           if (err.message && err.message.includes('corrupt')) {
+  //             setError(t("CS_FILE_CORRUPTED_ERROR"));
+  //           } else {
+  //             setError(t("CS_FILE_UPLOAD_ERROR"));
+  //           }
+  //         }
+  //       }
+  //     }
+  //   })();
+  // }, [file, maxFileSize]);
+
   useEffect(() => {
     (async () => {
       setError(null);
-      if (file) {
-        // Added: Validate file type
-        const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg'];
+  
+      if (!files?.length) return;
+  
+      const validTypes = ["application/pdf", "image/jpeg", "image/jpg"];
+      const uploadedResults = [];
+  
+      for (const file of files) {
+        // 1️⃣ Validate type
         if (!validTypes.includes(file.type)) {
           setError(t("CS_INVALID_FILE_TYPE"));
           return;
         }
-
+  
+        // 2️⃣ Validate size
         if (file.size >= maxFileSize) {
-          setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`);
-        } else {
-          try {
-            // Convert JPEG/JPG to PDF before uploading
-            let fileToUpload = file;
-            // if (file.type === "image/jpeg" || file.type === "image/jpg") {
-            //   fileToUpload = await convertImageToPdf(file);
-            // }
-            const response = await Digit.UploadServices.Filestorage("test", fileToUpload, "cg");
-            console.log("FilestorageResponse123",response)
-            if (response?.data?.files?.length > 0) {
-              const uploaded = response?.data?.files[0];
-              // setUploadedFile(uploaded);
-              if (config?.key) {
-                const auditDetails = {
-                  createdBy: user?.info?.uuid,
-                  lastModifiedBy: user?.info?.uuid,
-                  createdTime: timestamp,
-                  lastModifiedTime: timestamp
-                };
-                // onSelect(config.key, { ...uploaded, auditDetails });
-                onSelect(config.key, {
-                  ...uploaded,
-                  auditDetails
-                });
-              }
-            } else {
-              setError(t("CS_FILE_UPLOAD_ERROR"));
-            }
-          } catch (err) {
-            // Modified: Enhanced error handling for corrupted files
-            if (err.message && err.message.includes('corrupt')) {
-              setError(t("CS_FILE_CORRUPTED_ERROR"));
-            } else {
-              setError(t("CS_FILE_UPLOAD_ERROR"));
-            }
+          setError(
+            `${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`
+          );
+          return;
+        }
+  
+        try {
+          // 3️⃣ Upload ONE file (filestore supports single only)
+          const response = await Digit.UploadServices.Filestorage(
+            "test",
+            file,
+            "cg"
+          );
+  
+          const uploaded = response?.data?.files?.[0];
+  
+          if (uploaded) {
+            uploadedResults.push({
+              ...uploaded,
+              auditDetails: {
+                createdBy: user?.info?.uuid,
+                lastModifiedBy: user?.info?.uuid,
+                createdTime: timestamp,
+                lastModifiedTime: timestamp,
+              },
+            });
           }
+        } catch (err) {
+          if (err?.message?.includes("corrupt")) {
+            setError(t("CS_FILE_CORRUPTED_ERROR"));
+          } else {
+            setError(t("CS_FILE_UPLOAD_ERROR"));
+          }
+          return;
         }
       }
+  
+      // 4️⃣ Single onSelect call with ARRAY
+      if (uploadedResults.length && config?.key) {
+        onSelect(config.key, uploadedResults);
+      }
     })();
-  }, [file, maxFileSize]);
+  }, [files, maxFileSize]);
 
   function selectFile(e) {
-    setFile(e.target.files[0]);
+    const selectedFiles = Array.from(e.target.files);
+    setFiles(selectedFiles);
+    console.log("Selected files:", selectedFiles);
   }
 
   // Convert image file to PDF
@@ -142,28 +205,37 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
   //   });
   // };
 
-  async function downloadFile() {
-    if (!uploadedFile1?.fileStoreId) return;
+  async function downloadFile(
+    fileStoreId,
+  tenantId,
+  fileName,
+  mimeType,
+  setError,
+  t,
+  ) {
+    if (!fileStoreId) return;
   
     try {
-      console.log("fileStoreId45",uploadedFile1.fileStoreId)
-      const { data: { fileStoreIds } = {} } = await Digit.UploadServices.Filefetch([uploadedFile1.fileStoreId], tenantId);
-      console.log("fileStoreIds123",fileStoreIds)
-      const fileData = fileStoreIds?.[0];
-      console.log("fileData77",fileData)
+      console.log("fileStoreId45",fileStoreId)
+      const { data } = await Digit.UploadServices.Filefetch(
+        [fileStoreId],
+        tenantId
+      );
+  
+      const fileData = data?.fileStoreIds?.[0];
   
       if (fileData?.url) {
         // Get original file name and extension
-        const originalName = uploadedFile1?.name || "downloaded_file";
-        const fileExtension = originalName.split('.').pop();
-        const fileNameWithoutExtension = originalName.replace(`.${fileExtension}`, '');
+        // const originalName = uploadedFile1?.name || "downloaded_file";
+        // const fileExtension = originalName.split('.').pop();
+        // const fileNameWithoutExtension = originalName.replace(`.${fileExtension}`, '');
         
         // Use generic download function
         downloadFileWithCustomName({
           fileStoreId: fileData?.id,
-          customName: fileNameWithoutExtension,
-          fileUrl: fileData?.url,
-          mimeType: uploadedFile1?.mimeType || fileData?.mimeType
+          fileUrl: fileData.url,
+          customName: fileName || "download",
+          mimeType: mimeType || fileData.mimeType,
         });
       }
     } catch (err) {
@@ -171,23 +243,42 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
       setError(t("CS_FILE_DOWNLOAD_ERROR"));
     }
   }
+  const handleDownload = (file) => {
+    downloadFile({
+      fileStoreId: file.fileStoreId,
+      tenantId,
+      fileName: file.name?.replace(/\.[^/.]+$/, ""), // remove extension
+      mimeType: file.mimeType,
+      setError,
+      t,
+    });
+  };
+
+  const handleDelete = (index) => {
+    const updated = uploadedFiles.filter((_, i) => i !== index);
+    onSelect(config?.key, updated);
+  };
 
   return (
     <div className="pgr-upload-file-wrapper" style={{ maxWidth: "37.5rem" }}>
       <UploadFile
-        id={config?.key ? `upload-${config.key}` : "upload-doc"}
+        multiple
+        // id={config?.key ? `upload-${config.key}` : "upload-doc"}
         accept=".pdf,.jpg,.jpeg"
         onUpload={selectFile}
-        onDelete={() => {
-          setUploadedFile(null);
-          setFile(null);
-          setError(null);
-          // if (config?.key) onSelect(config.key, null);
-          onSelect(config.key, null);
-        }}
-        message={uploadedFile1 ? `1 ${t("CS_ACTION_FILEUPLOADED")}` : t("CS_ACTION_NO_FILEUPLOADED")}
+        // onDelete={() => {
+        //   setFiles(null);
+        //   setError(null);
+        //   // if (config?.key) onSelect(config.key, null);
+        //   onSelect(config.key, null);
+        // }}
+        message={
+          uploadedFiles.length
+            ? `${uploadedFiles.length} ${t("CS_ACTION_FILEUPLOADED")}`
+            : t("CS_ACTION_NO_FILEUPLOADED")
+        }
       />
-      {uploadedFile1 && (
+      {/* {uploadedFile1 && (
   <Button
     label={t("DELETE")}
     variation="secondary"
@@ -208,7 +299,24 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
             icon={t("DownloadIcon")}
             onClick={downloadFile}
           />
-      )}
+      )} */}
+      {uploadedFiles.map((file, index) => (
+  <div key={file.fileStoreId} className="uploaded-file-row">
+    <span>{file.name}</span>
+
+    <Button
+      label={t("WBH_DOWNLOAD")}
+      variation="secondary"
+      onClick={() => handleDownload(file)}
+    />
+
+    <Button
+      label={t("DELETE")}
+      variation="secondary"
+      onClick={() => handleDelete(index)}
+    />
+  </div>
+))}
       {error && <p className="pgr-upload-error">{error}</p>}
     </div>
   );

@@ -10,6 +10,7 @@ import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import UploadedFileComponent from "../../components/file_upload_component/FileUploadComponent";
+import { downloadFileWithCustomName } from "../../components/file_upload_component/downloadFileWithCustomName";
 /**
  * @function ViewAttendance
  * @description This component is used to view attendance.
@@ -51,8 +52,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
   const [openUploadPopup, setOpenUploadPopup] = useState(false);
-  const [uploadedDocument, setUploadedDocument] = useState(null);
-  const isFileUploaded = Boolean(uploadedDocument?.fileStoreId);
+  const [uploadedDocuments, setUploadedDocuments] = useState([]);
+  const isFileUploaded = uploadedDocuments.length > 0;
 
   const project = Digit?.SessionStorage.get("staffProjects");
   const selectedProject = Digit?.SessionStorage.get("selectedProject");
@@ -192,7 +193,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   });
 
   const triggerMusterRollApprove = async () => {
-    if (!uploadedDocument?.fileStoreId) {
+    if (!uploadedDocuments || uploadedDocuments.length === 0) {
       setShowToast({
         key: "error",
         label: t("UPLOAD_DOCUMENT_REQUIRED"),
@@ -208,12 +209,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
               ...data?.[0],
               additionalDetails: {
                 ...data?.[0]?.additionalDetails,
-                attendanceApprovalDocument: {
-                  fileStoreId: uploadedDocument.fileStoreId,
-                  fileName: uploadedDocument.name,
-                  uploadedBy: uploadedDocument.auditDetails?.createdBy,
-                  uploadedTime: uploadedDocument.auditDetails?.createdTime
-                }
+                attendanceApprovalDocuments: uploadedDocuments.map(doc => ({
+                  fileStoreId: doc.fileStoreId,
+                  fileName: doc.name,
+                  uploadedBy: doc.auditDetails?.createdBy,
+                  uploadedTime: doc.auditDetails?.createdTime,
+                }))
               }
             },
             workflow: {
@@ -431,6 +432,32 @@ const ViewAttendance = ({ editAttendance = false }) => {
   }, [attendanceSummary]);
 
   useEffect(() => {
+    // 🔴 REMOVE AFTER TESTING
+    const mockDocuments = [
+      {
+        fileStoreId: "3d18c0f5-c958-4184-842a-9785b34cef76",
+        name: "attendance-proof-1.pdf",
+        mimeType: "application/pdf",
+        auditDetails: {
+          createdBy: Digit.UserService.getUser()?.info?.uuid,
+          createdTime: Date.now(),
+        },
+      },
+      {
+        fileStoreId: "b71c74cd-b4ba-4b14-9dd1-43fc7fc35fdd",
+        name: "attendance-proof-2.pdf",
+        mimeType: "application/pdf",
+        auditDetails: {
+          createdBy: Digit.UserService.getUser()?.info?.uuid,
+          createdTime: Date.now(),
+        },
+      },
+    ];
+  
+    setUploadedDocuments(mockDocuments);
+  }, []);
+
+  useEffect(() => {
     if (attendanceSummary.length > 0 && initialAttendanceSummary.length > 0) {
 
       // Compare the current attendanceSummary with the initialAttendanceSummary using Lodash
@@ -475,35 +502,52 @@ const ViewAttendance = ({ editAttendance = false }) => {
   }
 
   async function downloadFile() {
-      // if (!uploadedFile1?.fileStoreId) return;
-      const musterRoll = data?.[0];
-      if(!musterRoll.additionalDetails?.attendanceApprovalDocument) return;
-    
-      try {
-        const { data: { fileStoreIds } = {} } = await Digit.UploadServices.Filefetch([musterRoll.additionalDetails?.attendanceApprovalDocument?.fileStoreId], tenantId);
-        // const fileData = fileStoreIds?.[0];
-        const fileData = musterRoll.additionalDetails?.attendanceApprovalDocument
-        ?.fileStoreId;
-    
-        if (fileData?.url) {
-          // Get original file name and extension
-          const originalName = uploadedFile1?.name || "downloaded_file";
-          const fileExtension = originalName.split('.').pop();
-          const fileNameWithoutExtension = originalName.replace(`.${fileExtension}`, '');
-          
-          // Use generic download function
-          downloadFileWithCustomName({
-            fileStoreId: fileData?.id,
-            customName: fileNameWithoutExtension,
-            fileUrl: fileData?.url,
-            mimeType: uploadedFile1?.mimeType || fileData?.mimeType
-          });
-        }
-      } catch (err) {
-        console.error("Download error:", err);
-        setError(t("CS_FILE_DOWNLOAD_ERROR"));
-      }
+    const musterRoll = data?.[0];
+    const docs = musterRoll?.additionalDetails?.attendanceApprovalDocuments;
+    console.log("Downloading files:", docs);
+  
+    if (!Array.isArray(docs) || docs.length === 0) return;
+  
+    try {
+      // 1️⃣ Collect all fileStoreIds
+      const fileStoreIds = docs
+        .map(doc => doc.fileStoreId)
+        .filter(Boolean);
+  
+      if (!fileStoreIds.length) return;
+      console.log("Fetching file URLs for fileStoreIds:", fileStoreIds);
+  
+      // 2️⃣ Fetch URLs from filestore
+      const { data: fileResponse } =
+        await Digit.UploadServices.Filefetch(fileStoreIds, tenantId);
+
+      console.log("File fetch response:", fileResponse);
+  
+      const filesMap = {};
+      fileResponse?.fileStoreIds?.forEach(f => {
+        filesMap[f.id] = f;
+      });
+
+      console.log("Fetched file URLs:", filesMap);
+  
+      // 3️⃣ Download each file
+      docs.forEach(doc => {
+        const fileData = filesMap[doc.fileStoreId];
+        if (!fileData?.url) return;
+  
+        downloadFileWithCustomName({
+          fileUrl: fileData.url,
+          customName: doc.fileName?.replace(/\.[^/.]+$/, "") || "attendance-proof",
+          mimeType: fileData.mimeType,
+        });
+      });
+      await new Promise(res => setTimeout(res, 500));
+  
+    } catch (err) {
+      console.error("Download failed", err);
+      // setError?.(t("CS_FILE_DOWNLOAD_ERROR"));
     }
+  }
   
 
   return (
@@ -627,7 +671,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
           header={t("Upload File")}
           onOverlayClick={() => setOpenUploadPopup(false)}
         >
-          <UploadedFileComponent 
+          <UploadedFileComponent
+            value={uploadedDocuments}
+            onSelect={(key, files) => setUploadedDocuments(files)}
+          />
+          {/* <UploadedFileComponent 
             config={{ key: "uploadedFile" }}
             value={uploadedDocument}
             isMandatory={true}
@@ -655,7 +703,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 createdTime: Date.now()
               }
             }}
-          />
+          /> */}
         </PopUp>
       )}
 
