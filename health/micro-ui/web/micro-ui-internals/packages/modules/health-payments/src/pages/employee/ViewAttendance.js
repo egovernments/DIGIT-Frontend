@@ -9,7 +9,7 @@ import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
-
+import UploadedFileComponent from "../../components/file_upload_component/FileUploadComponent";
 /**
  * @function ViewAttendance
  * @description This component is used to view attendance.
@@ -50,6 +50,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+  const [openUploadPopup, setOpenUploadPopup] = useState(false);
+  const [uploadedDocument, setUploadedDocument] = useState(null);
+  const isFileUploaded = Boolean(uploadedDocument?.fileStoreId);
 
   const project = Digit?.SessionStorage.get("staffProjects");
   const selectedProject = Digit?.SessionStorage.get("selectedProject");
@@ -189,11 +192,30 @@ const ViewAttendance = ({ editAttendance = false }) => {
   });
 
   const triggerMusterRollApprove = async () => {
+    if (!uploadedDocument?.fileStoreId) {
+      setShowToast({
+        key: "error",
+        label: t("UPLOAD_DOCUMENT_REQUIRED"),
+      });
+      return;
+    }
     try {
       await approveMutation.mutateAsync(
         {
           body: {
-            musterRoll: data?.[0],
+            // musterRoll: data?.[0],
+            musterRoll: {
+              ...data?.[0],
+              additionalDetails: {
+                ...data?.[0]?.additionalDetails,
+                attendanceApprovalDocument: {
+                  fileStoreId: uploadedDocument.fileStoreId,
+                  fileName: uploadedDocument.name,
+                  uploadedBy: uploadedDocument.auditDetails?.createdBy,
+                  uploadedTime: uploadedDocument.auditDetails?.createdTime
+                }
+              }
+            },
             workflow: {
               action: "APPROVE",
               comments: comment,
@@ -452,6 +474,38 @@ const ViewAttendance = ({ editAttendance = false }) => {
     return <LoaderScreen />
   }
 
+  async function downloadFile() {
+      // if (!uploadedFile1?.fileStoreId) return;
+      const musterRoll = data?.[0];
+      if(!musterRoll.additionalDetails?.attendanceApprovalDocument) return;
+    
+      try {
+        const { data: { fileStoreIds } = {} } = await Digit.UploadServices.Filefetch([musterRoll.additionalDetails?.attendanceApprovalDocument?.fileStoreId], tenantId);
+        // const fileData = fileStoreIds?.[0];
+        const fileData = musterRoll.additionalDetails?.attendanceApprovalDocument
+        ?.fileStoreId;
+    
+        if (fileData?.url) {
+          // Get original file name and extension
+          const originalName = uploadedFile1?.name || "downloaded_file";
+          const fileExtension = originalName.split('.').pop();
+          const fileNameWithoutExtension = originalName.replace(`.${fileExtension}`, '');
+          
+          // Use generic download function
+          downloadFileWithCustomName({
+            fileStoreId: fileData?.id,
+            customName: fileNameWithoutExtension,
+            fileUrl: fileData?.url,
+            mimeType: uploadedFile1?.mimeType || fileData?.mimeType
+          });
+        }
+      } catch (err) {
+        console.error("Download error:", err);
+        setError(t("CS_FILE_DOWNLOAD_ERROR"));
+      }
+    }
+  
+
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
@@ -472,6 +526,34 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>
         <Card className="bottom-gap-card-payment">
+        <div className="upload-heading">
+            <h2 className="upload-heading-title">{t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}</h2>
+            {data?.[0]?.musterRollStatus === "APPROVED" ? (
+              <Button
+              label={t("WBH_DOWNLOAD")}
+              variation="secondary"
+              type="button"
+              size={"medium"}
+              icon={t("DownloadIcon")}
+              onClick={downloadFile}
+            />
+            ) : (
+              <Button
+                className="custom-class"
+                icon="Visibility"
+                iconFill=""
+                label={t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}
+                onClick={() => setOpenUploadPopup(true)}
+                options={[]}
+                optionsKey=""
+                size=""
+                style={{}}
+                title={t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}
+                variation="secondary"
+              />
+            )
+            }  
+          </div>
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
         {showLogs && <Card >
@@ -539,6 +621,44 @@ const ViewAttendance = ({ editAttendance = false }) => {
         }}
       />}
 
+      {openUploadPopup && (
+        <PopUp
+          onClose={() => setOpenUploadPopup(false)}
+          header={t("Upload File")}
+          onOverlayClick={() => setOpenUploadPopup(false)}
+        >
+          <UploadedFileComponent 
+            config={{ key: "uploadedFile" }}
+            value={uploadedDocument}
+            isMandatory={true}
+            // onSelect={(key, fileData) => {
+            //   console.log("Uploaded file:", fileData);
+            //   setOpenUploadPopup(false);
+            // }}
+            // onSelect={(key, fileData) => {
+            //   setUploadedDocument(fileData);
+            //   if (!fileData) {
+            //     // deleted → re-enable retry
+            //     setShowToast({
+            //       key: "info",
+            //       label: t("FILE_REMOVED_PLEASE_UPLOAD_AGAIN"),
+            //     });
+            //   }
+            // }}
+            onSelect={(key, file) => setUploadedDocument(file)}
+            mockFile={{
+              fileStoreId: "3d18c0f5-c958-4184-842a-9785b34cef76",
+              name: "attendance-proof.pdf",
+              mimeType: "application/pdf",
+              auditDetails: {
+                createdBy: Digit.UserService.getUser()?.info?.uuid,
+                createdTime: Date.now()
+              }
+            }}
+          />
+        </PopUp>
+      )}
+
       {/* action bar for bill generation*/}
       <ActionBar
         actionFields={[
@@ -579,7 +699,17 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 if (value.code === "EDIT_ATTENDANCE") {
                   setOpenEditAlertPopUp(true);
                 } else if (value.code === "APPROVE") {
+                  if (!isFileUploaded) {
+                    setShowToast({
+                      key: "error",
+                      label: t("PLEASE_UPLOAD_DOCUMENT_BEFORE_APPROVAL"),
+                    });
+                    return;
+                  }
                   setOpenApproveCommentPopUp(true);
+                }
+                else if (value.code === "Upload") {
+                  setOpenUploadPopup(true); 
                 }
               }}
               options={[
@@ -590,6 +720,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 {
                   code: "APPROVE",
                   name: t(`HCM_AM_ACTIONS_APPROVE`),
+                },
+                {
+                  code: "Upload",
+                  name: t(`Upload_File`),
                 },
               ]}
               optionsKey="name"
