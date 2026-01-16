@@ -284,7 +284,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     );
     // Replace spaces with underscores and convert to lowercase
     const sanitizedValue = value?.replace(/\s+/g, '_')?.toLowerCase();
-    const fieldName = `${sanitizedValue}_${campaignNumber}_${pageName}`.toLowerCase();
+    const fieldName = `${sanitizedValue}_${campaignNumber}_${pageName}`.replaceAll(".", "_").toLowerCase();
     setNewFieldType((prev) => ({
       ...prev,
       label: locVal,
@@ -299,7 +299,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           className="app-config-add-field-popup"
           type={"default"}
           heading={t("ADD_FIELD")}
-          onOverlayClick={() => {}}
+          onOverlayClick={() => {
+            dispatch(handleShowAddFieldPopup(null));
+            setNewFieldType(null);
+          }}
           onClose={() => {
             dispatch(handleShowAddFieldPopup(null));
             setNewFieldType(null);
