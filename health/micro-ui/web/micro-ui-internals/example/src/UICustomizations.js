@@ -2312,6 +2312,11 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
+      // Convert current date to GMT (subtract 5.5 hours for IST offset)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Local midnight IST
+      const startDateEpoch = today.getTime() - 19800000; // Subtract 5.5 hours to get UTC timestamp (15th Jan 18:30 UTC)
+
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
@@ -2319,7 +2324,7 @@ export const UICustomizations = {
         isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: true,
-        startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
+        startDate: startDateEpoch,
         endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
         pagination: {
           sortBy: "createdTime",
@@ -2464,6 +2469,12 @@ export const UICustomizations = {
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
+
+      // Convert tomorrow's date to GMT (subtract 5.5 hours for IST offset)
+      const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      tomorrow.setHours(0, 0, 0, 0); // Local midnight IST
+      const startDateEpoch = tomorrow.getTime() - 19800000; // Subtract 5.5 hours to get UTC timestamp
+
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
@@ -2471,7 +2482,7 @@ export const UICustomizations = {
         isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: false,
-        startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
+        startDate: startDateEpoch,
         pagination: {
           sortBy: "createdTime",
           sortOrder: data?.state?.tableForm?.sortOrder || "desc",
