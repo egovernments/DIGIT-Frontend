@@ -11,11 +11,13 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
   const { t } = useTranslation();
   const [files, setFiles] = useState([]);
   const uploadedFiles = value || [];
+  const [filesToUpload, setFilesToUpload] = useState([]);
+
   const [error, setError] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const user = Digit.UserService.getUser();
   const timestamp = new Date().getTime();
-
+  const MAX_FILES = 5; // Maximum number of files allowed
   // Fetch max file size from MDMS v2
   const { isLoading: isMaxFileSizeLoading, data: maxFileSizeData } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -37,134 +39,86 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
 
   const maxFileSize = maxFileSizeData || 5242880; // Default to 5MB (5242880 bytes)
   const maxFileSizeMB = (maxFileSize / 1048576).toFixed(0); // Convert bytes to MB for display
-  // useEffect(() => {
-  //   if (mockFile && !value) {
-  //     onSelect(config.key, mockFile);
-  //     setUploadedFile(mockFile);
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   (async () => {
-  //     setError(null);
-  //     if (file) {
-  //       // Added: Validate file type
-  //       const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg'];
-  //       if (!validTypes.includes(file.type)) {
-  //         setError(t("CS_INVALID_FILE_TYPE"));
-  //         return;
-  //       }
-
-  //       if (file.size >= maxFileSize) {
-  //         setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`);
-  //       } else {
-  //         try {
-  //           // Convert JPEG/JPG to PDF before uploading
-  //           let fileToUpload = file;
-  //           // if (file.type === "image/jpeg" || file.type === "image/jpg") {
-  //           //   fileToUpload = await convertImageToPdf(file);
-  //           // }
-  //           const response = await Digit.UploadServices.Filestorage("test", fileToUpload, "cg");
-  //           console.log("FilestorageResponse123",response)
-  //           if (response?.data?.files?.length > 0) {
-  //             const uploaded = response?.data?.files[0];
-  //             // setUploadedFile(uploaded);
-  //             if (config?.key) {
-  //               const auditDetails = {
-  //                 createdBy: user?.info?.uuid,
-  //                 lastModifiedBy: user?.info?.uuid,
-  //                 createdTime: timestamp,
-  //                 lastModifiedTime: timestamp
-  //               };
-  //               // onSelect(config.key, { ...uploaded, auditDetails });
-  //               onSelect(config.key, {
-  //                 ...uploaded,
-  //                 auditDetails
-  //               });
-  //             }
-  //           } else {
-  //             setError(t("CS_FILE_UPLOAD_ERROR"));
-  //           }
-  //         } catch (err) {
-  //           // Modified: Enhanced error handling for corrupted files
-  //           if (err.message && err.message.includes('corrupt')) {
-  //             setError(t("CS_FILE_CORRUPTED_ERROR"));
-  //           } else {
-  //             setError(t("CS_FILE_UPLOAD_ERROR"));
-  //           }
-  //         }
-  //       }
-  //     }
-  //   })();
-  // }, [file, maxFileSize]);
+  
 
   useEffect(() => {
+    if (!filesToUpload.length) return;
+
     (async () => {
       setError(null);
-  
-      if (!files?.length) return;
-  
-      const validTypes = ["application/pdf", "image/jpeg", "image/jpg"];
+
+      const validTypes = ["application/pdf", "image/jpeg", "image/jpg","image/png"];
       const uploadedResults = [];
-  
-      for (const file of files) {
-        // 1️⃣ Validate type
+
+      for (const file of filesToUpload) {
         if (!validTypes.includes(file.type)) {
           setError(t("CS_INVALID_FILE_TYPE"));
           return;
         }
-  
-        // 2️⃣ Validate size
-        if (file.size >= maxFileSize) {
+
+        if (file.size > maxFileSize) {
           setError(
-            `${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: ${maxFileSizeMB} MB)`
+            `${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${maxFileSizeMB} MB)`
           );
           return;
         }
-  
+
         try {
-          // 3️⃣ Upload ONE file (filestore supports single only)
-          const response = await Digit.UploadServices.Filestorage(
+          const response = await Digit.UploadServices.MultipleFilesStorage(
             "test",
-            file,
-            "cg"
+            [file],
+            tenantId
           );
-  
+
           const uploaded = response?.data?.files?.[0];
-  
+
           if (uploaded) {
             uploadedResults.push({
-              ...uploaded,
+              fileStoreId: uploaded.fileStoreId,
+              tenantId: uploaded.tenantId,
+              name: file.name,
+              mimeType: file.type,
+              size: file.size,
               auditDetails: {
                 createdBy: user?.info?.uuid,
                 lastModifiedBy: user?.info?.uuid,
-                createdTime: timestamp,
-                lastModifiedTime: timestamp,
+                createdTime: Date.now(),
+                lastModifiedTime: Date.now(),
               },
             });
           }
         } catch (err) {
-          if (err?.message?.includes("corrupt")) {
-            setError(t("CS_FILE_CORRUPTED_ERROR"));
-          } else {
-            setError(t("CS_FILE_UPLOAD_ERROR"));
-          }
+          setError(t("CS_FILE_UPLOAD_ERROR"));
           return;
         }
       }
-  
-      // 4️⃣ Single onSelect call with ARRAY
-      if (uploadedResults.length && config?.key) {
-        onSelect(config.key, uploadedResults);
+
+      if (uploadedResults.length) {
+        onSelect(config?.key, [...uploadedFiles, ...uploadedResults]);
       }
+
+      setFilesToUpload([]);
     })();
-  }, [files, maxFileSize]);
+  }, [filesToUpload]);
+      const onFileSelect = (e) => {
+        const selectedFiles = Array.from(e.target.files);
 
-  function selectFile(e) {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
-    console.log("Selected files:", selectedFiles);
-  }
-
+        // 🔥 CRITICAL: clear the input immediately
+        e.target.value = "";
+      
+         // ✅ Total file count validation
+        const totalFilesCount =
+          uploadedFiles.length + selectedFiles.length;
+      
+          if (totalFilesCount > MAX_FILES) {
+            setError(
+              `${t("CS_MAXIMUM_FILES_EXCEEDED")} (${MAX_FILES})`
+            );
+            return;
+          }
+      
+        setError(null);
+        setFilesToUpload(selectedFiles);     };
   // Convert image file to PDF
   // const convertImageToPdf = (imageFile) => {
   //   return new Promise((resolve, reject) => {
@@ -243,64 +197,84 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
       setError(t("CS_FILE_DOWNLOAD_ERROR"));
     }
   }
-  const handleDownload = (file) => {
-    downloadFile({
-      fileStoreId: file.fileStoreId,
-      tenantId,
-      fileName: file.name?.replace(/\.[^/.]+$/, ""), // remove extension
-      mimeType: file.mimeType,
-      setError,
-      t,
-    });
+
+  const handleDownload = async (file) => {
+    try {
+      const { data } = await Digit.UploadServices.Filefetch(
+        [file.fileStoreId],
+        tenantId
+      );
+
+      const fileData = data?.fileStoreIds?.[0];
+
+      if (fileData?.url) {
+        downloadFileWithCustomName({
+          fileStoreId: fileData.id,
+          fileUrl: fileData.url,
+          customName: file.name.replace(/\.[^/.]+$/, ""),
+          mimeType: file.mimeType,
+        });
+      }
+    } catch {
+      setError(t("CS_FILE_DOWNLOAD_ERROR"));
+    }
   };
+
+
+  // const handleDownload = (file) => {
+  //   downloadFile({
+  //     fileStoreId: file.fileStoreId,
+  //     tenantId,
+  //     fileName: file.name?.replace(/\.[^/.]+$/, ""), // remove extension
+  //     mimeType: file.mimeType,
+  //     setError,
+  //     t,
+  //   });
+  // };
 
   const handleDelete = (index) => {
     const updated = uploadedFiles.filter((_, i) => i !== index);
     onSelect(config?.key, updated);
   };
-
+  console.log("uploadedFiles from parent", uploadedFiles);
+  const uploadFileTags = uploadedFiles.map(file => [
+    file.name,
+    file
+  ]);
+  const removeTargetedFile = (fileToRemove) => {
+    const updated = uploadedFiles.filter(
+      (file) => file.fileStoreId !== fileToRemove.fileStoreId
+    );
+    onSelect(config?.key, updated);
+  };
+  const handleDeleteAll = () => {
+    // UploadFile internally calls this to reset input
+    // Do NOT clear uploadedFiles here unless you want "clear all"
+  };
+  console.log("uploadFileTags", uploadFileTags);
   return (
     <div className="pgr-upload-file-wrapper" style={{ maxWidth: "37.5rem" }}>
       <UploadFile
-        multiple
-        // id={config?.key ? `upload-${config.key}` : "upload-doc"}
-        accept=".pdf,.jpg,.jpeg"
-        onUpload={selectFile}
-        // onDelete={() => {
-        //   setFiles(null);
-        //   setError(null);
-        //   // if (config?.key) onSelect(config.key, null);
-        //   onSelect(config.key, null);
-        // }}
-        message={
-          uploadedFiles.length
-            ? `${uploadedFiles.length} ${t("CS_ACTION_FILEUPLOADED")}`
-            : t("CS_ACTION_NO_FILEUPLOADED")
-        }
-      />
-      {/* {uploadedFile1 && (
-  <Button
-    label={t("DELETE")}
-    variation="secondary"
-    onClick={() => {
-      setFile(null);
-      setError(null);
-      setUploadedFile(null);
-      onSelect(config.key, null); // 🔥 parent notified
-    }}
-  />
-)}
-      {uploadedFile1 && (
-        <Button
-            label={t("WBH_DOWNLOAD")}
-            variation="secondary"
-            type="button"
-            size={"medium"}
-            icon={t("DownloadIcon")}
-            onClick={downloadFile}
-          />
-      )} */}
-      {uploadedFiles.map((file, index) => (
+  multiple
+  accept=".pdf,.jpg,.jpeg,.png"
+  onUpload={onFileSelect}
+  onDelete={handleDeleteAll}
+  uploadedFiles={uploadFileTags}
+  removeTargetedFile={removeTargetedFile}
+  // message={
+  //   uploadedFiles.length
+  //     ? `${uploadedFiles.length} ${t("CS_ACTION_FILEUPLOADED")}`
+  //     : t("CS_ACTION_NO_FILEUPLOADED")
+  // }
+/>
+
+<p className="file-upload-status">
+  {uploadedFiles.length === 0
+    ? t("CS_ACTION_NO_FILEUPLOADED")
+    : `${uploadedFiles.length} ${t("CS_ACTION_FILEUPLOADED")}`}
+</p>
+      
+      {/* {uploadedFiles.map((file, index) => (
   <div key={file.fileStoreId} className="uploaded-file-row">
     <span>{file.name}</span>
 
@@ -316,7 +290,7 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false , 
       onClick={() => handleDelete(index)}
     />
   </div>
-))}
+))} */}
       {error && <p className="pgr-upload-error">{error}</p>}
     </div>
   );

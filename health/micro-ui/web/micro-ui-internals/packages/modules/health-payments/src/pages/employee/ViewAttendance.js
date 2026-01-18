@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -431,31 +431,31 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   }, [attendanceSummary]);
 
-  useEffect(() => {
-    // 🔴 REMOVE AFTER TESTING
-    const mockDocuments = [
-      {
-        fileStoreId: "3d18c0f5-c958-4184-842a-9785b34cef76",
-        name: "attendance-proof-1.pdf",
-        mimeType: "application/pdf",
-        auditDetails: {
-          createdBy: Digit.UserService.getUser()?.info?.uuid,
-          createdTime: Date.now(),
-        },
-      },
-      {
-        fileStoreId: "b71c74cd-b4ba-4b14-9dd1-43fc7fc35fdd",
-        name: "attendance-proof-2.pdf",
-        mimeType: "application/pdf",
-        auditDetails: {
-          createdBy: Digit.UserService.getUser()?.info?.uuid,
-          createdTime: Date.now(),
-        },
-      },
-    ];
+  // useEffect(() => {
+  //   // 🔴 REMOVE AFTER TESTING
+  //   const mockDocuments = [
+  //     {
+  //       fileStoreId: "3d18c0f5-c958-4184-842a-9785b34cef76",
+  //       name: "attendance-proof-1.pdf",
+  //       mimeType: "application/pdf",
+  //       auditDetails: {
+  //         createdBy: Digit.UserService.getUser()?.info?.uuid,
+  //         createdTime: Date.now(),
+  //       },
+  //     },
+  //     {
+  //       fileStoreId: "b71c74cd-b4ba-4b14-9dd1-43fc7fc35fdd",
+  //       name: "attendance-proof-2.pdf",
+  //       mimeType: "application/pdf",
+  //       auditDetails: {
+  //         createdBy: Digit.UserService.getUser()?.info?.uuid,
+  //         createdTime: Date.now(),
+  //       },
+  //     },
+  //   ];
   
-    setUploadedDocuments(mockDocuments);
-  }, []);
+  //   setUploadedDocuments(mockDocuments);
+  // }, []);
 
   useEffect(() => {
     if (attendanceSummary.length > 0 && initialAttendanceSummary.length > 0) {
@@ -541,7 +541,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           mimeType: fileData.mimeType,
         });
       });
-      await new Promise(res => setTimeout(res, 500));
+      await new Promise(res => setTimeout(res, 800));
   
     } catch (err) {
       console.error("Download failed", err);
@@ -549,7 +549,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   }
   
+  const docs =
+  data?.[0]?.additionalDetails?.attendanceApprovalDocuments || [];
 
+const hasFiles = docs.length > 0;
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
@@ -573,14 +576,23 @@ const ViewAttendance = ({ editAttendance = false }) => {
         <div className="upload-heading">
             <h2 className="upload-heading-title">{t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}</h2>
             {data?.[0]?.musterRollStatus === "APPROVED" ? (
-              <Button
-              label={t("WBH_DOWNLOAD")}
-              variation="secondary"
-              type="button"
-              size={"medium"}
-              icon={t("DownloadIcon")}
-              onClick={downloadFile}
-            />
+               <>
+               <Button
+                 label={t("WBH_DOWNLOAD")}
+                 variation="secondary"
+                 type="button"
+                 size="medium"
+                 icon={t("DownloadIcon")}
+                 onClick={downloadFile}
+                 disabled={!hasFiles}
+               />
+           
+               <p className="file-upload-status">
+                 {hasFiles
+                   ? `${docs.length} ${t("CS_ACTION_FILEUPLOADED")}`
+                   : t("CS_ACTION_NO_FILEUPLOADED")}
+               </p>
+             </>
             ) : (
               <Button
                 className="custom-class"
