@@ -129,8 +129,13 @@ const SelectionCard = ({ field, t, props }) => {
   // Determine options based on field type
   let options = [];
 
-  if (hasValidResourceData) {
-    options = productVariants;
+  if (isResourceCard) {
+    if (hasValidResourceData) {
+      options = productVariants;
+    }
+    else {
+      options = generateFallbackOptions(selectionField?.label || selectionField?.fieldName);
+    }
   } else if (hasValidMdmsData) {
     options = mdmsData;
   } else if (hasValidEnums) {
@@ -139,7 +144,7 @@ const SelectionCard = ({ field, t, props }) => {
     options = selectionField.dropDownOptions.filter((o) => o?.isActive !== false);
   } else {
     // No valid static data - generate fallback options from label
-    options = generateFallbackOptions(selectionField?.label || selectionField?.fieldName);
+    options = [];
   }
 
   return (

@@ -1676,7 +1676,8 @@ function NewDependentFieldWrapper({ t }) {
                                                                                                 className="appConfigLabelField-Input"
                                                                                                 value={isoValue}
                                                                                                 populators={{
-                                                                                                    newDateFormat: true
+                                                                                                    newDateFormat: true,
+                                                                                                    useFixedPosition: true
                                                                                                 }}
                                                                                         onChange={(
                                                                                             d

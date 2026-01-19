@@ -322,7 +322,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   )}`}
                 </p>
               )}
-              <CardText style={{fontSize:"19px"}}>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
+              <CardText style={{fontSize:"19px",color:"#505a5f"}}>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING_${selectedProjectType.toUpperCase()}`)}</CardText>
               <LabelFieldPair>
                 <CardLabel className="cycleBold" style={{ fontWeight: "700",width:"40%" }}>
                   {t(`CAMPAIGN_NO_OF_CYCLE`)}

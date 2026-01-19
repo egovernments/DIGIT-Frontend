@@ -128,12 +128,14 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           labelStyles: field?.format === "checkbox" ? { width: "fit-content" } : null,
           options: options,
           optionsKey: optionsKey,
+          showToolTip: true,
         }}
         withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
         type={fieldType}
         value={field?.value === true ? "" : field?.value || ""}
         disabled={field?.readOnly || false}
+        showToolTip={true}
       />
     </div>
   );
