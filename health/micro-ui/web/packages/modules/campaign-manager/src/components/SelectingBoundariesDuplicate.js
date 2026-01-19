@@ -45,12 +45,14 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
   }, [HierarchySchema]);
-  // const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
-  // const [boundaryOptions, setBoundaryOptions] = useState(
-  //   props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
-  // );
-  const [selectedData, setSelectedData] = useState([]);
-  const [boundaryOptions, setBoundaryOptions] = useState({});
+  // Initialize from session data to prevent losing data on re-render
+  const [selectedData, setSelectedData] = useState(
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []
+  );
+  const [boundaryOptions, setBoundaryOptions] = useState(
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {}
+  );
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [executionCount, setExecutionCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,49 +91,48 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  // Load data from session/API - only run once when API data is ready
   useEffect(() => {
+    // Wait for API to finish fetching if campaignNumber exists
+    if (campaignNumber && isFetching) return;
+
+    // Only load from campaignData if sessionData is not available
+    if (!sessionData && campaignData?.boundaries) {
+      setSelectedData(campaignData?.boundaries || []);
+      if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
+        setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
+      }
+    } else if (sessionData) {
+      // Session data takes priority - only set if different to avoid unnecessary re-renders
+      if (sessionData?.selectedData && JSON.stringify(sessionData.selectedData) !== JSON.stringify(selectedData)) {
+        setSelectedData(sessionData.selectedData);
+      }
+      if (sessionData?.boundaryData && JSON.stringify(sessionData.boundaryData) !== JSON.stringify(boundaryOptions)) {
+        setBoundaryOptions(sessionData.boundaryData);
+      }
+      if (sessionData?.isUnifiedCampaign !== undefined && sessionData.isUnifiedCampaign !== isUnifiedCampaign) {
+        setIsUnifiedCampaign(sessionData.isUnifiedCampaign);
+      }
+    }
+
+    // Mark data as loaded only after we've processed available data
+    if (!isDataLoaded) {
+      setIsDataLoaded(true);
+    }
+    setTimeout(() => setIsLoading(false), 10);
+  }, [isFetching, campaignNumber]);
+
+  // Only save to session after data is loaded to prevent overwriting with empty values
+  useEffect(() => {
+    if (!isDataLoaded) return;
+
     onSelect("boundaryType", {
       selectedData: selectedData,
       boundaryData: boundaryOptions,
       updateBoundary: !restrictSelection,
       isUnifiedCampaign,
     });
-  }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
-
-  useEffect(() => {
-    if (selectedData?.length > 0 || Object.keys(boundaryOptions || {}).length) {
-      onSelect("boundaryType", {
-        selectedData,
-        boundaryData: boundaryOptions,
-        updateBoundary: !restrictSelection,
-        isUnifiedCampaign,
-      });
-    }
-  }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign]);
-
-  useEffect(() => {
-    if (executionCount < 5) {
-      onSelect("boundaryType", {
-        selectedData: selectedData,
-        boundaryData: boundaryOptions,
-        updateBoundary: !restrictSelection,
-        isUnifiedCampaign,
-      });
-      setExecutionCount((prevCount) => prevCount + 1);
-    }
-  });
-  useEffect(() => {
-    if (sessionData || campaignData?.boundaries) {
-      setSelectedData(sessionData?.selectedData || campaignData?.boundaries);
-      setBoundaryOptions(sessionData?.boundaryData || {});
-      if (sessionData?.isUnifiedCampaign !== undefined) {
-        setIsUnifiedCampaign(sessionData?.isUnifiedCampaign);
-      } else if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
-        setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
-      }
-    }
-    setTimeout(() => setIsLoading(false), 10);
-  }, [sessionData, campaignData]);
+  }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign, isDataLoaded]);
 
   useEffect(() => {
     if (

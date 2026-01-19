@@ -340,6 +340,7 @@ export const updateUrlParams = (params) => {
         boundaryType: {
           boundaryData: groupByTypeRemap(draftData?.boundaries),
           selectedData: draftData?.boundaries,
+          isUnifiedCampaign: draftData?.additionalDetails?.isUnifiedCampaign || false,
         },
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
