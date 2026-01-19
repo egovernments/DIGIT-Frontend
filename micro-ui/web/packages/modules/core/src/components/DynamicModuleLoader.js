@@ -101,9 +101,9 @@ const DynamicModuleLoader = ({
 
   // Show loading state
   if (moduleState.loading) {
-    const loadingText = !moduleState.initialDelayComplete 
-      ? t("CORE_INITIALIZING_MODULE", `Initializing ${moduleCode} module...`)
-      : t("CORE_LOADING_MODULE", `Loading ${moduleCode} module...`);
+    const loadingText = !moduleState.initialDelayComplete
+      ? t("CORE_INITIALIZING_MODULE", { moduleCode, defaultValue: "Initializing {{moduleCode}} module..." })
+      : t("CORE_LOADING_MODULE", { moduleCode, defaultValue: "Loading {{moduleCode}} module..." });
 
     return (
       <div className="module-loading-container">
@@ -114,7 +114,7 @@ const DynamicModuleLoader = ({
         />
         {moduleState.retryCount > 0 && moduleState.initialDelayComplete && (
           <div className="retry-info" style={{ textAlign: 'center', marginTop: '1rem', color: '#666' }}>
-            {t("CORE_MODULE_RETRY_ATTEMPT", `Retry attempt ${moduleState.retryCount}/${maxRetries}`)}
+            {t("CORE_MODULE_RETRY_ATTEMPT", { retryCount: moduleState.retryCount, maxRetries, defaultValue: "Retry attempt {{retryCount}}/{{maxRetries}}" })}
           </div>
         )}
       </div>
