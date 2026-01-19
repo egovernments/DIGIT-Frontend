@@ -117,50 +117,55 @@ const remoteConfigSlice = createSlice({
     },
     // Field selection actions
     selectField(state, action) {
-      const { field, screen, card, cardIndex, fieldIndex } = action.payload;
+      const { field, screen, card, cardIndex } = action.payload;
 
-      // Check if this field is in footer
-      const isFooterField =  field?.fieldName && state.currentData?.footer?.some(
-        (f) => f.fieldName === field?.fieldName || f === field
+      // Check if this field is in footer by fieldName or label
+      const isFooterField = state.currentData?.footer?.some(
+        (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
+               (field?.label && f.label === field.label)
       );
 
       let finalCardIndex = cardIndex;
-      let finalFieldIndex = fieldIndex;
+      let finalFieldIndex = -1;
+      let actualField = field;
 
       if (isFooterField) {
-        // For footer fields, use special markers
-        finalCardIndex = -1; // Special marker for footer
+        // For footer fields, find by fieldName first, then label
+        finalCardIndex = -1;
         finalFieldIndex = state.currentData.footer.findIndex(
-          (f) => f.fieldName === field?.fieldName || f === field
+          (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
+                 (field?.label && f.label === field.label)
         );
+        if (finalFieldIndex >= 0) {
+          actualField = state.currentData.footer[finalFieldIndex];
+        }
       } else {
-        // For body fields, use existing logic
+        // For body fields, find card index
         if (finalCardIndex === undefined || finalCardIndex === null) {
           finalCardIndex = state.currentData?.body?.findIndex(
             (c) => c.id === card?.id || c === card
           ) ?? -1;
         }
 
-        if (finalFieldIndex === undefined || finalFieldIndex === null) {
-          // Try to find by id first, then by reference
-          const sourceCard = state.currentData?.body?.[finalCardIndex] || card;
-          finalFieldIndex = sourceCard?.fields?.findIndex(
-            (f) => f.id === field?.id || f === field
-          ) ?? -1;
-        }
-      }
-
-      // IMPORTANT: Get the actual field reference from currentData to ensure consistency
-      // This prevents stale references when field objects are spread/copied
-      let actualField = field;
-      if (!isFooterField && finalCardIndex >= 0 && finalFieldIndex >= 0) {
-        const sourceCard = state.currentData?.body?.[finalCardIndex];
-        if (sourceCard?.fields?.[finalFieldIndex]) {
-          actualField = sourceCard.fields[finalFieldIndex];
-        }
-      } else if (isFooterField && finalFieldIndex >= 0) {
-        if (state.currentData?.footer?.[finalFieldIndex]) {
-          actualField = state.currentData.footer[finalFieldIndex];
+        // Find field by fieldName first, then label (no index-based lookup)
+        const sourceCard = state.currentData?.body?.[finalCardIndex] || card;
+        if (sourceCard?.fields) {
+          // First try fieldName
+          if (field?.fieldName) {
+            finalFieldIndex = sourceCard.fields.findIndex(
+              (f) => f.fieldName === field.fieldName
+            );
+          }
+          // If not found, try label
+          if (finalFieldIndex < 0 && field?.label) {
+            finalFieldIndex = sourceCard.fields.findIndex(
+              (f) => f.label === field.label
+            );
+          }
+          // Get actual field from source
+          if (finalFieldIndex >= 0) {
+            actualField = sourceCard.fields[finalFieldIndex];
+          }
         }
       }
 

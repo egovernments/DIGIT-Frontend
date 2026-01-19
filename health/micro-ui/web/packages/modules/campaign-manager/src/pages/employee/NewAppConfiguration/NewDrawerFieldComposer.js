@@ -421,6 +421,24 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             };
           }
 
+          // Special handling for isMdms toggle
+          if (bindTo === "isMdms") {
+            if (newToggleValue === true) {
+              // When isMdms is toggled ON, clear dropDownOptions (using MDMS schema now)
+              updatedField = {
+                ...updatedField,
+                dropDownOptions: null,
+              };
+            } else {
+              // When isMdms is toggled OFF, clear schemaCode (using manual options now)
+              updatedField = {
+                ...updatedField,
+                isMdms: false,
+                schemaCode: null,
+              };
+            }
+          }
+
           onFieldChange(updatedField);
         };
         return (

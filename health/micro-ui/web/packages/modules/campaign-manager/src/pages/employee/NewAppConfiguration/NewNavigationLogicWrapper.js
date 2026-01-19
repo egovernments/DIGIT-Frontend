@@ -246,7 +246,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        if (fmt === "dropdown" || fmt === "radio" || tpe === "selection") return true;
+        if (fmt === "dropdown" || fmt === "radio" || fmt === "select" || tpe === "selection") return true;
         return ["string", "text", "textinput", "textarea"].includes(tpe);
     };
 
@@ -681,6 +681,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
         valueText = `${valueText}`.replace(/[()]/g, "");
         return `${customT(fieldLabel)} ${t(op)} ${field?.format === "dropdown" ||
                 field?.format === "radio" ||
+                field?.format === "select" ||
                 field?.type === "selection" ||
                 field?.type === "checkbox"
                 ? customT(valueText)
@@ -1012,6 +1013,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                     selectedFieldObj &&
                                                                                     (selectedFieldObj.format === "dropdown" ||
                                                                                         selectedFieldObj.format === "radio" ||
+                                                                                        selectedFieldObj.format === "select" ||
                                                                                         selectedFieldObj.type === "selection");
 
                                                                                 if (isSelect) {

@@ -342,7 +342,7 @@ function NewDependentFieldWrapper({ t }) {
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        if (fmt === "dropdown" || fmt === "radio" || tpe === "selection") return true;
+        if (fmt === "dropdown" || fmt === "radio" || fmt ==="select" || tpe === "selection") return true;
         return ["string", "text", "textinput", "textarea"].includes(tpe);
     };
 
@@ -373,6 +373,7 @@ function NewDependentFieldWrapper({ t }) {
         return (
             fmt === "dropdown" ||
             fmt === "radio" ||
+            fmt === "select" ||
             tpe === "selection" ||
             (Array.isArray(field?.enums) && field.enums.length > 0) ||
             !!field?.schemaCode
@@ -1061,12 +1062,12 @@ function NewDependentFieldWrapper({ t }) {
                                             const operatorOptions = getOperatorOptions(selectedLeftFieldMeta);
                                             const selectedOperator = selectedLeftFieldMeta ? getSelectedOperatorFromOptions(selectedLeftFieldMeta, cond.comparisonType) : getSelectedOperatorFromOptions(null, cond.comparisonType);
 
-                                            const isSelect = selectedLeftFieldMeta && (selectedLeftFieldMeta.format === "dropdown" || selectedLeftFieldMeta.format === "radio" || selectedLeftFieldMeta.type === "selection");
+                                            const isSelect = selectedLeftFieldMeta && (selectedLeftFieldMeta.format === "dropdown" || selectedLeftFieldMeta.format === "radio" || selectedLeftFieldMeta.format === "select" || selectedLeftFieldMeta.type === "selection");
                                             const isCheckbox = selectedLeftFieldMeta && isCheckboxField(selectedLeftFieldMeta);
                                             const isDob = selectedLeftFieldMeta && isDobLike(selectedLeftFieldMeta);
                                             const isDate = selectedLeftFieldMeta && (isDatePickerNotDob(selectedLeftFieldMeta));
                                             const isProductVariantOrMultiselectField = selectedLeftFieldMeta && isProductVariantOrMultiselect(selectedLeftFieldMeta);
-                                            const useMdms = selectedLeftFieldMeta && (["dropdown", "radio"].includes((selectedLeftFieldMeta.format || "").toLowerCase())) && !!selectedLeftFieldMeta.schemaCode; // Option A behavior
+                                            const useMdms = selectedLeftFieldMeta && (["dropdown", "radio", "select"].includes((selectedLeftFieldMeta.format || "").toLowerCase())) && !!selectedLeftFieldMeta.schemaCode; // Option A behavior
 
                                             return (
                                                 <React.Fragment
