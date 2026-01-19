@@ -1191,8 +1191,9 @@ tbody {
     }
     .selection-card-container {
       .selection-card {
-        width: 100%;
+        width: 100% !important;
         justify-content: center;
+        flex-direction: column;
       }
     }
   }
@@ -1523,11 +1524,32 @@ tbody {
 .digit-button-teritiary {
   &.large {
     border-radius: 0.5rem;
+
+    .icon-label-container h2.digit-button-label {
+      display: flex;
+      align-items: center;
+      line-height: 1.5rem;
+    }
   }
 
-  &.medium,
+  &.medium {
+    border-radius: 0.375rem;
+
+    .icon-label-container h2.digit-button-label {
+      display: flex;
+      align-items: center;
+      line-height: 1.25rem;
+    }
+  }
+
   &.small {
     border-radius: 0.375rem;
+
+    .icon-label-container h2.digit-button-label {
+      display: flex;
+      align-items: center;
+      line-height: 0.875rem;
+    }
   }
 }
 
@@ -1603,4 +1625,29 @@ tbody {
   .card-sub-header{
     color: #0b4b66;
   }
+}
+
+.digit-popup-children-wrap{
+  .selection-card-container{
+    .selection-card{
+      flex-direction: column;
+      width: 100% !important;
+    }
+  }
+}
+
+input{
+  outline: none !important;
+
+  &:focus-visible{
+      outline: none !important;
+  }
+}
+
+.datepicker-popper-high-zindex {
+  z-index: 999999 !important;
+}
+
+.react-datepicker-popper {
+  z-index: 999999 !important;
 }
