@@ -142,13 +142,29 @@ const remoteConfigSlice = createSlice({
         }
 
         if (finalFieldIndex === undefined || finalFieldIndex === null) {
-          finalFieldIndex = card?.fields?.findIndex(
+          // Try to find by id first, then by reference
+          const sourceCard = state.currentData?.body?.[finalCardIndex] || card;
+          finalFieldIndex = sourceCard?.fields?.findIndex(
             (f) => f.id === field?.id || f === field
           ) ?? -1;
         }
       }
 
-      state.selectedField = field;
+      // IMPORTANT: Get the actual field reference from currentData to ensure consistency
+      // This prevents stale references when field objects are spread/copied
+      let actualField = field;
+      if (!isFooterField && finalCardIndex >= 0 && finalFieldIndex >= 0) {
+        const sourceCard = state.currentData?.body?.[finalCardIndex];
+        if (sourceCard?.fields?.[finalFieldIndex]) {
+          actualField = sourceCard.fields[finalFieldIndex];
+        }
+      } else if (isFooterField && finalFieldIndex >= 0) {
+        if (state.currentData?.footer?.[finalFieldIndex]) {
+          actualField = state.currentData.footer[finalFieldIndex];
+        }
+      }
+
+      state.selectedField = actualField;
       state.selectedFieldPath = {
         cardIndex: finalCardIndex,
         fieldIndex: finalFieldIndex,
@@ -159,7 +175,7 @@ const remoteConfigSlice = createSlice({
       state.isFieldSelected = true;
 
       // Auto-show popup preview if field is actionPopup type
-      if (field?.format === "actionPopup") {
+      if (actualField?.format === "actionPopup") {
         state.showPopupPreview = true;
       }
     },

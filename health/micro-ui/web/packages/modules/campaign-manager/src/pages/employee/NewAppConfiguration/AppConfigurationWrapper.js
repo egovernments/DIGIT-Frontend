@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useRef } from "react";
+import React, { Fragment, useEffect, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
@@ -11,6 +11,15 @@ import IntermediateWrapper from "./IntermediateWrapper";
 import { useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
+import { getFieldTypeFromMasterData2 } from "./helpers";
+
+// Helper function to check if a value is empty (null, undefined, empty string, or empty array)
+const isValueEmpty = (value) => {
+  if (value === null || value === undefined) return true;
+  if (typeof value === "string" && value.trim() === "") return true;
+  if (Array.isArray(value) && value.length === 0) return true;
+  return false;
+};
 
 const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -36,6 +45,117 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   const { currentData, showAddFieldPopup, responseData, pageType } = useSelector((state) => state.remoteConfig);
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
+  const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
+
+  // Get panel configuration for validation
+  const panelConfig = panelProperties?.drawerPanelConfig || {};
+
+  // Validation function to check ALL fields for mandatory conditional field errors
+  const checkAllFieldsValidation = useCallback(() => {
+    const errors = [];
+    const fieldTypeMasterData = fieldTypeMaster?.fieldTypeMappingConfig || [];
+
+    // Get all fields from currentData
+    const allFields = [];
+    if (currentData?.body) {
+      currentData.body.forEach((card) => {
+        if (card?.fields) {
+          card.fields.forEach((field) => {
+            allFields.push(field);
+          });
+        }
+      });
+    }
+    if (currentData?.footer) {
+      currentData.footer.forEach((field) => {
+        allFields.push(field);
+      });
+    }
+
+    // Check each field against panel config
+    allFields.forEach((field) => {
+      // Get the field type for this field
+      const fieldType = getFieldTypeFromMasterData2(field, fieldTypeMasterData);
+
+      // Check all tabs in panel config
+      Object.keys(panelConfig).forEach((tabKey) => {
+        const tabProperties = panelConfig[tabKey] || [];
+
+        tabProperties.forEach((panelItem) => {
+          // Check if this panel item is visible for this field type
+          const isVisible =
+            !panelItem?.visibilityEnabledFor ||
+            panelItem.visibilityEnabledFor.length === 0 ||
+            panelItem.visibilityEnabledFor.includes(fieldType);
+
+          if (!isVisible) return;
+
+          // Check toggle fields with isMandatory: true and conditionalField
+          if (
+            panelItem.fieldType === "toggle" &&
+            panelItem.isMandatory === true &&
+            Array.isArray(panelItem.conditionalField) &&
+            panelItem.conditionalField.length > 0
+          ) {
+            const bindTo = panelItem.bindTo;
+            const isHiddenField = bindTo === "hidden" || bindTo.includes(".hidden");
+
+            // Get the current toggle value from the field
+            let currentToggleValue = field?.[bindTo];
+            // For hidden fields, the toggle value is inverted
+            if (isHiddenField) {
+              currentToggleValue = !currentToggleValue;
+            }
+            currentToggleValue = Boolean(currentToggleValue);
+
+            // Get conditional fields that match the current toggle state
+            const activeConditionalFields = panelItem.conditionalField.filter(
+              (cField) => cField.condition === currentToggleValue
+            );
+
+            // If there are active conditional fields, check if at least one has a value
+            if (activeConditionalFields.length > 0) {
+              const hasAtLeastOneValue = activeConditionalFields.some((cField) => {
+                if (!cField.bindTo) return false;
+                const value = field?.[cField.bindTo];
+                return !isValueEmpty(value);
+              });
+
+              if (!hasAtLeastOneValue) {
+                // Get field labels for error message
+                const fieldLabels = activeConditionalFields
+                  .map((cField) => cField.label || cField.bindTo)
+                  .filter(Boolean)
+                  .join(", ");
+
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: panelItem.label,
+                  message: "VALIDATION_MANDATORY_CONDITIONAL_FIELD_REQUIRED",
+                  messageParams: { fields: fieldLabels },
+                  tab: tabKey,
+                });
+              }
+            }
+          }
+        });
+      });
+    });
+
+    return errors;
+  }, [currentData, panelConfig, fieldTypeMaster]);
+
+  // Expose validation function via window object (always available)
+  useEffect(() => {
+    window.__appConfig_hasValidationErrors = () => {
+      const errors = checkAllFieldsValidation();
+      return errors.length > 0 ? errors : null;
+    };
+
+    return () => {
+      delete window.__appConfig_hasValidationErrors;
+    };
+  }, [checkAllFieldsValidation]);
 
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);

@@ -264,12 +264,15 @@ function NewAppFieldScreenWrapper() {
 
         return (
           <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, ...rest }, i, c) => {
+            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, fieldName, id, ...rest }, i, c) => {
               const isFooterField = i >= bodyFieldsCount;
               const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
               const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
+              // Use id if available (for newly added fields), otherwise fall back to fieldName
+              const fieldKey = id || fieldName || `field-${actualCardIndex}-${actualFieldIndex}`;
               return (
                 <NewDraggableField
+                  key={`draggable-field-${fieldKey}`}
                   type={type}
                   label={label}
                   active={active}
@@ -286,7 +289,6 @@ function NewAppFieldScreenWrapper() {
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
                   moveField={type !== "template" ? moveField : null}
-                  key={`field-${i}`}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}
                 // isFooterField={isFooterField}

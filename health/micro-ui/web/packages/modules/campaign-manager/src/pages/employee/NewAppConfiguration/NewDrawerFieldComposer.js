@@ -28,6 +28,14 @@ const convertDateStringToEpoch = (dateString) => {
   return new Date(dateString).getTime();
 };
 
+// Helper function to check if a value is empty (null, undefined, empty string, or empty array)
+const isValueEmpty = (value) => {
+  if (value === null || value === undefined) return true;
+  if (typeof value === "string" && value.trim() === "") return true;
+  if (Array.isArray(value) && value.length === 0) return true;
+  return false;
+};
+
 const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -35,20 +43,38 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const { pageType, currentData } = useSelector((state) => state.remoteConfig);
 
+  // Hoisted hooks from switch cases to avoid hooks-in-conditionals violation
+  const labelFieldPairState = useSelector((state) => state?.labelFieldPair);
+  const fieldTypeDropdownRef = useRef(null);
+  const labelPairListRef = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState("");
   // Local state for toggles to control UI without forcing Redux writes
   const [localToggle, setLocalToggle] = useState(false);
 
+  const debounceTimerRef = useRef(null);
+
+  // Ref to track latest selectedField for use in debounced callbacks (prevents stale closures)
+  const selectedFieldRef = useRef(selectedField);
+  useEffect(() => {
+    selectedFieldRef.current = selectedField;
+  }, [selectedField]);
+
+  // Memoized getFieldValue to avoid recreating on every render
+  const getFieldValue = useCallback(() => {
+    const bindTo = panelItem.bindTo;
+    return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
+  }, [selectedField, panelItem.bindTo, panelItem.defaultValue]);
+
   // Keep local toggle in sync when selectedField changes from outside
   useEffect(() => {
     setLocalToggle(Boolean(getFieldValue()));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedField, panelItem.bindTo]);
-  const debounceTimerRef = useRef(null);
+  }, [getFieldValue]);
 
   // Check if field should be visible based on field type
-  const isFieldVisible = () => {
+  const isFieldVisible = useCallback(() => {
     // If this is a child of a group, always show it (group handles its own visibility)
     if (isGroupChild) {
       return true;
@@ -59,20 +85,88 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     }
     // Check if current field type matches any of the enabled types
     return panelItem.visibilityEnabledFor.includes(fieldType);
-  };
-
-  if (!isFieldVisible()) {
-    return null;
-  }
-
-  const getFieldValue = () => {
-    const bindTo = panelItem.bindTo;
-    return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
-  };
+  }, [isGroupChild, panelItem?.visibilityEnabledFor, fieldType]);
 
   // Get localized field value for text fields
   const fieldValue = getFieldValue();
   const localizedFieldValue = useCustomT(fieldValue);
+
+  // Hoisted useCallback for table column visibility toggle
+  const columns = selectedField?.data?.columns || [];
+  const visibleColumnsCount = useMemo(() =>
+    columns.filter((col) => col.isActive !== false).length,
+    [columns]
+  );
+
+  const handleColumnVisibilityToggle = useCallback(
+    (columnIndex, toggleValue) => {
+      const currentColumns = selectedFieldRef.current?.data?.columns || [];
+      const currentVisibleCount = currentColumns.filter((col) => col.isActive !== false).length;
+
+      // Toggle ON means visible (hidden: false)
+      // Toggle OFF means hidden (hidden: true)
+      const hiddenValue = !Boolean(toggleValue);
+
+      // Prevent hiding if this is the last visible column
+      if (hiddenValue && currentVisibleCount === 1) {
+        if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
+          window.__appConfig_showToast({
+            key: "error",
+            label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
+          });
+        }
+        return;
+      }
+
+      // Create updated columns array
+      const updatedColumns = currentColumns.map((col, idx) => {
+        if (idx === columnIndex) {
+          return { ...col, hidden: hiddenValue, isActive: !hiddenValue };
+        }
+        return col;
+      });
+
+      // Update the selectedField with new columns
+      const updatedField = {
+        ...selectedFieldRef.current,
+        data: {
+          ...selectedFieldRef.current?.data,
+          columns: updatedColumns,
+        },
+      };
+
+      onFieldChange(updatedField);
+    },
+    [onFieldChange, t]
+  );
+
+  // Memoized options for fieldTypeDropdown to prevent recomputation every render
+  const fieldTypeDropdownOptions = useMemo(() => {
+    const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
+    const filteredOptions = fieldTypeOptions.filter((item) => {
+      // Always filter out dynamic types
+      if (item?.metadata?.type === "dynamic") return false;
+      // Filter out template types only for forms (pageType === "object")
+      if (pageType === "object" && item?.metadata?.type === "template") return false;
+      return true;
+    });
+
+    const basicOptions = filteredOptions.filter((item) => item?.category === "basic");
+    const advancedOptions = filteredOptions.filter((item) => item?.category === "advanced");
+
+    return [
+      {
+        name: t("FIELD_CATEGORY_BASIC"),
+        code: "basic",
+        options: basicOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
+      },
+      {
+        name: t("FIELD_CATEGORY_ADVANCED"),
+        code: "advanced",
+        options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
+      },
+    ].filter((group) => group.options.length > 0);
+  }, [fieldTypeMaster?.fieldTypeMappingConfig, pageType, t]);
 
   // Initialize local value when field changes
   useEffect(() => {
@@ -82,7 +176,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       const value = getFieldValue();
       setLocalValue(value !== undefined && value !== null && value !== "" ? value : "");
     }
-  }, [selectedField, panelItem.bindTo, panelItem.fieldType]);
+  }, [panelItem.fieldType, localizedFieldValue, getFieldValue]);
 
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -92,6 +186,19 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       }
     };
   }, []);
+
+  // Fetch labelPairConfig when field type is labelPairList
+  useEffect(() => {
+    if (panelItem.fieldType === "labelPairList") {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      dispatch(getLabelFieldPairConfig({ tenantId }));
+    }
+  }, [panelItem.fieldType, dispatch]);
+
+  // Early return AFTER all hooks to comply with React rules
+  if (!isFieldVisible()) {
+    return null;
+  }
 
   // Get conditional fields to show based on toggle value
   const getConditionalFields = () => {
@@ -134,13 +241,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     }
   };
 
-  useEffect(() => {
-    if (panelItem.fieldType === "labelPairList") {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      dispatch(getLabelFieldPairConfig({ tenantId }));
-    }
-  }, [panelItem.fieldType, dispatch]);
-
   // Debounced handler for text fields with localization
   const handleFieldChangeWithLoc = useCallback(
     (code, value) => {
@@ -153,6 +253,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       // Debounce the Redux dispatch
       debounceTimerRef.current = setTimeout(() => {
+        // Use ref to get latest selectedField (prevents stale closure)
+        const currentSelectedField = selectedFieldRef.current;
         let finalValueToSave;
 
         // Handle localization
@@ -187,7 +289,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         if (bindTo.includes(".")) {
           // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(selectedField));
+          const newField = JSON.parse(JSON.stringify(currentSelectedField));
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -198,11 +300,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           current[keys[keys.length - 1]] = finalValueToSave;
           onFieldChange(newField);
         } else {
-          onFieldChange({ ...selectedField, [bindTo]: finalValueToSave });
+          onFieldChange({ ...currentSelectedField, [bindTo]: finalValueToSave });
         }
       }, 800); // 800ms debounce
     },
-    [panelItem.bindTo, dispatch, currentLocale, selectedField, onFieldChange]
+    [panelItem.bindTo, dispatch, currentLocale, onFieldChange]
   );
 
   // Debounced handler for number fields
@@ -217,10 +319,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       // Debounce the Redux dispatch
       debounceTimerRef.current = setTimeout(() => {
+        // Use ref to get latest selectedField (prevents stale closure)
+        const currentSelectedField = selectedFieldRef.current;
         if (bindTo.includes(".")) {
           // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = JSON.parse(JSON.stringify(selectedField));
+          const newField = JSON.parse(JSON.stringify(currentSelectedField));
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -231,11 +335,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           current[keys[keys.length - 1]] = value;
           onFieldChange(newField);
         } else {
-          onFieldChange({ ...selectedField, [bindTo]: value });
+          onFieldChange({ ...currentSelectedField, [bindTo]: value });
         }
       }, 800); // 800ms debounce
     },
-    [panelItem.bindTo, selectedField, onFieldChange]
+    [panelItem.bindTo, onFieldChange]
   );
 
   // Force dispatch on blur
@@ -275,28 +379,33 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isDisabled = panelItem?.disableForRequired && isMandatory;
 
         const handleToggleChange = (value) => {
+          const newToggleValue = Boolean(value);
+
           // Update local UI
-          setLocalToggle(Boolean(value));
+          setLocalToggle(newToggleValue);
           const isHiddenField = bindTo === "hidden" || bindTo.includes(".hidden");
-          const valueToSet = isHiddenField ? !Boolean(value) : Boolean(value);
+          const valueToSet = isHiddenField ? !newToggleValue : newToggleValue;
+
+          // Only update the toggle's bindTo property, do not modify conditional field values
+          let updatedField = {
+            ...selectedField,
+            [bindTo]: valueToSet,
+          };
 
           // Special handling for systemDate toggle
-          if (bindTo === "systemDate" && Boolean(value) === true) {
+          if (bindTo === "systemDate" && newToggleValue === true) {
             // When systemDate is toggled ON, clear startDate and endDate
-            const updatedField = {
-              ...selectedField,
-              [bindTo]: valueToSet,
+            updatedField = {
+              ...updatedField,
               dateRange: {
                 ...selectedField.dateRange,
                 startDate: null,
                 endDate: null,
               },
             };
-            onFieldChange(updatedField);
-          } else {
-            // Always update Redux store with the toggle value
-            handleFieldChange(valueToSet);
           }
+
+          onFieldChange(updatedField);
         };
         return (
           <>
@@ -533,9 +642,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       }
 
       case "fieldTypeDropdown": {
-        const switchRef = useRef(null);
-        const [showTooltip, setShowTooltip] = useState(false);
-
+        // Using hoisted refs and state from top of component
         // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
         // Find current selected field type based on type and format
@@ -572,7 +679,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         return (
           <div
-            ref={switchRef}
+            ref={fieldTypeDropdownRef}
             className="drawer-container-tooltip"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
@@ -597,31 +704,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               populators={{
                 title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
                 fieldPairClassName: "drawer-toggle-conditional-field",
-                options: (() => {
-                  const filteredOptions = fieldTypeOptions.filter((item) => {
-                    // Always filter out dynamic types
-                    if (item?.metadata?.type === "dynamic") return false;
-                    // Filter out template types only for forms (pageType === "object")
-                    if (pageType === "object" && item?.metadata?.type === "template") return false;
-                    return true;
-                  });
-
-                  const basicOptions = filteredOptions.filter((item) => item?.category === "basic");
-                  const advancedOptions = filteredOptions.filter((item) => item?.category === "advanced");
-
-                  return [
-                    {
-                      name: t("FIELD_CATEGORY_BASIC"),
-                      code: "basic",
-                      options: basicOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
-                    },
-                    {
-                      name: t("FIELD_CATEGORY_ADVANCED"),
-                      code: "advanced",
-                      options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
-                    },
-                  ].filter((group) => group.options.length > 0);
-                })(),
+                options: fieldTypeDropdownOptions,
                 optionsKey: "name",
                 variant: "nesteddropdown",
                 isSearchable: true,
@@ -636,10 +719,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         );
       }
       case "labelPairList": {
-        const switchRef = useRef(null);
-
-        // Fetch labelPairConfig state from Redux with all metadata
-        const labelFieldPairState = useSelector((state) => state?.labelFieldPair);
+        // Using hoisted refs and state from top of component
         const {
           config: allLabelPairConfig = [],
           status,
@@ -719,7 +799,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         return (
           <>
-            <div ref={switchRef} className="drawer-container-tooltip">
+            <div ref={labelPairListRef} className="drawer-container-tooltip">
               <div style={{ display: "flex" }}>
                 <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
                 <span className="mandatory-span">*</span>
@@ -894,52 +974,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         );
       }
       case "table": {
-        // Get columns from selectedField.data.columns
-        const columns = selectedField?.data?.columns || [];
-
-        // Count visible columns
-        const visibleColumnsCount = columns.filter((col) => col.isActive !== false).length;
-
-        const handleColumnVisibilityToggle = useCallback(
-          (columnIndex, toggleValue) => {
-            // Toggle ON means visible (hidden: false)
-            // Toggle OFF means hidden (hidden: true)
-            const hiddenValue = !Boolean(toggleValue);
-
-            // Prevent hiding if this is the last visible column
-            if (hiddenValue && visibleColumnsCount === 1) {
-              // Show toast/alert to user
-              if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
-                window.__appConfig_showToast({
-                  key: "error",
-                  label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
-                });
-              }
-              return; // Don't allow hiding
-            }
-
-            // Create updated columns array
-            const updatedColumns = columns.map((col, idx) => {
-              if (idx === columnIndex) {
-                return { ...col, hidden: hiddenValue, isActive: !hiddenValue };
-              }
-              return col;
-            });
-
-            // Update the selectedField with new columns
-            const updatedField = {
-              ...selectedField,
-              data: {
-                ...selectedField.data,
-                columns: updatedColumns,
-              },
-            };
-
-            onFieldChange(updatedField);
-          },
-          [columns, selectedField, onFieldChange, visibleColumnsCount, t]
-        );
-
+        // Using hoisted columns, visibleColumnsCount, and handleColumnVisibilityToggle from top of component
         return (
           <>
             <div className="drawer-container-tooltip">
@@ -1053,7 +1088,7 @@ const LocalizationInput = React.memo(
                 onToggle={handleToggle}
                 disable={isLastVisible}
                 isCheckedInitially={toggleState}
-                key={`toggle-${columnIndex}-${toggleState}`} // Force re-render when state changes
+                key={`toggle-${columnIndex}`}
                 shapeOnOff
                 isLabelFirst={true}
                 className={"digit-sidepanel-switch-wrap"}
@@ -1171,11 +1206,22 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   // Get the raw value (localization code) from selectedField
   const fieldValue = selectedField[cField.bindTo] || "";
 
-  // Get the translated value using useCustomT (skip if prefixText/suffixText)
-  const translatedValue = shouldSkipLocalization ? fieldValue : useCustomT(fieldValue);
+  // Always call useCustomT unconditionally to avoid hooks violation
+  // Then conditionally use its result
+  const localizedValue = useCustomT(fieldValue);
+  const translatedValue = shouldSkipLocalization ? fieldValue : localizedValue;
 
   const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
   const conditionalDebounceRef = useRef(null);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (conditionalDebounceRef.current) {
+        clearTimeout(conditionalDebounceRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     setConditionalLocalValue(translatedValue === true ? "" : translatedValue || "");
@@ -1434,37 +1480,26 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
     });
   }, [currentTabProperties, fieldType]);
 
-  // Filter properties based on field type visibility - only show popup-specific properties
-  const visiblePopupProperties = useMemo(() => {
-    return currentTabProperties.filter((panelItem) => {
-      // Only include properties explicitly marked as popup properties
-      if (panelItem?.isPopupProperty !== true) {
-        return false;
-      }
-      // Check if current field type matches any of the enabled types
-      return !panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0 || panelItem.visibilityEnabledFor.includes("actionPopup");
-    });
-  }, [currentTabProperties, fieldType]);
-
-  // Function to collect all validation errors from group fields
+  // Function to collect validation errors for the selected field (group validations only)
+  // Note: Mandatory conditional field validation is now handled in AppConfigurationWrapper for ALL fields
   const checkValidationErrors = useCallback(() => {
     const errors = [];
 
-    // Check all tabs for group fields with validation
+    // Check all tabs for group fields with validation expressions (for selected field only)
     Object.keys(panelConfig).forEach((tabKey) => {
       const tabProperties = panelConfig[tabKey] || [];
 
       tabProperties.forEach((panelItem) => {
-        // Only check group fields with validation expressions
+        // Check if this field is visible for current field type
+        const isVisible =
+          !panelItem?.visibilityEnabledFor ||
+          panelItem.visibilityEnabledFor.length === 0 ||
+          panelItem.visibilityEnabledFor.includes(fieldType);
+
+        if (!isVisible) return;
+
+        // Check group fields with validation expressions
         if (panelItem.fieldType === "group" && panelItem.validationExpression) {
-          // Check if this field is visible for current field type
-          const isVisible =
-            !panelItem?.visibilityEnabledFor ||
-            panelItem.visibilityEnabledFor.length === 0 ||
-            panelItem.visibilityEnabledFor.includes(fieldType);
-
-          if (!isVisible) return;
-
           try {
             const expression = panelItem.validationExpression;
             const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
@@ -1512,17 +1547,8 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
     }
   }, [selectedField, checkValidationErrors]);
 
-  // Expose validation check function via window object
-  useEffect(() => {
-    window.__appConfig_hasValidationErrors = () => {
-      const errors = checkValidationErrors();
-      return errors.length > 0 ? errors : null;
-    };
-
-    return () => {
-      delete window.__appConfig_hasValidationErrors;
-    };
-  }, [checkValidationErrors]);
+  // Note: window.__appConfig_hasValidationErrors is now set in AppConfigurationWrapper
+  // to validate ALL fields, not just the selected field
 
   // Handle field changes
   const handleFieldChange = (updatedField) => {
@@ -1534,7 +1560,13 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
     const errors = checkValidationErrors();
     if (errors.length > 0) {
       // Show toast error and prevent tab switch
-      const errorMessage = errors.map((err) => t(err.message)).join(", ");
+      const errorMessage = errors.map((err) => {
+        // Handle error messages with parameters
+        if (err.messageParams) {
+          return t(err.message, err.messageParams);
+        }
+        return t(err.message);
+      }).join(", ");
       // Show toast via window callback if available
       if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
         window.__appConfig_showToast({
