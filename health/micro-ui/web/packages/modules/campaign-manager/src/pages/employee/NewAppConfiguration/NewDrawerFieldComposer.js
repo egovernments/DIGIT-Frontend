@@ -386,11 +386,27 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           const isHiddenField = bindTo === "hidden" || bindTo.includes(".hidden");
           const valueToSet = isHiddenField ? !newToggleValue : newToggleValue;
 
-          // Only update the toggle's bindTo property, do not modify conditional field values
-          let updatedField = {
-            ...selectedField,
-            [bindTo]: valueToSet,
-          };
+          let updatedField;
+
+          // Handle nested properties with deep copy (e.g., "visibilityCondition.expression")
+          if (bindTo.includes(".")) {
+            const keys = bindTo.split(".");
+            updatedField = JSON.parse(JSON.stringify(selectedField));
+            let current = updatedField;
+            for (let i = 0; i < keys.length - 1; i++) {
+              if (!current[keys[i]]) {
+                current[keys[i]] = {};
+              }
+              current = current[keys[i]];
+            }
+            current[keys[keys.length - 1]] = valueToSet;
+          } else {
+            // Only update the toggle's bindTo property, do not modify conditional field values
+            updatedField = {
+              ...selectedField,
+              [bindTo]: valueToSet,
+            };
+          }
 
           // Special handling for systemDate toggle
           if (bindTo === "systemDate" && newToggleValue === true) {
