@@ -29,11 +29,11 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   const dispatch = useDispatch();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const searchParams = new URLSearchParams(location.search);
-  const flowModule = searchParams.get("flow");
+  const currentModule = searchParams.get("flow");
 
   // Generate unique localeModule based on flow, pageName, and campaignNumber
   // Format: hcm-{flow}-{pageName}-{campaignNumber}
-  const localeModule = `hcm-${flowModule?.toLowerCase()?.replace(/_/g, "")}-${campaignNumber}`;
+  const localeModule = `hcm-${currentModule?.toLowerCase()?.replace(/_/g, "")}-${campaignNumber}`;
   const [newFieldType, setNewFieldType] = useState(null);
   const [isLoadingPageConfig, setIsLoadingPageConfig] = useState(true);
   const [pageConfigError, setPageConfigError] = useState(null);
@@ -286,7 +286,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 flow: flow,
                 project: campaignNumber,
                 page: cleanedPageName,
-                module: flowModule,
+                module: currentModule,
               },
               limit: 1000,
               isActive: true,
