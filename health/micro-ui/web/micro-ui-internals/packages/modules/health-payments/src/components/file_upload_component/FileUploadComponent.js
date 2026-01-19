@@ -296,66 +296,66 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false, m
   //   });
   // };
 
-  async function downloadFile(
-    fileStoreId,
-    tenantId,
-    fileName,
-    mimeType,
-    setError,
-    t,
-  ) {
-    if (!fileStoreId) return;
+  // async function downloadFile(
+  //   fileStoreId,
+  //   tenantId,
+  //   fileName,
+  //   mimeType,
+  //   setError,
+  //   t,
+  // ) {
+  //   if (!fileStoreId) return;
 
-    try {
-      console.log("fileStoreId45", fileStoreId)
-      const { data } = await Digit.UploadServices.Filefetch(
-        [fileStoreId],
-        tenantId
-      );
+  //   try {
+  //     console.log("fileStoreId45", fileStoreId)
+  //     const { data } = await Digit.UploadServices.Filefetch(
+  //       [fileStoreId],
+  //       tenantId
+  //     );
 
-      const fileData = data?.fileStoreIds?.[0];
+  //     const fileData = data?.fileStoreIds?.[0];
 
-      if (fileData?.url) {
-        // Get original file name and extension
-        // const originalName = uploadedFile1?.name || "downloaded_file";
-        // const fileExtension = originalName.split('.').pop();
-        // const fileNameWithoutExtension = originalName.replace(`.${fileExtension}`, '');
+  //     if (fileData?.url) {
+  //       // Get original file name and extension
+  //       // const originalName = uploadedFile1?.name || "downloaded_file";
+  //       // const fileExtension = originalName.split('.').pop();
+  //       // const fileNameWithoutExtension = originalName.replace(`.${fileExtension}`, '');
 
-        // Use generic download function
-        downloadFileWithCustomName({
-          fileStoreId: fileData?.id,
-          fileUrl: fileData.url,
-          customName: fileName || "download",
-          mimeType: mimeType || fileData.mimeType,
-        });
-      }
-    } catch (err) {
-      console.error("Download error:", err);
-      setError(t("CS_FILE_DOWNLOAD_ERROR"));
-    }
-  }
+  //       // Use generic download function
+  //       downloadFileWithCustomName({
+  //         fileStoreId: fileData?.id,
+  //         fileUrl: fileData.url,
+  //         customName: fileName || "download",
+  //         mimeType: mimeType || fileData.mimeType,
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.error("Download error:", err);
+  //     setError(t("CS_FILE_DOWNLOAD_ERROR"));
+  //   }
+  // }
 
-  const handleDownload = async (file) => {
-    try {
-      const { data } = await Digit.UploadServices.Filefetch(
-        [file.fileStoreId],
-        tenantId
-      );
+  // const handleDownload = async (file) => {
+  //   try {
+  //     const { data } = await Digit.UploadServices.Filefetch(
+  //       [file.fileStoreId],
+  //       tenantId
+  //     );
 
-      const fileData = data?.fileStoreIds?.[0];
+  //     const fileData = data?.fileStoreIds?.[0];
 
-      if (fileData?.url) {
-        downloadFileWithCustomName({
-          fileStoreId: fileData.id,
-          fileUrl: fileData.url,
-          customName: file.name.replace(/\.[^/.]+$/, ""),
-          mimeType: file.mimeType,
-        });
-      }
-    } catch {
-      setError(t("CS_FILE_DOWNLOAD_ERROR"));
-    }
-  };
+  //     if (fileData?.url) {
+  //       downloadFileWithCustomName({
+  //         fileStoreId: fileData.id,
+  //         fileUrl: fileData.url,
+  //         customName: file.name.replace(/\.[^/.]+$/, ""),
+  //         mimeType: file.mimeType,
+  //       });
+  //     }
+  //   } catch {
+  //     setError(t("CS_FILE_DOWNLOAD_ERROR"));
+  //   }
+  // };
 
 
   // const handleDownload = (file) => {

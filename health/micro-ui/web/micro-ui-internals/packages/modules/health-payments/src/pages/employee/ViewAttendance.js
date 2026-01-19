@@ -7,10 +7,10 @@ import AttendanceManagementTable from "../../components/attendanceManagementTabl
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
-import { formatTimestampToDate } from "../../utils";
+import { formatTimestampToDate, downloadFileWithName } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import UploadedFileComponent from "../../components/file_upload_component/FileUploadComponent";
-import { downloadFileWithCustomName } from "../../components/file_upload_component/downloadFileWithCustomName";
+// import { downloadFileWithCustomName } from "../../components/file_upload_component/downloadFileWithCustomName";
 /**
  * @function ViewAttendance
  * @description This component is used to view attendance.
@@ -500,52 +500,39 @@ const ViewAttendance = ({ editAttendance = false }) => {
   if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
     return <LoaderScreen />
   }
-
   async function downloadFile() {
     const musterRoll = data?.[0];
     const docs = musterRoll?.additionalDetails?.attendanceApprovalDocuments;
+  
     console.log("Downloading files:", docs);
   
     if (!Array.isArray(docs) || docs.length === 0) return;
   
     try {
-      // 1️⃣ Collect all fileStoreIds
-      const fileStoreIds = docs
-        .map(doc => doc.fileStoreId)
-        .filter(Boolean);
+      for (const doc of docs) {
+        if (!doc?.fileStoreId) continue;
   
-      if (!fileStoreIds.length) return;
-      console.log("Fetching file URLs for fileStoreIds:", fileStoreIds);
+        // derive type from filename if present
+        const extension = doc?.fileName?.split(".").pop()?.toLowerCase();
+        const type =
+  extension === "pdf"
+    ? "pdf"
+    : ["png", "jpg", "jpeg"].includes(extension)
+    ? extension
+    : "excel"; // fallback
   
-      // 2️⃣ Fetch URLs from filestore
-      const { data: fileResponse } =
-        await Digit.UploadServices.Filefetch(fileStoreIds, tenantId);
-
-      console.log("File fetch response:", fileResponse);
-  
-      const filesMap = {};
-      fileResponse?.fileStoreIds?.forEach(f => {
-        filesMap[f.id] = f;
-      });
-
-      console.log("Fetched file URLs:", filesMap);
-  
-      // 3️⃣ Download each file
-      docs.forEach(doc => {
-        const fileData = filesMap[doc.fileStoreId];
-        if (!fileData?.url) return;
-  
-        downloadFileWithCustomName({
-          fileUrl: fileData.url,
-          customName: doc.fileName?.replace(/\.[^/.]+$/, "") || "attendance-proof",
-          mimeType: fileData.mimeType,
+        downloadFileWithName({
+          fileStoreId: doc.fileStoreId,
+          customName:
+            doc.fileName?.replace(/\.[^/.]+$/, "") || "attendance-proof",
+          type, // optional, safe fallback
         });
-      });
-      await new Promise(res => setTimeout(res, 800));
   
+        // small delay to avoid browser choking on multiple downloads
+        await new Promise((res) => setTimeout(res, 300));
+      }
     } catch (err) {
       console.error("Download failed", err);
-      // setError?.(t("CS_FILE_DOWNLOAD_ERROR"));
     }
   }
   
