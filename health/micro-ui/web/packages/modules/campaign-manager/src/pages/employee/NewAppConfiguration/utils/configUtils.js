@@ -63,7 +63,13 @@ export const checkValidationErrorsAndShowToast = (setShowToast, t) => {
 
     if (errors && errors.length > 0) {
       // Create error message from all validation errors
-      const errorMessage = errors.map((err) => t(err.message)).join(", ");
+      // Handle error messages with parameters (e.g., for mandatory conditional fields)
+      const errorMessage = errors.map((err) => {
+        if (err.messageParams) {
+          return t(err.message, err.messageParams);
+        }
+        return t(err.message);
+      }).join(", ");
 
       // Show toast error
       setShowToast({
