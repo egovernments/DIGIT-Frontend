@@ -447,6 +447,7 @@ const PTAcknowledgmentEmployee = () => {
   const getSuccessMessage = () => {
     if (purpose === "create") return t("PT_PROPERTY_REGISTRATION_SUCCESS");
     if (purpose === "reassess") return t("PT_PROPERTY_REASSESS_SUCCESS");
+    if (purpose === "assess") return t("PT_PROPERTY_ASSESS_SUCCESS");
     if (purpose === "apply") return t("PT_MUTATION_ACKNOWLEDGEMENT_SUCCESS_HEADER") || "Mutation Application Submitted Successfully";
     return t("PT_PROPERTY_UPDATE_SUCCESS");
   };

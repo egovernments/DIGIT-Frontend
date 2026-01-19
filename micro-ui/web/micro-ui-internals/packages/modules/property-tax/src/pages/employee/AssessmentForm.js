@@ -120,11 +120,19 @@ const AssessmentForm = () => {
       // Create assessment payload for estimate calculation
       const assessmentPayload = {
         Assessment: {
+          ...propertyData,
           financialYear: financialYear,
           propertyId: propertyId,
           tenantId: tenantId,
           source: "MUNICIPAL_RECORDS",
-          channel: "COUNTER"
+          channel: "COUNTER",
+          assessmentDate: Date.now(),
+          propertyType: editableProperty.propertyType,
+          usageCategory: editableProperty.usageCategory,
+          landArea: editableProperty.landArea ? parseFloat(editableProperty.landArea) : null,
+          noOfFloors: editableProperty.noOfFloors ? parseInt(editableProperty.noOfFloors) : null,
+          units: editableProperty.units,
+          address: propertyData?.address
         }
       };
 

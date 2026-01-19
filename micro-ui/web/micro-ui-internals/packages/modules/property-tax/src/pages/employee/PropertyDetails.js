@@ -21,6 +21,62 @@ import { useTranslation } from "react-i18next";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import { PDFDownload } from "../../utils/PDFDownload";
 
+const breakYear = (financialYear) => {
+  if (!financialYear || typeof financialYear !== "string" || !financialYear.includes("-")) {
+    return null;
+  }
+  return parseInt(financialYear.split("-")[1]);
+};
+
+const getCurrentFinancialYear = () => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+  const lastTwoDigitFY = currentYear.toString().slice(-2);
+  let financialYear;
+  if (currentMonth >= 4) {
+    financialYear = `${currentYear}-${parseInt(lastTwoDigitFY) + 1}`;
+  } else {
+    financialYear = `${currentYear - 1}-${lastTwoDigitFY}`;
+  }
+  return financialYear;
+};
+
+const checkAssessmentStatus = (constructionYear, assessmentArray, selectedYear) => {
+  let missingYears = [];
+  let checkedYears;
+
+  const mFinancialYear = getCurrentFinancialYear();
+  const currentFinancialYear = breakYear(mFinancialYear);
+  const lastFifthFinancialYear = currentFinancialYear - 4;
+
+  const newConstructionYear = !constructionYear || constructionYear === 'NA' ? lastFifthFinancialYear : breakYear(constructionYear);
+
+  let newAssessmentYear = assessmentArray.map((items) => {
+    return breakYear(items.financialYear);
+  });
+  newAssessmentYear = [...new Set(newAssessmentYear)];
+
+  // Check if construction year is earlier than the last fifth financial year
+  if (newConstructionYear < lastFifthFinancialYear) {
+    checkedYears = lastFifthFinancialYear;
+  } else {
+    checkedYears = newConstructionYear;
+  }
+
+  if (lastFifthFinancialYear > breakYear(selectedYear)) {
+    missingYears.push(breakYear(selectedYear));
+  } else {
+    for (let year = checkedYears; year <= currentFinancialYear; year++) {
+      if (!newAssessmentYear.includes(year)) {
+        missingYears.push(year);
+      }
+    }
+  }
+
+  return missingYears.sort((a, b) => a - b);
+};
+
 const PropertyDetails = () => {
   const { t } = useTranslation();
   const fullPageRef = useRef();
@@ -335,6 +391,23 @@ const PropertyDetails = () => {
         type: "error"
       });
       return;
+    }
+
+    // Validation for sequential assessment
+    const constructionYear = propertyData?.propertyDetails?.yearConstruction;
+    const assessments = assessmentResponse || [];
+    const assessed = checkAssessmentStatus(constructionYear, assessments, selectedFinancialYear);
+
+    if (assessed.length > 0) {
+      if (breakYear(selectedFinancialYear) === assessed[0]) {
+        // proceed
+      } else {
+        setToast({
+          label: `First Complete Your Assessment for Financial Year - 20${assessed[0] - 1}-${assessed[0]}`,
+          type: "error"
+        });
+        return;
+      }
     }
 
     // Clear session storage to ensure fresh data load for assessment
@@ -2193,6 +2266,7 @@ const PropertyDetails = () => {
           label={toast.label}
           type={toast.type}
           onClose={() => setToast(null)}
+          style={{ zIndex: "10000" }}
         />
       )}
     </div>

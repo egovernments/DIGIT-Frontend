@@ -207,8 +207,8 @@ export const MyApplications = () => {
           ))
         ) : (
           // Empty state
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"24px",flexDirection:"column",padding:"2rem"}}>
-            <p style={{margin:"0px",fontSize:"16px",color:"#505A5F"}}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "24px", flexDirection: "column", padding: "2rem" }}>
+            <p style={{ margin: "0px", fontSize: "16px", color: "#505A5F" }}>
               {t("PT_NO_APPLICATIONS_MESSAGE") || "You don't have any property applications yet."}
             </p>
             <Button
