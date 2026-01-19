@@ -66,6 +66,18 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
         mimeType: "application/pdf",
         extension: "pdf",
       },
+      png: {
+        mimeType: "image/png",
+        extension: "png",
+      },
+      jpg: {
+        mimeType: "image/jpeg",
+        extension: "jpg",
+      },
+      jpeg: {
+        mimeType: "image/jpeg",
+        extension: "jpeg",
+      },
     };
 
     const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"]; // Default to Excel if type is invalid

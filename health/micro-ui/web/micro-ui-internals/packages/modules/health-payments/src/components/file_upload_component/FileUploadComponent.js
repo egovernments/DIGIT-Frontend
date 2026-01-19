@@ -22,7 +22,7 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false, m
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const user = Digit.UserService.getUser();
   const timestamp = new Date().getTime();
-  const MAX_FILES = 5; // Maximum number of files allowed
+  const MAX_FILES = 10; // Maximum number of files allowed
   // Fetch max file size from MDMS v2
   const { isLoading: isMaxFileSizeLoading, data: maxFileSizeData } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -104,6 +104,9 @@ const UploadedFileComponent = ({ config, onSelect, value, isMandatory = false, m
   //     setSelectedFiles([]);
   //   })();
   // }
+  useEffect(() => {
+    console.log("UploadFile mounted");
+  }, []);
   const handleConfirmUpload = async () => {
     if (!selectedFiles.length) return;
     setIsUploading(true);

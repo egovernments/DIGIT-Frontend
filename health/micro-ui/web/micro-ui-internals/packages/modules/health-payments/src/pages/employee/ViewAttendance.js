@@ -501,6 +501,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     return <LoaderScreen />
   }
   async function downloadFile() {
+    console.log("InsideDownloading files:121223")
     const musterRoll = data?.[0];
     const docs = musterRoll?.additionalDetails?.attendanceApprovalDocuments;
   
