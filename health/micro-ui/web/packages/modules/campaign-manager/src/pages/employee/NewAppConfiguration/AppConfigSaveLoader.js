@@ -55,7 +55,7 @@ const AppConfigSaveLoader = () => {
 
         const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
         
-        const transformedData = transformMdmsToAppConfig(fullData, appConfigResponse.mdms?.[0].data?.version);
+        const transformedData = transformMdmsToAppConfig(fullData, appConfigResponse.mdms?.[0].data?.version, appConfigResponse.mdms?.[0]?.data?.flows);
         // Step 3: Update the existing config's mdms property with transformedData
         if (appConfigResponse?.mdms && appConfigResponse.mdms.length > 0) {
           const existingConfig = appConfigResponse.mdms?.[0].data;

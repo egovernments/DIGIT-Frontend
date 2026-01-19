@@ -35,9 +35,10 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
   }));
 
   // Check if resources contain unified-console-resources type
-  const hasUnifiedResource = transformedResources?.some(
-    (r) => r?.type === "unified-console" || r?.type === "unified-console-resources"
-  );
+  const hasUnifiedResource = totalFormData?.additionalDetails?.isUnifiedCampaign || false;
+  // transformedResources?.some(
+  //   (r) => r?.type === "unified-console" || r?.type === "unified-console-resources"
+  // );
 
   return {
     CampaignDetails: {

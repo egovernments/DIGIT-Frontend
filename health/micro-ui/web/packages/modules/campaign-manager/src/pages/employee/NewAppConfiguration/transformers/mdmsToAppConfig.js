@@ -5,7 +5,7 @@
  */
 
 //Final TransformaTION
-export const transformMdmsToAppConfig = (fullData, version) => {
+export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
   if (!fullData || !Array.isArray(fullData) || fullData.length === 0) {
     throw new Error("Invalid fullData: Expected non-empty array");
   }
@@ -34,7 +34,8 @@ export const transformMdmsToAppConfig = (fullData, version) => {
           screenType: "FORM",
           pages: [],
           onAction: item.onAction,
-          wrapperConfig: item.wrapperConfig,
+          initActions: existingFlows?.find(f => f.name === flowName)?.initActions || [],
+          wrapperConfig: existingFlows?.find(f => f.name === flowName)?.wrapperConfig || {},
           summary: item.summary || false,
         };
       }
@@ -313,7 +314,6 @@ const transformFormPage = (pageData) => {
   if (pageData.conditionalNavigationProperties) {
     page.conditionalNavigationProperties = pageData.conditionalNavigationProperties;
   }
-
   return page;
 };
 
@@ -372,6 +372,22 @@ const transformFormProperties = (body) => {
  */
 const buildValidations = (field) => {
   const validations = [];
+
+  // Configurable validation types that are built from field properties
+  const configurableValidationTypes = [
+    "required",
+    "minLength",
+    "maxLength",
+    "min",
+    "max",
+    "isGS1",
+    "scanLimit",
+    "minSearchChars",
+    "minAge",
+    "maxAge",
+    "startDate",
+    "endDate",
+  ];
 
   // Handle required validation
   if (field.required) {
@@ -463,6 +479,16 @@ const buildValidations = (field) => {
       });
     }
   });
+
+  // Retain non-configurable validations from field.validations (e.g., notEqualTo, pattern, custom validations)
+  if (Array.isArray(field.validations)) {
+    field.validations.forEach((validation) => {
+      if (validation?.type && !configurableValidationTypes.includes(validation.type)) {
+        // This validation type is not configurable, retain it as-is
+        validations.push(validation);
+      }
+    });
+  }
 
   return validations;
 };
