@@ -164,6 +164,13 @@ function NewDependentFieldWrapper({ t }) {
     );
 
     // ---------- helpers to read existing expression ----------
+    // Get custom expressions that should be preserved but not shown in UI
+    const getCustomExpressions = () => {
+        const expr = selectedField?.visibilityCondition?.expression;
+        if (!Array.isArray(expr)) return [];
+        return expr.filter((e) => e.type === "custom");
+    };
+
     const getExpressionArray = () => {
         const expr = selectedField?.visibilityCondition?.expression;
         // If string (old) -> wrap into single object
@@ -172,7 +179,10 @@ function NewDependentFieldWrapper({ t }) {
         }
         // If array of objects with condition key
         if (Array.isArray(expr)) {
-            return expr.map((e) => ({ condition: String(e.condition || "").trim() }));
+            // Filter out custom type expressions - these are not configurable through the UI
+            return expr
+                .filter((e) => e.type !== "custom")
+                .map((e) => ({ condition: String(e.condition || "").trim() }));
         }
         return [];
     };
@@ -772,13 +782,15 @@ function NewDependentFieldWrapper({ t }) {
     const deleteRuleFromList = (idx) =>
         setRules((prev) => {
             const next = prev.filter((_, i) => i !== idx);
-            // sync to redux
-            const payload = next
+            // sync to redux - preserve custom expressions
+            const customExprs = getCustomExpressions();
+            const configuredPayload = next
                 .map((r) => {
                     const condStr = buildConditionStringFromConds(r.conds || []);
                     return condStr ? { condition: condStr } : null;
                 })
                 .filter(Boolean);
+            const payload = [...customExprs, ...configuredPayload];
             dispatch(
                 updateSelectedField({
                     visibilityCondition: {
@@ -875,15 +887,19 @@ function NewDependentFieldWrapper({ t }) {
             return;
         }
 
+        // Preserve custom expressions when saving
+        const customExprs = getCustomExpressions();
+
         if (editorIndex === "new") {
             const next = [...rules, { conds: draftRule.conds }];
             setRules(next);
-            const payload = next
+            const configuredPayload = next
                 .map((r) => {
                     const cStr = buildConditionStringFromConds(r.conds || []);
                     return cStr ? { condition: cStr } : null;
                 })
                 .filter(Boolean);
+            const payload = [...customExprs, ...configuredPayload];
             dispatch(
                 updateSelectedField({
                     visibilityCondition: {
@@ -895,12 +911,13 @@ function NewDependentFieldWrapper({ t }) {
         } else if (typeof editorIndex === "number") {
             const next = rules.map((r, i) => (i === editorIndex ? { conds: draftRule.conds } : r));
             setRules(next);
-            const payload = next
+            const configuredPayload = next
                 .map((r) => {
                     const cStr = buildConditionStringFromConds(r.conds || []);
                     return cStr ? { condition: cStr } : null;
                 })
                 .filter(Boolean);
+            const payload = [...customExprs, ...configuredPayload];
             dispatch(
                 updateSelectedField({
                     visibilityCondition: {

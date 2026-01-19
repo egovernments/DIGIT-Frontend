@@ -286,6 +286,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 flow: flow,
                 project: campaignNumber,
                 page: cleanedPageName,
+                module: flowModule,
               },
               limit: 1000,
               isActive: true,
