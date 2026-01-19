@@ -768,9 +768,7 @@ const hasFiles = docs.length > 0;
                   }
                   setOpenApproveCommentPopUp(true);
                 }
-                else if (value.code === "Upload") {
-                  setOpenUploadPopup(true); 
-                }
+               
               }}
               options={[
                 {
@@ -780,11 +778,8 @@ const hasFiles = docs.length > 0;
                 {
                   code: "APPROVE",
                   name: t(`HCM_AM_ACTIONS_APPROVE`),
-                },
-                {
-                  code: "Upload",
-                  name: t(`Upload_File`),
-                },
+                }
+                
               ]}
               optionsKey="name"
               size=""
