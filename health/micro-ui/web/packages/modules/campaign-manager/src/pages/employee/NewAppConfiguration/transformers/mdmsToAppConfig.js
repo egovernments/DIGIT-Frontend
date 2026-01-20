@@ -90,6 +90,10 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
             return actionItem;
           }
 
+          if (actionItem?.condition?.type === "custom") {
+            return actionItem;
+          }
+
           // Find NAVIGATION action
           const navigationAction = actionItem?.actions.find(
             (action) => action.actionType === "NAVIGATION"
