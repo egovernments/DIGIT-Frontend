@@ -482,11 +482,12 @@ const transformOnActionToConditionalNavigateTo = (onAction) => {
     if (navigationAction && navigationAction.properties) {
       const { name, type } = navigationAction.properties;
       const condition = item.condition?.expression;
+      const conditionType = item.condition?.type;
 
       // Skip if:
       // 1. No condition expression present
       // 2. Condition expression is "DEFAULT"
-      if (!condition || condition === "DEFAULT") {
+      if (!condition || condition === "DEFAULT" || conditionType === "custom") {
         return;
       }
 
