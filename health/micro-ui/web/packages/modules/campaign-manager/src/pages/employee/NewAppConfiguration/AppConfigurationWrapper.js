@@ -21,13 +21,28 @@ const isValueEmpty = (value) => {
   return false;
 };
 
+// Helper function to get localized value from localization data
+const getLocalizedValue = (code, localizationData, currentLocale) => {
+  if (!code || !localizationData || !Array.isArray(localizationData)) return "";
+  const entry = localizationData.find((item) => item.code === code);
+  if (!entry) return "";
+  const locale = currentLocale || "en_IN";
+  return entry[locale] || "";
+};
+
+// Helper function to check if localized value is empty
+const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
+  const value = getLocalizedValue(code, localizationData, currentLocale);
+  return isValueEmpty(value);
+};
+
 const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const dispatch = useDispatch();
-  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+  const sessionLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const searchParams = new URLSearchParams(location.search);
   const currentModule = searchParams.get("flow");
 
@@ -43,7 +58,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
   // Redux selectors
   const { currentData, showAddFieldPopup, responseData, pageType } = useSelector((state) => state.remoteConfig);
-  const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
+  const { status: localizationStatus, data: localizationData, currentLocale } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
   const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
 
@@ -138,12 +153,246 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               }
             }
           }
+
+          // Special validation for isMdms toggle field
+          // Check if isMdms is enabled and validate schemaCode or dropDownOptions accordingly
+          if (panelItem.bindTo === "isMdms" && panelItem.fieldType === "toggle") {
+            const isMdmsEnabled = field?.isMdms === true;
+
+            if (isMdmsEnabled) {
+              // When isMdms is ON, schemaCode must be selected
+              if (isValueEmpty(field?.schemaCode)) {
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: panelItem.label,
+                  message: "VALIDATION_SCHEMA_CODE_REQUIRED",
+                  tab: tabKey,
+                });
+              }
+            } else {
+              // When isMdms is OFF, dropDownOptions must be present and valid
+              const dropDownOptions = field?.dropDownOptions;
+
+              if (isValueEmpty(dropDownOptions)) {
+                // dropDownOptions is null, undefined, or empty array
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: panelItem.label,
+                  message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
+                  tab: tabKey,
+                });
+              } else if (Array.isArray(dropDownOptions)) {
+                // Check if any option has empty name (localization code)
+                const hasEmptyName = dropDownOptions.some(
+                  (option) => !option?.name || (typeof option.name === "string" && option.name.trim() === "")
+                );
+
+                if (hasEmptyName) {
+                  errors.push({
+                    fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                    panelLabel: panelItem.label,
+                    message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
+                    tab: tabKey,
+                  });
+                } else {
+                  // Check if any option has empty localized value for its name
+                  const hasEmptyLocalizedName = dropDownOptions.some(
+                    (option) => option?.name && isLocalizedValueEmpty(option.name, localizationData, currentLocale)
+                  );
+
+                  if (hasEmptyLocalizedName) {
+                    errors.push({
+                      fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                      panelLabel: panelItem.label,
+                      message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
+                      tab: tabKey,
+                    });
+                  }
+                }
+              }
+            }
+          }
         });
       });
+
+      // Validation for popup config fields
+      const popupConfig = field?.properties?.popupConfig;
+      if (popupConfig) {
+        const fieldLabel = field?.label || field?.fieldName || "Unknown Field";
+
+        // Validate popup title - check if localized value is empty
+        if (popupConfig.title) {
+          if (isLocalizedValueEmpty(popupConfig.title, localizationData, currentLocale)) {
+            errors.push({
+              fieldLabel: fieldLabel,
+              message: "VALIDATION_POPUP_TITLE_EMPTY",
+            });
+          }
+        }
+
+        // Validate footer action labels - check if localized value is empty
+        if (Array.isArray(popupConfig.footerActions)) {
+          popupConfig.footerActions.forEach((footerAction, footerIndex) => {
+            if (footerAction.label && isLocalizedValueEmpty(footerAction.label, localizationData, currentLocale)) {
+              errors.push({
+                fieldLabel: fieldLabel,
+                message: "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
+                messageParams: { index: footerIndex + 1 },
+              });
+            }
+          });
+        }
+
+        // Validate popup body fields
+        const popupConfigBody = popupConfig.body;
+        if (Array.isArray(popupConfigBody)) {
+          const configurableFormats = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList", "table", "labelPairList"];
+
+          popupConfigBody.forEach((popupField, popupIndex) => {
+            const popupFieldLabel = popupField?.label || popupField?.fieldName || `Popup Field ${popupIndex + 1}`;
+
+            // Check if body item label localized value is empty
+            if (popupField.label && isLocalizedValueEmpty(popupField.label, localizationData, currentLocale)) {
+              errors.push({
+                fieldLabel: fieldLabel,
+                popupFieldLabel: popupFieldLabel,
+                message: "VALIDATION_POPUP_BODY_LABEL_EMPTY",
+                messageParams: { popupField: popupFieldLabel },
+              });
+            }
+
+            // Only validate configurable formats for options/data
+            if (!popupField?.format || !configurableFormats.includes(popupField.format)) {
+              return;
+            }
+
+            const isMdmsEnabled = popupField?.isMdms === true;
+
+            if (isMdmsEnabled) {
+              // When isMdms is ON, schemaCode must be selected
+              if (isValueEmpty(popupField?.schemaCode)) {
+                errors.push({
+                  fieldLabel: fieldLabel,
+                  popupFieldLabel: popupFieldLabel,
+                  message: "VALIDATION_POPUP_SCHEMA_CODE_REQUIRED",
+                  messageParams: { popupField: popupFieldLabel },
+                });
+              }
+            } else {
+              // When isMdms is OFF, check for valid static options
+              // For dropdown/dropdownTemplate/select/selectionCard - check enums or dropDownOptions
+              if (["dropdown", "dropdownTemplate", "select", "selectionCard"].includes(popupField.format)) {
+                const hasValidEnums = popupField?.enums && Array.isArray(popupField.enums) && popupField.enums.length > 0;
+                const hasValidDropdownOptions = popupField?.dropDownOptions && Array.isArray(popupField.dropDownOptions) && popupField.dropDownOptions.length > 0;
+                const hasValidSchemaCode = popupField?.schemaCode && typeof popupField.schemaCode === "string" && popupField.schemaCode.trim().length > 0;
+
+                if (!hasValidEnums && !hasValidDropdownOptions && !hasValidSchemaCode) {
+                  errors.push({
+                    fieldLabel: fieldLabel,
+                    popupFieldLabel: popupFieldLabel,
+                    message: "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
+                    messageParams: { popupField: popupFieldLabel },
+                  });
+                } else if (hasValidEnums) {
+                  // Check if any enum has empty localized value for name
+                  const hasEmptyLocalizedName = popupField.enums.some(
+                    (option) => option?.isActive !== false && option?.name && isLocalizedValueEmpty(option.name, localizationData, currentLocale)
+                  );
+
+                  if (hasEmptyLocalizedName) {
+                    errors.push({
+                      fieldLabel: fieldLabel,
+                      popupFieldLabel: popupFieldLabel,
+                      message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
+                      messageParams: { popupField: popupFieldLabel },
+                    });
+                  }
+                }
+              }
+
+              // For radioList - check data array
+              if (popupField.format === "radioList") {
+                const hasValidData = popupField?.data && Array.isArray(popupField.data) && popupField.data.length > 0;
+
+                if (!hasValidData) {
+                  errors.push({
+                    fieldLabel: fieldLabel,
+                    popupFieldLabel: popupFieldLabel,
+                    message: "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
+                    messageParams: { popupField: popupFieldLabel },
+                  });
+                } else {
+                  // Check if any radio option has empty localized value
+                  const hasEmptyLocalizedName = popupField.data.some(
+                    (option) => option?.isActive !== false && option?.name && isLocalizedValueEmpty(option.name, localizationData, currentLocale)
+                  );
+
+                  if (hasEmptyLocalizedName) {
+                    errors.push({
+                      fieldLabel: fieldLabel,
+                      popupFieldLabel: popupFieldLabel,
+                      message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
+                      messageParams: { popupField: popupFieldLabel },
+                    });
+                  }
+                }
+              }
+
+              // For table - check columns array and localized headers
+              if (popupField.format === "table") {
+                const columns = popupField?.data?.columns;
+                const hasValidColumns = columns && Array.isArray(columns) && columns.length > 0;
+
+                if (!hasValidColumns) {
+                  errors.push({
+                    fieldLabel: fieldLabel,
+                    popupFieldLabel: popupFieldLabel,
+                    message: "VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED",
+                    messageParams: { popupField: popupFieldLabel },
+                  });
+                } else {
+                  // Check if any column has empty localized header
+                  const hasEmptyLocalizedHeader = columns.some(
+                    (column) => column?.isActive !== false && column?.header && isLocalizedValueEmpty(column.header, localizationData, currentLocale)
+                  );
+
+                  if (hasEmptyLocalizedHeader) {
+                    errors.push({
+                      fieldLabel: fieldLabel,
+                      popupFieldLabel: popupFieldLabel,
+                      message: "VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY",
+                      messageParams: { popupField: popupFieldLabel },
+                    });
+                  }
+                }
+              }
+
+              // For labelPairList - check if localized labels are empty
+              if (popupField.format === "labelPairList") {
+                const data = popupField?.data;
+                if (Array.isArray(data) && data.length > 0) {
+                  const hasEmptyLocalizedLabel = data.some(
+                    (item) => item?.isActive !== false && item?.key && isLocalizedValueEmpty(item.key, localizationData, currentLocale)
+                  );
+
+                  if (hasEmptyLocalizedLabel) {
+                    errors.push({
+                      fieldLabel: fieldLabel,
+                      popupFieldLabel: popupFieldLabel,
+                      message: "VALIDATION_POPUP_LABEL_PAIR_VALUE_EMPTY",
+                      messageParams: { popupField: popupFieldLabel },
+                    });
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
     });
 
     return errors;
-  }, [currentData, panelConfig, fieldTypeMaster]);
+  }, [currentData, panelConfig, fieldTypeMaster, localizationData, currentLocale]);
 
   // Expose validation function via window object (always available)
   useEffect(() => {
@@ -345,7 +594,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         fetchLocalization({
           tenantId,
           localeModule,
-          currentLocale,
+          currentLocale: sessionLocale,
         })
       );
 
@@ -353,12 +602,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       dispatch(
         setLocalizationData({
           localisationData: localizationData,
-          currentLocale,
+          currentLocale: sessionLocale,
           localeModule,
         })
       );
     }
-  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale]);
+  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, sessionLocale]);
 
   // Auto-close toast after 10 seconds
   useEffect(() => {

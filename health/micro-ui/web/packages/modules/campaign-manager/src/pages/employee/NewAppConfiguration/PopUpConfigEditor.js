@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { TextInput, Tag , Divider} from "@egovernments/digit-ui-components";
+import { Tag, Divider, FieldV1 } from "@egovernments/digit-ui-components";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
@@ -187,65 +187,15 @@ const PopupConfigEditor = ({ selectedField }) => {
   );
 };
 
-// Individual label field component with debouncing and localization
+// Individual label field component with localization (same pattern as LocalizationInput)
 const PopupLabelField = ({ label, path, value, selectedField }) => {
   const { t } = useTranslation();
-  const customTranslate = useCustomTranslate();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
 
-  // Local state for immediate UI feedback
-  const [localValue, setLocalValue] = useState("");
-  const debounceTimerRef = useRef(null);
-
-  // Get localized value using custom hook
-  const localizedValue = customTranslate(value);
-
-  // Initialize local value when value changes
-  useEffect(() => {
-    setLocalValue(localizedValue || "");
-  }, [localizedValue]);
-
-  // Cleanup debounce timer on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
-
-  // Debounced handler with localization (similar to handleFieldChangeWithLoc)
-  const handleChange = useCallback(
-    (event) => {
-      const newValue = event.target.value;
-      setLocalValue(newValue);
-
-      // Clear previous timer
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-
-      // Debounce the Redux dispatch
-      debounceTimerRef.current = setTimeout(() => {
-        let finalCode;
-
-        // Handle localization
-        if (value && typeof value === "string") {
-          // If original value exists (it's a localization code), update it
-          dispatch(
-            updateLocalizationEntry({
-              code: value,
-              locale: currentLocale || "en_IN",
-              message: newValue,
-            })
-          );
-          finalCode = value; // Keep the existing code
-        } 
-      }, 800); // 800ms debounce
-    },
-    [path, value, dispatch, currentLocale]
-  );
+  // Get localized value using useCustomT hook directly (same as LocalizationInput)
+  // Don't fallback to code, empty string is valid
+  const localizedValue = useCustomT(value);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -259,15 +209,25 @@ const PopupLabelField = ({ label, path, value, selectedField }) => {
       >
         {t(label)}
       </label>
-      
-      {/* Text field below */}
-      <TextInput
+
+      {/* Text field using FieldV1 - same as LocalizationInput */}
+      <FieldV1
+        value={localizedValue}
         type="text"
-        value={localValue}
-        onChange={handleChange}
         placeholder={t("ENTER_LABEL_TEXT") || ""}
-        style={{
-          width: "100%",
+        onChange={(e) => {
+          const val = e.target.value;
+          // Update localization for the code
+          dispatch(
+            updateLocalizationEntry({
+              code: value,
+              locale: currentLocale || "en_IN",
+              message: val,
+            })
+          );
+        }}
+        populators={{
+          fieldPairClassName: "drawer-toggle-conditional-field",
         }}
       />
     </div>

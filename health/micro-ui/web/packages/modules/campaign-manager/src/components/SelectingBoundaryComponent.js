@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair, CardLabel, CardText, Loader, PopUp, Button } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { Dropdown } from "@egovernments/digit-ui-components";
 
@@ -119,10 +119,10 @@ const SelectingBoundaryComponent = ({
   const searchParams = new URLSearchParams(location.search);
   const [boundaryOptions, setBoundaryOptions] = useState(boundaryOptionsPage);
   const [selectedData, setSelectedData] = useState(selectedData1);
-  const [showPopUp, setShowPopUp] = useState(false);
   const timerRef = useRef(null);
   const [parentRoot, setParentRoot] = useState(selectedData?.find((item) => item?.isRoot === true)?.type || {});
-  const [restrictSelection, setRestrictSelection] = useState(restrictSelectionPage);
+  // Use restrictSelection from parent - no local state needed
+  const restrictSelection = restrictSelectionPage;
 
   useEffect(() => {
     setBoundaryOptions(boundaryOptionsPage);
@@ -131,10 +131,6 @@ const SelectingBoundaryComponent = ({
   useEffect(() => {
     setSelectedData(selectedData1);
   }, [selectedData1]);
-
-  useEffect(() => {
-    setRestrictSelection(restrictSelectionPage);
-  }, [restrictSelectionPage]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -268,8 +264,8 @@ const SelectingBoundaryComponent = ({
   }, [boundaryData, boundaryOptions, parentRoot]);
 
   function handleBoundaryChange(data, boundary) {
+    // If selection is restricted, just return - parent component handles the popup
     if (restrictSelection) {
-      setShowPopUp(true);
       return;
     }
     if (!data || data.length === 0) {
@@ -417,19 +413,6 @@ const SelectingBoundaryComponent = ({
     }, 1);
   }, [selectedData, boundaryOptions, restrictSelection]);
 
-  const checkDataPresent = ({ action }) => {
-    if (action === false) {
-      setShowPopUp(false);
-      setRestrictSelection(false);
-      return;
-    }
-    if (action === true) {
-      setShowPopUp(false);
-      setRestrictSelection(true);
-      return;
-    }
-  };
-
   if (hierarchyLoading) return <Loader page={true} variant={"PageLoader"} />;
 
   return (
@@ -485,7 +468,8 @@ const SelectingBoundaryComponent = ({
                         }}
                         selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                         optionsKey={"code"}
-                        disabled={isDisabled}
+                        disabled={restrictSelection}
+                        disableClearAll={restrictSelection}
                         hierarchyType={hierarchyType}
                         config={{
                           isDropdownWithChip: true,
@@ -514,6 +498,10 @@ const SelectingBoundaryComponent = ({
                             ?.flatMap(([key, value]) =>
                               Object.entries(value || {})
                                 .filter(([subkey, item]) => {
+                                  // When restrictSelection is false (user clicked Yes), show all options
+                                  if (restrictSelection === false) {
+                                    return true;
+                                  }
                                   const itemCode = item?.split(".")?.[0];
                                   if (frozenData?.length > 0) {
                                     const isFrozen = frozenData.some((frozenOption) => {
@@ -550,8 +538,8 @@ const SelectingBoundaryComponent = ({
                         }}
                         selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                         optionsKey={"code"}
-                        disabled={isDisabled}
-                        restrictSelection={restrictSelection}
+                        disabled={restrictSelection}
+                        disableClearAll={restrictSelection}
                         config={{
                           isDropdownWithChip: true,
                           chipKey: "code",
@@ -604,50 +592,11 @@ const SelectingBoundaryComponent = ({
                     }}
                     selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType)?.[0] || {}}
                     optionKey={"code"}
-                    restrictSelection={restrictSelection}
+                    disabled={restrictSelection}
                   />
                 </LabelFieldPair>
               ))}
       </div>
-      {showPopUp && (
-        <PopUp
-          className={"boundaries-pop-module"}
-          type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
-            </div>,
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          onClose={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
-              onClick={() => {
-                checkDataPresent({ action: false });
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
-              onClick={() => {
-                checkDataPresent({ action: true });
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-        ></PopUp>
-      )}
     </>
   );
 };

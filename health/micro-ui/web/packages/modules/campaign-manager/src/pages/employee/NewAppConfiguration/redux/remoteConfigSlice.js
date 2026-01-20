@@ -119,11 +119,64 @@ const remoteConfigSlice = createSlice({
     selectField(state, action) {
       const { field, screen, card, cardIndex } = action.payload;
 
+      // Check if this is a template type page
+      const isTemplate = state.currentData?.type === "template";
+
+      // Helper to recursively find field by fieldName in nested template structures
+      const findFieldByName = (node, targetFieldName) => {
+        if (!node || !targetFieldName) return null;
+
+        // Handle arrays
+        if (Array.isArray(node)) {
+          for (const item of node) {
+            const found = findFieldByName(item, targetFieldName);
+            if (found) return found;
+          }
+          return null;
+        }
+
+        // Handle objects
+        if (typeof node === "object") {
+          // Check if this node matches
+          if (node.fieldName === targetFieldName) {
+            return node;
+          }
+
+          // Check primaryAction and secondaryAction
+          if (node.primaryAction) {
+            const found = findFieldByName(node.primaryAction, targetFieldName);
+            if (found) return found;
+          }
+          if (node.secondaryAction) {
+            const found = findFieldByName(node.secondaryAction, targetFieldName);
+            if (found) return found;
+          }
+
+          // Recursively search in child and children
+          if (node.child) {
+            const found = findFieldByName(node.child, targetFieldName);
+            if (found) return found;
+          }
+          if (node.children) {
+            const found = findFieldByName(node.children, targetFieldName);
+            if (found) return found;
+          }
+
+          // Also search in data object for table columns etc.
+          if (node.data && typeof node.data === "object") {
+            const found = findFieldByName(node.data, targetFieldName);
+            if (found) return found;
+          }
+        }
+
+        return null;
+      };
+
       // Check if this field is in footer by fieldName or label
       const isFooterField = state.currentData?.footer?.some(
         (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
                (field?.label && f.label === field.label)
-      );
+      ) || (isTemplate && field?.fieldName && findFieldByName(state.currentData?.footer, field.fieldName));
 
       let finalCardIndex = cardIndex;
       let finalFieldIndex = -1;
@@ -132,15 +185,39 @@ const remoteConfigSlice = createSlice({
       if (isFooterField) {
         // For footer fields, find by fieldName first, then label
         finalCardIndex = -1;
-        finalFieldIndex = state.currentData.footer.findIndex(
-          (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
-                 (field?.label && f.label === field.label)
-        );
-        if (finalFieldIndex >= 0) {
-          actualField = state.currentData.footer[finalFieldIndex];
+        if (isTemplate && field?.fieldName) {
+          // For templates, search recursively in footer
+          const foundField = findFieldByName(state.currentData.footer, field.fieldName);
+          if (foundField) {
+            actualField = foundField;
+          }
+        } else {
+          // For non-templates, use flat search
+          finalFieldIndex = state.currentData.footer.findIndex(
+            (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
+                   (field?.label && f.label === field.label)
+          );
+          if (finalFieldIndex >= 0) {
+            actualField = state.currentData.footer[finalFieldIndex];
+          }
+        }
+      } else if (isTemplate && field?.fieldName) {
+        // For template body fields, search by fieldName across ALL cards (ignore cardIndex)
+        if (state.currentData?.body && Array.isArray(state.currentData.body)) {
+          for (let i = 0; i < state.currentData.body.length; i++) {
+            const bodyCard = state.currentData.body[i];
+            if (Array.isArray(bodyCard?.fields)) {
+              const foundField = findFieldByName(bodyCard.fields, field.fieldName);
+              if (foundField) {
+                actualField = foundField;
+                finalCardIndex = i; // Update to actual card index where field was found
+                break;
+              }
+            }
+          }
         }
       } else {
-        // For body fields, find card index
+        // For non-template body fields, use existing logic
         if (finalCardIndex === undefined || finalCardIndex === null) {
           finalCardIndex = state.currentData?.body?.findIndex(
             (c) => c.id === card?.id || c === card
@@ -293,17 +370,29 @@ const remoteConfigSlice = createSlice({
             // Recursively search in child and children (template-specific)
             if (node.child && updateFieldInTree(node.child)) return true;
             if (node.children && updateFieldInTree(node.children)) return true;
+
+            // Also search in data object for table columns etc.
+            if (node.data && typeof node.data === "object" && updateFieldInTree(node.data)) return true;
           }
 
           return false;
         };
 
-        // Search through body fields recursively for templates
-        if (state.currentData?.body && cardIndex !== null && cardIndex !== -1) {
-          const card = state.currentData.body[cardIndex];
-          if (Array.isArray(card?.fields)) {
-            updateFieldInTree(card.fields);
+        // For templates, search through ALL body cards by fieldName (ignore cardIndex)
+        // This ensures we find the field regardless of which card it's in
+        if (state.currentData?.body && Array.isArray(state.currentData.body)) {
+          for (const card of state.currentData.body) {
+            if (Array.isArray(card?.fields)) {
+              if (updateFieldInTree(card.fields)) {
+                return; // Field found and updated, exit
+              }
+            }
           }
+        }
+
+        // If not found in body, also search in footer for templates
+        if (state.currentData?.footer) {
+          updateFieldInTree(state.currentData.footer);
         }
       } else {
         // For non-template types (forms), use simple direct path access

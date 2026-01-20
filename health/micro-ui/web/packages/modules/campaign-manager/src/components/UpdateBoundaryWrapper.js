@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
-import { Card, HeaderComponent, AlertCard, PopUp, Button, Switch } from "@egovernments/digit-ui-components";
+import React, { useState, useMemo, useEffect, Fragment } from "react";
+import { Card, HeaderComponent, AlertCard, PopUp, Button, Switch, CardText } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
@@ -208,6 +208,10 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
 
   useEffect(() => {
+    // Show popup when there's upload data and user hasn't made a choice yet
+    // restrictSelection === null means user hasn't clicked Yes or No
+    if (restrictSelection !== null) return;
+
     if (
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
@@ -215,8 +219,9 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
     ) {
       setRestrictSelection(true);
+      setShowPopUp(true);
     }
-  }, [props?.props?.sessionData]);
+  }, [props?.props?.sessionData, restrictSelection]);
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
@@ -272,8 +277,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
             isLabelFirst={true}
             label={t("HCM_USE_UNIFIED_UPLOAD")}
             isCheckedInitially={isUnifiedCampaign}
-            disable={true}
-            onToggle={() => {}}
+            disable={restrictSelection}
+            onToggle={(checked) => setIsUnifiedCampaign(checked)}
           />
         </div>
       </Card>

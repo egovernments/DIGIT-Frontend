@@ -68,7 +68,7 @@ const TableTemplate = ({ field, t, fieldTypeMasterData }) => {
   // Format columns for ResultsDataTable
   const formattedColumns = useMemo(() => {
     return columnsConfig.map((item, index) => ({
-      name: t(item.header) || item.header, // Translated column header
+      name: t(item.header) || "", // Translated column header
       selector: (row) => row[`col_${index}`],
       sortable: false,
       minWidth: "150px",
