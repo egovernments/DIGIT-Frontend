@@ -34,17 +34,17 @@ const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
     }
   });
 
-  // Sync with session data or formData when it changes
+  // Sync with session data or formData when it changes (e.g., navigating back with existing data)
+  // Dependencies use specific string values, not the whole sessionData object, to avoid loops
+  const sessionName = sessionData?.CampaignName || sessionData?.HCM_CAMPAIGN_NAME?.CampaignName;
   useEffect(() => {
-    const sessionName = sessionData?.CampaignName || sessionData?.HCM_CAMPAIGN_NAME?.CampaignName;
-    const formName = formData?.CampaignName;
-    const newName = sessionName || formName;
-    if (newName && newName !== name) {
+    const newName = sessionName || formData?.CampaignName;
+    if (newName && newName !== name && !hasInteracted) {
       setName(newName);
       // Dispatch event for validation component
       window.dispatchEvent(new CustomEvent("campaignNameChange", { detail: newName }));
     }
-  }, [sessionData, formData?.CampaignName]);
+  }, [sessionName, formData?.CampaignName]);
 
   // Dispatching custom event whenever name changes for real time validation
   useEffect(() => {
