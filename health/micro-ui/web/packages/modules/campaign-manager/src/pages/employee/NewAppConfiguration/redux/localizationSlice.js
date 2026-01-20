@@ -83,7 +83,8 @@ const localizationSlice = createSlice({
       if (existingIndex !== -1) {
         state.data[existingIndex][localeKey] = message;
       } else {
-        state.data.push({ code, [localeKey]: message });
+        const newEntry = { code, [localeKey]: message };
+        state.data.push(newEntry);
       }
     },
     removeLocalizationKey(state, action) {

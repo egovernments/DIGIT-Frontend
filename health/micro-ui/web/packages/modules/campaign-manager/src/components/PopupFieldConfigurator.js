@@ -52,7 +52,7 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
   const hideToggles = items.length === 1;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
       {items.map((item, index) => {
         // Check if this is the last active item (applies to all field types)
         const isLastActive = activeItemsCount === 1 && item.isActive !== false;
@@ -149,13 +149,14 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
   const label = `${labelPrefix} ${itemIndex + 1}`;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <div className="drawer-container-tooltip">
       {/* Label row with toggle */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          marginBottom: "8px",
         }}
       >
         <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>
@@ -178,26 +179,29 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
       </div>
 
       {/* Text field using FieldV1 - same as LocalizationInput */}
-      <FieldV1
-        value={localizedValue}
-        type="text"
-        placeholder={placeholder}
-        onChange={(e) => {
-          const val = e.target.value;
-          // Update localization for the code
-          dispatch(
-            updateLocalizationEntry({
-              code: localizationCode,
-              locale: currentLocale || "en_IN",
-              message: val,
-            })
-          );
-        }}
-        populators={{
-          fieldPairClassName: "drawer-toggle-conditional-field",
-        }}
-        disabled={!toggleState}
-      />
+      <div style={{ display: !toggleState ? "none" : "block" }}>
+        <FieldV1
+          value={localizedValue}
+          type="text"
+          placeholder={placeholder}
+          withoutLabel={true}
+          onChange={(e) => {
+            const val = e.target.value;
+            // Update localization for the code
+            dispatch(
+              updateLocalizationEntry({
+                code: localizationCode,
+                locale: currentLocale || "en_IN",
+                message: val,
+              })
+            );
+          }}
+          populators={{
+            fieldPairClassName: "drawer-toggle-conditional-field",
+          }}
+          disabled={!toggleState}
+        />
+      </div>
     </div>
   );
 });
