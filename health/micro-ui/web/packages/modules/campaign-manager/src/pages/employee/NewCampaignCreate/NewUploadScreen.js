@@ -1,13 +1,14 @@
 import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { uploadConfig } from "../../../configs/uploadConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 
 const NewUploadScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [totalFormData, setTotalFormData] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -62,6 +63,14 @@ const NewUploadScreen = () => {
   useEffect(() => setTotalFormData(params), [params]);
   useEffect(() => setUploadConfig(uploadConfig({ totalFormData, campaignData, summaryErrors })), [campaignData, totalFormData, summaryErrors]);
   useEffect(() => updateUrlParams({ key: currentKey }), [currentKey]);
+
+  // Sync currentKey with URL changes (e.g., when edit button is clicked in DataUploadSummary)
+  useEffect(() => {
+    const keyParam = new URLSearchParams(location.search).get("key");
+    if (keyParam && parseInt(keyParam) !== currentKey) {
+      setCurrentKey(parseInt(keyParam));
+    }
+  }, [location.search]);
 
   const filterUploadConfig = (c, k) =>
     c

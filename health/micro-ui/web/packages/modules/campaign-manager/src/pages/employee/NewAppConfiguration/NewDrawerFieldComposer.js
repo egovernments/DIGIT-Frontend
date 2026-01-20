@@ -1354,6 +1354,10 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
     onFieldChange(newField);
   }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange, fieldValue, dispatch, currentLocale, shouldSkipLocalization]);
 
+  // Check if this is a prefix field for mobileNumber : should only accept numbers
+  const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
+  const maxPrefixLength = 5; // Maximum length for mobile number prefix to prevent UI breaking
+
   switch (cField.type) {
     case "text":
     case "number":
@@ -1361,16 +1365,28 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       return (
         <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
           <FieldV1
-            type={cField.type}
+            type={isMobileNumberPrefix ? "text" : cField.type}
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
             value={conditionalLocalValue}
             onChange={(event) => {
-              setConditionalLocalValue(event.target.value);
-              handleConditionalChange(event.target.value);
+              let newValue = event.target.value;
+
+              // For mobile number prefix, only allow numbers and limit length
+              if (isMobileNumberPrefix) {
+                // Remove any non-numeric characters
+                newValue = newValue.replace(/[^0-9]/g, "");
+                // Limit the length
+                if (newValue.length > maxPrefixLength) {
+                  newValue = newValue.slice(0, maxPrefixLength);
+                }
+              }
+
+              setConditionalLocalValue(newValue);
+              handleConditionalChange(newValue);
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...(isMobileNumberPrefix && { maxLength: maxPrefixLength }) }}
           />
         </div>
       );
