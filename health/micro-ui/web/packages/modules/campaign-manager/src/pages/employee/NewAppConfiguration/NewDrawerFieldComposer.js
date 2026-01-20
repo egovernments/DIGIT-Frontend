@@ -523,7 +523,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 return;
               }
 
-              const value = parseInt(inputValue);
+              const value = parseInt(inputValue, 10);
               // Only set if it's a valid number
               if (!isNaN(value)) {
                 // Prevent negative values for length-related fields
@@ -1104,7 +1104,7 @@ const LocalizationInput = React.memo(
     // For table columns, toggle state controls visibility of input
     // Toggle ON = visible (hidden: false)
     // Toggle OFF = hidden (hidden: true)
-    const isColumnHidden = isTableColumn ? column.hidden !== false : false;
+    const isColumnHidden = isTableColumn ? column.isActive === false : false;
 
     // Local state to control the toggle and prevent it from changing when disabled
     const [toggleState, setToggleState] = useState(!isColumnHidden);
