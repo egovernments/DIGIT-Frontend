@@ -99,6 +99,14 @@ const DataUploadSummary = (props) => {
   const [currentStep, setCurrentStep] = useState(1);
   const baseKey = 9;
 
+  // Determine which config flow we're in based on URL path
+  // uploadConfig (NewUploadScreen): /upload-screen - keys 1, 2, 3
+  // CampaignConfig (SetupCampaign): /setup-campaign - keys 10, 11, 12
+  const isUploadScreenFlow = window.location.pathname.includes("upload-screen");
+  const facilityKey = isUploadScreenFlow ? 1 : 10;
+  const userKey = isUploadScreenFlow ? 2 : 11;
+  const targetKey = isUploadScreenFlow ? 3 : 12;
+
   const handleRedirect = useCallback(
     (step, activeCycle) => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -194,7 +202,7 @@ const DataUploadSummary = (props) => {
                     },
                     cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(facilityKey)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -215,7 +223,7 @@ const DataUploadSummary = (props) => {
                     },
                     cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(userKey)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -236,7 +244,7 @@ const DataUploadSummary = (props) => {
                     },
                     cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(targetKey)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
@@ -251,7 +259,7 @@ const DataUploadSummary = (props) => {
             userGenerationSuccess: resourceIdArr,
           };
         },
-        [tenantId, t, noAction, handleRedirect]
+        [tenantId, t, noAction, handleRedirect, facilityKey, userKey, targetKey]
       ),
       enabled: id ? true : false,
       staleTime: 0,
