@@ -292,13 +292,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
               );
               payloadData.boundaries = temp;
             }
-            // const temp = resourceData(
-            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
-
-            // );
-            // Check if there's a new unified upload file in totalFormData
+            // Check if unified or non-unified campaign and get resources from totalFormData
             const newUnifiedFiles = totalFormData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile;
             let temp;
             if (newUnifiedFiles && newUnifiedFiles.length > 0) {
@@ -307,6 +301,14 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 ...resource,
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
               }));
+            } else if (!isUnifiedCampaign) {
+              // For non-unified campaigns, use totalFormData which has the updated files
+              temp = resourceData(
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+                null
+              );
             } else {
               // Fall back to CampaignData resources
               temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
@@ -386,19 +388,28 @@ const UpdateCampaign = ({ hierarchyData }) => {
               );
               payloadData.boundaries = temp;
             }
-            // const temp = resourceData(
-            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-            // );
-
-            const temp = CampaignData?.CampaignDetails?.[0].resources;
-
-            payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
-            const tempResources = temp?.map((resource) => ({
-              ...resource,
-              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-            }));
+            // Get resources from totalFormData for non-unified, or CampaignData for unified
+            const newUnifiedFiles = totalFormData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile;
+            let tempResources;
+            if (newUnifiedFiles && newUnifiedFiles.length > 0) {
+              tempResources = newUnifiedFiles.map((resource) => ({
+                ...resource,
+                type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+              }));
+            } else if (!isUnifiedCampaign) {
+              tempResources = resourceData(
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+                null
+              );
+            } else {
+              const temp = CampaignData?.CampaignDetails?.[0].resources;
+              tempResources = temp?.map((resource) => ({
+                ...resource,
+                type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+              }));
+            }
             const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
@@ -462,18 +473,31 @@ const UpdateCampaign = ({ hierarchyData }) => {
               );
               payloadData.boundaries = temp;
             }
-            // const temp = resourceData(
-            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-            // );
-            const temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
-              ...resource,
-              type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-            }));
-            const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
+            // Get resources from totalFormData for non-unified, or CampaignData for unified
+            const newUnifiedFiles = totalFormData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile;
+            let tempResources;
+            if (newUnifiedFiles && newUnifiedFiles.length > 0) {
+              tempResources = newUnifiedFiles.map((resource) => ({
+                ...resource,
+                type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+              }));
+            } else if (!isUnifiedCampaign) {
+              tempResources = resourceData(
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+                totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+                null
+              );
+            } else {
+              const temp = CampaignData?.CampaignDetails?.[0].resources;
+              tempResources = temp?.map((resource) => ({
+                ...resource,
+                type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+              }));
+            }
+            const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
 
-            payloadData.resources = temp;
+            payloadData.resources = tempResources;
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
             payloadData.additionalDetails = {
               beneficiaryType:
