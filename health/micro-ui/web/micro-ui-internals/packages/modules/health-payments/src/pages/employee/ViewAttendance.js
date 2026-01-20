@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -397,7 +397,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         const mobileNumber = matchingIndividual?.mobileNumber;
         const userType = matchingIndividual?.additionalFields?.fields?.find(
           (detail) => detail.key === "userType"
-      )?.value || "N/A";
+        )?.value || "N/A";
         return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType];
       } else {
         // Handle cases where no match is found in individualsData
@@ -453,7 +453,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   //       },
   //     },
   //   ];
-  
+
   //   setUploadedDocuments(mockDocuments);
   // }, []);
 
@@ -501,46 +501,42 @@ const ViewAttendance = ({ editAttendance = false }) => {
     return <LoaderScreen />
   }
   async function downloadFile() {
-    console.log("InsideDownloading files:121223")
     const musterRoll = data?.[0];
     const docs = musterRoll?.additionalDetails?.attendanceApprovalDocuments;
-  
-    console.log("Downloading files:", docs);
-  
     if (!Array.isArray(docs) || docs.length === 0) return;
-  
+
     try {
       for (const doc of docs) {
         if (!doc?.fileStoreId) continue;
-  
+
         // derive type from filename if present
         const extension = doc?.fileName?.split(".").pop()?.toLowerCase();
         const type =
-  extension === "pdf"
-    ? "pdf"
-    : ["png", "jpg", "jpeg"].includes(extension)
-    ? extension
-    : "excel"; // fallback
-  
+          extension === "pdf"
+            ? "pdf"
+            : ["png", "jpg", "jpeg"].includes(extension)
+              ? extension
+              : "pdf"; // fallback
+
         downloadFileWithName({
           fileStoreId: doc.fileStoreId,
           customName:
             doc.fileName?.replace(/\.[^/.]+$/, "") || "attendance-proof",
           type, // optional, safe fallback
         });
-  
+
         // small delay to avoid browser choking on multiple downloads
-        await new Promise((res) => setTimeout(res, 300));
+        await new Promise((res) => setTimeout(res, 500));
       }
     } catch (err) {
       console.error("Download failed", err);
     }
   }
-  
-  const docs =
-  data?.[0]?.additionalDetails?.attendanceApprovalDocuments || [];
 
-const hasFiles = docs.length > 0;
+  const docs =
+    data?.[0]?.additionalDetails?.attendanceApprovalDocuments || [];
+
+  const hasFiles = docs.length > 0;
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
@@ -561,42 +557,44 @@ const hasFiles = docs.length > 0;
           {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>
         <Card className="bottom-gap-card-payment">
-        <div className="upload-heading">
-            <h2 className="upload-heading-title">{t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}</h2>
+          <div className="upload-heading">
             {data?.[0]?.musterRollStatus === "APPROVED" ? (
-               <>
-               <Button
-                 label={t("WBH_DOWNLOAD")}
-                 variation="secondary"
-                 type="button"
-                 size="medium"
-                 icon={t("DownloadIcon")}
-                 onClick={downloadFile}
-                 disabled={!hasFiles}
-               />
-           
-               <p className="file-upload-status">
-                 {hasFiles
-                   ? `${docs.length} ${t("CS_ACTION_FILEUPLOADED")}`
-                   : t("CS_ACTION_NO_FILEUPLOADED")}
-               </p>
-             </>
+              <>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <Button
+                    label={t("HCM_ATTENDANCE_DOCS_DOWNLOAD")}
+                    variation="secondary"
+                    type="button"
+                    size="medium"
+                    icon={t("DownloadIcon")}
+                    onClick={downloadFile}
+                    disabled={!hasFiles}
+                  />
+
+                  <p className="file-upload-status">
+                    {hasFiles
+                      ? `${docs.length} ${t("HCM_ACTION_FILES_ATTACHED")}`
+                      : t("HCM_ACTION_NO_FILE_ATTACHED")}
+                  </p>
+                </div>
+              </>
+
             ) : (
               <Button
                 className="custom-class"
-                icon="Visibility"
+                icon="UpdateExpense"
                 iconFill=""
-                label={t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}
+                label={t(`HCM_ATTENDANCE_DOCS_UPLOAD`)}
                 onClick={() => setOpenUploadPopup(true)}
                 options={[]}
                 optionsKey=""
                 size=""
                 style={{}}
-                title={t(`HCM_AM_UPLAOD_AND_VIEW_DOC_HEADING`)}
+                title={t(`HCM_ATTENDANCE_DOCS_UPLOAD`)}
                 variation="secondary"
               />
             )
-            }  
+            }
           </div>
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
@@ -675,35 +673,6 @@ const hasFiles = docs.length > 0;
             value={uploadedDocuments}
             onSelect={(key, files) => setUploadedDocuments(files)}
           />
-          {/* <UploadedFileComponent 
-            config={{ key: "uploadedFile" }}
-            value={uploadedDocument}
-            isMandatory={true}
-            // onSelect={(key, fileData) => {
-            //   console.log("Uploaded file:", fileData);
-            //   setOpenUploadPopup(false);
-            // }}
-            // onSelect={(key, fileData) => {
-            //   setUploadedDocument(fileData);
-            //   if (!fileData) {
-            //     // deleted → re-enable retry
-            //     setShowToast({
-            //       key: "info",
-            //       label: t("FILE_REMOVED_PLEASE_UPLOAD_AGAIN"),
-            //     });
-            //   }
-            // }}
-            onSelect={(key, file) => setUploadedDocument(file)}
-            mockFile={{
-              fileStoreId: "3d18c0f5-c958-4184-842a-9785b34cef76",
-              name: "attendance-proof.pdf",
-              mimeType: "application/pdf",
-              auditDetails: {
-                createdBy: Digit.UserService.getUser()?.info?.uuid,
-                createdTime: Date.now()
-              }
-            }}
-          /> */}
         </PopUp>
       )}
 
@@ -750,13 +719,13 @@ const hasFiles = docs.length > 0;
                   if (!isFileUploaded) {
                     setShowToast({
                       key: "error",
-                      label: t("PLEASE_UPLOAD_DOCUMENT_BEFORE_APPROVAL"),
+                      label: t("HCM_PLEASE_UPLOAD_DOCUMENT_BEFORE_APPROVAL"),
                     });
                     return;
                   }
                   setOpenApproveCommentPopUp(true);
                 }
-               
+
               }}
               options={[
                 {
@@ -767,7 +736,7 @@ const hasFiles = docs.length > 0;
                   code: "APPROVE",
                   name: t(`HCM_AM_ACTIONS_APPROVE`),
                 }
-                
+
               ]}
               optionsKey="name"
               size=""
