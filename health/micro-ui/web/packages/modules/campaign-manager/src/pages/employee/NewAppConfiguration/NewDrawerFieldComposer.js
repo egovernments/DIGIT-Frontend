@@ -1071,8 +1071,8 @@ const LocalizationInput = React.memo(
     onColumnToggle = null,
     isLastVisible = false,
   }) => {
-    // Get the localized value
-    const localizedValue = useCustomT(code) || code;
+    // Get the localized value - don't fallback to code, empty string is valid
+    const localizedValue = useCustomT(code);
 
     // Check if this is a table column input (has column data and toggle handler)
     const isTableColumn = column !== null && columnIndex !== null && onColumnToggle !== null;
@@ -1195,6 +1195,11 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
           message: newValue,
         })
       );
+    }
+
+    // Don't call onFieldChange if localizationCode is still empty (no valid name entered)
+    if (!localizationCode || (typeof localizationCode === "string" && localizationCode.trim() === "")) {
+      return;
     }
 
     // Update the option with the localization code

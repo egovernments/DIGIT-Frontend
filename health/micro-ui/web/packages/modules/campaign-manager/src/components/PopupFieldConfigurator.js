@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, TextInput } from "@egovernments/digit-ui-components";
+import { Switch, FieldV1 } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLocalizationEntry } from "../pages/employee/NewAppConfiguration/redux/localizationSlice";
 import { updatePopupFieldProperty } from "../pages/employee/NewAppConfiguration/redux/remoteConfigSlice";
@@ -28,7 +28,6 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
   // Determine the type of component and get the items to configure
   const isTableComponent = field?.format === "table";
   const isEnumComponent = ["dropdown", "dropdownTemplate", "select", "selectionCard", "radioList"].includes(field?.format);
-  console.log("isEnumComponent:", isEnumComponent); 
 
   let items = [];
   let itemType = "";
@@ -46,13 +45,17 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
 
   if (items.length === 0) return null;
 
-  // Count active/visible items (for table columns, prevent hiding last one)
+  // Count active/visible items (prevent hiding/toggling last one for all field types)
   const activeItemsCount = items.filter((item) => item.isActive !== false).length;
+
+  // If only 1 item exists total, don't show toggles at all
+  const hideToggles = items.length === 1;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       {items.map((item, index) => {
-        const isLastActive = activeItemsCount === 1 && item.isActive !== false && isTableComponent;
+        // Check if this is the last active item (applies to all field types)
+        const isLastActive = activeItemsCount === 1 && item.isActive !== false;
         return (
           <ItemLocalizationInput
             key={`${item.code || item.header || item.name}-${index}`}
@@ -64,6 +67,7 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
             t={t}
             disabled={disabled}
             isLastActive={isLastActive}
+            hideToggle={hideToggles}
           />
         );
       })}
@@ -75,14 +79,15 @@ const PopupFieldConfigurator = ({ field, t, disabled = false }) => {
  * ItemLocalizationInput - Generic component for enum option or table column
  * with text field and toggle
  */
-const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, propertyPath, t, disabled, isLastActive }) => {
+const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, propertyPath, t, disabled, isLastActive, hideToggle = false }) => {
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
   const { selectedField } = useSelector((state) => state.remoteConfig);
 
   // Get the localization code (name for enums, header for columns)
   const localizationCode = item.name || item.header;
-  const localizedValue = useCustomT(localizationCode) || localizationCode;
+  // Don't fallback to code, empty string is valid (same as LocalizationInput)
+  const localizedValue = useCustomT(localizationCode);
 
   // Toggle state - isActive is true by default if not specified
   const isActive = item.isActive !== false;
@@ -95,13 +100,13 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
 
   // Handle toggle - update the isActive property
   const handleToggle = (value) => {
-    // Prevent deactivating if this is the last active column in a table
+    // Prevent deactivating if this is the last active item
     if (isLastActive && !value) {
       // Show toast/alert to user
       if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
         window.__appConfig_showToast({
           key: "error",
-          label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
+          label: t("AT_LEAST_ONE_ITEM_MUST_BE_ACTIVE"),
         });
       }
       return;
@@ -134,20 +139,6 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
     );
   };
 
-  // Handle text input change - update localization
-  const handleTextChange = (e) => {
-    const newValue = e.target.value;
-
-    // Update localization
-    dispatch(
-      updateLocalizationEntry({
-        code: localizationCode,
-        locale: currentLocale || "en_IN",
-        message: newValue,
-      })
-    );
-  };
-
   // Label prefix and placeholder based on item type
   const labelPrefix = itemType === "column" ? t("COLUMN") : t("OPTION_PLACEHOLDER");
   const placeholder = itemType === "column"
@@ -169,33 +160,44 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
       >
         <label style={{ fontWeight: "500", fontSize: "14px" }}>{label}</label>
 
-        {/* Toggle switch */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Switch
-            label=""
-            onToggle={handleToggle}
-            disable={disabled || isLastActive}
-            isCheckedInitially={toggleState}
-            key={`toggle-${item.code || itemIndex}-${toggleState}`}
-            shapeOnOff
-            isLabelFirst={true}
-            className={"digit-sidepanel-switch-wrap"}
-          />
-        </div>
+        {/* Toggle switch - hidden if only 1 item exists or if this is the last active item */}
+        {!hideToggle && !isLastActive && (
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Switch
+              label=""
+              onToggle={handleToggle}
+              disable={disabled}
+              isCheckedInitially={toggleState}
+              key={`toggle-${item.code || itemIndex}-${toggleState}`}
+              shapeOnOff
+              isLabelFirst={true}
+              className={"digit-sidepanel-switch-wrap"}
+            />
+          </div>
+        )}
       </div>
 
-      {/* Text input - hide with CSS when inactive */}
-        <TextInput
-          type="text"
-          value={localizedValue}
-          onChange={handleTextChange}
-          placeholder={placeholder}
-          disabled={!toggleState}
-          style={{
-            width: "100%",
-          }}
-        />
-      
+      {/* Text field using FieldV1 - same as LocalizationInput */}
+      <FieldV1
+        value={localizedValue}
+        type="text"
+        placeholder={placeholder}
+        onChange={(e) => {
+          const val = e.target.value;
+          // Update localization for the code
+          dispatch(
+            updateLocalizationEntry({
+              code: localizationCode,
+              locale: currentLocale || "en_IN",
+              message: val,
+            })
+          );
+        }}
+        populators={{
+          fieldPairClassName: "drawer-toggle-conditional-field",
+        }}
+        disabled={!toggleState}
+      />
     </div>
   );
 });

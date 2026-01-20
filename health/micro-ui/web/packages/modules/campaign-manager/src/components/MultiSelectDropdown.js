@@ -65,6 +65,7 @@ const Wrapper = ({
   frozenData,
   frozenType,
   onClose,
+  disableClearAll = false,
 }) => {
   const [dummySelected, setDummySelected] = useState(alreadyQueuedSelectedState);
   const boundaryType = alreadyQueuedSelectedState.find((item) => item.propsData[1] !== null)?.propsData[1]?.type;
@@ -159,6 +160,10 @@ const Wrapper = ({
               .flatMap(([key, value]) =>
                 Object.entries(value || {})
                   .filter(([subkey, item]) => {
+                    // When disableClearAll is false (user clicked Yes), show all options
+                    if (disableClearAll === false) {
+                      return true;
+                    }
                     const itemCode = item?.split(".")?.[0];
                     if (frozenData?.length > 0) {
                       const isFrozen = frozenData.some((frozenOption) => {
@@ -208,7 +213,8 @@ const Wrapper = ({
           <div className="digit-tag-container">
             {items.map((value, index) => {
               const translatedText = t(value.code);
-              const isClose = frozenData.some((frozenOption) => frozenOption.code === value.code);
+              // Use disableClearAll to control close buttons
+              const isClose = disableClearAll;
               return (
                 <Chip
                   key={index}
@@ -220,7 +226,7 @@ const Wrapper = ({
               );
             })}
           </div>
-          {frozenData.length === 0 && (
+          {!disableClearAll && (
             <Button
               label={t("HCM_CLEAR_ALL")}
               onClick={() => {
@@ -283,6 +289,7 @@ const MultiSelectDropdown = ({
   hierarchyType,
   frozenType,
   isSearchable = false,
+  disableClearAll = false,
 }) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
@@ -771,7 +778,9 @@ const MultiSelectDropdown = ({
 
   const MenuItem = ({ option, index }) => {
     const [isActive, setIsActive] = useState(false);
-    const isFrozen = frozenData.some((frozenOption) => frozenOption.code === option.code);
+    // When disableClearAll is false (user clicked Yes), don't freeze any options
+    // Only use frozenData when disableClearAll is not explicitly set to false
+    const isFrozen = disableClearAll === false ? false : frozenData.some((frozenOption) => frozenOption.code === option.code);
     return (
       <div
         key={index}
@@ -950,7 +959,9 @@ const MultiSelectDropdown = ({
               .map((value, index) => {
                 const translatedText = t(config?.chipKey ? value[config?.chipKey] : value.code);
                 const replacedText = replaceDotWithColon(translatedText);
-                const isClose = frozenData.some((frozenOption) => frozenOption.code === value.code);
+                // disableClearAll takes precedence - when true, hide all close buttons
+                // when false, show close buttons (allow modification)
+                const isClose = disableClearAll;
                 return (
                   <Chip
                     key={index}
@@ -988,9 +999,10 @@ const MultiSelectDropdown = ({
               hierarchyType={hierarchyType}
               frozenData={frozenData}
               frozenType={frozenType}
+              disableClearAll={disableClearAll}
             ></Wrapper>
           )}
-          {alreadyQueuedSelectedState.length > 0 && frozenData.length == 0 && (
+          {alreadyQueuedSelectedState.length > 0 && !disableClearAll && (
             <Button
               label={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
               onClick={handleClearAll}
@@ -1034,6 +1046,7 @@ MultiSelectDropdown.propTypes = {
   isPropsNeeded: PropTypes.bool,
   ServerStyle: PropTypes.object,
   config: PropTypes.object,
+  disableClearAll: PropTypes.bool,
 };
 
 export default MultiSelectDropdown;

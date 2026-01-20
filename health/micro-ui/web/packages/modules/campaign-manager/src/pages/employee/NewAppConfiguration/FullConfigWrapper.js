@@ -30,7 +30,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  const [activeSidePanel, setActiveSidePanel] = useState(null); // 'roles' or 'flows' or null
+  const [activeSidePanel, setActiveSidePanel] = useState("flows"); // 'roles' or 'flows' or null - defaults to 'flows' to keep flow panel open
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
 

@@ -135,6 +135,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   }, [selectedData, boundaryOptions, restrictSelection, isUnifiedCampaign, isDataLoaded]);
 
   useEffect(() => {
+    // Show popup on initial load if there's upload data and user hasn't made a choice yet
+    if (restrictSelection !== null) return;
+
     if (
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
@@ -142,9 +145,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
     ) {
       setRestrictSelection(true);
-      setShowPopUp(true); // Show popup immediately on initial load if data is present
+      setShowPopUp(true);
     }
-  }, [props?.props?.sessionData]);
+  }, [props?.props?.sessionData, restrictSelection]);
 
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
@@ -297,6 +300,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 label={t("HCM_USE_UNIFIED_UPLOAD")}
                 isCheckedInitially={isUnifiedCampaign}
                 onToggle={(checked) => setIsUnifiedCampaign(checked)}
+                disabled={restrictSelection}
               />
             </div>
           </Card>
