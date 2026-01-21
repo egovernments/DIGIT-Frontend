@@ -332,6 +332,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               // When isMdms is OFF, check for valid static options
               // For dropdown/dropdownTemplate/select/selectionCard - check enums or dropDownOptions
               if (["dropdown", "dropdownTemplate", "select", "selectionCard"].includes(popupField.format)) {
+                                // Check if enums is a dynamic function string (e.g., "{{fn:getUniqueComplaintTypes(contextData)}}")
+                // If so, skip validation as options are populated at runtime
+                const isDynamicEnums = popupField?.enums && typeof popupField.enums === "string";
+
+                if (!isDynamicEnums) {
+
                 const hasValidEnums = popupField?.enums && Array.isArray(popupField.enums) && popupField.enums.length > 0;
                 const hasValidDropdownOptions = popupField?.dropDownOptions && Array.isArray(popupField.dropDownOptions) && popupField.dropDownOptions.length > 0;
                 const hasValidSchemaCode = popupField?.schemaCode && typeof popupField.schemaCode === "string" && popupField.schemaCode.trim().length > 0;
@@ -358,6 +364,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     });
                   }
                 }
+              }
               }
 
               // For radioList - check data array
