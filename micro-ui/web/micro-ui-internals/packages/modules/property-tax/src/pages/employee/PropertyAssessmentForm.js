@@ -127,7 +127,6 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   });
   const currentConfig = config[currentStep];
 
-  console.log(formData, "1: formData");
 
 
   // API hook for fetching property details in update, reassess, or assess mode
@@ -183,6 +182,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
       },
     })
     : { isLoading: false, data: null };
+
+
 
   // API hook for property creation
   const { isLoading: isCreating, data: createResponse, revalidate: createProperty } = Digit.Hooks.useCustomAPIHook({
@@ -1184,6 +1185,13 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     console.log("ownerDetails.ownerName:", ownerDetails.ownerName);
     console.log("==================================");
 
+    // Helper to convert Sq.Ft to Sq.Yards (divide by 9) matching Old UI
+    const convertArea = (value) => {
+      const val = parseFloat(value) || 0;
+      // Convert Sq.Ft to Sq.Yards and round to 2 decimal places
+      return val > 0 ? parseFloat((val / 9).toFixed(2)) : 0;
+    };
+
     const payloadToReturn = {
       Property: {
         ...(isUpdateMode && propertyMetadata ? {
@@ -1208,16 +1216,53 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "STATUS" : "CREATE"),
         noOfFloors: (() => {
           if (propertyTypeCode === 'VACANT') return 1;
+          if (propertyTypeCode === 'SHAREDPROPERTY') return 2; // Match Mseva behavior
           const rawFloor = parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1;
           return rawFloor + 1;
         })(),
-        // landArea: null for SHAREDPROPERTY, otherwise string value
-        landArea: propertyTypeCode === 'SHAREDPROPERTY' ? null : String(parseFloat(conditionalFields.plotSize) || 0),
-        // Calculate superBuiltUpArea from sum of all unit builtUpAreas
+        // landArea: null for SHAREDPROPERTY, otherwise converted value
+        landArea: propertyTypeCode === 'SHAREDPROPERTY' ? null : String(convertArea(conditionalFields.plotSize) || 0),
+        // Calculate superBuiltUpArea: For Shared Property, use input (plotSize), otherwise sum of units
         superBuiltUpArea: (() => {
-          const units = conditionalFields.floors?.flatMap(f => f.units || []) || conditionalFields.units || [];
-          const totalBuiltUp = units.reduce((sum, unit) => sum + (parseFloat(unit.builtUpArea) || 0), 0);
-          return totalBuiltUp > 0 ? totalBuiltUp : null;
+          console.log("***LOG*** Calculating superBuiltUpArea");
+          console.log("***LOG*** propertyTypeCode:", propertyTypeCode);
+
+          // Priority 1: Check for duplicate/explicit superBuiltUpArea (from form config matching old UI)
+          if (conditionalFields.superBuiltUpArea) {
+            console.log("***LOG*** Using explicit superBuiltUpArea:", conditionalFields.superBuiltUpArea);
+            return convertArea(conditionalFields.superBuiltUpArea) || null;
+          }
+
+          // Determine units list
+          let units = [];
+          if (conditionalFields.floors && conditionalFields.floors.length > 0) {
+            units = conditionalFields.floors.flatMap(f => f.units || []);
+          } else if (conditionalFields.units && conditionalFields.units.length > 0) {
+            units = conditionalFields.units;
+          }
+          console.log("***LOG*** Extracted units count:", units.length);
+
+          // Calculate total before conversion
+          let totalValue = 0;
+
+          if (propertyTypeCode === 'SHAREDPROPERTY' || propertyTypeCode === 'BUILTUP.SHAREDPROPERTY') {
+            // Try plotSize first for Shared Property as it often holds the super area in this UI
+            if (conditionalFields.plotSize) {
+              const ps = parseFloat(conditionalFields.plotSize);
+              if (ps > 0) {
+                console.log("***LOG*** Using plotSize for SHAREDPROPERTY:", ps);
+                totalValue = ps;
+              }
+            }
+          }
+
+          if (totalValue === 0) {
+            const totalBuiltUp = units.reduce((sum, unit) => sum + (parseFloat(unit.builtUpArea) || 0), 0);
+            console.log("***LOG*** Calculated totalBuiltUp from units:", totalBuiltUp);
+            totalValue = totalBuiltUp;
+          }
+
+          return totalValue > 0 ? convertArea(totalValue) : null;
         })(),
         isactive: false,
         isinactive: false,
@@ -1451,14 +1496,15 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
                 } else {
                   // Fallback: use property-level usageCategory or unit's usage type
                   finalUsageCategory = usageCategoryCode || unit.usageType?.code || unit.usageType || "RESIDENTIAL";
-                  finalUnitType = unit.usageType?.code || unit.usageType || usageCategoryCode || "RESIDENTIAL";
+                  // If no subUsageType, unitType should be undefined (matching Mseva)
+                  finalUnitType = undefined;
                 }
 
                 return {
                   ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
                   tenantId: null,
                   floorNo: parseInt(floor.floorNo?.code || floor.floorNo) || 0,
-                  unitType: "false",
+                  unitType: finalUnitType,
                   usageCategory: finalUsageCategory,
                   occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
                   occupancyName: occupancy === "OWNER" ? "Self-Occupied" : (occupancy === "RENTED" ? "Rented" : occupancy),
@@ -1467,7 +1513,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
                   constructionDetail: {
                     ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
                     carpetArea: null,
-                    builtUpArea: parseFloat(unit.builtUpArea) || 0,
+                    builtUpArea: convertArea(unit.builtUpArea),
                     plinthArea: null,
                     superBuiltUpArea: null,
                     constructionType: null,
@@ -1498,8 +1544,13 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
               } else {
                 // Fallback: use property-level usageCategory or unit's usage type
                 finalUsageCategory = usageCategoryCode || unit.usageType?.code || unit.usageType || "RESIDENTIAL";
-                finalUnitType = unit.usageType?.code || unit.usageType || usageCategoryCode || "RESIDENTIAL";
+                // If no subUsageType, unitType should be undefined (matching Mseva)
+                finalUnitType = undefined;
               }
+
+              const plotSizeValue = parseFloat(conditionalFields.plotSize) || 0;
+              const unitBuiltUpArea = parseFloat(unit.builtUpArea) || 0;
+              const finalBuiltUpArea = unitBuiltUpArea > 0 ? unitBuiltUpArea : (plotSizeValue > 0 ? plotSizeValue : 0);
 
               return {
                 ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
@@ -1514,7 +1565,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
                 arv: String(parseFloat(unit.arv) || 0),
                 constructionDetail: {
                   ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
-                  builtUpArea: parseFloat(unit.builtUpArea) || 0
+                  builtUpArea: convertArea(finalBuiltUpArea)
                 }
               };
             }).filter(Boolean);

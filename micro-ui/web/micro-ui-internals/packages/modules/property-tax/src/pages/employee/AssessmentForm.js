@@ -23,6 +23,9 @@ const AssessmentForm = () => {
   const propertyId = searchParams.get('propertyId');
   const assessmentId = searchParams.get('assessmentId');
   const purpose = searchParams.get('purpose') || 'assess';
+
+  console.log("AssessmentForm Mounted. Purpose:", purpose, "PropertyID:", propertyId);
+
   const financialYear = searchParams.get('FY') || '2024-25';
   const tenantId = searchParams.get('tenantId') || Digit?.ULBService?.getCurrentTenantId();
 
@@ -39,6 +42,7 @@ const AssessmentForm = () => {
     propertyType: '',
     usageCategory: '',
     landArea: '',
+    superBuiltUpArea: '',
     noOfFloors: '',
     units: []
   });
@@ -85,6 +89,7 @@ const AssessmentForm = () => {
         propertyType: property.propertyType || '',
         usageCategory: property.usageCategory || '',
         landArea: property.landArea || '',
+        superBuiltUpArea: property.superBuiltUpArea || '',
         noOfFloors: property.noOfFloors || '',
         units: property.units || []
       });
@@ -108,16 +113,71 @@ const AssessmentForm = () => {
   const handleUnitFieldChange = (unitIndex, field, value) => {
     setEditableProperty(prev => ({
       ...prev,
-      units: prev.units.map((unit, idx) =>
-        idx === unitIndex ? { ...unit, [field]: value } : unit
-      )
+      units: prev.units.map((unit, idx) => {
+        if (idx !== unitIndex) return unit;
+
+        if (field.includes('.')) {
+          const [parent, child] = field.split('.');
+          return {
+            ...unit,
+            [parent]: {
+              ...unit[parent],
+              [child]: value
+            }
+          };
+        }
+
+        return { ...unit, [field]: value };
+      })
     }));
   };
 
   const handleCalculateEstimate = async () => {
     setIsCalculating(true);
     try {
-      // Create assessment payload for estimate calculation
+      // Mseva Parity: Handle Property Type Composite Logic
+      // Mseva joins propertyType and propertySubType. Here we simulate it if the dropdown gives a simple code.
+      let finalPropertyType = editableProperty.propertyType;
+      if (editableProperty.propertyType === "SHAREDPROPERTY") {
+        finalPropertyType = "BUILTUP.SHAREDPROPERTY";
+      } else if (editableProperty.propertyType === "BUILT_UP") {
+        // Assuming BUILT_UP maps to BUILTUP.INDEPENDENTPROPERTY or similar if needed
+      }
+
+      // Mseva Parity: Super Built-up Area
+      // Always use the editable value if present, falling back to null.
+      let currentSuperBuiltUpArea = editableProperty.superBuiltUpArea ? parseFloat(editableProperty.superBuiltUpArea) : null;
+
+      // Transform units to match assessment payload structure (Mseva Strictness)
+      const transformedUnits = editableProperty.units.map(unit => {
+        const derivedUnitType = unit.usageCategory;
+
+        // For Shared Property, Mseva syncs unit area with super area.
+        // If unit area is empty but super area exists, let's auto-fill it to be safe.
+        let finalBuiltUpArea = unit.constructionDetail?.builtUpArea ? parseFloat(unit.constructionDetail.builtUpArea) : (unit.builtUpArea ? parseFloat(unit.builtUpArea) : null);
+
+        // Fallback: If Shared and unit area is missing but super area exists
+        if (!finalBuiltUpArea && finalPropertyType.includes("SHAREDPROPERTY") && currentSuperBuiltUpArea) {
+          finalBuiltUpArea = currentSuperBuiltUpArea;
+        }
+
+        return {
+          ...unit,
+          unitType: derivedUnitType,
+          usageCategory: unit.usageCategory,
+          occupancyType: unit.occupancyType,
+          floorNo: unit.floorNo,
+          tenantId: tenantId,
+          constructionDetail: {
+            builtUpArea: finalBuiltUpArea,
+            constructionType: unit.constructionDetail?.constructionType
+          },
+          builtUpArea: undefined,
+          arv: unit.arv
+        };
+      });
+
+      // Prepare Final Assessment Payload
       const assessmentPayload = {
         Assessment: {
           ...propertyData,
@@ -125,16 +185,24 @@ const AssessmentForm = () => {
           propertyId: propertyId,
           tenantId: tenantId,
           source: "MUNICIPAL_RECORDS",
-          channel: "COUNTER",
+          channel: "CFC_COUNTER",
           assessmentDate: Date.now(),
-          propertyType: editableProperty.propertyType,
+          propertyType: finalPropertyType,
           usageCategory: editableProperty.usageCategory,
           landArea: editableProperty.landArea ? parseFloat(editableProperty.landArea) : null,
+          superBuiltUpArea: currentSuperBuiltUpArea,
           noOfFloors: editableProperty.noOfFloors ? parseInt(editableProperty.noOfFloors) : null,
-          units: editableProperty.units,
-          address: propertyData?.address
+          units: transformedUnits,
+          address: propertyData?.address,
+          additionalDetails: {
+            ...propertyData?.additionalDetails
+          },
+          // Ensure creationReason is preserved or set
+          creationReason: propertyData?.creationReason || 'CREATE'
         }
       };
+
+      console.log("Assessment Estimate Payload Accumulation:", JSON.stringify(assessmentPayload, null, 2));
 
       // Call PT calculator API for estimate
       const result = await Digit.CustomService.getResponse({
@@ -164,21 +232,70 @@ const AssessmentForm = () => {
     setIsSubmitting(true);
 
     try {
+      // Mseva Parity: Handle Property Type Composite Logic
+      let finalPropertyType = editableProperty.propertyType;
+      if (editableProperty.propertyType === "SHAREDPROPERTY") {
+        finalPropertyType = "BUILTUP.SHAREDPROPERTY";
+      }
+
+      // Mseva Parity: Super Built-up Area
+      // Debug log to check the raw value from state
+      console.log("Raw SuperBuiltUpArea in State:", editableProperty.superBuiltUpArea);
+
+      let currentSuperBuiltUpArea = editableProperty.superBuiltUpArea ? parseFloat(editableProperty.superBuiltUpArea) : null;
+
+      console.log("Parsed SuperBuiltUpArea:", currentSuperBuiltUpArea);
+
+      // Force inclusion if Shared property and value exists in raw state
+      if (finalPropertyType.includes("SHAREDPROPERTY") && !currentSuperBuiltUpArea && editableProperty.superBuiltUpArea) {
+        currentSuperBuiltUpArea = parseFloat(editableProperty.superBuiltUpArea);
+      }
+
+      const transformedUnits = editableProperty.units.map(unit => {
+        let finalBuiltUpArea = unit.constructionDetail?.builtUpArea ? parseFloat(unit.constructionDetail.builtUpArea) : (unit.builtUpArea ? parseFloat(unit.builtUpArea) : null);
+
+        // Fallback: If Shared and unit area is missing but super area exists
+        if (!finalBuiltUpArea && finalPropertyType.includes("SHAREDPROPERTY") && currentSuperBuiltUpArea) {
+          finalBuiltUpArea = currentSuperBuiltUpArea;
+        }
+
+        return {
+          ...unit,
+          unitType: unit.usageCategory,
+          usageCategory: unit.usageCategory,
+          occupancyType: unit.occupancyType,
+          floorNo: unit.floorNo,
+          tenantId: tenantId,
+          constructionDetail: {
+            builtUpArea: finalBuiltUpArea,
+            constructionType: unit.constructionDetail?.constructionType
+          },
+          builtUpArea: undefined, // Cleanup
+          arv: unit.arv
+        };
+      });
+
       // Update property with modified details first if reassessment
       if (purpose === 'reassess') {
         const propertyUpdatePayload = {
           Property: {
             ...propertyData,
-            propertyType: editableProperty.propertyType,
+            propertyType: finalPropertyType,
             usageCategory: editableProperty.usageCategory,
-            landArea: parseFloat(editableProperty.landArea),
-            noOfFloors: parseInt(editableProperty.noOfFloors),
-            units: editableProperty.units,
+            landArea: editableProperty.landArea ? parseFloat(editableProperty.landArea) : null,
+            superBuiltUpArea: currentSuperBuiltUpArea,
+            noOfFloors: editableProperty.noOfFloors ? parseInt(editableProperty.noOfFloors) : null,
+            units: transformedUnits,
+            source: "MUNICIPAL_RECORDS",
+            channel: "CFC_COUNTER",
+            creationReason: propertyData?.creationReason || 'CREATE',
             workflow: {
               action: "UPDATE"
             }
           }
         };
+
+        console.log("Property Update Payload:", JSON.stringify(propertyUpdatePayload, null, 2));
 
         await Digit.CustomService.getResponse({
           url: "/property-services/property/_update",
@@ -196,7 +313,7 @@ const AssessmentForm = () => {
           tenantId: tenantId,
           assessmentDate: Date.now(),
           source: "MUNICIPAL_RECORDS",
-          channel: "COUNTER",
+          channel: "CFC_COUNTER",
           status: "ACTIVE",
           additionalDetails: {
             // Preserve adhoc penalty/exemption from previous assessment if reassessment
@@ -305,6 +422,9 @@ const AssessmentForm = () => {
     { title: t("PT_REVIEW_ESTIMATE"), isActive: currentStep === 2, isCompleted: currentStep > 2 }
   ];
 
+  console.log(editableProperty, "editableProperty");
+
+
   return (
     <div>
       {/* Header Section */}
@@ -376,33 +496,66 @@ const AssessmentForm = () => {
             </h3>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-              <Dropdown
-                label={t("PT_PROPERTY_TYPE")}
-                option={propertyTypeOptions}
-                optionKey="code"
-                select={(value) => handlePropertyFieldChange('propertyType', value?.code)}
-                selected={propertyTypeOptions.find(opt => opt.code === editableProperty.propertyType)}
-                placeholder={t("PT_SELECT_PROPERTY_TYPE")}
-              />
-
+              {/* 1. Usage Category First */}
               <Dropdown
                 label={t("PT_USAGE_CATEGORY")}
                 option={usageCategoryOptions}
                 optionKey="code"
-                select={(value) => handlePropertyFieldChange('usageCategory', value?.code)}
+                select={(value) => {
+                  console.log("Selected Usage Category:", value?.code);
+                  setEditableProperty(prev => ({
+                    ...prev,
+                    usageCategory: value?.code,
+                    propertyType: '' // Reset property type when usage changes
+                  }));
+                }}
                 selected={usageCategoryOptions.find(opt => opt.code === editableProperty.usageCategory)}
                 placeholder={t("PT_SELECT_USAGE_CATEGORY")}
+              />
+
+              {/* 2. Property Type Second */}
+              <Dropdown
+                label={t("PT_PROPERTY_TYPE")}
+                option={propertyTypeOptions}
+                optionKey="code"
+                select={(value) => {
+                  console.log("Selected Property Type:", value?.code);
+                  setEditableProperty(prev => ({ ...prev, propertyType: value?.code }));
+                }}
+                selected={propertyTypeOptions.find(opt => opt.code === editableProperty.propertyType)}
+                placeholder={t("PT_SELECT_PROPERTY_TYPE")}
+                disable={!editableProperty.usageCategory}
               />
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-              <TextInput
-                label={t("PT_PLOT_SIZE")}
-                value={editableProperty.landArea}
-                onChange={(e) => handlePropertyFieldChange('landArea', e.target.value)}
-                placeholder={t("PT_ENTER_PLOT_SIZE")}
-                type="number"
-              />
+              {/* Conditional Rendering based on Property Type */}
+              {editableProperty.propertyType && !editableProperty.propertyType.includes("SHAREDPROPERTY") && (
+                <TextInput
+                  label={t("PT_PLOT_SIZE")}
+                  value={editableProperty.landArea}
+                  onChange={(e) => {
+                    console.log("Updating Land Area:", e.target.value);
+                    handlePropertyFieldChange('landArea', e.target.value)
+                  }}
+                  placeholder={t("PT_ENTER_PLOT_SIZE")}
+                  type="number"
+                />
+              )}
+
+              {editableProperty.propertyType && editableProperty.propertyType.includes("SHAREDPROPERTY") && (
+                <TextInput
+                  label={t("PT_FORM2_TOTAL_BUILT_AREA")}
+                  value={editableProperty.superBuiltUpArea}
+                  onChange={(e) => {
+                    console.log("Updating Super Built Up Area:", e.target.value);
+                    handlePropertyFieldChange('superBuiltUpArea', e.target.value);
+                  }}
+                  placeholder={t("PT_ENTER_SUPER_BUILT_UP_AREA")}
+                  type="number"
+                />
+              )}
+
 
               <TextInput
                 label={t("PT_NO_OF_FLOORS")}
@@ -451,22 +604,49 @@ const AssessmentForm = () => {
                 </h4>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                  <div>
-                    <label style={{ fontWeight: "500" }}>{t("PT_USAGE_CATEGORY")}</label>
-                    <div>{unit.usageCategory || t("ES_COMMON_NA")}</div>
-                  </div>
-                  <div>
-                    <label style={{ fontWeight: "500" }}>{t("PT_OCCUPANCY_TYPE")}</label>
-                    <div>{unit.occupancyType || t("ES_COMMON_NA")}</div>
-                  </div>
-                  <div>
-                    <label style={{ fontWeight: "500" }}>{t("PT_BUILT_UP_AREA")}</label>
-                    <div>{unit.constructionDetail?.builtUpArea ? `${unit.constructionDetail.builtUpArea} sq ft` : t("ES_COMMON_NA")}</div>
-                  </div>
-                  <div>
-                    <label style={{ fontWeight: "500" }}>{t("PT_CONSTRUCTION_TYPE")}</label>
-                    <div>{unit.constructionDetail?.constructionType || t("ES_COMMON_NA")}</div>
-                  </div>
+                  <Dropdown
+                    label={t("PT_USAGE_CATEGORY")}
+                    option={usageCategoryOptions}
+                    optionKey="code"
+                    select={(value) => handleUnitFieldChange(index, 'usageCategory', value?.code)}
+                    selected={usageCategoryOptions.find(opt => opt.code === unit.usageCategory)}
+                    placeholder={t("PT_SELECT_USAGE_CATEGORY")}
+                  />
+
+                  <Dropdown
+                    label={t("PT_OCCUPANCY_TYPE")}
+                    option={[
+                      { code: "SELFOCCUPIED", name: t("PT_SELF_OCCUPIED") },
+                      { code: "RENTED", name: t("PT_RENTED") },
+                      { code: "UNOCCUPIED", name: t("PT_UNOCCUPIED") }
+                    ]}
+                    optionKey="code"
+                    select={(value) => handleUnitFieldChange(index, 'occupancyType', value?.code)}
+                    selected={[
+                      { code: "SELFOCCUPIED", name: t("PT_SELF_OCCUPIED") },
+                      { code: "RENTED", name: t("PT_RENTED") },
+                      { code: "UNOCCUPIED", name: t("PT_UNOCCUPIED") }
+                    ].find(opt => opt.code === unit.occupancyType)}
+                    placeholder={t("PT_SELECT_OCCUPANCY_TYPE")}
+                  />
+
+                  <TextInput
+                    label={t("PT_FORM2_BUILT_AREA")}
+                    value={unit.constructionDetail?.builtUpArea || unit.builtUpArea || ""}
+                    onChange={(e) => handleUnitFieldChange(index, 'constructionDetail.builtUpArea', e.target.value)}
+                    placeholder={t("PT_ENTER_BUILT_UP_AREA")}
+                    type="number"
+                  />
+
+                  {/* Floor No - editable if needed, but usually fixed from property unless re-defining property structure */}
+                  <TextInput
+                    label={t("PT_FLOOR_NO")}
+                    value={unit.floorNo}
+                    onChange={(e) => handleUnitFieldChange(index, 'floorNo', e.target.value)}
+                    placeholder={t("PT_ENTER_FLOOR_NO")}
+                    type="number"
+                  />
+
                 </div>
               </div>
             ))
