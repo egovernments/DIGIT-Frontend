@@ -151,6 +151,7 @@ const SelectionCard = ({ field, t, props }) => {
     <SelectionTag
       errorMessage=""
       onSelectionChanged={() => { }}
+      allowMultipleSelection={selectionField?.isMultiSelect || false}
       options={options}
       optionsKey={"name"}
       selected={[]}

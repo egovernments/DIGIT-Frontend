@@ -198,23 +198,18 @@ const PopupLabelField = ({ label, path, value, selectedField }) => {
   const localizedValue = useCustomT(value);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+    <div className="drawer-container-tooltip">
       {/* Label on top */}
-      <label
-        style={{
-          fontSize: "14px",
-          fontWeight: "500",
-          color: "#0B0C0C",
-        }}
-      >
-        {t(label)}
-      </label>
+      <div style={{ display: "flex", marginBottom: "8px" }}>
+        <label style={{ fontWeight: "500", fontSize: "14px" }}>{t(label)}</label>
+      </div>
 
       {/* Text field using FieldV1 - same as LocalizationInput */}
       <FieldV1
         value={localizedValue}
         type="text"
         placeholder={t("ENTER_LABEL_TEXT") || ""}
+        withoutLabel={true}
         onChange={(e) => {
           const val = e.target.value;
           // Update localization for the code

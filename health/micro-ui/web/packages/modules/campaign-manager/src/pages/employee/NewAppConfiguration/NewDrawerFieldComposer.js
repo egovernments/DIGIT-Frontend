@@ -495,8 +495,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isMandatory = selectedField?.mandatory === true;
         const isDisabled = panelItem?.disableForRequired && isMandatory;
         // Check if this is a length-related field (should not allow negative values)
-        const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length") ;
-        const isRangeField=  panelItem.label?.toLowerCase()?.includes("minimum") || panelItem.label?.toLowerCase()?.includes("maximum");
+        const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length");
+        const isRangeField = panelItem.label?.toLowerCase()?.includes("minimum") || panelItem.label?.toLowerCase()?.includes("maximum");
+        const shouldPreventNegative = isLengthField || isRangeField;
+
         return (
           <FieldV1
             type="number"
@@ -508,24 +510,46 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               if (inputValue === "" || inputValue === null || inputValue === undefined) {
                 setLocalValue("");
                 handleNumberChange(null);
-              } else {
-                const value = parseInt(inputValue);
-                // Only set if it's a valid number
-                if (!isNaN(value) || typeof inputValue === "string") {
-                  // Prevent negative values for length-related fields
-                  if ((isLengthField || isRangeField) && value < 0) {
-                    return;
-                  }
-                  setLocalValue(value);
-                  handleNumberChange(value);
+                return;
+              }
+
+              // Validate input format - reject invalid patterns like "--1", "++1", etc.
+              // Allow only valid number formats: optional single minus followed by digits
+              const isValidFormat = /^-?\d+$/.test(inputValue);
+              if (!isValidFormat) {
+                // Clear the field for invalid format
+                setLocalValue("");
+                handleNumberChange(null);
+                return;
+              }
+
+              const value = parseInt(inputValue, 10);
+              // Only set if it's a valid number
+              if (!isNaN(value)) {
+                // Prevent negative values for length-related fields
+                if (shouldPreventNegative && value < 0) {
+                  // Clear the field for negative values in length/range fields
+                  setLocalValue("");
+                  handleNumberChange(null);
+                  return;
                 }
+                setLocalValue(value);
+                handleNumberChange(value);
+              } else {
+                // Clear the field for NaN
+                setLocalValue("");
+                handleNumberChange(null);
               }
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{
+              allowNegativeValues: !shouldPreventNegative,
               fieldPairClassName: "drawer-toggle-conditional-field",
-              validation: { min: isLengthField ? 0 : undefined },
+              validation: {
+                min: shouldPreventNegative ? 0 : undefined,
+                pattern: shouldPreventNegative ? "^\\d+$" : "^-?\\d+$",
+              },
             }}
             disabled={isDisabled}
           />
@@ -1080,7 +1104,7 @@ const LocalizationInput = React.memo(
     // For table columns, toggle state controls visibility of input
     // Toggle ON = visible (hidden: false)
     // Toggle OFF = hidden (hidden: true)
-    const isColumnHidden = isTableColumn ? column.hidden !== false : false;
+    const isColumnHidden = isTableColumn ? column.isActive === false : false;
 
     // Local state to control the toggle and prevent it from changing when disabled
     const [toggleState, setToggleState] = useState(!isColumnHidden);

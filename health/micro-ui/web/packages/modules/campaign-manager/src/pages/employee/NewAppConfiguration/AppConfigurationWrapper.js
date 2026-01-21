@@ -31,9 +31,15 @@ const getLocalizedValue = (code, localizationData, currentLocale) => {
 };
 
 // Helper function to check if localized value is empty
+// Returns true if: code is missing/empty, entry doesn't exist, or localized value is empty
 const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
+  // If code itself is empty/missing, consider it as empty localization
+  if (!code || (typeof code === "string" && code.trim() === "")) {
+    return true;
+  }
   const value = getLocalizedValue(code, localizationData, currentLocale);
-  return isValueEmpty(value);
+  const isEmpty = isValueEmpty(value);
+  return isEmpty;
 };
 
 const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
@@ -70,21 +76,65 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     const errors = [];
     const fieldTypeMasterData = fieldTypeMaster?.fieldTypeMappingConfig || [];
 
-    // Get all fields from currentData
-    const allFields = [];
-    if (currentData?.body) {
-      currentData.body.forEach((card) => {
-        if (card?.fields) {
-          card.fields.forEach((field) => {
-            allFields.push(field);
-          });
+    // Helper function to recursively collect all fields from nested template structures
+    const collectAllFields = (node, collectedFields = []) => {
+      if (!node) return collectedFields;
+
+      // Handle arrays
+      if (Array.isArray(node)) {
+        node.forEach((item) => collectAllFields(item, collectedFields));
+        return collectedFields;
+      }
+
+      // Handle objects
+      if (typeof node === "object") {
+        // If this node looks like a field (has fieldName or format), add it
+        if (node.fieldName || node.format) {
+          collectedFields.push(node);
         }
-      });
+
+        // Recursively search in child, children, primaryAction, secondaryAction
+        if (node.child) collectAllFields(node.child, collectedFields);
+        if (node.children) collectAllFields(node.children, collectedFields);
+        if (node.primaryAction) collectAllFields(node.primaryAction, collectedFields);
+        if (node.secondaryAction) collectAllFields(node.secondaryAction, collectedFields);
+
+        // Also search in fields array (for cards)
+        if (node.fields && Array.isArray(node.fields)) {
+          node.fields.forEach((field) => collectAllFields(field, collectedFields));
+        }
+      }
+
+      return collectedFields;
+    };
+
+    // Get all fields from currentData (including nested fields for templates)
+    const allFields = [];
+    const isTemplate = currentData?.type === "template";
+
+    if (currentData?.body) {
+      if (isTemplate) {
+        // For templates, recursively collect all nested fields
+        collectAllFields(currentData.body, allFields);
+      } else {
+        // For non-templates, use simple collection
+        currentData.body.forEach((card) => {
+          if (card?.fields) {
+            card.fields.forEach((field) => {
+              allFields.push(field);
+            });
+          }
+        });
+      }
     }
     if (currentData?.footer) {
-      currentData.footer.forEach((field) => {
-        allFields.push(field);
-      });
+      if (isTemplate) {
+        collectAllFields(currentData.footer, allFields);
+      } else {
+        currentData.footer.forEach((field) => {
+          allFields.push(field);
+        });
+      }
     }
 
     // Check each field against panel config
@@ -195,9 +245,9 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     tab: tabKey,
                   });
                 } else {
-                  // Check if any option has empty localized value for its name
+                  // Check if any option has empty/missing name code or empty localized value
                   const hasEmptyLocalizedName = dropDownOptions.some(
-                    (option) => option?.name && isLocalizedValueEmpty(option.name, localizationData, currentLocale)
+                    (option) => isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
                   );
 
                   if (hasEmptyLocalizedName) {
@@ -282,58 +332,69 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               // When isMdms is OFF, check for valid static options
               // For dropdown/dropdownTemplate/select/selectionCard - check enums or dropDownOptions
               if (["dropdown", "dropdownTemplate", "select", "selectionCard"].includes(popupField.format)) {
-                const hasValidEnums = popupField?.enums && Array.isArray(popupField.enums) && popupField.enums.length > 0;
-                const hasValidDropdownOptions = popupField?.dropDownOptions && Array.isArray(popupField.dropDownOptions) && popupField.dropDownOptions.length > 0;
-                const hasValidSchemaCode = popupField?.schemaCode && typeof popupField.schemaCode === "string" && popupField.schemaCode.trim().length > 0;
+                // Check if enums is a dynamic function string (e.g., "{{fn:getUniqueComplaintTypes(contextData)}}")
+                // If so, skip validation as options are populated at runtime
+                const isDynamicEnums = popupField?.enums && typeof popupField.enums === "string";
 
-                if (!hasValidEnums && !hasValidDropdownOptions && !hasValidSchemaCode) {
-                  errors.push({
-                    fieldLabel: fieldLabel,
-                    popupFieldLabel: popupFieldLabel,
-                    message: "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
-                    messageParams: { popupField: popupFieldLabel },
-                  });
-                } else if (hasValidEnums) {
-                  // Check if any enum has empty localized value for name
-                  const hasEmptyLocalizedName = popupField.enums.some(
-                    (option) => option?.isActive !== false && option?.name && isLocalizedValueEmpty(option.name, localizationData, currentLocale)
-                  );
+                if (!isDynamicEnums) {
+                  const hasValidEnums = popupField?.enums && Array.isArray(popupField.enums) && popupField.enums.length > 0;
+                  const hasValidDropdownOptions = popupField?.dropDownOptions && Array.isArray(popupField.dropDownOptions) && popupField.dropDownOptions.length > 0;
+                  const hasValidSchemaCode = popupField?.schemaCode && typeof popupField.schemaCode === "string" && popupField.schemaCode.trim().length > 0;
 
-                  if (hasEmptyLocalizedName) {
+                  if (!hasValidEnums && !hasValidDropdownOptions && !hasValidSchemaCode) {
                     errors.push({
                       fieldLabel: fieldLabel,
                       popupFieldLabel: popupFieldLabel,
-                      message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
+                      message: "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
                       messageParams: { popupField: popupFieldLabel },
                     });
+                  } else if (hasValidEnums) {
+                    // Check if any active enum has empty/missing name code or empty localized value
+                    const hasEmptyLocalizedName = popupField.enums.some(
+                      (option) => option?.isActive !== false && isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
+                    );
+
+                    if (hasEmptyLocalizedName) {
+                      errors.push({
+                        fieldLabel: fieldLabel,
+                        popupFieldLabel: popupFieldLabel,
+                        message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
+                        messageParams: { popupField: popupFieldLabel },
+                      });
+                    }
                   }
                 }
               }
 
               // For radioList - check data array
               if (popupField.format === "radioList") {
-                const hasValidData = popupField?.data && Array.isArray(popupField.data) && popupField.data.length > 0;
+                // Check if data is a dynamic function string - if so, skip validation
+                const isDynamicData = popupField?.data && typeof popupField.data === "string";
 
-                if (!hasValidData) {
-                  errors.push({
-                    fieldLabel: fieldLabel,
-                    popupFieldLabel: popupFieldLabel,
-                    message: "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
-                    messageParams: { popupField: popupFieldLabel },
-                  });
-                } else {
-                  // Check if any radio option has empty localized value
-                  const hasEmptyLocalizedName = popupField.data.some(
-                    (option) => option?.isActive !== false && option?.name && isLocalizedValueEmpty(option.name, localizationData, currentLocale)
-                  );
+                if (!isDynamicData) {
+                  const hasValidData = popupField?.data && Array.isArray(popupField.data) && popupField.data.length > 0;
 
-                  if (hasEmptyLocalizedName) {
+                  if (!hasValidData) {
                     errors.push({
                       fieldLabel: fieldLabel,
                       popupFieldLabel: popupFieldLabel,
-                      message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
+                      message: "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
                       messageParams: { popupField: popupFieldLabel },
                     });
+                  } else {
+                    // Check if any active radio option has empty/missing name code or empty localized value
+                    const hasEmptyLocalizedName = popupField.data.some(
+                      (option) => option?.isActive !== false && isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
+                    );
+
+                    if (hasEmptyLocalizedName) {
+                      errors.push({
+                        fieldLabel: fieldLabel,
+                        popupFieldLabel: popupFieldLabel,
+                        message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
+                        messageParams: { popupField: popupFieldLabel },
+                      });
+                    }
                   }
                 }
               }
@@ -351,9 +412,9 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     messageParams: { popupField: popupFieldLabel },
                   });
                 } else {
-                  // Check if any column has empty localized header
+                  // Check if any active column has empty/missing header code or empty localized header value
                   const hasEmptyLocalizedHeader = columns.some(
-                    (column) => column?.isActive !== false && column?.header && isLocalizedValueEmpty(column.header, localizationData, currentLocale)
+                    (column) => column?.isActive !== false && isLocalizedValueEmpty(column.header, localizationData, currentLocale)
                   );
 
                   if (hasEmptyLocalizedHeader) {
@@ -370,9 +431,11 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               // For labelPairList - check if localized labels are empty
               if (popupField.format === "labelPairList") {
                 const data = popupField?.data;
+
                 if (Array.isArray(data) && data.length > 0) {
+                  // Check if any active item has empty/missing key code or empty localized label value
                   const hasEmptyLocalizedLabel = data.some(
-                    (item) => item?.isActive !== false && item?.key && isLocalizedValueEmpty(item.key, localizationData, currentLocale)
+                    (item) => item?.isActive !== false && isLocalizedValueEmpty(item.key, localizationData, currentLocale)
                   );
 
                   if (hasEmptyLocalizedLabel) {
@@ -387,6 +450,45 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               }
             }
           });
+        }
+      }
+
+      // Additional validation for fields with direct table/labelPairList data structures
+      // These are edited via drawer panel items with fieldType "table" or "labelPairList"
+      const fieldLabel = field?.label || field?.fieldName || "Unknown Field";
+
+      // Validate table columns (field.data.columns) - for fields that directly have table structure
+      if (field?.data?.columns && Array.isArray(field.data.columns) && field.data.columns.length > 0) {
+
+
+        const hasEmptyLocalizedHeader = field.data.columns.some(
+          (column) => column?.isActive !== false && isLocalizedValueEmpty(column.header, localizationData, currentLocale)
+        );
+
+        if (hasEmptyLocalizedHeader) {
+          errors.push({
+            fieldLabel: fieldLabel,
+            message: "VALIDATION_TABLE_COLUMN_HEADER_EMPTY",
+          });
+        }
+      }
+
+      // Validate labelPairList data (field.data with key property) - for fields that directly have labelPairList structure
+      if (field?.data && Array.isArray(field.data) && field.data.length > 0) {
+        // Check if this is a labelPairList structure (items have key property)
+        const hasKeyProperty = field.data.some((item) => item?.key !== undefined);
+        if (hasKeyProperty) {
+          const hasEmptyLocalizedLabel = field.data.some(
+            (item) => item?.isActive !== false && isLocalizedValueEmpty(item.key, localizationData, currentLocale)
+          );
+
+
+          if (hasEmptyLocalizedLabel) {
+            errors.push({
+              fieldLabel: fieldLabel,
+              message: "VALIDATION_LABEL_PAIR_VALUE_EMPTY",
+            });
+          }
         }
       }
     });
