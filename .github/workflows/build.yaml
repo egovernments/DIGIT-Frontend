@@ -1,7 +1,10 @@
 name: Build Pipeline
-run-name: Build ${{ github.event.inputs.pipeline_name }}
+run-name: Build ${{ github.event.inputs.pipeline_name || 'workbench-ui' }}
 
 on:
+  push:
+    branches:
+      - console
   workflow_dispatch:
     inputs:
       pipeline_name:
@@ -31,7 +34,7 @@ env:
 
 jobs:
   resolve-config:
-    name: Resolve ${{ github.event.inputs.pipeline_name }} config
+    name: Resolve ${{ github.event.inputs.pipeline_name || 'workbench-ui' }} config
     runs-on: ubuntu-latest
     outputs:
       work_dir:    ${{ steps.setenv.outputs.work_dir }}
@@ -53,7 +56,7 @@ jobs:
       - name: Resolve env from build-config.yml
         id: setenv
         run: |
-          PIPELINE_NAME="${{ github.event.inputs.pipeline_name }}"
+          PIPELINE_NAME="${{ github.event.inputs.pipeline_name || 'workbench-ui' }}"
           DEFAULT_DOCKERFILE="Dockerfile"
           echo "### Pipeline Name - $PIPELINE_NAME" >> $GITHUB_STEP_SUMMARY
 
@@ -175,9 +178,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ github.event.inputs.pipeline_name }}-${{ github.ref_name }}
+          key: ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ github.event.inputs.pipeline_name || 'workbench-ui' }}-${{ github.ref_name }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ github.event.inputs.pipeline_name }}-
+            ${{ runner.os }}-${{ matrix.arch }}-buildx-${{ github.event.inputs.pipeline_name || 'workbench-ui' }}-
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
