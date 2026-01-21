@@ -196,7 +196,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 errors.push({
                   fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                   panelLabel: panelItem.label,
-                  message: "VALIDATION_MANDATORY_CONDITIONAL_FIELD_REQUIRED",
+                  message: `VALIDATION_MANDATORY_CONDITIONAL_FIELD_REQUIRED_${panelItem.label}`,
                   messageParams: { fields: fieldLabels },
                   tab: tabKey,
                 });
@@ -215,7 +215,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 errors.push({
                   fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                   panelLabel: panelItem.label,
-                  message: "VALIDATION_SCHEMA_CODE_REQUIRED",
+                  message: `VALIDATION_SCHEMA_CODE_REQUIRED_${panelItem.label}`,
                   tab: tabKey,
                 });
               }
@@ -228,7 +228,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 errors.push({
                   fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                   panelLabel: panelItem.label,
-                  message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
+                  message: `VALIDATION_DROPDOWN_OPTIONS_REQUIRED_${panelItem.label}`,
                   tab: tabKey,
                 });
               } else if (Array.isArray(dropDownOptions)) {
@@ -241,7 +241,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   errors.push({
                     fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                     panelLabel: panelItem.label,
-                    message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
+                    message: `VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED${panelItem.label}`,
                     tab: tabKey,
                   });
                 } else {
@@ -254,7 +254,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     errors.push({
                       fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                       panelLabel: panelItem.label,
-                      message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
+                      message: `VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY_${panelItem.label}`,
                       tab: tabKey,
                     });
                   }
@@ -275,7 +275,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           if (isLocalizedValueEmpty(popupConfig.title, localizationData, currentLocale)) {
             errors.push({
               fieldLabel: fieldLabel,
-              message: "VALIDATION_POPUP_TITLE_EMPTY",
+              message: `VALIDATION_POPUP_TITLE_EMPTY_${fieldLabel}`,
             });
           }
         }
@@ -286,7 +286,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             if (footerAction.label && isLocalizedValueEmpty(footerAction.label, localizationData, currentLocale)) {
               errors.push({
                 fieldLabel: fieldLabel,
-                message: "VALIDATION_POPUP_FOOTER_LABEL_EMPTY",
+                message: `VALIDATION_POPUP_FOOTER_LABEL_EMPTY_${fieldLabel}`,
                 messageParams: { index: footerIndex + 1 },
               });
             }
@@ -306,7 +306,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               errors.push({
                 fieldLabel: fieldLabel,
                 popupFieldLabel: popupFieldLabel,
-                message: "VALIDATION_POPUP_BODY_LABEL_EMPTY",
+                message: `VALIDATION_POPUP_BODY_LABEL_EMPTY_${popupFieldLabel}`,
                 messageParams: { popupField: popupFieldLabel },
               });
             }
@@ -324,7 +324,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 errors.push({
                   fieldLabel: fieldLabel,
                   popupFieldLabel: popupFieldLabel,
-                  message: "VALIDATION_POPUP_SCHEMA_CODE_REQUIRED",
+                  message: `VALIDATION_POPUP_SCHEMA_CODE_REQUIRED_${popupFieldLabel}`,
                   messageParams: { popupField: popupFieldLabel },
                 });
               }
@@ -332,69 +332,58 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               // When isMdms is OFF, check for valid static options
               // For dropdown/dropdownTemplate/select/selectionCard - check enums or dropDownOptions
               if (["dropdown", "dropdownTemplate", "select", "selectionCard"].includes(popupField.format)) {
-                // Check if enums is a dynamic function string (e.g., "{{fn:getUniqueComplaintTypes(contextData)}}")
-                // If so, skip validation as options are populated at runtime
-                const isDynamicEnums = popupField?.enums && typeof popupField.enums === "string";
+                const hasValidEnums = popupField?.enums && Array.isArray(popupField.enums) && popupField.enums.length > 0;
+                const hasValidDropdownOptions = popupField?.dropDownOptions && Array.isArray(popupField.dropDownOptions) && popupField.dropDownOptions.length > 0;
+                const hasValidSchemaCode = popupField?.schemaCode && typeof popupField.schemaCode === "string" && popupField.schemaCode.trim().length > 0;
 
-                if (!isDynamicEnums) {
-                  const hasValidEnums = popupField?.enums && Array.isArray(popupField.enums) && popupField.enums.length > 0;
-                  const hasValidDropdownOptions = popupField?.dropDownOptions && Array.isArray(popupField.dropDownOptions) && popupField.dropDownOptions.length > 0;
-                  const hasValidSchemaCode = popupField?.schemaCode && typeof popupField.schemaCode === "string" && popupField.schemaCode.trim().length > 0;
+                if (!hasValidEnums && !hasValidDropdownOptions && !hasValidSchemaCode) {
+                  errors.push({
+                    fieldLabel: fieldLabel,
+                    popupFieldLabel: popupFieldLabel,
+                    message: `VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED_${popupFieldLabel}`,
+                    messageParams: { popupField: popupFieldLabel },
+                  });
+                } else if (hasValidEnums) {
+                  // Check if any active enum has empty/missing name code or empty localized value
+                  const hasEmptyLocalizedName = popupField.enums.some(
+                    (option) => option?.isActive !== false && isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
+                  );
 
-                  if (!hasValidEnums && !hasValidDropdownOptions && !hasValidSchemaCode) {
+                  if (hasEmptyLocalizedName) {
                     errors.push({
                       fieldLabel: fieldLabel,
                       popupFieldLabel: popupFieldLabel,
-                      message: "VALIDATION_POPUP_DROPDOWN_OPTIONS_REQUIRED",
+                      message: `VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY_${popupFieldLabel}`,
                       messageParams: { popupField: popupFieldLabel },
                     });
-                  } else if (hasValidEnums) {
-                    // Check if any active enum has empty/missing name code or empty localized value
-                    const hasEmptyLocalizedName = popupField.enums.some(
-                      (option) => option?.isActive !== false && isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
-                    );
-
-                    if (hasEmptyLocalizedName) {
-                      errors.push({
-                        fieldLabel: fieldLabel,
-                        popupFieldLabel: popupFieldLabel,
-                        message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
-                        messageParams: { popupField: popupFieldLabel },
-                      });
-                    }
                   }
                 }
               }
 
               // For radioList - check data array
               if (popupField.format === "radioList") {
-                // Check if data is a dynamic function string - if so, skip validation
-                const isDynamicData = popupField?.data && typeof popupField.data === "string";
+                const hasValidData = popupField?.data && Array.isArray(popupField.data) && popupField.data.length > 0;
 
-                if (!isDynamicData) {
-                  const hasValidData = popupField?.data && Array.isArray(popupField.data) && popupField.data.length > 0;
+                if (!hasValidData) {
+                  errors.push({
+                    fieldLabel: fieldLabel,
+                    popupFieldLabel: popupFieldLabel,
+                    message: `VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED_${popupFieldLabel}`,
+                    messageParams: { popupField: popupFieldLabel },
+                  });
+                } else {
+                  // Check if any active radio option has empty/missing name code or empty localized value
+                  const hasEmptyLocalizedName = popupField.data.some(
+                    (option) => option?.isActive !== false && isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
+                  );
 
-                  if (!hasValidData) {
+                  if (hasEmptyLocalizedName) {
                     errors.push({
                       fieldLabel: fieldLabel,
                       popupFieldLabel: popupFieldLabel,
-                      message: "VALIDATION_POPUP_RADIO_OPTIONS_REQUIRED",
+                      message: `VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY_${popupFieldLabel}`,
                       messageParams: { popupField: popupFieldLabel },
                     });
-                  } else {
-                    // Check if any active radio option has empty/missing name code or empty localized value
-                    const hasEmptyLocalizedName = popupField.data.some(
-                      (option) => option?.isActive !== false && isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
-                    );
-
-                    if (hasEmptyLocalizedName) {
-                      errors.push({
-                        fieldLabel: fieldLabel,
-                        popupFieldLabel: popupFieldLabel,
-                        message: "VALIDATION_POPUP_OPTION_LOCALIZED_VALUE_EMPTY",
-                        messageParams: { popupField: popupFieldLabel },
-                      });
-                    }
                   }
                 }
               }
@@ -408,7 +397,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   errors.push({
                     fieldLabel: fieldLabel,
                     popupFieldLabel: popupFieldLabel,
-                    message: "VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED",
+                    message: `VALIDATION_POPUP_TABLE_COLUMNS_REQUIRED_${popupFieldLabel}`,
                     messageParams: { popupField: popupFieldLabel },
                   });
                 } else {
@@ -421,7 +410,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     errors.push({
                       fieldLabel: fieldLabel,
                       popupFieldLabel: popupFieldLabel,
-                      message: "VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY",
+                      message: `VALIDATION_POPUP_TABLE_COLUMN_HEADER_EMPTY_${popupFieldLabel}`,
                       messageParams: { popupField: popupFieldLabel },
                     });
                   }
@@ -442,7 +431,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     errors.push({
                       fieldLabel: fieldLabel,
                       popupFieldLabel: popupFieldLabel,
-                      message: "VALIDATION_POPUP_LABEL_PAIR_VALUE_EMPTY",
+                      message: `VALIDATION_POPUP_LABEL_PAIR_VALUE_EMPTY_${popupFieldLabel}`,
                       messageParams: { popupField: popupFieldLabel },
                     });
                   }
@@ -468,7 +457,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         if (hasEmptyLocalizedHeader) {
           errors.push({
             fieldLabel: fieldLabel,
-            message: "VALIDATION_TABLE_COLUMN_HEADER_EMPTY",
+            message:  `VALIDATION_TABLE_COLUMN_HEADER_EMPTY_${fieldLabel}`,
           });
         }
       }
@@ -486,7 +475,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           if (hasEmptyLocalizedLabel) {
             errors.push({
               fieldLabel: fieldLabel,
-              message: "VALIDATION_LABEL_PAIR_VALUE_EMPTY",
+              message: `VALIDATION_LABEL_PAIR_VALUE_EMPTY_${fieldLabel}`,
             });
           }
         }
