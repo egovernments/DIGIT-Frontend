@@ -1,10 +1,12 @@
+@import url("../../index.scss");
+@import "./typography.scss";
 @import "./campaignCommon.scss";
 
 .summary-header {
-  @include typography-text-heading-l;
+  @extend .typography.text-heading-l;
   font-size: 2.25rem;
   margin-bottom: 1.5rem !important;
-  color: var(--digitv2-lightTheme-primary-2);
+  color: theme(digitv2.lightTheme.primary-2);
 }
 .date-field-container {
   display: grid;
@@ -40,7 +42,7 @@
   font-weight: bold;
 }
 .mandatory-date {
-  color: var(--digitv2-lightTheme-error-v2) !important;
+  color: theme(digitv2.lightTheme.error-v2) !important;
   font-size: 1rem;
   font-weight: 700;
 }
@@ -50,11 +52,11 @@
 }
 .name-description {
   margin: 0rem;
-  color: var(--digitv2-lightTheme-text-color-secondary);
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 .dates-description {
   margin: 0rem;
-  color: var(--digitv2-lightTheme-text-color-secondary);
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 .selecting-boundary-div {
   padding-top: 0.5rem;
@@ -140,7 +142,7 @@
   padding-top: 0rem;
 }
 .stepper-subheader {
-  color: var(--digitv2-lightTheme-header-sidenav);
+  color: theme(digitv2.lightTheme.header-sidenav);
 }
 .container-full {
   display: flex;
@@ -223,7 +225,7 @@
 }
 .dataMappingCard {
   overflow-y: scroll;
-  margin-top: 0rem;
+  margin-top: 1.5rem;
 }
 .dataMappingDropdown {
   min-width: 13rem !important;
@@ -251,7 +253,7 @@
   height: calc(100vh - 22rem);
 
   overflow-y: auto;
-  border: 1px solid var(--digitv2-lightTheme-primary);
+  border: 1px solid theme(digitv2.lightTheme.primary);
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
@@ -306,107 +308,49 @@
   }
 
   .app-card {
+    min-height: 100%;
     gap: 0.5rem;
     box-shadow: none;
     border-style: none;
     padding: 1rem;
-    margin-bottom: 3rem;
-    overflow-y: auto !important;
-    overflow-y: overlay !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: #d6d5d4 transparent !important;
-
-    &::-webkit-scrollbar {
-      width: 8px !important;
-      background: transparent !important;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent !important;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #d6d5d4 !important;
-      border-radius: 4px !important;
+    &::-webkit-scrollbar-button {
+      display: none !important;
+      height: 0 !important;
+      width: 0 !important;
     }
   }
 }
 .app-card {
   flex-direction: column;
   display: flex;
+  min-height: 100%;
   gap: 0.5rem;
   box-shadow: none;
   border-style: none;
   padding: 1rem;
-  margin-bottom: 3rem;
-
-  .digit-card-header {
-    font-size: 2rem;
-  }
-}
-
-.app-card.template-layout-card {
-  overflow-y: auto !important;
-  overflow-y: overlay !important;
-  scrollbar-width: thin !important;
-  scrollbar-color: #d6d5d4 transparent !important;
-
-  &::-webkit-scrollbar {
-    width: 8px !important;
-    background: transparent !important;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent !important;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #d6d5d4 !important;
-    border-radius: 4px !important;
-  }
-}
-.app-preview-card {
-  overflow-y: auto !important;
-  overflow-y: overlay !important;
-  scrollbar-width: thin !important;
-  scrollbar-color: #d6d5d4 transparent !important; /* thumb color, track color */
-
-  &::-webkit-scrollbar {
-    width: 8px !important;
-    background: transparent !important;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent !important; /* track background - transparent */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #d6d5d4 !important; /* thumb color */
-    border-radius: 4px !important;
-  }
 }
 .mobile-bezel-outerWrapper {
   transform: scale(0.8);
-  margin-top: 0rem;
+  margin-top: -5rem;
 }
 
 .app-config-tag-page-fixed {
   position: fixed;
   top: 15rem;
   left: 67rem;
-  color: var(--digitv2-lightTheme-primary-2);
-  font-family: var(--digitv2-fontFamily-rc);
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
   font-weight: 700;
 }
 .mobile-top {
-  background-color: var(--digitv2-lightTheme-header-sidenav);
+  background-color: theme(digitv2.lightTheme.header-sidenav);
   height: 4rem;
   display: flex;
   align-items: center;
   padding: 0 1rem;
-  color: var(--digitv2-lightTheme-paper);
+  color: theme(digitv2.lightTheme.paper);
   font-size: 1.5rem;
-  font-weight: var(--digitv2-fontWeight-bold);
+  font-weight: theme(digitv2.fontWeight.bold);
   width: 100%;
   /* Full width */
   box-sizing: border-box;
@@ -414,9 +358,6 @@
   border-top-right-radius: 1rem;
 }
 
-.app-config-field-wrapper{
-  width: 100%;
-}
 .appConfiglabelField {
   position: relative;
   padding: 1rem;
@@ -426,7 +367,7 @@
 }
 .appConfiglabelField.selected {
   background-color: #f477381a;
-  border: 1px solid var(--digitv2-lightTheme-primary);
+  border: 1px solid theme(digitv2.lightTheme.primary);
 }
 .appConfig-flow-stepper {
   margin-top: 2rem;
@@ -481,22 +422,22 @@
   width: 100% !important;
 }
 .campaign-header-style {
-  color: var(--digitv2-lightTheme-primary-2);
+  color: theme(digitv2.lightTheme.primary-2);
   font-size: 2.5rem;
 }
 .campaign-header-module-style {
-  color: var(--digitv2-lightTheme-primary-2);
+  color: theme(digitv2.lightTheme.primary-2);
   font-size: 2.5rem;
   margin-bottom: 1rem !important;
 }
 .SubHeadingClass {
-  color: var(--digitv2-lightTheme-text-color-secondary);
+  color: theme(digitv2.lightTheme.text-color-secondary);
   font-weight: 400;
   font-size: 1rem;
 }
 .date-header {
   width: 100% !important;
-  color: var(--digitv2-lightTheme-primary-2);
+  color: theme(digitv2.lightTheme.primary-2);
   font-weight: 700;
   font-size: 40px;
   padding-bottom: 0.5rem;
@@ -504,42 +445,35 @@
 .descStyle {
   font-family: "Roboto";
   font-weight: 500;
-  font-size: 20px;
-  color: var(--digitv2-lightTheme-primary);
+  font-size: 24px;
+  color: theme(digitv2.lightTheme.primary);
   text-align: center;
-  font-style: Medium;
+  margin-top: 1.5rem;
   .disabledText {
     color: #c5c5c5;
   }
 }
 .containerStyle {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 2.5rem;
+  margin-top: 2rem;
+  gap: 2rem;
 }
 .cardStyle {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 300px;
-  height: 158px;
-  border: 1.5px solid var(--digitv2-lightTheme-primary);
-  border-radius: 12px;
+  width: 400px;
+  height: 139px;
+  border: 1.5px solid theme(digitv2.lightTheme.primary);
+  border-radius: 4px;
+  margin: 1rem;
   cursor: pointer;
   flex-direction: column;
   text-align: center;
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-  background-color: #ffffff;
-  gap: 24px;
-  padding: 24px;
-  box-shadow: 0px 2px 7px 0px #00000026;
-
-  svg {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-  }
+  background-color: #fff;
 }
 .cardStyle:hover {
   transform: translateY(-5px);
@@ -552,7 +486,7 @@
     color: #c5c5c5;
   }
   svg {
-    fill: var(--digitv2-lightTheme-text-color-secondary);
+    fill: theme(digitv2.lightTheme.text-color-secondary);
   }
 }
 
@@ -572,28 +506,27 @@
 .icon-heading {
   gap: 1rem;
   display: flex;
-  align-items: center;
 }
 .detail-desc {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  color: var(--digitv2-lightTheme-text-color-secondary);
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 .dates {
   margin-top: 0.5rem;
-  color: var(--digitv2-lightTheme-text-color-secondary);
-  font-family: var(--digitv2-fontFamily-sans);
-  font-size: var(--digitv2-fontSize-heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
 }
 .detail-header {
-  font-size: var(--digitv2-fontSize-heading-m);
-  color: var(--digitv2-lightTheme-primary-2);
+  font-size: theme(digitv2.fontSize.heading-m);
+  color: theme(digitv2.lightTheme.primary-2);
   font-family: "roboto";
 }
 .details-desc {
-  color: var(--digitv2-lightTheme-text-color-secondary);
-  font-family: var(--digitv2-fontFamily-sans);
-  font-size: var(--digitv2-fontSize-heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
 }
 .campaign-details-header {
   display: flex;
@@ -612,6 +545,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+                  
 }
 .modules-container {
   display: flex;
@@ -622,6 +556,7 @@
   padding: 1rem;
   padding-left: 0rem;
   grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+
 }
 
 .modules-feature-container {
@@ -645,7 +580,7 @@
   position: relative;
 }
 .selected-header {
-  color: var(--digitv2-lightTheme-primary);
+  color: theme(digitv2.lightTheme.primary);
 }
 
 .hcm-app-features {
@@ -686,22 +621,22 @@
 .module-description {
   flex-grow: 1;
   margin: 0 0 1rem 0;
-  font-family: var(--digitv2-fontFamily-sans);
-  font-size: var(--digitv2-fontSize-heading-s);
-  color: var(--digitv2-lightTheme-text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
   overflow-wrap: break-word;
 }
 .name-container-popUp {
   margin-top: 0.8rem;
   font-weight: bold;
   text-wrap: nowrap;
-  width: 33%;
+  width: 3.125rem;
 }
 .date-container-popUp {
   margin-top: 0.8rem;
   font-weight: bold;
   text-wrap: nowrap;
-  width: 33%;
+  width: 3.125rem;
 }
 .pop-display {
   display: flex;
@@ -714,7 +649,7 @@
   margin-top: 0.8rem;
   font-weight: bold;
   text-wrap: nowrap;
-  width: 33%;
+  width: 3.125rem;
 }
 
 .app-config-version-tags {
@@ -726,9 +661,9 @@
   margin: 0;
   margin-left: 54rem;
   margin-bottom: -3.5rem;
-  color: var(--digitv2-lightTheme-primary-2);
-  font-family: var(--digitv2-fontFamily-rc);
-  font-size: var(--digitv2-fontSize-heading-s);
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
+  font-size: theme(digitv2.fontSize.heading-s);
   font-weight: 700;
 
   .app-config-placeholder-version-tag {
@@ -776,12 +711,12 @@
   font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 4px;
-  color: var(--digitv2-lightTheme-primary-2);
+  color: theme(digitv2.lightTheme.primary-2);
 }
 
 .content-regular-text {
-  font-size: var(--digitv2-fontSize-heading-s);
-  color: var(--digitv2-lightTheme-text-color-secondary);
+  font-size: theme(digitv2.fontSize.heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 
 /* Fallback text group */
@@ -822,7 +757,7 @@
   .digit-popup-icon-header-container {
     .digit-popup-heading-subheading-wrap {
       .digit-popup-heading {
-        color: var(--digitv2-lightTheme-primary-2);
+        color: theme(digitv2.lightTheme.primary-2);
       }
     }
   }
@@ -868,22 +803,12 @@
   }
 }
 .update-boundary-header {
-  color: var(--digitv2-lightTheme-primary-2);
-  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  color: theme(digitv2.lightTheme.primary-2);
+  font-size: theme(fontSize.heading-xl);
 }
 .select-boundary {
-  color: var(--digitv2-lightTheme-primary-2) !important;
+  color: theme(digitv2.lightTheme.primary-2) !important;
 }
-.select-boundary-screen-heading ,
-.cycle-configuration-heading,
-.add-new-resource{
-  font-family: var(--digitv2-fontFamily-rc);
-  font-weight: var(--digitv2-fontWeight-bold);
-  font-style: Bold;
-  font-size: var(--digitv2-fontSize-heading-xl-desktop);
-  color: var(--digitv2-lightTheme-primary-2) !important;
-}
-
 .appConfigLabelField-toggleVisibility {
   position: absolute;
   cursor: pointer;
@@ -895,291 +820,11 @@
   margin-bottom: -2.5rem;
 }
 .start-header {
-  color: var(--digitv2-lightTheme-primary-2) !important;
+  color: theme(digitv2.lightTheme.primary-2) !important;
 }
 .digit-loader-new.Overlayloader.loader-center {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-.deliveries-pop-module {
-  max-width: fit-content;
-}
-.campaign-name-container {
-  display: ruby !important;
-}
-.campaign-name-code {
-  margin-left: 0.5rem !important;
-}
-.clonecampaign-popup-field {
-  .label-container {
-    font-weight: 700;
-  }
-}
-.digit-loader-new.center {
-  justify-content: center;
-  align-self: start;
-  width: 100%;
-}
-
-.details-heading {
-  .campaign-home-card-header{
-    font-family: "Roboto";
-    font-weight: var(--digitv2-fontWeight-bold);
-    font-style: Bold;
-    font-size: var(--digitv2-fontSize-heading-m-desktop);
-    display: flex;
-    align-items: center;
-  }
-}
-.digit-campaign-home-card {
-  display: flex;
-  justify-content: flex-start;
-  min-width: 31.25rem;
-  max-width: 100%;
-  flex: 1;
-  border: 0.094rem solid #d6d5d4;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  flex-direction: column;
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-  gap: 1rem;
-  padding: 1rem;
-  box-shadow: 0rem 0.125rem 0.25rem 0rem #C84C0E26;
-
-  &:hover {
-    transform: translateY(-12px);
-    border: 0.094rem solid var(--Primary-1, #C84C0E);
-    box-shadow: 0rem 0.125rem 0.419rem 0rem #00000033;
-  }
-
-  .digit-campaign-home-icon {
-    width: 3rem;
-    height: 3rem;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    border-radius: 0.5rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    background-color: #FBEEE8;
-  }
-
-  svg {
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .digit-campaign-home-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    .digit-campaign-home-text-header {
-      font-family: var(--digitv2-fontFamily-sans);
-      font-weight: var(--digitv2-fontWeight-bold);
-      font-style: Bold;
-      font-size: 1.5rem;
-      color: var(--digitv2-lightTheme-primary-2);
-
-    }
-
-    .digit-campaign-home-text-description {
-      font-family: var(--digitv2-fontFamily-sans);
-      font-weight: var(--digitv2-fontWeight-regular);
-      font-style: Regular;
-      font-size: 0.875rem;
-      color: var(--digitv2-lightTheme-text-secondary);
-
-    }
-  }
-
-  .digit-campaign-home-card-count {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: #F5F2F2;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-
-    svg {
-      width: 1.25rem;
-      height: 1.25rem;
-      flex-shrink: 0;
-    }
-
-    .digit-campaign-home-card-count-text {
-      font-family: "Roboto";
-      font-weight: var(--digitv2-fontWeight-bold);
-      font-style: Bold;
-      font-size: 0.875rem;
-      color: #0B4B66
-    }
-  }
-}
-
-.digit-nested-category:not(:first-child) {
-  margin-top: 0rem;
-}
-
-.language-button-container {
-  button {
-    border-radius: 0.5rem;
-  }
-}
-
-.digit-campaign-home-card-wrapper {
-  background-color: transparent;
-  box-shadow: none;
-  gap: 1.5rem;
-  padding: 0rem;
-}
-
-.employeeCard {
-  border-radius: 0.75rem;
-}
-
-.digit-button-primary,
-.digit-button-secondary {
-  &.small {
-    h2 {
-      line-height: normal;
-    }
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-  }
-}
-
-.campaign-name-validation-container {
-  width: 100%;
-  padding: 1rem;
-  background-color: #f7fafc;
-  border: 1px solid #d6d5d4;
-  border-radius: 0.5rem;
-
-  .validation-header {
-    margin-bottom: 1rem;
-
-    .validation-title {
-      font-family: var(--digitv2-fontFamily-sans);
-      font-weight: var(--digitv2-fontWeight-bold);
-      font-size: 1rem;
-      color: var(--digitv2-lightTheme-primary-2);
-    }
-  }
-
-  .validation-rules-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .validation-rule-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0rem;
-    transition: all 0.2s ease-in-out;
-
-    .validation-icon {
-      flex-shrink: 0;
-      width: 1.25rem;
-      height: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .validation-text {
-      font-family: var(--digitv2-fontFamily-sans);
-      font-size: 0.875rem;
-      line-height: 1.4;
-      color: var(--digitv2-lightTheme-text-color-secondary);
-      transition: color 0.2s ease-in-out;
-    }
-
-    &.rule-valid {
-      .validation-icon svg {
-        fill: #00703C;
-      }
-      .validation-text {
-        color: #00703C;
-      }
-    }
-
-    &.rule-invalid {
-      .validation-icon svg {
-        fill: #D4351C;
-      }
-      .validation-text {
-        color: #D4351C;
-        font-weight: var(--digitv2-fontWeight-bold);
-      }
-    }
-
-    &.rule-neutral {
-      .validation-icon svg {
-        fill: #787878;
-      }
-      .validation-text {
-        color: var(--digitv2-lightTheme-text-color-secondary);
-      }
-    }
-  }
-
-  .validation-success-banner {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    background-color: rgba(0, 112, 60, 0.1);
-    border-radius: 0.5rem;
-    margin-top: 1rem;
-
-    svg {
-      flex-shrink: 0;
-    }
-
-    .success-text {
-      font-family: var(--digitv2-fontFamily-sans);
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #00703C;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .campaign-name-validation-container {
-    padding: 0.75rem;
-
-    .validation-rule-item {
-      padding: 0.375rem 0;
-
-      .validation-text {
-        font-size: 0.8125rem;
-      }
-    }
-
-    .validation-success-banner {
-      padding: 0.5rem 0.75rem;
-
-      .success-text {
-        font-size: 0.8125rem;
-      }
-    }
-  }
-}
-.digit-infobanner-wrap .additional-elements-column .individualElement {
-  .digit-button-secondary {
-    &.alert-card-error-button {
-      .icon-label-container {
-        h2 {
-          color: var(--digitv2-lightTheme-primary) !important;
-        }
-      }
-    }
-  }
 }

@@ -10,7 +10,22 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
+const enabledModules = [
+  "DSS",
+  "HRMS",
+  "Workbench",
+  "HCMWORKBENCH",
+  //  "Engagement", "NDSS","QuickPayLinks", "Payment",
+  "Utilities",
+  "Microplanning",
+  "Sample",
+  "PublicServices",
+  "OpenPayment",
+  "ServiceDesigner",
+  "HRMS"
+  //added to check fsm
+  // "FSM"
+];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -59,10 +74,17 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initLibraries().then(async () => {
       try {
-        const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
+        // const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
+        const { initServiceDesignerComponents } = await import("@egovernments/digit-ui-module-service-designer")
+        const { initOpenPaymentComponents } = await import("@egovernments/digit-ui-module-open-payment")
+        const { initPublicServiceComponents } = await import("@egovernments/digit-ui-module-public-services")
+        
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
-        initCampaignComponents();
+        // initCampaignComponents();
         initWorkbenchComponents();
+        initServiceDesignerComponents();
+        initOpenPaymentComponents();
+        initPublicServiceComponents();
       } catch (error) {
         console.log("Error loading modules:", error);
         // Continue without modules if they fail to load

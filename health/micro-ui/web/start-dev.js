@@ -20,20 +20,26 @@ function log(message, color = colors.reset) {
 }
 
 function checkDistFiles() {
-  const campaignDist = path.join(__dirname, 'packages/modules/campaign-manager/dist/main.js');
-  const cssDist = path.join(__dirname, 'packages/css/dist/index.css');
+  const serviceDesignerDist = path.join(__dirname, 'packages/modules/ServiceDesigner/dist/main.js');
+  const openPaymentDist = path.join(__dirname, 'packages/modules/open-payment/dist/main.js');
+  const publicServicesDist = path.join(__dirname, 'packages/modules/PublicServices/dist/main.js');
+  // const cssDist = path.join(__dirname, 'packages/css/dist/index.css');
   
-  return fs.existsSync(campaignDist) && fs.existsSync(cssDist);
+  return fs.existsSync(serviceDesignerDist) && fs.existsSync(openPaymentDist) && fs.existsSync(publicServicesDist); // && fs.existsSync(cssDist);
 }
 
 async function buildPackages() {
   log('🔨 Building local packages...', colors.yellow);
   
   return new Promise((resolve, reject) => {
-    const buildProcess = spawn('npm', ['run', 'build:packages'], {
-      stdio: 'inherit',
-      cwd: __dirname
-    });
+    const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+
+const buildProcess = spawn(npmCmd, ['run', 'build2'], {
+  stdio: 'inherit',
+  cwd: __dirname,
+  shell: true
+});
+
     
     buildProcess.on('close', (code) => {
       if (code === 0) {
@@ -59,16 +65,19 @@ async function startDevelopment() {
     log('🔄 Starting development servers...', colors.blue);
     
     // Start the concurrent processes
-    const devProcess = spawn('npx', [
+    const devProcess = spawn(process.platform === "win32" ? "npx.cmd" : "npx", [
       'concurrently',
       '--names', 'CSS,Campaign,Webpack',
       '--prefix-colors', 'yellow,magenta,cyan',
-      '"cd packages/css && npm run start"',
-      '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
+      // '"cd packages/css && npm run start"',
+      '"cd packages/modules/ServiceDesigner && npm run build:dev -- --watch"',
+      '"cd packages/modules/PublicServices && npm run build:dev -- --watch"',
+      '"cd packages/modules/open-payment && npm run build:dev -- --watch"',
       '"webpack serve --config webpack.dev.js --port 3000"'
     ], {
       stdio: 'inherit',
-      cwd: __dirname
+      cwd: __dirname,
+      shell: true
     });
     
     devProcess.on('close', (code) => {

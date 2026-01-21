@@ -8,10 +8,11 @@
     "node": ">=14"
   },
   "workspaces": [
-    "packages/css",
-    "packages/modules/campaign-manager"
+    "packages/modules/open-payment",
+    "packages/modules/PublicServices",
+    "packages/modules/ServiceDesigner"
   ],
-  "homepage": "/workbench-ui/",
+  "homepage": "/digit-studio/",
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"
@@ -41,11 +42,14 @@
     "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-08",
     "@egovernments/digit-ui-module-core": "2.0.0-dev-06",
+    "@egovernments/digit-ui-module-hrms": "1.8.17",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-05",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
     "@egovernments/digit-ui-components": "2.0.0-dev-27",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-06",
-    "@egovernments/digit-ui-module-campaign-manager": "0.4.1",
+    "@egovernments/digit-ui-module-public-services": "0.0.1",
+    "@egovernments/digit-ui-module-service-designer": "0.0.1",
+    "@egovernments/digit-ui-module-open-payment": "0.0.5",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
     "cross-env": "^7.0.3",
@@ -65,7 +69,11 @@
     "style-loader": "2.0.0",
     "terser-brunch": "^4.1.0",
     "url": "^0.11.4",
-    "web-vitals": "1.1.2"
+    "web-vitals": "1.1.2",
+    "leaflet": "1.7.1",
+    "react-leaflet": "2.7.0",
+    "ajv": "8.12.0"
+
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
@@ -86,9 +94,14 @@
     "dev:css": "cd packages/css && npm run start",
     "dev:campaign": "cd packages/modules/campaign-manager && npm run build:dev -- --watch",
     "build": "npm run build:packages && webpack --config webpack.prod.js",
+    "build2": "npm run build2:open-payment && npm run build2:public-services && npm run build2:service-designer && webpack --config webpack.prod.js",
     "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
     "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
     "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build",
+    "build2d:css": "cd packages/css && npm run build",
+    "build2:open-payment": "cd packages/modules/open-payment && npm run build",
+    "build2:public-services": "cd packages/modules/PublicServices && npm run build",
+    "build2:service-designer": "cd packages/modules/ServiceDesigner && npm run build",
     "clean": "rm -rf node_modules build dist && find packages -name node_modules -type d -exec rm -rf {} + 2>/dev/null || true",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },
