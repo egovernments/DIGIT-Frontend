@@ -479,21 +479,45 @@ const AddDeliveryRule = React.memo(({
   );
 });
 
-const AddDeliveryRuleWrapper = React.memo(({ 
-  projectConfig, 
-  attributeConfig, 
-  operatorConfig, 
-  deliveryTypeConfig 
+const AddDeliveryRuleWrapper = React.memo(({
+  projectConfig,
+  attributeConfig,
+  operatorConfig,
+  deliveryTypeConfig
 }) => {
-  const { 
-    activeDeliveryRules, 
+  const {
+    activeDeliveryRules,
     activeDelivery,
-    addRule, 
+    addRule,
     removeRule,
     updateDeliveryTypeForEachDelivery,
     campaignData,
   } = useDeliveryRules();
   const { t } = useTranslation();
+
+  // Filter deliveryTypeConfig based on current projectType
+  const filteredDeliveryTypeConfig = useMemo(() => {
+    if (!deliveryTypeConfig || !Array.isArray(deliveryTypeConfig)) {
+      return [];
+    }
+
+    const currentProjectType = projectConfig?.code;
+
+    // If no projectType is set, return all delivery types
+    if (!currentProjectType) {
+      return deliveryTypeConfig;
+    }
+
+    // Filter delivery types that include the current projectType in their projectTypes array
+    return deliveryTypeConfig.filter((deliveryType) => {
+      // If deliveryType has no projectTypes array, include it by default
+      if (!deliveryType.projectTypes || !Array.isArray(deliveryType.projectTypes)) {
+        return true;
+      }
+      // Check if current projectType is in the projectTypes array
+      return deliveryType.projectTypes.includes(currentProjectType);
+    });
+  }, [deliveryTypeConfig, projectConfig?.code]);
 
   const handleAddRule = useCallback(() => {
     addRule();
@@ -507,10 +531,10 @@ const AddDeliveryRuleWrapper = React.memo(({
     updateDeliveryTypeForEachDelivery(value?.code);
   }, [updateDeliveryTypeForEachDelivery]);
 
-  const selectedDeliveryType = useMemo(() => 
-    deliveryTypeConfig?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) || 
-    deliveryTypeConfig?.[0] // default to first option
-  , [deliveryTypeConfig, activeDelivery?.deliveryType]);
+  const selectedDeliveryType = useMemo(() =>
+    filteredDeliveryTypeConfig?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) ||
+    filteredDeliveryTypeConfig?.[0] // default to first option
+  , [filteredDeliveryTypeConfig, activeDelivery?.deliveryType]);
 
   // Calculate if we can add more rules
   const canAddMore = useMemo(() => {
@@ -530,17 +554,16 @@ const AddDeliveryRuleWrapper = React.memo(({
   if (!attributeConfig || !operatorConfig) {
     return <Loader page variant="PageLoader" />;
   }
-
-  return (
+return (
     <>
-     {deliveryTypeConfig && deliveryTypeConfig?.length > 0 && (
+     {filteredDeliveryTypeConfig && filteredDeliveryTypeConfig?.length > 0 && (
         <Card className="delivery-type-container">
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
               <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
             </div>
             <RadioButtons
-              options={deliveryTypeConfig}
+              options={filteredDeliveryTypeConfig}
               selectedOption={selectedDeliveryType}
               optionsKey="code"
               value={selectedDeliveryType?.code}
