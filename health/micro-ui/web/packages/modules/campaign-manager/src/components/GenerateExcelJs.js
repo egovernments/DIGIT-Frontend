@@ -167,7 +167,7 @@ const GenerateExcelJs = ({
     // Use localization codes for headers to support all languages
     const displayHeaders = [t("DIGIT_LOC_CODE_HEADER"), ...allLocales.map((loc) => {
       const label = localeLabelsMap[loc] || loc;
-      return `${t("DIGIT_LOC_MESSAGE_HEADER")}_${label}`;
+      return t(`DIGIT_LOC_MESSAGE_HEADER_${label}`);
     })];
 
     // Find the index of the first locale column (languages[0])
