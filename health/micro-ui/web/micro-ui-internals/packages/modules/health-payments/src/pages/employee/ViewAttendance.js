@@ -9,7 +9,6 @@ import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
-import UploadedFileComponent from "../../components/file_upload_component/FileUploadComponent";
 
 
 /**
@@ -52,7 +51,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
-  const [openUploadPopup, setOpenUploadPopup] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
   const selectedProject = Digit?.SessionStorage.get("selectedProject");
@@ -542,21 +540,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
         }}
       />}
 
-      {openUploadPopup && (
-  <PopUp
-    onClose={() => setOpenUploadPopup(false)}
-    header={t("Upload File")}
-  >
-    <UploadedFileComponent 
-      config={{ key: "uploadedFile" }}
-      onSelect={(key, fileData) => {
-        console.log("Uploaded file:", fileData);
-        setOpenUploadPopup(false);
-      }}
-    />
-  </PopUp>
-)}
-
       {/* action bar for bill generation*/}
       <ActionBar
         actionFields={[
@@ -599,9 +582,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 } else if (value.code === "APPROVE") {
                   setOpenApproveCommentPopUp(true);
                 }
-                else if (value.code === "Upload") {
-                  setOpenUploadPopup(true); 
-                }
               }}
               options={[
                 {
@@ -611,10 +591,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 {
                   code: "APPROVE",
                   name: t(`HCM_AM_ACTIONS_APPROVE`),
-                },
-                {
-                  code: "Upload",
-                  name: t(`Upload_File`),
                 },
               ]}
               optionsKey="name"
