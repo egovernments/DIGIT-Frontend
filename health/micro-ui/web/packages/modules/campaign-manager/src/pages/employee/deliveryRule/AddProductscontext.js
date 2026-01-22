@@ -187,6 +187,8 @@ const AddProducts = React.memo(({
                   option={optionsForThisProduct}
                   select={(value) => updateProductValue(product.key, value)}
                   optionKey="displayName"
+                  isSearchable={true}
+                  optionCardStyles={{maxHeight:"10vh"}}
                 />
               </LabelFieldPair>
               
