@@ -246,7 +246,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     // 2. We're in update/reassess/assess mode
     // 3. We haven't loaded it yet (both flag and session check)
     // 4. We DON'T have existing form data in session (prevents overwriting user edits)
-    if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded && !hasLoadedInSession && !hasExistingFormData) {
+    if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded && !hasExistingFormData) {
       const property = propertyResponse[0];
       setFetchedPropertyData(property);
       // Transform property data to form data format
