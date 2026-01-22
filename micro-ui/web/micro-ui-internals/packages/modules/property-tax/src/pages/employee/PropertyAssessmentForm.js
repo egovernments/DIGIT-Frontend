@@ -68,6 +68,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
 
 
   const [currentStep, setCurrentStep] = useState(initialState.currentStep);
+  // Store the initial step to handle back navigation correctly when starting from a specific step (e.g. Assess & Pay)
+  const [startingStep] = useState(initialState.currentStep);
   const [formData, setFormData] = useState(initialState.formData);
 
   // Sync state with URL step parameter (handles back/forward navigation and edit links)
@@ -99,6 +101,11 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   const [termsError, setTermsError] = useState("");
 
   const handleStepClick = (stepIndex) => {
+    // Prevent stepper navigation if in Assess mode and started at Summary step (Assess & Pay flow)
+    if (isAssessMode && startingStep === 4) {
+      return;
+    }
+
     if (stepIndex < currentStep) {
       setCurrentStep(stepIndex);
     }
@@ -1647,6 +1654,14 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   };
 
   const onSecondaryActionClick = () => {
+    // If the user started at the summary step (e.g. from Assess & Pay) and is currently at that step,
+    // the back button should return to the property page instead of going to the previous step.
+    if (isAssessMode && startingStep === 4 && currentStep === 4) {
+      const context = isCitizen ? "citizen" : "employee";
+      history.push(`/${window.contextPath}/${context}/pt/property/${propertyIdFromUrl}?tenantId=${tenantId}`);
+      return;
+    }
+
     if (currentStep === 0) {
       // Clear session storage when leaving the form from first step
       Digit.SessionStorage.del(sessionKey);
