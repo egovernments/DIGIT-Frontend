@@ -19,7 +19,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useParams, useLocation, useHistory } from "react-router-dom";
-import { PDFDownload } from "../../utils/PDFDownload";
+import jsPDF from "jspdf";
 
 const breakYear = (financialYear) => {
   if (!financialYear || typeof financialYear !== "string" || !financialYear.includes("-")) {
@@ -626,60 +626,247 @@ const PropertyDetails = () => {
     setIsEditingSurveyId(false);
   };
 
-  const handlePrintDocument = () => {
-    try {
-      // Use the same PDFDownload utility but for printing
-      if (fullPageRef && fullPageRef.current) {
-        // Create a temporary print window with the property details
-        const printWindow = window.open('', '_blank');
-        const printContent = fullPageRef.current.innerHTML;
+  const generatePTApplicationPDF = () => {
+    if (!propertyData) {
+      return null;
+    }
 
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>Property Details - ${propertyData.propertyId}</title>
-              <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                .property-details-container { max-width: 800px; margin: 0 auto; }
-                .no-print { display: none !important; }
-                @media print {
-                  body { margin: 0; }
-                  .no-print { display: none !important; }
-                }
-              </style>
-            </head>
-            <body onload="window.print(); window.close();">
-              ${printContent}
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-      } else {
-        // Fallback to browser print
-        window.print();
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const fontName = "helvetica";
+    pdf.setFont(fontName);
+
+    const margin = 15;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const contentWidth = pageWidth - 2 * margin;
+    const halfWidth = contentWidth / 2;
+    const lineHeight = 7;
+    let yPos = 20;
+
+    const getText = (key, fallback) => {
+      const translated = t(key);
+      return translated !== key ? translated : (fallback || key);
+    };
+
+    const checkForNA = (value) => (value ? value : "NA");
+
+    const addSectionHeader = (title) => {
+      if (yPos + 15 > pageHeight - margin) {
+        pdf.addPage();
+        yPos = 20;
       }
-      setToast({
-        label: t("PT_PRINT_INITIATED"),
-        type: "success"
+      pdf.setFillColor(230, 230, 230);
+      pdf.rect(margin, yPos, contentWidth, 8, "F");
+      pdf.setFontSize(11);
+      pdf.setFont(fontName, "bold");
+      pdf.setTextColor(0);
+      pdf.text(title.toUpperCase(), margin + 3, yPos + 5.5);
+      yPos += 14;
+      pdf.setFont(fontName, "normal");
+      pdf.setFontSize(10);
+    };
+
+    const addDetailRow = (key1, value1, key2 = null, value2 = null) => {
+      let maxLines = 1;
+      let entry1Lines = [];
+      let entry2Lines = [];
+
+      // Calculate lines for first column
+      if (key1) {
+        entry1Lines = pdf.splitTextToSize(checkForNA(value1), halfWidth - 45); // Increased label space to 45
+        maxLines = Math.max(maxLines, entry1Lines.length);
+      }
+
+      // Calculate lines for second column
+      if (key2) {
+        entry2Lines = pdf.splitTextToSize(checkForNA(value2), halfWidth - 45); // Increased label space to 45
+        maxLines = Math.max(maxLines, entry2Lines.length);
+      }
+
+      // Calculate dynamic row height (approx 5mm per line)
+      const rowHeight = maxLines * 5;
+
+      // Check for page break
+      if (yPos + rowHeight > pageHeight - margin) {
+        pdf.addPage();
+        yPos = 20;
+      }
+
+      pdf.setFontSize(9);
+
+      // Col 1
+      if (key1) {
+        pdf.setFont(fontName, "bold");
+        pdf.text(`${key1}:`, margin, yPos);
+        pdf.setFont(fontName, "normal");
+        pdf.text(entry1Lines, margin + 45, yPos);
+      }
+
+      // Col 2
+      if (key2) {
+        const col2X = margin + halfWidth + 5;
+        pdf.setFont(fontName, "bold");
+        pdf.text(`${key2}:`, col2X, yPos);
+        pdf.setFont(fontName, "normal");
+        pdf.text(entry2Lines, col2X + 45, yPos);
+      }
+
+      yPos += rowHeight + 2; // Add padding between rows
+    };
+
+    // Page Border
+    pdf.setLineWidth(0.5);
+    pdf.rect(5, 5, pageWidth - 10, pageHeight - 10);
+
+    // Header: Tenant Name
+    const tenantKey = `TENANT_TENANTS_${tenantId?.toUpperCase().replace(/\./g, "_")}`;
+    const tenantName = getText(tenantKey, tenantId?.toUpperCase().replace(/\./g, " "));
+    pdf.setFontSize(14);
+    pdf.setFont(fontName, "bold");
+    pdf.text(tenantName, pageWidth / 2, yPos, { align: "center" });
+    yPos += 8;
+
+    // Title
+    pdf.setFontSize(12);
+    pdf.text(getText("PT_PROPERTY_DETAILS", "Property Details"), pageWidth / 2, yPos, { align: "center" });
+    yPos += 15;
+
+    const today = new Date().toLocaleDateString();
+    addDetailRow(getText("PT_PROPERTY_ID", "Property ID"), propertyData.propertyId, getText("DATE", "Date"), today);
+    addDetailRow(getText("PT_APPLICATION_NO", "Application No"), propertyData.acknowldgementNumber || "NA");
+    yPos += 5;
+
+    // Address
+    addSectionHeader(getText("PT_PROPERTY_ADDRESS_SUB_HEADER", "Property Address"));
+    const addr = propertyData.address || {};
+    addDetailRow(getText("PT_PROPERTY_ADDRESS_HOUSE_NO", "Door/House No"), addr.doorNo, getText("PT_PROPERTY_ADDRESS_BUILDING_NAME", "Building Name"), addr.buildingName);
+    addDetailRow(getText("PT_PROPERTY_ADDRESS_STREET_NAME", "Street Name"), addr.street, getText("PT_PROPERTY_ADDRESS_MOHALLA", "Mohalla"), addr.locality);
+    addDetailRow(getText("PT_PROPERTY_ADDRESS_PINCODE", "Pincode"), addr.pincode, getText("PT_EXISTING_PROPERTY_ID", "Existing Property ID"), propertyData.oldPropertyId);
+
+    // Assessment Info
+    addSectionHeader(getText("PT_ASSESMENT_INFO_SUB_HEADER", "Assessment Information"));
+    const propTypeKey = `COMMON_PROPTYPE_${propertyData.propertyType?.replace(/\./g, "_")}`;
+    const propType = getText(propTypeKey, propertyData.propertyType);
+
+    addDetailRow(
+      getText("PT_ASSESMENT_INFO_TYPE_OF_BUILDING", "Property Type"), propType,
+      getText("PT_ASSESMENT_INFO_PLOT_SIZE", "Plot Size"),
+      // landArea is in propertyDetails.landArea in formattedPropertyData
+      `${propertyData.propertyDetails?.landArea ? propertyData.propertyDetails.landArea : "NA"} ${getText("PT_COMMON_SQ_YARDS", "sq yards")}`
+    );
+
+    // Built-Up Area Table
+    addSectionHeader(getText("PT_BUILT_UP_AREA_DETAILS", "Built-Up Area Details"));
+
+    // Table Header
+    pdf.setFillColor(240, 240, 240);
+    pdf.rect(margin, yPos - 3, contentWidth, 7, "F");
+    pdf.setFont(fontName, "bold");
+    pdf.setFontSize(9);
+
+    const cols = [
+      { name: getText("PT_COMMON_FLOOR", "Floor"), x: margin + 2, w: 25 },
+      { name: getText("PT_FORM2_USAGE_TYPE", "Usage Type"), x: margin + 27, w: 40 },
+      { name: getText("PT_FORM2_SUB_USAGE_TYPE", "Sub Usage"), x: margin + 67, w: 30 },
+      { name: getText("PT_FORM2_OCCUPANCY", "Occupancy"), x: margin + 97, w: 30 },
+      { name: getText("PT_FORM2_BUILT_UP_AREA", "Built Up Area"), x: margin + 127, w: 30 },
+    ];
+
+    cols.forEach((col) => pdf.text(col.name, col.x, yPos + 1.5));
+    yPos += 6;
+
+    // Table Body
+    pdf.setFont(fontName, "normal");
+    if (propertyData.units && propertyData.units.length > 0) {
+      propertyData.units.forEach((unit, idx) => {
+        if (yPos + 15 > pageHeight - margin) {
+          pdf.addPage();
+          yPos = 20;
+        }
+
+        const floor = getText(`PROPERTYTAX_FLOOR_${unit.floorNo}`, unit.floorNo);
+        const usage = getText(`PROPERTYTAX_BILLING_SLAB_${unit.usageCategory}`, unit.usageCategory);
+        const subUsage = "NA";
+        const occupancy = getText(`PROPERTYTAX_OCCUPANCYTYPE_${unit.occupancyType}`, unit.occupancyType);
+        const area = unit.builtUpArea || unit.unitArea || "NA";
+
+        pdf.text(checkForNA(floor), cols[0].x, yPos);
+        const usageLines = pdf.splitTextToSize(checkForNA(usage), cols[1].w - 2);
+        pdf.text(usageLines, cols[1].x, yPos);
+        pdf.text(checkForNA(subUsage), cols[2].x, yPos);
+        pdf.text(checkForNA(occupancy), cols[3].x, yPos);
+        pdf.text(checkForNA(String(area)), cols[4].x, yPos);
+
+        const rowHeight = usageLines.length * 4 + 4;
+        pdf.setDrawColor(200);
+        pdf.line(margin, yPos + rowHeight - 2, pageWidth - margin, yPos + rowHeight - 2);
+        yPos += rowHeight;
       });
-    } catch (error) {
-      console.error("Print failed:", error);
-      setToast({
-        label: t("PT_PRINT_FAILED"),
-        type: "error"
+    } else {
+      pdf.text(getText("PT_NO_UNITS", "No Built-Up Details"), margin + 2, yPos);
+      yPos += 8;
+    }
+    yPos += 2;
+
+    // Ownership Info
+    addSectionHeader(getText("PT_OWNERSHIP_INFO_SUB_HEADER", "Ownership Information"));
+    if (propertyData.owners && propertyData.owners.length > 0) {
+      propertyData.owners.forEach((owner, idx) => {
+        if (yPos + 35 > pageHeight - margin) {
+          pdf.addPage();
+          yPos = 20;
+        }
+
+        if (idx > 0) {
+          pdf.setDrawColor(200);
+          pdf.line(margin, yPos - 2, pageWidth - margin, yPos - 2);
+          yPos += 4;
+        }
+
+        const gender = owner.gender ? getText(`PT_FORM3_${owner.gender.toUpperCase()}`, owner.gender) : "NA";
+
+        addDetailRow(getText("PT_OWNER_NAME", "Owner Name"), owner.name, getText("PT_FATHER_HUSBAND_NAME", "Father/Husband Name"), owner.fatherOrHusbandName);
+        addDetailRow(getText("PT_COMMON_GENDER", "Gender"), gender, getText("PT_DOB", "DOB"), "NA");
+        addDetailRow(getText("PT_MOBILE_NUMBER", "Mobile No"), owner.mobileNumber, getText("PT_EMAIL_ID", "Email ID"), owner.emailId);
+        addDetailRow(getText("PT_OWNER_TYPE", "Owner Type"), owner.ownerType, getText("PT_CORRESPONDENCE_ADDRESS", "Correspondence Address"), owner.correspondenceAddress || owner.permanentAddress);
+        yPos += 2;
       });
+    }
+
+    // Additional Details
+    if (propertyData.propertyDetails) {
+      const details = propertyData.propertyDetails;
+      if (details.vasikaNo || details.allotmentNo || details.remarks) {
+        addSectionHeader(getText("PT_COMMON_ADDITIONAL_DETAILS", "Additional Details"));
+        addDetailRow(getText("PT_REGISTRATION_VASIKA_NO", "Vasika No"), details.vasikaNo, getText("PT_REGISTRATION_VASIKA_DATE", "Vasika Date"), details.vasikaDate);
+        addDetailRow(getText("PT_REGISTRATION_ALLOTMENT_NO", "Allotment No"), details.allotmentNo, getText("PT_REGISTRATION_ALLOTMENT_DATE", "Allotment Date"), details.allotmentDate);
+        addDetailRow(getText("PT_COMMON_REMARKS", "Remarks"), details.remarks || "NA");
+      }
+    }
+
+    // Footer
+    const footerY = pageHeight - 20;
+    pdf.setFontSize(9);
+    pdf.setFont(fontName, "italic");
+    pdf.text(`* ${getText("PT_ACK_DISCLAIMER", "This document does not certify payment of Property Tax")}`, margin, footerY);
+    pdf.setFont(fontName, "bold");
+    pdf.text(getText("PT_COMMISSIONER_EO", "Commissioner/EO"), pageWidth - margin - 40, footerY + 5);
+
+    return pdf;
+  };
+
+  const handlePrintDocument = () => {
+    const pdf = generatePTApplicationPDF();
+    if (pdf) {
+      pdf.autoPrint();
+      window.open(pdf.output('bloburl'), '_blank');
     }
   };
 
   const handleDownloadDocument = () => {
-    try {
-      PDFDownload(fullPageRef, `pt-property-${propertyData.propertyId}.pdf`)
-    } catch (error) {
-      console.error("Download failed:", error);
-      setToast({
-        label: t("PT_DOWNLOAD_FAILED"),
-        type: "error"
-      });
+    const pdf = generatePTApplicationPDF();
+    if (pdf) {
+      pdf.save(`property-details-${propertyData.propertyId}.pdf`);
     }
   };
 
