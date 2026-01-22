@@ -284,6 +284,9 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
           populators: {
             name: "conditionalFields",
             validation: {}
+          },
+          customProps: {
+            isUpdateMode: isUpdateMode
           }
         },
       ]

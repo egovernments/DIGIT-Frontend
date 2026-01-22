@@ -1220,7 +1220,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         ownershipCategory: ownershipCategory,
         source: "MUNICIPAL_RECORDS",
         channel: "CFC_COUNTER",
-        creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "STATUS" : "CREATE"),
+        creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "UPDATE" : "CREATE"),
         noOfFloors: (() => {
           if (propertyTypeCode === 'VACANT') return 1;
           if (propertyTypeCode === 'SHAREDPROPERTY') return 2; // Match Mseva behavior

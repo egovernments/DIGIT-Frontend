@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Card, HeaderComponent, LabelFieldPair, Dropdown, TextInput, ErrorMessage, CardLabel, Button, Toast } from "@egovernments/digit-ui-components";
 
-const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userType, register }) => {
+const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userType, register, isUpdateMode }) => {
   // Get propertyType and usageCategory from parent form data
   const propertyType = formData?.propertyType;
   const usageCategory = formData?.usageCategory;
@@ -146,6 +146,9 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
     }
   }, [plotSize, noOfFloors, floorsData, unitsData, onSelect]);
 
+  // Handle prop fallback (sometimes passed in customProps via config)
+  const _isUpdateMode = isUpdateMode || config?.customProps?.isUpdateMode;
+
   const handleFieldChange = (fieldName, value) => {
     // Don't call onSelect directly anymore - let the useEffect handle it
     // Just update local state and useEffect will sync to parent
@@ -172,87 +175,142 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   // Initialize floors state from floorsData when data is loaded (for update mode)
   // Also convert string floorNo to object matching floorMasterData
   const hasInitializedFloors = React.useRef(false);
-
-  useEffect(() => {
-    // Only run once when data is first loaded
-    if (hasInitializedFloors.current) return;
-
-    if (isIndependent && floorsData.length > 0 && floors.length === 0) {
-      const initialFloors = floorsData.map((floorData, i) => ({
-        floorNumber: i,
-        units: (floorData.units || []).map((_, unitIdx) => ({ id: `floor_${i}_unit_${unitIdx}` }))
-      }));
-      setFloors(initialFloors);
-
-      // Convert string floorNo and occupancy to objects matching master data
-      if (floorMasterData.length > 0 && occupancyData.length > 0) {
-        const updatedFloorsData = floorsData.map(floor => {
-          // Find matching floor object from master data
-          const floorNoStr = typeof floor.floorNo === 'object' ? floor.floorNo.code : String(floor.floorNo);
-          const floorObj = floorMasterData.find(f => String(f.code) === floorNoStr);
-
-          return {
-            ...floor,
-            floorNo: floorObj || floor.floorNo,
-            units: (floor.units || []).map(unit => {
-              // Find matching occupancy object from master data
-              const occupancyStr = typeof unit.occupancy === 'object' ? unit.occupancy.code : String(unit.occupancy);
-              const occupancyObj = occupancyData.find(o => o.code === occupancyStr);
-
-              return {
-                ...unit,
-                occupancy: occupancyObj || unit.occupancy
-              };
-            })
-          };
-        });
-        setFloorsData(updatedFloorsData);
-      }
-
-      hasInitializedFloors.current = true;
-    }
-  }, [floorsData, isIndependent, floorMasterData, occupancyData, floors.length]);
-
-  // Initialize shared property with one unit if none exist
-  // Also convert string floorNo and occupancy to objects matching master data
   const hasInitializedSharedUnits = React.useRef(false);
 
+  // Robust Data Normalization Effect
+  // Converts string values in floorsData/unitsData to objects using MDMS data
+  // Runs whenever data or MDMS updates, preventing race conditions
   useEffect(() => {
-    if (isShared) {
-      // Initialize empty unit only once
-      if (units.length === 0 && unitsData.length === 0 && !hasInitializedSharedUnits.current) {
-        setUnits([{}]);
-        handleFieldChange("units", [{}]);
-        hasInitializedSharedUnits.current = true;
-      } else if (unitsData.length > 0 && floorMasterData.length > 0 && occupancyData.length > 0 && !hasInitializedSharedUnits.current) {
-        // Convert string floorNo and occupancy to objects matching master data (only once)
-        const hasStringValues = unitsData.some(unit =>
-          (unit.floorNo && typeof unit.floorNo === 'string') ||
-          (unit.occupancy && typeof unit.occupancy === 'string')
-        );
+    // Helper to normalize a single unit
+    const normalizeUnit = (unit) => {
+      let modified = false;
+      const newUnit = { ...unit };
 
-        if (hasStringValues) {
-          const updatedUnitsData = unitsData.map(unit => {
-            // Find matching floor object from master data
-            const floorNoStr = typeof unit.floorNo === 'object' ? unit.floorNo.code : String(unit.floorNo);
-            const floorObj = floorMasterData.find(f => String(f.code) === floorNoStr);
-
-            // Find matching occupancy object from master data
-            const occupancyStr = typeof unit.occupancy === 'object' ? unit.occupancy.code : String(unit.occupancy);
-            const occupancyObj = occupancyData.find(o => o.code === occupancyStr);
-
-            return {
-              ...unit,
-              ...(floorObj ? { floorNo: floorObj } : {}),
-              ...(occupancyObj ? { occupancy: occupancyObj } : {})
-            };
-          });
-          setUnitsData(updatedUnitsData);
+      // 1. Normalize Floor No
+      if (unit.floorNo && typeof unit.floorNo === 'string' && floorMasterData.length > 0) {
+        const floorObj = floorMasterData.find(f => String(f.code) === unit.floorNo);
+        if (floorObj) {
+          newUnit.floorNo = floorObj;
+          modified = true;
         }
-        hasInitializedSharedUnits.current = true;
+      }
+
+      // 2. Normalize Occupancy
+      if (unit.occupancy && typeof unit.occupancy === 'string' && occupancyData.length > 0) {
+        const occupancyObj = occupancyData.find(o => o.code === unit.occupancy);
+        if (occupancyObj) {
+          newUnit.occupancy = occupancyObj;
+          modified = true;
+        }
+      }
+
+      // 3. Normalize Usage Type
+      if (unit.usageType && typeof unit.usageType === 'string') {
+        const allUsageTypes = [...usageCategoryMajorData, ...usageCategoryMinorData];
+        if (allUsageTypes.length > 0) {
+          const usageObj = allUsageTypes.find(u => u.code === unit.usageType);
+          if (usageObj) {
+            newUnit.usageType = usageObj;
+            modified = true;
+          }
+        }
+      }
+
+      // 4. Normalize Sub Usage Type
+      if (unit.subUsageType && typeof unit.subUsageType === 'string' && subUsageTypeMasterData.length > 0) {
+        const subUsageObj = subUsageTypeMasterData.find(u => u.code === unit.subUsageType);
+        if (subUsageObj) {
+          newUnit.subUsageType = subUsageObj;
+          modified = true;
+        }
+      }
+
+      return { unit: newUnit, modified };
+    };
+
+    if (isIndependent && floorsData.length > 0) {
+      let listModified = false;
+      const newFloorsData = floorsData.map(floor => {
+        let floorModified = false;
+        const newFloor = { ...floor };
+
+        // Normalize Floor No (on floor object)
+        if (newFloor.floorNo && typeof newFloor.floorNo === 'string' && floorMasterData.length > 0) {
+          const floorObj = floorMasterData.find(f => String(f.code) === newFloor.floorNo);
+          if (floorObj) {
+            newFloor.floorNo = floorObj;
+            floorModified = true;
+          }
+        }
+
+        // Normalize Units
+        if (newFloor.units) {
+          const newUnits = newFloor.units.map(unit => {
+            const { unit: normUnit, modified } = normalizeUnit(unit);
+            if (modified) floorModified = true;
+            return normUnit;
+          });
+          newFloor.units = newUnits;
+        }
+
+        if (floorModified) listModified = true;
+        return newFloor;
+      });
+
+      if (listModified) {
+        setFloorsData(newFloorsData);
+      }
+
+      // Initialize UI Cards if needed (only once)
+      if (floors.length === 0) {
+        const initialFloors = newFloorsData.map((floorData, i) => ({
+          floorNumber: i,
+          units: (floorData.units || []).map((_, unitIdx) => ({ id: `floor_${i}_unit_${unitIdx}` }))
+        }));
+        setFloors(initialFloors);
       }
     }
-  }, [isShared, units.length, unitsData, floorMasterData, occupancyData]);
+
+    if (isShared && unitsData.length > 0) {
+      let listModified = false;
+      const newUnitsData = unitsData.map(unit => {
+        const { unit: normUnit, modified } = normalizeUnit(unit);
+        if (modified) listModified = true;
+        return normUnit;
+      });
+
+      if (listModified) {
+        setUnitsData(newUnitsData);
+      }
+
+      // Initialize UI Cards if needed (only once)
+      if (units.length === 0) {
+        setUnits(unitsData.map((_, i) => ({ id: i }))); // Simple ID mapping for shared units
+      }
+    }
+
+    // Initialize shared property with one unit if absolutely empty
+    if (isShared && units.length === 0 && unitsData.length === 0 && !hasInitializedSharedUnits.current) {
+      // Initialize empty unit only once
+      setUnits([{}]);
+      setUnitsData([{}]); // Also init data state
+      handleFieldChange("units", [{}]);
+      hasInitializedSharedUnits.current = true;
+    }
+
+  }, [
+    isIndependent,
+    isShared,
+    floorsData,
+    unitsData,
+    floorMasterData,
+    occupancyData,
+    usageCategoryMajorData,
+    usageCategoryMinorData,
+    subUsageTypeMasterData,
+    floors.length,
+    units.length
+  ]);
 
   // Set default usage type to RESIDENTIAL when usage category is RESIDENTIAL
   useEffect(() => {
@@ -560,6 +618,9 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
 
   const isUsageTypeDisabled = () => {
     // Disable for RESIDENTIAL, enable for MIXED
+    // Also disable if we are in update mode
+    if (_isUpdateMode) return true;
+
     return usageCategoryCode === "RESIDENTIAL";
   };
 
@@ -678,6 +739,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
               </div>
             </HeaderComponent>
             <Dropdown
+
               t={t}
               option={floorMasterData || []}
               optionKey="name"
@@ -691,7 +753,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
 
         {/* Usage Type - shown for RESIDENTIAL and MIXED */}
         {showUsageType && (
-          <LabelFieldPair style={{ marginBottom: "8px" }}>
+          <LabelFieldPair style={(_isUpdateMode && isSharedProp && usageCategoryCode === "RESIDENTIAL") ? { pointerEvents: "none", opacity: 0.5, marginBottom: "8px" } : { marginBottom: "8px" }}>
             <HeaderComponent className="label" style={{ margin: "0rem" }}>
               <div className={`label-container`}>
                 <label className={`label-styles`}>
@@ -701,6 +763,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
               </div>
             </HeaderComponent>
             <Dropdown
+
               t={t}
               option={getFilteredUsageTypes() || []}
               optionKey="code"
@@ -734,6 +797,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
               </div>
             </HeaderComponent>
             <Dropdown
+
               t={t}
               option={unitSubUsageTypeData || []}
               optionKey="name"
@@ -1156,6 +1220,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
               <Button
                 label={t("PT_COMMON_ADD_UNIT")}
                 variation="secondary"
+                isDisabled={_isUpdateMode && isShared && usageCategoryCode === "RESIDENTIAL"}
                 onClick={handleAddSharedUnit}
               />
             </div>

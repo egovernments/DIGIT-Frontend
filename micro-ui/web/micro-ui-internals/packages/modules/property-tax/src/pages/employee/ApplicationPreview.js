@@ -57,7 +57,7 @@ const ApplicationPreview = () => {
       params: {
         tenantId,
         businessIds: applicationNumber,
-        history:true
+        history: true
       },
       config: {
         enabled: !!(applicationNumber && tenantId),
@@ -83,7 +83,9 @@ const ApplicationPreview = () => {
         oldPropertyId: application.oldPropertyId,
         surveyId: application.surveyId,
         propertyType: application.propertyType,
-        usageCategory: application.usageCategory,
+        usageCategory: (propertyDetails.usageCategoryMajor && propertyDetails.usageCategoryMinor) ?
+          `${propertyDetails.usageCategoryMajor}.${propertyDetails.usageCategoryMinor}` :
+          (propertyDetails.usageCategoryMajor || application.usageCategory),
         creationReason: application.creationReason,
         status: application.status,
         tenantId: application.tenantId,
@@ -104,9 +106,9 @@ const ApplicationPreview = () => {
           propertySubType: propertyDetails.propertySubType,
           usageCategoryMajor: propertyDetails.usageCategoryMajor,
           usageCategoryMinor: propertyDetails.usageCategoryMinor,
-          landArea: application.landArea,
+          landArea: propertyDetails.landArea || application.landArea,
           buildUpArea: propertyDetails.buildUpArea,
-          noOfFloors: application.noOfFloors,
+          noOfFloors: propertyDetails.noOfFloors || application.noOfFloors,
           yearOfConstruction: propertyDetails.additionalDetails?.yearOfConstruction,
           vasikaNo: propertyDetails.additionalDetails?.vasikaNo,
           vasikaDate: propertyDetails.additionalDetails?.vasikaDate,

@@ -250,7 +250,7 @@ export const UICustomizations = {
                     );
 
                 case "PT_COMMON_TABLE_COL_APP_TYPE":
-                    return value ? t(`PT.${value}`) : t("ES_COMMON_NA");
+                    return value ? t(`PT_${value}`) : t("ES_COMMON_NA");
 
                 case "PT_COMMON_TABLE_COL_STATUS":
                 case "PT_COMMON_TABLE_COL_STATUS_LABEL":
@@ -409,7 +409,7 @@ export const UICustomizations = {
 
             const limit = requestCriteria.params?.limit || requestCriteria.state?.tableForm?.limit || 10;
             const offset = requestCriteria.params?.offset !== undefined ? requestCriteria.params.offset :
-                          (requestCriteria.state?.tableForm?.offset !== undefined ? requestCriteria.state.tableForm.offset : 0);
+                (requestCriteria.state?.tableForm?.offset !== undefined ? requestCriteria.state.tableForm.offset : 0);
 
             const searchParams = {
                 tenantId: tenantId,
@@ -634,7 +634,7 @@ export const UICustomizations = {
                             name: item.name,
                             value: item.code,
                             i18nKey: `PROPERTYTAX_BILLING_SLAB_${item.code}`,
-                            usageCategoryMajor:item?.usageCategoryMajor || ""
+                            usageCategoryMajor: item?.usageCategoryMajor || ""
                         }));
 
                         // Then add UsageCategoryMajor items that don't have corresponding UsageCategoryMinor
@@ -645,7 +645,7 @@ export const UICustomizations = {
                                 name: item.name,
                                 value: item.code,
                                 i18nKey: `PROPERTYTAX_BILLING_SLAB_${item.code}`,
-                                usageCategoryMajor:item?.usageCategoryMajor || ""
+                                usageCategoryMajor: item?.usageCategoryMajor || ""
                             }));
 
                         return [...merged, ...majorWithoutMinor];
@@ -711,7 +711,7 @@ export const UICustomizations = {
 
                         // For property-tax/assessment-form, limit to first 4 options
                         const isAssessmentForm = window.location.href.indexOf("/property-tax/assessment-form") > 0 ||
-                                                window.location.href.indexOf("/pt/assessment-form") > 0;
+                            window.location.href.indexOf("/pt/assessment-form") > 0;
 
                         return isAssessmentForm ? ownerShipDropdown.slice(0, 4) : ownerShipDropdown;
                     }
