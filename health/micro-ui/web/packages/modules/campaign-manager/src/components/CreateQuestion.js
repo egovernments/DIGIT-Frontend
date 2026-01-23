@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useContext, useMemo } from "react";
+import React, { useState, useEffect, Fragment, useContext, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { PRIMARY_COLOR } from "../utils";
@@ -40,19 +40,47 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
     }
   });
 
-  useEffect(() => {
-    dispatchQuestionData({
-      type: "UPDATE_OPTIONS",
-      payload: {
-        options: options,
-        field: field,
-      },
-    });
-  }, [options]);
+  // Debounce timer ref to prevent rapid-fire dispatches during fast typing
+  const debounceTimerRef = useRef(null);
 
   useEffect(() => {
+    // Clear any existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Debounce the dispatch to context to prevent glitching during fast typing
+    debounceTimerRef.current = setTimeout(() => {
+      dispatchQuestionData({
+        type: "UPDATE_OPTIONS",
+        payload: {
+          options: options,
+          field: field,
+        },
+      });
+    }, 100); // 100ms debounce
+
+    // Cleanup on unmount or before next effect
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [options]);
+
+  // Track if we're currently syncing from context to prevent loop
+  const isSyncingFromContext = useRef(false);
+
+  useEffect(() => {
+    // Skip if we just synced from context (prevents loop)
+    if (isSyncingFromContext.current) {
+      isSyncingFromContext.current = false;
+      return;
+    }
+
     // Check if field.options is defined and not equal to the current options
     if (field?.options && JSON.stringify(field.options) !== JSON.stringify(options)) {
+      isSyncingFromContext.current = true;
       setOptions(field.options);
     }
   }, [field?.options]);
