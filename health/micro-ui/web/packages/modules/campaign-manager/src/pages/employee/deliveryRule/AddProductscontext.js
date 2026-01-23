@@ -49,33 +49,30 @@ const AddProducts = React.memo(({
     }
   }, [products, stref]);
 
-  // Filter available options
+  // Filter available options only exclude products currently selected in the popup
   const availableOptions = useMemo(() => {
     if (!productData) return [];
-    
-    const selectedProductIds = new Set([
-      ...(selectedDelivery?.products?.map(p => p.value) || []),
-      ...products.map(p => p.value?.id).filter(Boolean)
-    ]);
-    
+
+    const selectedProductIds = new Set(
+      products.map(p => p.value?.id).filter(Boolean)
+    );
+
     return productData.filter(item => !selectedProductIds.has(item.id));
-  }, [productData, selectedDelivery?.products, products]);
+  }, [productData, products]);
 
   const getOptionsForProduct = useCallback((currentProductKey) => {
+    // Only exclude products selected in OTHER rows within this popup
+    // This allows re-selecting a product that was previously in this row when editing
     const otherProductIds = new Set(
       products
         .filter(p => p.key !== currentProductKey && p.value?.id)
         .map(p => p.value.id)
     );
-    const alreadySelectedIds = new Set(
-      selectedDelivery?.products?.map(p => p.value) || []
-    );
 
-    
-    return productData?.filter(item => 
-      !otherProductIds.has(item.id) && !alreadySelectedIds.has(item.id)
+    return productData?.filter(item =>
+      !otherProductIds.has(item.id)
     ) || [];
-  }, [productData, products, selectedDelivery?.products]);
+  }, [productData, products]);
 
   const addProduct = useCallback(() => {
     setProducts(prevState => [

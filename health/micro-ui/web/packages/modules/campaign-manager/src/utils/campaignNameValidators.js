@@ -25,8 +25,8 @@ export const isValidLength = (name) => {
  */
 export const startsWithLetterEndsWithAlphanumeric = (name) => {
   if (!name || name.length === 0) return false;
-  // Starts with letter and ends with letter, number, or closing parenthesis (not space/underscore/hyphen)
-  return /^[A-Za-z]/.test(name) && /[A-Za-z0-9\)]$/.test(name);
+  // Starts with letter and ends with letter or number only
+  return /^[A-Za-z]/.test(name) && /[A-Za-z0-9]$/.test(name);
 };
 
 /**
