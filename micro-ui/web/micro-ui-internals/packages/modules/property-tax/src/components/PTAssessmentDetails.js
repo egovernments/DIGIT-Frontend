@@ -1220,7 +1220,6 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
               <Button
                 label={t("PT_COMMON_ADD_UNIT")}
                 variation="secondary"
-                isDisabled={_isUpdateMode && isShared && usageCategoryCode === "RESIDENTIAL"}
                 onClick={handleAddSharedUnit}
               />
             </div>
