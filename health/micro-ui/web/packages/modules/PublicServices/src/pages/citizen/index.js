@@ -2,7 +2,7 @@ import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-compone
 import { BreadCrumb } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Switch, useLocation, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import DigitDemoComponent from "../employee/DigitDemo/digitDemoComponent";
 import Response from "../employee/Response";
 import DigitDemoViewComponent from "../employee/DigitDemo/digitDemoViewComponent";
@@ -93,35 +93,25 @@ const SampleBreadCrumbs = ({ location }) => {
 };
 
 
-const App = ({ path, stateCode, userType, tenants }) => {
-  const location = window.location;
+const App = ({ stateCode, userType, tenants }) => {
+  const location = useLocation();
 
   return (
-    <Router>
-    <Switch>
-      <AppContainer className="ground-container" style={{paddingLeft:"0.5rem",paddingRight:"0.5rem"}}>
-        <React.Fragment>
-          <SampleBreadCrumbs location={location} />
-        </React.Fragment>
-          <PrivateRoute path={`${path}/:module/:service/Apply`} component={() => <DigitDemoComponent />} />
-         <PrivateRoute path={`${path}/:module/:service/response`} component={() => <Response />} />
-         <PrivateRoute path={`${path}/:module/:service/ViewScreen`} component={() => <DigitDemoViewComponent />} />
-         <PrivateRoute path={`${path}/viewapp`} component={() => <ViewCheckListCards />} />
-         <PrivateRoute path={`${path}/checklist`} component={() => <CreateCheckList />} />
-         <PrivateRoute path={`${path}/viewresponse`} component={() => <ViewApplication />} />
-         <PrivateRoute path={`${path}/:module/:modulecode/my-application`} component={() => <CitizenInbox />} />
-         <PrivateRoute path={`${path}/:module/:service/Edit`} component={() => <DigitDemoEditComponent />} />
-         {/*<PrivateRoute path={`${path}/:module/search`} component={() => <DigitDemoSearch />} />
-         
-         <PrivateRoute path={`${path}/modules`} component={() => <ModulePageComponent />} />
-         <PrivateRoute path={`${path}/:module/inbox`} component={() => <InboxService />} />
-         <PrivateRoute path={`${path}/viewapp`} component={() => <ViewCheckListCards />} />
-         <PrivateRoute path={`${path}/checklist`} component={() => <CreateCheckList />} />
-         <PrivateRoute path={`${path}/viewresponse`} component={() => <ViewApplication />} />
-         <PrivateRoute path={`${path}/:module/:service/Edit`} component={() => <DigitDemoEditComponent />} /> */}
-      </AppContainer>
-    </Switch>
-    </Router>
+    <AppContainer className="ground-container" style={{ paddingLeft: "0.5rem", paddingRight: "0.5rem" }}>
+      <React.Fragment>
+        <SampleBreadCrumbs location={location} />
+      </React.Fragment>
+      <Routes>
+        <Route path=":module/:service/Apply" element={<PrivateRoute><DigitDemoComponent /></PrivateRoute>} />
+        <Route path=":module/:service/response" element={<PrivateRoute><Response /></PrivateRoute>} />
+        <Route path=":module/:service/ViewScreen" element={<PrivateRoute><DigitDemoViewComponent /></PrivateRoute>} />
+        <Route path="viewapp" element={<PrivateRoute><ViewCheckListCards /></PrivateRoute>} />
+        <Route path="checklist" element={<PrivateRoute><CreateCheckList /></PrivateRoute>} />
+        <Route path="viewresponse" element={<PrivateRoute><ViewApplication /></PrivateRoute>} />
+        <Route path=":module/:modulecode/my-application" element={<PrivateRoute><CitizenInbox /></PrivateRoute>} />
+        <Route path=":module/:service/Edit" element={<PrivateRoute><DigitDemoEditComponent /></PrivateRoute>} />
+      </Routes>
+    </AppContainer>
   );
 };
 

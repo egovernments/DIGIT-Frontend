@@ -1,7 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
-// import "@egovernments/digit-ui-health-css";
+import "@egovernments/digit-ui-health-css";
 // import { BrowserRouter } from "react-router-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
@@ -12,9 +12,9 @@ const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then
 
 const enabledModules = [
   "DSS",
-  "HRMS",
   "Workbench",
   "HCMWORKBENCH",
+  "HRMS",
   //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
   "Microplanning",
@@ -22,7 +22,6 @@ const enabledModules = [
   "PublicServices",
   "OpenPayment",
   "ServiceDesigner",
-  "HRMS"
   //added to check fsm
   // "FSM"
 ];
@@ -80,8 +79,10 @@ const MainApp = ({ stateCode, enabledModules }) => {
         const { initPublicServiceComponents } = await import("@egovernments/digit-ui-module-public-services")
         
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+        const {initHRMSComponents} = await import("@egovernments/digit-ui-module-hrms");
         // initCampaignComponents();
         initWorkbenchComponents();
+        initHRMSComponents();
         initServiceDesignerComponents();
         initOpenPaymentComponents();
         initPublicServiceComponents();

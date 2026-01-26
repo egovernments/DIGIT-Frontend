@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import React from "react";
@@ -108,8 +108,8 @@ export const UICustomizations = {
         }, // footerActionHandler : Is used to handle onclick functions of footer action buttons, gets index and event as props
         linkColumnHandler: (row) => {
           const url = `/${window.contextPath}/employee/microplan/view-main?tenantId=${row?.tenantId}&uniqueIdentifier=${row?.uniqueIdentifier}`;
-          const history = useHistory();
-          history.push(url);
+          const navigate = useNavigate();
+          navigate(url);
           //window.location.href = url;
         }, 
       },
@@ -295,8 +295,8 @@ export const UICustomizations = {
         }, // footerActionHandler : Is used to handle onclick functions of footer action buttons, gets index and event as props
         linkColumnHandler: (row) => {
           const url = `/${window.contextPath}/employee/microplan/view-main?tenantId=${row?.tenantId}&uniqueIdentifier=${row?.uniqueIdentifier}`;
-          const history = useHistory();
-          history.push(url);
+          const navigate = useNavigate();
+          navigate(url);
           //window.location.href = url;
         }, 
       }

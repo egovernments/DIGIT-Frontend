@@ -8,14 +8,14 @@ import NotifCardConfig from "../../../config/NotifCardConfig";
 import { Toggle } from "@egovernments/digit-ui-components";
 import EmailPreFilledData from "../../../config/NotificationData";
 import { SMSPreFilledData, PushPreFilledData } from "../../../config/NotificationData";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "../../../utils/tableStyles";
 import { useNotificationConfigAPI } from "../../../hooks/useNotificationConfigAPI";
 
 const Notification = () => {
     const { t } = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const roleModule = searchParams.get("module") || "Studio";
@@ -162,7 +162,7 @@ const Notification = () => {
     ];
 
     const onCardClick = (e,data) => {
-        history.push({
+        navigate({
             pathname: `/${window.contextPath}/employee/servicedesigner/create-notification`,
             search: `?module=${roleModule}&service=${roleService}`,
             state: {
@@ -174,7 +174,7 @@ const Notification = () => {
     }
 
     const onExistingCardClick = (e,data) => {
-        history.push({
+        navigate({
             pathname: `/${window.contextPath}/employee/servicedesigner/create-notification`,
             search: `?module=${roleModule}&service=${roleService}`,
             state: {

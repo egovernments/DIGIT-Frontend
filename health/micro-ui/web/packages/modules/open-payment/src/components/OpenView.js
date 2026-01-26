@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { makePayment } from '../utils/payGov';
 import  { CustomisedHooks } from "../hooks";
 import $ from "jquery";
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FormComposerV2 } from '@egovernments/digit-ui-components';
 import { ViewConfig, CardConfig, ChequeConfig } from '../configs/OpenViewConfig';
 
@@ -13,7 +13,7 @@ const OpenView = () => {
   const [showToast,setShowToast] = useState(null)
   const queryParams = Digit.Hooks.useQueryParams();
   const mutation = CustomisedHooks?.Hooks?.openpayment?.useCreatePayment();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { state } = useLocation();
   const defValues = {
     "mode": {
@@ -145,7 +145,7 @@ const OpenView = () => {
         {
           onSuccess: (data) => {
   if (data?.Payments?.[0].paymentDetails[0].businessService && data?.Payments?.[0].paymentDetails?.[0]?.bill?.consumerCode && data?.Payments?.[0]?.tenantId) {
-    history.push({
+    navigate({
       pathname: `/${window.contextPath}/${window.location.href.includes("/citizen/") ? "citizen" : "employee"}/openpayment/success/${data?.Payments?.[0].paymentDetails[0].businessService}/${data?.Payments?.[0].paymentDetails?.[0]?.bill?.consumerCode}/${data?.Payments?.[0]?.tenantId}`,
       state: {
         isSuccess: true,
@@ -154,7 +154,7 @@ const OpenView = () => {
       }
     });
   } else {
-    history.push({
+    navigate({
       pathname: `/${window.contextPath}/${window.location.href.includes("/citizen/") ? "citizen" : "employee"}/openpayment/failure`,
       state: { isSuccess: false, ...state }
     });

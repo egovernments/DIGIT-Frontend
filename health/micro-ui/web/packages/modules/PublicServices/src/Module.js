@@ -1,6 +1,6 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import { default as CitizenApp } from "./pages/citizen";
 import PublicServicesCard from "./components/PublicServicesCard";
@@ -12,7 +12,7 @@ import MDMSDependentDropdown from "./components/MDMSDependentDropdown";
 import HierarchyDropdown from "./components/HierarchyDropdown";
 
 export const PublicServicesModule = ({ stateCode, userType, tenants }) => {
-  const { path } = useRouteMatch();
+  // const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
 
@@ -151,7 +151,6 @@ export const PublicServicesModule = ({ stateCode, userType, tenants }) => {
   if (window.location.href.includes("digit-studio/citizen"))
     return (
       <CitizenApp
-        path={path}
         stateCode={stateCode}
         userType={userType}
         tenants={tenants}
@@ -159,7 +158,6 @@ export const PublicServicesModule = ({ stateCode, userType, tenants }) => {
     );
   return (
     <EmployeeApp
-      path={path}
       stateCode={stateCode}
       userType={userType}
       tenants={tenants}

@@ -1,8 +1,6 @@
-import React, { Fragment, useEffect, useReducer, useState } from "react";
+import React, { Fragment, useEffect, useReducer, useState, useCallback, useMemo } from "react";
 import { Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-// import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 import AppConfigurationParentRedesign from "./AppConfigurationParentLayer";
 
 const tabDispatcher = (state, action) => {
@@ -95,7 +93,6 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationTabLayer = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
   const MODULE_CONSTANTS = "Studio";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
@@ -111,58 +108,65 @@ const AppConfigurationTabLayer = () => {
   const [formName, setFormName] = useState(searchParams.get("formName") || "");
   const [formDescription, setFormDescription] = useState(searchParams.get("formDescription") || "");
 
-  const data =
-    useEffect(() => {
-      if (tabState?.actualData?.length > 0) {
-        setNumberTabs(tabState?.numberTabs);
-        setCurrentScreen(tabState?.numberTabs?.find((i) => i.active === true));
-      }
-    }, [tabState]);
-  const reqCriteriaTab = {
+  // Track if initial data has been set to prevent re-dispatching
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (tabState?.actualData?.length > 0) {
+      setNumberTabs(tabState?.numberTabs);
+      setCurrentScreen(tabState?.numberTabs?.find((i) => i.active === true));
+    }
+  }, [tabState]);
+
+  // Memoize the select function to prevent new reference on each render
+  const selectCallback = useCallback((data) => {
+    return data?.mdms;
+  }, []);
+
+  // Memoize the request body to prevent new object reference on each render
+  const requestBody = useMemo(() => ({
+    MdmsCriteria: {
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      schemaCode: `${MODULE_CONSTANTS}.${masterName}`,
+      filters: {
+        project: campaignNumber,
+      },
+    },
+  }), [masterName, campaignNumber]);
+
+  // Memoize the entire request criteria object
+  const reqCriteriaTab = useMemo(() => ({
     url: `/${mdms_context_path}/v2/_search`,
     changeQueryName: `APPCONFIG-${campaignNumber}`,
-    body: {
-      MdmsCriteria: {
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-        schemaCode: `${MODULE_CONSTANTS}.${masterName}`,
-        filters: {
-          project: campaignNumber,
-        },
-      },
-    },
+    body: requestBody,
     config: {
       enabled: formId ? true : false,
-      select: (data) => {
-        tabStateDispatch({
-          key: "SET_TAB",
-          data: data?.mdms,
-        });
-        return data?.mdms;
-      },
+      select: selectCallback,
+      // Prevent refetching on window focus or mount if data exists
+      staleTime: 60000,
+      refetchOnWindowFocus: false,
     },
-  };
+  }), [campaignNumber, requestBody, selectCallback, formId]);
 
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
 
+  // Use effect to dispatch SET_TAB only once when data arrives
+  useEffect(() => {
+    if (tabData && !isInitialized) {
+      tabStateDispatch({
+        key: "SET_TAB",
+        data: tabData,
+      });
+      setIsInitialized(true);
+    }
+  }, [tabData, isInitialized]);
+
   if (isTabLoading) return <Loader />;
+
   return (
     <div>
       {variant === "app" && (
         <>
-          {/* <AppConfigTab
-            wrapperClassName={"app-config-tab"}
-            toggleOptions={numberTabs}
-            selectedOption={numberTabs?.find((i) => i.active)?.code}
-            handleToggleChange={(tab, index) => {
-              // setShowPopUp(tab);
-              window.dispatchEvent(new Event("resetStep"));
-
-              tabStateDispatch({
-                key: "CHANGE_ACTIVE_TAB",
-                tab: tab,
-              });
-            }}
-          /> */}
           <AppConfigurationParentRedesign
             tabState={tabState}
             formData={tabState?.activeTabConfig}

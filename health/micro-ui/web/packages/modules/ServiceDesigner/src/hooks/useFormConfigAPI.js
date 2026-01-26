@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -13,8 +13,8 @@ export const useFormConfigAPI = () => {
   /**
    * Save form configuration to Studio.ServiceConfigurationDrafts
    */
-  const saveFormConfig = useMutation(
-    async (formData) => {
+  const saveFormConfig = useMutation({
+    mutationFn: async (formData) => {
       const { module, service, formName, formDescription, formConfig } = formData;
       
       // First, check if a draft exists for this module and service
@@ -69,11 +69,11 @@ export const useFormConfigAPI = () => {
           auditDetails: existingDraft.auditDetails
         };
 
-              const response = await Digit.CustomService.getResponse({
-        url: `/${mdms_context_path}/v2/_update/Studio.Checklists`,
-        params: { tenantId: tenantId },
-        body: { Mdms: updatePayload },
-      });
+        const response = await Digit.CustomService.getResponse({
+          url: `/${mdms_context_path}/v2/_update/Studio.Checklists`,
+          params: { tenantId: tenantId },
+          body: { Mdms: updatePayload },
+        });
         return response;
       } else {
         // Create new draft with the form
@@ -124,19 +124,17 @@ export const useFormConfigAPI = () => {
         return response;
       }
     },
-    {
-      onError: (error) => {
-        console.error("Error saving form config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error saving form config:", error);
+      throw error;
+    },
+  });
 
   /**
    * Update existing form configuration in Studio.ServiceConfigurationDrafts
    */
-  const updateFormConfig = useMutation(
-    async (formData) => {
+  const updateFormConfig = useMutation({
+    mutationFn: async (formData) => {
       const { module, service, formName, formDescription, formConfig, formId, originalFormName } = formData;
 
       // Search for the draft
@@ -207,21 +205,20 @@ export const useFormConfigAPI = () => {
       });
       return response;
     },
-    {
-      onError: (error) => {
-        console.error("Error updating form config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error updating form config:", error);
+      throw error;
+    },
+  });
 
   /**
    * Search form configurations by module and service from Studio.ServiceConfigurationDrafts
    */
   const searchFormConfigs = (module, service) => {
-    return useQuery(
-      ["formConfigs", module, service],
-      async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      queryKey: ["formConfigs", module, service],
+      queryFn: async () => {
         const payload = {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -257,21 +254,20 @@ export const useFormConfigAPI = () => {
         }
         return [];
       },
-      {
-        enabled: !!module && !!service,
-        cacheTime: 5 * 60 * 1000, // 5 minutes
-        staleTime: 2 * 60 * 1000, // 2 minutes
-      }
-    );
+      enabled: !!module && !!service,
+      gcTime: 5 * 60 * 1000,
+      staleTime: 2 * 60 * 1000,
+    });
   };
 
   /**
    * Search form configuration by unique identifier (module.service) from Studio.ServiceConfigurationDrafts
    */
   const searchFormConfigById = (module, service) => {
-    return useQuery(
-      ["formConfig", module, service],
-      async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      queryKey: ["formConfig", module, service],
+      queryFn: async () => {
         const payload = {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -307,21 +303,20 @@ export const useFormConfigAPI = () => {
         }
         return null;
       },
-      {
-        enabled: !!module && !!service,
-        cacheTime: 5 * 60 * 1000, // 5 minutes
-        staleTime: 2 * 60 * 1000, // 2 minutes
-      }
-    );
+      enabled: !!module && !!service,
+      gcTime: 5 * 60 * 1000,
+      staleTime: 2 * 60 * 1000,
+    });
   };
 
   /**
    * Fetch form configuration by formName for edit mode from Studio.ServiceConfigurationDrafts
    */
   const fetchFormConfigByName = (formName) => {
-    return useQuery(
-      ["formConfigByName", formName],
-      async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      queryKey: ["formConfigByName", formName],
+      queryFn: async () => {
         const payload = {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -357,19 +352,17 @@ export const useFormConfigAPI = () => {
         }
         return null;
       },
-      {
-        enabled: !!formName,
-        cacheTime: 5 * 60 * 1000, // 5 minutes
-        staleTime: 2 * 60 * 1000, // 2 minutes
-      }
-    );
+      enabled: !!formName,
+      gcTime: 5 * 60 * 1000,
+      staleTime: 2 * 60 * 1000,
+    });
   };
 
   /**
    * Delete form configuration from Studio.ServiceConfigurationDrafts
    */
-  const deleteFormConfig = useMutation(
-    async (formData) => {
+  const deleteFormConfig = useMutation({
+    mutationFn: async (formData) => {
       const { module, service, formName } = formData;
       
       // Search for the draft
@@ -419,13 +412,11 @@ export const useFormConfigAPI = () => {
       });
       return response;
     },
-    {
-      onError: (error) => {
-        console.error("Error deleting form config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error deleting form config:", error);
+      throw error;
+    },
+  });
 
   return {
     saveFormConfig,
@@ -505,4 +496,4 @@ export const transformMDMSToFormData = (mdmsData) => {
       createdBy: mdmsData.createdBy,
     },
   };
-}; 
+};

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader, CustomSVG } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { checklistCreateConfig } from "../../../config/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import useCreateChecklist from "../../../hooks/useCreateChecklist";
@@ -50,7 +50,7 @@ const CreateChecklist = ({isUpdate}) => {
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { mutateAsync } = useCreateChecklist(tenantId);
   const { saveChecklistConfig, updateChecklistConfig, searchChecklistConfigByName } = useChecklistConfigAPI();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [serviceCode, setServiceCode] = useState(null);
   const [def_data, setDef_Data] = useState(null);
   const [helpText, setHelpText] = useState("");
@@ -800,7 +800,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
         setShowLocalisationPopup(false)
         setShowToast({ label: isUpdate ? "CHECKLIST_UPDATED_SUCCESSFULLY" : "CHECKLIST_CREATED_SUCCESSFULLY", isError: false });
         setTimeout(() => {
-          history.push(`/${window.contextPath}/employee/servicedesigner/Checklist?module=${checklistModule}&service=${checklistService}`);
+          navigate(`/${window.contextPath}/employee/servicedesigner/Checklist?module=${checklistModule}&service=${checklistService}`);
       }, 3000);
       } else {
         setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: true });
@@ -822,7 +822,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
   }, [showToast])
 
   const onSecondayActionClick = () => {
-    history.push(`/${window.contextPath}/employee/servicedesigner/checklist?module=${checklistModule}&service=${checklistService}`);
+    navigate(`/${window.contextPath}/employee/servicedesigner/checklist?module=${checklistModule}&service=${checklistService}`);
   };
 
   // const fieldPairs = [

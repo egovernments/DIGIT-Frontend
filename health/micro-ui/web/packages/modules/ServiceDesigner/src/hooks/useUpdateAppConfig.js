@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const updateAppConfigService = async (req, tenantId) => {
   try {
@@ -38,9 +38,9 @@ const updateAppConfigService = async (req, tenantId) => {
 };
 
 const useUpdateAppConfig = (tenantId) => {
-  return useMutation((reqData) => {
+  return useMutation({mutationFn: (reqData) => {
     return updateAppConfigService(reqData, tenantId);
-  });
+  }});
 };
 
 export default useUpdateAppConfig;

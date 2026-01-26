@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useReducer, useState, useCallback, useMemo } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useState, useCallback, useMemo, useRef } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
 import { Footer, Button, Loader, PopUp, SidePanel, Toast, FieldV1, Tag, TextArea } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
@@ -11,9 +11,7 @@ import AppPreview from "../../../components/AppPreview";
 import { useCustomT } from "./useCustomT";
 import useUpsertLocalisationParallel from "../../../hooks/useUpsertLocalisationParallel";
 import { useFormConfigAPI, transformFormDataToMDMS } from "../../../hooks/useFormConfigAPI";
-import { useHistory } from "react-router-dom";
-// Import the local FieldPropertiesPanelConfig
-//import fieldPropertiesPanelConfig from "../../../localMdmsMasters/FieldPropertiesPanelConfig.json";
+import { useNavigate } from "react-router-dom";
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
@@ -24,31 +22,32 @@ const initialState = {};
 export const useAppConfigContext = () => {
   return useContext(AppConfigContext);
 };
+
 const reorderConfig = (config, fromIndex, toIndex) => {
   if (
-    fromIndex === toIndex || // No change needed
+    fromIndex === toIndex ||
     fromIndex < 0 ||
-    toIndex < 0 || // Prevent negative indexes
+    toIndex < 0 ||
     fromIndex >= config?.length ||
-    toIndex >= config?.length // Prevent out-of-bounds access
+    toIndex >= config?.length
   ) {
-    return [...config]; // Return a copy to ensure immutability
+    return [...config];
   }
 
-  const updatedConfig = [...config]; // Copy array to avoid mutation
-  const [movedItem] = updatedConfig.splice(fromIndex, 1); // Remove item
-  updatedConfig.splice(toIndex, 0, movedItem); // Insert item at new index
+  const updatedConfig = [...config];
+  const [movedItem] = updatedConfig.splice(fromIndex, 1);
+  updatedConfig.splice(toIndex, 0, movedItem);
   return updatedConfig?.map((item, index) => ({
     ...item,
     order: index + 1,
   }));
 };
 
-// Helper function to convert to sentence case
 const toSentenceCase = (str) => {
   if (!str || typeof str !== 'string') return str;
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
+
 const reducer = (state = initialState, action, updateLocalization) => {
   switch (action.type) {
     case "MASTER_DATA":
@@ -70,7 +69,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
           if (item?.name === action?.payload?.currentScreen?.name) {
-            // Find the maximum section number from existing sections to avoid duplicates
             const existingSectionNumbers = (item?.cards || [])
               .map(card => {
                 const headingField = card.headerFields?.find(hf => hf.label === "SCREEN_HEADING");
@@ -123,7 +121,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
             const updatedCards = [...item.cards];
             
             if (action.payload.enabled) {
-              // Add applicant details section if it doesn't exist
               const applicantSectionExists = updatedCards.some(card => 
                 card.fields?.some(field => field.jsonPath === "ApplicantName")
               );
@@ -141,9 +138,9 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: true,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Make this non-deletable
-                      isMandatory: true, // Mark as mandatory
-                      hidden: false, // Ensure it's visible
+                      deleteFlag: false,
+                      isMandatory: true,
+                      hidden: false,
                       order: 1,
                     },
                     {
@@ -158,10 +155,10 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: true,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Make this non-deletable
+                      deleteFlag: false,
                       hideSpan: true,
-                      isMandatory: true, // Mark as mandatory
-                      hidden: false, // Ensure it's visible
+                      isMandatory: true,
+                      hidden: false,
                       order: 2,
                       minLength: window?.globalConfigs?.getConfig("CORE_MOBILE_CONFIGS")?.mobileMaxLength || 10,
                       maxLength: window?.globalConfigs?.getConfig("CORE_MOBILE_CONFIGS")?.mobileMaxLength || 10,
@@ -181,7 +178,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: false,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Default field - shows toggle
+                      deleteFlag: false,
                       hidden: false,
                       order: 3,
                       regex: "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$",
@@ -197,7 +194,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: false,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Default field - shows toggle
+                      deleteFlag: false,
                       hidden: false,
                       order: 4,
                       isMdms: true,
@@ -228,11 +225,10 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       value: "Please provide your personal information",
                     },
                   ],
-                  sectionType: "applicant", // Add section type to identify applicant sections
+                  sectionType: "applicant",
                 });
               }
             } else {
-              // Remove applicant details section
               const filteredCards = updatedCards.filter(card => 
                 !card.fields?.some(field => field.jsonPath === "ApplicantName")
               );
@@ -257,7 +253,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
             const updatedCards = [...item.cards];
             
             if (action.payload.enabled) {
-              // Add address details section if it doesn't exist
               const addressSectionExists = updatedCards.some(card => 
                 card?.fields?.some(field => field.jsonPath === "AddressPincode")
               );
@@ -275,7 +270,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: false,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Default field - shows toggle
+                      deleteFlag: false,
                       hidden: false,
                       order: 1,
                       regex: "^[1-9][0-9]{5}$",
@@ -291,7 +286,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: false,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Default field - shows toggle
+                      deleteFlag: false,
                       hidden: false,
                       order: 2,
                     },
@@ -305,15 +300,15 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: false,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Default field - shows toggle
+                      deleteFlag: false,
                       hidden: false,
                       order: 3,
                       component: "HierarchyDropdown",
                       populators: {
                         name: "boundaryHierarchy",
-                        hierarchyType: action.payload.hierarchyDefaults?.hierarchyType || "", // 0th element from hierarchy types
-                        highestHierarchy: action.payload.hierarchyDefaults?.highestHierarchy || "", // Same as lowest on initial load
-                        lowestHierarchy: action.payload.hierarchyDefaults?.lowestHierarchy || "", // Lowest level from selected hierarchy
+                        hierarchyType: action.payload.hierarchyDefaults?.hierarchyType || "",
+                        highestHierarchy: action.payload.hierarchyDefaults?.highestHierarchy || "",
+                        lowestHierarchy: action.payload.hierarchyDefaults?.lowestHierarchy || "",
                         autoSelect: true,
                       }
                     },
@@ -327,7 +322,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       required: false,
                       value: "",
                       readOnly: false,
-                      deleteFlag: false, // Default field - shows toggle
+                      deleteFlag: false,
                       hidden: false,
                       order: 4,
                       component: "MapWithInput",
@@ -361,7 +356,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
                 });
               }
             } else {
-              // Remove address details section
               const filteredCards = updatedCards.filter(card => 
                 !card?.fields?.some(field => field.jsonPath === "AddressPincode")
               );
@@ -386,7 +380,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
             const updatedCards = [...item.cards];
             
             if (action.payload.enabled) {
-              // Add document section if it doesn't exist
               const documentSectionExists = updatedCards.some(card => 
                 card?.sectionType === "document" || 
                 card?.fields?.some(field => field.jsonPath === "DocumentUpload")
@@ -397,7 +390,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                   fields: [],
                   header: "Document Section",
                   description: "Document Upload and Download",
-                  sectionType: "document", // Add this to identify document sections
+                  sectionType: "document",
                   headerFields: [
                     {
                       type: "text",
@@ -421,7 +414,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
                 });
               }
             } else {
-              // Remove document section
               const filteredCards = updatedCards.filter(card => 
                 card?.sectionType !== "document" && 
                 !card?.fields?.some(field => field.jsonPath === "DocumentUpload")
@@ -451,66 +443,64 @@ const reducer = (state = initialState, action, updateLocalization) => {
           return item;
         }),
       };
-
     case "ADD_FIELD":
-  return {
-    ...state,
-    isPopup: true,
-    screenData: state?.screenData?.map((item, index) => {
-      if (item?.name === action?.payload?.currentScreen?.name) {
-        return {
-          ...item,
-          cards: item?.cards?.map((j, k, c) => {
-            if (j === action.payload.currentCard) {
-              // Check for duplicate field labels
-              const existingLabels = j.fields.map(field => field.label?.toLowerCase().trim());
-              const newLabel = action?.payload?.fieldData?.label?.toLowerCase().trim();
-              
-              if (existingLabels.includes(newLabel)) {
+      return {
+        ...state,
+        isPopup: true,
+        screenData: state?.screenData?.map((item, index) => {
+          if (item?.name === action?.payload?.currentScreen?.name) {
+            return {
+              ...item,
+              cards: item?.cards?.map((j, k, c) => {
+                if (j === action.payload.currentCard) {
+                  const existingLabels = j.fields.map(field => field.label?.toLowerCase().trim());
+                  const newLabel = action?.payload?.fieldData?.label?.toLowerCase().trim();
+                  
+                  if (existingLabels.includes(newLabel)) {
+                    return j;
+                  }
+                  
+                  const regex = new RegExp(`^${item?.name}_${j?.header}_newField(\\d+)$`);
+                  const maxCounter = j.fields
+                    .map((f) => {
+                      const match = f.jsonPath && f.jsonPath.match(regex);
+                      return match ? parseInt(match[1], 10) : 0;
+                    })
+                    .reduce((max, curr) => Math.max(max, curr), 0);
+                  const nextCounter = maxCounter + 1;
+                  const fieldType = action.payload.fieldData?.type?.fieldType;
+
+                  const isTextType = fieldType === "text" || fieldType === "textInput";
+                  const defaultValidation = isTextType ? {
+                    regex: "^[A-Za-z0-9 _.',]*$",
+                    errorMessage: "Only default characters allowed"
+                  } : {};
+
+                  return {
+                    ...j,
+                    fields: [
+                      ...j.fields,
+                      {
+                        ...action?.payload?.fieldData,
+                        jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
+                        type: fieldType,
+                        appType: action.payload.fieldData?.type?.type,
+                        label: toSentenceCase(action.payload.fieldData?.label),
+                        active: true,
+                        deleteFlag: true,
+                        ...defaultValidation,
+                      },
+                    ],
+                  };
+                }
                 return j;
-              }
-              
-              const regex = new RegExp(`^${item?.name}_${j?.header}_newField(\\d+)$`);
-              const maxCounter = j.fields
-                .map((f) => {
-                  const match = f.jsonPath && f.jsonPath.match(regex);
-                  return match ? parseInt(match[1], 10) : 0;
-                })
-                .reduce((max, curr) => Math.max(max, curr), 0);
-              const nextCounter = maxCounter + 1;
-              const fieldType = action.payload.fieldData?.type?.fieldType;
-
-              const isTextType = fieldType === "text" || fieldType === "textInput";
-              const defaultValidation = isTextType ? {
-                regex: "^[A-Za-z0-9 _.',]*$",
-                errorMessage: "Only default characters allowed"
-              } : {};
-
-              return {
-                ...j,
-                fields: [
-                  ...j.fields,
-                  {
-                    ...action?.payload?.fieldData,
-                    jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
-                    type: fieldType,
-                    appType: action.payload.fieldData?.type?.type,
-                    label: toSentenceCase(action.payload.fieldData?.label),  // Apply sentence case here
-                    active: true,
-                    deleteFlag: true,
-                    ...defaultValidation,
-                  },
-                ],
-              };
-            }
-            return j;
-          }),
-        };
-      }
-      return item;
-    }),
-  };
-    case "HIDE_FIELD": //added logic to hide fields in display
+              }),
+            };
+          }
+          return item;
+        }),
+      };
+    case "HIDE_FIELD":
       return {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
@@ -518,7 +508,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
             return {
               ...item,
               cards: item?.cards?.map((j, cardIndex) => {
-                // Fix: Use card index to identify the specific card
                 if (cardIndex === action.payload.currentCardIndex || j === action.payload.currentCard) {
                   return {
                     ...j,
@@ -540,7 +529,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
             return {
               ...item,
               cards: item?.cards?.map((j, cardIndex) => {
-                // Fix: Use card index to identify the specific card
                 if (cardIndex === action.payload.currentCardIndex || j === action.payload.currentCard) {
                   return {
                     ...j,
@@ -555,11 +543,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
         }),
       };
     case "UPDATE_HEADER_FIELD":
-      // updateLocalization(
-      //   action?.payload?.localisedCode,
-      //   Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-      //   action?.payload?.value
-      // );
       return {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
@@ -567,7 +550,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
             return {
               ...item,
               cards: item?.cards?.map((j, k) => {
-                // Fix: Use reference comparison to identify the specific card
                 if (j === action.payload.currentField) {
                   return {
                     ...j,
@@ -575,7 +557,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       if (m.label === action?.payload?.field?.label) {
                         return {
                           ...m,
-                          value: action?.payload?.value, // Store value directly
+                          value: action?.payload?.value,
                         };
                       }
                       return m;
@@ -594,7 +576,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
         ...state,
         currentScreen: action?.payload?.currentScreen,
         currentCard: action?.payload?.currentCard,
-        currentCardIndex: action?.payload?.currentCardIndex, // Store card index instead of reference
+        currentCardIndex: action?.payload?.currentCardIndex,
         drawerField: action?.payload?.drawerField,
       };
     case "UNSELECT_DRAWER_FIELD":
@@ -603,35 +585,34 @@ const reducer = (state = initialState, action, updateLocalization) => {
         drawerField: null,
       };
     case "UPDATE_DRAWER_FIELD":
-  return {
-    ...state,
-    screenData: state?.screenData?.map((item, index) => {
-      if (item?.name === state?.currentScreen?.name) {
-        return {
-          ...item,
-          cards: item?.cards?.map((j, cardIndex) => {
-            if (cardIndex === state.currentCardIndex) {
-              return {
-                ...j,
-                fields: j.fields.map((k) => {
-                  if (k.id ? k.id === state?.drawerField?.id : k.jsonPath === state?.drawerField?.jsonPath) {
-                    return {
-                      ...action.payload.updatedState,
-                      // Apply sentence case to label if it exists
-                      label: toSentenceCase(action.payload.updatedState?.label),
-                    };
-                  }
-                  return k;
-                }),
-              };
-            }
-            return j;
-          }),
-        };
-      }
-      return item;
-    }),
-  };
+      return {
+        ...state,
+        screenData: state?.screenData?.map((item, index) => {
+          if (item?.name === state?.currentScreen?.name) {
+            return {
+              ...item,
+              cards: item?.cards?.map((j, cardIndex) => {
+                if (cardIndex === state.currentCardIndex) {
+                  return {
+                    ...j,
+                    fields: j.fields.map((k) => {
+                      if (k.id ? k.id === state?.drawerField?.id : k.jsonPath === state?.drawerField?.jsonPath) {
+                        return {
+                          ...action.payload.updatedState,
+                          label: toSentenceCase(action.payload.updatedState?.label),
+                        };
+                      }
+                      return k;
+                    }),
+                  };
+                }
+                return j;
+              }),
+            };
+          }
+          return item;
+        }),
+      };
     case "REORDER_FIELDS":
       return {
         ...state,
@@ -674,7 +655,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const [showPopUp, setShowPopUp] = useState(false);
@@ -691,43 +672,35 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
   const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
   const [validationErrors, setValidationErrors] = useState({});
 
-  // Restricted characters for form name (URL-unsafe characters)
   const RESTRICTED_CHARS = /[?&=\/:#+]/g;
   const sanitizeInput = (value) => value.replace(RESTRICTED_CHARS, "");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
-  // Form configuration API hook
   const { saveFormConfig, updateFormConfig, fetchFormConfigByName } = useFormConfigAPI();
   
-  // Get module and service from URL parameters
   const module = searchParams.get("module");
   const service = searchParams.get("service");
-  const editMode = searchParams.get("editMode") === "true"; // Check for edit mode
+  const editMode = searchParams.get("editMode") === "true";
 
-  // Get original form name from URL params - this never changes during the session
   const originalFormName = searchParams.get("formName") || "";
 
-  // State for form name and description (will be updated from side panel)
   const [currentFormName, setCurrentFormName] = useState(formName || "");
   const [currentFormDescription, setCurrentFormDescription] = useState(formDescription || "");
 
-  // Local state for popup form name to prevent re-renders
   const [popupFormName, setPopupFormName] = useState(formName || "");
   const [popupFormDescription, setPopupFormDescription] = useState(formDescription || "");
   
-  const [showFormNamePopup, setShowFormNamePopup] = useState(() => {
-    // Use a function to compute initial state to avoid re-computation on every render
-    // In edit mode, don't show popup if we have a form name
+  // Use ref to track if popup should show - compute only once
+  const initialShowFormNamePopup = useRef(() => {
     const isEditMode = searchParams.get("editMode") === "true";
     return !(formName || "") && !isEditMode;
   });
+  const [showFormNamePopup, setShowFormNamePopup] = useState(initialShowFormNamePopup.current);
   const [showSectionPopup, setShowSectionPopup] = useState(false);
 
-  // Fetch existing form data if in edit mode (using original formName from URL)
   const { data: existingFormData, isLoading: isLoadingExistingForm } = fetchFormConfigByName(originalFormName);
 
-  // Fetch hierarchy types for address section defaults
-  const hierarchyTypesReq = {
+  const hierarchyTypesReq = useMemo(() => ({
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `hierarchyTypes_appConfig`,
     body: {
@@ -748,8 +721,28 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         }));
       },
     },
-  };
+  }), [tenantId]);
+
   const { data: hierarchyTypesData } = Digit.Hooks.useCustomAPIHook(hierarchyTypesReq);
+
+  // Track if MDMS data has been initialized
+  const mdmsInitializedRef = useRef(false);
+
+  // Memoize the select callback to prevent it from being recreated on every render
+  const mdmsSelectCallback = useCallback((data) => {
+    const fieldTypeMappingConfig = data?.["Studio"]?.["FieldTypeMappingConfig"] || [];
+    const fieldPropertiesPanelConfig = data?.["Studio"]?.["FieldPropertiesPanelConfig"] || [];
+    const sortedFieldTypes = [...fieldTypeMappingConfig].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const sortedPanelConfig = [...fieldPropertiesPanelConfig].sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    return {
+      ...data?.["Studio"],
+      DrawerPanelConfig: sortedPanelConfig,
+      AppFieldType: sortedFieldTypes,
+      DetailsConfig: data?.["Studio"]?.["DETAILS_RENDERER_CONFIG"],
+    };
+  }, []);
+
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -762,45 +755,34 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     {
       cacheTime: Infinity,
       staleTime: Infinity,
-      select: (data) => {
-        // Get FieldTypeMappingConfig from MDMS (contains all field types including document, hierarchy, mapcoord)
-        const fieldTypeMappingConfig = data?.["Studio"]?.["FieldTypeMappingConfig"] || [];
-
-        // Get FieldPropertiesPanelConfig from MDMS (contains all panel configs including hierarchy dropdowns)
-        const fieldPropertiesPanelConfig = data?.["Studio"]?.["FieldPropertiesPanelConfig"] || [];
-
-        // Sort field types by order
-        const sortedFieldTypes = [...fieldTypeMappingConfig].sort((a, b) => (a.order || 0) - (b.order || 0));
-
-        // Sort panel config by order
-        const sortedPanelConfig = [...fieldPropertiesPanelConfig].sort((a, b) => (a.order || 0) - (b.order || 0));
-
-        dispatch({
-          type: "MASTER_DATA",
-          state: {
-            screenConfig: screenConfig,
-            ...data?.["Studio"],
-            // Use FieldPropertiesPanelConfig from MDMS for drawer panel
-            DrawerPanelConfig: sortedPanelConfig,
-            // Use FieldTypeMappingConfig from MDMS for field types
-            AppFieldType: sortedFieldTypes,
-            DetailsConfig: data?.["Studio"]?.["DETAILS_RENDERER_CONFIG"],
-          },
-        });
-      },
+      select: mdmsSelectCallback,
     },
-    { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
+    { schemaCode: "BASE_APP_MASTER_DATA" }
   );
 
-  const openAddFieldPopup = (data) => {
-    setPopupData({ ...data, id: crypto.randomUUID() });
-  };
-  const fetchLoc = (key) => {
-    return locState?.find((i) => i.code === key)?.[currentLocale];
-  };
+  // Dispatch MASTER_DATA only when AppConfigMdmsData changes and hasn't been initialized
+  useEffect(() => {
+    if (AppConfigMdmsData && !mdmsInitializedRef.current) {
+      mdmsInitializedRef.current = true;
+      dispatch({
+        type: "MASTER_DATA",
+        state: {
+          screenConfig: screenConfig,
+          ...AppConfigMdmsData,
+        },
+      });
+    }
+  }, [AppConfigMdmsData, screenConfig]);
 
-  // Function to check for duplicate form names
-  const checkDuplicateFormName = async (formName) => {
+  const openAddFieldPopup = useCallback((data) => {
+    setPopupData({ ...data, id: crypto.randomUUID() });
+  }, []);
+
+  const fetchLoc = useCallback((key) => {
+    return locState?.find((i) => i.code === key)?.[currentLocale];
+  }, [locState, currentLocale]);
+
+  const checkDuplicateFormName = useCallback(async (formName) => {
     if (!formName) return false;
     
     try {
@@ -823,12 +805,11 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
 
       const draft = response?.mdms?.[0];
       if (!draft || !draft.data?.uiforms) {
-        return false; // No draft or no forms, so no duplicate
+        return false;
       }
       
       const existingForms = draft.data.uiforms;
       
-      // In edit mode, exclude the current form from duplicate check
       if (editMode && existingFormData) {
         return existingForms.some(form => 
           form.formName === formName.trim() && 
@@ -836,32 +817,25 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         );
       }
       
-      // In create mode, check if any form with same name exists
       return existingForms.some(form => form.formName === formName.trim());
     } catch (error) {
       console.error("Error checking duplicate form name:", error);
-      return false; // Return false to allow form creation if check fails
+      return false;
     }
-  };
+  }, [tenantId, module, service, editMode, existingFormData]);
 
-
-
-  // Validation function for form builder
-  const validateForm = async () => {
+  const validateForm = useCallback(async () => {
     const errors = {};
 
-    // 1. Verify if form name not entered
     if (!currentFormName || !currentFormName.trim()) {
       errors.formName = t("FORM_NAME_REQUIRED");
     } else {
-      // 2. Check for duplicate form name (only if form name is provided)
       const isDuplicate = await checkDuplicateFormName(currentFormName);
       if (isDuplicate) {
         errors.duplicateFormName = t("FORM_NAME_ALREADY_EXISTS");
       }
     }
 
-    // Collect all fields from all cards instead of just the first card
     const allFields = [];
     state?.screenData?.[0]?.cards?.forEach(card => {
       if (card?.fields) {
@@ -869,20 +843,17 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       }
     });
 
-    // 3. Verify field added but no type selected
     const fieldsWithoutType = allFields.filter(field => !field.type);
     if (fieldsWithoutType.length > 0) {
       errors.fieldType = t("FIELD_TYPE_REQUIRED");
     }
 
-    // 4. Verify if two fields with same name
     const fieldNames = allFields.map(field => field.label).filter(Boolean);
     const duplicateNames = fieldNames.filter((name, index) => fieldNames.indexOf(name) !== index);
     if (duplicateNames.length > 0) {
       errors.duplicateNames = t("DUPLICATE_FIELD_NAMES");
     }
 
-    // 5. Check for required metadata missing
     const fieldsWithMissingMetadata = allFields.filter(field => {
       if (!field.label || !field.type) return true;
       return false;
@@ -891,23 +862,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.missingMetadata = t("MISSING_REQUIRED_INFORMATION");
     }
 
-    // 6. Check for radio and dropdown fields with less than 2 options
     const radioDropdownFields = allFields.filter(field => 
       field.type === 'radio' || field.type === 'dropdown'
     );
     
     const fieldsWithInsufficientOptions = radioDropdownFields.filter(field => {
-      // For MDMS fields, we don't need to check options as they come from master data
       if (field.isMdms || field.schemaCode) {
         return false;
       }
       
-      // For enum fields with dropDownOptions, check if there are at least 2 options
       if (field.dropDownOptions && Array.isArray(field.dropDownOptions)) {
         return field.dropDownOptions.length < 2;
       }
       
-      // For fields without options, they need at least 2 options
       return true;
     });
     
@@ -916,17 +883,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.insufficientOptions = `${t("AT_LEAST_2_OPTIONS_REQUIRED")} ${fieldNames}`;
     }
 
-    // 7. Check for documentUploadAndDownload fields missing templateUrl or templatePDFKey
     const documentUploadAndDownloadFields = allFields.filter(field =>
       field.type === 'documentUploadAndDownload'
     );
 
     const fieldsWithMissingTemplate = documentUploadAndDownloadFields.filter(field => {
-      // Check if either templateUrl or templatePDFKey is provided
       const hasTemplateUrl = field.templateDownloadURL && field.templateDownloadURL.trim() !== '';
       const hasTemplatePDFKey = field.templatePDFKey && field.templatePDFKey.trim() !== '';
       
-      // Return true if neither is provided (validation error)
       return !hasTemplateUrl && !hasTemplatePDFKey;
     });
 
@@ -937,19 +901,17 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
 
     const fieldsWithInvalidTemplateUrl = documentUploadAndDownloadFields.filter(field => {
       const url = field.templateDownloadURL?.trim();
-      if (!url) return false; // empty is handled above
+      if (!url) return false;
 
-      // Multiple URL detection
       if (url.includes(",") || url.split(" ").length > 1 || url.includes("|")) {
         return true;
       }
 
-      // Validate URL syntax
       try {
         new URL(url);
-        return false; // valid URL
+        return false;
       } catch (e) {
-        return true; // invalid URL
+        return true;
       }
     });
 
@@ -958,12 +920,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.invalidTemplateUrl = `${t("INVALID_TEMPLATE_URL_SINGLE_URL_ONLY")} ${fieldNames}`;
     }
 
-    // 8. Check for documentUploadAndDownload fields with both templateUrl AND templatePDFKey provided
     const fieldsWithBothTemplates = documentUploadAndDownloadFields.filter(field => {
       const hasTemplateUrl = field.templateDownloadURL && field.templateDownloadURL.trim() !== '';
       const hasTemplatePDFKey = field.templatePDFKey && field.templatePDFKey.trim() !== '';
 
-      // Return true if BOTH are provided (validation error)
       return hasTemplateUrl && hasTemplatePDFKey;
     });
 
@@ -972,15 +932,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.bothTemplatesProvided = `${t("ONLY_ONE_TEMPLATE_ALLOWED")} ${fieldNames}`;
     }
 
-    // 9. Check for regex and errorMessage dependency - both must be provided together
     const fieldsWithIncompleteRegexValidation = allFields.filter(field => {
-      // Check if regex exists and is not empty (ignoring whitespace)
       const hasRegex = field.regex && typeof field.regex === 'string' && field.regex.trim() !== '';
-      // Check if errorMessage exists and is not empty (ignoring whitespace)
       const hasErrorMessage = field.errorMessage && typeof field.errorMessage === 'string' && field.errorMessage.trim() !== '';
 
-      // Return true if one is provided but not the other (validation error)
-      // This means: if hasRegex is true but hasErrorMessage is false, OR vice versa
       return (hasRegex && !hasErrorMessage) || (!hasRegex && hasErrorMessage);
     });
 
@@ -989,10 +944,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.incompleteRegexValidation = `${t("REGEX_AND_ERROR_MESSAGE_REQUIRED_TOGETHER")} ${fieldNames}`;
     }
 
-    // 10. Check if form only has custom sections, then at least one field is required
     const allCards = state?.screenData?.[0]?.cards || [];
 
-    // Check if there are any pre-defined sections (applicant, address, document)
     const hasPredefinedSections = allCards.some(card => {
       const sectionType = card.sectionType || "";
       return sectionType === "applicant" ||
@@ -1000,7 +953,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
              sectionType === "document";
     });
 
-    // 10a. Check if address section exists but has no visible fields (all hidden)
     const addressSection = allCards.find(card =>
       card.sectionType === "address" ||
       card?.fields?.some(field => field.jsonPath === "AddressPincode")
@@ -1013,27 +965,22 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       }
     }
 
-    // If no predefined sections, ensure there's at least one field somewhere in the form
     if (!hasPredefinedSections) {
-      // Count total fields across all cards
       const totalFields = allCards.reduce((count, card) => {
         return count + (card.fields ? card.fields.length : 0);
       }, 0);
 
-      // If no fields at all (even if there are no cards or only empty custom sections), show error
       if (totalFields === 0) {
         errors.noFieldsInCustomSections = t("AT_LEAST_ONE_FIELD_REQUIRED_IN_CUSTOM_SECTIONS");
       } 
     }
-     // 11. Check if any section is empty (no fields present)
+
     const emptySections = allCards.filter(card => {
       return !card.fields || card.fields.length === 0;
     });
 
     if (emptySections.length > 0) {
-      // Get section names/headers for better error message
       const emptySectionNames = emptySections.map(card => {
-        // Get the section heading from headerFields
         const headingField = card.headerFields?.find(hf => hf.label === "SCREEN_HEADING");
         return headingField?.value || card.header || "Unnamed Section";
       }).join(', ');
@@ -1041,7 +988,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.emptySections = `${t("SECTIONS_CANNOT_BE_EMPTY")} ${emptySectionNames}`;
     }
 
-    // 12. Validate prefix (isdCodePrefix) - should only contain numbers and + sign
     const fieldsWithInvalidPrefix = allFields.filter(field => {
       if (field.isdCodePrefix && typeof field.isdCodePrefix === 'string') {
         const prefixRegex = /^[\d+]*$/;
@@ -1055,7 +1001,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.invalidPrefix = `${t("PREFIX_SHOULD_ONLY_CONTAIN_NUMBERS_AND_PLUS")} ${fieldNames}`;
     }
 
-    // 13. Validate min/max length - min should not be greater than max
     const fieldsWithInvalidMinMax = allFields.filter(field => {
       const minLength = field.minLength ? parseInt(field.minLength) : null;
       const maxLength = field.maxLength ? parseInt(field.maxLength) : null;
@@ -1072,24 +1017,20 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       errors.invalidMinMax = `${t("MIN_LENGTH_CANNOT_BE_GREATER_THAN_MAX_LENGTH")} ${fieldNames}`;
     }
 
-    // 14. Validate regex - check if the regex pattern is valid and contains regex syntax
     const fieldsWithInvalidRegex = allFields.filter(field => {
       if (field.regex && typeof field.regex === 'string' && field.regex.trim() !== '') {
-        // First check if it's syntactically valid
         try {
           new RegExp(field.regex);
         } catch (e) {
-          return true; // Regex is syntactically invalid
+          return true;
         }
 
-        // Then check if it contains actual regex metacharacters
-        // Valid regex should contain at least one of: [] () {} ^ $ . * + ? | \
         const hasRegexSyntax = /[\[\](){}^$.*+?|\\]/.test(field.regex);
         if (!hasRegexSyntax) {
-          return true; // Valid syntax but no regex metacharacters (just a plain string)
+          return true;
         }
 
-        return false; // Regex is valid and contains regex syntax
+        return false;
       }
       return false;
     });
@@ -1100,25 +1041,20 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     }
 
     return errors;
-  };
+  }, [currentFormName, state?.screenData, checkDuplicateFormName, t]);
 
-  // Function to check for unsaved changes
-  const checkForUnsavedChanges = () => {
-    // This is a simplified check - you might want to implement more sophisticated change tracking
+  const checkForUnsavedChanges = useCallback(() => {
     return hasUnsavedChanges;
-  };
+  }, [hasUnsavedChanges]);
 
-  // Memoized onChange handler for form description to prevent unnecessary re-renders
   const handleFormDescriptionChange = useCallback((event) => {
     const newValue = event.target.value;
     setCurrentFormDescription(newValue);
-    // Call parent's onChange function only if it exists and is different
     if (onFormDescriptionChange && typeof onFormDescriptionChange === 'function') {
       onFormDescriptionChange(newValue);
     }
   }, [onFormDescriptionChange]);
 
-  // Memoized onChange handlers for popup form fields (separate from main form fields)
   const handlePopupFormNameChange = useCallback((event) => {
     const newValue = sanitizeInput(event.target.value);
     setPopupFormName(newValue);
@@ -1129,27 +1065,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     setPopupFormDescription(newValue);
   }, []);
 
-  // Function to handle window beforeunload event
-  // const handleBeforeUnload = (e) => {
-  //   if (checkForUnsavedChanges()) {
-  //     e.preventDefault();
-  //     e.returnValue = t("STUDIO_UNSAVED_CHANGES_WARNING");
-  //     return t("STUDIO_UNSAVED_CHANGES_WARNING");
-  //   }
-  // };
-
-  // Add event listener for window beforeunload
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', handleBeforeUnload);
-  //   return () => {
-  //     window.removeEventListener('beforeunload', handleBeforeUnload);
-  //   };
-  // }, [hasUnsavedChanges]);
-
-  // Add event listener for opening form name popup
   useEffect(() => {
     const handleOpenFormNamePopup = () => {
-      // Initialize popup form name with current form name when opening
       setPopupFormName(currentFormName);
       setPopupFormDescription(currentFormDescription);
       setShowFormNamePopup(true);
@@ -1161,40 +1078,40 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     };
   }, [currentFormName, currentFormDescription]);
 
-  // Prevent popup from showing in edit mode when we have existing data
+  // Use ref to track if we've already closed the popup
+  const popupClosedRef = useRef(false);
+  
   useEffect(() => {
-    if (editMode && existingFormData && !isLoadingExistingForm && showFormNamePopup) {
+    if (editMode && existingFormData && !isLoadingExistingForm && showFormNamePopup && !popupClosedRef.current) {
+      popupClosedRef.current = true;
       setShowFormNamePopup(false);
     }
-  }, [editMode, existingFormData, isLoadingExistingForm]); // Removed showFormNamePopup from dependencies
+  }, [editMode, existingFormData, isLoadingExistingForm, showFormNamePopup]);
 
-  // Track changes to mark unsaved changes
+  // Track screen data changes for unsaved changes - use ref to prevent loops
+  const prevScreenDataRef = useRef(null);
+  
   useEffect(() => {
-    if (state?.screenData) {
+    if (state?.screenData && prevScreenDataRef.current !== null && state?.screenData !== prevScreenDataRef.current) {
       setHasUnsavedChanges(true);
     }
+    prevScreenDataRef.current = state?.screenData;
   }, [state?.screenData]);
 
-  // Clear unsaved changes when form is successfully saved
-  const clearUnsavedChanges = () => {
+  const clearUnsavedChanges = useCallback(() => {
     setHasUnsavedChanges(false);
-  };
+  }, []);
 
-  // Helper function to update form references in workflow localStorage
-  // Forms are only assigned to START states in the workflow
-  const updateWorkflowFormReferencesInLocalStorage = (oldFormName, newFormName) => {
+  const updateWorkflowFormReferencesInLocalStorage = useCallback((oldFormName, newFormName) => {
     try {
       let updated = false;
 
-      // Get canvasElements from localStorage
       const canvasElementsStr = localStorage.getItem("canvasElements");
       if (canvasElementsStr && canvasElementsStr !== "undefined") {
         const canvasElements = JSON.parse(canvasElementsStr);
 
-        // Update form references ONLY in START state
         canvasElements.forEach(element => {
           if (element.nodetype === "start" && element.form) {
-            // Check if form is an object with code/name properties
             if (typeof element.form === 'object') {
               if (element.form.code === oldFormName || element.form.name === oldFormName) {
                 element.form.code = newFormName;
@@ -1202,7 +1119,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 updated = true;
               }
             }
-            // Check if form is just a string
             else if (typeof element.form === 'string' && element.form === oldFormName) {
               element.form = newFormName;
               updated = true;
@@ -1210,7 +1126,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
           }
         });
 
-        // Save back to localStorage if updated
         if (updated) {
           localStorage.setItem("canvasElements", JSON.stringify(canvasElements));
         }
@@ -1221,7 +1136,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       console.error("Failed to update workflow form references in localStorage:", error);
       return false;
     }
-  };
+  }, []);
 
   useEffect(() => {
     const handleStepChange = (e) => {
@@ -1235,45 +1150,47 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     };
   }, []);
 
+  // Use ref to track if screen data has been set
+  const screenDataSetRef = useRef(false);
+  
   useEffect(() => {
-    // In edit mode, don't overwrite with default screenConfig if existing data is loaded or loading
     if (editMode && (existingFormData || isLoadingExistingForm)) {
       return;
     }
-    dispatch({
-      type: "SET_SCREEN_DATA",
-      state: {
-        screenConfig: screenConfig,
-      },
-    });
+    if (!screenDataSetRef.current && screenConfig) {
+      screenDataSetRef.current = true;
+      dispatch({
+        type: "SET_SCREEN_DATA",
+        state: {
+          screenConfig: screenConfig,
+        },
+      });
+    }
   }, [screenConfig, editMode, existingFormData, isLoadingExistingForm]);
 
-  // Load existing form data when in edit mode
+  // Use ref to track if existing form data has been loaded
+  const existingFormLoadedRef = useRef(false);
+  
   useEffect(() => {
-    if (editMode && existingFormData && !isLoadingExistingForm) {
+    if (editMode && existingFormData && !isLoadingExistingForm && !existingFormLoadedRef.current) {
+      existingFormLoadedRef.current = true;
       
-      // Set form name and description from existing data
-      // Use the original form name from URL to prevent re-triggering when form name changes
-      const existingFormName = existingFormData?.data?.formName || originalFormName;
-      const existingFormDescription = existingFormData?.data?.formDescription || formDescription;
+      const existingFormNameValue = existingFormData?.data?.formName || originalFormName;
+      const existingFormDescriptionValue = existingFormData?.data?.formDescription || formDescription;
       
-      setCurrentFormName(existingFormName);
-      setCurrentFormDescription(existingFormDescription);
+      setCurrentFormName(existingFormNameValue);
+      setCurrentFormDescription(existingFormDescriptionValue);
       
-      // Also set popup form name and description
-      setPopupFormName(existingFormName);
-      setPopupFormDescription(existingFormDescription);
+      setPopupFormName(existingFormNameValue);
+      setPopupFormDescription(existingFormDescriptionValue);
       
-      // Transform MDMS data back to form builder format
       const formConfig = existingFormData?.data?.formConfig;
       if (formConfig?.screens) {
-        // Process imported screens to mark mandatory applicant fields
         const processedScreens = formConfig.screens.map(screen => ({
           ...screen,
           cards: screen.cards?.map(card => ({
             ...card,
             fields: card.fields?.map(field => {
-              // Mark ApplicantName, ApplicantMobile, and ApplicantMobileNumber as mandatory
               if (field.jsonPath === "ApplicantName" ||
                   field.jsonPath === "ApplicantMobile" ||
                   field.jsonPath === "ApplicantMobileNumber") {
@@ -1298,16 +1215,74 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     }
   }, [editMode, existingFormData, isLoadingExistingForm, originalFormName, formDescription]);
 
+  // Memoize field type options for the popup dropdown - MUST be before any early returns
+  const fieldTypeOptions = useMemo(() => {
+    const allFieldTypes = (state?.MASTER_DATA?.AppFieldType || [])
+      .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
+      ?.sort((a, b) => a?.order - b?.order);
+
+    const currentCard = popupData?.currentCard;
+
+    const isDocumentSection =
+      currentCard?.header === "Document Section" ||
+      currentCard?.description === "Document Upload and Download" ||
+      currentCard?.fields?.some(field =>
+        field.jsonPath === "DocumentUpload" ||
+        field.type === "documentUpload" ||
+        field.type === "documentUploadAndDownload"
+      );
+
+    if (isDocumentSection) {
+      return allFieldTypes.filter(fieldType =>
+        fieldType.type === "documentUpload" ||
+        fieldType.type === "documentUploadAndDownload"
+      );
+    }
+
+    return allFieldTypes.filter(fieldType =>
+      fieldType.type !== "documentUpload" &&
+      fieldType.type !== "documentUploadAndDownload" &&
+      fieldType.type !== "hierarchyDropdown" &&
+      fieldType.type !== "mapcoord"
+    );
+  }, [state?.MASTER_DATA?.AppFieldType, popupData?.currentCard]);
+
+  // Memoize context value to prevent unnecessary re-renders - MUST be before any early returns
+  const contextValue = useMemo(() => ({
+    state,
+    dispatch,
+    openAddFieldPopup,
+    currentFormName,
+    setCurrentFormName,
+    currentFormDescription,
+    setCurrentFormDescription,
+    selectedPreviewSection,
+    setSelectedPreviewSection,
+    validationErrors,
+    setValidationErrors,
+    hasUnsavedChanges,
+    setHasUnsavedChanges,
+    documentSectionEnabled: state?.documentSectionEnabled,
+  }), [
+    state,
+    openAddFieldPopup,
+    currentFormName,
+    currentFormDescription,
+    selectedPreviewSection,
+    validationErrors,
+    hasUnsavedChanges,
+  ]);
+
   if (isLoadingAppConfigMdmsData || (editMode && isLoadingExistingForm)) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
+
   const closeToast = () => {
     setShowToast(null);
   };
 
   function createLocaleArrays() {
     const result = {};
-    // Dynamically determine locales
     const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
@@ -1323,12 +1298,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
 
     return result;
   }
+
   const findConfig = (bindTo, config) => {
     return config.reduce(
       (res, item) => res || (item.bindTo === bindTo ? item : Array.isArray(item.conditionalField) ? findConfig(bindTo, item.conditionalField) : null),
       null
     );
   };
+
   const validateFromState = (state, drawerPanelConfig, locS, cL) => {
     const errors = {};
     const fields = state?.fields;
@@ -1343,10 +1320,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         }
       }
     }
+
     const validateValue = (value, validation, label, a, b) => {
       if (!validation) return null;
 
-      // required check
       if (validation.required) {
         if (
           value === undefined ||
@@ -1358,7 +1335,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         }
       }
 
-      // pattern check
       if (validation.pattern && value) {
         const regex = new RegExp(validation.pattern);
         if (!regex.test(value)) {
@@ -1366,36 +1342,29 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         }
       }
 
-      return null; // no error
+      return null;
     };
+
     for (let i = 0; i < fields.length; i++) {
       const fieldObj = fields[i];
 
-      // For each key in field object
       for (const key in fieldObj) {
-        // Find config matching this key
         const config = findConfig(key, drawerPanelConfig);
-        if (!config) continue; // no config, skip validation for this key
+        if (!config) continue;
 
-        // get validation object (could be an array, object, or nested)
         let validation = config.validation;
 
-        // If validation is an array, find validation matching key or default
         if (Array.isArray(validation)) {
-          // example: validation array might have { key: "toArray", required: true, message: "..." }
-          // You can adapt this as per your validation array structure
           const valFromArray = validation.find((v) => v.key === key || !v.key);
           if (valFromArray) validation = valFromArray;
           else validation = null;
         }
 
-        // Validate the field value
         const value = fieldObj[key];
 
         const errorMsg = validateValue(fetchLoc(value), validation, config.label, fieldObj, config);
 
         if (errorMsg) {
-          // Use a unique key to identify error (field index + key)
           return errorMsg;
         }
       }
@@ -1427,14 +1396,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
     }
     return;
   };
+
   const handleSubmit = async (finalSubmit) => {
-    
-    // Validate form before proceeding
     const validationErrors = await validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setValidationErrors(validationErrors);
       
-      // Show toast with first error
       const firstError = Object.values(validationErrors)[0];
       setShowToast({ 
         key: "error", 
@@ -1444,28 +1411,17 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
       return;
     }
 
-    // Clear validation errors if validation passes
     setValidationErrors({});
     
-    // Comment out localization processing - use plain text values directly
-    // const localeArrays = createLocaleArrays();
     let updateCount = 0;
     let updateSuccess = false;
     
     try {
       setLoading(true);
       
-      // Comment out localization saving - we don't need it anymore
-      // const result = await localisationMutate(localeArrays);
-      // updateCount = updateCount + 1;
-      // updateSuccess = true;
-      
-      // Set success to true since we're not doing localization
       updateSuccess = true;
       
-      // Save form configuration to MDMS
       if (finalSubmit) {
-        // Check if module and service are available from URL parameters
         if (!module || !service) {
           setShowToast({ 
             key: "error", 
@@ -1476,22 +1432,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         }
         
         try {
-          // Transform form data to MDMS format - include document configs
           const mdmsFormData = transformFormDataToMDMS(
             {
               ...state,
             },
             module,
             service,
-            formName || currentFormName, // Use formName from parent props (updated via onFormNameChange)
-            formDescription || currentFormDescription // Use formDescription from parent props (updated via onFormDescriptionChange)
+            formName || currentFormName,
+            formDescription || currentFormDescription
           );
           
           let result;
           if (editMode) {
-            // Update existing form
             if (existingFormData) {
-              // For edit mode, we need to update the specific form in the uiforms array
               const updatePayload = {
                 module: module,
                 service: service,
@@ -1500,11 +1453,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 formConfig: mdmsFormData.formConfig,
                 formId: existingFormData.id,
                 originalFormName: originalFormName,
-                //documentConfigs: documentConfigs // Include document configs in update payload
               };
               result = await updateFormConfig.mutateAsync(updatePayload);
 
-              // Update workflow form references in localStorage if form name changed
               if (originalFormName && originalFormName !== (formName || currentFormName)) {
                 const updated = updateWorkflowFormReferencesInLocalStorage(
                   originalFormName,
@@ -1519,13 +1470,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 transitionTime: 5000
               });
               setTimeout(() => {
-                history.push(`/${window.contextPath}/employee/servicedesigner/forms?module=${module}&service=${service}`);
-            }, 3000);
+                navigate(`/${window.contextPath}/employee/servicedesigner/forms?module=${module}&service=${service}`);
+              }, 3000);
             } else {
-              // If editMode is true but existingFormData is not available, 
-              // we need to search for the form first
               try {
-                // Search for the form by formName in the draft
                 const searchPayload = {
                   MdmsCriteria: {
                     tenantId: tenantId,
@@ -1554,11 +1502,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                       formConfig: mdmsFormData.formConfig,
                       formId: draft.id,
                       originalFormName: originalFormName,
-                      //documentConfigs: documentConfigs // Include document configs in update payload
                     };
                     result = await updateFormConfig.mutateAsync(updatePayload);
 
-                    // Update workflow form references in localStorage if form name changed
                     if (originalFormName && originalFormName !== currentFormName) {
                       const updated = updateWorkflowFormReferencesInLocalStorage(
                         originalFormName,
@@ -1573,8 +1519,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                       transitionTime: 5000
                     });
                     setTimeout(() => {
-                      history.push(`/${window.contextPath}/employee/servicedesigner/forms?module=${module}&service=${service}`);
-                  }, 3000);
+                      navigate(`/${window.contextPath}/employee/servicedesigner/forms?module=${module}&service=${service}`);
+                    }, 3000);
                   } else {
                     throw new Error("Form not found for update");
                   }
@@ -1592,7 +1538,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               }
             }
           } else {
-            // Create new form
             result = await saveFormConfig.mutateAsync({
               ...mdmsFormData
             });
@@ -1603,8 +1548,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               transitionTime: 5000
             });
             setTimeout(() => {
-              history.push(`/${window.contextPath}/employee/servicedesigner/forms?module=${module}&service=${service}`);
-          }, 3000);
+              navigate(`/${window.contextPath}/employee/servicedesigner/forms?module=${module}&service=${service}`);
+            }, 3000);
           }
           
         } catch (mdmsError) {
@@ -1635,7 +1580,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
 
   const currentPage = parseInt(pageTag?.split(" ")[1]);
 
-  // Check if sections already exist
   const allCards = state?.screenData?.[0]?.cards || [];
   const addressSectionExists = allCards.some(card =>
     card?.sectionType === "address" ||
@@ -1645,26 +1589,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
   const documentSectionExists = allCards.some(card => card?.sectionType === "document");
 
   return (
-    <AppConfigContext.Provider value={{
-      state,
-      dispatch,
-      openAddFieldPopup,
-      currentFormName,
-      setCurrentFormName,
-      currentFormDescription,
-      setCurrentFormDescription,
-      selectedPreviewSection,
-      setSelectedPreviewSection,
-      validationErrors,
-      setValidationErrors,
-      hasUnsavedChanges,
-      setHasUnsavedChanges,
-      documentSectionEnabled: state.documentSectionEnabled,
-    }}>
+    <AppConfigContext.Provider value={contextValue}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
       
       <div style={{ marginRight: "1.5rem", position: "relative", width: "100%" }}>
-        {/* Add Section Button - Top Right */}
         <Button
           type={"button"}
           size={"medium"}
@@ -1696,30 +1624,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
           }}
         />
       </div>
-      {/* <div className="appConfig-flex-action">
-        <Button
-          className="app-configure-action-button"
-          variation="secondary"
-          label={t("PREVIOUS")}
-          title={t("PREVIOUS")}
-          icon="ArrowBack"
-          isDisabled={currentPage === 1}
-          onClick={() => back()}
-        />
-        <span className="app-config-tag-page"> {pageTag} </span>
-        <Button
-          className="app-configure-action-button"
-          variation="secondary"
-          label={t("NEXT")}
-          title={t("NEXT")}
-          icon="ArrowForward"
-          isSuffix={true}
-          isDisabled={nextButtonDisable}
-          onClick={async () => {
-            await handleSubmit();
-          }}
-        />
-      </div> */}
+
       {true && (
         <SidePanel
           bgActive
@@ -1801,8 +1706,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               {state?.screenData
                 ?.find((i) => i.name === state?.currentScreen?.name)
                 ?.cards?.map((card) => [
-                  ...card?.fields?.map((field) => ({ message: field?.label })), // Extract label for fields
-                  ...card?.headerFields?.map((headerField) => ({ message: headerField?.value })), // Extract value for header fields
+                  ...card?.fields?.map((field) => ({ message: field?.label })),
+                  ...card?.headerFields?.map((headerField) => ({ message: headerField?.value })),
                 ])
                 ?.flat()}
             </div>,
@@ -1839,6 +1744,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
         </PopUp>
       )}
+
       {popupData && (
         <PopUp
           className="app-config-add-field-popup"
@@ -1865,42 +1771,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 t: t,
                 title: "ADD_FIELD_TYPE",
                 fieldPairClassName: "",
-                options: (() => {
-                  // Get all available field types
-                  const allFieldTypes = (state?.MASTER_DATA?.AppFieldType || [])
-                    .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
-                    ?.sort((a, b) => a?.order - b?.order);
-
-                  // Check if current section is a document section
-                  const currentCard = popupData?.currentCard;
-
-                  // Check for document section by header, description, or existing document fields
-                  const isDocumentSection =
-                    currentCard?.header === "Document Section" ||
-                    currentCard?.description === "Document Upload and Download" ||
-                    currentCard?.fields?.some(field =>
-                      field.jsonPath === "DocumentUpload" ||
-                      field.type === "documentUpload" ||
-                      field.type === "documentUploadAndDownload"
-                    );
-
-                  // If it's a document section, show ONLY document upload field types
-                  if (isDocumentSection) {
-                    return allFieldTypes.filter(fieldType =>
-                      fieldType.type === "documentUpload" ||
-                      fieldType.type === "documentUploadAndDownload"
-                    );
-                  }
-
-                  // If it's not a document section, filter out document upload field types
-                  // Also filter out hierarchyDropdown and mapcoord as they are only for pre-defined sections
-                  return allFieldTypes.filter(fieldType =>
-                    fieldType.type !== "documentUpload" &&
-                    fieldType.type !== "documentUploadAndDownload" &&
-                    fieldType.type !== "hierarchyDropdown" &&
-                    fieldType.type !== "mapcoord"
-                  );
-                })(),
+                options: fieldTypeOptions,
                 optionsKey: "type",
               }}
               infoMessage={t("INFO_ADD_FIELD_TYPE")}
@@ -1982,7 +1853,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                   return;
                 }
                 
-                // Check for duplicate field labels
                 const currentCard = popupData?.currentCard;
                 const existingLabels = currentCard?.fields?.map(field => field.label?.toLowerCase().trim()) || [];
                 const newLabel = addFieldData?.label?.toLowerCase().trim();
@@ -2009,6 +1879,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
           ]}
         ></PopUp>
       )}
+
       {showToast && (
         <div style={{ zIndex: 9999, position: 'relative' }}>
           <Toast
@@ -2020,14 +1891,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
         </div>
       )}
       
-      {/* Section Popup */}
       {showSectionPopup && (
         <PopUp
           type={"default"}
           heading={t("ADD_SECTION")}
           children={[
             <div style={{ padding: "1rem 0" }}>
-              {/* Custom Section Button */}
               <div style={{ 
                 marginBottom: "1rem",
                 padding: "1rem",
@@ -2052,12 +1921,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 setShowSectionPopup(false);
               }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "#f8f9fa";
-                e.target.style.borderColor = "black";
+                e.currentTarget.style.backgroundColor = "#f8f9fa";
+                e.currentTarget.style.borderColor = "black";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "#fff";
-                e.target.style.borderColor = "#e9ecef";
+                e.currentTarget.style.backgroundColor = "#fff";
+                e.currentTarget.style.borderColor = "#e9ecef";
               }}
               >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -2072,7 +1941,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 </div>
               </div>
 
-              {/* Address Template Button */}
               <div style={{
                 marginBottom: "1rem",
                 padding: "1rem",
@@ -2087,11 +1955,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 if (addressSectionExists) return;
                 const newSectionIndex = state?.screenData?.[0]?.cards?.length || 0;
 
-                // Get default hierarchy values from fetched data
                 const firstHierarchy = hierarchyTypesData?.[0];
                 const boundaryLevels = firstHierarchy?.boundaryHierarchy || [];
                 const defaultHierarchyType = firstHierarchy?.code || "";
-                // Set both highest and lowest to the same value (lowest level) on initial load
                 const defaultLowestHierarchy = boundaryLevels.length > 0
                   ? boundaryLevels[boundaryLevels.length - 1]?.boundaryType
                   : "";
@@ -2103,7 +1969,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                     currentScreen: state?.screenData?.[0],
                     hierarchyDefaults: {
                       hierarchyType: defaultHierarchyType,
-                      highestHierarchy: defaultLowestHierarchy, // Same as lowest on initial load
+                      highestHierarchy: defaultLowestHierarchy,
                       lowestHierarchy: defaultLowestHierarchy,
                     },
                   },
@@ -2114,14 +1980,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               }}
               onMouseEnter={(e) => {
                 if (!addressSectionExists) {
-                  e.target.style.backgroundColor = "#f8f9fa";
-                  e.target.style.borderColor = "black";
+                  e.currentTarget.style.backgroundColor = "#f8f9fa";
+                  e.currentTarget.style.borderColor = "black";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!addressSectionExists) {
-                  e.target.style.backgroundColor = "#fff";
-                  e.target.style.borderColor = "#e9ecef";
+                  e.currentTarget.style.backgroundColor = "#fff";
+                  e.currentTarget.style.borderColor = "#e9ecef";
                 }
               }}
               >
@@ -2137,7 +2003,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 </div>
               </div>
 
-              {/* Applicant Template Button */}
               <div style={{
                 marginBottom: "1rem",
                 padding: "1rem",
@@ -2164,14 +2029,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               }}
               onMouseEnter={(e) => {
                 if (!applicantSectionExists) {
-                  e.target.style.backgroundColor = "#f8f9fa";
-                  e.target.style.borderColor = "black";
+                  e.currentTarget.style.backgroundColor = "#f8f9fa";
+                  e.currentTarget.style.borderColor = "black";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!applicantSectionExists) {
-                  e.target.style.backgroundColor = "#fff";
-                  e.target.style.borderColor = "#e9ecef";
+                  e.currentTarget.style.backgroundColor = "#fff";
+                  e.currentTarget.style.borderColor = "#e9ecef";
                 }
               }}
               >
@@ -2187,7 +2052,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                 </div>
               </div>
 
-              {/* Document Template Button */}
               <div style={{
                 marginBottom: "1rem",
                 padding: "1rem",
@@ -2214,14 +2078,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               }}
               onMouseEnter={(e) => {
                 if (!documentSectionExists) {
-                  e.target.style.backgroundColor = "#f8f9fa";
-                  e.target.style.borderColor = "black";
+                  e.currentTarget.style.backgroundColor = "#f8f9fa";
+                  e.currentTarget.style.borderColor = "black";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!documentSectionExists) {
-                  e.target.style.backgroundColor = "#fff";
-                  e.target.style.borderColor = "#e9ecef";
+                  e.currentTarget.style.backgroundColor = "#fff";
+                  e.currentTarget.style.borderColor = "#e9ecef";
                 }
               }}
               >
@@ -2315,11 +2179,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
               label={t("CREATE_FORM")}
               onClick={() => {
                 if (popupFormName?.trim()) {
-                  // Update the main form name and description with popup values
                   setCurrentFormName(popupFormName);
                   setCurrentFormDescription(popupFormDescription);
                   
-                  // Call parent's onChange functions if they exist
                   if (onFormNameChange && typeof onFormNameChange === 'function') {
                     onFormNameChange(popupFormName);
                   }
@@ -2328,7 +2190,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, formName
                   }
                   
                   setShowFormNamePopup(false);
-                  setValidationErrors({}); // Clear any existing validation errors
+                  setValidationErrors({});
                 } else {
                   setValidationErrors({ formName: "FORM_NAME_REQUIRED" });
                 }

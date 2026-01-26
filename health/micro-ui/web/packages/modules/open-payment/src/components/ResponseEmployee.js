@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Banner, Card, LinkLabel, AddFileFilled, ArrowLeftWhite, ActionBar, SubmitBar, ArrowRightInbox } from "@egovernments/digit-ui-react-components";
 import { useParams } from "react-router-dom";
 
 const ResponseEmployee = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const nav = useNavigate();
   const { state } = useLocation();
   const {businessService, consumerCode, tenantId} = useParams();
   const [isResponseSuccess, setIsResponseSuccess] = useState(
@@ -16,10 +16,10 @@ const ResponseEmployee = () => {
   const navigate = (page) => {
     switch (page) {
       case "home": {
-        history.push(`/${window.contextPath}/employee`);
+        nav(`/${window.contextPath}/employee`);
       }
       case "view": {
-        history.push(state.redirectionUrl);
+        nav(state.redirectionUrl);
       }
     }
   };

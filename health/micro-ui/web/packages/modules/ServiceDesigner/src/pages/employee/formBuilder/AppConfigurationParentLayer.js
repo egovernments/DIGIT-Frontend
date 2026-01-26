@@ -2,10 +2,10 @@ import React, { useEffect, useReducer, useState, Fragment, useCallback, useMemo 
 import { CustomSVG, Loader, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
-import { useQueryClient } from "react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 
 const dispatcher = (state, action) => {
   switch (action.key) {
@@ -40,8 +40,8 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, isPreviousTabAvailable, tabStateDispatch, tabState, formName, formDescription, onFormNameChange, onFormDescriptionChange }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
-  const history = useHistory();
+  // const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "Studio";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");

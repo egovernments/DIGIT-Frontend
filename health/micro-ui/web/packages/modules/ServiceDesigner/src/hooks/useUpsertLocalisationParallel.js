@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const createLocalisationService = async (req, tenantId, module, locale) => {
   try {
@@ -32,9 +32,9 @@ const createLocalisationService = async (req, tenantId, module, locale) => {
 };
 
 const useUpsertLocalisationParallel = (tenantId, module, locale) => {
-  return useMutation((reqData) => {
+  return useMutation({mutationFn: (reqData) => {
     return createLocalisationService(reqData, tenantId, module, locale);
-  });
+  }});
 };
 
 export default useUpsertLocalisationParallel;

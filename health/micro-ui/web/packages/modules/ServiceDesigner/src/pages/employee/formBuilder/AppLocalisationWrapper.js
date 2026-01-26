@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
 import { Loader } from "@egovernments/digit-ui-components";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {useSearchLocalisation} from "../../../hooks/useSearchLocalisation";
 
 const initialState = [];

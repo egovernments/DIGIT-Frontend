@@ -2,13 +2,13 @@ import React from "react";
 import { Card, TextBlock, Button, Loader } from "@egovernments/digit-ui-components";
 import { transformViewApplication } from "../utils/createUtils";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CheckListCard = (props) => {
     const [filled, setFilled] = useState(false);
     const [loading, setLoading] = useState(false);
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const style = {
         display: "flex",
@@ -69,7 +69,7 @@ const CheckListCard = (props) => {
                     <TextBlock body={props.t(props.item.code)} />
                     {filled ? (
                         <Button label="View Response" onClick={() => 
-                            history.push({ 
+                            navigate({ 
                                 pathname: `/${window.contextPath}/${window?.location.href.includes("/citizen/")? "citizen" : "employee"}/publicservices/viewresponse`,
                                 search : `?accid=${props.accid}&id=${props.item.id}&code=${props.item.code}`,
                                 state:{
@@ -79,7 +79,7 @@ const CheckListCard = (props) => {
                             })
                         } />
                     ) : (
-                        <Button label="Fill Checklist" onClick={() => history.push(window?.location.href.includes("/citizen/")? `/${window.contextPath}/citizen/publicservices/checklist?accid=${props.accid}&id=${props.item.id}&code=${props.item.code}` :  `/${window.contextPath}/employee/publicservices/checklist?accid=${props.accid}&id=${props.item.id}&code=${props.item.code}`, { redirectionUrl : `${window.location.href}`,})} />
+                        <Button label="Fill Checklist" onClick={() => navigate(window?.location.href.includes("/citizen/")? `/${window.contextPath}/citizen/publicservices/checklist?accid=${props.accid}&id=${props.item.id}&code=${props.item.code}` :  `/${window.contextPath}/employee/publicservices/checklist?accid=${props.accid}&id=${props.item.id}&code=${props.item.code}`, { redirectionUrl : `${window.location.href}`,})} />
                     )}
                 </Card>
             ) : (

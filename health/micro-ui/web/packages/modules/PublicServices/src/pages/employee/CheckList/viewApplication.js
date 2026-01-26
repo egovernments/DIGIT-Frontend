@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, TextBlock, Button, Loader } from "@egovernments/digit-ui-components";
 import { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
 import { transformViewApplication } from "../../../utils/createUtils";
 import ViewApplicationConfig from "../../../configs/viewAppConfig";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";

@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, TextBlock, Button } from "@egovernments/digit-ui-components";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import transformViewCheckList from "../../../utils/createUtils.js"
 import CheckListCard from "../../../components/CheckListCard.js";
 import { useTranslation } from "react-i18next";

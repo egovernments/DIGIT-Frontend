@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@egovernments/digit-ui-react-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { FieldV1, SVG, CustomSVG, Footer } from "@egovernments/digit-ui-components";
 import { Toast } from "@egovernments/digit-ui-components";
@@ -25,7 +25,7 @@ const CreateNotification = () => {
   const workflowNodes = localStorage.getItem("canvasElements") !== "undefined" ? JSON.parse(localStorage.getItem("canvasElements")) : [];
   const [showToast, setShowToast] = useState(null);
   const MDMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "egov-mdms-service";
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Use the new notification config API hook
   const { searchNotificationConfigs, saveNotificationConfig, updateNotificationConfig } = useNotificationConfigAPI();
@@ -177,7 +177,7 @@ const CreateNotification = () => {
             updateworkflowNodes();
             setShowToast({ key: true, type: "success", label: t("NOTIF_ADDED_SUCCESSFULLY") });
             setTimeout(() => {
-              history.push(`/${window.contextPath}/employee/servicedesigner/notifications?module=${roleModule}&service=${roleService}`);
+              navigate(`/${window.contextPath}/employee/servicedesigner/notifications?module=${roleModule}&service=${roleService}`);
             }, 3000);
             return;
           } else {

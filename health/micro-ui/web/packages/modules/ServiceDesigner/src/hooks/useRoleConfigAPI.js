@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -13,8 +13,8 @@ export const useRoleConfigAPI = () => {
   /**
    * Save role configuration to Studio.ServiceConfigurationDrafts
    */
-  const saveRoleConfig = useMutation(
-    async (roleData) => {
+  const saveRoleConfig = useMutation({
+    mutationFn: async (roleData) => {
       const { module, service, roleName, description, access, selfRegistration, isDefaultRole } = roleData;
 
       // First, check if a draft exists for this module and service
@@ -128,19 +128,17 @@ export const useRoleConfigAPI = () => {
         return response;
       }
     },
-    {
-      onError: (error) => {
-        console.error("Error saving role config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error saving role config:", error);
+      throw error;
+    },
+  });
 
   /**
    * Update role configuration in Studio.ServiceConfigurationDrafts
    */
-  const updateRoleConfig = useMutation(
-    async (roleData) => {
+  const updateRoleConfig = useMutation({
+    mutationFn: async (roleData) => {
       const { module, service, roleName, description, access, oldRoleName, selfRegistration, isDefaultRole } = roleData;
 
       // Search for the draft
@@ -204,21 +202,20 @@ export const useRoleConfigAPI = () => {
       });
       return response;
     },
-    {
-      onError: (error) => {
-        console.error("Error updating role config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error updating role config:", error);
+      throw error;
+    },
+  });
 
   /**
    * Search role configurations by module and service from Studio.ServiceConfigurationDrafts
    */
   const searchRoleConfigs = (module, service) => {
-    return useQuery(
-      ["roleConfigs", module, service],
-      async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      queryKey: ["roleConfigs", module, service],
+      queryFn: async () => {
         const payload = {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -254,12 +251,10 @@ export const useRoleConfigAPI = () => {
         }
         return [];
       },
-      {
-        enabled: !!module && !!service,
-        cacheTime: 5 * 60 * 1000, // 5 minutes
-        staleTime: 2 * 60 * 1000, // 2 minutes
-      }
-    );
+      enabled: !!module && !!service,
+      gcTime: 5 * 60 * 1000,    // renamed from cacheTime
+      staleTime: 2 * 60 * 1000,
+    });
   };
 
   /**
@@ -313,8 +308,8 @@ export const useRoleConfigAPI = () => {
   /**
    * Delete role configuration from Studio.ServiceConfigurationDrafts
    */
-  const deleteRoleConfig = useMutation(
-    async (roleData) => {
+  const deleteRoleConfig = useMutation({
+    mutationFn: async (roleData) => {
       const { module, service, roleName } = roleData;
       
       // Search for the draft
@@ -364,13 +359,11 @@ export const useRoleConfigAPI = () => {
       });
       return response;
     },
-    {
-      onError: (error) => {
-        console.error("Error deleting role config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error deleting role config:", error);
+      throw error;
+    },
+  });
 
   return {
     saveRoleConfig,
@@ -411,4 +404,4 @@ export const transformMDMSToRoleData = (mdmsData) => {
     additionalDetails: mdmsData.data.additionalDetails,
     isActive: mdmsData.data.isActive
   };
-}; 
+};

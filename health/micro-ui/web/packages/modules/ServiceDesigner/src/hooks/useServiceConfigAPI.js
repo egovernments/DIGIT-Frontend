@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useServiceConfigAPI = () => {
   const saveServiceConfig = useMutation({
@@ -44,6 +44,7 @@ export const useServiceConfigAPI = () => {
   });
 
   const fetchServiceConfig = (module, service) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useQuery({
       queryKey: ["serviceConfig", module, service],
       queryFn: async () => {
@@ -61,7 +62,6 @@ export const useServiceConfigAPI = () => {
         });
 
         if (response && response.mdms && response.mdms.length > 0) {
-          // Find the specific service config for the given module and service
           const serviceConfig = response.mdms.find(config => 
             config.data.module === module && config.data.service === service
           );
@@ -70,8 +70,8 @@ export const useServiceConfigAPI = () => {
         return null;
       },
       enabled: !!module && !!service,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000 // 10 minutes
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000 // Changed from cacheTime to gcTime (v5 rename)
     });
   };
 
@@ -80,4 +80,4 @@ export const useServiceConfigAPI = () => {
     updateServiceConfig,
     fetchServiceConfig
   };
-}; 
+};

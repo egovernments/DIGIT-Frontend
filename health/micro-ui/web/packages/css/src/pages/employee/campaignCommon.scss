@@ -1,257 +1,53 @@
+.camp-drawer-caption {
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  padding-bottom: 1.5rem;
+}
 
-
-.camp-drawer-caption{
-    font-size: 1rem !important;
-    font-weight: 400 !important;
-    padding-bottom: 1.5rem;
-  }
-  
-  .camp-app-help-tutorial-popup{
-    bottom: 0;
-    top: 62vh !important;
-    width: 100%;
-    max-width:90% !important;
+.camp-app-help-tutorial-popup {
+  bottom: 0;
+  top: 62vh !important;
+  width: 100%;
+  max-width: 90% !important;
+  overflow: hidden !important;
+  .digit-popup-children-wrap {
     overflow: hidden !important;
-    .digit-popup-children-wrap{
-      overflow: hidden!important;
-    }
-    .tutorial-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    
-    .tutorial-row {
-      display: flex;
-      flex-direction: row;
-      overflow-x: auto;
-      gap: 1rem;
-      padding-bottom: 1rem;
-    }
-    
-    .tutorial-card {
-      flex: 0 0 auto;
-      width: 16rem;
-      min-height: 10rem;
-      background: #ffffff;
-      border-radius: 0.75rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-    
-      &:hover {
-        transform: translateY(-4px);
-      }
-    }
-    
-    .tutorial-icon {
-      background-color: #f0f0f0;
-      border-radius: 50%;
-      width: 3rem;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 0.75rem;
-      font-size: 1.5rem;
-    }
-    
-    .tutorial-title {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
   }
-  
-  
-  @keyframes fadeIn {
-    from {
-      background-color: rgba(0, 0, 0, 0);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0.3);
-    }
-  }
-  
-  @keyframes fadeOut {
-    from {
-      background-color: rgba(0, 0, 0, 0.3);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0);
-    }
-  }
-  
-  @keyframes slideInUp {
-    from {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOutDown {
-    from {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-  }
-  
-  .tutorial-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 2999;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-  
-    &.fade-in {
-      animation-name: fadeIn;
-    }
-  
-    &.fade-out {
-      animation-name: fadeOut;
-    }
-  }
-  
-  .tutorial-drawer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: 100%;
-    border-radius:1rem 1rem 0rem 0rem;
-    background: #ffffff;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    z-index: 1000;
+  .tutorial-wrapper {
     display: flex;
     flex-direction: column;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
-  
-    &.slide-in {
-      animation-name: slideInUp;
-    }
-  
-    &.slide-out {
-      animation-name: slideOutDown;
-    }
+    gap: 1rem;
   }
-  
-  .tutorial-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    color: theme(digitv2.lightTheme.primary-2);
-  
-  }
-  
-  .tutorial-close {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
-    line-height: 1;
-  }
-  
+
   .tutorial-row {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
     gap: 1rem;
-    padding: 0.25rem;
-  
-    /* Optional mobile smooth scrolling */
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width:thin;
+    padding-bottom: 1rem;
   }
-  
+
   .tutorial-card {
     flex: 0 0 auto;
-    width: 18rem;
+    width: 16rem;
     min-height: 10rem;
     background: #ffffff;
-    border-radius: 0.5rem;
-    box-shadow: none;
-    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
-    box-shadow: 0px 2px 4px 0px #00000026;
-  
-  
-  
+
     &:hover {
       transform: translateY(-4px);
     }
-  
-    .tutorial-card-image {
-      height: 5rem;
-      background-color: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      img{
-        max-width: 5rem;
-       max-height: 4rem;
-      }
-    }
-  
-    .tutorial-card-content {
-      margin: 1rem 0rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-  
-      .tutorial-card-title {
-        font-weight: 500;
-        color: theme(digitv2.lightTheme.primary-2)
-      }
-  
-      .tutorial-card-subtext {
-        font-size: 0.9rem;
-        color: #555;
-      }
-  
-      .tutorial-card-link {
-        margin-top: 0.5rem;
-        font-size: 0.875rem;
-        color:  theme(digitv2.lightTheme.primary);
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-  
-        .arrow {
-          font-weight: bold;
-        }
-      }
-    }
   }
-  
-  
+
   .tutorial-icon {
     background-color: #f0f0f0;
     border-radius: 50%;
@@ -262,96 +58,284 @@
     justify-content: center;
     margin-bottom: 0.75rem;
     font-size: 1.5rem;
-  
-    @media (max-width: 480px) {
-      width: 2.5rem;
-      height: 2.5rem;
-      font-size: 1.25rem;
-    }
   }
-  
+
   .tutorial-title {
     font-size: 0.95rem;
     font-weight: 500;
-  
-    @media (max-width: 480px) {
-      font-size: 0.85rem;
-    }
   }
-  
-  .camp-help-button-app-configuration-redesign{
-    margin-right: 24rem;
-  }
-  .boldLabel{
-    margin-bottom: 0rem;
-    .digit-header-content{
-      font-weight: 700;
-    }
-
-    &.withoutMargin{
-      margin-bottom: 0rem !important;
-    }
-  }
-  .clickable:hover{
-      border: 0.063rem solid theme(digitv2.lightTheme.primary);
-      box-shadow: 0.063rem theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer0) #00000029;
-  }
-
-  .setup-campaign{
-.digit-label-field-pair{
-margin-bottom: 0rem;
 }
+
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2999;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  &.fade-in {
+    animation-name: fadeIn;
   }
 
-.cmn-help-info-card{
-    margin: 1.5rem 1rem;
-    max-width: 100%;
-    display: column;
-    .cmn-help-info-card-elements-wrapper{
-        margin-bottom: 0.5rem;
-        flex-direction: column;
-        .digit-text-block-header-content {
-            flex-direction: column;
-             .digit-text-block-header{
-                line-height: 0.75rem;
-                font-weight:500;
-                font-size: 1.5rem;
-             }
-        }
-    ul,ol{ 
-        list-style:auto;
-        font-size: 1rem;
-        font-weight: 400;
-        margin-top: 0;
-        color: #787878;
-        font-weight: .875rem;
+  &.fade-out {
+    animation-name: fadeOut;
+  }
+}
+
+.tutorial-drawer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 1rem 1rem 0rem 0rem;
+  background: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+
+  &.slide-in {
+    animation-name: slideInUp;
+  }
+
+  &.slide-out {
+    animation-name: slideOutDown;
+  }
+}
+
+.tutorial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  color: var(--digitv2-lightTheme-primary-2);
+}
+
+.tutorial-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.tutorial-row {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 0.25rem;
+
+  /* Optional mobile smooth scrolling */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.tutorial-card {
+  flex: 0 0 auto;
+  width: 18rem;
+  min-height: 10rem;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: none;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0px 2px 4px 0px #00000026;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .tutorial-card-image {
+    height: 5rem;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    img {
+      max-width: 5rem;
+      max-height: 4rem;
     }
-    
+  }
+
+  .tutorial-card-content {
+    margin: 1rem 0rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .tutorial-card-title {
+      font-weight: 500;
+      color: var(--digitv2-lightTheme-primary-2);
     }
- 
+
+    .tutorial-card-subtext {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .tutorial-card-link {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--digitv2-lightTheme-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+
+      .arrow {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.tutorial-icon {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+
+  @media (max-width: 480px) {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+  }
+}
+
+.tutorial-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+  }
+}
+
+.camp-help-button-app-configuration-redesign {
+  margin-right: 24rem;
+}
+.boldLabel {
+  margin-bottom: 0rem;
+  .digit-header-content {
+    font-weight: 700;
+  }
+
+  &.withoutMargin {
+    margin-bottom: 0rem !important;
+  }
+}
+.clickable:hover {
+  border: 0.063rem solid var(--digitv2-lightTheme-primary);
+  box-shadow: 0.063rem var(--digitv2-spacers-spacer1) var(--digitv2-spacers-spacer1) var(--digitv2-spacers-spacer0) #00000029;
+}
+
+.setup-campaign {
+  .digit-label-field-pair {
+    margin-bottom: 0rem;
+  }
+}
+
+.cmn-help-info-card {
+  margin: 1.5rem 1rem;
+  max-width: 100%;
+  display: column;
+  .cmn-help-info-card-elements-wrapper {
+    margin-bottom: 0.5rem;
+    flex-direction: column;
+    .digit-text-block-header-content {
+      flex-direction: column;
+      .digit-text-block-header {
+        line-height: 0.75rem;
+        font-weight: 500;
+        font-size: 1.5rem;
+      }
+    }
+    ul,
+    ol {
+      list-style: auto;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-top: 0;
+      color: #787878;
+      font-weight: 0.875rem;
+    }
+  }
 }
 
 .digit-text-block-header-content {
-    flex-direction: column  !important;
+  flex-direction: column !important;
 }
-.copy-campaign-popup{
-  .digit-popup-heading{
-    color: theme(digitv2.lightTheme.primary-2);
+.copy-campaign-popup {
+  .digit-popup-heading {
+    color: var(--digitv2-lightTheme-primary-2);
   }
-  .digit-popup-children-wrap{
+  .digit-popup-children-wrap {
     overflow: unset !important;
   }
 }
 
-
-
-
-.campaign-popup-wrap{
-  
-  .digit-popup-children-wrap{
+.campaign-popup-wrap {
+  .digit-popup-children-wrap {
     overflow: visible !important;
   }
 }
-
-
-

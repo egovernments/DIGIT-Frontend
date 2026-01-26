@@ -15,13 +15,13 @@ import { useChecklistConfigAPI } from "../../hooks/useChecklistConfigAPI";
 import { useRoleConfigAPI } from "../../hooks/useRoleConfigAPI";
 import generateMdmsRolePayload from "../../config/rolecreateConfig";
 import AccessCard from "../../components/AccessCard";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useNotificationConfigAPI } from "../../hooks/useNotificationConfigAPI";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Workflow = () => {
     const { t } = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -1342,7 +1342,6 @@ const Workflow = () => {
                 type="dropdown"
                 required
                 infoMessage={t("FORM_INFO")}
-                required
                 value={stateData.form}
             />) : null,
             // Update the checklist field in Node_Properties_Section (around line 1289-1306)
@@ -1467,7 +1466,6 @@ const Workflow = () => {
                 type="multiselectdropdown"
                 required
                 infoMessage={t("ACTION_ROLES_INFO")}
-                required
                 value={actionData.aroles || []}
             />,
             <span
@@ -3438,7 +3436,7 @@ const transformWorkflowData = (statesData, connectionsData) => {
                     label: "SERVICE_CONFIG_UPDATED_SUCCESSFULLY"
                 });
                 setTimeout(() => {
-                    history.push(`/${window.contextPath}/employee/servicedesigner/LandingPage`);
+                    navigate(`/${window.contextPath}/employee/servicedesigner/LandingPage`);
                 }, 3000);
             } else {
                 // Create new service config
@@ -3486,7 +3484,7 @@ const transformWorkflowData = (statesData, connectionsData) => {
                     label: "SERVICE_CONFIG_SAVED_SUCCESSFULLY"
                 });
                 setTimeout(() => {
-                    history.push(`/${window.contextPath}/employee/servicedesigner/LandingPage`);
+                    navigate(`/${window.contextPath}/employee/servicedesigner/LandingPage`);
                 }, 3000);
             }
 
@@ -3642,7 +3640,7 @@ const handlePublishServiceConfig = async () => {
                     label: "SERVICE_CONFIG_PUBLISHED_SUCCESSFULLY"
                 });
                 setTimeout(() => {
-                    history.push(
+                    navigate(
                         `/${window.contextPath}/employee/servicedesigner/LandingPage`
                     );
                 }, 3000);

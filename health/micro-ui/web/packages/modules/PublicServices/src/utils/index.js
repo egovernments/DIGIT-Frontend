@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { UICustomizations } from "../configs/UICustomizations";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import cloneDeep from "lodash/cloneDeep";
 
 
@@ -928,15 +928,16 @@ import cloneDeep from "lodash/cloneDeep";
     const staleDataConfig = { staleTime: Infinity };
     
   
-    const { isLoading, error, isError, data } = useQuery(
-        ["workFlowDetailsWorks", tenantId, id, moduleCode, role, config],
-        () => getDetailsByIdWorks({ tenantId, id, moduleCode, role, getTripData }),
-        getStaleData ? { ...staleDataConfig, ...config } : config
-    );
+    const { isLoading, error, isError, data } = useQuery({
+      queryKey: ["workFlowDetailsWorks", tenantId, id, moduleCode, role, config],
+      queryFn: () => getDetailsByIdWorks({ tenantId, id, moduleCode, role, getTripData }),
+      ...(getStaleData ? staleDataConfig : {}),
+      ...config
+    });
   
     if (getStaleData) return { isLoading, error, isError, data };
   
-    return { isLoading, error, isError, data, revalidate: () => queryClient.invalidateQueries(["workFlowDetailsWorks", tenantId, id, moduleCode, role]) };
+    return { isLoading, error, isError, data, revalidate: () => queryClient.invalidateQueries({queryKey: ["workFlowDetailsWorks", tenantId, id, moduleCode, role]}) };
   };
 
   export const  getDetailsByIdWorks = async ({ tenantId, id, moduleCode }) => {

@@ -5,13 +5,11 @@ import {
   CardText,
 } from "@egovernments/digit-ui-react-components";
 import { Button, Loader, TextBlock, Toggle } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "../../../utils/tableStyles";
 
 const FormHomePage = () => {
-  const history = useHistory();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [selectedTab, setSelectedTab] = useState("MY_FORMS");

@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import ActionBar from "./ActionBar";
 import ActionModal from "./ActionModal";
 import { Toast, Button, Loader } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
-import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useWorkflowDetails } from "../utils";
 import { Request } from "./Request";
@@ -58,9 +58,9 @@ const ApplicationUpdateActionsCustom = async ({ url, body, headers }) => {
 
 // Custom hook to mutate update action
 const useUpdateCustom = (url, headers) => {
-  return useMutation((applicationData) =>
+  return useMutation({mutationFn: (applicationData) =>
     ApplicationUpdateActionsCustom({ url, body: applicationData, headers })
-  );
+  });
 };
 
 // Main Workflow Actions component
@@ -83,7 +83,7 @@ const WorkflowActions = ({
   isDisabled,
   ...props
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { estimateNumber, } = Digit.Hooks.useQueryParams();
   applicationNo = applicationNo || estimateNumber;
   const { module, service } = useParams();
@@ -154,8 +154,8 @@ const WorkflowActions = ({
 
     if (action.action === "PAY") {
   const userType = window.location.href.includes("/citizen/") ? "citizen" : "employee";
-  
-  history.push({
+
+  navigate({
     pathname: `/${window.contextPath}/${userType}/openpayment/open-view`,
     search: `?consumerCode=${applicationNo}&tenantId=${tenantId}&businessService=${props?.serviceConfig?.data?.bill?.BusinessService?.code}`,
     state: {
@@ -166,7 +166,7 @@ const WorkflowActions = ({
   });
 }
     else if(action.action === "EDIT") {
-      history.push(`/${window.contextPath}/${window.location.href.includes("/citizen/") ? "citizen" : "employee"}/publicservices/${module}/${service}/Edit?serviceCode=${queryStrings?.serviceCode}&applicationNumber=${queryStrings?.applicationNumber}&action=${action.action}&from=viewScreen`);
+      navigate(`/${window.contextPath}/${window.location.href.includes("/citizen/") ? "citizen" : "employee"}/publicservices/${module}/${service}/Edit?serviceCode=${queryStrings?.serviceCode}&applicationNumber=${queryStrings?.applicationNumber}&action=${action.action}&from=viewScreen`);
     }
      else {
       setShowModal(true);

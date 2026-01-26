@@ -1,7 +1,7 @@
 import { FormComposerV2, Stepper, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { serviceConfigPGR } from "../../../configs/serviceConfigurationPGR";
 import { serviceConfig } from "../../../configs/serviceConfiguration";
 import { generateFormConfig } from "../../../utils/generateFormConfigFromSchemaUtil";
@@ -11,7 +11,7 @@ import useCustomAPIMutationHook from "../../../components/useCustomAPIMutationHo
 
 const DigitDemoComponent = ({editdata}) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { module, service } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const queryStrings = Digit.Hooks.useQueryParams();
@@ -274,7 +274,7 @@ const DigitDemoComponent = ({editdata}) => {
             localStorage.removeItem(storageKeys.currentStep);
             sessionStorage.removeItem(storageKeys.formData);
             const lastUpdatedTime = Date.now();
-            history.push({
+            navigate({
               pathname: window.location.href.includes("digit-studio/citizen")? `/${window.contextPath}/citizen/publicservices/${module}/${service}/response` : `/${window.contextPath}/employee/publicservices/${module}/${service}/response`,
               search: `?isSuccess=true&applicationNumber=${data?.Application?.applicationNumber}&serviceCode=${schemaCode}`,
               state: {
@@ -292,7 +292,7 @@ const DigitDemoComponent = ({editdata}) => {
             localStorage.removeItem(storageKeys.formData);
             localStorage.removeItem(storageKeys.currentStep);
             sessionStorage.removeItem(storageKeys.formData);
-            history.push({
+            navigate({
               pathname: window.location.href.includes("digit-studio/citizen")? `/${window.contextPath}/citizen/publicservices/${module}/${service}/response` : `/${window.contextPath}/employee/publicservices/${module}/${service}/response`,
               search: "?isSuccess=false",
               state: {

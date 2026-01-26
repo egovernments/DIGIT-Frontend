@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, LandingPageCard, Button, HeaderComponent, CardText, Loader, SubmitBar } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { transformResponseforModulePage } from "../../../utils";
 
 const ModulePageComponent = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const queryStrings = Digit.Hooks.useQueryParams();
@@ -211,7 +211,7 @@ const ModulePageComponent = () => {
           type="button"
           size={"medium"}
           onClick={() => {
-            history.push({
+            navigate({
               pathname: `/${window.contextPath}/employee/publicservices/${product.module}/search`,
               search: urlModule && urlService || (product?.module && product?.businessServices?.[0]?.businessService) ? `?selectedModule=true&module=${product.module}&service=${firstBusinessService?.businessService}` : '',
               state: {
@@ -234,7 +234,7 @@ const ModulePageComponent = () => {
           type="button"
           size={"medium"}
           onClick={() => {
-            history.push({
+            navigate({
               pathname: `/${window.contextPath}/employee/publicservices/${product.module}/inbox`,
               search: urlModule && urlService ? `?selectedModule=true&module=${product.module}&service=${firstBusinessService?.businessService}` : ''
             });

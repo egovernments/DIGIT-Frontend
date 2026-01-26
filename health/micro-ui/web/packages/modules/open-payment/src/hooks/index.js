@@ -1,5 +1,5 @@
 import utils from "../utils";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 // export const CustomService = {
 //   getResponse: ({ url, params, body, plainAccessRequest,useCache=true,userService=true,setTimeParam=true,userDownload=false,auth=true, headers={}, method="POST"}) =>  Request({
@@ -37,7 +37,7 @@ const services = {
 
 const openpayment = {
   useCreatePayment : () => {
-    return useMutation(({ url, body, headers }) => services?.createPayment({ url, body, headers }));
+    return useMutation({mutationFn: ({ url, body, headers }) => services?.createPayment({ url, body, headers })});
   }
 };
 

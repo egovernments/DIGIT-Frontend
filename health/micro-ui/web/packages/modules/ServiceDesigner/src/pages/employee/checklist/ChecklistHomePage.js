@@ -5,14 +5,14 @@ import {
   CardText,
 } from "@egovernments/digit-ui-react-components";
 import { Button, Loader, TextBlock, Toggle } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "../../../utils/tableStyles";
 import { useChecklistConfigAPI } from "../../../hooks/useChecklistConfigAPI";
 
 const ChecklistHomePage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [selectedTab, setSelectedTab] = useState("MY_CHECKLIST");
@@ -80,7 +80,7 @@ const ChecklistHomePage = () => {
           label={t("STUDIO_EDIT")}
           variation="secondary"
           size="small"
-          onClick={() => history.push(`/${window.contextPath}/employee/servicedesigner/update-checklist?checklistName=${row.name}&module=${module}&service=${service}`)}
+          onClick={() => navigate(`/${window.contextPath}/employee/servicedesigner/update-checklist?checklistName=${row.name}&module=${module}&service=${service}`)}
         />
       ),
       sortable: false,

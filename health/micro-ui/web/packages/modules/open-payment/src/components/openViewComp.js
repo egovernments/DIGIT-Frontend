@@ -4,14 +4,13 @@ import { useTranslation } from "react-i18next";
 import { makePayment } from '../utils/payGov';
 import  { CustomisedHooks } from "../hooks";
 import $ from "jquery";
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const OpenViewComp = () => {
   const { t } = useTranslation();
   const [showToast,setShowToast] = useState(null)
   const queryParams = Digit.Hooks.useQueryParams();
   const mutation = CustomisedHooks?.Hooks?.openpayment?.useCreatePayment();
-  const history = useHistory();
   const { state } = useLocation();
 
   const requestCriteria = {

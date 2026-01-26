@@ -2,12 +2,11 @@ import { TextBlock, LinkLabel } from "@egovernments/digit-ui-components";
 import { Card } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const DynamicLoginComponent = () => {
   const { t } = useTranslation();
-  const history = useHistory();
-
+  const navigate = useNavigate();
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -37,7 +36,7 @@ const DynamicLoginComponent = () => {
           <LinkLabel
             style={styles.link}
             onClick={() =>
-              history.push(`/${window.contextPath}/citizen/login`)
+              navigate(`/${window.contextPath}/citizen/login`)
             }
           >
             {t("CS_CLICK_HERE")}

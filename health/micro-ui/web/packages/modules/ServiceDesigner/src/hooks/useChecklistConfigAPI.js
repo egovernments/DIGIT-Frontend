@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -13,8 +13,8 @@ export const useChecklistConfigAPI = () => {
   /**
    * Save checklist configuration to Studio.ServiceConfigurationDrafts
    */
-  const saveChecklistConfig = useMutation(
-    async (checklistData) => {
+  const saveChecklistConfig = useMutation({
+    mutationFn: async (checklistData) => {
       const { module, service, checklistName, description, data } = checklistData;
       
       // First, check if a draft exists for this module and service
@@ -133,19 +133,17 @@ export const useChecklistConfigAPI = () => {
         return response;
       }
     },
-    {
-      onError: (error) => {
-        console.error("Error saving checklist config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error saving checklist config:", error);
+      throw error;
+    },
+  });
 
   /**
    * Update checklist configuration in Studio.ServiceConfigurationDrafts
    */
-  const updateChecklistConfig = useMutation(
-    async (checklistData) => {
+  const updateChecklistConfig = useMutation({
+    mutationFn: async (checklistData) => {
       const { module, service, checklistName, description, data, oldChecklistName } = checklistData;
       
       // Search for the draft
@@ -205,21 +203,20 @@ export const useChecklistConfigAPI = () => {
       });
       return response;
     },
-    {
-      onError: (error) => {
-        console.error("Error updating checklist config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error updating checklist config:", error);
+      throw error;
+    },
+  });
 
   /**
    * Search checklist configurations by module and service from Studio.ServiceConfigurationDrafts
    */
   const searchChecklistConfigs = (module, service) => {
-    return useQuery(
-      ["checklistConfigs", module, service],
-      async () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useQuery({
+      queryKey: ["checklistConfigs", module, service],
+      queryFn: async () => {
         const payload = {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -255,12 +252,10 @@ export const useChecklistConfigAPI = () => {
         }
         return [];
       },
-      {
-        enabled: !!module && !!service,
-        cacheTime: 5 * 60 * 1000, // 5 minutes
-        staleTime: 2 * 60 * 1000, // 2 minutes
-      }
-    );
+      enabled: !!module && !!service,
+      gcTime: 5 * 60 * 1000,
+      staleTime: 2 * 60 * 1000,
+    });
   };
 
   /**
@@ -314,8 +309,8 @@ export const useChecklistConfigAPI = () => {
   /**
    * Delete checklist configuration from Studio.ServiceConfigurationDrafts
    */
-  const deleteChecklistConfig = useMutation(
-    async (checklistData) => {
+  const deleteChecklistConfig = useMutation({
+    mutationFn: async (checklistData) => {
       const { module, service, checklistName } = checklistData;
       
       // Search for the draft
@@ -365,13 +360,11 @@ export const useChecklistConfigAPI = () => {
       });
       return response;
     },
-    {
-      onError: (error) => {
-        console.error("Error deleting checklist config:", error);
-        throw error;
-      },
-    }
-  );
+    onError: (error) => {
+      console.error("Error deleting checklist config:", error);
+      throw error;
+    },
+  });
 
   return {
     saveChecklistConfig,
@@ -410,4 +403,4 @@ export const transformMDMSToChecklistData = (mdmsData) => {
     data: mdmsData.data.data,
     isActive: mdmsData.data.isActive
   };
-}; 
+};
