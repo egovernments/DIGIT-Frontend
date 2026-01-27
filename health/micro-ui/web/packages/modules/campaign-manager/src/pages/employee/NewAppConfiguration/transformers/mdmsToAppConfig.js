@@ -343,7 +343,7 @@ const transformFormProperties = (body) => {
           format: field.format,
           hidden: field.hidden !== undefined ? field.hidden : false,
           tooltip: field.tooltip || "",
-          helpText: field.helpText || "",
+          helpText: field.helpTextc=== false ? "" :field.helpText || "",
           infoText: field.infoText || "",
           readOnly: field.readOnly !== undefined ? field.readOnly : false,
           fieldName: field?.fieldName || field?.jsonPath,

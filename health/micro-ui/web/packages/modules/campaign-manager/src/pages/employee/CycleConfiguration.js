@@ -55,6 +55,12 @@ const reducer = (state, action) => {
         cycleData: updateCycleData(state.cycleData, action.index, { fromDate: action.payload }),
         // cycleData: state.cycleData.map((item) => (item.key === action.index ? { ...item, fromDate: action.payload } : item)),
       };
+    case "CLEAR_SUBSEQUENT_CYCLES":
+      // Clear dates for all cycles after the specified index
+      return {
+        ...state,
+        cycleData: state.cycleData.filter((item) => item.key <= action.index),
+      };
     default:
       return state;
   }
@@ -273,6 +279,20 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     // Add 5.5 hours so UTC becomes local midnight
     const adjustedDate = new Date(localDate.getTime() + 19800000);
     const isoString = adjustedDate.toISOString();
+
+    // Check if the new toDate conflicts with subsequent cycle dates
+    // Find the next cycle's fromDate
+    const nextCycleData = cycleData?.find((j) => j.key === index + 1);
+    if (nextCycleData?.fromDate) {
+      const newToDate = new Date(isoString);
+      const nextFromDate = new Date(nextCycleData.fromDate);
+
+      // If new toDate is >= next cycle's fromDate, clear subsequent cycles
+      if (newToDate >= nextFromDate) {
+        dispatch({ type: "CLEAR_SUBSEQUENT_CYCLES", index });
+      }
+    }
+
     dispatch({ type: "SELECT_TO_DATE", index, payload: isoString });
   };
 
@@ -301,6 +321,16 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     } else if (currentStep === 2) setKey(9);
     else setKey(8);
   };
+  // Check if previous cycle dates are filled (for cycles > 1)
+  // Returns true if the cycle should be enabled
+  const isCycleEnabled = (index) => {
+    // First cycle (index 0) is always enabled
+    if (index === 0) return true;
+    // For subsequent cycles, check if previous cycle has both fromDate and toDate
+    const previousCycleData = cycleData?.find((j) => j.key === index);
+    return previousCycleData?.fromDate && previousCycleData?.toDate;
+  };
+
   if (isLoading || campaignDataLoading || deliveryConfigLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
@@ -365,6 +395,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                         : ""
                     }
                     withoutLabel={true}
+                    disabled={!isCycleEnabled(index)}
                     min={
                       index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
@@ -391,6 +422,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                         : ""
                     }
                     withoutLabel={true}
+                    disabled={!isCycleEnabled(index)}
                     min={
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)

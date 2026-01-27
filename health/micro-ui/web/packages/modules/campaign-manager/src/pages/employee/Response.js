@@ -57,8 +57,8 @@ const Response = () => {
         actionFields={[
           state?.actionLabel && (
             <Button
-              icon="ArrowForward"
-              isSuffix
+              icon={state?.primaryActionIcon || "ArrowForward"}
+              isSuffix={state?.isPrimaryIconSuffix || true}
               label={t(state?.actionLabel)}
               onClick={() => navigation(state?.actionLink)}
               type="button"
@@ -72,6 +72,8 @@ const Response = () => {
                   ? t(state?.secondaryActionLabel)
                   : t("ES_CAMPAIGN_RESPONSE_ACTION")
               }
+              isSuffix={state?.isSecondaryIconSuffix || false}
+              icon={state?.secondaryActionIcon}
               onClick={() => navigation(state?.secondaryActionLink)}
               type="button"
               variation="secondary"
