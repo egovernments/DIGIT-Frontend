@@ -22,7 +22,13 @@ config:
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: digit-ui
+        image-name: digit-studio
+
+  # - name: builds/Digit-Frontend/digit-ui
+  #   build:
+  #     - work-dir: micro-ui/
+  #       dockerfile: micro-ui/web/docker/Dockerfile
+  #       image-name: digit-ui
 
   # Health UI variants - BUILD_VARIANT automatically derived from pipeline name
   - name: builds/Digit-Frontend/health/console
@@ -61,11 +67,11 @@ config:
         dockerfile: micro-ui/web/micro-ui-internals/packages/components-core/docker/Dockerfile
         image-name: storybook
 
-  - name: builds/Digit-Frontend/digit-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: digit-ui
+  # - name: builds/Digit-Frontend/digit-ui
+  #   build:
+  #     - work-dir: micro-ui/
+  #       dockerfile: micro-ui/web/docker/Dockerfile
+  #       image-name: digit-ui
 
 
   - name: builds/Digit-Frontend/utilities/egov-bff
