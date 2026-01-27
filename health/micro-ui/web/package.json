@@ -97,7 +97,7 @@
     "dev:campaign": "cd packages/modules/campaign-manager && npm run build:dev -- --watch",
     "build": "npm run build2 && webpack --config webpack.prod.js",
     "build2": "npm run build2:css && npm run build2:ui-components && npm run build2:core && npm run build2:open-payment && npm run build2:public-services && npm run build2:service-designer && webpack --config webpack.prod.js",
-    "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
+    "build:prod": "npm run build2 && webpack --config webpack.prod.js",
     "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
     "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build",
     "build2:css": "cd packages/css && npm run build",
