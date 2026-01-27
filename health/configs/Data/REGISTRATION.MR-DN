@@ -88,16 +88,16 @@
                                                         "name": "REGISTRATION_ADMINISTRATION_SUCCESS"
                                                     },
                                                     {
-                                                        "code": "ADMINISTRATION_FAILED",
-                                                        "name": "REGISTRATION_ADMINISTRATION_FAILED"
+                                                        "code": "BENEFICIARY_REFERRED",
+                                                        "name": "REGISTRATION_BENEFICIARY_REFERRED"
+                                                    },
+                                                    {
+                                                        "code": "INELIGIBLE",
+                                                        "name": "REGISTRATION_INELIGIBLE"
                                                     },
                                                     {
                                                         "code": "CLOSED_HOUSEHOLD",
                                                         "name": "REGISTRATION_CLOSED_HOUSEHOLD"
-                                                    },
-                                                    {
-                                                        "code": "NOT_REGISTERED",
-                                                        "name": "REGISTRATION_NOT_REGISTERD"
                                                     },
                                                     {
                                                         "code": "NOT_ADMINISTERED",
@@ -120,7 +120,7 @@
                                                     {
                                                         "actionType": "CLEAR_STATE",
                                                         "properties": {
-                                                            "name": "pgrService",
+                                                            "name": "task",
                                                             "filterKeys": [
                                                                 "status",
                                                                 "projectBeneficiary",
@@ -131,12 +131,9 @@
                                                             ],
                                                             "triggerSearch": true
                                                         }
-                                                    },
-                                                    {
-                                                        "actionType": "CLOSE_POPUP",
-                                                        "properties": {}
                                                     }
                                                 ],
+                                                "fieldName": "clearFilter",
                                                 "properties": {
                                                     "size": "large",
                                                     "type": "secondary",
@@ -226,6 +223,7 @@
                                                         }
                                                     }
                                                 ],
+                                                "fieldName": "saveFilter",
                                                 "properties": {
                                                     "size": "large",
                                                     "type": "primary",
@@ -280,7 +278,7 @@
                                                                 }
                                                             ],
                                                             "condition": {
-                                                                "expression": "{{0.tasks.0.status}} != CLOSED_HOUSEHOLD"
+                                                                "expression": "{{tasks.0.status}} != CLOSED_HOUSEHOLD"
                                                             }
                                                         },
                                                         {
@@ -318,7 +316,7 @@
                                                                 }
                                                             ],
                                                             "condition": {
-                                                                "expression": "{{0.tasks.0.status}} == CLOSED_HOUSEHOLD"
+                                                                "expression": "{{tasks.0.status}} == CLOSED_HOUSEHOLD"
                                                             }
                                                         }
                                                     ],
@@ -337,22 +335,25 @@
                                         },
                                         {
                                             "data": {
-                                                "rows": "{{contextData.0.individuals}}",
+                                                "rows": "{{currentItem.individuals}}",
                                                 "source": "individuals",
                                                 "columns": [
                                                     {
                                                         "header": "BENEFICIARY",
                                                         "hidden": false,
+                                                        "isActive": true,
                                                         "cellValue": "{{item.name.givenName}}"
                                                     },
                                                     {
                                                         "header": "AGE_OF_BENEFICIARY",
                                                         "hidden": false,
+                                                        "isActive": true,
                                                         "cellValue": "{{fn:formatDate(item.dateOfBirth, 'age')}}"
                                                     },
                                                     {
                                                         "header": "GENDER",
                                                         "hidden": false,
+                                                        "isActive": true,
                                                         "cellValue": "{{item.gender}}"
                                                     }
                                                 ]
@@ -465,7 +466,10 @@
                                 "onAction": [
                                     {
                                         "actionType": "BACK_NAVIGATION",
-                                        "properties": {}
+                                        "properties": {
+                                            "name": "HOME",
+                                            "type": "HOME"
+                                        }
                                     }
                                 ]
                             }
@@ -518,7 +522,7 @@
                                     "name": "projectBeneficiaries",
                                     "match": {
                                         "field": "beneficiaryClientReferenceId",
-                                        "equalsFrom": "individuals.clientReferenceId"
+                                        "inFrom": "individuals.clientReferenceId"
                                     },
                                     "entity": "ProjectBeneficiaryModel"
                                 },
@@ -948,6 +952,11 @@
                                                 "type": "required",
                                                 "value": true,
                                                 "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_mandatory_message"
+                                            },
+                                            {
+                                                "type": "minLength",
+                                                "value": "2",
+                                                "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_familyname_min_message"
                                             }
                                         ],
                                         "errorMessage": "",
@@ -1060,45 +1069,13 @@
                                         "innerLabel": "",
                                         "schemaCode": "common-masters.GenderType",
                                         "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "integer",
-                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height",
-                                        "order": 6,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": true,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "height",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "integer",
-                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight",
-                                        "order": 7,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": true,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "weight",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "GENDER_MANDATORY_MESSAGE"
+                                            }
+                                        ],
                                         "errorMessage": "",
                                         "isMultiSelect": false
                                     },
@@ -1119,9 +1096,14 @@
                                         "systemDate": false,
                                         "validations": [
                                             {
-                                                "type": "pattern",
-                                                "value": "^\\d+$",
-                                                "message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_regex"
+                                                "type": "minLength",
+                                                "value": 10,
+                                                "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
+                                            },
+                                            {
+                                                "type": "maxLength",
+                                                "value": 10,
+                                                "message": "MOBILE_LENGTH_10_DIGIT_ERROR"
                                             }
                                         ],
                                         "errorMessage": "",
@@ -1215,6 +1197,7 @@
                                     }
                                 ],
                                 "condition": {
+                                    "type": "custom",
                                     "expression": "isEdit==true && isClosedHousehold==true"
                                 }
                             },
@@ -1271,6 +1254,7 @@
                                     }
                                 ],
                                 "condition": {
+                                    "type": "custom",
                                     "expression": "isEdit==true"
                                 }
                             },
@@ -1553,6 +1537,7 @@
                                                         }
                                                     ],
                                                     "properties": {
+                                                        "bottomGap": 16,
                                                         "mainAxisSize": "max",
                                                         "mainAxisAlignment": "spaceBetween"
                                                     }
@@ -1561,43 +1546,60 @@
                                                     "type": "template",
                                                     "value": "{{individual.0.gender }} | {{fn:formatDate(individual.0.dateOfBirth, 'age')}}",
                                                     "format": "textTemplate",
-                                                    "fieldName": "genderAge"
+                                                    "fieldName": "genderAge",
+                                                    "properties": {
+                                                        "bottomGap": 16
+                                                    }
                                                 },
                                                 {
                                                     "type": "template",
                                                     "label": "NOT_ELIGIBLE",
                                                     "format": "tag",
-                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==false",
+                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, task)}}==false",
                                                     "fieldName": "notEligible",
                                                     "properties": {
-                                                        "tagType": "error"
+                                                        "tagType": "error",
+                                                        "bottomGap": 16
+                                                    }
+                                                },
+                                                {
+                                                    "type": "template",
+                                                    "label": "BENEFICIARY_REFERRED",
+                                                    "format": "tag",
+                                                    "visible": "{{fn:length(referral)}} > 0",
+                                                    "fieldName": "beneficiaryReferred",
+                                                    "properties": {
+                                                        "tagType": "error",
+                                                        "bottomGap": 16
                                                     }
                                                 },
                                                 {
                                                     "type": "template",
                                                     "label": "ADMINISTERED_SUCCESS",
                                                     "format": "tag",
-                                                    "visible": "{{fn:isDelivered(task.0.status)}}==true",
+                                                    "visible": "{{fn:isDelivered(task.0.status)}}==true && {{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, task)}}==true && {{fn:length(referral)}} <= 0",
                                                     "fieldName": "administrationSuccess",
                                                     "properties": {
-                                                        "tagType": "success"
+                                                        "tagType": "success",
+                                                        "bottomGap": 16
                                                     }
                                                 },
                                                 {
                                                     "type": "template",
                                                     "label": "NOT_VISITED",
                                                     "format": "tag",
-                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}}==true && {{fn:isDelivered(task.0.status)}}==false",
+                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, task)}}==true && {{fn:isDelivered(task.0.status)}}==false && {{fn:length(referral)}} <= 0",
                                                     "fieldName": "notVisited",
                                                     "properties": {
-                                                        "tagType": "info"
+                                                        "tagType": "info",
+                                                        "bottomGap": 16
                                                     }
                                                 },
                                                 {
                                                     "type": "template",
                                                     "label": "DELIVERY",
                                                     "format": "button",
-                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true  && {{fn:checkAllDoseDelivered(task)}} == false",
+                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, task)}} == true  && {{fn:checkAllDoseDelivered(task)}} == false && {{fn:length(referral)}} <= 0",
                                                     "onAction": [
                                                         {
                                                             "actionType": "NAVIGATION",
@@ -1626,6 +1628,7 @@
                                                     "properties": {
                                                         "size": "medium",
                                                         "type": "primary",
+                                                        "bottomGap": 16,
                                                         "mainAxisSize": "max",
                                                         "mainAxisAlignment": "center"
                                                     }
@@ -1635,7 +1638,7 @@
                                                     "type": "template",
                                                     "label": "REGISTRATION_VIEW_DETAILS",
                                                     "format": "button",
-                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth)}} == true &&  {{fn:checkAllDoseDelivered(task)}} == true",
+                                                    "visible": "{{fn:checkEligibilityForAgeAndSideEffect(individual.0.dateOfBirth, task)}} == true &&  {{fn:checkAllDoseDelivered(task)}} == true && {{fn:length(referral)}} <= 0",
                                                     "onAction": [
                                                         {
                                                             "actionType": "NAVIGATION",
@@ -1671,6 +1674,7 @@
                                             "fieldName": "memberCard",
                                             "properties": {
                                                 "type": "secondary",
+                                                "spacing": 0,
                                                 "cardType": "secondary"
                                             }
                                         },
@@ -1693,7 +1697,7 @@
                                                     "data": [
                                                         {
                                                             "key": "HouseholdClientReferenceId",
-                                                            "value": "{{household.HouseholdModel.clientReferenceId}}"
+                                                            "value": "{{contextData.HouseholdModel.clientReferenceId}}"
                                                         }
                                                     ],
                                                     "name": "ADD_MEMBER",
@@ -1726,7 +1730,7 @@
                                 "format": "backLink",
                                 "onAction": [
                                     {
-                                        "actionType": "BACK_NAVIGATION",
+                                        "actionType": "NAVIGATION",
                                         "properties": {
                                             "name": "searchBeneficiary",
                                             "type": "TEMPLATE"
@@ -1966,6 +1970,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "identifiers",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
@@ -2047,45 +2052,13 @@
                                         "innerLabel": "",
                                         "schemaCode": "common-masters.GenderType",
                                         "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "integer",
-                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_height_addmember",
-                                        "order": 6,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": true,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "height",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
-                                        "errorMessage": "",
-                                        "isMultiSelect": false
-                                    },
-                                    {
-                                        "type": "integer",
-                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_weight_addmember",
-                                        "order": 7,
-                                        "value": "",
-                                        "format": "text",
-                                        "hidden": true,
-                                        "tooltip": "",
-                                        "helpText": "",
-                                        "infoText": "",
-                                        "readOnly": false,
-                                        "fieldName": "weight",
-                                        "deleteFlag": false,
-                                        "innerLabel": "",
-                                        "systemDate": false,
-                                        "validations": [],
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "GENDER_MANDATORY_MESSAGE_ADDMEMBER"
+                                            }
+                                        ],
                                         "errorMessage": "",
                                         "isMultiSelect": false
                                     },
@@ -2104,7 +2077,18 @@
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "systemDate": false,
-                                        "validations": [],
+                                        "validations": [
+                                            {
+                                                "type": "minLength",
+                                                "value": 10,
+                                                "message": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
+                                            },
+                                            {
+                                                "type": "maxLength",
+                                                "value": 10,
+                                                "message": "MOBILE_LENGTH_10_DIGIT_ERROR_ADDMEMBER"
+                                            }
+                                        ],
                                         "errorMessage": "",
                                         "isMultiSelect": false
                                     },
@@ -2167,6 +2151,7 @@
                                     }
                                 ],
                                 "condition": {
+                                    "type": "custom",
                                     "expression": "isEdit == true"
                                 }
                             },
@@ -2564,7 +2549,9 @@
                                                         "message": "Navigation failed."
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "navigationMode": "popUntilAndPush",
+                                            "popUntilPageName": "householdOverview"
                                         }
                                     }
                                 ],
@@ -2577,6 +2564,20 @@
                                     {
                                         "actionType": "FETCH_TRANSFORMER_CONFIG",
                                         "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "selectedIndividualClientReferenceId",
+                                                    "value": "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+                                                },
+                                                {
+                                                    "key": "HouseholdClientReferenceId",
+                                                    "value": "{{ contextData.navigation.HouseholdClientReferenceId }}"
+                                                },
+                                                {
+                                                    "key": "ProjectBeneficiaryClientReferenceId",
+                                                    "value": "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
+                                                }
+                                            ],
                                             "onError": [
                                                 {
                                                     "actionType": "SHOW_TOAST",
@@ -2607,8 +2608,16 @@
                                         "properties": {
                                             "data": [
                                                 {
-                                                    "key": "reason",
-                                                    "value": "SP_CTX_TAKEN_RECENTLY"
+                                                    "key": "selectedIndividualClientReferenceId",
+                                                    "value": "{{contextData.navigation.selectedIndividualClientReferenceId}}"
+                                                },
+                                                {
+                                                    "key": "HouseholdClientReferenceId",
+                                                    "value": "{{ contextData.navigation.HouseholdClientReferenceId }}"
+                                                },
+                                                {
+                                                    "key": "ProjectBeneficiaryClientReferenceId",
+                                                    "value": "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
                                                 }
                                             ],
                                             "name": "householdOverview",
@@ -2656,7 +2665,9 @@
                                                         "message": "Navigation failed."
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "navigationMode": "popUntilAndPush",
+                                            "popUntilPageName": "householdOverview"
                                         }
                                     }
                                 ],
@@ -2714,6 +2725,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "evaluationFacility",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "schemaCode": "HCM.FACILITY_OPTIONS_POPULATOR",
@@ -2767,6 +2779,7 @@
                                         "infoText": "",
                                         "readOnly": false,
                                         "fieldName": "referralReason",
+                                        "mandatory": true,
                                         "deleteFlag": false,
                                         "innerLabel": "",
                                         "schemaCode": "HCM.REFERRAL_REASONS",
@@ -2952,7 +2965,7 @@
                                 "format": "backLink",
                                 "onAction": [
                                     {
-                                        "actionType": "BACK_NAVIGATION",
+                                        "actionType": "NAVIGATION",
                                         "properties": {
                                             "data": [
                                                 {
@@ -2960,7 +2973,7 @@
                                                     "value": "{{navigation.clientReferenceId}}"
                                                 }
                                             ],
-                                            "name": "householdOverview",
+                                            "name": "searchBeneficiary",
                                             "type": "TEMPLATE"
                                         }
                                     }
@@ -3054,7 +3067,7 @@
                                                 {
                                                     "header": "COMPLETED_ON",
                                                     "isActive": true,
-                                                    "cellValue": "{{fn:getTaskCompletionDate(item.id, contextData.0.nextCycleIndex)}}"
+                                                    "cellValue": "{{fn:getTaskCompletionDate(item.id, contextData.0.currentRunningCycle)}}"
                                                 }
                                             ]
                                         },
@@ -3400,15 +3413,8 @@
                                     "order": 6,
                                     "where": {
                                         "left": "{{item.id}}",
-                                        "right": "{{nextCycleId}}",
+                                        "right": "{{currentRunningCycle}}",
                                         "operator": "lt"
-                                    },
-                                    "includeCurrentIf": {
-                                        "condition": {
-                                            "left": "{{dose}}",
-                                            "right": "{{deliveryLength}}",
-                                            "operator": "eq"
-                                        }
                                     }
                                 },
                                 "futureTasks": {
@@ -3827,9 +3833,15 @@
                                 "format": "backLink",
                                 "onAction": [
                                     {
-                                        "actionType": "BACK_NAVIGATION",
+                                        "actionType": "NAVIGATION",
                                         "properties": {
-                                            "name": "householdOverview",
+                                            "data": [
+                                                {
+                                                    "key": "HouseholdClientReferenceId",
+                                                    "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+                                                }
+                                            ],
+                                            "name": "searchBeneficiary",
                                             "type": "TEMPLATE"
                                         }
                                     }
