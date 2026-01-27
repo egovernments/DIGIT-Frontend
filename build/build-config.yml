@@ -18,11 +18,11 @@
 # -
 config:
   # frontend
-  - name: builds/Digit-Frontend/digit-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: digit-studio
+  # - name: builds/Digit-Frontend/digit-ui
+  #   build:
+  #     - work-dir: micro-ui/
+  #       dockerfile: micro-ui/web/docker/Dockerfile
+  #       image-name: digit-studio
 
   # - name: builds/Digit-Frontend/digit-ui
   #   build:
@@ -31,6 +31,12 @@ config:
   #       image-name: digit-ui
 
   # Health UI variants - BUILD_VARIANT automatically derived from pipeline name
+  - name: builds/Digit-Frontend/health/digit-studio
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/docker/Dockerfile
+        image-name: digit-studio
+        
   - name: builds/Digit-Frontend/health/console
     build:
       - work-dir: health/micro-ui/
