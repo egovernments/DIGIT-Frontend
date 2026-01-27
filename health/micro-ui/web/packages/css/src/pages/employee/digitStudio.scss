@@ -1528,3 +1528,8 @@ textarea.light-placeholder::placeholder {
     content: none !important;
   }
 }
+
+.employeeCard .digit-field-container textarea {
+    width: 100%;
+    max-width: 37.5rem;
+}

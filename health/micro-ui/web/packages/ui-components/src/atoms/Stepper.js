@@ -5,6 +5,7 @@ import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import { Colors} from "../constants/colors/colorconstants";
 import Divider from "./Divider";
+import "./SubmitBar.css"
 
 const Stepper = ({
   currentStep = 1,
@@ -74,14 +75,34 @@ const Stepper = ({
   };
   const actions = getAction(totalSteps, customSteps);
 
+  // Helper function to get step status
+  const getStepStatus = (index) => {
+    if ((index < currentStep - 1) || (index < activeSteps)) {
+      return "completed";
+    } else if (currentStep - 1 === index) {
+      return "current";
+    } else {
+      return "upcoming";
+    }
+  };
+
   return (
     <div
-      className={`digit-stepper-container ${direction ? direction : ""} ${
-        className ? className : ""
-      }`}
-      style={style ? style : null}
+        className={`digit-stepper-container ${direction ? direction : ""} ${
+          className ? className : ""
+        }`}
+        style={style ? style : null}
+        role="group"
+        aria-labelledby="stepper-heading"
+      aria-describedby="stepper-description"
     >
-      {actions.map((action, index, arr) => (
+      {actions.map((action, index, arr) => {
+        const stepStatus = getStepStatus(index);
+        const isCompleted = (index < currentStep - 1) || (index < activeSteps);
+        const isCurrent = currentStep - 1 === index;
+        const isActive = ((index <= currentStep - 1) || (index < activeSteps));
+        
+      return (
         <div
           ref={(el) => (stepRefs.current[index] = el)}
           className={`digit-stepper-checkpoint ${direction ? direction : ""}`}
@@ -91,16 +112,27 @@ const Stepper = ({
             currentStep = index;
             onStepClick(index);
           }}
+          role="button"
+          tabIndex={(isCompleted||isActive)?  0:-1}
+          aria-label={`Step ${index + 1}: ${t(StringManipulator("TRUNCATESTRING", action, { maxLength: 64 }))}`}
+          aria-describedby={`step-${index}-status`}
+          aria-current={isCurrent ? "step" : "false"}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              currentStep = index;
+              onStepClick(index);
+            }
+          }}
         >
           <div
             className={`digit-stepper-content ${direction ? direction : ""}`}
           >
             <span
-              className={`stepper-circle ${
-                ((index <= currentStep - 1) || (index < activeSteps) ) && "active"
-              }`}
+              className={`stepper-circle ${isActive && "active"}`}
+              aria-hidden="true"
             >
-              {((index < currentStep - 1) || (index < activeSteps) ) ? (
+              {isCompleted ? (
                 <SVG.Check
                   width={isMobileView ? "18px" : "24px"}
                   height={isMobileView ? "18px" : "24px"}
@@ -112,9 +144,10 @@ const Stepper = ({
             </span>
             <span
               className={`stepper-label ${
-                ((index < currentStep - 1) || (index < activeSteps)) && "completed"
-              } ${currentStep - 1 === index && "current"} ${direction ? direction : ""}`}
+                isCompleted && "completed"
+              } ${isCurrent && "current"} ${direction ? direction : ""}`}
               style={{ ...props?.labelStyles }}
+              aria-hidden="true"
             >
               {t(
                 StringManipulator("TRUNCATESTRING", action, { maxLength: 64 })
@@ -126,14 +159,16 @@ const Stepper = ({
               className={`stepper-connect ${
                 ((index < currentStep - 1) || (index < activeSteps && index < activeSteps - 1 ) ) && "active"
               } ${direction ? direction : ""} ${(index === arr.length-2 && direction !=="vertical") ? "lastbutone" : ""}`}
+              aria-hidden="true"
             ></span>
           )}
           {index < arr.length - 1 && direction === "vertical" && !hideDivider &&  (
-            <Divider className="stepper-vertical-divider"></Divider>
+            <Divider className="stepper-vertical-divider" aria-hidden="true"></Divider>
           )}
         </div>
-      ))}
+      );
+    })}
     </div>
-  );
+);
 };
 export default Stepper;

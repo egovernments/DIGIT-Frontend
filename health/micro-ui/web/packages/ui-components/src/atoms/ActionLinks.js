@@ -2,7 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ActionLinks = (props) => (
-  <span className={`digit-action-links ${props?.className ? props?.className : ""}`} style={props?.style} onClick={props?.onClick}>
+  <span className={`digit-action-links ${props?.className ? props?.className : ""}`} style={props?.style} onClick={props?.onClick}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        props?.onClick?.(e);
+      }
+    }}
+    aria-label={props?.ariaLabel || "Action link"}
+  >
     {props.children}
   </span>
 );

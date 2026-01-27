@@ -56,66 +56,84 @@ const BreadCrumb = (props) => {
   const validCrumbsMain = crumbsToDisplay?.filter((crumb) => crumb?.show === true);
 
   return (
-    <ol
-      className={`digit-bread-crumb ${props?.className ? props?.className : ""}`}
-      style={props?.style}
-    >
-      {validCrumbsMain?.map((crumb, ci) => {
-        if (!crumb?.show) return null;
-        if (crumb?.isBack)
-          return (
-            <li
-              key={ci}
-              style={props?.itemStyle}
-              className="digit-bread-crumb--item back-crumb-item"
-            >
-              <span onClick={() => window.history.back()}>{crumb.content}</span>
-            </li>
-          );
+      <ol
+        aria-label="Breadcrumb"
+        className={`digit-bread-crumb ${props?.className ? props?.className : ""}`}
+        style={props?.style}
+      >
+        {validCrumbsMain?.map((crumb, ci) => {
+          if (!crumb?.show) return null;
+          if (crumb?.isBack)
+            return (
+              <li
+                key={ci}
+                style={props?.itemStyle}
+                className="digit-bread-crumb--item back-crumb-item"
+              >
+                <button 
+                  type="button"
+                  onClick={() => window.history.back()}
+                  aria-label="Go back to previous page"
+                >
+                  {crumb.content}
+                </button>
+              </li>
+            );
 
-        return (
-          <Fragment>
-            <li
-            key={ci}
-              style={props?.itemStyle}
-              className="digit-bread-crumb--item"
-            >
-              {isLast(ci) || (!crumb?.internalLink && !crumb?.externalLink) ? (
-                <span
-                  className={`digit-bread-crumb-content ${isLast(ci) ? "current" : "default"}`}
-                  style={props?.spanStyle}
-                  onClick={(crumb.content === "..." || crumb.content === props?.expandText) ? handleCrumbClick : null}
-                >
-                  {crumb?.icon && crumb.icon}
-                  {crumb.content}
-                </span>
-              ) : crumb?.externalLink ? (
-                <Link
-                  className="digit-bread-crumb-content"
-                  onClick={() => handleRedirect(crumb?.externalLink)}
-                >
-                  {crumb?.icon && crumb.icon}
-                  {crumb.content}
-                </Link>
-              ) : (
-                <Link
-                  to={{ pathname: crumb.internalLink, state: { count: crumb?.count }, search: crumb?.query  }}
-                  className="digit-bread-crumb-content"
-                >
-                  {crumb?.icon && crumb.icon}
-                  {crumb.content}
-                </Link>
-              )}
-              {!isLast(ci) && (
-                <div className="digit-bread-crumb-seperator">
-                  {props?.customSeparator ? props?.customSeparator : "/"}
-                </div>
-              )}
-            </li>
-          </Fragment>
-        );
-      })}
-    </ol>
+          return (
+            <Fragment>
+              <li key={ci}
+                style={props?.itemStyle}
+                className="digit-bread-crumb--item"
+              >
+                {isLast(ci) || (!crumb?.internalLink && !crumb?.externalLink) ? (
+                  <span
+                    className={`digit-bread-crumb-content ${isLast(ci) ? "current" : "default"}`}
+                    style={props?.spanStyle}
+                    onClick={(crumb.content === "..." || crumb.content === props?.expandText) ? handleCrumbClick : null}
+                    role={(crumb.content === "..." || crumb.content === props?.expandText) ? "button" : undefined}
+                    tabIndex={(crumb.content === "..." || crumb.content === props?.expandText) ? 0 : undefined}
+                    onKeyDown={(crumb.content === "..." || crumb.content === props?.expandText) ? (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleCrumbClick();
+                      }
+                    } : undefined}
+                    aria-label={(crumb.content === "..." || crumb.content === props?.expandText) ? "Show more breadcrumb items" : undefined}
+                    aria-current={isLast(ci) ? "page" : undefined}
+                  >
+                    {crumb?.icon && crumb.icon}
+                    {crumb.content}
+                  </span>
+                ) : crumb?.externalLink ? (
+                  <Link
+                    className="digit-bread-crumb-content"
+                    onClick={() => handleRedirect(crumb?.externalLink)}
+                    aria-label={`Navigate to ${crumb.content}`}
+                  >
+                    {crumb?.icon && crumb.icon}
+                    {crumb.content}
+                  </Link>
+                ) : (
+                  <Link
+                    to={{ pathname: crumb.internalLink, state: { count: crumb?.count }, search: crumb?.query  }}
+                    className="digit-bread-crumb-content"
+                    aria-label={`Navigate to ${crumb.content}`}
+                  >
+                    {crumb?.icon && crumb.icon}
+                    {crumb.content}
+                  </Link>
+                )}
+                {!isLast(ci) && (
+                  <div className="digit-bread-crumb-seperator" aria-hidden="true">
+                    {props?.customSeparator ? props?.customSeparator : "/"}
+                  </div>
+                )}
+              </li>
+            </Fragment>
+          );
+        })}
+      </ol>
   );
 };
 

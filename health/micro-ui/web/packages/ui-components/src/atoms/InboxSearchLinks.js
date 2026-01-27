@@ -46,7 +46,7 @@ const InboxSearchLinks = ({
   return (
     <div className={`digit-inbox-search-links-container ${customClass}`}>
       {renderHeader()}
-      <div className="digit-inbox-search-links-contents">
+      <div className="digit-inbox-search-links-contents" aria-label={t(headerText)}>
         {linksToShow.map(({ url, text, hyperlink = false }, index) => {
           return (
             <span className="digit-inbox-search-link" key={index}>

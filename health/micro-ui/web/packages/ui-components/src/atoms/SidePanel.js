@@ -105,17 +105,29 @@ const SidePanel = ({
             ? defaultClosedWidth || 64
             : 0,
         }}
+        aria-label={isOpen ? "Side panel expanded" : "Side panel collapsed"}
+        aria-expanded={isOpen}
       >
         {type === "dynamic" && (
           <div
             className={`slider-handler ${type || ""} ${position || ""}`}
             onClick={toggleSlider}
             onMouseDown={handleMouseDown}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleSlider();
+              }
+            }}
             style={{ cursor: isDraggable && isOpen ? "ew-resize" : "pointer" }}
+            tabIndex={0}
+            role="button"
+            aria-label={isOpen ? "Collapse side panel" : "Expand side panel"}
+            aria-expanded={isOpen}
           >
-            {!hideScrollIcon && <div className="scroll-bar"></div>}
+            {!hideScrollIcon && <div className="scroll-bar" aria-hidden="true"></div>}
             {!hideArrow && (
-              <div className="slider-handler-svg">
+              <div className="slider-handler-svg" aria-hidden="true">
                 <SVG.ChevronRight
                   width={iconSize}
                   height={iconSize}
@@ -135,11 +147,23 @@ const SidePanel = ({
             )}
           </div>
         )}
-        <div className={`slider-content`}>
+        <div className={`slider-content`} role="region" aria-label="Side panel content">
           {header && isOpen && (
-            <div className="slider-header">
+            <div className="slider-header" role="banner">
               {addClose && isOpen && (
-                <div className="close-icon" onClick={handleClose}>
+                <div 
+                  className="close-icon" 
+                  onClick={handleClose}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleClose();
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label="Close side panel"
+                >
                   <SVG.Close
                     width={"1.5rem"}
                     height={"1.5rem"}
@@ -161,16 +185,18 @@ const SidePanel = ({
             className={`slider-body ${
               sections && sections.length > 0 ? "with-sections" : ""
             }`}
+            role="main"
+            aria-label="Side panel body"
           >
             {isOpen
               ? sections && sections?.length > 0
                 ? sections?.map((section, index) => (
                     <div className="section-divider-wrapper">
-                      <div key={index} className="slider-section">
+                      <div key={index} className="slider-section" role="region" aria-label={`Section ${index + 1}`}>
                         {section}
                       </div>
                       {index < sections.length - 1 && (
-                        <div className="section-divider"></div>
+                        <div className="section-divider" role="separator" aria-hidden="true"></div>
                       )}
                     </div>
                   ))
@@ -178,19 +204,19 @@ const SidePanel = ({
               : sections && sections?.length > 0
               ? closedSections?.map((section, index) => (
                   <div className="section-divider-wrapper">
-                    <div key={index} className="slider-section">
+                    <div key={index} className="slider-section" role="region" aria-label={`Collapsed section ${index + 1}`}>
                       {section}
                     </div>
                     {index < sections.length - 1 && (
-                      <div className="section-divider"></div>
+                      <div className="section-divider" aria-hidden="true"></div>
                     )}
                   </div>
                 ))
               : closedContents}
           </div>
 
-          {footer && isOpen && <div className="slider-footer">{footer}</div>}
-          {closedFooter && !isOpen && <div className="slider-footer">{closedFooter}</div>}
+          {footer && isOpen && <div className="slider-footer" role="contentinfo">{footer}</div>}
+          {closedFooter && !isOpen && <div className="slider-footer" role="contentinfo">{closedFooter}</div>}
         </div>
       </div>
     </>

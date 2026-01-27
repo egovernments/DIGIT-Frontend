@@ -37,6 +37,7 @@ const ResultsDataTable = ({
   showTableDescription,
   showTableTitle,
   enableGlobalSearch,
+  enableColumnSort,
   showSelectedState,
   selectedRows,
   actions,
@@ -55,7 +56,9 @@ const ResultsDataTable = ({
         columns={columns}
         responsive={true}
         sortIcon={
-          <CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />
+          enableColumnSort !== false ? (
+            <CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />
+          ) : null
         }
         selectableRows={showCheckBox}
         selectableRowsHighlight={true}
@@ -128,7 +131,7 @@ const ResultsDataTable = ({
               height={"1.5rem"}
               fill={"#C84C0E"}
             ></SVG.DoneAll>
-            <div className={"selected-state"}>{`${selectedRows.length} ${t(
+            <div className="selected-state" role="status" aria-live="polite"> {`${selectedRows.length} ${t(
               "ROWS_SELECTED"
             )}`}</div>
           </div>

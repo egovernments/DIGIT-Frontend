@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 const Tooltip = ({ tooltipRef, content, placement, arrow, style, className,header ,description,theme}) => {
   return (
     <div
+      role="tooltip"
+      aria-live="polite"
+      tabIndex={0}
       className={`tooltip-content tooltip-${placement} ${
         arrow ? "with-arrow" : ""
       } ${theme || ""} ${className || ""}`}

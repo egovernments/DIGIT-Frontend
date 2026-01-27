@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, Fragment, useCallback } from "react";
+import React, { useEffect, useState, Fragment, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
@@ -16,6 +16,7 @@ import MultiChildFormWrapper from "./MultiChildFormWrapper";
 
 // import Fields from "./Fields";    //This is a field selector pickup from formcomposer
 import FieldController from "./FieldController";
+import { ButtonIdentificationProvider, SectionIdentificationProvider } from "./ButtonIdentificationContext";
 
 const wrapperStyles = {
   display: "flex",
@@ -357,8 +358,9 @@ export const FormComposer = (props) => {
               );
 
             return (
-              <Fragment key={fieldIndex}>
+              <Fragment>
                 <LabelFieldPair
+                  key={index}
                   style={
                     props?.showWrapperContainers && !field.hideContainer
                       ? { ...wrapperStyles, ...field?.populators?.customStyle }
@@ -386,7 +388,7 @@ export const FormComposer = (props) => {
   };
 
   const isDisabled = props.isDisabled || false;
-  
+
   const checkKeyDown = (e) => {
     const keyCode = e.keyCode ? e.keyCode : e.key ? e.key : e.which;
     if (keyCode === 13) {
@@ -445,7 +447,18 @@ export const FormComposer = (props) => {
         <SubmitBar label={t(props.label)} style={{ width: "100%", ...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full" />
       )}
       {props.secondaryActionLabel && (
-        <div className="primary-label-btn" style={{ margin: "20px auto 0 auto" }} onClick={onSecondayActionClick}>
+        <div
+          className="primary-label-btn"
+          role="button"
+          tabIndex={0}
+          style={{ margin: "20px auto 0 auto" }}
+          onClick={onSecondayActionClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onSecondayActionClick();
+            }
+          }}
+        >
           {props.secondaryActionLabel}
         </div>
       )}
@@ -459,92 +472,105 @@ export const FormComposer = (props) => {
   const fieldId = Digit?.Utils?.getFieldIdName?.(props?.formId || props?.className || "form") || "NA";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={fieldId} className={props.className}>
-      {props?.showMultipleCardsWithoutNavs ? (
-        props?.config?.map((section, index, array) => {
-          return (
-            !section.navLink && (
-              <Card key={index} style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
-                {renderFormFields(props, section, index, array)}
-              </Card>
-            )
-          );
-        })
-      ) : (
-        <Card style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
-          {props?.config?.map((section, index, array) => {
-            return !section.navLink && <Fragment key={index}>{renderFormFields(props, section, index, array)}</Fragment>;
-          })}
-        </Card>
-      )}
-      {props?.showFormInNav && props.horizontalNavConfig && (
-        <HorizontalNav
-          configNavItems={props.horizontalNavConfig ? props.horizontalNavConfig : null}
-          showNav={props?.showNavs}
-          activeLink={activeLink}
-          setActiveLink={setActiveLink}
-        >
-          {props?.showMultipleCardsInNavs ? (
-            props?.config?.map((section, index, array) => {
-              return section.navLink ? (
-                <Card key={index} style={section.navLink !== activeLink ? getCardStyles(false) : getCardStyles()} noCardStyle={props.noCardStyle}>
-                  {renderFormFields(props, section, index, array, section?.sectionFormCategory)}
-                </Card>
-              ) : null;
-            })
-          ) : (
-            <Card style={getCardStyles()} noCardStyle={props.noCardStyle}>
-              {props?.config?.map((section, index, array) => {
+    <ButtonIdentificationProvider
+      composerType="formcomposer"
+      composerId={props.formId || props.className || "form"}
+    >
+      <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={fieldId} className={props.className}>
+        {props?.showMultipleCardsWithoutNavs ? (
+          props?.config?.map((section, index, array) => {
+            return (
+              !section.navLink && (
+                <SectionIdentificationProvider key={index} sectionId={section?.headId || `section-${index}`}>
+                  <Card key={index} style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
+                    {renderFormFields(props, section, index, array)}
+                  </Card>
+                </SectionIdentificationProvider>
+              )
+            );
+          })
+        ) : (
+          <Card style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
+            {props?.config?.map((section, index, array) => {
+              return !section.navLink && (
+                <SectionIdentificationProvider key={index} sectionId={section?.headId || `section-${index}`}>
+                  {renderFormFields(props, section, index, array)}
+                </SectionIdentificationProvider>
+              );
+            })}
+          </Card>
+        )}
+        {props?.showFormInNav && props.horizontalNavConfig && (
+          <HorizontalNav
+            configNavItems={props.horizontalNavConfig ? props.horizontalNavConfig : null}
+            showNav={props?.showNavs}
+            activeLink={activeLink}
+            setActiveLink={setActiveLink}
+          >
+            {props?.showMultipleCardsInNavs ? (
+              props?.config?.map((section, index, array) => {
                 return section.navLink ? (
-                  <Fragment key={index}>
-                    <div style={section.navLink !== activeLink ? { display: "none" } : {}}>
+                  <SectionIdentificationProvider key={index} sectionId={section?.headId || section.navLink || `nav-section-${index}`}>
+                    <Card key={index} style={section.navLink !== activeLink ? getCardStyles(false) : getCardStyles()} noCardStyle={props.noCardStyle}>
                       {renderFormFields(props, section, index, array, section?.sectionFormCategory)}
-                    </div>
-                  </Fragment>
+                    </Card>
+                  </SectionIdentificationProvider>
                 ) : null;
-              })}
-            </Card>
-          )}
-        </HorizontalNav>
-      )}
-      {!props.submitInForm && props.label && (
-        <Footer className={props.actionClassName}>
-          {props?.draftLabel && (
+              })
+            ) : (
+              <Card style={getCardStyles()} noCardStyle={props.noCardStyle}>
+                {props?.config?.map((section, index, array) => {
+                  return section.navLink ? (
+                    <SectionIdentificationProvider key={index} sectionId={section?.headId || section.navLink || `nav-section-${index}`}>
+                      <div style={section.navLink !== activeLink ? { display: "none" } : {}}>
+                        {renderFormFields(props, section, index, array, section?.sectionFormCategory)}
+                      </div>
+                    </SectionIdentificationProvider>
+                  ) : null;
+                })}
+              </Card>
+            )}
+          </HorizontalNav>
+        )}
+        {!props.submitInForm && props.label && (
+          <Footer className={props.actionClassName}>
+            {props?.draftLabel && (
+              <SubmitBar
+                style={props?.submitButtonStyle}
+                className="digit-formcomposer-submitbar"
+                submit={false}
+                label={t(props?.draftLabel)}
+                onClick={onDraftLabelClick}
+              />
+            )}
             <SubmitBar
-              style={props?.submitButtonStyle}
+              label={t(props.label)}
+              id={`${fieldId}-primary`}
               className="digit-formcomposer-submitbar"
-              submit={false}
-              label={t(props?.draftLabel)}
-              onClick={onDraftLabelClick}
+              submit="submit"
+              disabled={isDisabled}
+              icon={props?.primaryActionIcon}
+              isSuffix={props?.primaryActionIconAsSuffix}
             />
-          )}
-          <SubmitBar
-            label={t(props.label)}
-            id={`${fieldId}-primary`}
-            className="digit-formcomposer-submitbar"
-            submit="submit"
-            disabled={isDisabled}
-            icon={props?.primaryActionIcon}
-            isSuffix={props?.primaryActionIconAsSuffix}
-          />
-          {props?.secondaryLabel && props?.showSecondaryLabel && (
-            <Button
-              id={`${fieldId}-secondary`}
-              className="previous-button"
-              variation="secondary"
-              label={t(props?.secondaryLabel)}
-              onClick={props?.onSecondayActionClick}
-              icon={props?.secondaryActionIcon}
-              isSuffix={props?.secondaryActionIconAsSuffix}
-            />
-          )}
-          {props.onSkip && props.showSkip && (
-            <ActionLinks style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} id={`${fieldId}-links`} onClick={props.onSkip} />
-          )}
-        </Footer>
-      )}
-      {showErrorToast && <Toast type={"error"} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
-      {customToast && <Toast type={customToast?.type} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
-    </form>
+            {props?.secondaryLabel && props?.showSecondaryLabel && (
+              <Button
+                id={`${fieldId}-secondary`}
+                className="previous-button"
+                variation="secondary"
+                label={t(props?.secondaryLabel)}
+                onClick={props?.onSecondayActionClick}
+                icon={props?.secondaryActionIcon}
+                isSuffix={props?.secondaryActionIconAsSuffix}
+              />
+            )}
+            {props.onSkip && props.showSkip && (
+              <ActionLinks style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} id={`${fieldId}-links`} onClick={props.onSkip} />
+            )}
+          </Footer>
+        )}
+        {showErrorToast && <Toast type={"error"} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
+        {customToast && <Toast type={customToast?.type} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
+      </form>
+    </ButtonIdentificationProvider>
   );
 };

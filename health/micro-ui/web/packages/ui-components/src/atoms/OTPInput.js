@@ -12,11 +12,31 @@ const OTPInput = ({
   label,
   inline,
   masking = false,
+  screenPath,
+  composerType,
+  composerId,
+  sectionId,
+  name,
+  id,
 }) => {
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputRefs = useRef([]);
   const [error, setError] = useState(null);
   const { t } = useTranslation();
+
+  // Generate unique ID for tracking (single source of truth)
+  // ID Pattern: screenPath + composerType + composerId + sectionId + name + type + index
+  const generateOTPFieldId = (index) => {
+    return Digit?.Utils?.generateUniqueId?.({
+      screenPath: screenPath || "",
+      composerType: composerType || "standalone",
+      composerId: composerId || "",
+      sectionId: sectionId || "",
+      name: name || "otp",
+      type: `otp-${index}`,
+      id: id ? `${id}-${index}` : ""
+    }) || `${name || "otp"}-${index}`;
+  };
 
   useEffect(() => {
     inputRefs.current[0].focus();
@@ -123,12 +143,18 @@ const OTPInput = ({
     >
       <div className={`digit-otp-label`}>{label}</div>
       <div className={`otp-error-wrapper`}>
-      <div className="otp-input-container" style={{display:"flex"}}>
+      <div className="otp-input-container" style={{ display: "flex" }}
+        role="group"
+        aria-labelledby="otp-label"
+      >
         {otp.map((data, index) => (
           <input
             key={index}
+            id={generateOTPFieldId(index)}
             type="text"
             maxLength="1"
+            inputMode={type === "numeric" ? "numeric" : "text"}
+            aria-label={`${index + 1} of ${length}`}
             value={masking && otp[index] ? "●" : otp[index]}
             ref={(el) => (inputRefs.current[index] = el)}
             onChange={(e) => handleInputChange(e, index)}

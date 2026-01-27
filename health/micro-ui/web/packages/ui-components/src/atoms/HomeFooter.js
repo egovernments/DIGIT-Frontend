@@ -14,6 +14,15 @@ function HomeFooter(props) {
         onClick={() => {
           window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
         }}
+        role="link"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank")?.focus();
+          }
+        }}
+        aria-label="Visit DIGIT homepage"
       />
     </div>
   );

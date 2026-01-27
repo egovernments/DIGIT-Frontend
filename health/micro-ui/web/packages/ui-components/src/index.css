@@ -6,3 +6,24 @@
     width: 100px;
     height: 100px;
 }
+
+
+*:focus-visible {
+    outline: 2px solid #b91900 !important;
+}
+
+.digit-checkbox-container .digit-custom-checkbox-emp:focus-visible{
+  outline-offset: 3px;
+}
+
+.digit-cursor-pointer .digit-text-input-customIcon{
+  position: unset;
+}
+
+.digit-cursor-pointer .wrapperSpan{
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  top: 0.5rem;
+  right: 0.75rem;
+}

@@ -14,7 +14,6 @@ const enabledModules = [
   "DSS",
   "Workbench",
   "HCMWORKBENCH",
-  "HRMS",
   //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
   "Microplanning",
@@ -79,10 +78,8 @@ const MainApp = ({ stateCode, enabledModules }) => {
         const { initPublicServiceComponents } = await import("@egovernments/digit-ui-module-public-services")
         
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
-        const {initHRMSComponents} = await import("@egovernments/digit-ui-module-hrms");
         // initCampaignComponents();
         initWorkbenchComponents();
-        initHRMSComponents();
         initServiceDesignerComponents();
         initOpenPaymentComponents();
         initPublicServiceComponents();

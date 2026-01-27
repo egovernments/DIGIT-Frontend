@@ -1,11 +1,12 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Chip from "./Chip";
 import { SVG } from "./SVG";
 import Button from "./Button";
 import TreeSelect from "./TreeSelect";
-import { Colors} from "../constants/colors/colorconstants";
+import { Colors } from "../constants/colors/colorconstants";
 import { iconRender } from "../utils/iconRender";
 
 const MultiSelectDropdown = ({
@@ -27,18 +28,133 @@ const MultiSelectDropdown = ({
   selectAllLabel = "",
   categorySelectAllLabel = "",
   restrictSelection = false,
-  isSearchable=false,
+  isSearchable = false,
   chipsKey,
   frozenData = [],
-  handleViewMore
+  handleViewMore,
+  disablePortal = false,
+  disableClearAll = false,
+  onChipClose,
+  screenPath,
+  composerType,
+  composerId,
+  sectionId,
+  name,
+  id,
 }) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
   const [optionIndex, setOptionIndex] = useState(-1);
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [categorySelected, setCategorySelected] = useState({});
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const dropdownRef = useRef();
+  const isInitialMount = useRef(true);
+  const closedByScrollRef = useRef(false);
   const { t } = useTranslation();
+
+  // Generate unique ID for tracking (single source of truth)
+  // ID Pattern: screenPath + composerType + composerId + sectionId + name + type
+  const fieldId = Digit?.Utils?.generateUniqueId?.({
+    screenPath: screenPath || "",
+    composerType: composerType || "standalone",
+    composerId: composerId || "",
+    sectionId: sectionId || "",
+    name: name || optionsKey || "multiselect",
+    type: "multiselect",
+    id: id
+  }) || id || name;
+
+  // Helper function to check if element is visible within all scroll ancestors
+  const isElementVisibleInScrollParents = (element) => {
+    if (!element) return false;
+
+    const rect = element.getBoundingClientRect();
+    let parent = element.parentElement;
+
+    while (parent) {
+      const parentStyle = window.getComputedStyle(parent);
+      const overflowY = parentStyle.overflowY;
+      const overflow = parentStyle.overflow;
+
+      // Check if parent has vertical scrolling enabled
+      const hasVerticalScroll =
+        overflowY === 'auto' ||
+        overflowY === 'scroll' ||
+        overflow === 'auto' ||
+        overflow === 'scroll';
+
+      // Also check if parent actually has scrollable content (scrollHeight > clientHeight)
+      const isActuallyScrollable = hasVerticalScroll && parent.scrollHeight > parent.clientHeight;
+
+      if (isActuallyScrollable) {
+        const parentRect = parent.getBoundingClientRect();
+        // Check if element is outside the scrollable parent's visible area
+        if (rect.bottom <= parentRect.top || rect.top >= parentRect.bottom) {
+          return false;
+        }
+      }
+      parent = parent.parentElement;
+    }
+
+    // Also check viewport visibility
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    if (rect.bottom <= 0 || rect.top >= viewportHeight) {
+      return false;
+    }
+
+    return true;
+  };
+
+  // Update dropdown position when it opens or on scroll/resize (only when using portal)
+  useEffect(() => {
+    // Skip if portal is disabled - no need to track position or visibility
+    if (disablePortal) return;
+
+    // Only check visibility on scroll/resize, not on initial position update
+    const updatePositionOnScroll = () => {
+      if (active && dropdownRef.current) {
+        // Check if the input field is visible within scroll parents and viewport
+        if (!isElementVisibleInScrollParents(dropdownRef.current)) {
+          closedByScrollRef.current = true;
+          setActive(false);
+          return;
+        }
+
+        const rect = dropdownRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width
+        });
+      }
+    };
+
+    // Initial position update without visibility check
+    const setInitialPosition = () => {
+      if (dropdownRef.current) {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width
+        });
+      }
+    };
+
+    if (active) {
+      // Reset the scroll-closed flag when dropdown opens
+      closedByScrollRef.current = false;
+      setInitialPosition();
+      window.addEventListener("scroll", updatePositionOnScroll, true);
+      window.addEventListener("resize", updatePositionOnScroll);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", updatePositionOnScroll, true);
+      window.removeEventListener("resize", updatePositionOnScroll);
+    };
+  }, [active, disablePortal]);
 
   function reducer(state, action) {
     switch (action.type) {
@@ -49,25 +165,13 @@ const MultiSelectDropdown = ({
         }
         return [
           ...state,
-          { code: action.payload?.[1]?.code,name: action?.payload?.[1]?.name, propsData: action.payload,},
+          { code: action.payload?.[1]?.code, name: action?.payload?.[1]?.name, propsData: action.payload, },
         ];
       case "REMOVE_FROM_SELECTED_EVENT_QUEUE":
         const newState = state?.filter(
           (e) => e?.code !== action.payload?.[1]?.code
         );
-        onSelect(
-          newState.map((e) => e.propsData),
-          getCategorySelectAllState(),
-          props
-        ); // Update the form state here
-        if (onClose && !active) {
-          setSearchQuery("");
-          onClose(
-            newState.map((e) => e.propsData),
-            getCategorySelectAllState(),
-            props
-          );
-        }
+        // onSelect is now called via useEffect when state changes
         return newState;
       case "REPLACE_COMPLETE_STATE":
         return action.payload;
@@ -84,7 +188,7 @@ const MultiSelectDropdown = ({
   }, [selected?.length]);
 
   function fnToSelectOptionThroughProvidedSelection(selected) {
-    return selected?.length > 0 ? selected?.map((e) => ({ code: e?.code, name: e?.name,propsData: [null, e] })) : [];
+    return selected?.map((e) => ({ code: e?.code, name: e?.name, propsData: [null, e] }));
   }
   const [alreadyQueuedSelectedState, dispatch] = useReducer(
     reducer,
@@ -92,21 +196,36 @@ const MultiSelectDropdown = ({
     fnToSelectOptionThroughProvidedSelection
   );
 
+  // Store callbacks in refs to avoid stale closures and unnecessary re-renders
+  const onSelectRef = useRef(onSelect);
+  const onCloseRef = useRef(onClose);
+  onSelectRef.current = onSelect;
+  onCloseRef.current = onClose;
+
+  // Call onSelect whenever selection changes (real-time updates)
+  // Skip initial mount to maintain backward compatibility
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    onSelectRef.current(
+      alreadyQueuedSelectedState?.map((e) => e.propsData),
+      getCategorySelectAllState(),
+      props
+    );
+  }, [alreadyQueuedSelectedState]);
+
   useEffect(() => {
     if (!active) {
       setSearchQuery("");
-      onSelect(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
-    }
-    if (onClose) {
-      onClose(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
+      if (onCloseRef.current) {
+        onCloseRef.current(
+          alreadyQueuedSelectedState?.map((e) => e.propsData),
+          getCategorySelectAllState(),
+          props
+        );
+      }
     }
   }, [active]);
 
@@ -176,6 +295,11 @@ const MultiSelectDropdown = ({
   }, [options, alreadyQueuedSelectedState, searchQuery]);
 
   function handleOutsideClickAndSubmitSimultaneously() {
+    // Skip if dropdown was just closed by scroll - prevents blocking reopening
+    if (closedByScrollRef.current) {
+      closedByScrollRef.current = false;
+      return;
+    }
     setActive(false);
   }
 
@@ -226,17 +350,12 @@ const MultiSelectDropdown = ({
         isChecked
           ? dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: arguments })
           : dispatch({
-              type: "REMOVE_FROM_SELECTED_EVENT_QUEUE",
-              payload: arguments,
-            });
+            type: "REMOVE_FROM_SELECTED_EVENT_QUEUE",
+            payload: arguments,
+          });
       }
-      onSelect(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
     } else {
-      onSelect();
+      onSelectRef.current();
     }
   }
 
@@ -258,10 +377,13 @@ const MultiSelectDropdown = ({
   };
 
   const handleClearAll = () => {
+    // Prevent clear all if disabled
+    if (disableClearAll) return;
+
     dispatch({ type: "REPLACE_COMPLETE_STATE", payload: [] });
-    onSelect([], getCategorySelectAllState(), props);
-    if (onClose) {
-      onClose([], getCategorySelectAllState(), props);
+    // onSelect is called via useEffect when alreadyQueuedSelectedState changes
+    if (onCloseRef.current) {
+      onCloseRef.current([], getCategorySelectAllState(), props);
     }
   };
 
@@ -274,30 +396,26 @@ const MultiSelectDropdown = ({
         const payload =
           variant === "nestedmultiselect"
             ? flattenedOptions
-                ?.filter((option) => !option.options)
-                ?.map((option) => ({
-                  code: option.code,
-                  name: option.name,
-                  propsData: [null, option],
-                }))
-            : options.map((option) => ({
+              ?.filter((option) => !option.options)
+              ?.map((option) => ({
                 code: option.code,
                 name: option.name,
                 propsData: [null, option],
-              }));
+              }))
+            : options.map((option) => ({
+              code: option.code,
+              name: option.name,
+              propsData: [null, option],
+            }));
         dispatch({
           type: "REPLACE_COMPLETE_STATE",
           payload: payload,
         });
         setSelectAllChecked(true);
       }
-      onSelect(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
+      // onSelect is called via useEffect when alreadyQueuedSelectedState changes
     } else {
-      onSelect();
+      onSelectRef.current();
     }
   };
 
@@ -326,13 +444,9 @@ const MultiSelectDropdown = ({
         ...prev,
         [parentOption.code]: !categorySelected[parentOption.code],
       }));
-      onSelect(
-        alreadyQueuedSelectedState?.map((e) => e.propsData),
-        getCategorySelectAllState(),
-        props
-      );
+      // onSelect is called via useEffect when alreadyQueuedSelectedState changes
     } else {
-      onSelect();
+      onSelectRef.current();
     }
   };
 
@@ -394,9 +508,9 @@ const MultiSelectDropdown = ({
     const optionToScroll =
       variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
 
-      if (optionToScroll.length === 0) {
-        return; // No options to navigate
-      }
+    if (optionToScroll.length === 0) {
+      return; // No options to navigate
+    }
 
     if (e.key == "ArrowDown") {
       setOptionIndex((state) =>
@@ -436,33 +550,33 @@ const MultiSelectDropdown = ({
   const filteredOptions =
     searchQuery?.length > 0
       ? options
-          ?.map((option) => {
-            if (option?.options && option.options.length > 0) {
-              const matchingNestedOptions = option?.options?.filter(
-                (nestedOption) =>
-                  t(nestedOption.code)
-                    .toLowerCase()
-                    .includes(searchQuery.toLowerCase())
-              );
+        ?.map((option) => {
+          if (option?.options && option.options.length > 0) {
+            const matchingNestedOptions = option?.options?.filter(
+              (nestedOption) =>
+                t(nestedOption.code)
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
+            );
 
-              if (matchingNestedOptions.length > 0) {
-                return {
-                  ...option,
+            if (matchingNestedOptions.length > 0) {
+              return {
+                ...option,
 
-                  options: matchingNestedOptions,
-                };
-              }
-            } else if (option?.code) {
-              if (
-                t(option.code).toLowerCase().includes(searchQuery.toLowerCase())
-              ) {
-                return option;
-              }
+                options: matchingNestedOptions,
+              };
             }
+          } else if (option?.code) {
+            if (
+              t(option.code).toLowerCase().includes(searchQuery.toLowerCase())
+            ) {
+              return option;
+            }
+          }
 
-            return null;
-          })
-          ?.filter(Boolean)
+          return null;
+        })
+        ?.filter(Boolean)
       : options;
 
   const parentOptionsWithChildren = filteredOptions?.filter(
@@ -478,8 +592,8 @@ const MultiSelectDropdown = ({
       if (existingOption) {
         // If the code already exists, merge the new options
         if (option.options) {
-        existingOption.options = existingOption.options || [];
-        existingOption.options = existingOption.options.concat(option.options);
+          existingOption.options = existingOption.options || [];
+          existingOption.options = existingOption.options.concat(option.options);
         }
       } else {
         flattened.push(option);
@@ -524,43 +638,47 @@ const MultiSelectDropdown = ({
     return null;
   }
 
+  // Handler for chip close with disableClearAll check
+  const handleChipClose = (value) => {
+    if (variant === "treemultiselect") {
+      onSelectToAddToQueue([value]);
+    } else if (isPropsNeeded) {
+      onSelectToAddToQueue({ target: { checked: false } }, value, props);
+    } else {
+      onSelectToAddToQueue({ target: { checked: false } }, value);
+    }
+
+    if (onChipClose) {
+        onChipClose(value);
+      }
+  };
+
   const MenuItem = ({ option, index }) => {
     const [isActive, setIsActive] = useState(false);
     const isFrozen = frozenData.some((frozenOption) => frozenOption.code === option.code);
+    const isSelected = alreadyQueuedSelectedState.find(
+      (selectedOption) => selectedOption.code === option.code
+    );
+    const isKeyboardFocused = index === optionIndex && !isSelected;
+
     return (
       <div
         key={index}
-        className={`digit-multiselectdropodwn-menuitem ${
-          variant ? variant : ""
-        } ${
-          alreadyQueuedSelectedState.find(
-            (selectedOption) => selectedOption.code === option.code
-          )
-            ? "checked"
-            : ""
-        } ${
-          index === optionIndex &&
-          !alreadyQueuedSelectedState.find(
-            (selectedOption) => selectedOption.code === option.code
-          )
-            ? "keyChange"
-            : ""
-        } ${isFrozen ? "frozen" : ""}`}
+        className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""
+          } ${isSelected ? "checked" : ""} ${isKeyboardFocused ? "keyChange" : ""
+          } ${isFrozen ? "frozen" : ""}`}
         onMouseDown={() => setIsActive(true)}
         onMouseUp={() => setIsActive(false)}
         onMouseLeave={() => setIsActive(false)}
+        role="option"
+        aria-selected={isSelected ? "true" : "false"}
+        aria-disabled={isFrozen ? "true" : "false"}
+        tabIndex={-1}
       >
         <input
           type="checkbox"
           value={option.code}
-          checked={
-            isFrozen ||
-            alreadyQueuedSelectedState.find(
-              (selectedOption) => selectedOption.code === option.code
-            )
-              ? true
-              : false
-          }
+          checked={isFrozen || isSelected ? true : false}
           onChange={(e) => {
             if (!isFrozen) {
               isPropsNeeded
@@ -568,13 +686,22 @@ const MultiSelectDropdown = ({
                 : onSelectToAddToQueue(e, option);
             }
           }}
-          className={`digit-multi-select-dropdown-menuitem ${
-            variant ? variant : ""
-          } ${isFrozen ? "disabled" : ""}`}
+          className={`digit-multi-select-dropdown-menuitem ${variant ? variant : ""
+            } ${isFrozen ? "disabled" : ""}`}
           disabled={isFrozen}
           style={{
             cursor: isFrozen ? "not-allowed" : "pointer",
           }}
+          aria-label={`${isFrozen ? "Disabled option" : "Select option"}: ${t(
+            option[optionsKey] &&
+            typeof option[optionsKey] == "string" &&
+            option[optionsKey]
+          )}`}
+          aria-describedby={
+            variant === "nestedtextmultiselect" && option.description
+              ? `option-desc-${index}`
+              : undefined
+          }
         />
         <div className="digit-multiselectdropodwn-custom-checkbox">
           <SVG.Check width="20px" height="20px" fill={primaryColor} />
@@ -586,22 +713,24 @@ const MultiSelectDropdown = ({
               IconRender(
                 option?.icon,
                 isActive,
-                alreadyQueuedSelectedState.find(
-                  (selectedOption) => selectedOption.code === option.code
-                )
-                  ? true
-                  : false
+                isSelected ? true : false
               )}
             <p className="digit-label">
               {t(
                 option[optionsKey] &&
-                  typeof option[optionsKey] == "string" &&
-                  option[optionsKey]
+                typeof option[optionsKey] == "string" &&
+                option[optionsKey]
               )}
             </p>
           </div>
           {variant === "nestedtextmultiselect" && option.description && (
-            <div className="option-description">{option.description}</div>
+            <div
+              className="option-description"
+              id={`option-desc-${index}`}
+              aria-label="Option description"
+            >
+              {option.description}
+            </div>
           )}
         </div>
       </div>
@@ -610,14 +739,17 @@ const MultiSelectDropdown = ({
 
   const selectAllOption = addSelectAllCheck && (
     <div
-      className={`digit-multiselectdropodwn-menuitem ${
-        variant ? variant : ""
-      } ${addSelectAllCheck ? "selectAll" : ""}`}
+      className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""
+        } ${addSelectAllCheck ? "selectAll" : ""}`}
+      role="option"
+      aria-selected={selectAllChecked ? "true" : "false"}
+      tabIndex={-1}
     >
       <input
         type="checkbox"
         checked={selectAllChecked}
         onChange={handleSelectAll}
+        aria-label={`Select all options: ${selectAllLabel ? selectAllLabel : t("SELECT_ALL")}`}
       />
       <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
         <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
@@ -635,11 +767,14 @@ const MultiSelectDropdown = ({
     if (!optionsToRender || optionsToRender?.length === 0) {
       return (
         <div
-          className={`digit-multiselectdropodwn-menuitem ${
-            variant ? variant : ""
-          } unsuccessfulresults`}
+          className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""
+            } unsuccessfulresults`}
           key={"-1"}
-          onClick={() => {}}
+          onClick={() => { }}
+          role="option"
+          aria-selected="false"
+          aria-disabled="true"
+          tabIndex={-1}
         >
           {<span> {t("NO_RESULTS_FOUND")}</span>}
         </div>
@@ -647,16 +782,17 @@ const MultiSelectDropdown = ({
     }
 
     return (
-      <div>
+      <div role="listbox" aria-multiselectable="true">
         {selectAllOption}
         {optionsToRender?.map((option, index) => {
           if (option.options) {
             return (
               <div
                 key={index}
-                className={`digit-nested-category ${
-                  addSelectAllCheck || addCategorySelectAllCheck ? "selectAll" : ""
-                }`}
+                className={`digit-nested-category ${addSelectAllCheck || addCategorySelectAllCheck ? "selectAll" : ""
+                  }`}
+                role="group"
+                aria-label={`Category: ${t(option[optionsKey])}`}
               >
                 <div className="digit-category-name">
                   {t(option[optionsKey])}
@@ -665,6 +801,10 @@ const MultiSelectDropdown = ({
                   <div
                     className="digit-category-selectAll"
                     onClick={() => handleCategorySelection(option)}
+                    role="option"
+                    aria-selected={selectAllChecked || categorySelected[option?.code] ? "true" : "false"}
+                    tabIndex={-1}
+                    aria-label={`Select all items in category: ${t(option[optionsKey])}`}
                   >
                     <div className="category-selectAll-label">
                       {categorySelectAllLabel
@@ -676,9 +816,11 @@ const MultiSelectDropdown = ({
                       checked={
                         selectAllChecked || categorySelected[option?.code]
                       }
+                      aria-label={`Select all in ${t(option[optionsKey])} category`}
                     />
                     <div
                       className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}
+                      aria-hidden="true"
                     >
                       <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
                     </div>
@@ -697,16 +839,21 @@ const MultiSelectDropdown = ({
   return (
     <div>
       <div
-        className={`digit-multiselectdropdown-wrap ${
-          props?.className ? props?.className : ""
-        } ${variant ? variant : ""}`}
+        id={fieldId}
+        className={`digit-multiselectdropdown-wrap ${props?.className ? props?.className : ""
+          } ${variant ? variant : ""}`}
         ref={dropdownRef}
         style={props?.style}
       >
         <div
-          className={`digit-multiselectdropdown-master${
-            active ? `-active` : ``
-          } ${disabled ? "disabled" : ""}  ${variant ? variant : ""} ${isSearchable ? "searchable" : ""}`}
+          className={`digit-multiselectdropdown-master${active ? `-active` : ``
+            } ${disabled ? "disabled" : ""}  ${variant ? variant : ""} ${isSearchable ? "searchable" : ""}`}
+          role="combobox"
+          aria-expanded={active ? "true" : "false"}
+          aria-haspopup="listbox"
+          aria-label={`Multi-select dropdown: ${defaultLabel}`}
+          aria-owns="jk-dropdown-unique"
+          aria-describedby="dropdown-description"
         >
           <input
             className="digit-cursorPointer"
@@ -716,24 +863,28 @@ const MultiSelectDropdown = ({
             onFocus={() => setActive(true)}
             value={searchQuery}
             onChange={onSearch}
+            aria-label={`Search options in ${defaultLabel}`}
+            aria-autocomplete="list"
           />
           <div
             className="digit-multiselectdropdown-label"
             title={
               alreadyQueuedSelectedState.length > 0
-                ? `${variant === "treemultiselect" 
-                    ? countFinalChildOptions(alreadyQueuedSelectedState) 
-                    : alreadyQueuedSelectedState.length} 
+                ? `${variant === "treemultiselect"
+                  ? countFinalChildOptions(alreadyQueuedSelectedState)
+                  : alreadyQueuedSelectedState.length} 
                    ${defaultUnit} Selected`
                 : defaultLabel
             }
+            id="dropdown-description"
+            aria-live="polite"
           >
             {variant === "treemultiselect" ? (
               <p>
                 {alreadyQueuedSelectedState.length > 0
                   ? `${countFinalChildOptions(
-                      alreadyQueuedSelectedState
-                    )} ${defaultUnit} Selected`
+                    alreadyQueuedSelectedState
+                  )} ${defaultUnit} Selected`
                   : defaultLabel}
               </p>
             ) : (
@@ -746,32 +897,51 @@ const MultiSelectDropdown = ({
             <SVG.ArrowDropDown onClick={() => setActive(true)} fill={disabled ? dividerColor : inputBorderColor} />
           </div>
         </div>
-        {active ? (
-          <div
-            className="digit-multiselectdropdown-server"
-            id="jk-dropdown-unique"
-            style={ServerStyle ? ServerStyle : {}}
-          >
-            {variant === "treemultiselect" ? (
-              <TreeSelect
-                options={parentOptionsWithChildren}
-                onSelect={onSelectToAddToQueue}
-                selectedOption={alreadyQueuedSelectedState}
-                variant={variant}
-                optionsKey={optionsKey}
-              />
-            ) : (
-              <Menu />
-            )}
-          </div>
-        ) : null}
+        {active && (() => {
+          const dropdownContent = (
+            <div
+              className="digit-multiselectdropdown-server"
+              id="jk-dropdown-unique"
+              style={{
+                ...(disablePortal ? {} : {
+                  position: "absolute",
+                  top: dropdownPosition.top,
+                  left: dropdownPosition.left,
+                  width: dropdownPosition.width || "auto",
+                  zIndex: 999999,
+                }),
+                ...(ServerStyle ? ServerStyle : {}),
+              }}
+              role="region"
+              aria-label="Dropdown options"
+            >
+              {variant === "treemultiselect" ? (
+                <TreeSelect
+                  options={parentOptionsWithChildren}
+                  onSelect={onSelectToAddToQueue}
+                  selectedOption={alreadyQueuedSelectedState}
+                  variant={variant}
+                  optionsKey={optionsKey}
+                />
+              ) : (
+                <Menu />
+              )}
+            </div>
+          );
+
+          // Use portal only if not disabled and document exists
+          if (!disablePortal && typeof document !== "undefined") {
+            return createPortal(dropdownContent, document.body);
+          }
+          return dropdownContent;
+        })()}
       </div>
       {config?.isDropdownWithChip ? (
-        <div className="digit-tag-container">
+        <div className="digit-tag-container" role="region" aria-label="Selected options">
           {alreadyQueuedSelectedState.length > 0 &&
             alreadyQueuedSelectedState
               ?.filter((value) => !value.propsData[1]?.options)
-              ?.slice(0, config?.numberOfChips || alreadyQueuedSelectedState.length )
+              ?.slice(0, config?.numberOfChips || alreadyQueuedSelectedState.length)
               ?.map((value, index) => {
                 const translatedText = t(
                   chipsKey ? value[chipsKey] : value.code
@@ -788,30 +958,21 @@ const MultiSelectDropdown = ({
                         ? `${replacedText.slice(0, 64)}...`
                         : replacedText
                     }
-                    onClick={
-                      variant === "treemultiselect"
-                        ? () => onSelectToAddToQueue([value])
-                        : isPropsNeeded
-                        ? (e) => onSelectToAddToQueue(e, value, props)
-                        : (e) => {
-                            onSelectToAddToQueue(e, value);
-                          }
-                    }
-                    hideClose={isClose}
+                    onClick={() => handleChipClose(value)}
+                    hideClose={isClose || (disableClearAll && alreadyQueuedSelectedState.length === 1)}
                     className="multiselectdropdown-tag"
                   />
                 );
               })}
           {alreadyQueuedSelectedState.length > (config?.numberOfChips || alreadyQueuedSelectedState.length) && (
             <Button
-              label={`+${
-                alreadyQueuedSelectedState.length - (config?.numberOfChips || alreadyQueuedSelectedState.length)
-              } ${t("SELECTED")}`}
+              label={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || alreadyQueuedSelectedState.length)
+                } ${t("SELECTED")}`}
               onClick={() => handleViewMore(alreadyQueuedSelectedState)}
               variation="link"
             />
           )}
-          {alreadyQueuedSelectedState.length > 0 &&  frozenData.length === 0 && (
+          {alreadyQueuedSelectedState.length > 0 && frozenData.length === 0 && !disableClearAll && (
             <Button
               label={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
               onClick={handleClearAll}
@@ -854,6 +1015,14 @@ MultiSelectDropdown.propTypes = {
   isPropsNeeded: PropTypes.bool,
   ServerStyle: PropTypes.object,
   config: PropTypes.object,
+  disablePortal: PropTypes.bool,
+  disableClearAll: PropTypes.bool,
+  onChipClose: PropTypes.func,
+};
+
+MultiSelectDropdown.defaultProps = {
+  disablePortal: false,
+  disableClearAll: false,
 };
 
 export default MultiSelectDropdown;

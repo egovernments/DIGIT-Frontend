@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
+import "./SubmitBar.css";
 
 const TextInput = (props) => {
   const { t: i18nT } = useTranslation();
@@ -16,6 +17,19 @@ const TextInput = (props) => {
   const [date, setDate] = useState(props?.type === "date" && props?.value);
   const [visibility, setVisibility] = useState(false);
   const [inputType, setInputType] = useState(props?.type || "text");
+
+  // Generate unique ID for tracking (single source of truth)
+  // ID Pattern: screenPath + composerType + composerId + sectionId + name + type
+  const fieldId = Digit?.Utils?.generateUniqueId?.({
+    screenPath: props?.screenPath || "",
+    composerType: props?.composerType || "standalone",
+    composerId: props?.composerId || "",
+    sectionId: props?.sectionId || "",
+    name: props?.name || props?.placeholder || "textinput",
+    type: "input",
+    id: props?.id
+  }) || props?.id || props?.name;
+
   const data = props?.watch
     ? {
         fromDate: props?.watch("fromDate"),
@@ -45,6 +59,36 @@ const TextInput = (props) => {
       ? newValue
       : Math.max(newValue, 0);
     props.onChange(finalValue);
+  };
+
+  // Track last input type (keyboard or mouse)
+  let isKeyboard = false;
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Tab') {
+      isKeyboard = true;
+    }
+  };
+
+  const handleMouseDown = () => {
+    isKeyboard = false;
+  };
+
+  const handleFocus = (event) => {
+    console.log(event.target);
+    if (isKeyboard) {
+      event.target.classList.remove("focus-no-outline");
+      event.target.classList.add("focus-visible-outline");
+    } else {
+      event.target.classList.remove("focus-visible-outline");
+      event.target.classList.add("focus-no-outline");
+    }
+  };
+
+  const handleBlur = (event) => {
+    // reset on blur
+    event.target.classList.remove("focus-visible-outline");
+    event.target.classList.remove("focus-no-outline");
   };
 
   const renderPrefix = () => {
@@ -86,7 +130,7 @@ const TextInput = (props) => {
       );
     }
     if (
-      props?.type === "text" &&
+      (props?.type === "text" || props?.type === "number") &&
       !props?.populators?.customIcon &&
       suffixValue
     ) {
@@ -250,6 +294,9 @@ const TextInput = (props) => {
           props?.populators?.suffix ? "suffix" : ""
         } `}
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
+        role="group"
+        aria-label={props?.label || t(props.placeholder)}
+        aria-describedby={props.error ? `${props.id || props.name}-error` : undefined}
       >
         {props.type === "date" && props?.populators?.newDateFormat ? (
           <div className={inputContainerClass}>
@@ -284,12 +331,37 @@ const TextInput = (props) => {
                     ? new Date(props?.populators?.max)
                     : undefined
                 }
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                onMouseDown={handleMouseDown}
+                popperProps={{
+                  strategy: props?.populators?.useFixedPosition ? 'fixed' : 'absolute'
+                }}
+                popperClassName="datepicker-popper-high-zindex"
+                closeOnScroll={(e) => {
+                  if (!props?.populators?.useFixedPosition) return false;
+                  const inputEl = datePickerRef.current?.input;
+                  if (!inputEl) return false;
+                  const rect = inputEl.getBoundingClientRect();
+                  // Close if input is not visible in viewport
+                  return rect.bottom < 0 || rect.top > window.innerHeight;
+                }}
               />
               <div
                 className={`digit-new-date-format ${
                   props.disabled ? "disabled" : ""
                 }`}
                 onClick={() => datePickerRef.current?.setOpen(true)}
+                role="button"
+                aria-label="Open date picker"
+                tabIndex={props.disabled ? -1 : 0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    datePickerRef.current?.setOpen(true);
+                  }
+                }}
               >
                 <SVG.CalendarToday fill={"#505A5F"}/>
               </div>
@@ -301,6 +373,17 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                {...(typeof props?.onIconSelection === 'function' && {
+                tabIndex: 0,
+                role: 'button',
+                'aria-label': 'Select icon',
+                onKeyDown: (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); 
+                    props.onIconSelection();
+                  }
+                }
+                })}
               >
                 {icon}
               </span>
@@ -316,15 +399,43 @@ const TextInput = (props) => {
                   : defaultType || "text"
               }
               name={props.name}
-              id={props?.id}
+              id={fieldId}
               className={inputClassNameForMandatory}
               placeholder={StringManipulator(
                 "TOSENTENCECASE",
                 t(props.placeholder)
               )}
               onChange={(event) => {
-                if (props?.type === "number" && props?.maxlength) {
-                  if (event.target.value.length > props?.maxlength) {
+                // NUMBER TYPE
+                if (props?.type === "number") {
+                  const allowNegative =
+                    props?.allowNegativeValues !== undefined
+                      ? props.allowNegativeValues
+                      : false;
+                  // allow clearing input
+                  if (event.target.value === "") {
+                    props?.onChange?.(event);
+                    return;
+                  }
+                  // allow intermediate "-" only if negatives allowed
+                  if (allowNegative && event.target.value === "-") {
+                    props?.onChange?.(event);
+                    return;
+                  }
+                  // block invalid number formats
+                  const numberRegex = allowNegative ? /^-?\d+$/ : /^\d+$/;
+                  if (!numberRegex.test(event.target.value)) {
+                    return;
+                  }
+                  // prevent negative values if not allowed
+                  if (!allowNegative && Number(event.target.value) < 0) {
+                    return;
+                  }
+                  // enforce maxlength (AFTER validation)
+                  if (
+                    props?.maxlength &&
+                    event.target.value.length > props.maxlength
+                  ) {
                     event.target.value = event.target.value.slice(0, -1);
                   }
                 }
@@ -362,10 +473,22 @@ const TextInput = (props) => {
               }
               step={props.step}
               autoFocus={props.autoFocus}
-              onBlur={props.onBlur}
+              onKeyDown={handleKeyDown}
+              onMouseDown={handleMouseDown}
+              onBlur={(event) => {
+                if (typeof props?.onBlur === "function") {
+                  props.onBlur(event);
+                }
+                handleBlur(event);
+              }}
               autoComplete="off"
               disabled={props.disabled}
-              onFocus={props?.onFocus}
+              onFocus={(event) => {
+                if (typeof props?.onFocus === "function") {
+                  props.onFocus(event);
+                }
+                handleFocus(event);
+              }}      
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
@@ -378,6 +501,10 @@ const TextInput = (props) => {
                   }
                 }
               }}
+              aria-label={props?.label || t(props.placeholder)}
+              aria-describedby={props.error ? `${props.id || props.name}-error` : undefined}
+              aria-invalid={props.error ? "true" : "false"}
+              aria-required="true"
             />
             {renderSuffix()}
             {props.signature && props.signatureImg}
@@ -385,6 +512,17 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                {...(typeof props?.onIconSelection === 'function' && {
+                tabIndex: 0,
+                role: 'button',
+                'aria-label': 'Select icon',
+                onKeyDown: (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); 
+                    props.onIconSelection();
+                  }
+                }
+                })}
               >
                 {icon}
               </span>
@@ -407,8 +545,36 @@ const TextInput = (props) => {
                 t(props.placeholder)
               )}
               onChange={(event) => {
-                if (props?.type === "number" && props?.maxlength) {
-                  if (event.target.value.length > props?.maxlength) {
+                // NUMBER TYPE
+                if (props?.type === "number") {
+                  const allowNegative =
+                    props?.allowNegativeValues !== undefined
+                      ? props.allowNegativeValues
+                      : false;
+                  // allow clearing input
+                  if (event.target.value === "") {
+                    props?.onChange?.(event);
+                    return;
+                  }
+                  // allow intermediate "-" only if negatives allowed
+                  if (allowNegative && event.target.value === "-") {
+                    props?.onChange?.(event);
+                    return;
+                  }
+                  // block invalid number formats
+                  const numberRegex = allowNegative ? /^-?\d+$/ : /^\d+$/;
+                  if (!numberRegex.test(event.target.value)) {
+                    return;
+                  }
+                  // prevent negative values if not allowed
+                  if (!allowNegative && Number(event.target.value) < 0) {
+                    return;
+                  }
+                  // enforce maxlength (AFTER validation)
+                  if (
+                    props?.maxlength &&
+                    event.target.value.length > props.maxlength
+                  ) {
                     event.target.value = event.target.value.slice(0, -1);
                   }
                 }
@@ -453,11 +619,25 @@ const TextInput = (props) => {
               }
               step={props.step}
               autoFocus={props.autoFocus}
-              onBlur={props.onBlur}
               onKeyPress={props.onKeyPress}
+              onKeyDown={(event) => {
+                handleKeyDown(event);
+              }}
+              onMouseDown={handleMouseDown}
+              onFocus={(event) => {
+                if (typeof props?.onFocus === "function") {
+                  props.onFocus(event);
+                }
+                handleFocus(event);
+              }}
+              onBlur={(event) => {
+                if (typeof props?.onBlur === "function") {
+                  props.onBlur(event);
+                }
+                handleBlur(event);
+              }}
               autoComplete="off"
               disabled={props.disabled}
-              onFocus={props?.onFocus}
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
@@ -470,6 +650,10 @@ const TextInput = (props) => {
                   }
                 }
               }}
+              aria-label={props?.label || t(props.placeholder)}
+              aria-describedby={props.error ? `${props.id || props.name}-error` : undefined}
+              aria-invalid={props.error ? "true" : "false"}
+              aria-required={props.required ? "true" : "false"}
             />
             {renderSuffix()}
             {props.signature && props.signatureImg}
@@ -477,6 +661,17 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                {...(typeof props?.onIconSelection === 'function' && {
+                tabIndex: 0,
+                role: 'button',
+                'aria-label': 'Select icon',
+                onKeyDown: (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); 
+                    props.onIconSelection();
+                  }
+                }
+                })}
               >
                 {icon}
               </span>

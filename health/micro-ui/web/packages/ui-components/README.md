@@ -1,437 +1,137 @@
 
-# DIGIT UI Components
+# digit-ui-components
 
-A comprehensive React component library for DIGIT platform applications, providing standardized UI components, form composers, and search interfaces.
-
-## 📦 Install
+## Install
 
 ```bash
 npm install --save @egovernments/digit-ui-components
 ```
 
-**Latest Version: 0.2.1** 🎉
-
-## 🚀 What's New in v0.2.1
-
-### 🔄 InboxSearchComposer Enhancements
-
-#### 1. **Enhanced Table Component**
-- Replaced old table with **ResultsDataTable** using react-data-table-component (v7.6.2)
-- Features: sorting, filtering, selection, pagination, and expandable rows
-- Better performance and customization options
-
-#### 2. **Link Column Support**
-```jsx
-{
-  label: "Id",
-  jsonPath: "id", 
-  link: true, // Creates clickable links
-  buttonProps: {
-    size: "medium",
-    icon: "Edit",
-    linkTo: "/edit-page" // Optional: direct navigation
-  }
-}
-```
-
-#### 3. **Row Selection & Actions**
-```jsx
-// Row selection configuration
-selectionProps: {
-  showCheckBox: true,
-  showSelectedState: true,
-  selectableRowsNoSelectAll: false,
-  showSelectedStatePosition: "top" // or "bottom"
-}
-
-// Action buttons for selected rows
-actionProps: {
-  actions: [
-    { label: "Edit", variation: "secondary", icon: "Edit" },
-    { label: "Delete", variation: "primary", icon: "Delete" }
-  ]
-}
-```
-
-#### 4. **Footer Actions**
-```jsx
-footerProps: {
-  showFooter: true,
-  allowedRolesForFooter: ["ADMIN"],
-  actionFields: [
-    { 
-      label: "Previous", 
-      icon: "ArrowBack", 
-      variation: "secondary",
-      allowedRoles: ["USER"] 
-    },
-    { 
-      label: "Next", 
-      icon: "ArrowForward", 
-      variation: "primary",
-      allowedRoles: ["ADMIN"] 
-    }
-  ],
-  setactionFieldsToRight: true
-}
-```
-
-#### 5. **Expandable Rows**
-```jsx
-const ExpandedComponent = ({ data }) => (
-  <pre>{JSON.stringify(data, null, 2)}</pre>
-);
-
-expandableProps: {
-  expandableRows: true,
-  expandableRowsComponent: ExpandedComponent
-}
-```
-
-#### 6. **Editable Tables**
-- **Inline Editing:** Edit fields directly within table rows
-- **Popup Editing:** Edit in modal with additional fields
-- **Field Validation:** FieldV1 configurations for consistency
-
-```jsx
-// Inline editable column
-{
-  label: "Name",
-  jsonPath: "data.name",
-  editable: true,
-  editableFieldConfig: {
-    type: "text",
-    validation: { minlength: 2 },
-    populators: { name: "row.name" }
-  }
-}
-
-// Additional popup fields
-additionalPopupColumns: [
-  {
-    label: "Description",
-    jsonPath: "data.description", 
-    editable: true,
-    editableFieldConfig: {
-      type: "textarea",
-      populators: { name: "row.description" }
-    }
-  }
-]
-```
-
-#### 7. **UICustomizations Handlers**
-Enhanced event handling through UICustomizations:
-
-```jsx
-// Handle link column clicks
-linkColumnHandler: (row) => {
-  const url = `/${window.contextPath}/employee/view?id=${row?.id}`;
-  window.location.href = url;
-},
-
-// Handle row selections
-selectionHandler: (event) => {
-  const { allSelected, selectedCount, selectedRows } = event;
-  console.log('Selected:', selectedCount, 'rows');
-},
-
-// Handle action button clicks
-actionSelectHandler: (index, label, selectedRows) => {
-  if (label === "Delete") {
-    // Handle delete action
-  }
-},
-
-// Handle footer action clicks  
-footerActionHandler: (index, event) => {
-  console.log('Footer action:', index, event);
-}
-```
-
-### 🎯 FormComposer Enhancements
-
-#### 1. **Extended Field Types**
-Now supports 20+ field types:
-```jsx
-// New field types added
-"text", "date", "time", "geolocation", "password", 
-"search", "number", "numeric", "textarea", "radio", 
-"dropdown", "select", "radioordropdown", "toggle", 
-"checkbox", "multiselectdropdown", "mobileNumber",
-"component", "custom", "amount", "locationdropdown", 
-"apidropdown", "dateRange"
-```
-
-#### 2. **Boundary Dropdowns (Dependent Dropdowns)**
-```jsx
-{
-  type: "boundary",
-  label: "Administrative Area",
-  populators: {
-    name: "boundary",
-    levelConfig: {
-      lowestLevel: "VILLAGE",
-      highestLevel: "STATE",
-      isSingleSelect: ["STATE"] // Single selection for state level
-    },
-    hierarchyType: "ADMIN_BOUNDARY",
-    layoutConfig: {
-      isDropdownLayoutHorizontal: true,
-      isLabelFieldLayoutHorizontal: false  
-    },
-    preSelected: ["STATE_001", "DISTRICT_001"], // Pre-fill values
-    frozenData: [ // Locked selections
-      { code: "STATE_001", name: "State 1" }
-    ]
-  }
-}
-```
-
-### 🎨 Major Enhancements
-- **🌍 Boundary Dropdowns** for hierarchical administrative boundary selection
-- **📊 Editable Tables** with inline editing and popup functionality
-- **🎨 Improved Typography & Styling** with responsive design updates
-- **🔧 Better Component Variants** for increased flexibility
-
-### Breaking Changes
-- **MDMS v2 Integration** - Updated prop formats required
-- **Pagination Updates** - Enhanced pagination implementation
-- **Employee → UserType** - Configuration property updates
-- **Custom Row Components** - New structure requirements
-
-📖 **[Migration Guide](./migration/v0.2.0-to-v0.2.1-migration-guide.md)** - Complete guide for upgrading from v0.2.0
-
-## 🎯 Usage
-
-### Installation
-
-Add the dependency to your package.json:
-
-```json
-"@egovernments/digit-ui-components": "0.2.1"
-```
-
-### Basic Import
-
-```jsx
-// Import individual components
-import { Button, TextInput, FormComposerV2, InboxSearchComposer } from "@egovernments/digit-ui-components";
-
-// Import SVG icons
-import { SVG } from "@egovernments/digit-ui-components";
-
-// Usage
-<Button variant="primary">Click Me</Button>
-<SVG.Accessibility />
-```
-
-### Component Categories
-
-#### 🔧 **Atoms** (Basic Components)
-- Button, TextInput, Toggle, Tag, RadioButtons, OTPInput
-- Dropdown, MultiSelectDropdown, CheckBox, Chip
-- Loader, Toast, Timeline, Stepper, and more
-
-#### 🧩 **Molecules** (Composite Components)  
-- CustomDropdown, ApiDropdown, ResultsDataTable
-- FilterCard, SummaryCard, FormCard, PanelCard
-- Header, Footer, SideNav, BottomSheet
-
-#### 🎯 **HOCs** (Higher Order Components)
-- **FormComposerV2** - Dynamic form builder
-- **InboxSearchComposer** - Search & inbox interfaces  
-- **BoundaryFilter** - Hierarchical boundary selection
-
-## 📋 Quick Start Examples
-
-### FormComposer Usage
-```jsx
-import { FormComposerV2 } from "@egovernments/digit-ui-components";
-
-const formConfig = {
-  head: "User Details",
-  body: [
-    {
-      type: "text",
-      label: "Name",
-      isMandatory: true,
-      populators: { name: "userName" }
-    },
-    {
-      type: "boundary", // New boundary dropdown
-      label: "Location",
-      populators: {
-        name: "location",
-        hierarchyType: "ADMIN",
-        levelConfig: {
-          lowestLevel: "LOCALITY",
-          highestLevel: "STATE"
-        }
-      }
-    }
-  ]
-};
-
-<FormComposerV2 
-  config={[formConfig]} 
-  onSubmit={handleSubmit}
-  defaultValues={defaultData}
-/>
-```
-
-### InboxSearchComposer Usage
-```jsx
-import { InboxSearchComposer } from "@egovernments/digit-ui-components";
-
-const searchConfig = {
-  headerLabel: "Search Applications", // Updated from 'label'
-  type: "search",
-  actions: { // Updated structure
-    actionLabel: "Create New",
-    actionRoles: ["ADMIN"],
-    actionLink: "/create"
-  },
-  // ... rest of config
-};
-
-<div className="digit-inbox-search-wrapper">
-  <InboxSearchComposer configs={searchConfig} />
-</div>
-```
-
-## 🛠️ Local Development
-
-### Prerequisites
-- Node.js 14+ 
-- Yarn package manager
-
-### Setup Storybook
+## Limitation
 
 ```bash
-# Step 1: Install dependencies
-yarn install 
+This Package is more specific to DIGIT-UI's can be used across mission's
+```
 
-# Step 2: Start Storybook
+## Usage
+
+After adding the dependency make sure you have this dependency in
+
+```bash
+frontend/micro-ui/web/package.json
+```
+
+```json
+"@egovernments/digit-ui-components":"0.2.0",
+```
+
+then navigate to App.js
+
+```bash
+ frontend/micro-ui/web/src/App.js
+```
+
+# Syntax for importing any components
+
+```jsx
+import { SVG } from "@egovernments/digit-ui-components";
+
+<SVG.Accessibility />;
+```
+
+# Local Development to check storybook
+Use Node 14 version 
+
+Step 1
+
+ ```bash
+yarn install 
+```
+
+Step 2 
+
+ ```bash
 yarn storybook 
 ```
 
-## 🔄 Migration & Version History
+### New Changes
 
-### **v0.2.1** (Current) - 2025-10-23
+## [0.0.1-beta.28] - 2024-05-24
 
-#### ✨ Major Features
-- **Enhanced FormComposer & InboxSearchComposer** with improved config structure
-- **Boundary Dropdowns** for hierarchical selection (Country → State → City)
-- **Editable Tables** with inline editing and popup functionality
-- **Footer Actions** support in InboxSearchComposer
-- **Custom Row Components** in ResultsDataTable
+- Added restrictSelection prop in Multiselectdropdown. If this is sent as true, it restricts any option to get selected. 
 
-#### 🐛 Key Fixes
-- Fixed pagination issues in InboxSearchComposer  
-- Resolved dropdown text clearing after re-render
-- Fixed multiple API call prevention
-- Improved error handling across components
+  - Usage:
+    ```jsx
+        <MultiSelectDropdown
+          restrictSelection={true}
+        />
+    ```
 
-#### ⚠️ Breaking Changes
-- `label` → `headerLabel` in InboxSearchComposer configs
-- `employee` → `userType` in actionLink configurations
-- MDMS v2 prop format requirements
-- Enhanced pagination implementation
+### Breaking Changes while migrating from any version below 0.0.1-beta.22
 
-**📖 [Full Migration Guide](./migration/v0.2.0-to-v0.2.1-migration-guide.md)**
+## [0.0.1-beta.22] - 2024-05-20
 
-### **v0.2.0** - Previous Major Release
+- Toast Component: From this version of `ui-components`, the `Toast` component has a new prop named `type`, replacing the separate props for `info`, `warning`, and `error`.
+  - Old Usage:
+    ```jsx
+        <Toast info={true} label={"Info Toast"} />
+        <Toast warning="warning" label={"Warning Toast"}/>
+        <Toast error={true} label={"Error Toast"}/>
+    ```
+  - New Usage:
+    ```jsx
+        <Toast type="info" label={"Info Toast"} />
+        <Toast type="warning" label={"Warning Toast"} />
+        <Toast type="error" label={"Error Toast"} />
+        <Toast type="success" label={"Success Toast"} />
+    ```
 
-#### New Components Added
-- Error Message, Info Button, Panels, Popup Components
-- Stepper, TextBlock, Timeline Components  
-- Uploader variants (UploadFile, UploadPopup, UploadImage)
-- PanelCard Molecule
+## Changelog
+
+### Summary for Version [0.0.2] - 2024-06-03
+
+#### New Changes
+
+- Added Error Message Component.
+- Added Info Button Component.
+- Added Panels Component.
+- Added Popup Component with two variants: `default` and `alert`.
+- Added RemoveableTag Component.
+- Added Stepper Component.
+- Added TextBlock Component.
+- Added Timeline Component.
+- Added Uploader Component with three variants: `UploadFile`, `UploadPopup`, and `UploadImage`.
+- Added PanelCard Molecule.
 
 #### Enhancements
-- Updated Button & Dropdown Component Styles
-- Toast animations and new `type` prop
-- Typography updates with lineHeight
-- Enhanced Color Typography
 
-### Migration Examples
+- Updated Button Component Styles.
+- Updated Dropdown Component Styles and added SelectAll Option.
+- Updated InfoCard Component Styles.
+- Added Animation for Toast.
+- Added new prop `type` for Toast, replacing the separate props for `info`, `warning`, and `error`.
+- Updated Typography with lineHeight.
+- Updated Color Typography.
 
-#### Toast Component (v0.2.0 Breaking Change)
-```jsx
-// ❌ Old Usage (pre v0.2.0)
-<Toast info={true} label={"Info Toast"} />
-<Toast warning="warning" label={"Warning Toast"}/>
+For a detailed changelog, see the [CHANGELOG.md](./CHANGELOG.md) file.
 
-// ✅ New Usage (v0.2.0+)
-<Toast type="info" label={"Info Toast"} />
-<Toast type="warning" label={"Warning Toast"} />
-<Toast type="success" label={"Success Toast"} />
-```
+## Published from DIGIT-UI-LIBRARIES
 
-#### InboxSearchComposer Config (v0.2.1 Breaking Change)
-```jsx
-// ❌ Old Config (v0.2.0)
-const oldConfig = {
-  label: "Search Applications",
-  actionLabel: "Create",
-  actionRoles: ["ADMIN"]
-};
+DIGIT-UI-LIBRARIES Repo (https://github.com/egovernments/DIGIT-UI-LIBRARIES/tree/master)
 
-// ✅ New Config (v0.2.1)
-const newConfig = {
-  headerLabel: "Search Applications", // Changed from 'label'
-  actions: { // Grouped under 'actions'
-    actionLabel: "Create",
-    actionRoles: ["ADMIN"],
-    actionLink: "/create"
-  }
-};
-```
+# Contributors
 
-## 📖 Documentation & Resources
+[nabeelmd-egov] [bhavya-eGov] [nipunarora-eGov] [swathi-egov] [jagankumar-egov]
 
-### 📚 **Documentation**
-- **[Full Documentation](./DOCUMENTATION.md)** - Comprehensive component documentation
-- **[Migration Guide](./migration/v0.2.0-to-v0.2.1-migration-guide.md)** - Step-by-step upgrade instructions
-- **[Changelog](./CHANGELOG.md)** - Detailed version history and changes
+# Reference 
 
-### 📋 **Sample Configurations & Examples**
-- **[Sample Configs](https://github.com/egovernments/DIGIT-Frontend/tree/sample/micro-ui/web/micro-ui-internals/packages/modules/sample/src/configs/uiComponentsConfigs)** - Complete configuration examples
-- **[Sample Module Screens](https://github.com/egovernments/DIGIT-Frontend/tree/sample/micro-ui/web/micro-ui-internals/packages/modules/sample)** - Integration examples with new components
-- **[Boundary Dropdown Examples](https://github.com/egovernments/DIGIT-Frontend/blob/sample/micro-ui/web/micro-ui-internals/packages/modules/sample/src/configs/uiComponentsConfigs/boundaryConfig.js)** - Dependent dropdown configurations
-- **[Editable Table Examples](https://github.com/egovernments/DIGIT-Frontend/blob/sample/micro-ui/web/micro-ui-internals/packages/modules/sample/src/configs/uiComponentsConfigs/editableTableConfig.js)** - Inline and popup editing configs
+Storybook (https://unified-dev.digit.org/storybook/)
 
-### 🎨 **Live Examples**
-- **[Storybook](https://unified-dev.digit.org/storybook/)** - Interactive component playground
-- **[Official DIGIT Documentation](https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui/ui-components-standardisation/digit-ui-components0.2.0)** - Integration guides
+Documentation (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui/ui-components-standardisation/digit-ui-components0.2.0)
 
-### 🔗 **Links**
-- **[Source Repository](https://github.com/egovernments/DIGIT-UI-LIBRARIES/tree/develop)** - Main development repository
-- **[NPM Package](https://www.npmjs.com/package/@egovernments/digit-ui-components)** - Published package
-
-## 🤝 Contributors
-
-Special thanks to our contributors:
-- [@swathi-egov](https://github.com/swathi-egov)
-- [@nabeelmd-egov](https://github.com/nabeelmd-egov) 
-- [@bhavya-eGov](https://github.com/bhavya-eGov)
-- [@nipunarora-eGov](https://github.com/nipunarora-eGov)
-- [@tulika-egov](https://github.com/tulika-egov)
-- [@jagankumar-egov](https://github.com/jagankumar-egov)
-- [@Ramkrishna-egov](https://github.com/Ramkrishna-egov)
-- [@piyushraj-egov](https://github.com/piyushraj-egov)
-
-## 📄 License
+## License
 
 MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
 
-## 🏛️ About DIGIT
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
 
-This component library is part of the **DIGIT** (Digital Infrastructure for Governance, Impact & Transformation) platform - India's largest open-source platform for digital governance.
-
-![DIGIT Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
-
----
-
-**🎯 Ready to build with DIGIT UI Components?** Start with our [Quick Start Guide](#-quick-start-examples) or explore the [Storybook](https://unified-dev.digit.org/storybook/) for interactive examples!

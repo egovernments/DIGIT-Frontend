@@ -40,34 +40,62 @@ const Chip = ({
         !disabled && onTagClick ? "cp" : ""
       }`}
       onClick={disabled ? null : onTagClick}
+      role={onTagClick ? "button" : undefined}
+      tabIndex={onTagClick && !disabled ? 0 : undefined}
+      onKeyDown={(e) => {
+        if ((e.key === "Enter" || e.key === " ") && onTagClick && !disabled) {
+          e.preventDefault();
+          onTagClick(e);
+        }
+      }}
+      aria-label={onTagClick ? `${text} chip` : undefined}
+      aria-disabled={disabled ? "true" : undefined}
     >
       <div
         className={`digit-tag ${isErrorTag ? "errortag" : ""} ${hideClose ? "noClose" : ""} ${!iconReq ? "noIcon" : ""} ${onTagClick || onClick ? "clickable" : ""} ${
           className ? className : ""
         }`}
         style={tagStyles}
+        role="group"
+        aria-label={`${text}${isErrorTag ? " error" : ""} chip${!hideClose ? " with remove button" : ""}`}
       >
         {iconReq && IconRender(iconReq,isErrorTag)}
         <span className="digit-text" style={textStyles}>
           {text}
         </span>
-        {
-          !hideClose &&         <span
-          onClick={disabled ? null : onClick}
-          className={`close-icon ${disabled ? "disabled" : ""} ${hideClose ? "hideClose" : ""}`}
-        >
-          <SVG.Close
-            fill={IconColor}
-            className="close"
-            style={closeIconStyles}
-          />
+        {!hideClose && (
+          <span
+            onClick={disabled ? null : onClick}
+            role="button"
+            tabIndex={disabled ? -1 : 0}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && onClick && !disabled) {
+                e.preventDefault();
+                onClick(e);
+              }
+            }}
+            className={`close-icon ${disabled ? "disabled" : ""} ${hideClose ? "hideClose" : ""}`}
+            aria-label={`Remove ${text}`}
+            aria-disabled={disabled ? "true" : undefined}
+          >
+            <SVG.Close fill={IconColor} className="close" style={closeIconStyles} />
         </span>
-        }
+        )}
       </div>
       {error && (
         <div
           className={`${onErrorClick ? "cp" : "nonclickable"}`}
           onClick={onErrorClick}
+          role={onErrorClick ? "button" : "alert"}
+          tabIndex={onErrorClick ? 0 : undefined}
+          onKeyDown={(e) => {
+            if ((e.key === "Enter" || e.key === " ") && onErrorClick) {
+              e.preventDefault();
+              onErrorClick(e);
+            }
+          }}
+          aria-label={onErrorClick ? "View error message" : undefined}
+          aria-live="assertive"
         >
           <ErrorMessage
             message={error}

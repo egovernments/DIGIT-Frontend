@@ -20,7 +20,7 @@ const Tag = ({
   iconClassName,
   iconColor,
   loader,
-  animationStyles
+  animationStyles,
 }) => {
   const MonochromeIconColor = Colors.lightTheme.primary[2];
   const SuccessIconColor = Colors.lightTheme.alert.success;
@@ -28,51 +28,45 @@ const Tag = ({
   const WarningIconColor = Colors.lightTheme.alert.warning;
 
   const commonProps = {
-      loop: animationStyles?.noLoop !== true,
-      autoplay: animationStyles?.noAutoplay !== true,
-      width: animationStyles?.width || "1rem",
-      height: animationStyles?.height || "1rem",
-      animationData: theLoaderPrimary2
-    };
+    loop: animationStyles?.noLoop !== true,
+    autoplay: animationStyles?.noAutoplay !== true,
+    width: animationStyles?.width || "1rem",
+    height: animationStyles?.height || "1rem",
+    animationData: theLoaderPrimary2,
+  };
 
-  let iconToShow =null;
+  let iconToShow = null;
   if (loader) {
-  iconToShow = <Animation {...commonProps} />;
-}
-  else if (icon) {
-    iconToShow = iconRender(icon,iconColor || MonochromeIconColor, "1rem", "1rem", `digit-tag-customIcon ${iconClassName}`);;
+    iconToShow = <Animation {...commonProps} />;
+  } else if (icon) {
+    iconToShow = iconRender(icon, iconColor || MonochromeIconColor, "1rem", "1rem", `digit-tag-customIcon ${iconClassName}`);
   } else {
     switch (type) {
       case "error":
-        iconToShow = (
-          <SVG.Error fill={ErrorIconColor} width={"1rem"} height={"1rem"} />
-        );
+        iconToShow = <SVG.Error fill={ErrorIconColor} width={"1rem"} height={"1rem"} />;
         break;
       case "warning":
-        iconToShow = (
-          <SVG.Warning fill={WarningIconColor} width={"1rem"} height={"1rem"} />
-        );
+        iconToShow = <SVG.Warning fill={WarningIconColor} width={"1rem"} height={"1rem"} />;
         break;
       default:
-        iconToShow = (
-          <SVG.CheckCircle
-            fill={type==="success" ? SuccessIconColor : MonochromeIconColor}
-            width={"1rem"}
-            height={"1rem"}
-          />
-        );
+        iconToShow = <SVG.CheckCircle fill={type === "success" ? SuccessIconColor : MonochromeIconColor} width={"1rem"} height={"1rem"} />;
     }
   }
 
   return (
     <div
-      className={`digit-tag-wrapper ${className ? className : ""} ${
-        type || ""
-      } ${stroke ? "stroke" : ""} ${onClick ? "cp" : ""} ${
+      tabIndex={0}
+      className={`digit-tag-wrapper ${className ? className : ""} ${type || ""} ${stroke ? "stroke" : ""} ${onClick ? "cp" : ""} ${
         alignment ? alignment : ""
       }`}
       style={style}
       onClick={onClick}
+      role="button"
+      onKeyDown={(e) => {
+        if (e.key == "Enter" || e.key == " ") {
+          onClick(e);
+        }
+      }}
     >
       {showIcon && iconToShow}
       <span className="digit-tag-text" style={labelStyle}>
@@ -84,8 +78,8 @@ const Tag = ({
 
 Tag.propTypes = {
   className: PropTypes.string,
-  iconClassName:PropTypes.string,
-  iconColor:PropTypes.string,
+  iconClassName: PropTypes.string,
+  iconColor: PropTypes.string,
   label: PropTypes.string.isRequired,
   style: PropTypes.object,
   stroke: PropTypes.bool,
@@ -101,9 +95,9 @@ Tag.defaultProps = {
   showIcon: true,
   labelStyle: {},
   alignment: "center",
-  iconColor:"",
-  iconClassName:"",
-  loader: false
+  iconColor: "",
+  iconClassName: "",
+  loader: false,
 };
 
 export default Tag;

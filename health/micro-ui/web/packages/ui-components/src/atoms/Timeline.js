@@ -69,8 +69,21 @@ const Timeline = ({
   const color = Colors.lightTheme.paper.primary;
 
   return (
-    <div className={`digit-timeline-item ${className || ""} ${variant} ${isError ? "error" : ""}`}>
-      <div className={`timeline-circle ${variant} ${isError ? "error" : ""}`}>
+    <div className={`digit-timeline-item ${className || ""} ${variant} ${isError ? "error" : ""}`}
+      role="group"
+      aria-labelledby={`timeline-label-${label}`}
+    >
+      <div
+        className={`timeline-circle ${variant} ${isError ? "error" : ""}`}
+        role="img"
+        aria-label={
+          isError
+            ? "Step failed"
+            : variant === "completed"
+            ? "Step completed"
+            : `Step ${variant}`
+        }
+      >
         {variant === "completed" && !isError &&  (
           <div className="check-icon">
             <SVG.Check
@@ -126,6 +139,8 @@ const Timeline = ({
                 ? "timeline-additional-elements-inline"
                 : "timeline-additional-elements-column"
             }
+            role="region"
+            aria-label="Additional timeline details"
           >
             {additionalElements.map((element, index) => (
               <div
@@ -143,7 +158,11 @@ const Timeline = ({
           </div>
         )}
         {hasAdditionalElements && additionalElements.length > initialVisibleAdditionalElementsCount && (
-          <div className="timeline-toggle-details" onClick={toggleDetails}>
+          <div className="timeline-toggle-details" onClick={toggleDetails} tabIndex={0} role="button" onKeyDown={(e)=>{
+            if (e.key=="Enter" || e.key==" "){
+              toggleDetails(e)
+            }
+          }}>
             <Button
               label={
                 showDetails

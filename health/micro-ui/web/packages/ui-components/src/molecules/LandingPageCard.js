@@ -19,8 +19,7 @@ const LandingPageCard = ({
   buttonSize,
   onMetricClick,
   centreChildren,
-  endChildren,
-  hideHeaderDivider
+  endChildren
 }) => {
   const navigate = useNavigate();
 
@@ -31,6 +30,14 @@ const LandingPageCard = ({
   const handleLinkClick = ({ link, label, icon }) => {
     link?.includes(`${window?.contextPath}/`) ? navigate(link) : window.location.href = link;
   };
+
+  const handleMetricKeyDown = (e, link, count) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleMetricClick(link, count);
+    }
+  };
+
   const primaryIconColor = Colors.lightTheme.primary[1];
   const secondaryIconColor = Colors.lightTheme.paper.primary;
 
@@ -60,7 +67,7 @@ const LandingPageCard = ({
           </div>
         )}
         {moduleName && (
-          <div className="ladingcard-moduleName">
+          <div className="ladingcard-moduleName" role="heading" aria-level="2">
             {StringManipulator(
               "TOSENTENCECASE",
               StringManipulator("TRUNCATESTRING", moduleName, {
@@ -83,16 +90,20 @@ const LandingPageCard = ({
           </div>
         )}
       </div>
-      {!hideHeaderDivider && (
+      {!hideDivider && (
         <Divider className="digit-landingpage-divider" variant={"small"} />
       )}
       {metrics && metrics.length > 0 && (
-        <div className={`metric-container ${metricAlignment || ""}`}>
+        <div className={`metric-container ${metricAlignment || ""}`} role="group" aria-label="Metrics">
           {metrics.map((metric, index) => (
             <div
               key={index}
               className={`metric-item ${metricAlignment || ""}`}
               onClick={() => handleMetricClick(metric?.link, metric?.count)}
+              onKeyDown={(e) => handleMetricKeyDown(e, metric?.link, metric?.count)}
+              role={metric?.link ? "button" : "group"}
+              tabIndex={metric?.link ? 0 : -1}
+              aria-label={`${metric?.label || 'Metric'}: ${metric?.count || 'No count'}`}
             >
               {metric?.count && (
                 <div className="metric-count">{metric?.count}</div>
@@ -120,7 +131,9 @@ const LandingPageCard = ({
           <Divider className="digit-landingpage-divider" variant={"small"} />
         )}
       {centreChildren && centreChildren.length > 0 && (
-        <div className={"landingpagecard-section"}>{centreChildren}</div>
+        <div className={"landingpagecard-section"} role="group" aria-label="Additional content">
+          {centreChildren}
+        </div>
       )}
       {!hideDivider &&
         links &&

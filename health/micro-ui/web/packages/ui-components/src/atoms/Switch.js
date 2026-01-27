@@ -24,6 +24,13 @@ const Switch = ({
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleToggle();
+    }
+  };
+
   return (
     <div
       className={`digit-switch-container ${className || ""} ${
@@ -39,20 +46,20 @@ const Switch = ({
           shapeOnOff ? "shape-onoff" : ""
         } ${disable ? "switch-disabled" : ""}`}
         onClick={handleToggle}
-        tabIndex={0}
+        tabIndex={disable ? -1 : 0}
         style={switchStyle || {}}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            handleToggle();
-          }
-        }}
+        onKeyDown={handleKeyDown}
+        role="switch"
+        aria-checked={isChecked}
+        aria-disabled={disable}
+        aria-label={!label ? `Toggle switch ${isChecked ? "on" : "off"}` : undefined}
       >
         {shapeOnOff && isChecked && (
-          <div className="digit-switch-shape-on"></div>
+          <div className="digit-switch-shape-on" aria-hidden="true"></div>
         )}
-        <div className="digit-switch-toggle"></div>
+        <div className="digit-switch-toggle" aria-hidden="true"></div>
         {shapeOnOff && !isChecked && (
-          <div className="digit-switch-shape-off"></div>
+          <div className="digit-switch-shape-off" aria-hidden="true"></div>
         )}
       </div>
       {!isLabelFirst && (

@@ -157,12 +157,23 @@ const UploadWidget = ({
           }`}
           style={{ display: "flex" }}
           key={index}
+          role="listitem"
+          aria-label={`Uploaded file: ${file?.name}`}
         >
           <div
             className="uploaded-file-container-sub"
             style={{ cursor: "pointer", display: "flex" }}
             onClick={() => {
               handleFileClick(index, file);
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={`View file: ${file?.name}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleFileClick(index, file);
+              }
             }}
           >
             {renderFileIcon(file?.type, fileErrors)}
@@ -192,6 +203,8 @@ const UploadWidget = ({
           <div
             className={`digit-upload-and-download-button ${fileErrors?.error && showErrorCard ? "error-card" : "" }`}
             style={{ display: "flex" }}
+            role="toolbar"
+            aria-label={`Actions for file: ${file?.name}`}
           >
             {showReUploadButton && (
               <Button
@@ -223,6 +236,15 @@ const UploadWidget = ({
             className="digit-uploadWidget-close-icon"
             style={{ display: "flex" }}
             onClick={() => handleFileDelete(file)}
+            role="button"
+            tabIndex={0}
+            aria-label={`Delete file: ${file?.name}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleFileDelete(file);
+              }
+            }}
           >
             <SVG.Close
               fill={fileErrors ? primaryColor : primaryTwo}

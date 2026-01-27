@@ -43,6 +43,14 @@ const Tab = ({
     setMaxWidth(maxItemWidth);
   };
 
+
+  const handleKeyDown = (e, item) => {
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      setActive(item);
+    }
+  };
+
  useEffect(() => {
     calculateMaxWidth();
   }, [configNavItems, activeLink]);
@@ -50,13 +58,25 @@ const Tab = ({
   return (
     <div className={`digit-tab-main ${navClassName}`} style={navStyles}>
       {showNav && (
-        <div className={`digit-tab ${className}`} style={style}>
-          {configNavItems?.map((item, index) => (
+        <div className={`digit-tab ${className}`} style={style}
+          role="tablist"
+          aria-label="Tab navigation"
+        >
+          {configNavItems?.map((item, index) => {
+            const isActive = activeLink === item?.[configItemKey];
+            const tabId = `tab-${item?.[configItemKey]}`;
+            const panelId = `tabpanel-${item?.[configItemKey]}`;
+
+          return (
             <div
-              className={`digit-tab-list ${
-                activeLink === item?.[configItemKey] ? "active" : ""
-              }`}
               key={index}
+              className={`digit-tab-list ${isActive ? "active" : ""}`}
+              role="tab"
+              id={tabId}
+              aria-controls={panelId}
+              aria-selected={isActive}
+              tabIndex={isActive ? 0 : -1}
+              onKeyDown={(e) => handleKeyDown(e, item)}
               onClick={() => setActive(item)}
             >
               <span
@@ -72,7 +92,7 @@ const Tab = ({
                 }
               >
                 {item?.icon && (
-                  <div className="digit-tab-icon">
+                  <div className="digit-tab-icon" aria-hidden="true">
                     {iconRender(
                       item?.icon,
                       activeLink === item?.[configItemKey]
@@ -92,7 +112,8 @@ const Tab = ({
                 </div>
               </span>
             </div>
-          ))}
+          )
+        })}
         </div>
       )}
       {children}

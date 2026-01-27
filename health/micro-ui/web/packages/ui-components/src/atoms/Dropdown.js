@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { SVG } from "./SVG";
 import TreeSelect from "./TreeSelect";
 import { CustomSVG } from "./CustomSVG";
@@ -146,12 +147,115 @@ const Dropdown = (props) => {
   const [isActive, setIsActive] = useState(-1);
   const [forceSet, setforceSet] = useState(0);
   const [optionIndex, setOptionIndex] = useState(-1);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const optionRef = useRef(null);
   const dropdownComponentRef = useRef(null);
   const menuRef = useRef(null); 
   const selectorRef = useRef(null);
   const hasCustomSelector = props.customSelector ? true : false;
   const t = props.t || translateDummy;
+
+  // Generate unique ID for tracking (single source of truth)
+  // ID Pattern: screenPath + composerType + composerId + sectionId + name + type
+  const fieldId = Digit?.Utils?.generateUniqueId?.({
+    screenPath: props?.screenPath || "",
+    composerType: props?.composerType || "standalone",
+    composerId: props?.composerId || "",
+    sectionId: props?.sectionId || "",
+    name: props?.name || props?.optionKey || "dropdown",
+    type: "dropdown",
+    id: props?.id
+  }) || props?.id || props?.name;
+
+  // Helper function to check if element is visible within all scroll ancestors
+  const isElementVisibleInScrollParents = (element) => {
+    if (!element) return false;
+
+    const rect = element.getBoundingClientRect();
+    let parent = element.parentElement;
+
+    while (parent) {
+      const parentStyle = window.getComputedStyle(parent);
+      const overflowY = parentStyle.overflowY;
+      const overflow = parentStyle.overflow;
+
+      // Check if parent has vertical scrolling enabled
+      const hasVerticalScroll =
+        overflowY === 'auto' ||
+        overflowY === 'scroll' ||
+        overflow === 'auto' ||
+        overflow === 'scroll';
+
+      // Also check if parent actually has scrollable content (scrollHeight > clientHeight)
+      const isActuallyScrollable = hasVerticalScroll && parent.scrollHeight > parent.clientHeight;
+
+      if (isActuallyScrollable) {
+        const parentRect = parent.getBoundingClientRect();
+        // Check if element is outside the scrollable parent's visible area
+        if (rect.bottom <= parentRect.top || rect.top >= parentRect.bottom) {
+          return false;
+        }
+      }
+      parent = parent.parentElement;
+    }
+
+    // Also check viewport visibility
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    if (rect.bottom <= 0 || rect.top >= viewportHeight) {
+      return false;
+    }
+
+    return true;
+  };
+
+  // Update dropdown position when it opens or on scroll/resize (only when using portal)
+  useEffect(() => {
+    // Skip if portal is disabled - no need to track position or visibility
+    if (props.disablePortal) return;
+
+    // Only check visibility on scroll/resize, not on initial position update
+    const updatePositionOnScroll = () => {
+      if (dropdownStatus && dropdownComponentRef.current) {
+        // Check if the input field is visible within scroll parents and viewport
+        if (!isElementVisibleInScrollParents(dropdownComponentRef.current)) {
+          // Remove the mousedown listener before closing to prevent it from blocking reopening
+          document.removeEventListener("mousedown", handleClick, false);
+          setDropdownStatus(false);
+          return;
+        }
+
+        const rect = dropdownComponentRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width
+        });
+      }
+    };
+
+    // Initial position update without visibility check
+    const setInitialPosition = () => {
+      if (dropdownComponentRef.current) {
+        const rect = dropdownComponentRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width
+        });
+      }
+    };
+
+    if (dropdownStatus) {
+      setInitialPosition();
+      window.addEventListener("scroll", updatePositionOnScroll, true);
+      window.addEventListener("resize", updatePositionOnScroll);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", updatePositionOnScroll, true);
+      window.removeEventListener("resize", updatePositionOnScroll);
+    };
+  }, [dropdownStatus, props.disablePortal]);
 
 
   const scrollIntoViewIfNeeded = () => {
@@ -249,15 +353,53 @@ const Dropdown = (props) => {
     setFilterVal(val);
   }
 
+  // Filter options - for nested dropdowns, also search within child options
   let filteredOption =
-    (props.option &&
-      props.option?.filter(
-        (option) =>
-          t(option[props?.optionKey])
-            ?.toUpperCase()
-            ?.indexOf(filterVal?.toUpperCase()) > -1
-      )) ||
-    [];
+    props.variant === "nesteddropdown" || props.variant === "treedropdown"
+      ? filterVal?.length > 0
+        ? props.option
+            ?.map((option) => {
+              const optionName = t(option[props?.optionKey])?.toUpperCase() || "";
+              const searchVal = filterVal?.toUpperCase();
+              const categoryMatches = optionName.indexOf(searchVal) > -1;
+
+              if (option?.options && option.options.length > 0) {
+                // Search within nested options
+                const matchingNestedOptions = option?.options?.filter(
+                  (nestedOption) =>
+                    t(nestedOption[props?.optionKey])
+                      ?.toUpperCase()
+                      ?.indexOf(searchVal) > -1
+                );
+
+                // Include category if category name matches OR any children match
+                if (categoryMatches) {
+                  // Category matches - show all children
+                  return option;
+                } else if (matchingNestedOptions.length > 0) {
+                  // Children match - show category with only matching children
+                  return {
+                    ...option,
+                    options: matchingNestedOptions,
+                  };
+                }
+              } else if (categoryMatches) {
+                // Non-nested option that matches
+                return option;
+              }
+
+              return null;
+            })
+            ?.filter(Boolean) || []
+        : props.option || []
+      : (props.option &&
+          props.option?.filter(
+            (option) =>
+              t(option[props?.optionKey])
+                ?.toUpperCase()
+                ?.indexOf(filterVal?.toUpperCase()) > -1
+          )) ||
+        [];
   function selectOption(ind) {
     const optionsToSelect =
       props.variant === "nesteddropdown" || props.variant === "treedropdown"
@@ -332,6 +474,12 @@ const Dropdown = (props) => {
           props.variant ? props?.variant : ""
         } ${index === optionIndex ? "keyChange" : ""}`}
         key={index}
+        role="button"
+        onKeyDown={(e)=>{
+          if (e.key=="Enter" || e.key==" "){
+            onSelect(option)
+          }
+        }}
         onClick={() => onSelect(option)}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
@@ -466,6 +614,12 @@ const Dropdown = (props) => {
           className={`header-dropdown-label ${props?.theme || ""}`}
           onClick={menuSwitch}
           ref={selectorRef}
+          role="button"
+          aria-expanded={menuStatus}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") menuSwitch();
+          }}
         >
           {props?.profilePic && (
             <span
@@ -510,6 +664,13 @@ const Dropdown = (props) => {
               ? dropdownSwitch
               : null
           }
+          role="button"
+          tabIndex={0}
+          aria-expanded={dropdownStatus}
+          aria-label="Select an option"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") dropdownSwitch();
+          }}
         >
           <TextField
             variant={props?.variant}
@@ -518,7 +679,7 @@ const Dropdown = (props) => {
             setFilter={setFilter}
             forceSet={forceSet}
             setforceSet={setforceSet}
-            id={props?.id}
+            id={fieldId}
             setOptionIndex={setOptionIndex}
             keepNull={props.keepNull}
             selectedVal={
@@ -591,13 +752,23 @@ const Dropdown = (props) => {
           />
         </div>
       )}
-      {!hasCustomSelector && !props?.profilePIc && dropdownStatus ? (
-        props.optionKey ? (
+      {!hasCustomSelector && !props?.profilePIc && dropdownStatus && (() => {
+        const dropdownContent = props.optionKey ? (
           <div
             id="jk-dropdown-unique"
             className={`digit-dropdown-options-card`}
-            style={{ ...props.optionCardStyles }}
+            style={{
+              ...(props.disablePortal ? {} : {
+                position: "absolute",
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
+                width: dropdownPosition.width || "auto",
+                zIndex: 999999,
+              }),
+              ...props.optionCardStyles,
+            }}
             ref={optionRef}
+            role="listbox"
           >
             {props.variant === "treedropdown" ? (
               <TreeSelect
@@ -632,12 +803,23 @@ const Dropdown = (props) => {
           <div
             className="digit-dropdown-options-card"
             style={{
-              ...props.optionCardStyles,
-              overflow: "scroll",
-              maxHeight: "350px",
+              ...(props.disablePortal ? {
+                overflow: "scroll",
+                maxHeight: "350px",
+              } : {
+                position: "absolute",
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
+                width: dropdownPosition.width || "auto",
+                zIndex: 999999,
+                overflow: "scroll",
+                maxHeight: "350px",
+              }),
+               ...props.optionCardStyles,
             }}
             id="jk-dropdown-unique"
             ref={optionRef}
+            role="listbox"
           >
             {props.option
               ?.filter(
@@ -648,24 +830,37 @@ const Dropdown = (props) => {
                 return (
                   <p
                     key={index}
+                    role="option"
+                    aria-selected={index === optionIndex}
+                    onClick={() => onSelect(option)}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        onSelect(option);
+                    }}
                     style={
                       index === optionIndex
                         ? {
-                            opacity: 1,
-                            backgroundColor:
-                              "rgba(238, 238, 238, var(--bg-opacity))",
-                          }
+                          opacity: 1,
+                          backgroundColor:
+                            "rgba(238, 238, 238, var(--bg-opacity))",
+                        }
                         : {}
                     }
-                    onClick={() => onSelect(option)}
                   >
                     {option}
                   </p>
                 );
               })}
           </div>
-        )
-      ) : null}
+        );
+
+        // Use portal only if not disabled and document exists
+        if (!props.disablePortal && typeof document !== "undefined") {
+          return createPortal(dropdownContent, document.body);
+        }
+        return dropdownContent;
+      })()}
     </div>
   );
 };
@@ -679,12 +874,14 @@ Dropdown.propTypes = {
   optionKey: PropTypes.any,
   select: PropTypes.any,
   t: PropTypes.func,
+  disablePortal: PropTypes.bool,
 };
 
 Dropdown.defaultProps = {
   customSelector: null,
   showArrow: true,
   isSearchable: true,
+  disablePortal: false,
 };
 
 export default Dropdown;

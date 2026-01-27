@@ -6,6 +6,14 @@ import PropTypes from "prop-types";
 const CollapseAndExpandGroups = ({ children, groupElements = false, groupHeader = "", headerLabel = "", headerValue = "", customClass = "" }) => {
   const { t } = useTranslation();
   const [collapse, setCollapse] = useState(true);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setCollapse((prev) => !prev);
+    }
+  };
+
   return (
     <div className={groupElements ? `digit-expand-collapse-wrapper ${customClass}` : `${customClass}`}>
       {groupHeader && <header style={{ marginBottom: "0px", fontSize: "24px" }}>{t(groupHeader)}</header>}
@@ -13,7 +21,12 @@ const CollapseAndExpandGroups = ({ children, groupElements = false, groupHeader 
         <div className="digit-expand-collapse-header">
           <span className="label">{headerLabel}</span>
           <span className="value">{headerValue}</span>
-          <div onClick={() => setCollapse((prev) => !prev)} className="digit-icon-toggle ">
+          <div onClick={() => setCollapse((prev) => !prev)} className="digit-icon-toggle "
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-expanded={!collapse}
+          >
             {!collapse && (
               <span>
                 <SVG.ArrowUpward />

@@ -24,6 +24,15 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
       <div
         className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} level-${level}`}
         onClick={option.options ? handleToggleDropdown : handleSelect}
+        tabIndex={0}
+        aria-expanded={option.options ? isExpanded : undefined}
+        aria-label={t(option[optionsKey])}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            option.options ? handleToggleDropdown(e) : handleSelect(e);
+          }
+        }}
       >
         {option.options && (
           <div className="digit-toggle-dropdown">
@@ -124,6 +133,16 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
         } ${allChildrenSelected ? "all-child-selected" : ""} level-${level}`}
         style={{ gap: `${level !== 0 ? 12 : 4}px` }}
         onClick={!option.options ? handleSelect : handleToggleDropdown}
+        role="button"
+        tabIndex={0}
+        aria-expanded={option.options ? isExpanded : undefined}
+        aria-label={t(option[optionsKey])}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            !option.options ? handleSelect(e) : handleToggleDropdown(e);
+          }
+        }}
       >
         {option.options && (
           <div
@@ -156,6 +175,16 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
               e.stopPropagation();
               handleSelect();
             }}
+          role="checkbox"
+          aria-checked={allChildrenSelected || isSelected(option)}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSelect(e);
+            }
+          }}
           style={{ marginRight: `${level == 0 ? 8 : 0}px` }}
         >
           {isIntermediate() ? (

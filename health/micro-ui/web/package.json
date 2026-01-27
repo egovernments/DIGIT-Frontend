@@ -12,7 +12,8 @@
     "packages/ui-components",
     "packages/modules/open-payment",
     "packages/modules/PublicServices",
-    "packages/modules/ServiceDesigner"
+    "packages/modules/ServiceDesigner",
+    "packages/modules/core"
   ],
   "homepage": "/digit-studio/",
   "husky": {},
@@ -51,7 +52,6 @@
     "@egovernments/digit-ui-module-public-services": "0.0.1",
     "@egovernments/digit-ui-module-service-designer": "0.0.1",
     "@egovernments/digit-ui-module-open-payment": "0.0.5",
-    "@egovernments/digit-ui-module-hrms": "1.8.17",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
     "cross-env": "^7.0.3",
@@ -95,8 +95,8 @@
     "dev:packages": "concurrently \"npm run dev:css\" \"npm run dev:campaign\"",
     "dev:css": "cd packages/css && npm run start",
     "dev:campaign": "cd packages/modules/campaign-manager && npm run build:dev -- --watch",
-    "build": "npm run build:packages && webpack --config webpack.prod.js",
-    "build2": "npm run build2:css && npm run build2:ui-components && npm run build2:open-payment && npm run build2:public-services && npm run build2:service-designer && webpack --config webpack.prod.js",
+    "build": "npm run build2 && webpack --config webpack.prod.js",
+    "build2": "npm run build2:css && npm run build2:ui-components && npm run build2:core && npm run build2:open-payment && npm run build2:public-services && npm run build2:service-designer && webpack --config webpack.prod.js",
     "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
     "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
     "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build",
@@ -105,6 +105,7 @@
     "build2:open-payment": "cd packages/modules/open-payment && npm run build",
     "build2:public-services": "cd packages/modules/PublicServices && npm run build",
     "build2:service-designer": "cd packages/modules/ServiceDesigner && npm run build",
+    "build2:core": "cd packages/modules/core && npm run build",
     "clean": "rm -rf node_modules build dist && find packages -name node_modules -type d -exec rm -rf {} + 2>/dev/null || true",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },

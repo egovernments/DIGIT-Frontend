@@ -14,6 +14,13 @@ import InboxSearchComposer from "./InboxSearchComposer";
 import FormComposerCitizen from "./FormComposerCitizen";
 import AppLocalisationWrapper from "./app-config-screen-builder/AppLocalisationWrapper";
 import BoundaryFilter from "./BoundaryFilter";
+import {
+  ButtonIdentificationProvider,
+  SectionIdentificationProvider,
+  useButtonIdentification,
+  useButtonId,
+  generateButtonId
+} from "./ButtonIdentificationContext";
 import { useCustomT } from "./app-config-screen-builder/app-config-utils/useCustomT";
 import { setConstantsforAppConfig } from "./app-config-screen-builder/app-config-utils/constants";
 // Local additions - components used by FormComposerV2 and FieldV1
@@ -42,4 +49,10 @@ export {
   // Local additions
   MultiChildFormWrapper,
   UploadAndDownloadDocumentHandler,
+    // Button Identification exports
+  ButtonIdentificationProvider,
+  SectionIdentificationProvider,
+  useButtonIdentification,
+  useButtonId,
+  generateButtonId
 };

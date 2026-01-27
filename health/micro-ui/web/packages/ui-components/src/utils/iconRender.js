@@ -23,11 +23,11 @@ export const iconRender = (iconReq, iconFill, width, height, className) => {
       });
       return svgElement;
     } else {
-      console.warn(`Icon not found, ${iconReq}`);
+      console.warn(`🔍 Icon not found: ${iconReq} - Please check if the icon exists in svg-components`);
       return null;
     }
   } catch (error) {
-    console.warn(`Icon not found, ${iconReq}`);
+    console.warn(`🔍 Icon loading failed: ${iconReq} - ${error.message || 'Unknown error'}`);
     return null;
   }
 };

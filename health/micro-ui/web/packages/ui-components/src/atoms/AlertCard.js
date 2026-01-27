@@ -31,7 +31,11 @@ const AlertCard = ({ label, text, variant, style, textStyle, additionalElements,
   const displayedLabel = StringManipulator("TOTITLECASE", label) || defaultLabel;
 
   return (
-    <div className={`digit-infobanner-wrap ${variant || "default"} ${className || ""}`} style={style}>
+    <div
+      className={`digit-infobanner-wrap ${variant || "default"} ${className || ""}`} style={style}
+      role="alert"
+      aria-live={variant === "error" ? "assertive" : "polite"}
+    >
       <div className={`digit-infobanner-header-wrap ${variant || "default"} ${headerWrapperClassName || ""}`} height="24px">
         {icon}
         <h2 className={`digit-infobanner-header ${headerClassName || ""}`}>{displayedLabel}</h2>

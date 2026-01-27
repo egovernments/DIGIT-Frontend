@@ -17,9 +17,10 @@ import HeaderComponent from "../atoms/HeaderComponent";
 import { useTranslation } from "react-i18next";
 import { Button, Footer } from "../atoms";
 import ResultsDataTableWrapper from "./ResultsDataTableWrapper";
+import { ButtonIdentificationProvider } from "./ButtonIdentificationContext";
 
 
-const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},showTab,tabData,onTabChange,customizers={}}) => {
+const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},showTab,tabData,onTabChange,customizers={},onClearSearch}) => {
 
     const renderCount = useRef(1); // Initialize render count
 
@@ -229,30 +230,35 @@ const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},
     }
 
     return (
-      <InboxContext.Provider value={{ state, dispatch }}>
-        <div className="digit-inbox-search-composer-header-action-wrapper">
-          {configs?.headerLabel && (
-            <HeaderComponent className="digit-inbox-search-composer-header">
-              {t(configs?.headerLabel)}
-            </HeaderComponent>
-          )}
-          {Digit.Utils.didEmployeeHasAtleastOneRole(
-            configs?.actions?.actionRoles
-          ) && (
-            <Button
-              label={t(configs?.actions?.actionLabel)}
-              variation="secondary"
-              icon="Add"
-              onClick={() => {
-                navigate(
-                  `/${window?.contextPath}/${window.sessionStorage.getItem("userType") || Digit.SessionStorage.get("userType")}/${configs?.actions?.actionLink}`
-                );
-              }}
-              className={"digit-inbox-search-composer-action"}
-              type="button"
-            />
-          )}
-        </div>
+      <ButtonIdentificationProvider
+        composerType="inboxsearchcomposer"
+        composerId={configs?.apiDetails?.moduleName || configs?.type || "inbox"}
+      >
+        <InboxContext.Provider value={{ state, dispatch }}>
+          <div className="digit-inbox-search-composer-header-action-wrapper">
+            {configs?.headerLabel && (
+              <HeaderComponent className="digit-inbox-search-composer-header">
+                {t(configs?.headerLabel)}
+              </HeaderComponent>
+            )}
+            {Digit.Utils.didEmployeeHasAtleastOneRole(
+              configs?.actions?.actionRoles
+            ) && (
+              <Button
+                name="header-action"
+                label={t(configs?.actions?.actionLabel)}
+                variation="secondary"
+                icon="Add"
+                onClick={() => {
+                  navigate(
+                    `/${window?.contextPath}/employee/${configs?.actions?.actionLink}`
+                  );
+                }}
+                className={"digit-inbox-search-composer-action"}
+                type="button"
+              />
+            )}
+          </div>
         <div className="digit-inbox-search-component-wrapper ">
           <div className={`digit-sections-parent ${configs?.type}`}>
             {configs?.sections?.links?.show && (
@@ -279,6 +285,7 @@ const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},
                   showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
                   tabData={tabData}
                   onTabChange={onTabChange}
+                  onClearSearch={onClearSearch}
                 />
               </div>
             )}
@@ -291,6 +298,7 @@ const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},
                   fullConfig={configs}
                   data={data}
                   showTabCount={configs?.sections?.filter?.uiConfig?.showTabCount}
+                  onClearSearch={onClearSearch}
                 />
               </div>
             )}
@@ -304,6 +312,7 @@ const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},
                     fullConfig={configs}
                     data={data}
                     showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
+                    onClearSearch={onClearSearch}
                   />
                 </div>
               </MediaQuery>
@@ -318,6 +327,7 @@ const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},
                     fullConfig={configs}
                     data={data}
                     showTabCount={configs?.sections?.filter?.uiConfig?.showTabCount}
+                    onClearSearch={onClearSearch}
                   />
                 </div>
               </MediaQuery>
@@ -451,50 +461,52 @@ const InboxSearchComposer = ({configs,additionalConfig,onFormValueChange=()=>{},
             onClose={() => setShowToast(null)}
           ></Toast>
         )}
-        {configs?.footerProps?.showFooter &&
-          Digit.Utils.didEmployeeHasAtleastOneRole(
-            configs?.footerProps?.allowedRolesForFooter
-          ) && (
-            <Footer
-              actionFields={configs?.footerProps?.actionFields
-                ?.filter((btnConfig) =>
-                  Digit.Utils.didEmployeeHasAtleastOneRole(
-                    btnConfig?.allowedRoles
+          {configs?.footerProps?.showFooter &&
+            Digit.Utils.didEmployeeHasAtleastOneRole(
+              configs?.footerProps?.allowedRolesForFooter
+            ) && (
+              <Footer
+                actionFields={configs?.footerProps?.actionFields
+                  ?.filter((btnConfig) =>
+                    Digit.Utils.didEmployeeHasAtleastOneRole(
+                      btnConfig?.allowedRoles
+                    )
                   )
-                )
-                ?.map((btnConfig, index) => (
-                  <Button
-                    key={index}
-                    icon={btnConfig?.icon}
-                    label={btnConfig?.label}
-                    type={btnConfig?.type || "button"}
-                    variation={btnConfig?.variation || "primary"}
-                    isSuffix={btnConfig?.isSuffix}
-                    {...btnConfig}
-                    onClick={(event) =>
-                      configModule?.footerActionHandler?.(index, event)
-                    }
-                  />
-                ))}
-              className={configs?.footerProps?.className || ""}
-              maxActionFieldsAllowed={
-                configs?.footerProps?.maxActionFieldsAllowed
-              }
-              setactionFieldsToLeft={
-                configs?.footerProps?.setactionFieldsToLeft
-              }
-              setactionFieldsToRight={
-                configs?.footerProps?.setactionFieldsToRight
-              }
-              sortActionFields={
-                configs?.footerProps?.sortActionFields
-                  ? configs?.footerProps?.sortActionFields
-                  : true
-              }
-              style={configs?.footerProps?.style || {}}
-            />
-        )}
-      </InboxContext.Provider>
+                  ?.map((btnConfig, index) => (
+                    <Button
+                      key={index}
+                      name={`footer-action-${index}`}
+                      icon={btnConfig?.icon}
+                      label={btnConfig?.label}
+                      type={btnConfig?.type || "button"}
+                      variation={btnConfig?.variation || "primary"}
+                      isSuffix={btnConfig?.isSuffix}
+                      {...btnConfig}
+                      onClick={(event) =>
+                        configModule?.footerActionHandler?.(index, event)
+                      }
+                    />
+                  ))}
+                className={configs?.footerProps?.className || ""}
+                maxActionFieldsAllowed={
+                  configs?.footerProps?.maxActionFieldsAllowed
+                }
+                setactionFieldsToLeft={
+                  configs?.footerProps?.setactionFieldsToLeft
+                }
+                setactionFieldsToRight={
+                  configs?.footerProps?.setactionFieldsToRight
+                }
+                sortActionFields={
+                  configs?.footerProps?.sortActionFields
+                    ? configs?.footerProps?.sortActionFields
+                    : true
+                }
+                style={configs?.footerProps?.style || {}}
+              />
+          )}
+        </InboxContext.Provider>
+      </ButtonIdentificationProvider>
     );
 }
 

@@ -75,6 +75,7 @@ async function startDevelopment() {
         "purple,pink,yellow,magenta,blue,cyan",
         '"cd packages/css && npm run build:dev -- --watch"',
         '"cd packages/ui-components && npm run build:dev -- --watch"',
+        '"cd packages/modules/core && npm run build:dev -- --watch"',
         '"cd packages/modules/ServiceDesigner && npm run build:dev -- --watch"',
         '"cd packages/modules/PublicServices && npm run build:dev -- --watch"',
         '"cd packages/modules/open-payment && npm run build:dev -- --watch"',

@@ -4,7 +4,7 @@ RUN apk update && apk upgrade
 RUN apk add --no-cache git>2.30.0
 
 # Build argument to specify which variant to build
-ARG BUILD_VARIANT=core-ui
+ARG BUILD_VARIANT=digit-studio
 ARG WORK_DIR
 
 WORKDIR /app
@@ -29,7 +29,7 @@ RUN yarn install \
 
 # Production stage
 FROM nginx:mainline-alpine
-ARG BUILD_VARIANT=core-ui
+ARG BUILD_VARIANT=digit-studio
 ENV BUILD_VARIANT=${BUILD_VARIANT}
 ENV WORK_DIR=/var/web/${BUILD_VARIANT}
 

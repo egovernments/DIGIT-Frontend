@@ -31,6 +31,9 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors ,disabled})
 
   if (isApiLoading) return <Loader />;
 
+  // Support both old format (props.onChange) and new format (props.field.onChange)
+  const field = props?.field || props;
+
   return (
     <>
       {populators.allowMultiSelect && (
@@ -41,7 +44,7 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors ,disabled})
             props={props} //these are props from Controller
             isPropsNeeded={true}
             onSelect={(e) => {
-              props.onChange(
+              field?.onChange?.(
                 e
                   ?.map((row) => {
                     return row?.[1] ? row[1] : null;
@@ -49,7 +52,7 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors ,disabled})
                   .filter((e) => e)
               );
             }}
-            selected={props?.value}
+            selected={field?.value}
             defaultLabel={t(populators?.defaultText)}
             defaultUnit={t(populators?.selectedText)}
             config={populators}
@@ -71,12 +74,12 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors ,disabled})
           option={options || []}
           key={populators.name}
           optionKey={populators?.optionsKey}
-          value={props.value?.[0]}
+          value={field?.value?.[0]}
           select={(e) => {
-            props.onChange([e], populators.name);
+            field?.onChange?.([e], populators.name);
           }}
-          selected={props.value?.[0] || populators.defaultValue}
-          defaultValue={props.value?.[0] || populators.defaultValue}
+          selected={field?.value?.[0] || populators.defaultValue}
+          defaultValue={field?.value?.[0] || populators.defaultValue}
           t={t}
           errorStyle={errors?.[populators.name]}
           optionCardStyles={populators?.optionsCustomStyle}

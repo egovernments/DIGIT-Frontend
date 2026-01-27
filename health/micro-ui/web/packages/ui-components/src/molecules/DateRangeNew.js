@@ -11,7 +11,7 @@ function isStartDateFocused(focusNumber) {
     return focusNumber === 0;
 }
 
-const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyles, inputRef}) => {
+const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyles, inputRef,optionsCardClassName,dateRangeClassName}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [focusedRange, setFocusedRange] = useState([0, 0]);
     const [selectionRange, setSelectionRange] = useState({
@@ -133,16 +133,16 @@ const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyl
 
     return (
         <>
-            <div className="filter-label" style={{...customStyles}}>{label}</div>
-            <div className="digit-employee-select-wrap" ref={wrapperRef} style={{width:"100%"}}>
+            {label && <div className={`filter-label ${labelClass || ""}`} style={{...customStyles}}>{label}</div>}
+            <div className="digit-employee-select-wrap" ref={wrapperRef} style={{width:"100%",marginBottom:"0rem"}}>
                 <div className="digit-select">
                     <input className="digit-employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} readOnly />
                     <CustomSVG.Calender className="cursorPointer" onClick={() => setIsModalOpen((prevState) => !prevState)} />
                 </div>
                 {isModalOpen && (
-                    <div className="options-card" style={{ overflow: "visible", width: "unset"}}>
+                    <div className={`digit-options-card force-unset-width ${optionsCardClassName || ""}`} style={{ overflow: "visible",marginTop:"0rem"}}>
                         <DateRange
-                            className="pickerShadow"
+                            className={`pickerShadow ${dateRangeClassName || ""}`}
                             focusedRange={focusedRange}
                             ranges={[selectionRange]}
                             rangeColors={["#9E9E9E"]}

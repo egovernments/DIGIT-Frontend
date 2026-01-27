@@ -13,13 +13,26 @@ const ImageOrPDFIcon = ({ source, index, last = false, onClick }) => {
       </a>
     </div>
   ) : (
-    <img key={index} src={source} {...(last ? { className: "last" } : {})} alt="issue thumbnail" onClick={() => onClick(source, index)}></img>
+    <img key={index} src={source} {...(last ? { className: "last" } : {})}
+      alt={`Image`}
+      onClick={() => onClick(source, index)}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick(source, index);
+        }
+      }}
+    />
   );
 };
 
 const DisplayPhotos = (props) => {
   return (
-    <div className={`digit-photos-wrap ${props?.className ? props?.className : ""}`} style={props?.style || {}}>
+    <div className={`digit-photos-wrap ${props?.className ? props?.className : ""}`} style={props?.style || {}}
+      role="group"
+      aria-label="Attached media files"
+    >
       {props.srcs.map((source, index) => {
         return <ImageOrPDFIcon key={index} {...{ source, index, ...props }} last={++index !== props.srcs.length ? false : true} />;
       })}

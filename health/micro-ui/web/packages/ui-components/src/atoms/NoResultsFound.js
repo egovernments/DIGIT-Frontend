@@ -8,8 +8,9 @@ const NoResultsFound = (props) => {
   const iconHeight = props?.height || 262;
   const iconWidth = props?.width || 336;
   return (
-    <div className={`digit-no-data-found ${props?.className ? props?.className : ""}`} style={props?.style}>
+    <div role="status" aria-live="polite" className={`digit-no-data-found ${props?.className ? props?.className : ""}`} style={props?.style}>
       <SVG.NoResultsFoundIcon height={iconHeight} width={iconWidth} />
+      {/* here screen reader will only the span element since svg is decorative element it won't read it  */}
       <span className="digit-error-msg">{t("COMMON_NO_RESULTS_FOUND")}</span>
     </div>
   );

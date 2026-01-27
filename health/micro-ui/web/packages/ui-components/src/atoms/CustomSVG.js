@@ -91,6 +91,16 @@ const ArrowDown = ({ className, onClick, styles, disable,width="18",height="18",
     onClick={onClick}
     width={width}
     height={height}
+    role={onClick ? "button" : "img"}
+    aria-label="Arrow down"
+    aria-disabled={disable ? "true" : undefined}
+    tabIndex={onClick && !disable ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
   >
     <path d="M0 0h24v24H0V0z" fill="none" />
     <path d="M7 10l5 5 5-5H7z" />
@@ -138,6 +148,18 @@ const ArrowBack = ({ className, onClick ,width="18",height="18",fill="black"}) =
     onClick={onClick}
     width={width}
     height={height}
+    role={onClick ? "button" : "img"}
+    aria-label={"Arrow back"}
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z" />
@@ -153,6 +175,18 @@ const ArrowForward = ({ className, onClick,width="18",height = "18",fill ="black
     onClick={onClick}
     width={width}
     height={height}
+    role={onClick ? "button" : "img"}
+    aria-label= "Go forward"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M5.88 4.12L13.76 12l-7.88 7.88L8 22l10-10L8 2z" />
@@ -168,6 +202,18 @@ const ArrowToFirst = ({ className, onClick,width="18",height="18",fill="#505A5F"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Go to first"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M12.41 10.59L7.82 6L12.41 1.41L11 0L5 6L11 12L12.41 10.59ZM0 0H2V12H0V0Z"
@@ -185,6 +231,18 @@ const ArrowToLast = ({ className, onClick,fill="#505A5F",width="18",height="18" 
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Go to Last"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M0.589844 1.41L5.17984 6L0.589844 10.59L1.99984 12L7.99984 6L1.99984 0L0.589844 1.41ZM10.9998 0H12.9998V12H10.9998V0Z"
@@ -230,6 +288,18 @@ const DeleteBtn = ({ className, onClick, fill="white",width="18",height="18" }) 
     onClick={onClick}
     width={width}
     height={height}
+    role={onClick ? "button" : "img"}
+    aria-label= "Delete"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path d="M0 0h24v24H0V0z" fill={fill} />
     <path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z" />
@@ -276,6 +346,16 @@ const StarFilled = ({ className, id, onClick, styles, percentage = 100,fill="#C8
     fill={fill}
     width={width}
     height={height}
+    role={onClick ? "button" : "img"}
+    aria-label= "Star Filled"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    
   >
     <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
       <stop offset="0%" stopColor={fill} stopOpacity={1}></stop>
@@ -311,6 +391,15 @@ const StarEmpty = ({ className, onClick, styles,fill="#C84C0E" ,width="48",heigh
     width={width}
     height={height}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Empty Star"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
   >
     <path d="M0 0h24v24H0V0z" fill="none" />
     <path
@@ -370,6 +459,18 @@ const DocumentIcon = ({fill="#C84C0E" ,width="100",height="100",onClick}) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Document"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM11 14H4V12H11V14ZM14 10H4V8H14V10ZM14 6H4V4H14V6Z"
@@ -505,6 +606,16 @@ const DocumentSVG = ({fill="#505A5F" ,width="80",height="80",onClick}) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     onClick={onClick}
+    role="button"
+    tabIndex={0}
+    aria-label={"Document"}
+    onKeyDown={(e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+        e.preventDefault();
+        onClick(e);
+      }
+    }}
+    style={{ cursor: 'pointer' }}
   >
     <path
       d="M46.6667 6.6665H20C16.3334 6.6665 13.3667 9.6665 13.3667 13.3332L13.3334 66.6665C13.3334 70.3332 16.3 73.3332 19.9667 73.3332H60C63.6667 73.3332 66.6667 70.3332 66.6667 66.6665V26.6665L46.6667 6.6665ZM53.3334 59.9998H26.6667V53.3332H53.3334V59.9998ZM53.3334 46.6665H26.6667V39.9998H53.3334V46.6665ZM43.3334 29.9998V11.6665L61.6667 29.9998H43.3334Z"
@@ -538,7 +649,15 @@ const PDFSvg = ({
   </svg>
 );
 
-const SearchIconSvg = ({ className, onClick,fill="#C84C0E" ,width="24",height="24" }) => (
+
+const SearchIconSvg = ({
+  className,
+  onClick,
+  fill = "#C84C0E",
+  width = "24",
+  height = "24",
+  ariaLabel = "Search"
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -547,6 +666,16 @@ const SearchIconSvg = ({ className, onClick,fill="#C84C0E" ,width="24",height="2
     width={width}
     height={height}
     onClick={onClick}
+    role="button"
+    tabIndex={0}
+    aria-label={ariaLabel}
+    onKeyDown={(e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+        e.preventDefault();
+        onClick(e);
+      }
+    }}
+    style={{ cursor: 'pointer' }}
   >
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
@@ -582,7 +711,14 @@ const RoundedCheck = ({ className,fill="#FFFFFF" ,width="24",height="24" }) => (
   </svg>
 );
 
-const Calender = ({ className, onClick,fill="black" ,width="24",height="24"  }) => (
+const Calender = ({
+  className,
+  onClick,
+  fill = "black",
+  width = "24",
+  height = "24",
+  ariaLabel = "Calendar"
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -591,6 +727,16 @@ const Calender = ({ className, onClick,fill="black" ,width="24",height="24"  }) 
     width={width}
     height={height}
     onClick={onClick}
+    role="button"
+    tabIndex={0}
+    aria-label={ariaLabel}
+    onKeyDown={(e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+        e.preventDefault();
+        onClick(e);
+      }
+    }}
+    style={{ cursor: 'pointer' }}
   >
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z" />
@@ -612,7 +758,15 @@ const Phone = ({ className, fillcolor, style,fill="#C84C0E" ,width="24",height="
   </svg>
 );
 
-const FilterSvg = ({ className,style,onClick,fill="#C84C0E" ,width="24",height="24" }) => (
+const FilterSvg = ({
+  className,
+  style,
+  onClick,
+  fill = "#C84C0E",
+  width = "24",
+  height = "24",
+  ariaLabel = "Filter"
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill={fill}
@@ -620,8 +774,17 @@ const FilterSvg = ({ className,style,onClick,fill="#C84C0E" ,width="24",height="
     height={height}
     viewBox="0 0 24 24"
     className={className}
-    style={style}
+    style={{ ...style, cursor: 'pointer' }}
     onClick={onClick}
+    role="button"
+    tabIndex={0}
+    aria-label={ariaLabel}
+    onKeyDown={(e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+        e.preventDefault();
+        onClick(e);
+      }
+    }}
   >
     <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
   </svg>
@@ -736,6 +899,15 @@ const SortDown = (style,onClick,fill="#C84C0E" ,width="24",height="24") => (
     viewBox="0 0 24 24"
     width={width}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Sort Down"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
     fill={fill}
   >
     <rect fill="none" height="24" width="24" />
@@ -753,6 +925,15 @@ const SortUp = (style,onClick,fill="#C84C0E" ,width="24",height="24") => (
     width={width}
     fill={fill}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Sort Up"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
   >
     <rect fill="none" height="24" width="24" />
     <path d="M5,9l1.41,1.41L11,5.83V22H13V5.83l4.59,4.59L19,9l-7-7L5,9z" />
@@ -798,6 +979,18 @@ function CloseSvg({ onClick,fill="#C84C0E" ,width="24",height="24" }) {
       viewBox="0 0 24 24"
       width={width}
       onClick={onClick}
+      role={onClick ? "button" : "img"}
+      aria-label= "Close"
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(e);
+        }
+      } : undefined}
+      style={{ 
+        cursor: onClick ? 'pointer' : 'default'
+      }}
       fill={fill}
     >
       <path d="M0 0h24v24H0z" fill="none" />
@@ -841,6 +1034,15 @@ const DownloadIcon = ({ styles, className, onClick, fill = "#505A5F",width="19",
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Download"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
   >
     <path
       d="M18.8337 8.5H13.5003V0.5H5.50033V8.5H0.166992L9.50033 17.8333L18.8337 8.5ZM0.166992 20.5V23.1667H18.8337V20.5H0.166992Z"
@@ -900,6 +1102,17 @@ const Ellipsis = ({ className, onClick,fill="#B1B4B6" ,width="4",height="16" }) 
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2C0 3.1 0.9 4 2 4ZM2 6C0.9 6 0 6.9 0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6ZM2 12C0.9 12 0 12.9 0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12Z"
@@ -950,6 +1163,18 @@ const FilterIcon = ({ onClick,fill="#505A5F" ,width="22",height="22" }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Filter"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M0.666904 2.48016C3.36024 5.9335 8.33357 12.3335 8.33357 12.3335V20.3335C8.33357 21.0668 8.93357 21.6668 9.6669 21.6668H12.3336C13.0669 21.6668 13.6669 21.0668 13.6669 20.3335V12.3335C13.6669 12.3335 18.6269 5.9335 21.3202 2.48016C22.0002 1.60016 21.3736 0.333496 20.2669 0.333496H1.72024C0.613571 0.333496 -0.0130959 1.60016 0.666904 2.48016Z"
@@ -1130,8 +1355,17 @@ const WhatsappIcon = ({fill="#C84C0E" ,width="24",height="24"}) => (
 );
 
 const EmailIcon = ({fill="#C84C0E" ,width="20",height="16"}) => (
-  <svg width={width} height={height} viewBox="0 0 44 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M36.668 6.83398H7.33464C5.31797 6.83398 3.6863 8.37148 3.6863 10.2507L3.66797 30.7507C3.66797 32.6298 5.31797 34.1673 7.33464 34.1673H36.668C38.6846 34.1673 40.3346 32.6298 40.3346 30.7507V10.2507C40.3346 8.37148 38.6846 6.83398 36.668 6.83398ZM36.668 30.7507H7.33464V13.6673L22.0013 22.209L36.668 13.6673V30.7507ZM22.0013 18.7923L7.33464 10.2507H36.668L22.0013 18.7923Z" fill={fill}/>
+  <svg
+    width={width}
+    height={height}
+    viewBox="0 0 20 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M18 0H2C0.9 0 0.00999999 0.9 0.00999999 2L0 14C0 15.1 0.9 16 2 16H18C19.1 16 20 15.1 20 14V2C20 0.9 19.1 0 18 0ZM18 4L10 9L2 4V2L10 7L18 2V4Z"
+      fill={fill}
+    />
   </svg>
 );
 
@@ -3107,6 +3341,18 @@ const XlsxFile = ({ className = "", fill = "none", style = {},width="38",height=
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Xlsx File "
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path d="M5.5 31.0801H3L5.5 33.5801V31.0801Z" fill="#006C36" />
     <path
@@ -3150,6 +3396,15 @@ const DocFile = ({ className = "", fill = "none", styles = {},width="33",height=
     style={styles}
     xmlns="http://www.w3.org/2000/svg"
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "Document File"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
   >
     <path d="M2.5 30.0801H0L2.5 32.5801V30.0801Z" fill="#064B8C" />
     <path
@@ -3178,6 +3433,18 @@ const PdfFile = ({ className = "", fill = "none", style = {},width="33",height="
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "PDF File"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M29.8008 30.0801H32.3008L29.8008 32.5801V30.0801Z"
@@ -3205,6 +3472,18 @@ const JpgFile = ({ className = "", fill = "none", style = {} ,width="33",height=
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    aria-label= "JPG File"
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path d="M2.5 30.0801H0L2.5 32.5801V30.0801Z" fill="#8C5606" />
     <path
@@ -3230,6 +3509,17 @@ const PngFile = ({ className = "", fill = "none", style = {} ,width="34",height=
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    role={onClick ? "button" : "img"}
+    tabIndex={onClick ? 0 : undefined}
+    onKeyDown={onClick ? (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick(e);
+      }
+    } : undefined}
+    style={{ 
+      cursor: onClick ? 'pointer' : 'default'
+    }}
   >
     <path
       d="M30.7461 30.0801H33.2461L30.7461 32.5801V30.0801Z"

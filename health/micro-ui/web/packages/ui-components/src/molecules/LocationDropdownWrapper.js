@@ -53,6 +53,9 @@ const LocationDropdownWrapper = ({ populators, formData, props, inputRef, errors
     return <Loader />;
   }
 
+  // Support both old format (props.onChange) and new format (props.field.onChange)
+  const field = props?.field || props;
+
   return (
     <>
       {populators.allowMultiSelect && (
@@ -66,7 +69,7 @@ const LocationDropdownWrapper = ({ populators, formData, props, inputRef, errors
               if (populators.type === "ward") {
                 setValue("locality", []);
               }
-              props.onChange(
+              field?.onChange?.(
                 e
                   ?.map((row) => {
                     return row?.[1] ? row[1] : null;
@@ -74,7 +77,7 @@ const LocationDropdownWrapper = ({ populators, formData, props, inputRef, errors
                   .filter((e) => e)
               );
             }}
-            selected={props?.value}
+            selected={field?.value}
             defaultLabel={t(populators?.defaultText)}
             defaultUnit={t(populators?.selectedText)}
             config={populators}
@@ -97,12 +100,12 @@ const LocationDropdownWrapper = ({ populators, formData, props, inputRef, errors
           option={options}
           key={populators.name}
           optionKey={populators?.optionsKey}
-          value={props?.value?.[0]}
+          value={field?.value?.[0]}
           select={(e) => {
-            props.onChange([e], populators.name);
+            field?.onChange?.([e], populators.name);
           }}
-          selected={props?.value?.[0] || populators.defaultValue}
-          defaultValue={props?.value?.[0] || populators.defaultValue}
+          selected={field?.value?.[0] || populators.defaultValue}
+          defaultValue={field?.value?.[0] || populators.defaultValue}
           t={t}
           errorStyle={errors?.[populators.name]}
           optionCardStyles={populators?.optionsCustomStyle}

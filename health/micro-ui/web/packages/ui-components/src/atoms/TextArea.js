@@ -7,6 +7,18 @@ import { getUserType } from "../utils/digitUtils";
 const TextArea = (props) => {
   const user_type = getUserType();
 
+  // Generate unique ID for tracking (single source of truth)
+  // ID Pattern: screenPath + composerType + composerId + sectionId + name + type
+  const fieldId = Digit?.Utils?.generateUniqueId?.({
+    screenPath: props?.screenPath || "",
+    composerType: props?.composerType || "standalone",
+    composerId: props?.composerId || "",
+    sectionId: props?.sectionId || "",
+    name: props?.name || "textarea",
+    type: "textarea",
+    id: props?.id
+  }) || props?.id || props?.name;
+
   function textAreaAdjust(event) {
     const element = event.target;
     const initialHeight = 6.25 * parseFloat(getComputedStyle(element).fontSize);
@@ -29,7 +41,7 @@ const TextArea = (props) => {
         name={props.name}
         ref={props.inputRef}
         style={props.style}
-        id={props.id}
+        id={fieldId}
         value={props.value}
         onChange={(event) => {
           if (props?.onChange) {
@@ -38,8 +50,8 @@ const TextArea = (props) => {
         }}
         className={`${
           user_type !== "citizen"
-            ? " light-placeholder digit-employee-card-textarea-field"
-            : " light-placeholder digit-card-textarea-field"
+            ? "digit-employee-card-textarea-field"
+            : "digit-card-textarea-field"
         } ${props?.className ? props?.className : ""} ${
           props.disabled ? "disabled" : ""
         } ${props.nonEditable ? "noneditable" : ""} ${

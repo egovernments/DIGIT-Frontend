@@ -7,7 +7,9 @@ const WorkflowStatusFilter = ({ props, t, populators, formData,inboxResponse,dis
   //from inbox response get the statusMap and show the relevant statuses
   //here need to filter these options based on logged in user(and test based on single roles in every inbox)(new requirement from vasanth)
 
-  
+  // Support both old format (props.onChange) and new format (props.field.onChange)
+  const field = props?.field || props;
+
   const [statusMap,setStatusMap] = useState(null)
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const WorkflowStatusFilter = ({ props, t, populators, formData,inboxResponse,dis
       }))
     }
   }, [inboxResponse])
-  
+
 
   if (!statusMap && !inboxResponse) return <Loader />;
 
@@ -38,10 +40,10 @@ const WorkflowStatusFilter = ({ props, t, populators, formData,inboxResponse,dis
           <CheckBox
             onChange={(e) => {
               const obj = {
-                ...props.value,
+                ...field?.value,
                 [e.target.value]: e.target.checked,
               };
-              props.onChange(obj);
+              field?.onChange?.(obj);
             }}
             value={row.uuid}
             checked={formData?.[populators.name]?.[row.uuid]}
@@ -55,6 +57,7 @@ const WorkflowStatusFilter = ({ props, t, populators, formData,inboxResponse,dis
             style={populators?.labelStyles}
             disabled={disabled}
             isLabelFirst={populators?.isLabelFirst}
+            removeMargin={populators?.removeMargin}
           />
         );
       })}

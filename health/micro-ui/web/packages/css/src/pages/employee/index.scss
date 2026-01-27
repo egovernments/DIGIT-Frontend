@@ -1,4 +1,3 @@
-@import "./digitStudio.scss";
 // @import "./campaignCycle.scss";
 // @import "./coreOverride.scss";
 // @import "./hcmworkbench.scss";
@@ -393,9 +392,9 @@
 //     padding-bottom: 1.5rem;
 //   }
 
-//   .digit-dropdown-options-card {
-//     max-height: 10rem !important;
-//   }
+  .digit-dropdown-options-card {
+    max-height: 10rem !important;
+  }
 
 //   .digit-field {
 //     margin-bottom: 0 !important;
@@ -566,11 +565,11 @@
 //   }
 // }
 
-// .digit-dropdown-employee-select-wrap.language-dropdown {
-//   .digit-dropdown-options-card {
-//     min-width: fit-content;
-//   }
-// }
+.digit-dropdown-employee-select-wrap.language-dropdown {
+  .digit-dropdown-options-card {
+    min-width: fit-content;
+  }
+}
 
 // .digit-popup-wrapper.boundaries-pop-module.default {
 //   width: 36rem;
@@ -1461,14 +1460,14 @@
 //   box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
 // }
 
-// .digit-dropdown-options-card {
-//   box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
-//   max-height: 20vmax;
-//   position: absolute;
-//   background-color: #ffffff;
-//   overflow-x: hidden;
-//   overflow-y: auto;
-// }
+.digit-dropdown-options-card {
+  box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
+  max-height: 20vmax;
+  position: absolute;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
 // .app-preview-card {
 //   .digit-checkbox-container {

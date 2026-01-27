@@ -1,3 +1,4 @@
+import "./index.css"
 import {
   Accordion,
   AccordionList,
@@ -104,6 +105,29 @@ import {
 } from "./atoms";
 
 import { lazyWithFallback } from "./utils/lazyWithFallback";
+
+import {
+  FieldComposer,
+  FormComposerCitizen, 
+  FieldController,
+  Fields,
+  FormComposerV2,
+  Modal,
+  UploadFileComposer,
+  FieldV1,
+  InboxSearchComposer,
+  ResultsTable,
+  ResultsDataTableWrapper,
+  BoundaryFilter,
+  ButtonIdentificationProvider,
+  SectionIdentificationProvider,
+  useButtonIdentification,
+  useButtonId,
+  generateButtonId,
+  AppLocalisationWrapper,
+  useCustomT,
+  setConstantsforAppConfig,
+} from "./hoc";
 
 //exporting all the svg items separately as at few places they are being imported directly
 export const {
@@ -283,8 +307,6 @@ export const {
     AddIconNew,
 } = CustomSVG;
 
-import { FieldComposer, FormComposerCitizen, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer, FieldV1, InboxSearchComposer, ResultsTable, ResultsDataTableWrapper, AppLocalisationWrapper, useCustomT, setConstantsforAppConfig } from "./hoc";
-
 import {
   ApiDropdown,
   CustomDropdown,
@@ -314,14 +336,14 @@ import {
   SummaryCard,
   ResultsDataTable
 } from "./molecules";
-import BoundaryFilter from "./hoc/BoundaryFilter";
+
 
 // import { initCoreLibraries } from "@egovernments/digit-ui-libraries-core";
-// import { initLibraries } from "@egovernments/digit-ui-libraries";
+import { initLibraries } from "@egovernments/digit-ui-libraries";
 
-// initLibraries().then(() => {
-//   console.info("DIGIT Contants enabled");
-// });
+initLibraries().then(() => {
+  console.info("DIGIT Contants enabled");
+});
 
 export {
   Footer,
@@ -454,6 +476,12 @@ export {
   ResultsDataTableWrapper,
   LinkLabel,
   RoundedLabel,
+  // Button Identification System
+  ButtonIdentificationProvider,
+  SectionIdentificationProvider,
+  useButtonIdentification,
+  useButtonId,
+  generateButtonId,
   //Icons
   CustomSVG,
   ErrorBoundary,

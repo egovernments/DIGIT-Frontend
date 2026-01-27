@@ -4,253 +4,54 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [0.2.5] - 2026-01-02
--New SVG ArrowUp added
-
-### [0.2.4] - 2025-12-05
--New components introduced during studio development : MultiChildFormWrapper and UploadAndDownloadDocumentHandler
-- Few enhancements in existing components including formcomposer and inboxsearchcomposer
-- New SVGs introduced in customSVG
-- exporting all the svg items separately in index.js file as at many places they are being imported directly
-
-### [0.2.3] - 2025-10-23
-## 📦 Version Updates
-
-- CSS Library: v0.2.0-beta.15 → v0.2.0-beta.64
-- UI Components: Multiple beta version increments
-
----
-⚛️ Atoms (Basic Components)
-
-Button
-
-- ✨ Enhanced button identifier system
-- 🔧 Improved accessibility attributes
-
-TextInput
-
-- ✨ Added validation prop for custom validation rules
-- ✨ Added pattern prop for input pattern matching
-- 🐛 Improved error handling with try-catch blocks
-- 🔧 Enhanced input field validation logic
-
-Toggle
-
-- ✨ Added vertical variant for vertical toggle layout
-- ✨ Implemented disabled state handling
-- 💅 Updated styling for better visual feedback
-
-Tag
-
-- ✨ Added loader prop for showing loading state
-- 💅 Enhanced tag component styling
-
-RadioButtons
-
-- ✨ Added custom translation options support
-- 🔧 Improved radio button group handling
-
-OTPInput
-
-- 🐛 Minor bug fixes and improvements
-
----
-🧩 Molecules (Composite Components)
-
-CustomDropdown
-
-- ✨ Added MDMS v2 prop support for new data source
-- 🔧 Enhanced dropdown configuration options
-- 🐛 Fixed dropdown text clearing issue after re-render
-
-ApiDropdown
-
-- 🐛 Fixed API dropdown data fetching issues
-- 🔧 Improved error handling for API calls
-
-ResultsDataTable
-
-- ✨ Enhanced to accept custom row components
-- ✨ Added pagination support with total count
-- 🔧 Improved table rendering performance
-
-FilterCard
-
-- ✨ Added translation support for filter labels
-- 💅 Updated filter card styling
-
-SummaryCard
-
-- 🔧 Minor improvements and bug fixes
-
----
-🎯 HOC (Higher Order Components)
-
-InboxSearchComposer
-
-- ✨ Major Enhancement: Added support for custom row components
-- ✨ Improved pagination functionality with proper props
-- 🐛 Fixed multiple API call issues
-- 🐛 Replaced employee with proper userType for actionLink
-- 🔧 Enhanced search and submit functionality
-- 🔧 Better state management for search results
-
-FormComposerV2
-
-- ✨ Added backButton prop for navigation
-- ✨ Enhanced form configuration flexibility
-- 🔧 Improved form submission handling
-
-BoundaryFilter
-
-- ✨ Added multi-select and single-select options
-- ✨ Enhanced boundary selection logic
-- ✨ Improved pre-selection handling
-- ✨ Added frozen data support
-- 🔧 Better hierarchy management
-
----
-🎨 CSS & Styling Updates
-
-Typography
-
-- 📱 Updated responsive typography for tablet and desktop
-- 💅 Enhanced font sizes and line heights
-- 🔧 Improved spacing and margins
-
-Component Styles
-
-- ✨ New styles for BoundaryComponent
-- 💅 Updated button, card, and field styling
-- 💅 Enhanced dropdown and modal styles
-- 📱 Improved mobile responsiveness
-
----
-🏗️ Infrastructure & Build
-
-CI/CD
-
-- ✨ Added comprehensive GitHub Actions workflow
-- ✨ Multi-architecture Docker build support (amd64, arm64)
-- 🔧 Improved build pipeline configuration
-
-Docker
-
-- 📦 Updated Dockerfiles for better optimization
-- 🔧 Enhanced container build process
-
----
-🌍 Localization & Configuration
-
-Localization
-
-- 🐛 Fixed localization search query issues
-- ✨ Enhanced translation support across components
-- 🔧 Improved language switching functionality
-
-App Configuration
-
-- ✨ Better tab change handling
-- 🔧 Optimized configuration loading
-- 🐛 Fixed configuration-related bugs
-
----
-🐛 Notable Bug Fixes
-
-1. Submit button tag rendering fixed
-2. Dropdown text clearing issue resolved
-3. Pagination props properly passed to components
-4. API dropdown data fetching stabilized
-5. Multiple API call prevention in search composers
-6. Form validation improvements
-
----
-⚠️ Potential Breaking Changes
-
-- Components now require specific prop formats for MDMS v2
-- Pagination implementation may require prop updates
-- Custom row components in tables need specific structure
-
----
-📊 Summary
-
-This version represents a major update focusing on:
-- Enhanced component flexibility and configurability
-- Improved error handling and validation
-- Better performance and UX
-- Comprehensive styling updates
-- Robust build and deployment infrastructure
-
-### [0.2.0-rc.1] - 2025-10-23
-## Fix
-- test build
-
-### [0.2.0-beta.100] - 2025-10-23
-## Fix
-- test build
-
-### [0.2.0-beta.68] - 2025-10-17
-## Fix
-- Removed Logout button from Hamburger if user not logged in.
-
-### [0.2.0-beta.67] - 2025-10-16
-## Fix
-- Replaced employee with proper userType for actionLink in InboxSearchComposer
-
-### [0.2.0-beta.66] - 2025-09-12
-## Enhancement
-- Added Pagination fixes for InboxSearchComposer
-
-### [0.2.0-beta.65] - 2025-08-20
-## Added Dependent Field Wrapper and Filter
-- Added documentation
-
-### [0.2.0-beta.64] - 2025-08-05
-## Enhancement
-- Added documentation
-
-### [0.2.0-beta.63] - 2025-08-05
-## Enhancement
-- Submit button tag fixed
-
-### [0.2.0-beta.62] - 2025-08-05
-## Enhancement
-- All buttons to have default logic to autogenerate unique html id attribute
-
-### [0.2.0-beta.61] - 2025-08-05
-## Enhancement
-- Added validation and pattern prop for textinput in formcomposer
-
-### [0.2.0-beta.60] - 2025-08-05
-## Features
-- Fixes for button unique identifier
-
-
-### [0.2.0-beta.51] - 2025-07-16
-## Features
-- app-screen-builder bug bash fixes-> pop up data resetting
-
-### [0.2.0-beta.47] - 2025-07-11
-## Features
-- Added app-screen-builder feature: Introduced a set of components and utilities for dynamic app configuration screens, including AppConfigurationWrapper, AppFieldComposer, AppFieldScreenWrapper, DrawerFieldComposer, and more.
-- All UI component imports in app-screen-builder now use local atoms instead of package imports.
-- Enhanced modularity and maintainability for app configuration flows.
-
-### [0.2.0-beta.44] - 2025-07-03
-## Enhancements
-- Added disabled state for the toggle
-
-### [0.2.0-beta.43] - 2025-07-01
-## Enhancements
-- Added Citizen form composer to render based on routes
-
-### [0.2.0-beta.42] - 2025-07-01
-## Enhancements
-- Added loader in tag
-
-### [0.2.0-beta.41] - 2025-06-27
-## Enhancements
-- Fixed pagination issue in ResultsTableWrapper(for inboxSearchComposer)
+## [2.0.0-dev-15] [18-Dec-2025]
+- Added disableClearAll prop in MultiselectDropdown component
+
+## [2.0.0-dev-05] [27-Nov-2025]
+- Fixed dropdown css issue and Added required prop in Checkbox
+
+## [2.0.0-dev-04] [26-Nov-2025]
+- Added createPortal support to render dropdown options at document body level, preventing options from being clipped by parent containers with overflow: hidden or lower z-index.
+
+## [2.0.0-dev-03] [26-Nov-2025]
+- Updated Controller render props from ({ onChange, ref, value }) to ({ field }) pattern
+- Fixed form inputs not working in InboxSearchComposer and FormComposerV2
+- Fixed MobileDetailsOnClick error in mobile view
+
+## [2.0.0-dev-02] [13-Nov-2025]
+- Added removeMargin prop to CheckBox component
+- Disabled sort icon based on enableColumnSort prop
+- Added onClearSearch callback support in SearchComponent
+- Modified error display logic in FormComposer with showFieldLevelErrors and showFormLevelErrorToast checks.
+- Added custom classnames support in DateRange component
+
+## [2.0.0-dev-01] [29-Aug-2025]
+- Merged with latest react 17 master changes
+
+## [2.0.0-rc19-02] [29-Seo-2025]
+- Advanced webpack optimization for comprehensive UI component library
+
+## [2.0.0-rc19-01] [26-Aug-2025]
+- Advanced webpack optimization for comprehensive UI component library
+- Full CSS modules support with auto-detection for .module.css files
+- Enhanced asset handling for fonts, images, and static resources
+- Performance budget increased to 750KB for full-featured component library
+- Externalized form libraries (react-hook-form, react-datepicker) to prevent conflicts
+- Modern Babel configuration with smart polyfill injection
+- Tree-shaking optimization with module concatenation in production
+- Added build caching and console removal in production
+- Bundle analysis command: yarn build:analyze
+- Optimized dev server with HMR on port 3004
+
+## [0.2.0-beta.40-rc19.02] [28-Jun-2025]
+-New css classes introduced in index.css and submitbar.css for keyboard focus accessibilty
+-Keyboard and screen reader accessibilty implemented to each atoms, molecules and HOCs
+
+## [0.2.0-beta.40-rc19.01] [27-Jun-2025]
+- ui-components(0.2.0-beta.40) from develop Upgraded to react19
+- webpack for build
+- npm packages upgraded and syntax changed to make them react19 compatible
+- react, react-dom, react-router-dom and @tanstack/react-query are in peer dependencies now to avoid version conflict
 
 ### [0.2.0-beta.40] - 2025-06-24
 ## Enhancements

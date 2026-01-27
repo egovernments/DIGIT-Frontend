@@ -347,6 +347,14 @@ const TableMolecule = ({
                             <span
                               className="sort-icon"
                               onClick={() => handleSort(index)}
+                              tabIndex={0}
+                              aria-label="sort"
+                              role="button"
+                              onKeyDown={(e)=>{
+                                if (e.key==="Enter" || e.key===" "){
+                                   handleSort(index)
+                                }
+                              }}
                             >
                               {sortedColumnIndex === index ? (
                                 sortOrder === "ascending" ? (
@@ -428,6 +436,14 @@ const TableMolecule = ({
                             <span
                               className="sort-icon"
                               onClick={() => handleSort(index)}
+                              tabIndex={0}
+                              aria-label="sort"
+                              role="button"
+                              onKeyDown={(e)=>{
+                                if (e.key==="Enter" || e.key===" "){
+                                   handleSort(index)
+                                }
+                              }}
                             >
                               {sortedColumnIndex === index ? (
                                 sortOrder === "ascending" ? (

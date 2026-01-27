@@ -144,6 +144,9 @@ const Button = (props) => {
       disabled={props?.isDisabled || null}
       title={props?.title || ""}
       style={props.style ? props.style : null}
+      aria-label={props?.ariaLabel || formattedLabel}
+      aria-haspopup={props?.type === "actionButton" ? "menu" : undefined}
+      aria-expanded={props?.type === "actionButton" ? dropdownStatus : undefined}
     >
       <div
         id={`${fieldId}-content`}
@@ -198,10 +201,6 @@ Button.propTypes = {
    */
   variation: PropTypes.string,
   /**
-   * button id if any
-   */
-  id: PropTypes.string,
-    /**
    * button icon if any
    */
   icon: PropTypes.string,
@@ -229,6 +228,14 @@ Button.propTypes = {
    * button size
    */
   size: PropTypes.string,
+  /**
+   * Explicit ID for the button (optional - auto-generated if not provided)
+   */
+  id: PropTypes.string,
+  /**
+   * Semantic name for the button (used in auto-ID generation, not localized)
+   */
+  name: PropTypes.string,
 };
 
 Button.defaultProps = {

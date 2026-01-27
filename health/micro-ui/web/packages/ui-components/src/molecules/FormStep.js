@@ -26,13 +26,7 @@ const FormStep = ({
   childrenAtTheBottom = true,
   textInputStyle
 }) => {
-  // ✅ Fixed: v7 syntax - errors comes from formState
-  const { 
-    register, 
-    watch, 
-    handleSubmit,
-    formState: { errors } 
-  } = useForm({
+  const { register, watch, errors, handleSubmit } = useForm({
     defaultValues: _defaultValues,
   });
 
@@ -40,35 +34,27 @@ const FormStep = ({
     onSelect(data);
   };
 
-  const isDisable = isDisabled ? true : config.canDisable && Object.keys(errors).filter((i) => errors[i]).length;
+  var isDisable = isDisabled ? true : config.canDisable && Object.keys(errors).filter((i) => errors[i]).length;
 
   const inputs = config.inputs?.map((input, index) => {
     if (input.type === "text") {
-      // ✅ Fixed: v7 register syntax
-      const { ref, ...registerProps } = register(input.name, input.validation);
-      
       return (
         <React.Fragment key={index}>
           <CardLabel>{t(input.label)}</CardLabel>
           {errors[input.name] && <CardLabelError>{t(input.error)}</CardLabelError>}
           <div className="field-container" style={{ justifyContent: "left" }}>
-            {componentInFront ? (
-              <span className="citizen-card-input citizen-card-input--front">
-                {componentInFront}
-              </span>
-            ) : null}
+            {componentInFront ? <span className="citizen-card-input citizen-card-input--front">{componentInFront}</span> : null}
             <TextInput
               key={index}
               name={input.name}
               value={value}
               onChange={onChange}
-              minlength={input.validation?.minlength}
-              maxlength={input.validation?.maxlength}
+              minlength={input.validation.minlength}
+              maxlength={input.validation.maxlength}
               pattern={input.validation?.pattern}
               title={input.validation?.title}
-              inputRef={ref}
-              {...registerProps}
-              isMandatory={!!errors[input.name]}
+              inputRef={register(input.validation)}
+              isMandatory={errors[input.name]}
               disable={input.disable ? input.disable : false}
               textInputStyle={textInputStyle}
             />
@@ -76,28 +62,13 @@ const FormStep = ({
         </React.Fragment>
       );
     }
-    
-    if (input.type === "textarea") {
-      // ✅ Fixed: v7 register syntax
-      const { ref, ...registerProps } = register(input.name, input.validation);
-      
+    if (input.type === "textarea")
       return (
         <React.Fragment key={index}>
           <CardLabel>{t(input.label)}</CardLabel>
-          <TextArea
-            key={index}
-            name={input.name}
-            value={value}
-            onChange={onChange}
-            inputRef={ref}
-            {...registerProps}
-            maxLength="1024"
-          />
+          <TextArea key={index} name={input.name} value={value} onChange={onChange} inputRef={register(input.validation)} maxLength="1024"></TextArea>
         </React.Fragment>
       );
-    }
-    
-    return null;
   });
 
   return (

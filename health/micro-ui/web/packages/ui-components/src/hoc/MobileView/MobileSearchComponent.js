@@ -29,11 +29,20 @@ const MobileSearchComponent = ({
   const { apiDetails } = fullConfig;
 
   if (fullConfig?.postProcessResult) {
+    //conditions can be added while calling postprocess function to pass different params
     Digit?.Customizations?.[apiDetails?.masterName]?.[
       apiDetails?.moduleName
     ]?.postProcess(data, uiConfig);
   }
 
+  //define session for modal form
+  //uiConfig.type === filter || sort
+  //we need to sync browsersession and mobileSearchSession
+  // const mobileSearchSession = Digit.Hooks.useSessionStorage(`MOBILE_SEARCH_MODAL_FORM_${uiConfig?.type}_${fullConfig?.label}`,
+  // {...uiConfig?.defaultValues}
+  // );
+
+  // const [sessionFormData, setSessionFormData, clearSessionFormData] = mobileSearchSession;
   const [session, setSession, clearSession] = browserSession || [];
 
   const defValuesFromSession =
@@ -41,7 +50,6 @@ const MobileSearchComponent = ({
       ? session?.searchForm
       : session?.filterForm;
 
-  // ✅ Fixed: v7 syntax - errors and dirtyFields come from formState
   const {
     register,
     handleSubmit,
@@ -50,13 +58,15 @@ const MobileSearchComponent = ({
     reset,
     watch,
     control,
+    formState,
+    errors,
     setError,
     clearErrors,
-    formState: { errors, dirtyFields }  // ✅ Correct way in v7
   } = useForm({
+    // defaultValues: {...uiConfig?.defaultValues,...sessionFormData},
     defaultValues: { ...uiConfig?.defaultValues, ...defValuesFromSession },
+    // defaultValues:{...uiConfig?.defaultValues}
   });
-  
   const formData = watch();
 
   const checkKeyDown = (e) => {
@@ -66,14 +76,26 @@ const MobileSearchComponent = ({
     }
   };
 
-  // ✅ Fixed: Use dirtyFields from formState
   useEffect(() => {
-    updatedFields = Object.values(dirtyFields);
-  }, [dirtyFields]);
+    updatedFields = Object.values(formState?.dirtyFields);
+  }, [formState]);
+
+  // //on form value change, update session data with form data
+  // useEffect(()=>{
+  //   if (!_.isEqual(sessionFormData, formData)) {
+  //     // const difference = _.pickBy(sessionFormData, (v, k) => !_.isEqual(formData[k], v));
+  //     setSessionFormData({ ...sessionFormData,...formData,  });
+  //   }
+  // },[formData]);
+
+  // useEffect(()=>{
+  //   clearSessionFormData();
+  // },[]);
 
   const onSubmit = (data) => {
     onClose?.();
     if (updatedFields.length >= uiConfig?.minReqFields) {
+      // here based on screenType call respective dispatch fn
       dispatch({
         type: modalType === "SEARCH" ? "searchForm" : "filterForm",
         state: {
@@ -90,10 +112,12 @@ const MobileSearchComponent = ({
   };
 
   const clearSearch = () => {
+    // clearSessionFormData();
     reset(uiConfig?.defaultValues);
     dispatch({
       type: uiConfig?.type === "filter" ? "clearFilterForm" : "clearSearchForm",
       state: { ...uiConfig?.defaultValues },
+      //need to pass form with empty strings
     });
   };
 
@@ -136,6 +160,7 @@ const MobileSearchComponent = ({
                 <CustomSVG.RefreshIcon />
               </span>
             </span>
+            {/* <span className="clear-search" onClick={clearSearch}><RefreshIcon/></span> */}
             <span onClick={onClose}>
               <CustomSVG.CloseSvg />
             </span>
@@ -259,9 +284,9 @@ const MobileSearchComponent = ({
               className="clear-search-container"
               actionFields={[
                 <div
-                  key="search-buttons"
                   className={`digit-search-button-wrapper ${screenType} inbox  ${uiConfig?.typeMobile}`}
                 >
+                  {/* { uiConfig?.secondaryLabel && <LinkLabel style={{marginBottom: 0, whiteSpace: 'nowrap'}} onClick={clearSearch}>{t(uiConfig?.secondaryLabel)}</LinkLabel> } */}
                   {uiConfig?.secondaryLabel && (
                     <Button
                       label={t(uiConfig?.secondaryLabel)}

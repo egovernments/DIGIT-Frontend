@@ -134,6 +134,8 @@ const SideNav = ({
             className={`digit-sidebar-search-container ${theme || ""} ${
               variant || ""
             }`}
+            role="search"
+            aria-label="Search navigation"
           >
             <TextInput
               type="search"
@@ -150,6 +152,15 @@ const SideNav = ({
             className={`digit-sidebar-search-container-collapsed ${
               theme || ""
             } ${variant || ""}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Expand search"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setHovered(true);
+              }
+            }}
           >
             <SVG.Search
               width={"24px"}
@@ -179,10 +190,20 @@ const SideNav = ({
               isParentOfSelectedItem(currentIndex) ? "selectedAsParent" : ""
             } ${hovered ? "hovered" : "collapsed"}`}
             onClick={() => handleItemClick(item, currentIndex, parentIndex)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleItemClick(item, currentIndex, parentIndex);
+              }
+            }}
             tabIndex={0}
+            aria-selected={isSelected}
+            aria-expanded={item.children ? isExpanded : undefined}
+            aria-label={item.label}
+            aria-level={isTopLevel ? 1 : 2}
           >
             {(isTopLevel || hovered) && (
-              <span className="icon">
+              <span className="icon" aria-hidden="true">
                 {(isSelected || isParentOfSelectedItem(currentIndex)) &&
                 item?.selectedIcon
                   ? IconRender(
@@ -211,6 +232,17 @@ const SideNav = ({
                   e.stopPropagation();
                   handleArrowClick(item, currentIndex, parentIndex);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleArrowClick(item, currentIndex, parentIndex);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label={isExpanded ? "Collapse submenu" : "Expand submenu"}
+                aria-expanded={isExpanded}
               >
                 {isExpanded ? (
                   <SVG.ArrowDropDown
@@ -240,7 +272,11 @@ const SideNav = ({
             )}
           </div>
           {item.children && isExpanded && hovered && (
-            <div className="digit-sidebar-children">
+            <div 
+              className="digit-sidebar-children"
+              role="menu"
+              aria-label={t("Submenu for") + " " + item.label}
+            >
               {renderItems(item.children, currentIndex)}
             </div>
           )}
@@ -276,27 +312,55 @@ const SideNav = ({
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      role="navigation"
+      aria-label="Main navigation"
     >
       {enableSearch && renderSearch()}
       <div
         className={`digit-sidebar-items-container ${theme || ""} ${
           variant || ""
         } ${enableSearch ? "" :"searchDisabled"}`}
+        role="menu"
+        aria-label="Navigation menu"
       >
         {filteredItems.length > 0 ? (
           renderItems(filteredItems)
         ) : (
-          hovered && <div className="digit-msb-no-results">{t("No Results Found")}</div>
+          hovered && <div className="digit-msb-no-results" role="status" aria-live="polite">{t("No Results Found")}</div>
         )}
       </div>
       {hovered && !hideAccessbilityTools && (
         <div className={`digit-sidebar-bottom ${theme || ""} ${variant || ""}`}>
           <div>
-            <div className="digit-sidebar-bottom-item" onClick={()=> onBottomItemClick && onBottomItemClick("Help")}>
+            <div 
+              className="digit-sidebar-bottom-item" 
+              onClick={()=> onBottomItemClick && onBottomItemClick("Help")}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onBottomItemClick && onBottomItemClick("Help");
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label="Help"
+            >
               <SVG.Help width={bottomIconSize} height={bottomIconSize} fill={primaryColor} />
               <span className="digit-sidebar-bottom-item-text">{t("Help")}</span>
             </div>
-            <div className={`digit-sidebar-bottom-item`} onClick={()=> onBottomItemClick && onBottomItemClick("Settings")}>
+            <div 
+              className={`digit-sidebar-bottom-item`} 
+              onClick={()=> onBottomItemClick && onBottomItemClick("Settings")}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onBottomItemClick && onBottomItemClick("Settings");
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label="Settings"
+            >
               <SVG.Settings
                 width={bottomIconSize}
                 height={bottomIconSize}
@@ -304,8 +368,20 @@ const SideNav = ({
               />
               <span className="digit-sidebar-bottom-item-text">{t("Settings")}</span>
             </div>
-            <div className={`digit-sidebar-bottom-item`} onClick={()=>onBottomItemClick && onBottomItemClick("Logout")}>
-              <SVG.Logout width={bottomIconSize} height={bottomIconSize} fill={primaryColor} />
+            <div 
+              className={`digit-sidebar-bottom-item`} 
+              onClick={()=>onBottomItemClick && onBottomItemClick("Logout")}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onBottomItemClick && onBottomItemClick("Logout");
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label="Logout"
+            >
+              <SVG.Logout width={bottomIconSize} height={bottomIconSize} fill={primaryColor}/>
               <span className="digit-sidebar-bottom-item-text">{t("Logout")}</span>
             </div>
             <hr className={`divider`}></hr>
@@ -322,6 +398,20 @@ const SideNav = ({
                 )
                 .focus();
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window
+                  .open(
+                    window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"),
+                    "_blank"
+                  )
+                  .focus();
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label="Go to Home "
           />
         </div>
       )}

@@ -59,7 +59,8 @@ const FieldV1 = ({
   variant,
   defaultValues
 }) => {
-  const { t } = useTranslation();
+  const { t: i18nT } = useTranslation();
+  const t = populators.t || i18nT; // consuming custom translation function if provided, otherwise use i18nT
   let disableFormValidation = false;
   if (sectionFormCategory && selectedFormCategory) {
     disableFormValidation =
@@ -238,7 +239,9 @@ const FieldV1 = ({
               style={populators?.labelStyles}
               disabled={disabled}
               isLabelFirst={populators?.isLabelFirst}
+              removeMargin={populators?.removeMargin}
               id={fieldId}
+              required={required}
             />
           </div>
         );
@@ -497,6 +500,9 @@ const FieldV1 = ({
                 inputRef={field.ref}
                 value={field.value}
                 errorStyle={fieldState.error || errors?.[populators?.name]}
+                labelClass={populators?.labelClass}
+                optionsCardClassName={populators?.optionsCardClassName}
+                dateRangeClassName={populators?.dateRangeClassName}
               />
             )}
           />
@@ -637,7 +643,7 @@ const FieldV1 = ({
                 {showInfoTooltip && (
                   <span
                     style={{ color: "white" }}
-                    className="tooltiptextrm"
+                    className="tooltiptextrm infotext"
                   >
                     {t(infoMessage)}
                   </span>
@@ -656,15 +662,18 @@ const FieldV1 = ({
         className="digit-field"
       >
         {renderField()}
-        <div
-          className={`${charCount && !error && !description
-              ? "digit-charcount"
-              : "digit-description"
+        {(charCount || error || description) && (
+          <div
+            className={`${
+              charCount && !error && !description
+                ? "digit-charcount"
+                : "digit-description"
             }`}
-        >
-          {renderDescriptionOrError()}
-          {renderCharCount()}
-        </div>
+          >
+            {renderDescriptionOrError()}
+            {renderCharCount()}
+          </div>
+        )}
       </div>
     </LabelFieldPair>
   );

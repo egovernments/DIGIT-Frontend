@@ -59,7 +59,7 @@ const UploadFile = (props) => {
           <ButtonSelector
             theme="border"
             label={t("CS_COMMON_CHOOSE_FILE")}
-            style={{ ...(props?.extraStyles ? props?.extraStyles?.buttonStyles : {}), ...(!props?.enableButton ? { opacity: 0.5 } : {})}}
+            style={{ ...(props?.extraStyles ? props?.extraStyles?.buttonStyles : {}), ...(!props?.enableButton ? { opacity: 0.5 } : {}) }}
             textStyles={props?.textStyles}
             type={props.buttonType}
           />
