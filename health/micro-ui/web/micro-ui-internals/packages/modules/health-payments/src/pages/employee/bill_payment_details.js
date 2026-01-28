@@ -8,7 +8,7 @@ import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
 import _, { set } from "lodash";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
-import { formatTimestampToDate } from "../../utils";
+import { downloadFileWithName, formatTimestampToDate,formatTimestampToDateTime } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
@@ -44,6 +44,21 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
+  // --------------------
+// Report (PDF / EXCEL)
+// --------------------
+const [reportType, setReportType] = useState("EXCEL"); // PDF | EXCEL
+const [reportList, setReportList] = useState([]);
+const [reportLoading, setReportLoading] = useState(false);
+const [reportError, setReportError] = useState(null);
+const reportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
+  url: `/health-expense/v1/transactions/report/_search`,
+});
+
+const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
+  url: `/health-expense/v1/transactions/report/_generate`,
+});
+
   // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
   const [limitAndOffset, setLimitAndOffset] = useState({
     limit: rowsPerPage,
@@ -580,7 +595,34 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       refetchBill();
     }
     };
+ 
 
+  // Fetch reports
+  const fetchReports = async (billId) => {
+    setReportLoading(true);
+    try {
+      const res = await reportSearchMutation.mutateAsync({
+        body: {
+          searchCriteria: {
+            billId,
+            tenantId,
+          },
+        },
+      });
+  
+      setReportList(res?.billTransactionReports || []);
+      setReportError(null);
+    } catch (e) {
+      setReportError(
+        e?.response?.data?.Errors?.[0]?.message ||
+        t("HCM_AM_REPORT_FETCH_FAILED")
+      );
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  
   useEffect(() => {
     return () => {
       Object.values(transferPollTimers).forEach(clearTimeout);
@@ -657,6 +699,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           console.warn("Task status check failed for", billId, e);
           setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
         };
+        fetchReports(billId);
       }
     }
   }, [BillData, editBillDetails]);
@@ -706,6 +749,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     }
   }, [AllIndividualsData, billData, activeLink]);
 
+  
   const renderLabelPair = (heading, text, style) => (
     <div className="label-pair">
       <span className="view-label-heading">{t(heading)}</span>
@@ -724,6 +768,110 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   console.log("Rendering buttons for:", activeLink?.code);
   console.log("mob num:", tableData);
+
+ 
+
+// Generate report (single type only)
+const generateReport = async (reportType) => {
+  setReportLoading(true);
+  try {
+    await reportGenerateMutation.mutateAsync({
+      body: {
+        billTransactionReport: {
+          billId: billData?.id,
+          tenantId,
+          type: reportType, // PDF or EXCEL}
+      },
+    }
+  });
+
+    setShowToast({
+      key: "info",
+      label: t("HCM_AM_TXN_REPORT_GENERATION_STARTED"),
+      transitionTime: 10000,
+    });
+
+  } catch (e) {
+    setShowToast({
+      key: "error",
+      label:
+        e?.response?.data?.Errors?.[0]?.message ||
+        t("HCM_AM_TXN_REPORT_GENERATION_FAILED"),
+      transitionTime: 10000,
+    });
+  } finally {
+    setReportLoading(false);
+  }
+};
+
+
+// Get latest COMPLETED report by type
+const getLatestReportByType = (type) => {
+  const completed = reportList
+    .filter(
+      (r) => r.type === type && r.status === "GENERATED"
+    )
+    .sort(
+      (a, b) =>
+        (b.auditDetails?.createdTime || 0) -
+        (a.auditDetails?.createdTime || 0)
+    );
+
+  return completed[0];
+};
+
+const latestPdf = getLatestReportByType("PDF");
+const latestExcel = getLatestReportByType("EXCEL");
+console.log("Latest PDF Report:", latestPdf);
+console.log("Latest EXCEL Report:", latestExcel);
+
+const lastGeneratedAt = reportList.length
+  ? Math.max(
+      ...reportList
+        .filter((r) => r.status === "GENERATED")
+        .map((r) => r.auditDetails?.createdTime || 0)
+    )
+  : null;
+
+  const downloadOptions = [
+    {
+      code: "DOWNLOAD_EXCEL",
+      name: t("HCM_AM_DOWNLOAD_EXCEL"),
+    },
+    {
+      code: "DOWNLOAD_PDF",
+      name: t("HCM_AM_DOWNLOAD_PDF"),
+    },
+  ];
+
+  const handleDownloadSelect = (option) => {
+    try {
+      if (option.code === "DOWNLOAD_EXCEL") {
+        if (!latestExcel?.fileStoreId) throw new Error();
+        downloadFileWithName({
+          fileStoreId: latestExcel.fileStoreId,
+          customName: `Transaction_Report_${billID}`,
+          type: "excel",
+        });
+      }
+  
+      if (option.code === "DOWNLOAD_PDF") {
+        if (!latestPdf?.fileStoreId) throw new Error();
+        downloadFileWithName({
+          fileStoreId: latestPdf.fileStoreId,
+          customName: `Transaction_Report_${billID}`,
+          type: "pdf",
+        });
+      }
+    } catch {
+      setShowToast({
+        key: "error",
+        label: t("HCM_AM_REPORT_DOWNLOAD_FAILED"),
+        transitionTime: 3000,
+      });
+    }
+  };
+
 
   return (
     <React.Fragment>
@@ -763,6 +911,93 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   {t(billData?.status || "NA")}
                 </span>
               )}
+<div >
+  {/* Transaction Report Section */}
+  <div
+    style={{
+      marginTop: "1rem",
+      display: "flex",
+      flexDirection: "column",
+      gap: "6px",
+    }}
+  >
+    {/* Outline Heading */}
+    <span style={{
+      display: "inline-block",
+      border: "1.5px solid #F47738",
+      color: "#F47738",
+      padding: "0.25rem 0.6rem",
+      borderRadius: "4px",
+      fontWeight: 600,
+      fontSize: "18px",
+      width: "fit-content",
+    }}>
+      {t("HCM_AM_TRANSACTION_REPORT")}
+    </span>
+
+    {/* Generated time */}
+    <span className="view-label-text">
+      {lastGeneratedAt ? (
+        <>
+          <strong>{t("HCM_AM_LAST_GENERATED_ON")}{" : "}</strong>
+          {formatTimestampToDateTime(lastGeneratedAt)}
+        </>
+      ) : (
+        <strong>{t("HCM_AM_REPORT_NOT_GENERATED")}</strong>
+      )}
+    </span>
+
+    {/* Error */}
+    {reportError && (
+      <InfoCard
+        variant="error"
+        style={{ marginTop: "6px" }}
+        label={t("HCM_AM_REPORT_ERROR")}
+        text={reportError}
+      />
+    )}
+  </div>
+
+  <div
+  style={{
+    display: "flex",
+    gap: "12px",
+    marginTop: "12px",
+    alignItems: "center",
+  }}
+>
+  {/* Generate */}
+  <Button
+    label={t("HCM_AM_GENERATE_REPORT")}
+    variation="primary"
+    isDisabled={reportLoading}
+    onClick={async () => {
+      try {
+        // await generateReport("EXCEL");
+        await generateReport("PDF");
+      } catch (e) {
+        console.error("Error generating report", e);
+      }
+    }}
+  />
+
+  {/* Download Dropdown */}
+  <Button
+    icon="ArrowDropDown"
+    isSuffix
+    label={t("HCM_AM_DOWNLOAD")}
+    variation="secondary"
+    type="actionButton"
+    options={downloadOptions}
+    optionsKey="name"
+    onOptionSelect={handleDownloadSelect}
+    isDisabled={!latestExcel?.fileStoreId && !latestPdf?.fileStoreId}
+    style={{ minWidth: "10rem" }}
+    showBottom={true}
+  />
+</div>
+</div>
+
               {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                   

@@ -110,7 +110,9 @@ module.exports = function (app) {
     "/health-expense/v1/bill/details/status/_update",
     "/health-expense/v1/task/_status",
     "/health-expense/v1/bill/_verify",
-    "/health-expense/v1/payment/_transfer"
+    "/health-expense/v1/payment/_transfer",
+    "/health-expense/v1/transactions/report/_search",
+    "/health-expense/v1/transactions/report/_generate",
     // "/health-muster-roll/v1/_create",
     // "/health-muster-roll/v1/_estimate"
   ].forEach((location) => app.use(location, createProxy));
