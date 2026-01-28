@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-core",
-  "version": "2.0.0-dev-07",
+  "version": "2.0.0-dev-08",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -21,8 +21,8 @@
     "react-router-dom": "6.25.1"
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "2.0.0-dev-29",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-06",
+    "@egovernments/digit-ui-components": "2.0.0-dev-30",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-07",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-08",
     "react-i18next": "15.0.0",
     "react-redux": "7.2.8",
