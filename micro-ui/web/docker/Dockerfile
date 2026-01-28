@@ -26,7 +26,7 @@ RUN echo "Files in /app/web directory:" && ls -la
 RUN yarn install
 
 # Build the project with increased timeout
-RUN timeout 18000 yarn build:webpack || (echo "Build failed or timed out" && exit 1)
+RUN timeout 18000 yarn build:prod || (echo "Build failed or timed out" && exit 1)
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine

@@ -1,0 +1,79 @@
+{
+  "name": "@egovernments/digit-ui-health-css",
+  "version": "0.1.29-rc19",
+  "license": "MIT",
+  "main": "dist/index.css",
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "engines": {
+    "node": ">=20"
+  },
+  "cssConfig": {
+    "prefix": ""
+  },
+  "scripts": {
+    "generate-theme": "node extract-theme.js",
+    "start": "cross-env NODE_ENV=development webpack --watch --config webpack.config.js",
+    "serve": "cross-env NODE_ENV=development webpack serve --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js",
+    "prepublishOnly": "yarn build",
+    "publish:css-develop": "npm publish --tag core-v0.1",
+    "publish:css": "npm publish --access public",
+    "deploy": "yarn build && cp -R svg dist && cp -R img dist && gh-pages -d dist"
+  },
+  "browserslist": [
+    "> 3%",
+    "last 2 versions"
+  ],
+  "dependencies": {
+    "react-date-picker": "^12.0.1",
+    "react-date-range": "^2.0.1",
+    "react-datepicker": "^8.7.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "cssnano": "^7.0.0",
+    "gh-pages": "6.1.1",
+    "mini-css-extract-plugin": "^2.9.1",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^10.1.0",
+    "postcss-header": "^2.0.0",
+    "postcss-import": "^16.1.0",
+    "postcss-loader": "^8.1.1",
+    "postcss-nested": "^6.0.1",
+    "postcss-preset-env": "^9.6.0",
+    "postcss-scss": "^4.0.9",
+    "sass": "^1.77.8",
+    "sass-loader": "^16.0.0",
+    "tailwindcss": "^3.4.10",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
+  },
+  "resolutions": {
+    "**/minimatch": "7.4.6"
+  },
+  "files": [
+    "dist/index.min.css",
+    "dist/index.css",
+    "svg/**/*.svg",
+    "img/**/*.png",
+    "src/**/*.scss",
+    "src/**/*.css"
+  ],
+  "keywords": [
+    "digit",
+    "egov",
+    "dpg",
+    "hcm",
+    "health",
+    "console",
+    "microplan",
+    "digit-ui",
+    "css"
+  ]
+}

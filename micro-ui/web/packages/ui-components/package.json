@@ -1,0 +1,116 @@
+{
+  "name": "@egovernments/digit-ui-components",
+  "version": "2.0.0-dev-27",
+  "license": "MIT",
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "source": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "homepage": "https://unified-dev.digit.org/storybook/",
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "scripts": {
+    "example": "cd example && npm run start",
+    "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --config webpack.config.js",
+    "build:dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=development --config webpack.config.js",
+    "prepare": "yarn build",
+    "publish:components": "npm publish --tag core-webpack-v0.1",
+    "predeploy": "cd example && yarn install && yarn run build",
+    "deploy": "gh-pages -d example/build",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@storybook/react": "8.6.14",
+    "@storybook/react-webpack5": "8.6.14",
+    "@storybook/addon-docs": "8.6.14",
+    "@storybook/addon-essentials": "8.6.14",
+    "@storybook/addon-interactions": "8.6.14",
+    "@storybook/addon-a11y": "8.6.14",
+    "@storybook/addon-actions": "8.6.14",
+    "@storybook/addon-links": "8.6.14",
+    "@storybook/addon-onboarding": "8.6.14",
+    "@storybook/addon-webpack5-compiler-swc": "3.0.0",
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@storybook/blocks": "8.6.14",
+    "@storybook/node-logger": "6.4.20",
+    "@storybook/test": "8.6.14",
+    "gh-pages": "2.2.0",
+    "husky": "7.0.4",
+    "babel-eslint": "10.1.0",
+    "@babel/plugin-transform-optional-chaining": "^7.23.4",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "babel-loader": "8.0.0",
+    "core-js": "^3.38.1",
+    "cross-env": "7.0.3",
+    "css-loader": "^7.1.2",
+    "lint-staged": "12.3.7",
+    "prop-types": "15.8.1",
+    "storybook": "8.6.14",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^4.10.0",
+    "react-router-dom": "6.25.1",
+    "@tanstack/react-query": "^5.62.16"
+    
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
+    "@egovernments/digit-ui-components-css":"2.0.0-dev-09",
+
+    "@googlemaps/js-api-loader": "1.13.10",
+    "@cyntler/react-doc-viewer": "1.10.3",
+    "autoprefixer": "^10.4.15",
+    "date-fns": "3.6.0",
+    "lodash": "^4.17.21",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "react-data-table-component": "7.6.2",
+    "react-date-range": "2.0.1",
+    "react-datepicker": "^8.4.0",
+    "react-hook-form": "7.52.2",
+    "react-i18next": "15.0.0",
+    "react-lottie": "1.2.4",
+    "react-responsive": "10.0.0",
+    "react-webcam": "7.2.0",
+    "react-table": "7.7.0",
+    "react-drag-drop-files": "2.3.10",
+    "react-dnd": "16.0.1",
+    "react-dnd-html5-backend": "16.0.1",
+    "minimatch": "7.4.6"
+  },
+  "peerDependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "@tanstack/react-query": "^5.62.16",
+    "styled-components": "5.x"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }, 
+  "keywords": [
+    "digit",
+    "core",
+    "components",
+    "dpg",
+    "webpack"
+  ]
+}
