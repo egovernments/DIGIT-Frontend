@@ -1,10 +1,11 @@
 import { BackLink, Loader, FormComposerV2, Toast, useCustomAPIMutationHook } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import SandBoxHeader from "../../../components/SandBoxHeader";
 import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
@@ -13,7 +14,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const reqCreate = {
     url: `/tenant-management/tenant/_create`,
@@ -48,7 +49,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
           });
         },
         onSuccess: async (data) => {
-          history.push({
+          navigate({
             pathname: `/${window?.globalPath}/user/otp`,
             state: { email: data?.Tenants[0]?.email, tenant: data?.Tenants[0]?.code },
           });
@@ -108,7 +109,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       }}
     >
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
-        <BackLink onClick={() => window.history.back()} />
+        <BackLink onClick={() => navigate('/')} />
       </div>
       <FormComposerV2
         onSubmit={onLogin}

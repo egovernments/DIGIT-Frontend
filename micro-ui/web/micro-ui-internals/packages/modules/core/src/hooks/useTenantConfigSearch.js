@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const tenantConfigSearchService = async ({ tenantId, filter, pagination }) => {
   const response = await Digit.CustomService.getResponse({
@@ -12,5 +12,10 @@ const tenantConfigSearchService = async ({ tenantId, filter, pagination }) => {
 };
 
 export const useTenantConfigSearch = ({ tenantId, filter, pagination, config = {} }) => {
-  return useQuery(["SEARCH_TENANT_CONFIG", tenantId, filter, pagination], () => tenantConfigSearchService({ tenantId, filter, pagination }), config);
+  return useQuery({
+    queryKey : ["SEARCH_TENANT_CONFIG", tenantId, filter, pagination],
+    queryFn : () => tenantConfigSearchService({ tenantId, filter, pagination }),
+    ...config
+  }
+  );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Background from "./Background";
 import { Button, Card, CardHeader, CardText } from "@egovernments/digit-ui-components";
 import Header from "./Header";
@@ -11,7 +11,7 @@ const CustomErrorComponent = (props) => {
   const { t } = useTranslation();
   const stateInfo = props.stateInfo;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const ModuleBasedErrorConfig = {
     sandbox: {
       imgUrl: `https://s3.ap-south-1.amazonaws.com/egov-qa-assets/error-image.png`,
@@ -19,7 +19,7 @@ const CustomErrorComponent = (props) => {
       infoMessage: "WRONG_TENANT_SIGN_UP_MESSAGE",
       buttonInfo: "WRONG_TENANT_SIGN_UP_BUTTON",
       action: () => {
-        history.push(`/${window.globalPath}/`);
+        navigate(`/${window.globalPath}/`);
       },
     },
   };

@@ -1,17 +1,67 @@
 import React, { useEffect } from "react";
-import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
-import CitizenApp from "./pages/citizen";
-import EmployeeApp from "./pages/employee";
-// import SignUp from "./pages/employee/SignUp";
-import Otp from "./pages/employee/Otp";
-import ViewUrl from "./pages/employee/ViewUrl";
-import CustomErrorComponent from "./components/CustomErrorComponent";
-import DummyLoaderScreen from "./components/DummyLoader";
-import SignUpV2 from "./pages/employee/SignUp-v2";
-import LoginV2 from "./pages/employee/Login-v2";
+import { Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen",allowedUserTypes=["citizen","employee"] }) => {
-  const history = useHistory();
+// Create lazy components with fallbacks using the utility
+const CitizenApp = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-app" */ "./pages/citizen"),
+  () => require("./pages/citizen").default,
+  { loaderText: "Loading Citizen App..." }
+);
+
+const EmployeeApp = lazyWithFallback(
+  () => import(/* webpackChunkName: "employee-app" */ "./pages/employee"),
+  () => require("./pages/employee").default,
+  { loaderText: "Loading Employee App..." }
+);
+
+const SignUpV2 = lazyWithFallback(
+  () => import(/* webpackChunkName: "sign-up-v2" */ "./pages/employee/SignUp-v2"),
+  () => require("./pages/employee/SignUp-v2").default,
+  { loaderText: "Loading Sign Up..." }
+);
+
+const LoginV2 = lazyWithFallback(
+  () => import(/* webpackChunkName: "login-v2" */ "./pages/employee/Login-v2"),
+  () => require("./pages/employee/Login-v2").default,
+  { loaderText: "Loading Login..." }
+);
+
+const Otp = lazyWithFallback(
+  () => import(/* webpackChunkName: "otp" */ "./pages/employee/Otp"),
+  () => require("./pages/employee/Otp").default,
+  { loaderText: "Loading OTP..." }
+);
+
+const ViewUrl = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-url" */ "./pages/employee/ViewUrl"),
+  () => require("./pages/employee/ViewUrl").default,
+  { loaderText: "Loading View URL..." }
+);
+
+const CustomErrorComponent = lazyWithFallback(
+  () => import(/* webpackChunkName: "custom-error" */ "./components/CustomErrorComponent"),
+  () => require("./components/CustomErrorComponent").default,
+  { loaderText: "Loading Error Component..." }
+);
+
+const DummyLoaderScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "dummy-loader" */ "./components/DummyLoader"),
+  () => require("./components/DummyLoader").default,
+  { loaderText: "Loading..." }
+);
+
+export const DigitApp = ({
+  stateCode,
+  modules,
+  appTenants,
+  logoUrl,
+  logoUrlWhite,
+  initData,
+  defaultLanding = "citizen",
+  allowedUserTypes = ["citizen", "employee"],
+}) => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
   const cityDetails = Digit.ULBService.getCurrentUlb();
@@ -24,6 +74,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
 
   if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
 
+  // Session storage cleanup on route changes
   useEffect(() => {
     if (!pathname?.includes("application-details")) {
       if (!pathname?.includes("inbox")) {
@@ -45,9 +96,10 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
     }
   }, [pathname]);
 
-  history.listen(() => {
+  // Scroll to top on route changes
+  useEffect(() => {
     window?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  });
+  }, [pathname]);
 
   const handleUserDropdownSelection = (option) => {
     option.func();
@@ -72,26 +124,33 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
     pathname,
     initData,
   };
+
   return (
-    <Switch>
-     {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/employee`}>
-        <EmployeeApp {...commonProps} />
-      </Route>}
-      {allowedUserTypes?.some(userType=>userType=="citizen")&& <Route path={`/${window?.contextPath}/citizen`}>
-        <CitizenApp {...commonProps} />
-      </Route>}
-      {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/no-top-bar/employee`}>
-        <EmployeeApp  {...commonProps} noTopBar={true} />
-      </Route>}
-      <Route>
-        <Redirect to={`/${window?.contextPath}/${defaultLanding}`} />
-      </Route>
-    </Switch>
+    <Routes>
+      {allowedUserTypes?.some((userType) => userType === "employee") && (
+        <Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />
+      )}
+      {allowedUserTypes?.some((userType) => userType === "citizen") && (
+        <Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />
+      )}
+      {allowedUserTypes?.some((userType) => userType === "employee") && (
+        <Route path={`/${window?.contextPath}/no-top-bar/employee/*`} element={<EmployeeApp {...commonProps} noTopBar={true} />} />
+      )}
+      <Route path="*" element={<Navigate to={`/${window?.contextPath}/${defaultLanding}`} replace />} />
+    </Routes>
   );
 };
 
-export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" ,allowedUserTypes}) => {
-  // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+export const DigitAppWrapper = ({
+  stateCode,
+  modules,
+  appTenants,
+  logoUrl,
+  logoUrlWhite,
+  initData,
+  defaultLanding = "citizen",
+  allowedUserTypes,
+}) => {
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const userScreensExempted = ["user/error"];
@@ -105,49 +164,41 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
     <div
       className={isUserProfile ? "grounded-container" : "loginContainer"}
       style={
-        isUserProfile ? { padding: 0, paddingTop: CITIZEN ? "0" : mobileView && !CITIZEN ? "3rem" : "80px", marginLeft: CITIZEN || mobileView ? "0" : "40px" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
+        isUserProfile
+          ? {
+              padding: 0,
+              paddingTop: CITIZEN ? "0" : mobileView && !CITIZEN ? "3rem" : "80px",
+              marginLeft: CITIZEN || mobileView ? "0" : "40px",
+            }
+          : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
       }
     >
-      <Switch>
-        <Route exact path={`/${window?.globalPath}/user/invalid-url`}>
-          <CustomErrorComponent />
-        </Route>
-        <Route exact path={`/${window?.globalPath}/user/sign-up`}>
-          <SignUpV2 stateCode={stateCode} />
-        </Route>
-        <Route exact path={`/${window?.globalPath}/user/login`}>
-          <LoginV2 stateCode={stateCode} />
-        </Route>
-        {/* <Route exact path={`/${window?.globalPath}/user/sign-up`}>
-          <SignUp stateCode={stateCode} />
-        </Route> */}
-        <Route exact path={`/${window?.globalPath}/user/otp`}>
-          <Otp />
-        </Route>
-        <Route exact path={`/${window?.globalPath}/user/setup`}>
-          <DummyLoaderScreen />
-        </Route>
-        <Route exact path={`/${window?.globalPath}/user/url`}>
-          <ViewUrl />
-        </Route>
+      <Routes>
+        <Route path={`/${window?.globalPath}/user/invalid-url`} element={<CustomErrorComponent />} />
+        <Route path={`/${window?.globalPath}/user/sign-up`} element={<SignUpV2 stateCode={stateCode} />} />
+        <Route path={`/${window?.globalPath}/user/login`} element={<LoginV2 stateCode={stateCode} />} />
+        <Route path={`/${window?.globalPath}/user/otp`} element={<Otp />} />
+        <Route path={`/${window?.globalPath}/user/setup`} element={<DummyLoaderScreen />} />
+        <Route path={`/${window?.globalPath}/user/url`} element={<ViewUrl />} />
         {window?.globalPath !== window?.contextPath && (
-          <Route path={`/${window?.contextPath}`}>
-            <DigitApp
-              stateCode={stateCode}
-              modules={modules}
-              appTenants={appTenants}
-              logoUrl={logoUrl}
-              logoUrlWhite={logoUrlWhite}
-              initData={initData}
-              defaultLanding={defaultLanding}
-              allowedUserTypes={allowedUserTypes}
-            />
-          </Route>
+          <Route
+            path={`/${window?.contextPath}/*`}
+            element={
+              <DigitApp
+                stateCode={stateCode}
+                modules={modules}
+                appTenants={appTenants}
+                logoUrl={logoUrl}
+                logoUrlWhite={logoUrlWhite}
+                initData={initData}
+                defaultLanding={defaultLanding}
+                allowedUserTypes={allowedUserTypes}
+              />
+            }
+          />
         )}
-        <Route>
-          <Redirect to={`/${window?.globalPath}/user/sign-up`} />
-        </Route>
-      </Switch>
+        <Route path="*" element={<Navigate to={`/${window?.globalPath}/user/sign-up`} replace />} />
+      </Routes>
     </div>
   );
 };

@@ -22,7 +22,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import SideBarMenu from "../../../config/sidebar-menu";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LogoutDialog from "../../Dialog/LogoutDialog";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
@@ -73,7 +73,7 @@ const IconsObject = {
 };
 const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
   const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
@@ -108,16 +108,15 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   }
 
   const redirectToLoginPage = () => {
-    // localStorage.clear();
-    // sessionStorage.clear();
-    history.push(`/${window?.contextPath}/citizen/login`);
+  
+    navigate(`/${window?.contextPath}/citizen/login`);
   };
   const showProfilePage = () => {
-    history.push(`/${window?.contextPath}/citizen/user/profile`);
+    navigate(`/${window?.contextPath}/citizen/user/profile`);
   };
 
   const closeSidebar = () => {
-    history.push(`/${window?.contextPath}/citizen/all-services`);
+    navigate(`/${window?.contextPath}/citizen/all-services`);
   };
 
   let menuItems = [...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee)];
@@ -189,33 +188,32 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
         populators: { onClick: handleLogout },
       },
       {
-        text: (
-          <React.Fragment>
-            {t("CS_COMMON_HELPLINE")}
-            <div className="telephone" style={{ marginTop: "-10%" }}>
-              {storeData?.tenants?.map((i) => {
-                i.code === tenantId ? (
-                  <div className="link">
-                    <a href={`tel:${storeData?.tenants?.[i].contactNumber}`}>{storeData?.tenants?.[i].contactNumber}</a>
-                  </div>
-                ) : (
-                  <div className="link">
-                    <a href={`tel:${storeData?.tenants?.[0].contactNumber}`}>{storeData?.tenants?.[0].contactNumber}</a>
-                  </div>
-                );
-              })}
-              <div className="link">
-                <a href={`tel:${storeData?.tenants?.[0].contactNumber}`}>{storeData?.tenants?.[0].contactNumber}</a>
-              </div>
-            </div>
-          </React.Fragment>
-        ),
-        element: "Helpline",
-        icon: "Phone",
-      },
+  text: (
+    <React.Fragment>
+      {t("CS_COMMON_HELPLINE")}
+      <div className="telephone" style={{ marginTop: "-10%" }}>
+        {storeData?.tenants?.length > 0 && (
+          <div className="link">
+            <a href={`tel:${
+              storeData.tenants.find((tenant) => tenant.code === tenantId)?.contactNumber 
+              || storeData.tenants[0]?.contactNumber 
+              || ''
+            }`}>
+              {storeData.tenants.find((tenant) => tenant.code === tenantId)?.contactNumber 
+               || storeData.tenants[0]?.contactNumber 
+               || t("CS_NA")}
+            </a>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  ),
+  element: "Helpline",
+  icon: "Phone",
+}
     ];
   }
-  Object.keys(linkData)
+  Object.keys(linkData || {})
     ?.sort((x, y) => y.localeCompare(x))
     ?.map((key) => {
       if (linkData[key][0]?.sidebar === `${window.contextPath}-links`) {

@@ -2,7 +2,7 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
@@ -85,7 +85,8 @@ export const CitizenSideBar = ({
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     if (searcher == "") return str;
@@ -154,7 +155,7 @@ export const CitizenSideBar = ({
     setDropDownData(city);
     if (window.location.href.includes(`/${window?.contextPath}/employee/`)) {
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-      history.replace(redirectPath);
+      navigate(redirectPath, { replace: true });
     }
     window.location.reload();
   };
@@ -170,21 +171,21 @@ export const CitizenSideBar = ({
       updatedUrl = isEmployee
         ? url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`)
         : url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`);
-      history.push(updatedUrl);
+      navigate(updatedUrl);
       toggleSidebar();
     } else {
       url[0] === "/"
-        ? history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
-        : history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
+        ? navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
+        : navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
       toggleSidebar();
     }
   };
 
   const redirectToLoginPage = () => {
     if (isEmployee) {
-      history.push(`/${window?.contextPath}/employee/user/language-selection`);
+      navigate(`/${window?.contextPath}/employee/user/language-selection`);
     } else {
-      history.push(`/${window?.contextPath}/citizen/login`);
+      navigate(`/${window?.contextPath}/citizen/login`);
     }
     closeSidebar();
   };
@@ -261,7 +262,7 @@ export const CitizenSideBar = ({
           icon: configEmployeeSideBar[keys[i]][0]?.leftIcon,
           populators: {
             onClick: () => {
-              history.push(configEmployeeSideBar[keys[i]][0]?.navigationURL);
+              navigate(configEmployeeSideBar[keys[i]][0]?.navigationURL);
               closeSidebar();
             },
           },
@@ -294,7 +295,7 @@ export const CitizenSideBar = ({
   }
 
   /*  URL with openlink wont have sidebar and actions    */
-  if (history.location.pathname.includes("/openlink")) {
+  if (location.pathname.includes("/openlink")) {
     profileItem = <span></span>;
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
@@ -314,9 +315,9 @@ export const CitizenSideBar = ({
   }
   const goToHome = () => {
     if (isEmployee) {
-      history.push(`/${window?.contextPath}/employee`);
+      navigate(`/${window?.contextPath}/employee`);
     } else {
-      history.push(`/${window?.contextPath}/citizen`);
+      navigate(`/${window?.contextPath}/citizen`);
     }
   };
   const onItemSelect = ({ item, index, parentIndex }) => {

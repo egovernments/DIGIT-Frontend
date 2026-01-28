@@ -1,35 +1,30 @@
 # Changelog 
 
-## [1.9.10]  [02-JAN-2026]
--userProfile has been changed according to the new api /health-individual/v1
+## ["2.0.0-dev-02"] [24-Nov-2025]
+- Made SideNav and Header's theme and variant configurable via globalConfigs
 
-## [1.9.9]  [24-DEC-2025]
-- **Feature**: Mobile number validation in Login and User Profile now driven by `UserValidation` MDMS master.
-- **Refactor**: Removed dependency on `CORE_MOBILE_CONFIGS` global object.
-- **Configurability**: The MDMS module name for validation is configurable via `UICONFIG_MODULENAME` in global configs, defaulting to `commonUiConfig` if not set.
-- **Compatibility**: `UserProfileValidationConfig` is mapped from the `UserValidation` response within the `UserProfile` component.
+## ["2.0.0-dev-01"] [3-Nov-2025]
+-Optimised packages of core with lazy implementation republish
 
-## [1.9.7]  [12-DEC-2025]
--Feature : Header.js component enhanced for secondary logo URL
 
-## [1.9.6]  [26-November-2025]
--Bug fix : minor logic enhancement in 1.9.5
+## ["2.0.0-rc19-05"] [26-Sep-2025]
+-Optimised packages of core with lazy implementation
 
-## [1.9.5]  [26-November-2025]
--Bug fix for edit profile citizen side(if user logged out, no need to show edit profile button)
+## ["2.0.0-rc19-02"] [27-Jun-2025]
+-Added new logic for language selection page
 
-## [1.9.4]  [25-November-2025]
--Bug fix for use data in edit profile in citizen side
+## [1.8.35-rc19.02] [27-Jun-2025]
+-Accessibility features implemented
+-New HOC component withAutoFocusMain.js added for targeted keyboard focus
+-Webpack config changes for css compatibility
 
-## [1.9.3]  [21-November-2025]
--Bug fix for edit profile in citizen side
+## [1.8.35-rc19.01] [27-Jun-2025]
+- core(1.8.35) from develop Upgraded to react19
+- App.js changes in routes
+- webpack for build
+- npm packages upgraded and syntax changed to make them react19 compatible
+- react, react-dom, react-router-dom and @tanstack/react-query are in peer dependencies now to avoid version conflict
 
-## [1.9.2]  [12-November-2025]
--New feature added for external URLs in employeeSidebar
-
-## [1.9.0]  [07-November-2025]
--Citizen side api changes to /health-individual for user registration
--Forgot password ui changes from mobile number to username
 
 ## [1.9.0]  [28-October-2025]
 

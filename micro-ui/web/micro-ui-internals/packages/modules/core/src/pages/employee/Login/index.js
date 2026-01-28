@@ -1,39 +1,37 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
-import { useHistory, useLocation } from "react-router-dom";
 import { useLoginConfig } from "../../../hooks/useLoginConfig";
 import { Loader } from "@egovernments/digit-ui-components";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
-  const { path } = useRouteMatch();
   const [loginConfig, setloginConfig] = useState(defaultLoginConfig);
   const [loginOtpConfig, setloginOtpConfig] = useState(defaultLoginOtpConfig);
   const moduleCode = ["privacy-policy"];
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
   const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
-    const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
-
-  const history = useHistory();
+  const { data: mdmsData, isLoading } = useLoginConfig(stateCode);
+  const navigate = useNavigate();
   const location = useLocation();
-
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     if (!query.get("ts")) {
       const ts = Date.now();
-      history.replace({
-        pathname: location.pathname,
-        search: `?ts=${ts}`
-      });
+      navigate(
+        {
+          pathname: location.pathname,
+          search: `?ts=${ts}`
+        },
+        { replace: true }
+      );
     }
-  }, [location, history]);
-
+  }, [location, navigate]);
 
   const { data: store } = Digit.Services.useStore({
     stateCode,
@@ -42,8 +40,6 @@ const EmployeeLogin = ({ stateCode }) => {
     modulePrefix,
   });
 
-
-  //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
     if (isLoading == false && mdmsData?.config) {
       setloginConfig(mdmsData?.config);
@@ -77,15 +73,24 @@ const EmployeeLogin = ({ stateCode }) => {
       [loginOtpConfig]
     )
   );
-  if(isLoading){
-      return <Loader page={false} variant={"PageLoader"} />;
+
+  if (isLoading) {
+    return <Loader page={false} variant={"PageLoader"} />;
   }
+
   return (
-    <Switch>
-      <Route path={`${path}`} exact>
-        {loginType ? <LoginComponent config={loginOtpParams[0]} t={t} loginOTPBased={loginType}/> : <LoginComponent config={loginParams[0]} t={t} />}
-      </Route>
-    </Switch>
+    <Routes>
+      <Route
+        index
+        element={
+          loginType ? (
+            <LoginComponent config={loginOtpParams[0]} t={t} loginOTPBased={loginType} />
+          ) : (
+            <LoginComponent config={loginParams[0]} t={t} />
+          )
+        }
+      />
+    </Routes>
   );
 };
 

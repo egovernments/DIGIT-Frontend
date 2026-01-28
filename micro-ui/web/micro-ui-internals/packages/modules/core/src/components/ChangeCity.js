@@ -1,6 +1,6 @@
 import { CardText, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   if (searcher == "") return str;
@@ -13,8 +13,8 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
 const ChangeCity = (prop) => {
   const [dropDownData, setDropDownData] = useState(null);
   const [selectCityData, setSelectCityData] = useState([]);
-  const [selectedCity, setSelectedCity] = useState([]); //selectedCities?.[0]?.value
-  const history = useHistory();
+  const [selectedCity, setSelectedCity] = useState([]); 
+  const navigate = useNavigate();
   const isDropdown = prop.dropdown || false;
   let selectedCities = [];
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
@@ -29,11 +29,18 @@ const ChangeCity = (prop) => {
     Digit.SessionStorage.set("Employee.tenantId", city?.value);
     Digit.UserService.setUser(loggedInData);
     setDropDownData(city);
-    if (window.location.href.includes(`/${window?.contextPath}/employee/`)) {
+    if (typeof window !== 'undefined' && window.location?.href?.includes(`/${window?.contextPath}/employee/`)) {
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-      history.replace(redirectPath);
+      navigate(redirectPath, { replace: true });
     }
-    window.location.reload();
+    // Safe reload with error handling
+    try {
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.warn('Failed to reload page:', error);
+    }
   };
 
   useEffect(() => {

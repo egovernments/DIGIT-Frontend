@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { SideNav, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MediaQuery from 'react-responsive';
 
 
@@ -11,7 +11,7 @@ const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getStateId();
 
   function extractLeftIcon(data = {}) {
@@ -84,40 +84,40 @@ const EmployeeSideBar = () => {
     return configEmployeeSideBar;
   };
 
-  const navigateToRespectiveURL = (history = {}, url = "") => {
-  if (!url || url === "/") return;
+  const navigateToRespectiveURL = (url = "") => {
+    if (!url || url === "/") return;
 
-  //Detect if it's an external link (starts with http or https)
-  const isExternal = /^https?:\/\//i.test(url);
+    // Detect if it's an external link (starts with http or https)
+    const isExternal = /^https?:\/\//i.test(url);
 
-  if (isExternal) {
-    //Open external links in a new tab
-    window.open(url, "_blank", "noopener,noreferrer");
-    return;
-  }
-
-  //Internal navigation logic
-  if (!url.includes(`/${window?.contextPath}`)) {
-    const hostUrl = window.location.origin;
-    let updatedUrl;
-
-    if (isMultiRootTenant) {
-      const contextPath = window?.contextPath || "sandbox-ui";
-      url = url.replace(`/${contextPath}/employee`, `/${contextPath}/${tenantId}/employee`);
-      updatedUrl = url;
-      history.push(updatedUrl);
-    } else {
-      updatedUrl = hostUrl + url;
-      window.location.href = updatedUrl;
+    if (isExternal) {
+      // Open external links in a new tab
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
     }
-  } else {
-    history.push(url);
-  }
-};
+
+    // Internal navigation logic
+    if (!url.includes(`/${window?.contextPath}`)) {
+      const hostUrl = window.location.origin;
+      let updatedUrl;
+
+      if (isMultiRootTenant) {
+        const contextPath = window?.contextPath || "sandbox-ui";
+        url = url.replace(`/${contextPath}/employee`, `/${contextPath}/${tenantId}/employee`);
+        updatedUrl = url;
+        navigate(updatedUrl);
+      } else {
+        updatedUrl = hostUrl + url;
+        window.location.href = updatedUrl;
+      }
+    } else {
+      navigate(url);
+    }
+  };
 
   const onItemSelect = ({ item, index, parentIndex }) => {
     if (item?.navigationUrl) {
-      navigateToRespectiveURL(history, item?.navigationUrl);
+      navigateToRespectiveURL(item?.navigationUrl);
     } else {
       return;
     } 
@@ -192,8 +192,3 @@ const EmployeeSideBar = () => {
 };
 
 export default EmployeeSideBar;
-
-
-
-
-

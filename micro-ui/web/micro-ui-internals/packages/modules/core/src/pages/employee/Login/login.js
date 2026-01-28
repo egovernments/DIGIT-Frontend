@@ -1,11 +1,13 @@
 import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useMemo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import Carousel from "./Carousel/Carousel";
 import ImageComponent from "../../../components/ImageComponent";
+// import SkipToMainContent from "../SkipToMainContent/SkipToMainContent";
+import withAutoFocusMain from "../../../hoc/withAutoFocusMain";
 
 const setEmployeeDetail = (userObject, token) => {
   if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") {
@@ -30,11 +32,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-   //checking for custom login components
-   const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent("DynamicLoginComponent");
-  // const { t } = useTranslation();
+  const navigate = useNavigate(); 
+ const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent("DynamicLoginComponent");
 
-  const history = useHistory();
 
   useEffect(() => {
     if (!user) {
@@ -61,7 +61,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/home`;
     }
 
-    history.replace(redirectPath); // Replaced history.replace with navigate
+    navigate(redirectPath, { replace: true }); // Replaced history.replace with navigate
   }, [user]);
 
   const onLogin = async (data) => {
@@ -134,7 +134,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
-          history.push(`/${window?.contextPath}/employee/user/login/otp`, {
+          navigate(`/${window?.contextPath}/employee/user/login/otp`, {
             state: { email: inputEmail, tenant: Digit?.ULBService?.getStateId() },
           });
         },
@@ -147,7 +147,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   };
 
   const onForgotPassword = () => {
-    history.push(`/${window?.contextPath}/employee/user/forgot-password`);
+    navigate(`/${window?.contextPath}/employee/user/forgot-password`);
   };
   const defaultTenant = Digit.ULBService.getStateId();
 
@@ -159,8 +159,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   let config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
-
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable === false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
@@ -239,10 +238,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   }
   return propsConfig?.bannerImages ? (
     <div className="login-container">
+      {/* <SkipToMainContent class_name={".login-form-container"}/> */}
       <Carousel bannerImages={propsConfig?.bannerImages} />
       <div className="login-form-container">
         {renderLoginForm("login-form-container", "", loginOTPBased ? "sandbox-onboarding-wrapper" : "")}
-        {DynamicLoginComponent && <DynamicLoginComponent />}
+        {DynamicLoginComponent && <DynamicLoginComponent />} 
         {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
         {renderFooter("EmployeeLoginFooter")}
       </div>
@@ -257,8 +257,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         "loginCardClassName",
         loginOTPBased ? "sandbox-onboarding-wrapper" : ""
       )}
-      {DynamicLoginComponent && <DynamicLoginComponent />}
-      {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
+        {DynamicLoginComponent && <DynamicLoginComponent />}
+       {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
       {renderFooter("employee-login-home-footer")}
     </Background>
   );
@@ -273,4 +273,4 @@ Login.defaultProps = {
   loginParams: null,
 };
 
-export default Login;
+export default withAutoFocusMain(Login, ".login-form-container");

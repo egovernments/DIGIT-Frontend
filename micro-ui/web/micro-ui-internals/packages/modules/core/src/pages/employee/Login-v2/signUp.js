@@ -1,7 +1,8 @@
 import { BackLink, Loader, FormComposerV2, Toast, useCustomAPIMutationHook } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import Background from "../../../components/Background";
 import SandBoxHeader from "../../../components/SandBoxHeader";
 import ImageComponent from "../../../components/ImageComponent";
@@ -14,7 +15,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   function buildOtpUrl(contextPath, tenantId) {
     const ctx = (contextPath || "").split("/").filter(Boolean).join("/");
@@ -113,7 +114,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const renderFormSection = () => (
     <div style={{ padding: isMobile ? "1rem" : "2rem", width: isMobile ? "100%" : "30%", backgroundColor: "#fff", overflowY: "auto", justifyContent: "center", display: "flex", alignItems: "center", flexDirection: "column" }}>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
-        <BackLink onClick={() => window.history.back()} />
+        <BackLink onClick={() => navigate("/")} />
       </div>
       <FormComposerV2
         onSubmit={onLogin}

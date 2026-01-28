@@ -2,17 +2,18 @@ import { Button, Card, SubmitBar, Loader } from "@egovernments/digit-ui-componen
 import { CustomButton } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, Redirect } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import ImageComponent from "../../../components/ImageComponent";
 
 const DEFAULT_LOCALE=Digit?.Utils?.getDefaultLanguage?.();
 
 const defaultLanguage = { label: "English", value:  DEFAULT_LOCALE};
+
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { languages, stateInfo } = storeData || {};
   let defaultLanguages = languages;
   if (!defaultLanguages || defaultLanguages?.length == 0) {
@@ -24,21 +25,21 @@ const LanguageSelection = () => {
     setselected(language.value);
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
-
   function getContextPath(contextPath) {
     if (!contextPath || typeof contextPath !== "string") return "";
     return contextPath.split("/")[0];
   }
+  
   const hasMultipleLanguages = languages?.length > 1;
 
-  const handleSubmit = (event) => {    
-    history.push(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
+  const handleSubmit = (event) => {
+        navigate(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
   };
 
   if (isLoading) return <Loader />;
 
   if (!hasMultipleLanguages) {
-    return <Redirect to={`/${window?.contextPath}/employee/user/login`} />;
+    return <Navigate to={`/${window?.contextPath}/employee/user/login`} replace />;
   }
 
   return (

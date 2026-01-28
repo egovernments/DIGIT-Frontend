@@ -1,13 +1,15 @@
 import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import React, { Fragment } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import React,{Fragment} from "react";
+import {useNavigate, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import { Header as TopBarComponentMain } from "@egovernments/digit-ui-components";
 import ImageComponent from "../ImageComponent";
 
 const DEFAULT_EGOV_LOGO ="https://egov-dev-assets.s3.ap-south-1.amazonaws.com/egov-logo-2025.png";
+
+
 const TopBar = ({
   t,
   stateInfo,
@@ -26,7 +28,8 @@ const TopBar = ({
 }) => {
   const [profilePic, setProfilePic] = React.useState(null);
 
-  React.useEffect(async () => {
+  React.useEffect( () => {
+    const app=async ()=>{
     const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId();
     const uuid = userDetails?.info?.uuid;
     if (uuid) {
@@ -37,11 +40,13 @@ const TopBar = ({
         setProfilePic(thumbs?.at(0));
       }
     }
+  }
+  app()
   }, [profilePic !== null, userDetails?.info?.uuid]);
 
   const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
 
-  let history = useHistory();
+  let navigate = useNavigate();
   const { pathname } = useLocation();
 
   const conditionsToDisableNotificationCountTrigger = () => {
@@ -69,7 +74,7 @@ const TopBar = ({
   };
 
   function onNotificationIconClick() {
-    history.push(`/${window?.contextPath}/citizen/engagement/notifications`);
+    navigate(`/${window?.contextPath}/citizen/engagement/notifications`);
   }
 
   const urlsToDisableNotificationIcon = (pathname) =>
@@ -154,7 +159,7 @@ const TopBar = ({
       props={{}}
       showDeafultImg
       style={{}}
-      theme="light"
+      theme={window?.globalConfigs?.getConfig("HEADER_THEME") || "light"}
       ulb={
         loggedin ? (
           cityDetails?.city?.ulbGrade ? (

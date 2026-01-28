@@ -1,8 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Button, LandingPageCard, LandingPageWrapper } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-components";
+
+
 import { CustomSVG } from "@egovernments/digit-ui-components";
 const Components = require("@egovernments/digit-ui-svg-components");
 
@@ -10,8 +12,8 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
-  const history = useHistory();
-  const tenantId = Digit.ULBService.getStateId();
+  const navigate= useNavigate();
+  const tenantId = Digit?.ULBService?.getStateId();
   let sortedConfigEmployeesSidebar = null;
   const [mdmsOrderData, setMdmsOrderData] = useState([{}]);
 
@@ -194,7 +196,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
                 icon={configureData?.icon}
                 type="button"
                 size={"medium"}
-                onClick={() => history?.push(configureData?.link)}
+                onClick={() => navigate(configureData?.link)}
                 style={{ padding: "0px" }}
               />
             ),

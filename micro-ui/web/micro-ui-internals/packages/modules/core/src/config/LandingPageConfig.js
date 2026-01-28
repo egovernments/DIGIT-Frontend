@@ -12,7 +12,7 @@ export const config = {
             ]
         },
         {
-            "title": "What can you do on",
+            "title": "What can you do on Sandbox?",
             "type": "stepsSection",
             "content": [
                 {

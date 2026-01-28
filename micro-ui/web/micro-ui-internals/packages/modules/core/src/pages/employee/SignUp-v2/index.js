@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { SignUpConfig as defaultSignUpConfig  } from "./config";
 import Login from "./signUp";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const SignUpV2 = ({stateCode}) => {
@@ -20,8 +20,8 @@ const SignUpV2 = ({stateCode}) => {
     modulePrefix
   });
 
-  const history = useHistory();
-  const location = useLocation();
+  const navigate = useNavigate();
+  const location = window?.location;
 
 
     // Timestamp handling
@@ -29,12 +29,12 @@ const SignUpV2 = ({stateCode}) => {
       const query = new URLSearchParams(location.search);
       if (!query.get("ts")) {
         const ts = Date.now();
-        history.replace({
+        navigate({
           pathname: location.pathname,
           search: `?ts=${ts}`
         });
       }
-    }, [location, history]);
+    }, [location, navigate]);
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["SignUpConfig"], {
     select: (data) => {

@@ -28,7 +28,19 @@ const ImageComponent = ({
     console.warn("AccessibleImage: Missing alt, aria-label, or aria-labelledby for non-decorative image.");
   }
 
-  return <img src={src} {...accessibilityProps} {...props} />;
+  return (
+    <img
+      src={src}
+      {...accessibilityProps}
+      {...props}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+        }
+      }}
+    />
+  );
 };
 
 ImageComponent.propTypes = {
