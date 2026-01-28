@@ -147,6 +147,7 @@ const CloneCampaignWrapper = (props) => {
             size={"large"}
             variation={"primary"}
             label={t("SUBMIT")}
+            title={t("SUBMIT")}
             onClick={onNextClick}
             isDisabled={isLoading || isValidatingName}
           />

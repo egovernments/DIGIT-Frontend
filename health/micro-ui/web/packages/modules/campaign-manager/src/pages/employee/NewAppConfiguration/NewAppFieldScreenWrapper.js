@@ -302,6 +302,7 @@ function NewAppFieldScreenWrapper() {
               icon={"AddIcon"}
               variation={"teritiary"}
               label={t("ADD_FIELD")}
+              title={t("ADD_FIELD")}
               onClick={() => handleAddField(currentCard, card[index])}
             />)}
           </Fragment>

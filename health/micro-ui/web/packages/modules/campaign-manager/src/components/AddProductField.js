@@ -165,6 +165,7 @@ const AddProductField = ({ onSelect }) => {
       <Button
         variation="secondary"
         label={t(`CAMPAIGN_ADD_MORE_PRODUCT_BUTTON`)}
+        title={t(`CAMPAIGN_ADD_MORE_PRODUCT_BUTTON`)}
         size={"large"}
         // className={"hover"}
         icon={"AddIcon"}

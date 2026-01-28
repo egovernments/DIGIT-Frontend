@@ -105,7 +105,7 @@ const Dropdowns = ({
             label={`${t("ADD_OPTIONS")} ${questionNumber}`}
             onClick={() => addOption()}
             size="medium"
-            title=""
+            title={`${t("ADD_OPTIONS")} ${questionNumber}`}
             variation="link"
             textStyles={{ width: "unset" }}
           />
@@ -259,7 +259,7 @@ const DropdownOption = ({
               onClick={() => removeOption(index)}
               size="medium"
               style={{}}
-              title=""
+              title={t(`DELETE`)}
               variation="link"
             />
           )}

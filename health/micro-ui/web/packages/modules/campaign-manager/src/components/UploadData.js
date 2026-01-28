@@ -1170,6 +1170,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <TagComponent campaignName={campaignName} />
               <Button
                 label={getDownloadLabel()}
+                title={getDownloadLabel()}
                 variation="secondary"
                 icon={"FileDownload"}
                 type="button"
@@ -1275,6 +1276,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 size={"large"}
                 variation={"secondary"}
                 label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                title={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
                 onClick={() => {
                   setShowPopUp(false);
                 }}
@@ -1285,7 +1287,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 variation={"primary"}
                 icon={"FileDownload"}
                 label={getDownloadLabel()}
-                title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                title={getDownloadLabel() || t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
                 onClick={() => {
                   downloadTemplate(), setShowPopUp(false);
                 }}

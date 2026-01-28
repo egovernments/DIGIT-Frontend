@@ -249,6 +249,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
                           // {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
                             <Button
                               label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+                              title={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
                               variation="primary"
                               icon={"DownloadIcon"}
                               type="button"

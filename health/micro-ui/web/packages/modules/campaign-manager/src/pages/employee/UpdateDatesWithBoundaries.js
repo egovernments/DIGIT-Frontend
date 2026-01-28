@@ -230,6 +230,7 @@ function UpdateDatesWithBoundaries() {
               size={"large"}
               variation={"secondary"}
               label={t("NO")}
+              title={t("NO")}
               onClick={() => {
                 setShowPopUp(null);
               }}
@@ -239,6 +240,7 @@ function UpdateDatesWithBoundaries() {
               size={"large"}
               variation={"primary"}
               label={t("YES")}
+              title={t("YES")}
               onClick={() => {
                 onConfirm(showPopUp);
               }}

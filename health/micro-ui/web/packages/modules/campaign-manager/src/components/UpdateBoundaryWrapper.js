@@ -312,6 +312,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
               size={"large"}
               variation={"secondary"}
               label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              title={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
               onClick={() => {
                 checkDataPresent({ action: false });
               }}
@@ -321,6 +322,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
               size={"large"}
               variation={"primary"}
               label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              title={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
               onClick={() => {
                 checkDataPresent({ action: true });
               }}

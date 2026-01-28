@@ -123,16 +123,20 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   if (rowData?.status == "created") {
     actions.downloadApp = {
       label: "DOWNLOAD_APP",
+      title: "DOWNLOAD_APP",
       onClick: () => setShowQRPopUp(true),
       size: "medium",
       icon: "FileDownload",
+      id:`my-campaigns-row-card-download-app-button-${campaignId}`,
       variation: "secondary",
     };
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
+      title: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
       icon: "FileDownload",
       size: "medium",
+      id:`my-campaigns-row-card-download-user-creds-button-${campaignId}`,
       variation: "secondary",
     };
   }
@@ -140,6 +144,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   if (rowData?.status == "creating") {
     actions.downloadUserCreds = {
       label: "EDIT_CREATING_CAMPAIGN",
+      title: "EDIT_CREATING_CAMPAIGN",
       onClick: () => setShowCreatingPopUp(true),
       size: "medium",
       variation: "secondary",
@@ -152,16 +157,19 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   if (currentTab === "CAMPAIGN_FAILED") {
     actions.editCampaign = {
       label: "SHOW_REASON_FOR_ERROR",
+      title: "SHOW_REASON_FOR_ERROR",
       size: "medium",
       onClick: () => setShowErrorPopUp(true),
       icon: "",
       variation: "primary",
+      id:`my-campaigns-row-card-show-reason-for-error-button-${campaignId}`
     };
   }
 
   if (currentTab === "CAMPAIGN_FAILED" && rowData?.startDate > Date.now()) {
     actions.downloadUserCreds = {
       label: "RETRY",
+      title: "RETRY",
       size: "medium",
       onClick: () => handleRetryLogic(rowData),
       icon: "",
@@ -173,6 +181,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   if (!(currentTab === "CAMPAIGN_COMPLETED" || currentTab === "CAMPAIGN_FAILED" || rowData?.status == "creating")) {
     actions.editCampaign = {
       label: "EDIT_CAMPAIGN",
+      title: "EDIT_CAMPAIGN",
       size: "medium",
       onClick: () =>
         navigate(
@@ -403,6 +412,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               onClick={() => setCloneCampaign(true)}
               variation={"teritiary"}
               size={"medium"}
+              id={`my-campaigns-row-card-clone-campaign-button-${rowData?.id}`}
               title={t("DUPLICATE_CAMPAIGN")}
             />
           )}
@@ -465,6 +475,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                   size={btn.size}
                   title={t(btn.title) || ""}
                   style={btn.style}
+                  id={btn.id || "my-campaigns-row-card-button"}
                 />
               ))}
             </div>

@@ -127,6 +127,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
                 key={idx}
                 type={action?.format || "button"}
                 label={t(action.label) || ""}
+                title={t(action.label) || ""}
                 size={action.properties?.size || "medium"}
                 variation={action.properties?.type || "primary"}
                 onClick={() => {}}

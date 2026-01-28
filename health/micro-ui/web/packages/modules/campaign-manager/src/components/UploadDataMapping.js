@@ -888,6 +888,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     {listOfBoundaries?.length > 2 && (
                       <Button
                         label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        title={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
                         onClick={() => setChipPopUpRowId(listOfBoundaries)}
                         variation="link"
                         style={{
@@ -915,6 +916,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
                     variation="link"
                     label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
                     }}
@@ -935,6 +937,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   icon={"Edit"}
                   // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                   label={t("MAPPING_EDIT")}
+                  title={t("MAPPING_EDIT")}
                   onClick={() => {
                     setShowEditPopUp(row);
                   }}
@@ -953,6 +956,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   variation={"primary"}
                   icon={"Delete"}
                   label={t("MAPPING_DELETE")}
+                  title={t("MAPPING_DELETE")}
                   onClick={() => {
                     dispatch({
                       type: "DELETE_DATA",
@@ -1033,6 +1037,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     {listOfBoundaries?.length > 2 && (
                       <Button
                         label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        title={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
                         onClick={() => setChipPopUpRowId(listOfBoundaries)}
                         variation="link"
                         style={{
@@ -1059,6 +1064,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     size={"small"}
                     isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
                     variation={"link"}
+                    title={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
                     onClick={() => {
                       setShowPopUp(row);
@@ -1078,6 +1084,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
                   label={t("MAPPING_EDIT")}
+                  title={t("MAPPING_EDIT")}
                   icon={"Edit"}
                   onClick={() => {
                     setShowEditPopUp(row);
@@ -1096,6 +1103,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isDisabled={row?.editable ? false : true}
                   variation={"primary"}
                   label={t("MAPPING_DELETE")}
+                  title={t("MAPPING_DELETE")}
                   icon={"Delete"}
                   onClick={() => {
                     dispatch({
@@ -1156,6 +1164,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               size={"large"}
               variation={"secondary"}
               label={t("CLOSE")}
+              title={t("CLOSE")}
               onClick={() => {
                 setShowAddPopup(false);
               }}
@@ -1165,6 +1174,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               size={"large"}
               variation={"primary"}
               label={t("ADD_DATA_MAPPING")}
+              title={t("ADD_DATA_MAPPING")}
               onClick={async () => {
                 const result = await handleButtonAddClick("add");
                 if (result) setShowAddPopup(false);
@@ -1203,6 +1213,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               size={"large"}
               variation={"secondary"}
               label={t("CLOSE")}
+              title={t("CLOSE")}
               onClick={() => {
                 setShowEditPopUp(false);
               }}
@@ -1212,6 +1223,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               size={"large"}
               variation={"primary"}
               label={t("EDIT_DATA_MAPPING")}
+              title={t("EDIT_DATA_MAPPING")}
               onClick={async () => {
                 const result = await handleButtonAddClick("edit");
                 if (result) setShowEditPopUp(false);
@@ -1277,7 +1289,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                     whiteSpace: "nowrap",
                     width: "auto",
                   }}
-                  title=""
+                  title={t("MAPPING_ADD_DATA")}
                 />
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
@@ -1471,6 +1483,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               size={"large"}
               variation={"secondary"}
               label={t("NO")}
+              title={t("NO")}
               onClick={() => {
                 setShowPopUp(false);
                 setSelectedLevel(null);
@@ -1482,6 +1495,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               size={"large"}
               variation={"primary"}
               label={t("YES")}
+              title={t("YES")}
               onClick={() => {
                 dispatch({
                   type: "UPDATE_BOUNDARY",

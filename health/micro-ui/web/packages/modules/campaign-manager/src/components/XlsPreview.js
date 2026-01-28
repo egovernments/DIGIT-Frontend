@@ -32,6 +32,7 @@ function XlsPreview({ file, ...props }) {
       <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
         <Button
           label={t("BACK")}
+          title={t("BACK")}
           onClick={() => props?.onBack()}
           variation="secondary"
           icon="ArrowBack"
@@ -39,6 +40,7 @@ function XlsPreview({ file, ...props }) {
         />
         <Button
           label={t("WBH_DOWNLOAD")}
+          title={t("WBH_DOWNLOAD")}
           onClick={() => props?.onDownload()}
           variation="primary"
           isSuffix

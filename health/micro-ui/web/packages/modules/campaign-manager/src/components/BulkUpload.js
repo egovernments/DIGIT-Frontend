@@ -153,6 +153,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         <div className="delete-and-download-button">
           <ButtonNew
             label={t("WBH_DOWNLOAD")}
+            title={t("WBH_DOWNLOAD")}
             variation="secondary"
             type="button"
             size={"medium"}
@@ -164,6 +165,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
           />
           <ButtonNew
             label={t("WBH_DELETE")}
+            title={t("WBH_DELETE")}
             variation="secondary"
             size={"medium"}
             type="button"

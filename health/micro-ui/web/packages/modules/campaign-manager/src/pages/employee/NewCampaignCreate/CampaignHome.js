@@ -175,6 +175,7 @@ const CampaignHome = () => {
               `/${window.contextPath}/employee/campaign/campaign-templates?from=home`
             );
           }}
+          id={"campaign-home-card-campaign-create-methods-campaign-templates"}
         >
           <div className="digit-campaign-home-icon">
             <MobileLayout width="40" height="40" fill={"#C84C0E"} />
@@ -200,6 +201,7 @@ const CampaignHome = () => {
               `/${window.contextPath}/employee/campaign/my-campaign-new?from=home`
             );
           }}
+          id={"campaign-home-card-campaign-create-methods-my-campaigns-screen"}
         >
           {" "}
           <div className="digit-campaign-home-icon">
@@ -225,6 +227,7 @@ const CampaignHome = () => {
               setShowPopUp(true);
             }
           }}
+          id={"campaign-home-card-campaign-create-methods-campaign-create-from-scratch"}
         >
           {" "}
           <div className="digit-campaign-home-icon">
@@ -260,6 +263,8 @@ const CampaignHome = () => {
               size={"large"}
               variation={"primary"}
               label={t("HCM_CAMPAIGN_PROCEED")}
+              title={t("HCM_CAMPAIGN_PROCEED")}
+              name="create-new-campaign-from-scratch"
               onClick={() => {
                 navigate(
                   `/${window.contextPath}/employee/campaign/create-campaign`

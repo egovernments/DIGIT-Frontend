@@ -7,6 +7,7 @@ const QRScanner = ({ field, t, fieldTypeMasterData, props }) => {
     <Button
       variation={"secondary"}
       label={field?.label ? t(field?.label|| ""): props?.t(props?.field?.label || "")}
+      title={field?.label ? t(field?.label|| ""): props?.t(props?.field?.label || "")}
       onClick={() => {}}
       className="app-preview-action-button"
       icon={"QrCodeScanner"}

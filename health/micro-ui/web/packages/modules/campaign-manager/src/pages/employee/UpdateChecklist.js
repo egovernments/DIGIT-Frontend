@@ -570,6 +570,7 @@ const UpdateChecklist = () => {
                 icon="Preview"
                 variation="secondary"
                 label={t("PREVIEW_CHECKLIST")}
+                title={t("PREVIEW_CHECKLIST")}
                 className={"hover"}
                 style={{ marginTop: "10px", marginBottom: "1.5rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -595,6 +596,7 @@ const UpdateChecklist = () => {
                   size={"large"}
                   variation={"secondary"}
                   label={t("CLOSE")}
+                  title={t("CLOSE")}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -604,6 +606,7 @@ const UpdateChecklist = () => {
                   size={"large"}
                   variation={"primary"}
                   label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
+                  title={t("CONFIRM_CHECKLIST_CONFIGURATION")}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);

@@ -65,6 +65,13 @@ function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenera
                             ? t(document?.filename)
                             : t("CAMPAIGN_DOCUMENT_TITLE", { INDEX: index + 1 })
                         }
+                        title={
+                          isUserGenerate
+                            ? document?.type
+                            : document?.filename
+                            ? t(document?.filename)
+                            : t("CAMPAIGN_DOCUMENT_TITLE", { INDEX: index + 1 })
+                        }
                         onClick={() => {}}
                         className=""
                       />

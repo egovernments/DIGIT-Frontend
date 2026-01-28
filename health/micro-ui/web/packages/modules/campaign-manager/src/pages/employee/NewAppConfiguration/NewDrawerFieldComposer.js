@@ -1451,6 +1451,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             size="small"
             variation="tertiary"
             label={t("ADD_OPTIONS")}
+            title={t("ADD_OPTIONS")}
             className={`app-config-add-option-button`}
             style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
             textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}

@@ -110,7 +110,7 @@ const MultipleChoice = ({
           label={`${t("ADD_OPTIONS")} ${questionNumber}`}
           onClick={() => addOption()}
           size="medium"
-          title=""
+          title={`${t("ADD_OPTIONS")} ${questionNumber}`}
           variation="link"
           textStyles={{ width: 'unset' }}
         />
@@ -274,7 +274,7 @@ export const RadioButtonOption = ({
               label={t(`DELETE`)}
               onClick={() => removeOption(index)}
               size="medium"
-              title=""
+              title={t(`DELETE`)}
               variation="link"
             />
           )}

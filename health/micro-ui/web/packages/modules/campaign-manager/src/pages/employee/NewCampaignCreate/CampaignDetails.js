@@ -353,6 +353,7 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_BOUNDARY_SELECT_HEADING"),
               desc: t("HCM_SELECT_BOUNDARY_DESC"),
+              buttonId: campaignData?.boundaries?.length > 0 ? `campaign-details-page-button-edit-selecting-boundaries` : `campaign-details-page-button-selecting-boundaries`,
               buttonLabel:
                 campaignData?.status === "created" || campaignData?.parentId
                   ? t("HCM_UPDATE_BOUNDARIES")
@@ -386,6 +387,12 @@ const CampaignDetails = () => {
                   : campaignData?.deliveryRules?.[0]?.cycles?.length > 0
                   ? t("HCM_EDIT_DELIVERY_BUTTON")
                   : t("HCM_DELIVERY_BUTTON"),
+              buttonId:
+                campaignData?.status === "created" || campaignData?.parentId
+                  ? `campaign-details-page-button-edit-delivery-strategy`
+                  : campaignData?.deliveryRules?.[0]?.cycles?.length > 0
+                  ? `campaign-details-page-button-edit-delivery-strategy`
+                  : `campaign-details-page-button-delivery-strategy`,
               navLink:
                 campaignData?.status === "created" || campaignData?.parentId
                   ? `update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&projectId=${campaignData?.projectId}&campaignNumber=${campaignData?.campaignNumber}`
@@ -407,6 +414,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
               buttonLabel: isFormConfigured ? t("HCM_EDIT_MOBILE_APP_BUTTON") : t("HCM_MOBILE_APP_BUTTON"),
+              buttonId: isFormConfigured ? `campaign-details-page-button-edit-mobile-app` : `campaign-details-page-button-setup-mobile-app`,
               type: isFormConfigured ? "secondary" : "primary",
               navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: (
@@ -444,6 +452,11 @@ const CampaignDetails = () => {
                     )
                       ? t("HCM_EDIT_UPLOAD_DATA_BUTTON")
                       : t("HCM_UPLOAD_DATA_BUTTON"),
+                    buttonId: campaignData?.resources?.some(
+                      (r) => r.type === "unified-console" || r.type === "unified-console-resources"
+                    )
+                      ? `campaign-details-page-button-unified-console-data-edit`
+                      : `campaign-details-page-button-unified-console-data-upload`,
                     navLink: `unified-upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
                     type: campaignData?.resources?.some((r) => r.type === "unified-console" || r.type === "unified-console-resources")
                       ? "secondary"
@@ -471,6 +484,7 @@ const CampaignDetails = () => {
                     headingName: t("HCM_UPLOAD_DATA_HEADING"),
                     desc: t("HCM_UPLOAD_DATA_DESC"),
                     buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
+                    buttonId: campaignData?.resources?.length > 0 ? `campaign-details-page-button-edit-data` : `campaign-details-page-button-upload-data`,
                     navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
                     type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
                     icon: (
@@ -495,6 +509,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_UPLOAD_LOCALIZATION_DATA_HEADING"),
               desc: t("HCM_UPLOAD_LOCALIZATION_DATA_DESC"),
               buttonLabel: t("HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON"),
+              buttonId: `campaign-details-page-button-localizations-data-upload`,
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}&campaignName=${campaignData?.campaignName}`,
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}&campaignName=${campaignData?.campaignName}`,
               type: "primary",
@@ -516,6 +531,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_CHECKLIST_HEADING"),
               desc: t("HCM_CHECKLIST_DESC"),
               buttonLabel: isChecklistConfigured ? t("HCM_EDIT_CHECKLIST_BUTTON") : t("HCM_CHECKLIST_BUTTON"),
+              buttonId: isChecklistConfigured ? `campaign-details-page-button-edit-checklist` : `campaign-details-page-button-checklist`,
               type: isChecklistConfigured ? "secondary" : "primary",
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
               icon: <ListAltCheck />,
@@ -703,6 +719,7 @@ const CampaignDetails = () => {
                 <Button
                   icon="CheckCircleOutline"
                   label={t("HCM_CREATE_CAMPAIGN")}
+                  title={t("HCM_CREATE_CAMPAIGN")}
                   onClick={onsubmit}
                   isDisabled={
                     campaignData?.boundaries?.length === 0 ||
@@ -718,11 +735,12 @@ const CampaignDetails = () => {
                 <Button
                   icon="CloudDownload"
                   label={t("HCM_DOWNLOAD_CREDENTIALS")}
+                  title={t("HCM_DOWNLOAD_CREDENTIALS")}
                   onClick={() => onDownloadCredentails(campaignData)}
                   type="button"
                   variation="primary"
                 />,
-                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
+                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} title={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
               ]
         }
         maxActionFieldsAllowed={5}

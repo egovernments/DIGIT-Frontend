@@ -169,6 +169,7 @@ const SearchChecklist = () => {
                   size={"large"}
                   variation={"secondary"}
                   label={t("CLOSE")}
+                  title={t("CLOSE")}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -178,6 +179,7 @@ const SearchChecklist = () => {
                   size={"large"}
                   variation={"primary"}
                   label={t("CREATE_CHECKLIST")}
+                  title={t("CREATE_CHECKLIST")}
                   onClick={() => {
                     createNewChecklist();
                   }}

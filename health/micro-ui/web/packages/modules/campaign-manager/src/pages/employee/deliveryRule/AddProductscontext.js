@@ -165,6 +165,7 @@ const AddProducts = React.memo(({
                 <Button
                   icon="Delete"
                   label={t("DELETE")}
+                  title={t("DELETE")}
                   onClick={() => deleteProduct(product)}
                   variation="link"
                 />
@@ -212,6 +213,7 @@ const AddProducts = React.memo(({
         <Button
           variation="secondary"
           label={t("CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION")}
+          title={t("CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION")}
           className="add-rule-btn hover"
           icon="AddIcon"
           onClick={addProduct}

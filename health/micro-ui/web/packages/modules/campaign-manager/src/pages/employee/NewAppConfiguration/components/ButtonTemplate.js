@@ -19,6 +19,7 @@ const ButtonTemplate = ({ field, t, fieldTypeMasterData, props }) => {
     <Button
       variation={variation || "primary"}
       label={buttonLabel}
+      title={buttonLabel}
       onClick={() => {}}
       className="app-preview-action-button"
       style={variation === "tertiary" ? { color: "#c84c0e", height: "1.5rem", width: "fit-content" } : null}

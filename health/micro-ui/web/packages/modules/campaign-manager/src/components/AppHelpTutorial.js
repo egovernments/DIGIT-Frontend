@@ -99,7 +99,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel = "HELP", buttonIcon =
             setClosing(false); // reset closing state
             setVisible(true); // immediately show popup
           }}
-          title="Help"
+          title={t(buttonLabel) || "Help"}
           variation="secondary"
           size={"medium"}
           style={{marginLeft: "auto" }}

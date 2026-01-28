@@ -426,6 +426,7 @@ const CampaignSummary = (props) => {
                         size={"large"}
                         variation={"primary"}
                         label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
+                        title={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
                         onClick={() => {
                           setTimeline(true);
                           setResource(resourceIdArr);
