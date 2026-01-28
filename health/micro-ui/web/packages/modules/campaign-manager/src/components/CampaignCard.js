@@ -46,18 +46,21 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/campaign-home`,
+      id:`admin-console-home-screen-create-campaign-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      id:`admin-console-home-screen-my-campaign-new-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
     {
       label: t("CAMPAIGN_TEMPLATES"),
       link: `/${window?.contextPath}/employee/campaign/campaign-templates`,
+      id:`admin-console-home-screen-campaign-templates-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
     },
     // {
@@ -80,6 +83,7 @@ const CampaignCard = () => {
     {
       label: t("BOUNDARY_MANAGEMENT"),
       link: `/${window?.contextPath}/employee/workbench/boundary/home`,
+      id:`admin-console-home-screen-boundary-management-link`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },

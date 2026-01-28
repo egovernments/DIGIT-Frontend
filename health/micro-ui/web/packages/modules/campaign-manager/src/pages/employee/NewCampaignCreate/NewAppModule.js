@@ -64,6 +64,7 @@ const NewAppModule = () => {
                 key={item?.id || index}
                 className={`module-card ${isActive ? "selected-card" : ""}`}
                 onClick={() => {}}
+                id={`setup-mobile-app-card-${item?.data?.name}`}
                 style={{
                   cursor: "pointer",
                   position: "relative",

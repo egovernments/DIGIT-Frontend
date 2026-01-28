@@ -127,6 +127,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
       onClick: () => setShowQRPopUp(true),
       size: "medium",
       icon: "FileDownload",
+      id:`my-campaigns-row-card-download-app-button-${campaignId}`,
       variation: "secondary",
     };
     actions.downloadUserCreds = {
@@ -135,6 +136,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
       onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
       icon: "FileDownload",
       size: "medium",
+      id:`my-campaigns-row-card-download-user-creds-button-${campaignId}`,
       variation: "secondary",
     };
   }
@@ -160,6 +162,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
       onClick: () => setShowErrorPopUp(true),
       icon: "",
       variation: "primary",
+      id:`my-campaigns-row-card-show-reason-for-error-button-${campaignId}`
     };
   }
 
@@ -409,6 +412,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               onClick={() => setCloneCampaign(true)}
               variation={"teritiary"}
               size={"medium"}
+              id={`my-campaigns-row-card-clone-campaign-button-${rowData?.id}`}
               title={t("DUPLICATE_CAMPAIGN")}
             />
           )}
@@ -471,6 +475,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                   size={btn.size}
                   title={t(btn.title) || ""}
                   style={btn.style}
+                  id={btn.id || "my-campaigns-row-card-button"}
                 />
               ))}
             </div>

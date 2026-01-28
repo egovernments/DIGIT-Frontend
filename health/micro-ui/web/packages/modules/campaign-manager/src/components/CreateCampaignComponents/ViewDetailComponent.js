@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, icon, disabled, isDraftCampaign }) => {
+const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, icon, disabled, isDraftCampaign,buttonId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -30,6 +30,7 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink, type, ic
           style={{ width: "19rem" }}
           isDisabled={disabled}
           title={buttonLabel}
+          id={buttonId}
         />
       </div>
       <div className="details-desc">{desc}</div>

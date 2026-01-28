@@ -234,12 +234,12 @@ const LocalisationBulkUpload = () => {
 
           // Skip the default locale (first element in languages) during upload
           // Default column is read-only and populated from base modules
-          const messageHeader = t("DIGIT_LOC_MESSAGE_HEADER").toLowerCase();
           languages.slice(1).forEach(({ value, label }) => {
-            // Support both localized and hardcoded column keys for backward compatibility
-            const localizedColumnKey = `${messageHeader}_${label.toLowerCase()}`;
+            // Match the header format used in GenerateExcelJs: t(`DIGIT_LOC_MESSAGE_HEADER_${label}`)
+            const translatedHeader = t(`DIGIT_LOC_MESSAGE_HEADER_${label}`).toLowerCase();
+            // Also support hardcoded format for backward compatibility
             const hardcodedColumnKey = `message_${label.toLowerCase()}`;
-            const message = normalized[localizedColumnKey] || normalized[hardcodedColumnKey];
+            const message = normalized[translatedHeader] || normalized[hardcodedColumnKey];
 
             // Check if message exists (not undefined/null)
             if (message !== undefined && message !== null) {
