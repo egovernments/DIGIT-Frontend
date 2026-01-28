@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Routes, Route } from "react-router-dom"; // Updated imports for v6
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
@@ -16,6 +16,23 @@ const EmployeeLogin = ({ stateCode }) => {
   const modulePrefix = "digit";
   const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
   const { data: mdmsData, isLoading } = useLoginConfig(stateCode);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    if (!query.get("ts")) {
+      const ts = Date.now();
+      navigate(
+        {
+          pathname: location.pathname,
+          search: `?ts=${ts}`
+        },
+        { replace: true }
+      );
+    }
+  }, [location, navigate]);
+
   const { data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
@@ -24,16 +41,16 @@ const EmployeeLogin = ({ stateCode }) => {
   });
 
   useEffect(() => {
-    if (!isLoading && mdmsData?.config) { 
+    if (isLoading == false && mdmsData?.config) {
       setloginConfig(mdmsData?.config);
     } else {
       setloginConfig(defaultLoginConfig);
     }
-  }, [mdmsData, isLoading]); 
+  }, [mdmsData, isLoading]);
 
-  const loginParams = useMemo(
-    () =>
-      loginConfig.map((step) => {
+  const loginParams = useMemo(() =>
+    loginConfig.map(
+      (step) => {
         const texts = {};
         for (const key in step.texts) {
           texts[key] = t(step.texts[key]);
@@ -44,9 +61,9 @@ const EmployeeLogin = ({ stateCode }) => {
     )
   );
 
-  const loginOtpParams = useMemo(
-    () =>
-      loginOtpConfig.map((step) => {
+  const loginOtpParams = useMemo(() =>
+    loginOtpConfig.map(
+      (step) => {
         const texts = {};
         for (const key in step.texts) {
           texts[key] = t(step.texts[key]);
@@ -62,10 +79,10 @@ const EmployeeLogin = ({ stateCode }) => {
   }
 
   return (
-    <Routes> {/* Replaced Switch with Routes */}
+    <Routes>
       <Route
-        path="/"      
-        element={ 
+        index
+        element={
           loginType ? (
             <LoginComponent config={loginOtpParams[0]} t={t} loginOTPBased={loginType} />
           ) : (

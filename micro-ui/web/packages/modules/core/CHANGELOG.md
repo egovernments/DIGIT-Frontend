@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-09"] [29-Jan-2026]
+- Merged with stable react17 core module
+
 ## ["2.0.0-dev-02"] [24-Nov-2025]
 - Made SideNav and Header's theme and variant configurable via globalConfigs
 

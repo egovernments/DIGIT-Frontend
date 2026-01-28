@@ -84,19 +84,29 @@ const EmployeeSideBar = () => {
     return configEmployeeSideBar;
   };
 
-  const navigateToRespectiveURL = (navigate = {}, url = "") => {
-    if (url == "/") {
+  const navigateToRespectiveURL = (url = "") => {
+    if (!url || url === "/") return;
+
+    // Detect if it's an external link (starts with http or https)
+    const isExternal = /^https?:\/\//i.test(url);
+
+    if (isExternal) {
+      // Open external links in a new tab
+      window.open(url, "_blank", "noopener,noreferrer");
       return;
-    } 
-    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
+    }
+
+    // Internal navigation logic
+    if (!url.includes(`/${window?.contextPath}`)) {
       const hostUrl = window.location.origin;
-      let updatedUrl=null;
-      if(isMultiRootTenant){
-        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+      let updatedUrl = null;
+
+      if (isMultiRootTenant) {
+        const contextPath = window?.contextPath || "sandbox-ui";
+        url = url.replace(`/${contextPath}/employee`, `/${contextPath}/${tenantId}/employee`);
         updatedUrl = url;
         navigate(updatedUrl);
-      }
-      else{
+      } else {
         updatedUrl = hostUrl + url;
         try {
           if (typeof window !== 'undefined') {
@@ -113,12 +123,12 @@ const EmployeeSideBar = () => {
       }
     } else {
       navigate(url);
-    } 
+    }
   };
 
   const onItemSelect = ({ item, index, parentIndex }) => {
     if (item?.navigationUrl) {
-      navigateToRespectiveURL(navigate, item?.navigationUrl);
+      navigateToRespectiveURL(item?.navigationUrl);
     } else {
       return;
     } 
@@ -131,7 +141,7 @@ const EmployeeSideBar = () => {
           label: t(value.item.displayName),
           icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
           navigationUrl: value.item.navigationURL,
-          orderNumber:value.item.orderNumber,
+          orderNumber: value.item.orderNumber,
         };
       }
       const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
@@ -164,7 +174,8 @@ const EmployeeSideBar = () => {
   };
 
   const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
-  const sortedTransformedData= sortDataByOrderNumber(transformedData);
+  const sortedTransformedData = sortDataByOrderNumber(transformedData);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -193,8 +204,3 @@ const EmployeeSideBar = () => {
 };
 
 export default EmployeeSideBar;
-
-
-
-
-
