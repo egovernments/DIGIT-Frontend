@@ -973,7 +973,7 @@ const lastGeneratedAt = reportList.length
     isDisabled={reportLoading}
     onClick={async () => {
       try {
-        // await generateReport("EXCEL");
+        await generateReport("EXCEL");
         await generateReport("PDF");
       } catch (e) {
         console.error("Error generating report", e);
