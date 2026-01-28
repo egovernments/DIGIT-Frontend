@@ -115,6 +115,7 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
               descriptionStyles={{ color: "#787878", textAlign: "center" }}
               cardStyle={{ maxWidth: "408px", margin: "auto" }}
               className="employeeForgotPassword"
+              secondaryActionId={"employeeForgotPassword"}
             >
               <Header />
             </FormComposerV2>
@@ -152,6 +153,7 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
           descriptionStyles={{ color: "#787878", textAlign: "center" }}
           cardStyle={{ maxWidth: "408px", margin: "auto" }}
           className="employeeForgotPassword"
+          secondaryActionId={"employeeForgotPassword"}
         >
           <Header />
         </FormComposerV2>
