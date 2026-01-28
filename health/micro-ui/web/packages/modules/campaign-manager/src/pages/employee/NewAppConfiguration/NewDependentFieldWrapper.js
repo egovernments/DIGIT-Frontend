@@ -961,7 +961,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onEdit(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} onClick={() => onEdit(idx)} />}
+                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} />}
                 </div>
 
                 <div
@@ -971,7 +971,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onDelete(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Delete ? <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel} onClick={() => onDelete(idx)} />}
+                    {SVG?.Delete ? <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel}  title={deleteRuleLabel} onClick={() => onDelete(idx)} />}
                 </div>
             </div>
         </div>
@@ -1031,7 +1031,7 @@ function NewDependentFieldWrapper({ t }) {
             </div>
 
             <div>
-                <Button variation="secondary" label={addDisplayLogicLabel} onClick={openEditorForNew} icon="Add" style={{ width: "100%" }} />
+                <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={openEditorForNew} icon="Add" style={{ width: "100%" }} />
             </div>
 
             {/* Editor popup */}
@@ -1911,7 +1911,7 @@ function NewDependentFieldWrapper({ t }) {
 
                                         {/* Add Condition button after the last condition */}
                                         <div style={{ marginTop: "0.5rem" }}>
-                                            <Button variation="secondary" icon={"Add"} label={addConditionLabel} onClick={addSubCondition} />
+                                            <Button variation="secondary" icon={"Add"} label={addConditionLabel} title={addConditionLabel} onClick={addSubCondition} />
                                         </div>
 
                                         {/* show any form-level error here */}
@@ -1951,6 +1951,7 @@ function NewDependentFieldWrapper({ t }) {
                                         size={"large"}
                                         variation={"secondary"}
                                         label={closeLabel}
+                                        title={closeLabel}
                                         onClick={discardAndCloseEditor}
                                     />,
                                     <Button
@@ -1959,6 +1960,7 @@ function NewDependentFieldWrapper({ t }) {
                                         size={"large"}
                                         variation={"primary"}
                                         label={submitLabel}
+                                        title={submitLabel}
                                         onClick={submitAndClose}
                                         disabled={!isRuleComplete(draftRule)}
                                     />

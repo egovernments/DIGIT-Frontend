@@ -845,6 +845,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 size="medium"
                 variation="secondary"
                 label={t("CANCEL")}
+                title={t("CANCEL")}
                 onClick={() => {
                   dispatch(handleShowAddFieldPopup(null));
                   setNewFieldType(null);
@@ -855,6 +856,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 size="medium"
                 variation="primary"
                 label={t("ADD")}
+                title={t("ADD")}
                 isDisabled={!newFieldType?.label || !newFieldType?.field}
                 onClick={handleAddNewField}
               />

@@ -144,6 +144,7 @@ export const UICustomizations = {
                 // icon="View"
                 variation="secondary"
                 label={t("HCM_CHECKLIST_VIEW")}
+                title={t("HCM_CHECKLIST_VIEW")}
                 onClick={() => {
                   navigate(
                     `/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
@@ -160,6 +161,7 @@ export const UICustomizations = {
                 // icon="View"
                 variation="secondary"
                 label={t("HCM_CHECKLIST_CREATE")}
+                title={t("HCM_CHECKLIST_CREATE")}
                 onClick={() => {
                   navigate(
                     `/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
@@ -298,6 +300,7 @@ export const UICustomizations = {
                 icon={"DownloadIcon"}
                 variation={"secondary"}
                 label={t("DOWNLOAD")}
+                title={t("DOWNLOAD")}
                 onClick={() => {
                   downloadExcelTemplate();
                 }}
@@ -510,6 +513,7 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
+                title={"Action"}
                 options={[
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
@@ -670,6 +674,7 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
+                title={"Action"}
                 options={[
                   { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                   { key: 1, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
@@ -867,6 +872,7 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
+                title={"Action"}
                 options={[
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
@@ -1222,6 +1228,7 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
+                title={"Action"}
                 options={[
                   { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                   // { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }, // disabling in UI Since it is just beta functionality

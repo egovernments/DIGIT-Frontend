@@ -69,9 +69,10 @@ const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisati
       />
 
       <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "2rem" }}>
-        <Button label={t("CANCEL")} variation="secondary" onClick={onClose} />
+        <Button label={t("CANCEL")} title={t("CANCEL")} variation="secondary" onClick={onClose} />
         <Button
           label={t("SAVE_TRANSLATIONS")}
+          title={t("SAVE_TRANSLATIONS")}
           variation="primary"
           onClick={() => {
             const formatted = Object.entries(translations)

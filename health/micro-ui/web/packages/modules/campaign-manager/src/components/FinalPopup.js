@@ -29,6 +29,7 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                         size={"large"}
                         variation={"secondary"}
                         label={t("CANCEL")}
+                        title={t("CANCEL")}
                         onClick={() => {
                             setShowFinalPopup(false);
                         }}
@@ -38,6 +39,7 @@ const FinalPopup = ({ showFinalPopUp, setShowFinalPopup, onConfirmClick})=> {
                         size={"large"}
                         variation={"primary"}
                         label={t("CREATE")}
+                        title={t("CREATE")}
                         onClick={() => {
                             onConfirmClick();
                             setShowFinalPopup(false);

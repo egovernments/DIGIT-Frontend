@@ -356,6 +356,7 @@ const AppFeatures = () => {
               size={"large"}
               variation={"secondary"}
               label={t("NO")}
+              title={t("NO")}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -366,6 +367,7 @@ const AppFeatures = () => {
               size={"large"}
               variation={"primary"}
               label={t("CONFIRM")}
+              title={t("CONFIRM")}
               onClick={() => {
                 handleNext(showPopUp);
                 setShowPopUp(false);
@@ -403,6 +405,7 @@ const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedF
               isDisabled={feature?.disabled}
               variation={featureSelected ? "secondary" : "primary"}
               label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
+              title={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
               onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
             />
           </Card>

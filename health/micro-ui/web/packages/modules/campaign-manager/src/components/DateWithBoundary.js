@@ -333,7 +333,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
                 />
               </div>
             </LabelFieldPair>
-            <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
+            <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} title={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
           </div>
         </div>
       </Card>

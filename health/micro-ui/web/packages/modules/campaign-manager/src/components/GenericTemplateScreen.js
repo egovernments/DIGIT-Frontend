@@ -97,6 +97,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
               key={index}
               variation={field.jsonPath === "SecondaryButton" || field.jsonPath === "scanner" ? "secondary" : "primary"}
               label={t(field?.label)}
+              title={t(field?.label)}
               onClick={() => { }}
               style={{ minWidth: "100%" }}
               icon={field.jsonPath === "scanner"  ? "QrCodeScanner" : null}

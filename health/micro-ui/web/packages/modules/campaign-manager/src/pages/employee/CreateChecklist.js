@@ -588,6 +588,7 @@ const CreateChecklist = () => {
               <Button
                 variation="secondary"
                 label={t("HCM_CHECKLIST_CLEAR")}
+                title={t("HCM_CHECKLIST_CLEAR")}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -598,6 +599,7 @@ const CreateChecklist = () => {
                 icon="Preview"
                 variation="secondary"
                 label={t("PREVIEW_CHECKLIST")}
+                title={t("PREVIEW_CHECKLIST")}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -623,6 +625,7 @@ const CreateChecklist = () => {
                   size={"large"}
                   variation={"secondary"}
                   label={t("CLOSE")}
+                  title={t("CLOSE")}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -632,6 +635,7 @@ const CreateChecklist = () => {
                   size={"large"}
                   variation={"primary"}
                   label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
+                  title={t("CONFIRM_CHECKLIST_CONFIGURATION")}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);

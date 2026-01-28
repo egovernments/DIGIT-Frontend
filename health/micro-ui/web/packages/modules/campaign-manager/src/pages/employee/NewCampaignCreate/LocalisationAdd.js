@@ -397,6 +397,7 @@ const LocalisationBulkUpload = () => {
           <Button
             variation="secondary"
             label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
+            title={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
             onClick={() => inputRef.current?.click()}
             isDisabled={!isTemplateReady}
             icon={"FileDownload"}

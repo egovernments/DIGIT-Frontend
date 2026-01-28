@@ -1178,6 +1178,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               type={"button"}
               style={{ marginLeft: "2.5rem", width: "14rem" }}
               label={t("HCM_BACK")}
+              title={t("HCM_BACK")}
               variation={"secondary"}
               t={t}
               onClick={() => {
@@ -1188,6 +1189,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               type={"actionButton"}
               options={actionbarOptions}
               label={t("ES_COMMON_TAKE_ACTION")}
+              title={t("ES_COMMON_TAKE_ACTION")}
               variation={"primary"}
               style={{ width: "14rem" }}
               optionsKey={"name"}

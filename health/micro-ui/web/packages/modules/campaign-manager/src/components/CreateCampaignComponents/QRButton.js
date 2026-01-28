@@ -45,6 +45,7 @@ const QRButton = ({setShowQRPopUp}) => {
               size={"large"}
               variation={"primary"}
               label={t("ES_CAMPAIGN_CLOSE")}
+              title={t("ES_CAMPAIGN_CLOSE")}
               onClick={() => {
                 setShowQRPopUp(false);
               }}

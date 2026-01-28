@@ -397,6 +397,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               size={"large"}
               variation={"secondary"}
               label={t("ES_CAMPAIGN_DELIVERY_BACK")}
+              title={t("ES_CAMPAIGN_DELIVERY_BACK")}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -407,6 +408,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               size={"large"}
               variation={"primary"}
               label={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
+              title={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
               onClick={() => {
                 setShowPopUp(false);
                 if (pendingFormData) {

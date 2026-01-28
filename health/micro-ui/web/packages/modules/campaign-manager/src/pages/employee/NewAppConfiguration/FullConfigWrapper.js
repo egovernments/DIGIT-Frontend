@@ -249,6 +249,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           variation="secondary"
           icon="ArrowBack"
           label={t("BACK_TO_MODULES")}
+          title={t("BACK_TO_MODULES")}
           className="full-config-wrapper__back-button"
           onClick={() => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
@@ -518,6 +519,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           <Button
             variation="primary"
             label={t("PROCEED_TO_PREVIEW")}
+            title={t("PROCEED_TO_PREVIEW")}
             icon="CheckCircle"
             isSuffix={false}
             onClick={() => {

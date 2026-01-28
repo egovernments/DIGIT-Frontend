@@ -44,6 +44,7 @@ const ExpandableTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFi
       {/* Toggle Button */}
       <Button
         label={buttonLabel}
+        title={buttonLabel}
         onClick={handleToggle}
         variation="link"
         icon={buttonIcon}

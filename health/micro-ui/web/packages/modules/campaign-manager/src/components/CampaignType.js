@@ -201,6 +201,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 size={"large"}
                 variation={"secondary"}
                 label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+                title={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
                 onClick={() => {
                   setShowPopUp(false);
                   setCanUpdate(true);
@@ -212,6 +213,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                 size={"large"}
                 variation={"primary"}
                 label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+                title={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
                 onClick={() => {
                   setShowPopUp(false);
                   setCanUpdate(false);

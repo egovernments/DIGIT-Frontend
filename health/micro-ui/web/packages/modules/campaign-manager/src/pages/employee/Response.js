@@ -60,6 +60,7 @@ const Response = () => {
               icon={state?.primaryActionIcon || "ArrowForward"}
               isSuffix={state?.isPrimaryIconSuffix || true}
               label={t(state?.actionLabel)}
+              title={t(state?.actionLabel)}
               onClick={() => navigation(state?.actionLink)}
               type="button"
               variation="secondary"
@@ -68,6 +69,11 @@ const Response = () => {
           state?.secondaryActionLabel && (
             <Button
               label={
+                state?.secondaryActionLabel
+                  ? t(state?.secondaryActionLabel)
+                  : t("ES_CAMPAIGN_RESPONSE_ACTION")
+              }
+              title={
                 state?.secondaryActionLabel
                   ? t(state?.secondaryActionLabel)
                   : t("ES_CAMPAIGN_RESPONSE_ACTION")

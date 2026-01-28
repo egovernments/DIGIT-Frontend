@@ -260,6 +260,7 @@ const CampaignHome = () => {
               size={"large"}
               variation={"primary"}
               label={t("HCM_CAMPAIGN_PROCEED")}
+              title={t("HCM_CAMPAIGN_PROCEED")}
               onClick={() => {
                 navigate(
                   `/${window.contextPath}/employee/campaign/create-campaign`

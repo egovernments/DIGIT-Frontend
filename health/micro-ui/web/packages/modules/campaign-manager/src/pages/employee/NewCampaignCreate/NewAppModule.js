@@ -92,6 +92,7 @@ const NewAppModule = () => {
                   icon={isVisited ? "Edit" : null}
                   className={`campaign-module-button ${isVisited || isActive ? "primaryButton" : "secondButton"}`}
                   label={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
+                  title={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card click
                     if (isActive) {
@@ -115,6 +116,7 @@ const NewAppModule = () => {
           <Button
             icon="ArrowBack"
             label={t("GO_BACK")}
+            title={t("GO_BACK")}
             onClick={() => {
               // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);

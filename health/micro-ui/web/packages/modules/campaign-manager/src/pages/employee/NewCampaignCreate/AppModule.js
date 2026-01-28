@@ -307,6 +307,7 @@ const AppModule = () => {
                   isDisabled={module?.data?.disabled}
                   variation={selectedModuleCodes.includes(module?.data?.name) ? "secondary" : "primary"}
                   label={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
+                  title={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
                   onClick={() => handleSelectModule(module?.data?.name)}
                 />
               </Card>

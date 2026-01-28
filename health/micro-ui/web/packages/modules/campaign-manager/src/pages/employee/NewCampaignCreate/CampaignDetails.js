@@ -703,6 +703,7 @@ const CampaignDetails = () => {
                 <Button
                   icon="CheckCircleOutline"
                   label={t("HCM_CREATE_CAMPAIGN")}
+                  title={t("HCM_CREATE_CAMPAIGN")}
                   onClick={onsubmit}
                   isDisabled={
                     campaignData?.boundaries?.length === 0 ||
@@ -718,11 +719,12 @@ const CampaignDetails = () => {
                 <Button
                   icon="CloudDownload"
                   label={t("HCM_DOWNLOAD_CREDENTIALS")}
+                  title={t("HCM_DOWNLOAD_CREDENTIALS")}
                   onClick={() => onDownloadCredentails(campaignData)}
                   type="button"
                   variation="primary"
                 />,
-                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
+                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} title={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
               ]
         }
         maxActionFieldsAllowed={5}

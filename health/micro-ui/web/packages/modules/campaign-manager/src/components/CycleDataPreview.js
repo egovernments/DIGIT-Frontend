@@ -62,7 +62,7 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           variant="error"
           text={t(i?.error ? i?.error : i?.message)}
           hasAdditionalElements={true}
-          additionalElements={[<Button className={"error alert-card-error-button"} label={i?.button} variation="secondary" onClick={i.onClick} />]}
+          additionalElements={[<Button className={"error alert-card-error-button"} label={i?.button} title={i?.button} variation="secondary" onClick={i.onClick} />]}
         />
       ))}
       <div className="employee-data-table ">

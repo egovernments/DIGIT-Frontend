@@ -30,6 +30,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data }) => {
             isDisabled={Object.keys(data?.defaultBoundaryData || {})?.length == 0}
             variation={"secondary"}
             label={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
+            title={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
             onClick={() => {
               navigate(
                 `/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${
@@ -45,6 +46,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data }) => {
             size={"large"}
             variation={"secondary"}
             label={t("CREATE_MY_OWN_BOUNDARY_DATA")}
+            title={t("CREATE_MY_OWN_BOUNDARY_DATA")}
             onClick={() => {
               navigate(
                 `/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${

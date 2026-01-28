@@ -15,6 +15,7 @@ export const CaptureImage = ({ field, t, fieldTypeMasterData }) => {
     <Button
       variation={variation || "primary"}
       label={t(field?.label) || "Capture Image"}
+      title={t(field?.label) || "Capture Image"}
       onClick={() => {}}
       className="app-preview-action-button"
       icon={iconName}

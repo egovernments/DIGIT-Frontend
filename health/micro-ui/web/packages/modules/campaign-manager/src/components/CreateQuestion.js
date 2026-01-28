@@ -482,7 +482,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                             label={`${t(`CAMPAIGN_DELETE_QUESTION`)} ${questionNumber}`}
                             onClick={() => deleteField(field.key, initialQuestionData, field.id, field)}
                             size="medium"
-                            title=""
+                            title={`${t(`CAMPAIGN_DELETE_QUESTION`)} ${questionNumber}`}
                             variation="link"
                           />
                         </div>
@@ -619,6 +619,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
             variation="secondary"
             size="medium"
             label={`${t("ADD_QUESTION")} ${nextQuestionNumber}`}
+            title={`${t("ADD_QUESTION")} ${nextQuestionNumber}`}
             className={"hover"}
             icon="Add"
             iconFill=""

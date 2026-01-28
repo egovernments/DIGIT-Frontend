@@ -122,6 +122,7 @@ const Wrapper = ({
           size={"large"}
           variation={"secondary"}
           label={t("DIGIT_CLOSE")}
+          title={t("DIGIT_CLOSE")}
           onClick={() => {
             setShowPopUp(false);
           }}
@@ -132,6 +133,7 @@ const Wrapper = ({
           size={"large"}
           variation={"primary"}
           label={t("DIGIT_CONFIRM_SELECTION")}
+          title={t("DIGIT_CONFIRM_SELECTION")}
           onClick={() => {
             const selectedPropsData = dummySelected.map((item) => item.propsData);
             onSelect(selectedPropsData);
@@ -229,6 +231,7 @@ const Wrapper = ({
           {!disableClearAll && (
             <Button
               label={t("HCM_CLEAR_ALL")}
+              title={t("HCM_CLEAR_ALL")}
               onClick={() => {
                 const updatedDummySelected = dummySelected.filter((item) => item?.propsData?.[1]?.parent !== parent);
                 setDummySelected(updatedDummySelected);
@@ -984,6 +987,7 @@ const MultiSelectDropdown = ({
           {alreadyQueuedSelectedState.length > (config?.numberOfChips || 4) && (
             <Button
               label={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t("HCM_SELECTED")}`}
+              title={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t("HCM_SELECTED")}`}
               onClick={() => openPopUp(alreadyQueuedSelectedState)}
               variation="link"
             />
@@ -1005,6 +1009,7 @@ const MultiSelectDropdown = ({
           {alreadyQueuedSelectedState.length > 0 && !disableClearAll && (
             <Button
               label={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
+              title={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
               onClick={handleClearAll}
               variation=""
               style={{

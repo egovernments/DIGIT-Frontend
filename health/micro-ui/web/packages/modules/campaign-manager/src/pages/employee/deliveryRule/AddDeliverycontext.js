@@ -282,6 +282,7 @@ const AddAttributeField = React.memo(({
           variation="link"
           style={{ marginTop: "3rem" }}
           label={t("CAMPAIGN_DELETE_ROW_TEXT")}
+          title={t("CAMPAIGN_DELETE_ROW_TEXT")}
           icon="Delete"
           onClick={onDelete}
         />
@@ -329,6 +330,7 @@ const AddAttributeWrapper = React.memo(({
         <Button
           variation="secondary"
           label={t("CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT")}
+          title={t("CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT")}
           className="add-attribute hover"
           icon="AddIcon"
           onClick={handleAddAttribute}
@@ -443,6 +445,7 @@ const AddDeliveryRule = React.memo(({
           variation="secondary"
           className="add-product-btn hover"
           label={t("CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT")}
+          title={t("CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT")}
           icon="AppRegistration"
           onClick={() => setShowModal(true)}
         />
@@ -462,6 +465,7 @@ const AddDeliveryRule = React.memo(({
               size="large"
               variation="primary"
               label={t("CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT")}
+              title={t("CAMPAIGN_PRODUCTS_MODAL_SUBMIT_TEXT")}
               onClick={confirmResources}
             />,
           ]}
@@ -591,6 +595,7 @@ return (
         <Button
           variation="secondary"
           label={t("CAMPAIGN_ADD_MORE_DELIVERY_BUTTON")}
+          title={t("CAMPAIGN_ADD_MORE_DELIVERY_BUTTON")}
           className="add-rule-btn hover"
           icon="AddIcon"
           onClick={handleAddRule}

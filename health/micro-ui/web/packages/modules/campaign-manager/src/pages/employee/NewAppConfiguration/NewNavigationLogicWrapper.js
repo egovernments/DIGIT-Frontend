@@ -764,7 +764,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                     {SVG?.Edit ? (
                         <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
                     ) : (
-                        <Button variation="secondary" label={navLogicTitle} onClick={() => openEditor(idx)} />
+                        <Button variation="secondary" label={navLogicTitle} title={navLogicTitle} onClick={() => openEditor(idx)} />
                     )}
                 </div>
 
@@ -811,6 +811,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                 <Button
                     variation="secondary"
                     label={addRuleLabel}
+                    title={addRuleLabel}
                     onClick={addRule}
                     icon="Add"
                     style={{ width: "100%" }}
@@ -1161,6 +1162,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                     <Button
                                                         variation="secondary"
                                                         label={addConditionLabel}
+                                                        title={addConditionLabel}
                                                         icon="Add"
                                                         onClick={() => addCondition(editorIndex)}
                                                         style={{ minWidth: "auto" }}
@@ -1232,6 +1234,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                     size={"large"}
                                     variation={"secondary"}
                                     label={closeLabel}
+                                    title={closeLabel}
                                     onClick={discardAndCloseEditor}
                                 />,
                                 <Button
@@ -1240,6 +1243,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                     size={"large"}
                                     variation={"primary"}
                                     label={submitLabel}
+                                    title={submitLabel}
                                     onClick={submitAndClose}
                                 />,
                             ]}
