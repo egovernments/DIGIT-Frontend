@@ -1,4 +1,4 @@
-FROM node:14-alpine3.16 AS build
+FROM node:20-alpine AS build
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
