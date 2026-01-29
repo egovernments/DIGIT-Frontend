@@ -26,7 +26,11 @@ function NewDraggableField({
   const ref = useRef(null);
 
   const customTranslate = useCustomTranslate();
-  const localizedLabel = label ? customTranslate(label): rest?.fieldName ? customTranslate(rest?.fieldName) : "";
+  const localizedLabel =
+  customTranslate(label)?.trim() ||
+  customTranslate(rest?.fieldName)?.trim() ||
+  rest.fieldName;
+
   const isDragEnabled = typeof moveField === 'function' && !isTemplate;
   const [, drop] = useDrop({
     accept: FIELD_TYPE,

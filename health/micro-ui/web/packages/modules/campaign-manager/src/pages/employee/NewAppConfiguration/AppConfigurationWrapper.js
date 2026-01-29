@@ -149,11 +149,36 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         tabProperties.forEach((panelItem) => {
           // Check if this panel item is visible for this field type
           const isVisible =
-            !panelItem?.visibilityEnabledFor ||
+            (!panelItem?.visibilityEnabledFor ||
             panelItem.visibilityEnabledFor.length === 0 ||
-            panelItem.visibilityEnabledFor.includes(fieldType);
+            panelItem.visibilityEnabledFor.includes(fieldType) && field.hidden !== true);
 
           if (!isVisible) return;
+
+          // Validation for mandatory localisable fields
+          // Check if field has isMandatory: true and localized value is empty
+          if (
+            panelItem.isMandatory === true &&
+            panelItem.fieldType === "text" &&
+            panelItem.isLocalisable !== false
+          ) {
+            const bindTo = panelItem.bindTo;
+            const fieldValue = field?.[bindTo];
+
+            // Check if localized value is empty
+            if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
+              errors.push({
+                fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                panelLabel: panelItem.label,
+                message: `VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY`,
+                messageParams: {
+                  fieldName: field?.label || field?.fieldName || "Unknown Field",
+                  propertyName: panelItem.label
+                },
+                tab: tabKey,
+              });
+            }
+          }
 
           // Check toggle fields with isMandatory: true and conditionalField
           if (
@@ -292,7 +317,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                       },
                       tab: tabKey,
                     });
-                  } else if (isLocalisable && typeof conditionalValue === "string" && conditionalValue.trim() !== "") {
+                  } else if (isLocalisable && typeof conditionalValue === "string" && conditionalValue.trim() !== "" && panelItem.label !== "isMdms") {
                     // Check localization for string values
                     if (isLocalizedValueEmpty(conditionalValue, localizationData, currentLocale)) {
                       errors.push({
@@ -308,6 +333,21 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     }
                   }
                 }
+              });
+            }
+          }
+
+          // Validation for labelPairList fields - at least one field must be selected
+          if (panelItem.fieldType === "labelPairList") {
+            const labelPairData = field?.data;
+
+            // Check if data is empty, undefined, null, or an empty array
+            if (!labelPairData || !Array.isArray(labelPairData) || labelPairData.length === 0 && !field.hidden ) {
+              errors.push({
+                fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                panelLabel: panelItem.label,
+                message: "AT_LEAST_ONE_FIELD_MUST_BE_SELECTED",
+                tab: tabKey,
               });
             }
           }

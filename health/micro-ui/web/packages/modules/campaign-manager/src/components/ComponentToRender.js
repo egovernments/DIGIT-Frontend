@@ -85,6 +85,9 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
     if (field?.isMdms && isValidSchema && mdmsData) {
       return mdmsData;
     }
+    else if(field?.isMdms && !mdmsData){
+      return []
+    }
     return field?.dropDownOptions || [];
   }, [field?.isMdms, field?.dropDownOptions, isValidSchema, mdmsData]);
 
