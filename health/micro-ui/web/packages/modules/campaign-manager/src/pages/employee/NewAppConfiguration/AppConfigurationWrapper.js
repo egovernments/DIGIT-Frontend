@@ -204,6 +204,114 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
             }
           }
 
+          // Validation for toggle fields with showFieldOnToggle: true
+          // Validates that when toggle is ON, conditional fields have proper values
+          if (
+            panelItem.fieldType === "toggle" &&
+            panelItem.showFieldOnToggle === true &&
+            Array.isArray(panelItem.conditionalField) &&
+            panelItem.conditionalField.length > 0
+          ) {
+            const toggleBindTo = panelItem.bindTo;
+            const fieldValue = field?.[toggleBindTo];
+
+            // Determine if toggle is ON:
+            // - Value is exactly true (boolean)
+            // - Value is a truthy string
+            // - Value is a truthy number (for cases like scanLimit where value might be a number)
+            const isToggleOn = fieldValue === true ||
+              (typeof fieldValue === "string" && fieldValue.trim() !== "") ||
+              (typeof fieldValue === "number" && !isNaN(fieldValue));
+
+            // Skip validation if toggle is OFF (false, undefined, null, empty string, 0)
+            if (!isToggleOn && fieldValue !== 0) {
+              // Toggle is OFF, no validation needed
+            } else {
+              // Toggle is ON - validate all conditional fields
+
+              // Get conditional fields that appear when toggle is ON (condition: true or no condition specified)
+              const activeConditionalFields = panelItem.conditionalField.filter(
+                (cField) => cField.condition === true || cField.condition === undefined
+              );
+
+              activeConditionalFields.forEach((cField) => {
+                if (!cField.bindTo) return;
+
+                const conditionalBindTo = cField.bindTo;
+                const isMatchingBindTo = conditionalBindTo === toggleBindTo;
+
+                // Get the value for this conditional field
+                let conditionalValue;
+                  conditionalValue = field?.[conditionalBindTo];
+                
+
+                const isLocalisable = cField.isLocalisable !== false;
+                const conditionalFieldType = cField.type;
+
+                if (isMatchingBindTo) {
+                  // Same bindTo as parent toggle - value should NOT be just boolean true
+                  if (fieldValue === true) {
+                    errors.push({
+                      fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                      panelLabel: panelItem.label,
+                      message: `VALIDATION_TOGGLE_VALUE_REQUIRED`,
+                      messageParams: {
+                        fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
+                      },
+                      tab: tabKey,
+                    });
+                  } else if (
+                    isLocalisable &&
+                    conditionalFieldType !== "number" && // Skip localization for number fields
+                    typeof fieldValue === "string" &&
+                    fieldValue.trim() !== ""
+                  ) {
+                    // Check localization for string values (not number fields)
+                    if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
+                      errors.push({
+                        fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                        panelLabel: panelItem.label,
+                        message: `VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY`,
+                        messageParams: {
+                          fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
+                        },
+                        tab: tabKey,
+                      });
+                    }
+                  }
+                } else {
+                  // Different bindTo than parent toggle - validate conditional field has value
+                  if (isValueEmpty(conditionalValue)) {
+                    errors.push({
+                      fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                      panelLabel: panelItem.label,
+                      message: `VALIDATION_CONDITIONAL_FIELD_REQUIRED`,
+                      messageParams: {
+                        toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
+                        fieldName: t(cField.label) || cField.bindTo
+                      },
+                      tab: tabKey,
+                    });
+                  } else if (isLocalisable && typeof conditionalValue === "string" && conditionalValue.trim() !== "") {
+                    // Check localization for string values
+                    if (isLocalizedValueEmpty(conditionalValue, localizationData, currentLocale)) {
+                      errors.push({
+                        fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                        panelLabel: panelItem.label,
+                        message: `VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY`,
+                        messageParams: {
+                          toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
+                          fieldName: t(cField.label) || cField.bindTo
+                        },
+                        tab: tabKey,
+                      });
+                    }
+                  }
+                }
+              });
+            }
+          }
+
           // Special validation for isMdms toggle field
           // Check if isMdms is enabled and validate schemaCode or dropDownOptions accordingly
           if (panelItem.bindTo === "isMdms" && panelItem.fieldType === "toggle") {
