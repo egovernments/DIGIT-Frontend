@@ -7,6 +7,10 @@ WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=8168 --max-http-header-size=81920"
 ENV GIT_TOKEN=${GIT_TOKEN}
 
+# --- ADD THIS LINE HERE ---
+ARG CACHEBUST=1 
+# --------------------------
+
 COPY ${WORK_DIR} .
 RUN ls -lah
 
