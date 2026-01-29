@@ -140,13 +140,14 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
   };
 
   // Label prefix and placeholder based on item type
-  const labelPrefix = itemType === "column" ? t("COLUMN") : t("OPTION_PLACEHOLDER");
+  const labelPrefix = itemType === "column" ? t("COLUMN") : t("ADD_LOCALIZATION");
   const placeholder = itemType === "column"
     ? (t("ADD_HEADER_LOCALIZATION") || "Add header localization")
     : (t("ADD_LOCALIZATION") || "Add localization");
 
-  // Display label text
-  const label = `${labelPrefix} ${itemIndex + 1}`;
+  // Display label text - use translated fieldName instead of index
+  const translatedFieldName = t(Digit.Utils.locale.getTransformedLocale(localizationCode)) ;
+  const label = `${labelPrefix}: ${translatedFieldName}`;
 
   return (
     <div className="drawer-container-tooltip">

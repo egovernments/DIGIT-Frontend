@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback,Fragment } from "react";
+import React, { useEffect, useMemo, useState, useCallback, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
     Dropdown,
@@ -35,7 +35,19 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
         {
             cacheTime: Infinity,
             staleTime: Infinity,
-            select: (data) => data?.[module]?.[master] || [],
+            select: (data) => {
+                // Extract the data from the MDMS response
+                if (data && module && master) {
+                    const optionsData = data?.[module]?.[master] || [];
+                    return optionsData
+                        .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+                        .map((opt) => ({
+                            ...opt,
+                            name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
+                        }));
+                }
+                return [];
+            },
         },
         { schemaCode: "DROPDOWN_MASTER_DATA" },
         true // mdmsv2
@@ -68,7 +80,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
     );
 }
 
-function NewNavigationLogicWrapper({ t, targetPages = []}) {
+function NewNavigationLogicWrapper({ t, targetPages = [] }) {
     const customT = useCustomTranslate();
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
@@ -680,12 +692,12 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
         let valueText = c?.fieldValue || "";
         valueText = `${valueText}`.replace(/[()]/g, "");
         return `${customT(fieldLabel)} ${t(op)} ${field?.format === "dropdown" ||
-                field?.format === "radio" ||
-                field?.format === "select" ||
-                field?.type === "selection" ||
-                field?.type === "checkbox"
-                ? customT(valueText)
-                : valueText
+            field?.format === "radio" ||
+            field?.format === "select" ||
+            field?.type === "selection" ||
+            field?.type === "checkbox"
+            ? customT(valueText)
+            : valueText
             }`.trim();
     };
 
@@ -889,168 +901,197 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                     gap: "0.5rem",
                                                                 }}
                                                             >
-                                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", alignItems: "flex-end" }}>
-                                                                {/* Field */}
-                                                                <div style={{ minWidth: 260, flex: "1 1 280px" }}>
-                                                                    <LabelFieldPair vertical removeMargin>
-                                                                        <p style={{ margin: 0 }}>{selectFieldLabel}</p>
-                                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                                            <Dropdown
-                                                                                option={currentPageFieldOptions}
-                                                                                optionKey="label"
-                                                                                name={`field-${editorIndex}-${idx}`}
-                                                                                t={customT}
-                                                                                select={(e) => {
-                                                                                    const nextOps = getOperatorOptions(e);
-                                                                                    const canKeep =
-                                                                                        cond?.comparisonType?.code &&
-                                                                                        nextOps.some((o) => o.code === cond.comparisonType.code);
+                                                                <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", alignItems: "flex-end" }}>
+                                                                    {/* Field */}
+                                                                    <div style={{ minWidth: 260, flex: "1 1 280px" }}>
+                                                                        <LabelFieldPair vertical removeMargin>
+                                                                            <p style={{ margin: 0 }}>{selectFieldLabel}</p>
+                                                                            <div className="digit-field" style={{ width: "100%" }}>
+                                                                                <Dropdown
+                                                                                    option={currentPageFieldOptions}
+                                                                                    optionKey="label"
+                                                                                    name={`field-${editorIndex}-${idx}`}
+                                                                                    t={customT}
+                                                                                    select={(e) => {
+                                                                                        const nextOps = getOperatorOptions(e);
+                                                                                        const canKeep =
+                                                                                            cond?.comparisonType?.code &&
+                                                                                            nextOps.some((o) => o.code === cond.comparisonType.code);
 
-                                                                                    const isCk = isCheckboxField(e);
-                                                                                    updateCond(editorIndex, idx, {
-                                                                                        selectedField: e,
-                                                                                        ...(isCk && { fieldValue: ["true", "false"].includes(String(cond.fieldValue).toLowerCase()) ? cond.fieldValue : "false" }),
-                                                                                        comparisonType: canKeep
-                                                                                            ? cond.comparisonType
-                                                                                            : (isCk ? nextOps.find((o) => o.code === "==") : {}),
-                                                                                    });
-                                                                                }}
-                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
-                                                                                selected={
-                                                                                    cond?.selectedField?.code
-                                                                                        ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
-                                                                                        : cond.selectedField
-                                                                                }
-                                                                                showToolTip={true}
-                                                                            />
-                                                                        </div>
-                                                                    </LabelFieldPair>
-                                                                </div>
+                                                                                        const isCk = isCheckboxField(e);
+                                                                                        updateCond(editorIndex, idx, {
+                                                                                            selectedField: e,
+                                                                                            ...(isCk && { fieldValue: ["true", "false"].includes(String(cond.fieldValue).toLowerCase()) ? cond.fieldValue : "false" }),
+                                                                                            comparisonType: canKeep
+                                                                                                ? cond.comparisonType
+                                                                                                : (isCk ? nextOps.find((o) => o.code === "==") : {}),
+                                                                                        });
+                                                                                    }}
+                                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                                    selected={
+                                                                                        cond?.selectedField?.code
+                                                                                            ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
+                                                                                            : cond.selectedField
+                                                                                    }
+                                                                                    showToolTip={true}
+                                                                                />
+                                                                            </div>
+                                                                        </LabelFieldPair>
+                                                                    </div>
 
-                                                                {/* Operator */}
-                                                                <div style={{ minWidth: 220, flex: "0 1 220px" }}>
-                                                                    <LabelFieldPair vertical removeMargin>
-                                                                        <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
-                                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                                            <Dropdown
-                                                                                option={operatorOptions}
-                                                                                optionKey="name"
-                                                                                name={`op-${editorIndex}-${idx}`}
-                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
-                                                                                t={t}
-                                                                                select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
-                                                                                // disabled={!cond?.selectedField?.code}
-                                                                                selected={selectedOperator}
-                                                                                showToolTip={true}
-                                                                            />
-                                                                        </div>
-                                                                    </LabelFieldPair>
-                                                                </div>
+                                                                    {/* Operator */}
+                                                                    <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                                                        <LabelFieldPair vertical removeMargin>
+                                                                            <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
+                                                                            <div className="digit-field" style={{ width: "100%" }}>
+                                                                                <Dropdown
+                                                                                    option={operatorOptions}
+                                                                                    optionKey="name"
+                                                                                    name={`op-${editorIndex}-${idx}`}
+                                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                                    t={t}
+                                                                                    select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
+                                                                                    // disabled={!cond?.selectedField?.code}
+                                                                                    selected={selectedOperator}
+                                                                                    showToolTip={true}
+                                                                                />
+                                                                            </div>
+                                                                        </LabelFieldPair>
+                                                                    </div>
 
-                                                                {/* Value */}
-                                                                <div style={{ minWidth: 220, flex: "0 1 220px" }}>
-                                                                    <LabelFieldPair vertical removeMargin>
-                                                                        <p style={{ margin: 0 }}>{selectValueLabel}</p>
-                                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                                            {(() => {
-                                                                                if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
-                                                                                    const boolVal = String(cond.fieldValue).toLowerCase() === "true";
-                                                                                    return (
-                                                                                        <CheckBox
-                                                                                            mainClassName={"app-config-checkbox-main"}
-                                                                                            labelClassName={"app-config-checkbox-label"}
-                                                                                            onChange={(v) => {
-                                                                                                const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
-                                                                                                updateCond(editorIndex, idx, { fieldValue: checked ? "true" : "false" });
-                                                                                            }}
-                                                                                            value={boolVal}
-                                                                                            label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
-                                                                                            isLabelFirst={false}
-                                                                                            disabled={!cond?.selectedField?.code}
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                if (selectedFieldObj && isDobLike(selectedFieldObj)) {
-                                                                                    return (
-                                                                                        <TextInput
-                                                                                            type="text"
-                                                                                            populators={{ name: `months-${editorIndex}-${idx}` }}
-                                                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
-                                                                                            value={cond.fieldValue}
-                                                                                            onChange={(event) =>
-                                                                                                updateCond(editorIndex, idx, {
-                                                                                                    fieldValue: sanitizeIntegerInput(event.target.value),
-                                                                                                })
-                                                                                            }
-                                                                                            disabled={!cond?.selectedField?.code}
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                if (selectedFieldObj && isDatePickerNotDob(selectedFieldObj)) {
-                                                                                    const iso = toISOFromDDMMYYYY(cond.fieldValue);
-                                                                                    return (
-                                                                                        <TextInput
-                                                                                            type="date"
-                                                                                            name={`date-${editorIndex}-${idx}`}
-                                                                                            className="appConfigLabelField-Input"
-                                                                                            value={iso}
-                                                                                            populators={{
-                                                                                                newDateFormat: true,
-                                                                                            }}
-                                                                                            onChange={(d) => {
-
-                                                                                                updateCond(editorIndex, idx, {
-                                                                                                    fieldValue: toDDMMYYYY(d),
-                                                                                                })
-                                                                                            }
-                                                                                            }
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                const isSelect =
-                                                                                    selectedFieldObj &&
-                                                                                    (selectedFieldObj.format === "dropdown" ||
-                                                                                        selectedFieldObj.format === "radio" ||
-                                                                                        selectedFieldObj.format === "select" ||
-                                                                                        selectedFieldObj.type === "selection");
-
-                                                                                if (isSelect) {
-                                                                                    if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
-                                                                                        const enumOptions = selectedFieldObj.enums.map((en) => ({
-                                                                                            code: String(en.code),
-                                                                                            name: en.name,
-                                                                                        }));
-                                                                                        const selectedEnum =
-                                                                                            enumOptions.find((o) => String(o.code) === String(cond.fieldValue)) ||
-                                                                                            (cond.fieldValue
-                                                                                                ? { code: String(cond.fieldValue), name: String(cond.fieldValue) }
-                                                                                                : undefined);
+                                                                    {/* Value */}
+                                                                    <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                                                        <LabelFieldPair vertical removeMargin>
+                                                                            <p style={{ margin: 0 }}>{selectValueLabel}</p>
+                                                                            <div className="digit-field" style={{ width: "100%" }}>
+                                                                                {(() => {
+                                                                                    if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
+                                                                                        const boolVal = String(cond.fieldValue).toLowerCase() === "true";
                                                                                         return (
-                                                                                            <Dropdown
-                                                                                                option={enumOptions}
-                                                                                                optionKey="name"
-                                                                                                name={`val-${editorIndex}-${idx}`}
-                                                                                                t={customT}
-                                                                                                optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
-                                                                                                select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
+                                                                                            <CheckBox
+                                                                                                mainClassName={"app-config-checkbox-main"}
+                                                                                                labelClassName={"app-config-checkbox-label"}
+                                                                                                onChange={(v) => {
+                                                                                                    const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
+                                                                                                    updateCond(editorIndex, idx, { fieldValue: checked ? "true" : "false" });
+                                                                                                }}
+                                                                                                value={boolVal}
+                                                                                                label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
+                                                                                                isLabelFirst={false}
                                                                                                 disabled={!cond?.selectedField?.code}
-                                                                                                selected={selectedEnum}
-                                                                                                showToolTip={true}
-                                                                                                isSearchable={true}
                                                                                             />
                                                                                         );
                                                                                     }
 
-                                                                                    if (selectedFieldObj.schemaCode) {
+                                                                                    if (selectedFieldObj && isDobLike(selectedFieldObj)) {
                                                                                         return (
-                                                                                            <MdmsValueDropdown
-                                                                                                schemaCode={selectedFieldObj.schemaCode}
+                                                                                            <TextInput
+                                                                                                type="text"
+                                                                                                populators={{ name: `months-${editorIndex}-${idx}` }}
+                                                                                                placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
                                                                                                 value={cond.fieldValue}
-                                                                                                onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
-                                                                                                t={t}
+                                                                                                onChange={(event) =>
+                                                                                                    updateCond(editorIndex, idx, {
+                                                                                                        fieldValue: sanitizeIntegerInput(event.target.value),
+                                                                                                    })
+                                                                                                }
+                                                                                                disabled={!cond?.selectedField?.code}
+                                                                                            />
+                                                                                        );
+                                                                                    }
+
+                                                                                    if (selectedFieldObj && isDatePickerNotDob(selectedFieldObj)) {
+                                                                                        const iso = toISOFromDDMMYYYY(cond.fieldValue);
+                                                                                        return (
+                                                                                            <TextInput
+                                                                                                type="date"
+                                                                                                name={`date-${editorIndex}-${idx}`}
+                                                                                                className="appConfigLabelField-Input"
+                                                                                                value={iso}
+                                                                                                populators={{
+                                                                                                    newDateFormat: true,
+                                                                                                }}
+                                                                                                onChange={(d) => {
+
+                                                                                                    updateCond(editorIndex, idx, {
+                                                                                                        fieldValue: toDDMMYYYY(d),
+                                                                                                    })
+                                                                                                }
+                                                                                                }
+                                                                                            />
+                                                                                        );
+                                                                                    }
+
+                                                                                    const isSelect =
+                                                                                        selectedFieldObj &&
+                                                                                        (selectedFieldObj.format === "dropdown" ||
+                                                                                            selectedFieldObj.format === "radio" ||
+                                                                                            selectedFieldObj.format === "select" ||
+                                                                                            selectedFieldObj.type === "selection");
+
+                                                                                    if (isSelect) {
+                                                                                        if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
+                                                                                            const enumOptions = selectedFieldObj.enums.map((en) => ({
+                                                                                                code: String(en.code),
+                                                                                                name: en.name,
+                                                                                            }));
+                                                                                            const selectedEnum =
+                                                                                                enumOptions.find((o) => String(o.code) === String(cond.fieldValue)) ||
+                                                                                                (cond.fieldValue
+                                                                                                    ? { code: String(cond.fieldValue), name: String(cond.fieldValue) }
+                                                                                                    : undefined);
+                                                                                            return (
+                                                                                                <Dropdown
+                                                                                                    option={enumOptions}
+                                                                                                    optionKey="name"
+                                                                                                    name={`val-${editorIndex}-${idx}`}
+                                                                                                    t={customT}
+                                                                                                    optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
+                                                                                                    select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
+                                                                                                    disabled={!cond?.selectedField?.code}
+                                                                                                    selected={selectedEnum}
+                                                                                                    showToolTip={true}
+                                                                                                    isSearchable={true}
+                                                                                                />
+                                                                                            );
+                                                                                        }
+
+                                                                                        if (selectedFieldObj.schemaCode) {
+                                                                                            return (
+                                                                                                <MdmsValueDropdown
+                                                                                                    schemaCode={selectedFieldObj.schemaCode}
+                                                                                                    value={cond.fieldValue}
+                                                                                                    onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
+                                                                                                    t={t}
+                                                                                                />
+                                                                                            );
+                                                                                        }
+
+                                                                                        return (
+                                                                                            <TextInput
+                                                                                                type="text"
+                                                                                                populators={{ name: `text-${editorIndex}-${idx}` }}
+                                                                                                placeholder={enterValueLabel}
+                                                                                                value={cond.fieldValue}
+                                                                                                onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
+                                                                                                disabled={!cond?.selectedField?.code}
+                                                                                            />
+                                                                                        );
+                                                                                    }
+
+                                                                                    if (numericField) {
+                                                                                        return (
+                                                                                            <TextInput
+                                                                                                type="text"
+                                                                                                populators={{ name: `text-${editorIndex}-${idx}` }}
+                                                                                                placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                                value={cond.fieldValue}
+                                                                                                onChange={(event) =>
+                                                                                                    updateCond(editorIndex, idx, {
+                                                                                                        fieldValue: sanitizeIntegerInput(event.target.value),
+                                                                                                    })
+                                                                                                }
+                                                                                                disabled={!cond?.selectedField?.code}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1065,93 +1106,64 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                                                                             disabled={!cond?.selectedField?.code}
                                                                                         />
                                                                                     );
-                                                                                }
+                                                                                })()}
+                                                                            </div>
+                                                                        </LabelFieldPair>
+                                                                    </div>
 
-                                                                                if (numericField) {
-                                                                                    return (
-                                                                                        <TextInput
-                                                                                            type="text"
-                                                                                            populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
-                                                                                            value={cond.fieldValue}
-                                                                                            onChange={(event) =>
-                                                                                                updateCond(editorIndex, idx, {
-                                                                                                    fieldValue: sanitizeIntegerInput(event.target.value),
-                                                                                                })
-                                                                                            }
-                                                                                            disabled={!cond?.selectedField?.code}
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                return (
-                                                                                    <TextInput
-                                                                                        type="text"
-                                                                                        populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                        placeholder={enterValueLabel}
-                                                                                        value={cond.fieldValue}
-                                                                                        onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
-                                                                                        disabled={!cond?.selectedField?.code}
-                                                                                    />
-                                                                                );
-                                                                            })()}
+                                                                    {/* Remove condition - only show when more than 1 condition exists */}
+                                                                    {rule.conds.length > 1 && (
+                                                                        <div
+                                                                            style={{
+                                                                                display: "flex",
+                                                                                alignItems: "center",
+                                                                                gap: "0.25rem",
+                                                                                cursor: "pointer",
+                                                                                alignSelf: "flex-end",
+                                                                                paddingBottom: "0.5rem",
+                                                                            }}
+                                                                            onClick={() => removeCondition(editorIndex, idx)}
+                                                                            title={removeConditionLabel}
+                                                                            aria-label={removeConditionLabel}
+                                                                            role="button"
+                                                                        >
+                                                                            <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
+                                                                            <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
+                                                                                {removeConditionLabel}
+                                                                            </span>
                                                                         </div>
-                                                                    </LabelFieldPair>
+                                                                    )}
                                                                 </div>
 
-                                                                {/* Remove condition - only show when more than 1 condition exists */}
-                                                                {rule.conds.length > 1 && (
+                                                                {/* Per-condition error */}
+                                                                {validationStarted && !isCondComplete(cond) && (
                                                                     <div
                                                                         style={{
+                                                                            border: "1px solid #FCA5A5",
+                                                                            background: "#FEF2F2",
+                                                                            color: "#B91C1C",
+                                                                            borderRadius: 6,
+                                                                            padding: "0.5rem 0.75rem",
                                                                             display: "flex",
                                                                             alignItems: "center",
-                                                                            gap: "0.25rem",
-                                                                            cursor: "pointer",
-                                                                            alignSelf: "flex-end",
-                                                                            paddingBottom: "0.5rem",
+                                                                            justifyContent: "space-between",
+                                                                            gap: "0.75rem",
                                                                         }}
-                                                                        onClick={() => removeCondition(editorIndex, idx)}
-                                                                        title={removeConditionLabel}
-                                                                        aria-label={removeConditionLabel}
-                                                                        role="button"
                                                                     >
-                                                                        <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
-                                                                        <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
-                                                                            {removeConditionLabel}
-                                                                        </span>
+                                                                        <span>{completeAllMsg}</span>
+                                                                        <SVG.Close
+                                                                            width={"1.1rem"}
+                                                                            height={"1.1rem"}
+                                                                            fill={"#7F1D1D"}
+                                                                            onClick={() => {
+                                                                                setValidationStarted(false);
+                                                                                setGlobalFormError(null)
+                                                                            }}
+                                                                            tabIndex={0}
+                                                                            style={{ cursor: "pointer" }}
+                                                                        />
                                                                     </div>
                                                                 )}
-                                                            </div>
-
-                                                            {/* Per-condition error */}
-                                                            {validationStarted && !isCondComplete(cond) && (
-                                                                <div
-                                                                    style={{
-                                                                        border: "1px solid #FCA5A5",
-                                                                        background: "#FEF2F2",
-                                                                        color: "#B91C1C",
-                                                                        borderRadius: 6,
-                                                                        padding: "0.5rem 0.75rem",
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        justifyContent: "space-between",
-                                                                        gap: "0.75rem",
-                                                                    }}
-                                                                >
-                                                                    <span>{completeAllMsg}</span>
-                                                                    <SVG.Close
-                                                                        width={"1.1rem"}
-                                                                        height={"1.1rem"}
-                                                                        fill={"#7F1D1D"}
-                                                                        onClick={() => {
-                                                                            setValidationStarted(false);
-                                                                            setGlobalFormError(null)
-                                                                        }}
-                                                                        tabIndex={0}
-                                                                        style={{ cursor: "pointer" }}
-                                                                    />
-                                                                </div>
-                                                            )}
                                                             </div>
                                                         </React.Fragment>
                                                     );
@@ -1247,7 +1259,7 @@ function NewNavigationLogicWrapper({ t, targetPages = []}) {
                                     onClick={submitAndClose}
                                 />,
                             ]}
-                            style={{maxWidth:"60%"}}
+                            style={{ maxWidth: "60%" }}
                         />
                     </div>
                 </BodyPortal>
