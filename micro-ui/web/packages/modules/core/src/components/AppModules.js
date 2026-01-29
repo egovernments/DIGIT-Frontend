@@ -30,52 +30,25 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
   const location = useLocation();
   const user = Digit.UserService.getUser();
 
-  // Super user with multi-root tenant check
-  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
-
-  // Check if on product details page for conditional styling
-  const hideClass = location.pathname.includes(`/${window?.contextPath}/${userType}/productDetailsPage/`);
-
   if (!user || !user?.access_token || !user?.info) {
-    return (
-      <Navigate
-        to={`/${window?.contextPath}/${userType}/user/login`}
-        state={{ from: location.pathname + location.search }}
-        replace
-      />
-    );
+    return <Navigate to={{ pathname: `/${window?.contextPath}/${userType}/user/login`, state: { from: location.pathname + location.search } }} replace />;
   }
 
-  // Create app routes with dynamic module loading
+  // Create app routes with dynamic module loading and loading states
   const appRoutes = modules?.map(({ code, tenants }, index) => {
-    const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
-
-    if (Module) {
-      return (
-        <Route
-          key={index}
-          path={`${code.toLowerCase()}/*`}
-          element={
-            <Module
-              stateCode={stateCode}
-              moduleCode={code}
-              userType={userType}
-              tenants={getTenants(tenants, appTenants)}
-            />
-          }
-        />
-      );
-    }
-
-    // If module not found, redirect to error page
     return (
       <Route
         key={index}
         path={`${code.toLowerCase()}/*`}
         element={
-          <Navigate
-            to={`/${window?.contextPath}/${userType}/user/error?type=notfound&module=${code}`}
-            replace
+          <DynamicModuleLoader
+            moduleCode={code}
+            stateCode={stateCode}
+            userType={userType}
+            tenants={getTenants(tenants, appTenants)}
+            maxRetries={3}
+            retryDelay={1000}
+            initialDelay={800}
           />
         }
       />
@@ -83,15 +56,14 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
   });
 
   return (
-    <div className={isSuperUserWithMultipleRootTenant && hideClass ? "" : "ground-container digit-home-ground"}>
+    <div className="ground-container digit-home-ground">
       <Routes>
         {appRoutes}
         <Route
           path="login"
           element={
             <Navigate
-              to={`/${window?.contextPath}/${userType}/user/login`}
-              state={{ from: location.pathname + location.search }}
+              to={{ pathname: `/${window?.contextPath}/${userType}/user/login`, state: { from: location.pathname + location.search } }}
               replace
             />
           }

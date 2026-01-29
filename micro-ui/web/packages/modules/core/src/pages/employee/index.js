@@ -63,12 +63,11 @@ const EmployeeApp = ({
   handleUserDropdownSelection,
   logoUrl,
   logoUrlWhite,
-  DSO,
   stateCode,
   modules,
   appTenants,
   sourceUrl,
-  pathname,
+  pathname, // This prop seems unused, consider removing
   initData,
   noTopBar = false,
 }) => {
@@ -78,28 +77,9 @@ const EmployeeApp = ({
   const showLanguageChange = location?.pathname?.includes("language-selection");
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
 
-  // Get the base path for employee routes
-  const basePath = `/${window?.contextPath}/employee`;
-
-  // Super user with multi-root tenant check
-  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
-  
-  // Check if on product details page for conditional styling
-  const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPage/`);
-
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);
-
-  // Super user redirect logic
-  useEffect(() => {
-    const isDirectAccess = location.pathname === basePath || location.pathname === `${basePath}/`;
-    const queryParams = new URLSearchParams(location.search);
-    const cameFromButton = queryParams.get("from") === "sandbox";
-    if (isSuperUserWithMultipleRootTenant && isDirectAccess && !cameFromButton) {
-      navigate(`${basePath}/sandbox/productPage`, { replace: true });
-    }
-  }, [location.pathname, location.search, basePath, navigate, isSuperUserWithMultipleRootTenant]);
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
 
@@ -132,18 +112,13 @@ const EmployeeApp = ({
               }
             >
               <Routes>
-                {/* Login route - only available if NOT multi-root tenant */}
-                {!Digit.Utils.getMultiRootTenant() && (
-                  <Route path="login" element={<EmployeeLogin stateCode={stateCode} />} />
-                )}
+                <Route path="login" element={<EmployeeLogin stateCode={stateCode} />} />
                 <Route path="login/otp" element={<Otp isLogin={true} />} />
                 <Route path="forgot-password" element={<ForgotPassword stateCode={stateCode} />} />
                 <Route path="change-password" element={<ChangePassword />} />
                 <Route
                   path="profile"
-                  element={
-                    <PrivateRoute element={<UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />} />
-                  }
+                  element={ <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />}
                 />
                 <Route
                   path="error"
@@ -160,8 +135,8 @@ const EmployeeApp = ({
                 <Route path="*" element={<Navigate to="language-selection" replace />} />
               </Routes>
             </div>
-          </>
-        } />
+          </>}
+        />
 
         <Route path="*" element={
           <>
@@ -179,8 +154,8 @@ const EmployeeApp = ({
                 modules={modules}
               />
             )}
-            <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
-              <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant && hideClass ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
+            <div className={!noTopBar ? `main digit-home-main` : ""}>
+              <div className="employee-app-wrapper digit-home-app-wrapper">
                 <ErrorBoundary initData={initData}>
                   <AppModules
                     stateCode={stateCode}
@@ -203,9 +178,9 @@ const EmployeeApp = ({
               </div>
             </div>
           </>
-        } />
+        }/>
 
-        <Route path="*" element={<Navigate to="user/language-selection" replace />} />
+        <Route path="*" element={<Navigate to={`user/language-selection`} replace />} />
       </Routes>
     </div>
   );

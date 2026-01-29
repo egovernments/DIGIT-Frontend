@@ -1,15 +1,14 @@
 import { InputCard, TextBlock, FieldV1, LinkLabel } from "@egovernments/digit-ui-components";
 import React, { useMemo, useState } from "react";
 
-const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange, onEmailChange, config, canSubmit, validationConfig }) => {
-  const [isEmail, setIsEmail] = useState(emailId ? true : false);
+const SelectMobileNumber = ({ t, onSelect, mobileNumber,emailId, onMobileChange,onEmailChange, config, canSubmit }) => {
+  const [isEmail, setIsEmail] = useState(emailId? true : false);
   const [error, setError] = useState("");
 
+  const core_mobile_config = window?.globalConfigs?.getConfig("CORE_MOBILE_CONFIGS") || {};
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const rawPattern = validationConfig?.pattern || "^[6-9][0-9]{9}$";
+  const rawPattern = core_mobile_config?.mobileNumberPattern || "^\\d+$";
   const mobileNumberPattern = new RegExp(rawPattern);
-  const maxLength = validationConfig?.maxLength || 10;
-  const prefix = validationConfig?.prefix || "+91";
 
   const isEmailValid = useMemo(() => EMAIL_REGEX.test(emailId), [emailId]);
   const isMobileValid = useMemo(() => mobileNumberPattern.test(mobileNumber || ""), [mobileNumber, mobileNumberPattern]);
@@ -45,7 +44,7 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
   const switchMode = () => {
     setIsEmail(!isEmail);
     setError("");
-    if (isEmail)
+    if(isEmail)
       onEmailChange({ target: { value: "" } });
     else
       onMobileChange({ target: { value: "" } }); // clear mobile input
@@ -56,9 +55,9 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
   }, [isEmail, isEmailValid, isMobileValid, canSubmit]);
 
   const mobileViewStyles = {
-    marginLeft: "0px",
+    marginLeft:"0px",
     userSelect: "none",
-    color: "inherit",
+    color: "inherit",  
     cursor: "pointer",      // keeps it clickable
     textDecoration: "underline",
   };
@@ -89,9 +88,9 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
           placeholder={isEmail ? t("ENTER_EMAIL_PLACEHOLDER") : t("ENTER_MOBILE_PLACEHOLDER")}
           populators={{
             name: isEmail ? "userName" : "mobileNumber",
-            prefix: isEmail ? "" : prefix,
+            prefix: isEmail ? "" : core_mobile_config?.mobilePrefix,
             validation: {
-              maxlength: isEmail ? 256 : maxLength,
+              maxlength: isEmail ? 256 : (core_mobile_config?.mobileNumberLength || 10),
               pattern: isEmail ? EMAIL_REGEX : mobileNumberPattern,
             },
           }}

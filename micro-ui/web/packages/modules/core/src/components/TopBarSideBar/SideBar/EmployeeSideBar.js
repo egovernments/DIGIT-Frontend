@@ -12,7 +12,7 @@ const EmployeeSideBar = () => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const tenantId = Digit?.ULBService?.getStateId();
+  const tenantId = Digit.ULBService.getStateId();
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {
@@ -99,7 +99,7 @@ const EmployeeSideBar = () => {
     // Internal navigation logic
     if (!url.includes(`/${window?.contextPath}`)) {
       const hostUrl = window.location.origin;
-      let updatedUrl = null;
+      let updatedUrl;
 
       if (isMultiRootTenant) {
         const contextPath = window?.contextPath || "sandbox-ui";
@@ -108,18 +108,7 @@ const EmployeeSideBar = () => {
         navigate(updatedUrl);
       } else {
         updatedUrl = hostUrl + url;
-        try {
-          if (typeof window !== 'undefined') {
-            window.location.href = updatedUrl;
-          }
-        } catch (error) {
-          console.warn('Navigation failed, attempting fallback:', error);
-          try {
-            window.location.replace(updatedUrl);
-          } catch (fallbackError) {
-            console.error('All navigation methods failed:', fallbackError);
-          }
-        }
+        window.location.href = updatedUrl;
       }
     } else {
       navigate(url);
@@ -141,7 +130,7 @@ const EmployeeSideBar = () => {
           label: t(value.item.displayName),
           icon: { icon: value.item.leftIcon, width: "1.5rem", height: "1.5rem" },
           navigationUrl: value.item.navigationURL,
-          orderNumber: value.item.orderNumber,
+          orderNumber:value.item.orderNumber,
         };
       }
       const children = Object.keys(value).map((childKey) => transformItem(childKey, value[childKey]));
@@ -174,8 +163,7 @@ const EmployeeSideBar = () => {
   };
 
   const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
-  const sortedTransformedData = sortDataByOrderNumber(transformedData);
-
+  const sortedTransformedData= sortDataByOrderNumber(transformedData);
   if (isLoading) {
     return <Loader />;
   }
@@ -190,8 +178,8 @@ const EmployeeSideBar = () => {
         items={sortedTransformedData}
         hideAccessbilityTools={true}
         onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
-        theme={window?.globalConfigs?.getConfig("SIDENAV_THEME") || "dark"}
-        variant={window?.globalConfigs?.getConfig("SIDENAV_VARIANT") || "primary"}
+        theme={"dark"}
+        variant={"primary"}
         transitionDuration={""}
         className=""
         styles={{}}
