@@ -1447,8 +1447,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             icon="AddIcon"
             size="small"
             variation="tertiary"
-            label={t("ADD_OPTIONS")}
-            title={t("ADD_OPTIONS")}
+            label={t("ADD_OPTIONS_SIDEPANEL")}
+            title={t("ADD_OPTIONS_SIDEPANEL")}
             className={`app-config-add-option-button`}
             style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
             textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}

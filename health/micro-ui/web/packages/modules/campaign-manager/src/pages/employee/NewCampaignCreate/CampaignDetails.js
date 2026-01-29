@@ -659,6 +659,7 @@ const CampaignDetails = () => {
           {campaignData?.status !== "created" && (
             <div
               className="hover"
+              id={"campaign-details-edit-campaign-name"}
               onClick={() => {
                 navigate(
                   `/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
@@ -702,6 +703,7 @@ const CampaignDetails = () => {
               );
             }
           }}
+          id={"campaign-details-edit-campaign-dates"}
         >
           <Edit width={"18"} height={"18"} />
         </div>
