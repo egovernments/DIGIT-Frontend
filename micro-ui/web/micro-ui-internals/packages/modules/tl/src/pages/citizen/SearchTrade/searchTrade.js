@@ -1,4 +1,4 @@
-import { FormComposer, Dropdown } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, Dropdown } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -111,7 +111,7 @@ const SearchTrade = ({ config: propsConfig, onSelect }) => {
 
     return (
         <div style={{ marginTop: "16px" }}>
-            <FormComposer
+            <FormComposerV2
                 onSubmit={onTradeSearch}
                 noBoxShadow
                 inline
@@ -124,7 +124,9 @@ const SearchTrade = ({ config: propsConfig, onSelect }) => {
                 isDisabled={!canSubmit}
                 defaultValues={{ mobileNumber: defaultMobileno }}
                 onFormValueChange={onFormValueChange}
-            ></FormComposer>
+                submitInForm={true}
+                className="tl-citizen-search-form"
+            />
         </div>
     );
 };

@@ -1,29 +1,29 @@
-import { FormComposer, Header, Toast } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, HeaderComponent, Toast, Loader, Stepper } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
-import { newConfig as newConfigTL } from "../../../configs/config";
+import { TradeLicenseConfig } from "../../../configs/employee/TradeLicenseConfig";
 import { convertDateToEpoch } from "../../../utils";
 
 const NewApplication = () => {
-    let tenantId = Digit.ULBService.getCurrentTenantId() || Digit.ULBService.getCitizenCurrentTenant();
+    const tenantId = Digit.ULBService.getCurrentTenantId() || Digit.ULBService.getCitizenCurrentTenant();
     const tenants = Digit.Hooks.tl.useTenants();
     const { t } = useTranslation();
-    const [canSubmit, setSubmitValve] = useState(false);
     const history = useHistory();
-    // delete
-    const [propertyId, setPropertyId] = useState(new URLSearchParams(useLocation().search).get("propertyId"));
-    const isEmpNewApplication = window.location.href.includes("/employee/tl/new-application");
-    const isEmpRenewLicense = window.location.href.includes("/employee/tl/renew-application-details") || window.location.href.includes("/employee/tl/edit-application-details");
+    const location = useLocation();
 
+    const [propertyId, setPropertyId] = useState(new URLSearchParams(location.search).get("propertyId"));
     const [sessionFormData, setSessionFormData, clearSessionFormData] = Digit.Hooks.useSessionStorage("PT_CREATE_EMP_TRADE_NEW_FORM", {});
-    const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_MUTATION_HAPPENED", false);
-    const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_MUTATION_SUCCESS_DATA", {});
     const [showToast, setShowToast] = useState(null);
     const [error, setError] = useState(null);
-    const stateId = Digit.ULBService.getStateId();
-    let { data: newConfig, isLoading } = Digit.Hooks.tl.useMDMS.getFormConfig(stateId, {});
+    const [currentStep, setCurrentStep] = useState(0);
+    const [loading, setLoading] = useState(false);
+
+    // Initial Config
+    const config = TradeLicenseConfig(t);
+    const currentConfig = config[currentStep];
+
     const { data: propertyDetails } = Digit.Hooks.pt.usePropertySearch(
         { filters: { propertyIds: propertyId }, tenantId: tenantId },
         { filters: { propertyIds: propertyId }, tenantId: tenantId, enabled: propertyId ? true : false }
@@ -32,90 +32,73 @@ const NewApplication = () => {
     useEffect(() => {
         !propertyId && setPropertyId(sessionFormData?.cpt?.details?.propertyId);
     }, [sessionFormData?.cpt]);
+
     const closeToast = () => {
         setShowToast(null);
         setError(null);
     };
 
-    useEffect(() => {
-        if (sessionStorage.getItem("isCreateEnabledEmployee") === "true") {
-            sessionStorage.removeItem("isCreateEnabledEmployee");
-            history.replace("/employee");
-        }
-        else
-            sessionStorage.removeItem("isCreateEnabledEmployee");
+    const handleStepClick = (step) => {
+        setCurrentStep(step);
+    };
 
-    })
+    const handleFormSubmit = (data) => {
+        const currentStepKey = currentConfig.key;
 
-    useEffect(() => {
-        setMutationHappened(false);
-        clearSuccessData();
-    }, []);
+        // Merge data for current step
+        const newFormData = {
+            ...sessionFormData,
+            [currentStepKey]: {
+                ...sessionFormData[currentStepKey],
+                ...data
+            }
+        };
 
-    function checkforownerPresent(formData) {
-        if (formData?.owners) {
-            let hasInvalidOwner = false;
-            formData?.owners?.forEach((ob) => {
-                // Check for institutional owners
-                if (formData?.ownershipCategory?.code?.includes("INSTITUTIONAL")) {
-                    if (!ob?.instituionName || !ob?.subOwnerShipCategory?.code || !ob?.name || !ob?.mobileNumber) {
-                        hasInvalidOwner = true;
-                    }
-                    // Validate mobile number format for institutional
-                    if (ob?.mobileNumber && !/^([6-9]{1}[0-9]{9})$/.test(ob.mobileNumber)) {
-                        hasInvalidOwner = true;
-                    }
-                } else {
-                    // Check for individual owners
-                    if (!ob?.name || !ob?.mobileNumber || !ob?.fatherOrHusbandName || !ob?.relationship?.code || !ob?.gender?.code) {
-                        hasInvalidOwner = true;
-                    }
-                    // Validate mobile number format for individual
-                    if (ob?.mobileNumber && !/^[6789]\d{9}$/.test(ob.mobileNumber)) {
-                        hasInvalidOwner = true;
-                    }
-                }
-            });
-            return hasInvalidOwner;
-        }
-        return false;
-    }
+        // Update session storage
+        setSessionFormData(newFormData);
 
-    const onFormValueChange = (setValue, formData, formState) => {
-        if (!_.isEqual(sessionFormData, formData)) {
-            setSessionFormData({ ...sessionFormData, ...formData });
-        }
-
-        const hasOwnerIssues = checkforownerPresent(formData);
-
-        if (hasOwnerIssues) {
-            setSubmitValve(false);
-        }
-        else if (
-            Object.keys(formState.errors).length > 0 &&
-            Object.keys(formState.errors).length == 1 &&
-            formState.errors["owners"] &&
-            Object.entries(formState.errors["owners"].type).filter((ob) => ob?.[1].type === "required").length == 0
-        ) {
-            setSubmitValve(true);
+        // Move to next step or submit
+        if (currentStep < config.length - 1) {
+            setCurrentStep(currentStep + 1);
         } else {
-            const canSubmit = !Object.keys(formState.errors).length;
-            setSubmitValve(canSubmit);
+            handleFinalSubmit(newFormData);
         }
     };
+
+    const handleFinalSubmit = (formData) => {
+        setLoading(true);
+        // Flatten data for legacy logic compatibility
+        // The legacy logic expects keys like 'tradedetils', 'tradeUnits' at top level or nested in a specific way.
+        // Our new formData has them under step keys: 'trade-details', etc.
+
+        const flattenedData = {
+            ...formData["trade-details"],
+            ...formData["property-details"],
+            ...formData["ownership-details"],
+            ...formData["document-details"],
+        };
+
+        // Legacy onSubmit logic adapted
+        onSubmit(flattenedData);
+    };
+
     const onSubmit = (data) => {
         let isSameAsPropertyOwner = sessionStorage.getItem("isSameAsPropertyOwner");
         if (data?.cpt?.id) {
             if (!data?.cpt?.details || !propertyDetails) {
                 setShowToast({ key: "error" });
                 setError(t("ERR_INVALID_PROPERTY_ID"));
+                setLoading(false);
                 return;
             }
         }
+
+        // Validate Pincode
         const foundValue = tenants?.find((obj) => obj.pincode?.find((item) => item.toString() === data?.address?.pincode));
         if (!foundValue && data?.address?.pincode) {
             setShowToast({ key: "error" });
             setError(t("TL_COMMON_PINCODE_NOT_SERVICABLE"));
+            setLoading(false);
             return;
         }
 
@@ -178,15 +161,18 @@ const NewApplication = () => {
         }
 
         let applicationDocuments = data?.documents?.documents || [];
-        let commencementDate = convertDateToEpoch(data?.tradedetils?.["0"]?.commencementDate);
-        let financialYear = data?.tradedetils?.["0"]?.financialYear?.code;
-        let gstNo = data?.tradedetils?.["0"]?.gstNo || "";
-        let noOfEmployees = Number(data?.tradedetils?.["0"]?.noOfEmployees) || "";
-        let operationalArea = Number(data?.tradedetils?.["0"]?.operationalArea) || "";
-        let structureType = data?.tradedetils?.["0"]?.structureSubType?.code || "";
-        let tradeName = data?.tradedetils?.["0"]?.tradeName || "";
+        // tradedetils might be under 'tradedetils' key from 'trade-details' step
+        const tradeDetail = data?.tradedetils?.["0"] || {};
+
+        let commencementDate = convertDateToEpoch(tradeDetail?.commencementDate);
+        let financialYear = tradeDetail?.financialYear?.code;
+        let gstNo = tradeDetail?.gstNo || "";
+        let noOfEmployees = Number(tradeDetail?.noOfEmployees) || "";
+        let operationalArea = Number(tradeDetail?.operationalArea) || "";
+        let structureType = tradeDetail?.structureSubType?.code || "";
+        let tradeName = tradeDetail?.tradeName || "";
         let subOwnerShipCategory = data?.ownershipCategory?.code || "";
-        let licenseType = data?.tradedetils?.["0"]?.licenseType?.code || "PERMANENT";
+        let licenseType = tradeDetail?.licenseType?.code || "PERMANENT";
 
         let formData = {
             action: "INITIATE",
@@ -201,7 +187,6 @@ const NewApplication = () => {
             tradeLicenseDetail: {
                 channel: "COUNTER",
                 additionalDetail: {},
-                // institution: {}
             },
         };
 
@@ -227,13 +212,13 @@ const NewApplication = () => {
         if (data?.owners?.length && subOwnerShipCategory.includes("INSTITUTIONAL"))
             formData.tradeLicenseDetail.institution["contactNo"] = data?.owners?.[0]?.altContactNumber;
         if (data?.cpt) {
-            formData.tradeLicenseDetail.additionalDetail.propertyId = data?.cpt?.details?.propertyId,
-                formData.tradeLicenseDetail.additionalDetail.isSameAsPropertyOwner = isSameAsPropertyOwner
+            formData.tradeLicenseDetail.additionalDetail.propertyId = data?.cpt?.details?.propertyId;
+            formData.tradeLicenseDetail.additionalDetail.isSameAsPropertyOwner = isSameAsPropertyOwner;
         };
 
-        // setFormData(formData)
-        /* use customiseCreateFormData hook to make some chnages to the licence object */
+        // Call customize logic
         formData = Digit?.Customizations?.TL?.customiseCreateFormData ? Digit?.Customizations?.TL?.customiseCreateFormData(data, formData) : formData;
+
         Digit.TLService.create({ Licenses: [formData] }, tenantId)
             .then((result, err) => {
                 if (result?.Licenses?.length > 0) {
@@ -244,7 +229,6 @@ const NewApplication = () => {
                     Digit.TLService.update({ Licenses: [licenses] }, tenantId)
                         .then((response) => {
                             if (response?.Licenses?.length > 0) {
-                                // setTimeout(() => window.location.reload());
                                 sessionStorage.setItem("isCreateEnabledEmployee", "true");
                                 history.replace(`/digit-ui/employee/tl/response`, { data: response?.Licenses });
                                 clearSessionFormData();
@@ -253,61 +237,54 @@ const NewApplication = () => {
                         .catch((e) => {
                             setShowToast({ key: "error" });
                             setError(e?.response?.data?.Errors[0]?.message || null);
+                            setLoading(false);
                         });
                 }
             })
             .catch((e) => {
                 setShowToast({ key: "error" });
                 setError(e?.response?.data?.Errors[0]?.message || null);
+                setLoading(false);
             });
     };
-    // let configs = newConfig;
-    let configs = [];
-    newConfig = newConfig ? newConfig : newConfigTL;
-    newConfig?.map((conf) => {
-        if (conf.head !== "ES_NEW_APPLICATION_PROPERTY_ASSESSMENT" && conf.head) {
-            configs.push(conf);
-        }
-    });
 
-    function checkHead(head) {
-        if (head === "ES_NEW_APPLICATION_LOCATION_DETAILS") {
-            return "TL_CHECK_ADDRESS";
-        } else if (head === "ES_NEW_APPLICATION_OWNERSHIP_DETAILS") {
-            return "TL_OWNERSHIP_DETAILS_HEADER";
-        } else if (head === "TL_NEW_APPLICATION_PROPERTY" && (sessionFormData?.tradedetils?.[0]?.structureType?.code === "MOVABLE" && (isEmpNewApplication || isEmpRenewLicense))) {
-            return "";
-        }
-        else {
-            return head;
-        }
-    }
+    const textStyles = {
+        color: "#0B4B66",
+        fontWeight: "700",
+        fontSize: "32px",
+        marginBottom: "1.5rem"
+    };
 
     return (
         <div>
             <div style={{ marginLeft: "15px" }}>
-                <Header>{t("ES_TITLE_NEW_TRADE_LICESE_APPLICATION")}</Header>
+                <HeaderComponent styles={textStyles}>
+                    {t("ES_TITLE_NEW_TRADE_LICESE_APPLICATION")}
+                </HeaderComponent>
             </div>
-            <FormComposer
-                heading={t("")}
-                isDisabled={!canSubmit}
-                label={t("ES_COMMON_APPLICATION_SUBMIT")}
-                config={configs?.map((config) => {
-                    return {
-                        ...config,
-                        body: config.body.filter((a) => {
-                            return !a.hideInEmployee;
-                        }),
-                        head: checkHead(config.head),
-                    };
-                })}
-                fieldStyle={{ marginRight: 0 }}
-                onSubmit={onSubmit}
-                defaultValues={/* defaultValues */ sessionFormData}
-                onFormValueChange={onFormValueChange}
-                breaklineStyle={{ border: "0px" }}
+
+            <Stepper
+                customSteps={["TL_COMMON_TR_DETAILS", "TL_NEW_APPLICATION_PROPERTY", "ES_NEW_APPLICATION_OWNERSHIP_DETAILS", "TL_NEW_APPLICATION_DOCUMENTS_REQUIRED", "TL_SUMMARY_HEADER"]}
+                currentStep={currentStep + 1}
+                onStepClick={handleStepClick}
+                style={{ marginBottom: "24px" }}
             />
+
+            <FormComposerV2
+                key={currentConfig.key}
+                config={[currentConfig]}
+                onSubmit={handleFormSubmit}
+                defaultValues={sessionFormData[currentConfig.key] || {}}
+                label={currentStep === config.length - 1 ? t("CS_COMMON_SUBMIT") : t("CS_COMMON_NEXT")}
+                isSubmitting={loading}
+                showSecondaryLabel={currentStep > 0}
+                secondaryLabel={t("CS_COMMON_BACK")}
+                secondaryActionIcon="ArrowBack"
+                onSecondayActionClick={() => setCurrentStep(currentStep - 1)}
+            />
+
             {showToast && <Toast isDleteBtn={true} error={showToast?.key === "error" ? true : false} label={error} onClose={closeToast} />}
+            {loading && <Loader />}
         </div>
     );
 };

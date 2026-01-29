@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+
+window.process = { env: { NODE_ENV: 'development' } };
+
 import "./index.css";
 import App from './App';
 
