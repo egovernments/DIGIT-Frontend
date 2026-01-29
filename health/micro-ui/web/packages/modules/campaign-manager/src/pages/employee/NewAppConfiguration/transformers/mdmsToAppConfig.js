@@ -37,6 +37,7 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
           order: existingFlows?.find(f => f.name === flowName)?.order || item.order || 0,
           initActions: existingFlows?.find(f => f.name === flowName)?.initActions || [],
           wrapperConfig: existingFlows?.find(f => f.name === flowName)?.wrapperConfig || {},
+          scrollListener: existingFlows?.find(f => f.name === flowName)?.scrollListener || {},
           summary: item.summary || false,
         };
       }
@@ -204,10 +205,18 @@ const transformTemplate = (screenData) => {
       };
     }
 
-     if (field.dropDownOptions) field.enums = field.dropDownOptions;
-     if(!!field.isMdms && !!field.schemaCode) {
-       field.schemaCode = field.schemaCode;
-     }
+    // Handle isMdms toggle: if true, use schemaCode and clear enums; if false, use dropDownOptions as enums
+    if (field.isMdms === true && field.schemaCode) {
+      field.schemaCode = field.schemaCode;
+      field.enums = null; // Clear enums when using MDMS
+    } else {
+      // isMdms is false or not set - use dropDownOptions as enums
+      if (field.dropDownOptions) {
+        field.enums = field.dropDownOptions;
+      }
+      // Clear schemaCode when not using MDMS
+      field.schemaCode = null;
+    }
 
     return field;
   });
@@ -227,6 +236,7 @@ const transformTemplate = (screenData) => {
   if (screenData.navigateTo !== undefined) template.navigateTo = screenData.navigateTo;
   if (screenData.initActions) template.initActions = screenData.initActions;
   if (screenData.wrapperConfig) template.wrapperConfig = screenData.wrapperConfig;
+  if(screenData.scrollListener) template.scrollListener = screenData.scrollListener;
 
   // Default screenType to TEMPLATE if not set
   if (!template.screenType) {
@@ -342,9 +352,9 @@ const transformFormProperties = (body) => {
           value: field.value !== undefined ? field.value : "",
           format: field.format,
           hidden: field.hidden !== undefined ? field.hidden : false,
-          tooltip: field.tooltip || "",
-          helpText: field.helpTextc=== false ? "" :field.helpText || "",
-          infoText: field.infoText || "",
+          tooltip:  typeof field.tooltip === "string" ? field.tooltip : "",
+          helpText: typeof field.helpText === "string" ? field.helpText : "",
+          infoText: typeof field.infoText === "string" ? field.infoText : "",
           readOnly: field.readOnly !== undefined ? field.readOnly : false,
           fieldName: field?.fieldName || field?.jsonPath,
           deleteFlag: field.deleteFlag !== undefined ? field.deleteFlag : false,
@@ -357,9 +367,18 @@ const transformFormProperties = (body) => {
         };
 
 
-        // Add optional fields
-        if (field.dropDownOptions) property.enums = field.dropDownOptions;
-        if (!!field.isMdms && !!field.schemaCode) property.schemaCode = field.schemaCode;
+        // Handle isMdms toggle: if true, use schemaCode and clear enums; if false, use dropDownOptions as enums
+        if (field.isMdms === true && field.schemaCode) {
+          property.schemaCode = field.schemaCode;
+          property.enums = null; // Clear enums when using MDMS
+        } else {
+          // isMdms is false or not set - use dropDownOptions as enums
+          if (field.dropDownOptions) {
+            property.enums = field.dropDownOptions;
+          }
+          // Clear schemaCode when not using MDMS
+          property.schemaCode = null;
+        }
         if (field.includeInForm !== undefined) property.includeInForm = field.includeInForm;
         if (field.includeInSummary !== undefined) property.includeInSummary = field.includeInSummary;
         if (field.visibilityCondition) property.visibilityCondition = field.visibilityCondition;
