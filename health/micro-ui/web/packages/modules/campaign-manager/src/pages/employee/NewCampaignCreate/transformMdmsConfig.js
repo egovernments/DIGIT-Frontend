@@ -46,6 +46,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
         screenType: flow.screenType,
         initActions: flow.initActions,
         wrapperConfig: flow.wrapperConfig,
+        scrollListener: flow.scrollListener,
       };
 
       appConfig.push(transformedFlow);
@@ -448,6 +449,7 @@ export const extractFlowMetadata = (mdmsData) => {
       metadata[flow.name] = {
         onAction: flow.onAction,
         wrapperConfig: flow.wrapperConfig,
+        scrollListener: flow.scrollListener,
         screenType: flow.screenType,
         project: flow.project || mdmsData.data.project,
         version: mdmsData.data.version,

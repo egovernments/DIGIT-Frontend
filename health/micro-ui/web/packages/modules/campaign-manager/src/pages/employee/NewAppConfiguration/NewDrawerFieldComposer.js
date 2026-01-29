@@ -422,19 +422,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           }
 
           // Special handling for isMdms toggle
+          // Retain existing values in both directions - transformer will decide what to use based on isMdms
           if (bindTo === "isMdms") {
             if (newToggleValue === true) {
-              // When isMdms is toggled ON, clear dropDownOptions (using MDMS schema now)
+              // When isMdms is toggled ON, just set isMdms to true
+              // Keep dropDownOptions for potential switch back
               updatedField = {
                 ...updatedField,
-                dropDownOptions: null,
+                isMdms: true,
               };
             } else {
-              // When isMdms is toggled OFF, clear schemaCode (using manual options now)
+              // When isMdms is toggled OFF, just set isMdms to false
+              // Keep schemaCode for potential switch back
               updatedField = {
                 ...updatedField,
                 isMdms: false,
-                schemaCode: null,
               };
             }
           }
@@ -750,12 +752,53 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
               onChange={(value) => {
                 const isIdPopulator = value?.type === "idPopulator";
-                const updatedField = {
-                  ...selectedField,
-                  type: value?.metadata?.type,
-                  format: value?.metadata?.format,
-                  ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
-                };
+
+                // Check if the new field type supports isMdms (has dropdown/select capabilities)
+                const newFieldFormat = value?.metadata?.format;
+                const supportsDropdownOptions = ["dropdown", "select", "multiselect", "radio"].includes(newFieldFormat);
+
+                let updatedField;
+
+                if (isIdPopulator) {
+                  // idPopulator: set MDMS specific values
+                  updatedField = {
+                    ...selectedField,
+                    type: value?.metadata?.type,
+                    format: value?.metadata?.format,
+                    isMdms: true,
+                    MdmsDropdown: true,
+                    schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR",
+                  };
+                } else if (supportsDropdownOptions) {
+                  // Field type supports dropdown options - reset MDMS/dropdown related values
+                  updatedField = {
+                    ...selectedField,
+                    type: value?.metadata?.type,
+                    format: value?.metadata?.format,
+                    // Reset MDMS related values
+                    isMdms: false,
+                    MdmsDropdown: false,
+                    schemaCode: null,
+                    // Reset dropdown options
+                    dropDownOptions: null,
+                    enums: null,
+                  };
+                } else {
+                  // Field type doesn't support dropdown options - clear all dropdown/MDMS related values
+                  updatedField = {
+                    ...selectedField,
+                    type: value?.metadata?.type,
+                    format: value?.metadata?.format,
+                    // Clear MDMS related values
+                    isMdms: undefined,
+                    MdmsDropdown: undefined,
+                    schemaCode: undefined,
+                    // Clear dropdown options
+                    dropDownOptions: undefined,
+                    enums: undefined,
+                  };
+                }
+
                 onFieldChange(updatedField);
               }}
               placeholder={t(panelItem?.innerLabel) || ""}

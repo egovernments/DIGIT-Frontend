@@ -34,8 +34,6 @@ function transformCampaignData(inputObj = {}) {
         code: rule.code || "",
         name: rule.name || "",
         group: rule.group || "",
-        validMinAge: rule.validMinAge,
-        validMaxAge: rule.validMaxAge,
         deliveryAddDisable: rule.deliveryAddDisable,
         IsCycleDisable: rule.IsCycleDisable,
         beneficiaryType: rule.beneficiaryType,

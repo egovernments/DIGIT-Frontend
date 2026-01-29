@@ -56,8 +56,6 @@ export const cycleDataRemap=(data)=> {
     if (deliveryConfig) {
       deliveryConfig.cycles = cycles;
       deliveryConfig.resources = resources;
-      deliveryConfig.validMaxAge = ageInfo.maxAge === -Infinity ? null : ageInfo.maxAge; 
-      deliveryConfig.validMinAge = ageInfo.minAge === Infinity ? null : ageInfo.minAge; 
     }
     return [deliveryConfig];
   }
