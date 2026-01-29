@@ -945,30 +945,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   // }
                 }}
 
-                frozenData={
-                  selectedData.length === 1
-                    ? selectedOptions.map((opt) => ({ code: opt.code }))
-                    : []
-                }
                 onChipClose={(value) => {
-                  // 🚫 BLOCK removal of last remaining item
-                  if (selectedData.length === 1) {
-                    if (
-                      window.__appConfig_showToast &&
-                      typeof window.__appConfig_showToast === "function"
-                    ) {
-                      window.__appConfig_showToast({
-                        key: "error",
-                        label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
-                      });
-                    }
-                    return;
-                  }
-
                   // Filter out the removed item from selectedData
                   const updatedData = selectedData.filter((item) => item.key !== value.name);
 
-                  // Update the field with the new data
+                  // Update the field with the new data (allow empty array)
                   onFieldChange({
                     ...selectedField,
                     data: updatedData,
@@ -977,20 +958,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 onClose={(selectedArray) => {
                   const extractedOptions =
                     selectedArray?.map((arr) => arr?.[1]) || [];
-
-                  // 🚫 BLOCK deselect if only one already selected
-                  if (extractedOptions.length === 0 && selectedData.length === 1) {
-                    if (
-                      window.__appConfig_showToast &&
-                      typeof window.__appConfig_showToast === "function"
-                    ) {
-                      window.__appConfig_showToast({
-                        key: "error",
-                        label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
-                      });
-                    }
-                    return;
-                  }
 
                   const mappedData = extractedOptions
                     .map((item) => {
@@ -1011,25 +978,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     })
                     .filter(Boolean);
 
-                  // Safety check (extra guard)
-                  if (mappedData.length === 0) {
-                    if (
-                      window.__appConfig_showToast &&
-                      typeof window.__appConfig_showToast === "function"
-                    ) {
-                      window.__appConfig_showToast({
-                        key: "error",
-                        label: t("AT_LEAST_ONE_FIELD_MUST_BE_SELECTED"),
-                      });
-                    }
-                    return;
-                  }
-
                   const currentStr = JSON.stringify(selectedData);
                   const newStr = JSON.stringify(mappedData);
 
                   if (currentStr === newStr) return;
 
+                  // Update the field with the new data (allow empty array)
                   onFieldChange({
                     ...selectedField,
                     data: mappedData,

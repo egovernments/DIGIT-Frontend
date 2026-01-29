@@ -138,15 +138,17 @@ const UpdateChecklist = () => {
     });
 
     // Second pass: Link each question to its parent, whether it's a question or an option
+    // Check parentOption FIRST - if a sub-question was added under an option's dependency,
+    // it should go to the option's subQuestions, not the question's
     clonedQuestions.forEach((question) => {
       if (question.parentId) {
-        const parentQuestion = questionMap.get(question.parentId);
         const parentOption = optionMap.get(question.parentId);
+        const parentQuestion = questionMap.get(question.parentId);
 
-        if (parentQuestion) {
-          parentQuestion.subQuestions.push(question);
-        } else if (parentOption) {
+        if (parentOption) {
           parentOption.subQuestions.push(question);
+        } else if (parentQuestion) {
+          parentQuestion.subQuestions.push(question);
         }
       } else {
         organizedQuestions.push(question);

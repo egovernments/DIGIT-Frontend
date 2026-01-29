@@ -283,7 +283,7 @@ function NewAppFieldScreenWrapper() {
                   onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}
-                  rest={rest}
+                  rest={{...rest, fieldName}}
                   index={i}
                   fieldIndex={actualFieldIndex}
                   cardIndex={actualCardIndex}

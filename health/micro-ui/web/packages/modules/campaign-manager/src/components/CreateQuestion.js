@@ -26,16 +26,15 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
     if (field.options) {
       return field.options;
     } else {
+      const newOptionId = crypto.randomUUID();
       const defaultOption = {
-        id: crypto.randomUUID(),
+        id: newOptionId,
         key: 1,
         parentQuestionId: field.id,
         label: `${t("HCM_CHECKLIST_OPTION")} 1`,
         optionDependency: false,
         optionComment: false,
       };
-      // field.options=[defaultOption];
-      // handleAddOption();
       return [defaultOption];
     }
   });
