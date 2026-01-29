@@ -12,7 +12,7 @@ const EmployeeSideBar = () => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const tenantId = Digit?.ULBService?.getStateId();
+  const tenantId = Digit.ULBService.getStateId();
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {
@@ -84,41 +84,40 @@ const EmployeeSideBar = () => {
     return configEmployeeSideBar;
   };
 
-  const navigateToRespectiveURL = (navigate = {}, url = "") => {
-    if (url == "/") {
+  const navigateToRespectiveURL = (url = "") => {
+    if (!url || url === "/") return;
+
+    // Detect if it's an external link (starts with http or https)
+    const isExternal = /^https?:\/\//i.test(url);
+
+    if (isExternal) {
+      // Open external links in a new tab
+      window.open(url, "_blank", "noopener,noreferrer");
       return;
-    } 
-    if (url?.indexOf(`/${window?.contextPath}`) === -1) {
+    }
+
+    // Internal navigation logic
+    if (!url.includes(`/${window?.contextPath}`)) {
       const hostUrl = window.location.origin;
-      let updatedUrl=null;
-      if(isMultiRootTenant){
-        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+      let updatedUrl;
+
+      if (isMultiRootTenant) {
+        const contextPath = window?.contextPath || "sandbox-ui";
+        url = url.replace(`/${contextPath}/employee`, `/${contextPath}/${tenantId}/employee`);
         updatedUrl = url;
         navigate(updatedUrl);
-      }
-      else{
+      } else {
         updatedUrl = hostUrl + url;
-        try {
-          if (typeof window !== 'undefined') {
-            window.location.href = updatedUrl;
-          }
-        } catch (error) {
-          console.warn('Navigation failed, attempting fallback:', error);
-          try {
-            window.location.replace(updatedUrl);
-          } catch (fallbackError) {
-            console.error('All navigation methods failed:', fallbackError);
-          }
-        }
+        window.location.href = updatedUrl;
       }
     } else {
       navigate(url);
-    } 
+    }
   };
 
   const onItemSelect = ({ item, index, parentIndex }) => {
     if (item?.navigationUrl) {
-      navigateToRespectiveURL(navigate, item?.navigationUrl);
+      navigateToRespectiveURL(item?.navigationUrl);
     } else {
       return;
     } 
@@ -179,8 +178,8 @@ const EmployeeSideBar = () => {
         items={sortedTransformedData}
         hideAccessbilityTools={true}
         onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
-        theme={window?.globalConfigs?.getConfig("SIDENAV_THEME") || "dark"}
-        variant={window?.globalConfigs?.getConfig("SIDENAV_VARIANT") || "primary"}
+        theme={"dark"}
+        variant={"primary"}
         transitionDuration={""}
         className=""
         styles={{}}
@@ -193,8 +192,3 @@ const EmployeeSideBar = () => {
 };
 
 export default EmployeeSideBar;
-
-
-
-
-

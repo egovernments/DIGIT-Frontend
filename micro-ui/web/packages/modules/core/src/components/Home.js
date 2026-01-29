@@ -80,66 +80,60 @@ const iconSelector = (code) => {
       return <CustomSVG.PTIcon className="fill-path-primary-main" />;
   }
 };
-const CitizenHome = ({
-  modules,
-  getCitizenMenu,
-  fetchedCitizen,
-  isLoading,
-}) => {
-  const paymentModule = modules.filter(({ code }) => code === "Payment")[0];
-  const moduleArr = modules.filter(({ code }) => code !== "Payment");
-  const moduleArray = [paymentModule, ...moduleArr];
+import { useNavigate } from "react-router-dom";
+
+// Inside CitizenHome component
+const CitizenHome = ({ getCitizenMenu, fetchedCitizen, isLoading }) => {
   const { t } = useTranslation();
-  if (isLoading) {
+  const navigate = useNavigate();
+
+  if (isLoading || !fetchedCitizen || !getCitizenMenu) {
     return <Loader />;
   }
 
+  const parentModules = Object.keys(getCitizenMenu);
+
+  const handleLinkClick = (e, link) => {
+    e.preventDefault();
+    navigate(link);
+  };
+
   return (
-    <React.Fragment>
-      <div className="citizen-all-services-wrapper">
-        {location.pathname.includes(
-          "sanitation-ui/citizen/all-services"
-        ) || (location.pathname.includes("sandbox-ui") && location.pathname.includes("all-services")) ? null : (
-          <BackLink onClick={() => window.history.back()}/>
-        )}
-        <div className="citizenAllServiceGrid">
-          {moduleArray
-            .filter((mod) => mod)
-            .map(({ code }, index) => {
-              let mdmsDataObj;
-              if (fetchedCitizen)
-                mdmsDataObj = fetchedCitizen
-                  ? processLinkData(getCitizenMenu, code, t)
-                  : undefined;
-              if (mdmsDataObj?.links?.length > 0) {
-                return (
-                  <CitizenHomeCard
-                    header={t(mdmsDataObj?.header)}
-                    links={mdmsDataObj?.links
-                      ?.filter((ele) => ele?.link)
-                      ?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
-                    Icon={() => iconSelector(code)}
-                    Info={
-                      code === "OBPS"
-                        ? () => (
-                          <CitizenInfoLabel
-                            style={{ margin: "0px", padding: "10px" }}
-                            info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                            text={t(
-                              `BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`
-                            )}
-                          />
-                        )
-                        : null
-                    }
-                    isInfo={code === "OBPS" ? true : false}
-                  />
-                );
-              } else return <React.Fragment />;
-            })}
-        </div>
+    <div className="citizen-all-services-wrapper">
+      {/* BackLink logic */}
+      <div className="citizenAllServiceGrid">
+        {parentModules.map((code) => {
+          const mdmsDataObj = processLinkData(getCitizenMenu, code, t);
+
+          if (mdmsDataObj?.links?.length > 0) {
+            return (
+              <div className="CitizenHomeCard" key={code}>
+                <div className="header">
+                  <h2>{t(mdmsDataObj?.header)}</h2>
+                  {iconSelector(code)}
+                </div>
+                <div className="links">
+                  {mdmsDataObj?.links
+                    ?.filter((ele) => ele?.link)
+                    ?.sort((x, y) => x?.orderNumber - y?.orderNumber)
+                    .map((link, i) => (
+                      <div className="linksWrapper" key={i}>
+                        <a 
+                          href={link.link} 
+                          onClick={(e) => handleLinkClick(e, link.link)}
+                        >
+                          {link.i18nKey}
+                        </a>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })}
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
