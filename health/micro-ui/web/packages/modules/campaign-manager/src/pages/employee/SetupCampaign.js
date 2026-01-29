@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
-import { Stepper, Toast, Button, Footer, Loader } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer, Loader,SVG } from "@egovernments/digit-ui-components";
 import {
   updateUrlParams,
   transformDraftDataToFormData,
@@ -1148,15 +1148,15 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
-        actionClassName={"actionBarClass"}
+        actionClassName={"actionBarClass setup-campaign-action-bar"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
-        secondaryActionIcon={"ArrowBack"}
+        secondaryActionIcon={<SVG.ArrowBack />}
         primaryActionIconAsSuffix={true}
-        primaryActionIcon={"ArrowDirection"}
+        primaryActionIcon={"ArrowForward"}
         label={
           isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
