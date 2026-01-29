@@ -102,6 +102,7 @@ const NewAppModule = () => {
                     }
                   }}
                   isDisabled={!isActive}
+                  id={`setup-mobile-app-card-${item?.data?.name}`}
                   style={{
                     marginTop: "1rem",
                     width: "100%",
