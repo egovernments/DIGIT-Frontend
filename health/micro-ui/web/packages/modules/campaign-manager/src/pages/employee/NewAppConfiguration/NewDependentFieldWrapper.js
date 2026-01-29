@@ -36,7 +36,19 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
         {
             cacheTime: Infinity,
             staleTime: Infinity,
-            select: (data) => data?.[module]?.[master] || [],
+            select: (data) => {
+                // Extract the data from the MDMS response
+                if (data && module && master) {
+                    const optionsData = data?.[module]?.[master] || [];
+                    return optionsData
+                        .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+                        .map((opt) => ({
+                            ...opt,
+                            name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}`,
+                        }));
+                }
+                return [];
+            },
         },
         { schemaCode: "DROPDOWN_MASTER_DATA" },
         true // mdmsv2
@@ -342,7 +354,7 @@ function NewDependentFieldWrapper({ t }) {
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        if (fmt === "dropdown" || fmt === "radio" || fmt ==="select" || tpe === "selection") return true;
+        if (fmt === "dropdown" || fmt === "radio" || fmt === "select" || tpe === "selection") return true;
         return ["string", "text", "textinput", "textarea"].includes(tpe);
     };
 
@@ -971,7 +983,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onDelete(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Delete ? <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel}  title={deleteRuleLabel} onClick={() => onDelete(idx)} />}
+                    {SVG?.Delete ? <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel} title={deleteRuleLabel} onClick={() => onDelete(idx)} />}
                 </div>
             </div>
         </div>
@@ -1679,19 +1691,19 @@ function NewDependentFieldWrapper({ t }) {
                                                                                                     newDateFormat: true,
                                                                                                     useFixedPosition: true
                                                                                                 }}
-                                                                                        onChange={(
-                                                                                            d
-                                                                                        ) => {
-                                                                                            // Convert to DD/MM/YYYY, handling ISO timestamps with local timezone
-                                                                                            const ddmmyyyy = toDDMMYYYY(d);
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    fieldValue: ddmmyyyy,
-                                                                                                    isDate: true,
-                                                                                                }
-                                                                                            );
-                                                                                        }}
+                                                                                                onChange={(
+                                                                                                    d
+                                                                                                ) => {
+                                                                                                    // Convert to DD/MM/YYYY, handling ISO timestamps with local timezone
+                                                                                                    const ddmmyyyy = toDDMMYYYY(d);
+                                                                                                    updateSubCond(
+                                                                                                        idx,
+                                                                                                        {
+                                                                                                            fieldValue: ddmmyyyy,
+                                                                                                            isDate: true,
+                                                                                                        }
+                                                                                                    );
+                                                                                                }}
                                                                                                 disabled={
                                                                                                     !cond.leftField
                                                                                                 }
