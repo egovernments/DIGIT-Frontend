@@ -76,7 +76,7 @@ export const InboxConfig = {
             label: "",
             labelMobile: "ES_COMMON_SEARCH",
             children: {},
-            show: false
+            show: true
         },
         links: {
             uiConfig: {
@@ -159,8 +159,8 @@ export const InboxConfig = {
                 secondaryLabel: "Clear Filters",  // label for clear button
                 minReqFields: 0,
                 defaultValues: {
-                    locality: "",
-                    state: "",
+                    locality: [],
+                    state: [],
                     assignee: "ASSIGNED_TO_ALL",
                 },
                 fields: [

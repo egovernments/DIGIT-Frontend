@@ -3,7 +3,8 @@ import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import { default as CitizenApp } from "./pages/citizen";
 import TLCard from "./components/TLCard";
-import { overrideHooks, updateCustomConfigs } from "./utils";
+import { updateCustomConfigs } from "./utils";
+import { overrideHooks } from "./hooks";
 
 export const TLModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -48,10 +49,13 @@ const componentsToRegister = {
   TLSearch: Search,
 };
 
+import { TLService } from "./services";
+
 export const initTLComponents = () => {
   overrideHooks();
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
+  Digit.TLService = TLService;
 };

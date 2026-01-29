@@ -19,95 +19,62 @@
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.8.42/dist/index.css" />
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@0.2.0-beta.16/dist/index.css" />
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-mseva-css@1.0.0/dist/index.css" />
-  
-  <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script>
-  <script src="%REACT_APP_GLOBAL%"></script>
-  <!-- <script>
-    // var globalConfigs = (function () {
-    //   var stateTenantId = "pg";
-    //   var contextPath = "digit-ui";
-    //   var gmaps_api_key_old = "AIzaSyAQOd09-vjmk1sXFb_ZQYDz2nlfhXq7Wf8";
-    //   var gmaps_api_key = "AIzaSyASqkAr3d494ihZaJeCOg4CJ3xnQ_83e2s";
-    //   var finEnv = "unified-demo";
-    //   var centralInstanceEnabled = false;
-    //   var footerBWLogoURL =
-    //     "https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer-bw.png";
-    //   var footerLogoURL =
-    //     "https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer.png";
-    //   var digitHomeURL = "https://www.digit.org/ ";
-    //   var assetS3Bucket = "pg-egov-assets";
-    //   var matomoUrl = "https://unified-demo.digit.org/matomo/";
-    //   var getConfig = function (key) {
-    //     if (key === "STATE_LEVEL_TENANT_ID") {
-    //       return stateTenantId;
-    //     } else if (key === "GMAPS_API_KEY") {
-    //       return gmaps_api_key;
-    //     } else if (key === "FIN_ENV") {
-    //       return finEnv;
-    //     } else if (key === "ENABLE_SINGLEINSTANCE") {
-    //       return centralInstanceEnabled;
-    //     } else if (key === "DIGIT_FOOTER_BW") {
-    //       return footerBWLogoURL;
-    //     } else if (key === "DIGIT_FOOTER") {
-    //       return footerLogoURL;
-    //     } else if (key === "DIGIT_HOME_URL") {
-    //       return digitHomeURL;
-    //     } else if (key === "S3BUCKET") {
-    //       return assetS3Bucket;
-    //     } else if (key === "JWT_TOKEN") {
-    //       return "ZWdvdi11c2VyLWNsaWVudDo=";
-    //     } else if (key === "CONTEXT_PATH") {
-    //       return contextPath;
-    //     } else if (key === "MATOMO_URL") {
-    //       return matomoUrl;
-    //     }
-    //   };
-    //   return {
-    //     getConfig,
-    //   };
-    // })(); 
-    var globalConfigs = (function () {
-    var stateTenantId = "pb";
-    var contextPath = "digit-ui";
-    var gmaps_api_key_old = "AIzaSyAQOd09-vjmk1sXFb_ZQYDz2nlfhXq7Wf8";
-    var gmaps_api_key_old1 = "AIzaSyASqkAr3d494ihZaJeCOg4CJ3xnQ_83e2s";
-    var gmaps_api_key = "AIzaSyDjSk-Bw1OuiOE-5K7jsP6KGN2rbcN7iBk";
-    var finEnv = "uat";
-    var centralInstanceEnabled = false;
-    var footerBWLogoURL =
-      "https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer-bw.png";
-    var footerLogoURL =
-      "https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer.png";
-    var digitHomeURL = "https://mseva-uat.lgpunjab.gov.in/";
-    var assetS3Bucket = "pg-egov-assets";
-    var getConfig = function (key) {
-      if (key === "STATE_LEVEL_TENANT_ID") {
-        return stateTenantId;
-      } else if (key === "GMAPS_API_KEY") {
-        return gmaps_api_key;
-      } else if (key === "FIN_ENV") {
-        return finEnv;
-      } else if (key === "ENABLE_SINGLEINSTANCE") {
-        return centralInstanceEnabled;
-      } else if (key === "DIGIT_FOOTER_BW") {
-        return footerBWLogoURL;
-      } else if (key === "DIGIT_FOOTER") {
-        return footerLogoURL;
-      } else if (key === "DIGIT_HOME_URL") {
-        return digitHomeURL;
-      } else if (key === "S3BUCKET") {
-        return assetS3Bucket;
-      } else if (key === "JWT_TOKEN") {
-        return "ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0";
-      } else if (key === "CONTEXT_PATH") {
-        return contextPath;
+
+  <script>
+    window.global = window;
+    window.process = {
+      env: {
+        NODE_ENV: "development"
       }
     };
-    return {
-      getConfig,
-    };
-  })();
-  </script> -->
+  </script>
+  <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script>
+  <!-- <script src="%REACT_APP_GLOBAL%"></script> -->
+  <script>
+    var globalConfigs = (function () {
+      var stateTenantId = "pg.citya";
+      var contextPath = "digit-ui";
+      var gmaps_api_key_old = "AIzaSyAQOd09-vjmk1sXFb_ZQYDz2nlfhXq7Wf8";
+      var gmaps_api_key = "AIzaSyDECcePUbEYTJN_KurJ-21Tz208kkARZP0";
+      var finEnv = "unified-demo";
+      var centralInstanceEnabled = true;
+      var footerBWLogoURL =
+        "https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer-bw.png";
+      var footerLogoURL =
+        "https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer.png";
+      var digitHomeURL = "https://www.digit.org/ ";
+      var assetS3Bucket = "pg-egov-assets";
+      var matomoUrl = "https://unified-demo.digit.org/matomo/";
+      var getConfig = function (key) {
+        if (key === "STATE_LEVEL_TENANT_ID") {
+          return stateTenantId;
+        } else if (key === "GMAPS_API_KEY") {
+          return gmaps_api_key;
+        } else if (key === "FIN_ENV") {
+          return finEnv;
+        } else if (key === "ENABLE_SINGLEINSTANCE") {
+          return centralInstanceEnabled;
+        } else if (key === "DIGIT_FOOTER_BW") {
+          return footerBWLogoURL;
+        } else if (key === "DIGIT_FOOTER") {
+          return footerLogoURL;
+        } else if (key === "DIGIT_HOME_URL") {
+          return digitHomeURL;
+        } else if (key === "S3BUCKET") {
+          return assetS3Bucket;
+        } else if (key === "JWT_TOKEN") {
+          return "ZWdvdi11c2VyLWNsaWVudDo=";
+        } else if (key === "CONTEXT_PATH") {
+          return contextPath;
+        } else if (key === "MATOMO_URL") {
+          return matomoUrl;
+        }
+      };
+      return {
+        getConfig,
+      };
+    })();
+  </script>
 
 </head>
 
