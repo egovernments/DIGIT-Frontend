@@ -167,13 +167,14 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   }
 
   if (currentTab === "CAMPAIGN_FAILED" && rowData?.startDate > Date.now()) {
-    actions.downloadUserCreds = {
+    actions.retryCampaign = {
       label: "RETRY",
       title: "RETRY",
       size: "medium",
       onClick: () => handleRetryLogic(rowData),
       icon: "",
       variation: "secondary",
+      id:`my-campaigns-row-card-retry-campaign-button-${campaignId}`
     };
   }
 
