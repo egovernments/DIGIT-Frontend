@@ -718,6 +718,7 @@ const CampaignDetails = () => {
             ? [
                 <Button
                   icon="CheckCircleOutline"
+                  id={"campaign-details-page-final-save-campaign"}
                   label={t("HCM_CREATE_CAMPAIGN")}
                   title={t("HCM_CREATE_CAMPAIGN")}
                   onClick={onsubmit}
@@ -739,8 +740,9 @@ const CampaignDetails = () => {
                   onClick={() => onDownloadCredentails(campaignData)}
                   type="button"
                   variation="primary"
+                  id={"campaign-details-page-final-download-credentials"}
                 />,
-                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} title={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
+                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} title={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" id={"campaign-details-page-final-download-app"}/>,
               ]
         }
         maxActionFieldsAllowed={5}
