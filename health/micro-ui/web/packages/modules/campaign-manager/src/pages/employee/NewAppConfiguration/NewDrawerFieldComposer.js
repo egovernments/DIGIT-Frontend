@@ -852,12 +852,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Create nested options structure for MultiSelectDropdown
         const nestedOptions = labelPairConfig.map((category) => ({
           code: category.entity,
-          name: category.entity,
+          name: Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${category.entity}`),
           options: (category.labelFields || []).map((field) => ({
             ...field,
             code: `${category.entity}.${field.name}`,
-            name: field.name,
+            name: Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${field.fieldKey}`),
             fieldKey: field.fieldKey,
+            keyName: field.name,
             jsonPath: field.jsonPath,
           })),
         }));
@@ -869,7 +870,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
             // Find the matching option from nestedOptions
             for (const category of nestedOptions) {
-              const option = category.options.find((opt) => opt.name === item.key);
+              const option = category.options.find((opt) => opt.keyName === item.key);
               if (option) {
                 return option; // Return the actual option object
               }
@@ -890,7 +891,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 name={panelItem?.label}
                 options={nestedOptions}
                 optionsKey="name"
-                chipsKey="code"
+                chipsKey="name"
                 disablePortal={true}
                 type="multiselectdropdown"
                 variant="nestedmultiselect"
@@ -944,7 +945,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                       let option;
                       if (Array.isArray(item) && item.length >= 2) {
                         option = item[1];
-                      } else if (item?.name && item?.jsonPath) {
+                      } else if (item?.keyName && item?.jsonPath) {
                         option = item;
                       } else {
                         return null;
@@ -952,7 +953,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
                       return {
                         ...option,
-                        key: option.name,
+                        key: option.keyName,
                         value: option.jsonPath,
                       };
                     })
@@ -993,7 +994,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         key={`${item.key}-${index}`}
                         code={item.key}
                         // item={item}
-                        label={`${t(entityName || "ENTITY")} - ${t(item.key)}`}
+                        label={`${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_CATEGORY_${entityName}`) || "ENTITY")} - ${t(Digit.Utils.locale.getTransformedLocale(`LABEL_PAIR_${item.fieldKey}`))}`}
                         // entityName={entityName}
                         selectedField={selectedField}
                         currentLocale={currentLocale}
