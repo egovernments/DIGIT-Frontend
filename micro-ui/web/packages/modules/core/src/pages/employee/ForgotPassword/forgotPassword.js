@@ -44,7 +44,7 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
     }
     const requestData = {
       otp: {
-        mobileNumber: data.mobileNumber,
+        userName: data.username,
         userType: getUserType().toUpperCase(),
         type: "passwordreset",
         tenantId: data.city.code,
@@ -52,7 +52,7 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
     };
     try {
       await Digit.UserService.sendOtp(requestData, data.city.code);
-      navigate(`/${window?.contextPath}/employee/user/change-password?mobile_number=${data.mobileNumber}&tenantId=${data.city.code}`);
+      navigate(`/${window?.contextPath}/employee/user/change-password?USERNAME=${data.username}&tenantId=${data.city.code}`);
     } catch (err) {
       setShowToast(err?.response?.data?.error?.fields?.[0]?.message || "Invalid login credentials!");
       setTimeout(closeToast, 5000);
@@ -68,10 +68,10 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
     {
       body: [
         {
-          label: t(userId.label),
-          type: userId.type,
+          label: t("USERNAME"),
+          type: "text",
           populators: {
-            name: userId.name,
+            name: "username",
           },
           isMandatory: true,
         },

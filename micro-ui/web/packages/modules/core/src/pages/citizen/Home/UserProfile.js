@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
 
-const DEFAULT_TENANT=Digit?.ULBService?.getStateId?.();
+const DEFAULT_TENANT = Digit?.ULBService?.getStateId?.();
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -96,7 +96,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               const lastSlashIndex = value.lastIndexOf("/");
               const pattern = value.slice(1, lastSlashIndex); // Extracting regex pattern
               const flags = value.slice(lastSlashIndex + 1); // Extracting regex flags
-  
+
               acc[key] = new RegExp(pattern, flags); // Converting properly
             } else {
               acc[key] = new RegExp(value); // Treating it as a normal regex pattern (no flags)
@@ -135,19 +135,48 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
+    const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+
     if (uuid) {
-      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-      usersResponse && usersResponse.user && usersResponse.user.length && setUserDetails(usersResponse.user[0]);
+      if (individualServicePath) {
+        // New API using health-individual
+        const response = await Digit.CustomService.getResponse({
+          url: `${individualServicePath}/v1/_search`,
+          useCache: false,
+          method: "POST",
+          userService: true,
+          params: {
+            limit: 1000,
+            offset: 0,
+            tenantId: tenant,
+          },
+          body: {
+            Individual: {
+              userUuid: [uuid],
+              tenantId: tenant,
+            },
+          },
+        });
+
+        if (response?.Individual?.length) {
+          setUserDetails(response.Individual[0]);
+        }
+      } else {
+        // Old API
+        const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+        if (usersResponse?.user?.length) {
+          setUserDetails(usersResponse.user[0]);
+        }
+      }
     }
   };
 
   React.useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", () => setWindowWidth(window.innerWidth));
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", () => setWindowWidth(window.innerWidth));
     };
-  }, []);
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -285,16 +314,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const updateProfile = async () => {
     setLoading(true);
     try {
-      const requestData = {
-        ...userInfo,
-        name,
-        gender: gender?.value,
-        emailId: email,
-        photo: profilePic,
-      };
-
-      if(name){
-        setName((prev)=>prev.trim());
+      if (name) {
+        setName((prev) => prev.trim());
       }
 
       if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
@@ -317,15 +338,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           message: t("CORE_COMMON_PROFILE_EMAIL_INVALID"),
         });
       }
+
       const trimmedCurrentPassword = currentPassword.trim();
       const trimmedNewPassword = newPassword.trim();
       const trimmedConfirmPassword = confirmPassword.trim();
 
-      // Updating state with trimmed values
       setCurrentPassword(trimmedCurrentPassword);
       setNewPassword(trimmedNewPassword);
       setConfirmPassword(trimmedConfirmPassword);
-      
 
       if (changepassword && (trimmedCurrentPassword && trimmedNewPassword && trimmedConfirmPassword)) {
         if (trimmedNewPassword !== trimmedConfirmPassword) {
@@ -350,7 +370,62 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
       }
 
-      const { responseInfo, user } = await Digit.UserService.updateUser(requestData, stateCode);
+      let responseInfo;
+      const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+
+      if (individualServicePath) {
+        // Build Individual object dynamically
+        const individualPayload = {
+          ...userDetails,
+          tenantId: tenant,
+          name: {
+            givenName: name.trim(),
+            familyName: userDetails?.name?.familyName,
+            otherNames: userDetails?.name?.otherNames,
+          },
+          mobileNumber: mobileNumber,
+          isDeleted: false,
+          isSystemUser: true,
+          isSystemUserActive: true,
+        };
+
+        // Only add optional fields if they have values
+        if (gender?.value) {
+          individualPayload.gender = gender.value;
+        }
+
+        if (email) {
+          individualPayload.email = email;
+        }
+
+        if (profilePic) {
+          individualPayload.photo = profilePic;
+        }
+
+        const response = await Digit.CustomService.getResponse({
+          url: `${individualServicePath}/v1/_update`,
+          useCache: false,
+          method: "POST",
+          userService: true,
+          body: {
+            Individual: individualPayload,
+          },
+        });
+        responseInfo = response?.responseInfo;
+      }
+      else {
+        // Old API
+        const requestData = {
+          ...userInfo,
+          name,
+          gender: gender?.value,
+          emailId: email,
+          photo: profilePic,
+        };
+        const response = await Digit.UserService.updateUser(requestData, stateCode);
+        responseInfo = response?.responseInfo;
+      }
+
 
       if (responseInfo && responseInfo.status === "200") {
         const user = Digit.UserService.getUser();
@@ -406,7 +481,15 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
       }
     } catch (error) {
-      const errorObj = JSON.parse(error);
+      let errorObj;
+      try {
+        errorObj = JSON.parse(error);
+      } catch (e) {
+        errorObj = {
+          type: "error",
+          message: error?.response?.data?.Errors?.[0]?.description || "CORE_COMMON_PROFILE_UPDATE_ERROR",
+        };
+      }
       showToast(errorObj.type, t(errorObj.message), 5000);
     }
 
@@ -553,7 +636,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>
                   {`${t("CORE_COMMON_PROFILE_NAME")}`}*
                 </CardLabel>
-                <div style={{ width: "40rem", maxWidth: "960px" }}>
+                <div style={{ width: "100%", maxWidth: "960px" }}>
                   <TextInput
                     t={t}
                     style={{ width: "100%" }}
@@ -593,7 +676,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_GENDER")}`}</CardLabel>
                 <Dropdown
-                  style={{ width: "40rem", fontSize: "1rem" }}
+                  style={{ width: "100%", fontSize: "1rem" }}
                   className="form-field profileDropdown"
                   selected={gender?.length === 1 ? gender[0] : gender}
                   disable={gender?.length === 1 || editScreen}
@@ -608,7 +691,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_EMAIL")}`}</CardLabel>
-                <div style={{ width: "40rem" }}>
+                <div style={{ width: "100%" }}>
                   <TextInput
                     t={t}
                     style={{ width: "100%" }}
@@ -798,7 +881,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                       label={t("CORE_COMMON_CHANGE_PASSWORD")}
                       variation={"teritiary"}
                       onClick={TogleforPassword}
-                      style={{ paddingLeft: "0rem" }}
+                      style={{ paddingLeft: "20rem" }}
                     ></Button>
                   ) : null}
                   {changepassword ? (
