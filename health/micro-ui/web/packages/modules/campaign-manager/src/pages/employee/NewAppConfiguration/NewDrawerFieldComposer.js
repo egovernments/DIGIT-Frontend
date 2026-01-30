@@ -5,7 +5,7 @@ import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown, RadioBut
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
-import { getFieldTypeFromMasterData, getFieldValueByPath, getFieldTypeFromMasterData2 } from "./helpers";
+import { getFieldTypeFromMasterData, getFieldValueByPath, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
@@ -706,27 +706,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
         // Find current selected field type based on type and format
-        const currentSelectedFieldType = fieldTypeOptions.find((item) => {
-          const typeMatches = item?.metadata?.type === selectedField?.type;
-          const formatMatches = item?.metadata?.format === selectedField?.format;
-
-          // Special handling for custom format with fieldName
-          if (selectedField?.format === "custom" && selectedField?.fieldName) {
-            const fieldNameMatches = item?.type === selectedField?.fieldName;
-            return typeMatches && formatMatches && fieldNameMatches;
-          }
-
-          // Handle different matching scenarios:
-          // 1. If field has both type and format, match both
-          if (selectedField?.format) {
-            return typeMatches && formatMatches;
-          }
-          // 2. If field only has type, try to match where format equals the field's type
-          // (e.g., field.type = "text" should match metadata: {type: "string", format: "text"})
-          else {
-            return typeMatches || item?.metadata?.format === selectedField?.type;
-          }
-        });
+        const currentSelectedFieldType = getFieldTypeOptionFromMasterData(selectedField, fieldTypeOptions);
 
         // Get current field's metadata type
         const metadataType = currentSelectedFieldType?.metadata?.type;

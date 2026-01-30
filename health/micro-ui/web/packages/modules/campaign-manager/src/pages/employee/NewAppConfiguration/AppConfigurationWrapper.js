@@ -8,10 +8,10 @@ import { fetchLocalization, setLocalizationData, updateLocalizationEntry } from 
 import { Header } from "@egovernments/digit-ui-react-components";
 import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput, Toast } from "@egovernments/digit-ui-components";
 import IntermediateWrapper from "./IntermediateWrapper";
-import { useFieldDataLabel } from "./hooks/useCustomT";
+import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
-import { getFieldTypeFromMasterData2 } from "./helpers";
+import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
 const isValueEmpty = (value) => {
@@ -45,6 +45,7 @@ const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
 const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
+  const customTranslate = useCustomTranslate();
   const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const dispatch = useDispatch();
@@ -139,8 +140,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
     // Check each field against panel config
     allFields.forEach((field) => {
+
+         // Skip validation for hidden fields
+      if (field.hidden === true) {
+        return; // Skip to next field in allFields.forEach
+      }
       // Get the field type for this field
-      const fieldType = getFieldTypeFromMasterData2(field, fieldTypeMasterData);
+      const fieldType = getFieldTypeOptionFromMasterData(field, fieldTypeMasterData)?.type;
 
       // Check all tabs in panel config
       Object.keys(panelConfig).forEach((tabKey) => {
@@ -148,275 +154,280 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
         tabProperties.forEach((panelItem) => {
           // Check if this panel item is visible for this field type
-          const isVisible =
-            (!panelItem?.visibilityEnabledFor ||
+          // First check if field type is in visibilityEnabledFor (or if no restrictions)
+          const isFieldTypeVisible =
+            !panelItem?.visibilityEnabledFor ||
             panelItem.visibilityEnabledFor.length === 0 ||
-            panelItem.visibilityEnabledFor.includes(fieldType) && field.hidden !== true);
+            panelItem.visibilityEnabledFor.includes(fieldType);
 
-          if (!isVisible) return;
-
-          // Validation for mandatory localisable fields
+          // Field must be visible for this field type AND field must not be hidden
+          const isVisible = isFieldTypeVisible && field.hidden !== true;
+          if (!isVisible) {
+            return;
+          }          // Validation for mandatory localisable fields
           // Check if field has isMandatory: true and localized value is empty
-          if (
-            panelItem.isMandatory === true &&
-            panelItem.fieldType === "text" &&
-            panelItem.isLocalisable !== false
-          ) {
-            const bindTo = panelItem.bindTo;
-            const fieldValue = field?.[bindTo];
+          else {
+            if (
+              panelItem.isMandatory === true &&
+              panelItem.fieldType === "text" &&
+              panelItem.isLocalisable !== false
+            ) {
+              const bindTo = panelItem.bindTo;
+              const fieldValue = field?.[bindTo];
 
-            // Check if localized value is empty
-            if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
-              errors.push({
-                fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                panelLabel: panelItem.label,
-                message: `VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY`,
-                messageParams: {
-                  fieldName: field?.label || field?.fieldName || "Unknown Field",
-                  propertyName: panelItem.label
-                },
-                tab: tabKey,
-              });
-            }
-          }
-
-          // Check toggle fields with isMandatory: true and conditionalField
-          if (
-            panelItem.fieldType === "toggle" &&
-            panelItem.isMandatory === true &&
-            Array.isArray(panelItem.conditionalField) &&
-            panelItem.conditionalField.length > 0
-          ) {
-            const bindTo = panelItem.bindTo;
-            const isHiddenField = bindTo === "hidden" || bindTo.includes(".hidden");
-
-            // Get the current toggle value from the field
-            let currentToggleValue = field?.[bindTo];
-            // For hidden fields, the toggle value is inverted
-            if (isHiddenField) {
-              currentToggleValue = !currentToggleValue;
-            }
-            currentToggleValue = Boolean(currentToggleValue);
-
-            // Get conditional fields that match the current toggle state
-            const activeConditionalFields = panelItem.conditionalField.filter(
-              (cField) => cField.condition === currentToggleValue
-            );
-
-            // If there are active conditional fields, check if at least one has a value
-            if (activeConditionalFields.length > 0) {
-              const hasAtLeastOneValue = activeConditionalFields.some((cField) => {
-                if (!cField.bindTo) return false;
-                const value = field?.[cField.bindTo];
-                return !isValueEmpty(value);
-              });
-
-              if (!hasAtLeastOneValue) {
-                // Get field labels for error message
-                const fieldLabels = activeConditionalFields
-                  .map((cField) => cField.label || cField.bindTo)
-                  .filter(Boolean)
-                  .join(", ");
-
+              // Check if localized value is empty
+              if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
                 errors.push({
                   fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                   panelLabel: panelItem.label,
-                  message: `VALIDATION_MANDATORY_CONDITIONAL_FIELD_REQUIRED_${panelItem.label}`,
-                  messageParams: { fields: fieldLabels },
+                  message: `VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY`,
+                  messageParams: {
+                    fieldName: customTranslate(field?.label || field?.fieldName || "Unknown Field"),
+                    propertyName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))
+                  },
                   tab: tabKey,
                 });
               }
             }
-          }
 
-          // Validation for toggle fields with showFieldOnToggle: true
-          // Validates that when toggle is ON, conditional fields have proper values
-          if (
-            panelItem.fieldType === "toggle" &&
-            panelItem.showFieldOnToggle === true &&
-            Array.isArray(panelItem.conditionalField) &&
-            panelItem.conditionalField.length > 0
-          ) {
-            const toggleBindTo = panelItem.bindTo;
-            const fieldValue = field?.[toggleBindTo];
+            // Check toggle fields with isMandatory: true and conditionalField
+            if (
+              panelItem.fieldType === "toggle" &&
+              panelItem.isMandatory === true &&
+              Array.isArray(panelItem.conditionalField) &&
+              panelItem.conditionalField.length > 0
+            ) {
+              const bindTo = panelItem.bindTo;
+              const isHiddenField = bindTo === "hidden" || bindTo.includes(".hidden");
 
-            // Determine if toggle is ON:
-            // - Value is exactly true (boolean)
-            // - Value is a truthy string
-            // - Value is a truthy number (for cases like scanLimit where value might be a number)
-            const isToggleOn = fieldValue === true ||
-              (typeof fieldValue === "string" && fieldValue.trim() !== "") ||
-              (typeof fieldValue === "number" && !isNaN(fieldValue));
+              // Get the current toggle value from the field
+              let currentToggleValue = field?.[bindTo];
+              // For hidden fields, the toggle value is inverted
+              if (isHiddenField) {
+                currentToggleValue = !currentToggleValue;
+              }
+              currentToggleValue = Boolean(currentToggleValue);
 
-            // Skip validation if toggle is OFF (false, undefined, null, empty string, 0)
-            if (!isToggleOn && fieldValue !== 0) {
-              // Toggle is OFF, no validation needed
-            } else {
-              // Toggle is ON - validate all conditional fields
-
-              // Get conditional fields that appear when toggle is ON (condition: true or no condition specified)
+              // Get conditional fields that match the current toggle state
               const activeConditionalFields = panelItem.conditionalField.filter(
-                (cField) => cField.condition === true || cField.condition === undefined
+                (cField) => cField.condition === currentToggleValue
               );
 
-              activeConditionalFields.forEach((cField) => {
-                if (!cField.bindTo) return;
+              // If there are active conditional fields, check if at least one has a value
+              if (activeConditionalFields.length > 0) {
+                const hasAtLeastOneValue = activeConditionalFields.some((cField) => {
+                  if (!cField.bindTo) return false;
+                  const value = field?.[cField.bindTo];
+                  return !isValueEmpty(value);
+                });
 
-                const conditionalBindTo = cField.bindTo;
-                const isMatchingBindTo = conditionalBindTo === toggleBindTo;
+                if (!hasAtLeastOneValue) {
+                  // Get field labels for error message
+                  const fieldLabels = activeConditionalFields
+                    .map((cField) => cField.label || cField.bindTo)
+                    .filter(Boolean)
+                    .join(", ");
 
-                // Get the value for this conditional field
-                let conditionalValue;
+                  errors.push({
+                    fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                    panelLabel: panelItem.label,
+                    message: `VALIDATION_MANDATORY_CONDITIONAL_FIELD_REQUIRED_${panelItem.label}`,
+                    messageParams: { fields: fieldLabels },
+                    tab: tabKey,
+                  });
+                }
+              }
+            }
+
+            // Validation for toggle fields with showFieldOnToggle: true
+            // Validates that when toggle is ON, conditional fields have proper values
+            if (
+              panelItem.fieldType === "toggle" &&
+              panelItem.showFieldOnToggle === true &&
+              Array.isArray(panelItem.conditionalField) &&
+              panelItem.conditionalField.length > 0
+            ) {
+              const toggleBindTo = panelItem.bindTo;
+              const fieldValue = field?.[toggleBindTo];
+
+              // Determine if toggle is ON:
+              // - Value is exactly true (boolean)
+              // - Value is a truthy string
+              // - Value is a truthy number (for cases like scanLimit where value might be a number)
+              const isToggleOn = fieldValue === true ||
+                (typeof fieldValue === "string" && fieldValue.trim() !== "") ||
+                (typeof fieldValue === "number" && !isNaN(fieldValue));
+
+              // Skip validation if toggle is OFF (false, undefined, null, empty string, 0)
+              if (!isToggleOn && fieldValue !== 0) {
+                // Toggle is OFF, no validation needed
+              } else {
+                // Toggle is ON - validate all conditional fields
+
+                // Get conditional fields that appear when toggle is ON (condition: true or no condition specified)
+                const activeConditionalFields = panelItem.conditionalField.filter(
+                  (cField) => cField.condition === true || cField.condition === undefined
+                );
+
+                activeConditionalFields.forEach((cField) => {
+                  if (!cField.bindTo) return;
+
+                  const conditionalBindTo = cField.bindTo;
+                  const isMatchingBindTo = conditionalBindTo === toggleBindTo;
+
+                  // Get the value for this conditional field
+                  let conditionalValue;
                   conditionalValue = field?.[conditionalBindTo];
-                
 
-                const isLocalisable = cField.isLocalisable !== false;
-                const conditionalFieldType = cField.type;
 
-                if (isMatchingBindTo) {
-                  // Same bindTo as parent toggle - value should NOT be just boolean true
-                  if (fieldValue === true) {
-                    errors.push({
-                      fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                      panelLabel: panelItem.label,
-                      message: `VALIDATION_TOGGLE_VALUE_REQUIRED`,
-                      messageParams: {
-                        fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
-                      },
-                      tab: tabKey,
-                    });
-                  } else if (
-                    isLocalisable &&
-                    conditionalFieldType !== "number" && // Skip localization for number fields
-                    typeof fieldValue === "string" &&
-                    fieldValue.trim() !== ""
-                  ) {
-                    // Check localization for string values (not number fields)
-                    if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
+                  const isLocalisable = cField.isLocalisable !== false;
+                  const conditionalFieldType = cField.type;
+
+                  if (isMatchingBindTo) {
+                    // Same bindTo as parent toggle - value should NOT be just boolean true
+                    if (fieldValue === true) {
                       errors.push({
                         fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                         panelLabel: panelItem.label,
-                        message: `VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY`,
+                        message: `VALIDATION_TOGGLE_VALUE_REQUIRED`,
                         messageParams: {
                           fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
                         },
                         tab: tabKey,
                       });
+                    } else if (
+                      isLocalisable &&
+                      conditionalFieldType !== "number" && // Skip localization for number fields
+                      typeof fieldValue === "string" &&
+                      fieldValue.trim() !== ""
+                    ) {
+                      // Check localization for string values (not number fields)
+                      if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
+                        errors.push({
+                          fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                          panelLabel: panelItem.label,
+                          message: `VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY`,
+                          messageParams: {
+                            fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
+                          },
+                          tab: tabKey,
+                        });
+                      }
                     }
-                  }
-                } else {
-                  // Different bindTo than parent toggle - validate conditional field has value
-                  if (isValueEmpty(conditionalValue)) {
-                    errors.push({
-                      fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                      panelLabel: panelItem.label,
-                      message: `VALIDATION_CONDITIONAL_FIELD_REQUIRED`,
-                      messageParams: {
-                        toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
-                        fieldName: t(cField.label) || cField.bindTo
-                      },
-                      tab: tabKey,
-                    });
-                  } else if (isLocalisable && typeof conditionalValue === "string" && conditionalValue.trim() !== "" && panelItem.label !== "isMdms") {
-                    // Check localization for string values
-                    if (isLocalizedValueEmpty(conditionalValue, localizationData, currentLocale)) {
+                  } else {
+                    // Different bindTo than parent toggle - validate conditional field has value
+                    if (isValueEmpty(conditionalValue)) {
                       errors.push({
                         fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                         panelLabel: panelItem.label,
-                        message: `VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY`,
+                        message: `VALIDATION_CONDITIONAL_FIELD_REQUIRED`,
                         messageParams: {
                           toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
                           fieldName: t(cField.label) || cField.bindTo
                         },
                         tab: tabKey,
                       });
+                    } else if (isLocalisable && typeof conditionalValue === "string" && conditionalValue.trim() !== "" && panelItem.label !== "isMdms") {
+                      // Check localization for string values
+                      if (isLocalizedValueEmpty(conditionalValue, localizationData, currentLocale)) {
+                        errors.push({
+                          fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                          panelLabel: panelItem.label,
+                          message: `VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY`,
+                          messageParams: {
+                            toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
+                            fieldName: t(cField.label) || cField.bindTo
+                          },
+                          tab: tabKey,
+                        });
+                      }
                     }
                   }
-                }
-              });
+                });
+              }
             }
-          }
 
-          // Validation for labelPairList fields - at least one field must be selected
-          if (panelItem.fieldType === "labelPairList") {
-            const labelPairData = field?.data;
+            // Validation for labelPairList fields - at least one field must be selected
+            if (panelItem.fieldType === "labelPairList") {
+              const labelPairData = field?.data;
 
-            // Check if data is empty, undefined, null, or an empty array
-            if (!labelPairData || !Array.isArray(labelPairData) || labelPairData.length === 0 && !field.hidden ) {
-              errors.push({
-                fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                panelLabel: panelItem.label,
-                message: "AT_LEAST_ONE_FIELD_MUST_BE_SELECTED",
-                tab: tabKey,
-              });
-            }
-          }
-
-          // Special validation for isMdms toggle field
-          // Check if isMdms is enabled and validate schemaCode or dropDownOptions accordingly
-          if (panelItem.bindTo === "isMdms" && panelItem.fieldType === "toggle") {
-            const isMdmsEnabled = field?.isMdms === true;
-
-            if (isMdmsEnabled) {
-              // When isMdms is ON, schemaCode must be selected
-              if (isValueEmpty(field?.schemaCode)) {
+              // Check if data is empty, undefined, null, or an empty array
+              if (!labelPairData || !Array.isArray(labelPairData) || labelPairData.length === 0 && !field.hidden) {
                 errors.push({
                   fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                   panelLabel: panelItem.label,
-                  message: "VALIDATION_SCHEMA_CODE_REQUIRED",
-                  messageParams: {
-                    fieldName: field?.label || field?.fieldName || "Unknown Field"
-                  },
+                  message: "AT_LEAST_ONE_FIELD_MUST_BE_SELECTED",
                   tab: tabKey,
                 });
               }
-            } else {
-              // When isMdms is OFF, dropDownOptions must be present and valid
-              const dropDownOptions = field?.dropDownOptions;
+            }
 
-              if (isValueEmpty(dropDownOptions)) {
-                // dropDownOptions is null, undefined, or empty array
-                errors.push({
-                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                  panelLabel: panelItem.label,
-                  message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
-                  messageParams: {
-                    fieldName: field?.label || field?.fieldName || "Unknown Field"
-                  },
-                  tab: tabKey,
-                });
-              } else if (Array.isArray(dropDownOptions)) {
-                // Check if any option has empty name (localization code)
-                const hasEmptyName = dropDownOptions.some(
-                  (option) => !option?.name || (typeof option.name === "string" && option.name.trim() === "")
-                );
+            // Special validation for isMdms toggle field
+            // Check if isMdms is enabled and validate schemaCode or dropDownOptions accordingly
+            if (panelItem.bindTo === "isMdms" && panelItem.fieldType === "toggle") {
+              const isMdmsEnabled = field?.isMdms === true;
 
-                if (hasEmptyName) {
+              if (isMdmsEnabled) {
+                // When isMdms is ON, schemaCode must be selected
+                if (isValueEmpty(field?.schemaCode)) {
                   errors.push({
                     fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                     panelLabel: panelItem.label,
-                    message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
+                    message: "VALIDATION_SCHEMA_CODE_REQUIRED",
                     messageParams: {
                       fieldName: field?.label || field?.fieldName || "Unknown Field"
                     },
                     tab: tabKey,
                   });
-                } else {
-                  // Check if any option has empty/missing name code or empty localized value
-                  const hasEmptyLocalizedName = dropDownOptions.some(
-                    (option) => isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
+                }
+              } else {
+                // When isMdms is OFF, dropDownOptions must be present and valid
+                const dropDownOptions = field?.dropDownOptions;
+
+                if (isValueEmpty(dropDownOptions)) {
+                  // dropDownOptions is null, undefined, or empty array
+                  errors.push({
+                    fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                    panelLabel: panelItem.label,
+                    message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
+                    messageParams: {
+                      fieldName: field?.label || field?.fieldName || "Unknown Field"
+                    },
+                    tab: tabKey,
+                  });
+                } else if (Array.isArray(dropDownOptions)) {
+                  // Check if any option has empty name (localization code)
+                  const hasEmptyName = dropDownOptions.some(
+                    (option) => !option?.name || (typeof option.name === "string" && option.name.trim() === "")
                   );
 
-                  if (hasEmptyLocalizedName) {
+                  if (hasEmptyName) {
                     errors.push({
                       fieldLabel: field?.label || field?.fieldName || "Unknown Field",
                       panelLabel: panelItem.label,
-                      message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
+                      message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
                       messageParams: {
                         fieldName: field?.label || field?.fieldName || "Unknown Field"
                       },
                       tab: tabKey,
                     });
+                  } else {
+                    // Check if any option has empty/missing name code or empty localized value
+                    const hasEmptyLocalizedName = dropDownOptions.some(
+                      (option) => isLocalizedValueEmpty(option?.name, localizationData, currentLocale)
+                    );
+
+                    if (hasEmptyLocalizedName) {
+                      errors.push({
+                        fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                        panelLabel: panelItem.label,
+                        message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
+                        messageParams: {
+                          fieldName: field?.label || field?.fieldName || "Unknown Field"
+                        },
+                        tab: tabKey,
+                      });
+                    }
                   }
                 }
               }
@@ -1030,7 +1041,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 placeholder={t("SELECT_FIELD_TYPE")}
                 t={t}
                 isSearchable={true}
-                optionCardStyles={{maxHeight:"20vh"}}
+                optionCardStyles={{ maxHeight: "20vh" }}
               />
             </LabelFieldPair>
 
