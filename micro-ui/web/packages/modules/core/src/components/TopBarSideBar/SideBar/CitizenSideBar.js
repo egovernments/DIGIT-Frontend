@@ -2,7 +2,7 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
@@ -17,7 +17,6 @@ const Profile = ({ info, stateName, t }) => {
     const uuid = info?.uuid;
     if (uuid) {
       const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-
       if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
         const userDetails = usersResponse.user[0];
         const thumbs = userDetails?.photo?.split(",");
@@ -86,7 +85,11 @@ export const CitizenSideBar = ({
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
+  
+  // React Router v6: useNavigate replaces useHistory
   const navigate = useNavigate();
+  // React Router v6: useLocation for accessing location object
+  const location = useLocation();
 
   const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     if (searcher == "") return str;
@@ -123,6 +126,14 @@ export const CitizenSideBar = ({
       const uuid = user?.info?.uuid;
       if (uuid) {
         const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+        const userData = usersResponse?.user?.[0];
+        if (userData) {
+          const currentUser = Digit.UserService.getUser();
+          Digit.UserService.setUser({
+            ...currentUser,
+            info: userData
+          });
+        }
         if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
           const userDetails = usersResponse.user[0];
           const thumbs = userDetails?.photo?.split(",");
@@ -146,8 +157,10 @@ export const CitizenSideBar = ({
     Digit.UserService.setUser(loggedInData);
     setDropDownData(city);
     if (typeof window !== 'undefined' && window.location?.href?.includes(`/${window?.contextPath}/employee/`)) {
+
+      // React Router v6: navigate with { replace: true } instead of history.replace()
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-      navigate(redirectPath,{replace:true});
+      navigate(redirectPath, { replace: true });
     }
     // Safe reload with error handling
     try {
@@ -170,23 +183,23 @@ export const CitizenSideBar = ({
       updatedUrl = isEmployee
         ? url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`)
         : url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`);
+      // React Router v6: navigate() instead of history.push()
       navigate(updatedUrl);
       toggleSidebar();
     } else {
       url[0] === "/"
         ? navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
-        : navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`)
+        : navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
       toggleSidebar();
     }
   };
 
   const redirectToLoginPage = () => {
-    if(isEmployee){
-     navigate(`/${window?.contextPath}/employee/user/language-selection`);
-    }
-    else{
+    if (isEmployee) {
+      // React Router v6: navigate() instead of history.push()
+      navigate(`/${window?.contextPath}/employee/user/language-selection`);
+    } else {
       navigate(`/${window?.contextPath}/citizen/login`);
-
     }
     closeSidebar();
   };
@@ -263,6 +276,7 @@ export const CitizenSideBar = ({
           icon: configEmployeeSideBar[keys[i]][0]?.leftIcon,
           populators: {
             onClick: () => {
+              // React Router v6: navigate() instead of history.push()
               navigate(configEmployeeSideBar[keys[i]][0]?.navigationURL);
               closeSidebar();
             },
@@ -296,6 +310,7 @@ export const CitizenSideBar = ({
   }
 
   /*  URL with openlink wont have sidebar and actions    */
+  // React Router v6: location.pathname instead of history.location.pathname
   if (location.pathname.includes("/openlink")) {
     profileItem = <span></span>;
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
@@ -311,12 +326,14 @@ export const CitizenSideBar = ({
   if (Digit.Utils.getMultiRootTenant()) {
     city = t(`TENANT_TENANTS_${tenantId}`);
   } else {
-    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`);
+    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.ULBService.getCurrentTenantId(), ".", "_")?.toUpperCase()}`);
+    // city = "TEST";
   }
-  const goToHome= () => {
-    if(isEmployee){
+  const goToHome = () => {
+    if (isEmployee) {
+      // React Router v6: navigate() instead of history.push()
       navigate(`/${window?.contextPath}/employee`);
-    }else{
+    } else {
       navigate(`/${window?.contextPath}/citizen`);
     }
   };
@@ -401,12 +418,16 @@ export const CitizenSideBar = ({
       icon: "Language",
       key: "language",
     },
-    {
-      label: t("EDIT_PROFILE"),
-      type: "custom",
-      icon: "Edit",
-      key: "editProfile",
-    },
+    ...(user && user.access_token
+    ? [
+        {
+          label: t("EDIT_PROFILE"),
+          type: "custom",
+          icon: "Edit",
+          key: "editProfile",
+        },
+      ]
+    : []),
     {
       label: t("Modules"),
       icon: "DriveFileMove",
@@ -417,7 +438,7 @@ export const CitizenSideBar = ({
     <Hamburger
       items={hamburgerItems}
       profileName={user?.info?.name}
-      profileNumber={user?.info?.mobileNumber}
+      profileNumber={user?.info?.mobileNumber || user?.info?.emailId}
       theme="dark"
       transitionDuration={0.3}
       styles={{ marginTop: "64px", height: "93%" }}

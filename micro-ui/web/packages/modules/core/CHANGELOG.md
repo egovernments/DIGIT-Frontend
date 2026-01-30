@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-09"] [30-JAN-2026]
+- Changes from react17 core merge which was done for studio
+
 ## ["2.0.0-dev-02"] [24-Nov-2025]
 - Made SideNav and Header's theme and variant configurable via globalConfigs
 
