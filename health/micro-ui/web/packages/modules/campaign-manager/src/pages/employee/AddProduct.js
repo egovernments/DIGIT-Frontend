@@ -140,9 +140,10 @@ function AddProduct() {
                 boldText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_BOLD_TEXT",
                 postText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_POST_TEXT",
                 actionLabel: "ES_PRODUCT_RESPONSE_ACTION",
-                primaryActionIcon: "ArrowBack",
+                primaryActionIcon: "UndoIcon",
                 actionLink: returnPath,
                 isPrimaryIconSuffix: false,
+                primaryActionVariation: "primary"
               },
             });
           },

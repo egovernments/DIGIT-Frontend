@@ -58,12 +58,12 @@ const Response = () => {
           state?.actionLabel && (
             <Button
               icon={state?.primaryActionIcon || "ArrowForward"}
-              isSuffix={state?.isPrimaryIconSuffix || true}
+              isSuffix={state?.isPrimaryIconSuffix === false ? false : true}
               label={t(state?.actionLabel)}
               title={t(state?.actionLabel)}
               onClick={() => navigation(state?.actionLink)}
               type="button"
-              variation="secondary"
+              variation={state?.primaryActionVariation || "secondary"}
             />
           ),
           state?.secondaryActionLabel && (
@@ -82,7 +82,7 @@ const Response = () => {
               icon={state?.secondaryActionIcon}
               onClick={() => navigation(state?.secondaryActionLink)}
               type="button"
-              variation="secondary"
+              variation={state?.secondaryActionVariation || "secondary"}
             />
           ),
         ]}
