@@ -40,7 +40,6 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [isOtpValid, setIsOtpValid] = useState(true);
-  const [tokens, setTokens] = useState(null); // This variable is unused, consider removing
   const [params, setParams] = useState(isUserRegistered ? {} : location?.state?.data); // Renamed setParams to setParams for consistency
   const [errorTO, setErrorTO] = useState(null);
   const searchParams = Digit.Hooks.useQueryParams();
