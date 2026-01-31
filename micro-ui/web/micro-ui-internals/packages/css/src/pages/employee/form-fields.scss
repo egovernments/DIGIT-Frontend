@@ -1,0 +1,24 @@
+.form-field{
+    @apply w-full
+}
+
+@screen dt {
+    .form-field{
+        @apply w-1/2
+    }
+
+    .desktop-w-full{
+        @apply w-full !important   
+    }
+}
+
+
+.form-explorer{
+    display: flex;
+    flex-flow: row;
+    justify-content:space-between;
+    
+    .form-component{
+        width: 60%;
+    }
+}

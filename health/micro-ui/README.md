@@ -1,281 +1,176 @@
 
-# DIGIT Frontend - Health UI
+# DIGIT UI 
 
-A multi-variant React application built on top of DIGIT UI Core, designed for healthcare management systems.
+A React App built on top of DIGIT UI Core.
 
-## Overview
+# DIGIT
 
-DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India's largest platform for governance services. This repository contains the frontend implementation for the Health module of DIGIT, featuring a multi-variant build system.
+DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India's largest platform for governance services. Visit https://www.digit.org for more details.
 
-## Project Structure
+This repository contains source code for web implementation of the new Digit UI modules with dependencies and libraries.
 
-```
-DIGIT-Frontend/
-├── health/micro-ui/web/                    # Health UI main application
-│   ├── src/                                # Source code
-│   ├── builds/                             # Build variants
-│   │   ├── console/                        # Admin console variant
-│   │   │   ├── index.js                    # Console-specific entry point
-│   │   │   ├── package.json                # Console dependencies & config
-│   │   │   └── public/                     # Console-specific assets
-│   │   ├── core-ui/                        # Core application variant
-│   │   │   ├── index.js                    # Core-specific entry point
-│   │   │   ├── package.json                # Core dependencies & config
-│   │   │   └── public/                     # Core-specific assets
-│   │   └── workbench-ui/                   # Workbench variant (default)
-│   │       ├── index.js                    # Workbench-specific entry point
-│   │       ├── package.json                # Workbench dependencies & config
-│   │       └── public/                     # Workbench-specific assets
-│   ├── docker/                             # Docker configuration
-│   │   ├── Dockerfile                      # Multi-variant Dockerfile
-│   │   └── nginx.conf.template             # Dynamic nginx configuration
-│   ├── packages/                           # Local packages
-│   │   ├── css/                            # Health UI styles
-│   │   └── modules/campaign-manager/       # Campaign management module
-│   └── webpack.*.js                        # Webpack configurations
-├── build/                                  # CI/CD configuration
-│   └── build-config.yml                    # Build pipeline configuration
-└── .github/workflows/                      # GitHub Actions workflows
-    └── build.yaml                          # Multi-variant build pipeline
-```
+Workbench module is used to Manage the master data (MDMS V2 Service) used across the DIGIT Services / Applications
 
-## Build Variants
-
-This application supports three distinct build variants:
-
-### 🏥 **Console** (`/console/`)
-- **Purpose**: Administrative console interface
-- **Modules**: Core, Admin, Console
-- **Users**: System administrators
-- **Features**: User management, system configuration
-
-### 🩺 **Core-UI** (`/core-ui/`)
-- **Purpose**: Basic healthcare application
-- **Modules**: Core modules only  
-- **Users**: Healthcare workers
-- **Features**: Patient management, basic workflows
-
-### 📊 **Workbench-UI** (`/workbench-ui/`)
-- **Purpose**: Campaign management and analytics
-- **Modules**: Core, Workbench, Campaign Manager
-- **Users**: Program managers, data analysts
-- **Features**: Campaign planning, data visualization, reporting
+It is also used to manage the Localisation data present in the system (Localisation service)
 
 
-## 🚀 Local Development
-
-### Prerequisites
-- Node.js >= 14
-- Yarn package manager
-- Git
-
-### Quick Start
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/egovernments/DIGIT-Frontend.git
-cd DIGIT-Frontend/health/micro-ui/web
-```
-
-2. **Choose and configure a build variant**
-```bash
-# For Workbench UI (default - includes campaign management)
-cp builds/workbench-ui/package.json package.json
-cp builds/workbench-ui/index.js src/index.js
-
-# OR for Core UI (basic healthcare features only)
-cp builds/core-ui/package.json package.json
-cp builds/core-ui/index.js src/index.js
-
-# OR for Console (admin interface)
-cp builds/console/package.json package.json
-cp builds/console/index.js src/index.js
-```
-
-3. **Install dependencies**
-```bash
-yarn install
-```
-
-4. **Create environment file**
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-5. **Start development server**
-```bash
-yarn start
-```
-
-The application will be available at:
-- **Workbench UI**: http://localhost:3000/workbench-ui/
-- **Core UI**: http://localhost:3000/core-ui/
-- **Console**: http://localhost:3000/console/
-
-### Development Tips
-
-- **Hot Reload**: Changes are automatically reloaded
-- **Switching Variants**: Copy different variant files and restart the server
-- **Package Building**: Run `yarn build:packages` to build local packages
-- **Production Build**: Run `yarn build:prod` for optimized production bundle
-
-
-## 🔧 Environment Variables
-
-Create a `.env` file in the `health/micro-ui/web/` directory with the following variables:
+## 📂 Project Structure
 
 ```bash
-# API Configuration
-REACT_APP_PROXY_API=https://your-api-server.com
-REACT_APP_GLOBAL=https://your-global-server.com
-REACT_APP_PROXY_ASSETS=https://your-assets-server.com
-
-# User Configuration  
-REACT_APP_USER_TYPE=EMPLOYEE
-# Options: EMPLOYEE, CITIZEN
-
-# Build Configuration
-SKIP_PREFLIGHT_CHECK=true
-
-# Optional: State Configuration
-REACT_APP_STATE_LEVEL_TENANT_ID=mz
+micro-ui-internals/
+│── example/
+│── node_modules/
+│── packages/
+│   ├── css/                    # Global CSS package with Tailwind configuration
+│   │   ├── dist/
+│   │   ├── example/
+│   │   ├── node_modules/
+│   │   ├── src/
+│   │   ├── gulpfile.js
+│   │   ├── package.json
+│   │   ├── postcss.config.js
+│   │   ├── tailwind.config.js
+│   ├── modules/                 # Contains different micro UI modules
+│   │   ├── campaign-manager/
+│   │   ├── hcm-microplanning/
+│   │   ├── health-payments/
+│   │   ├── microplan/
+│   │   ├── workbench-hcm/
 ```
 
-### Environment Profiles
 
-Different deployment environments may require different configurations:
+## 🛠 External Dependencies
+This project uses several external packages:
 
-- **Development**: Local API endpoints
-- **Staging**: Staging server endpoints  
-- **Production**: Production server endpoints
-
-
-## 🚢 CI/CD Deployment
-
-### GitHub Actions
-
-The repository includes automated CI/CD pipelines that build and deploy different variants:
-
-1. **Navigate to Actions tab** in GitHub
-2. **Select "Build Pipeline"**  
-3. **Choose variant**: `console`, `core-ui`, or `workbench-ui`
-4. **Run workflow**
-
-The pipeline automatically:
-- Detects the build variant from the selection
-- Builds the appropriate Docker image
-- Supports both AMD64 and ARM64 architectures
-- Creates multi-platform manifest
-
-### Manual Deployment
-
-For manual deployments, use the build configuration:
 
 ```bash
-# Build specific variant
-yarn build:prod
-
-# Or with Docker
-docker build --build-arg BUILD_VARIANT=workbench-ui -t my-app .
+Dependency	Source Code Repo	Branch
+@egovernments/digit-ui-libraries	digit-ui-libraries	develop
+@egovernments/digit-ui-module-core	digit-frontend	develop
+@egovernments/digit-ui-react-components	digit-frontend	develop
+@egovernments/digit-ui-svg-components	digit-frontend	develop
+@egovernments/digit-ui-module-workbench	digit-frontend	develop
+@egovernments/digit-ui-module-utilities	digit-frontend	develop
+@egovernments/digit-ui-components	digit-ui-libraries	develop
 ```
 
-## 🛠 Tech Stack
+## Tech Stack
 
-### Core Technologies
-- **[React 19.0.0](https://react.dev/)** - Modern UI framework with latest features
-- **[React Hook Form](https://www.react-hook-form.com/)** - Performant forms with easy validation
-- **[TanStack Query](https://tanstack.com/query/)** - Powerful data synchronization for React
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Webpack 5](https://webpack.js.org/)** - Module bundler with advanced optimizations
+**Libraries:** 
 
-### Additional Libraries
-- **Campaign Management**: Excel processing, mapping, form handling
-- **Data Visualization**: Charts and analytics components  
-- **UI Components**: DIGIT UI component library
-- **State Management**: Redux Toolkit for complex state
+[React](https://react.dev/)
 
-### Build Optimizations
-- **Code Splitting**: Lazy loading of heavy modules
-- **Tree Shaking**: Dead code elimination
-- **Bundle Analysis**: Webpack Bundle Analyzer integration
-- **Compression**: Gzip compression for production
+[React Hook Form](https://www.react-hook-form.com/)
 
-## 🗂 Modules
+[React Query](https://tanstack.com/query/v3/)
 
-The application is organized into modular components:
+[Tailwind CSS](https://tailwindcss.com/)
 
-### Core Modules
-1. **Core** - Basic functionality and routing
-2. **Assignment** - Task and assignment management  
-3. **Utilities** - Common utilities and helpers
+[Webpack](https://webpack.js.org/)
 
-### Variant-Specific Modules
-4. **Workbench** - Data management and configuration
-5. **Campaign Manager** - Campaign planning and execution
-6. **Admin/Console** - System administration (console variant)
+## 🚀 Running the Project Locally
+Prerequisites
+Ensure you have the following installed on your system:
 
-### Optional Modules
-7. **HRMS** - Human Resource Management
-8. **Dashboard** - Analytics and reporting
-9. **Engagement** - User engagement tools
-10. **Payment** - Payment processing
+Node.js (14.18)
+Yarn or npm (Yarn preferred )
 
-## 📖 Documentation
+Installation Steps
 
-- **[DIGIT UI Developer Guide](https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)** - Official documentation
-- **[API Documentation](https://core.digit.org/)** - Backend API reference
-- **[Component Library](https://github.com/egovernments/DIGIT-UI-LIBRARIES)** - Reusable UI components
+## Run Locally
 
-## 🤝 Contributing
+Clone the project
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```bash
+  git clone https://github.com/egovernments/Digit-Frontend.git
+```
 
-## 🆘 Support
+Go to the Sub directory to run UI
+```bash
+    cd into health/micro-ui/web/micro-ui-internals
+```
 
-For support and issues:
+Install dependencies
 
-- **GitHub Issues**: [DIGIT-Frontend Issues](https://github.com/egovernments/DIGIT-Frontend/issues)
-- **DIGIT Core Issues**: [DIGIT-Core Issues](https://github.com/egovernments/DIGIT-core/issues)
-- **Documentation**: [DIGIT Docs](https://core.digit.org/)
+```bash
+  yarn install
+```
 
-## 📄 License
+Add .env file
+```bash
+    health/micro-ui/web/micro-ui-internals/example/.env
+```
 
-This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/) - see the LICENSE file for details.
+Start the server
 
-## 👥 Authors
-
-- **[@jagankumar-egov](https://www.github.com/jagankumar-egov)** - Lead Developer
-- **DIGIT Team** - Core platform development
-
-## 🏗 Architecture
-
-### Multi-Variant Build System
-
-The application uses a sophisticated build system that allows:
-
-- **Single Codebase**: Maintain one codebase for multiple applications
-- **Optimized Bundles**: Each variant only includes necessary dependencies  
-- **Dynamic Configuration**: Webpack configs adapt to build variant
-- **CI/CD Integration**: Automated builds for different variants
-
-### Performance Optimizations
-
-- **Lazy Loading**: Heavy modules loaded on demand
-- **Code Splitting**: Separate chunks for different features
-- **Bundle Analysis**: Monitor and optimize bundle sizes
-- **Caching**: Efficient browser and CDN caching strategies
-
----
-
-![DIGIT](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
+```bash
+  yarn start
+```
 
 
-**Built with ❤️ by the eGov Team**
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`REACT_APP_PROXY_API` ::  `{{server url}}`
+
+`REACT_APP_GLOBAL`  ::  `{{server url}}`
+
+`REACT_APP_PROXY_ASSETS`  ::  `{{server url}}`
+
+`REACT_APP_USER_TYPE`  ::  `{{EMPLOYEE||CITIZEN}}`
+
+`SKIP_PREFLIGHT_CHECK` :: `true`
+
+[sample .env file](https://github.com/egovernments/Digit-Frontend/health/micro-ui/web/micro-ui-internals/example/.env-unifieddev)
 
 
-![eGov](https://egov-dev-assets.s3.ap-south-1.amazonaws.com/egov.png)
+
+## Modules
+
+    1. Console
+    2. Microplan
+    3. Payments
+    4. Settings
+
+
+🎨 Tailwind CSS Configuration
+The project uses Tailwind CSS for styling. The global configuration is located in:
+
+Tailwind Config: packages/css/tailwind.config.js
+PostCSS Config: packages/css/postcss.config.js
+Each module may also include its own CSS files, managed within their respective directories.
+
+🛠 Development & Contribution Guidelines
+Follow the monorepo structure for module development.
+Use feature branches and create a pull request to develop branch.
+Ensure Tailwind classes are used properly and avoid unnecessary CSS overrides.
+
+
+This README should provide clarity on setting up and running your project locally. Let me know if you'd like to add any specific details! 🚀
+
+
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
+## Author
+
+- [@jagankumar-egov](https://www.github.com/jagankumar-egov)
+
+
+## Documentation
+
+[Documentation](https://https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
+
+
+## Support
+
+For support, add the issues in https://github.com/egovernments/DIGIT-Frontend/issues.
+
+
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
+

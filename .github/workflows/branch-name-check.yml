@@ -1,27 +1,79 @@
-name: Branch Name Validation
+name: Branch and PR Name Validation
 
 on:
   push:
     branches:
       - master
       - develop
+      - console
+
   pull_request:
     branches:
       - master
       - develop
+      - console
+      
+    types:
+      - opened
+      - edited
+      - reopened
 
 jobs:
-  validate-branch-name:
+  validate-names:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Validate branch name
         run: |
-          branch_name=$(echo "${GITHUB_REF#refs/heads/}")
-          pattern="^(FEATURE|BUGFIX|RELEASE)\/(HCMPRE|DPG|SN)-[0-9]{1,5}$"
-          if [[ ! "$branch_name" =~ $pattern ]]; then
-            echo "Branch name '$branch_name' does not follow the correct pattern: FEATURE/HCMPRE-<TICKET_NO>, FEATURE/DPG-<TICKET_NO>, FEATURE/SN-<TICKET_NO>, BUGFIX/SN-<TICKET_NO>,  BUGFIX/HCMPRE-<TICKET_NO>, or BUGFIX/DPG-<TICKET_NO> where x is a number between 0 and 99999"
+          # Determine the branch name
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            branch_name="${GITHUB_HEAD_REF}"
+          else
+            branch_name="${GITHUB_REF#refs/heads/}"
+          fi
+      
+          # Define the branch name pattern
+          PREFIXES="FEATURE|BUGFIX|RELEASE"
+          PROJECTS="HCMPRE|DPG|SN|DUCE|HCMCONSOLE"
+          TICKET_PATTERN="[0-9]{1,5}"
+          BRANCH_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN$"
+      
+          # Validate the branch name
+          if [[ ! "$branch_name" =~ $BRANCH_PATTERN ]]; then
+            echo "Branch name '$branch_name' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO> where <TICKET_NO> is $TICKET_PATTERN"
             exit 1
           fi
+
+      - name: Validate PR title
+        if: ${{ github.event_name == 'pull_request' }} # Only for PR validation
+        run: |
+          # Define constants
+          PREFIXES="FEATURE|BUGFIX|RELEASE"
+          PROJECTS="HCMPRE|DPG|SN|DUCE|HCMCONSOLE"
+          TICKET_PATTERN="[0-9]{1,5}"
+          TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN.*$"
+          MIN_TITLE_LENGTH=30
+
+
+          # Fetch the latest PR title dynamically
+          pr_title=$(curl -s https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq -r '.title')
+          echo "Fetched PR title: $pr_title"
+
+          # Validate the PR title
+          if [[ ! "$pr_title" =~ $TITLE_PATTERN ]]; then
+            echo "PR title '$pr_title' does not follow the correct pattern: $PREFIXES/$PROJECTS-<TICKET_NO> : <Description> where <TICKET_NO> is $TICKET_PATTERN"
+            exit 1
+          fi
+
+          # Validate the PR title length
+          if [[ ${#pr_title} -lt $MIN_TITLE_LENGTH ]]; then
+            echo "PR title '$pr_title' is too short. It must be at least $MIN_TITLE_LENGTH characters long, excluding the default pattern or ticket number."
+            exit 1
+          fi
+      
+          echo "PR title validation passed."
+
+
+          

@@ -15,6 +15,7 @@ on:
           - sandbox-ui
           - microplan-ui
           - console
+          - dashboard-ui
           - payments-ui
           - storybook-svg
           - storybook
@@ -24,6 +25,7 @@ on:
           - hrms-ui
           - karnataka-ui
           - meghalaya-ui
+          - pgr-ui
 
 env:
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
@@ -37,7 +39,6 @@ jobs:
       work_dir:    ${{ steps.setenv.outputs.work_dir }}
       image_name:  ${{ steps.setenv.outputs.image_name }}
       dockerfile:  ${{ steps.setenv.outputs.dockerfile }}
-      build_args:  ${{ steps.setenv.outputs.build_args }}
       tag:         ${{ steps.tag.outputs.tag }}
     steps:
       - name: Checkout Code
@@ -70,21 +71,6 @@ jobs:
           SERVICE_WORK_DIR=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -r '.["work-dir"] // ""' -)
           SERVICE_IMAGE_NAME=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -r '.["image-name"] // ""' -)
           SERVICE_DOCKERFILE=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -r '.dockerfile // ""' -)
-          
-          # For health UI variants, automatically set BUILD_VARIANT based on pipeline name
-          BUILD_ARGS_STRING=""
-          if [[ "$SERVICE_DOCKERFILE" == *"health/micro-ui/web/docker/Dockerfile"* ]]; then
-            # Extract variant from pipeline name (console, core-ui, workbench-ui)
-            VARIANT_NAME=$(echo "$PIPELINE_NAME" | sed 's/.*\///')
-            BUILD_ARGS_STRING="--build-arg BUILD_VARIANT=$VARIANT_NAME"
-          fi
-          
-          # Extract additional build-args if present in config
-          BUILD_ARGS_JSON=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -o=json '.["build-args"] // {}' -)
-          if [ "$BUILD_ARGS_JSON" != "{}" ] && [ "$BUILD_ARGS_JSON" != "null" ]; then
-            ADDITIONAL_ARGS=$(echo "$BUILD_ARGS_JSON" | jq -r 'to_entries | map("--build-arg " + .key + "=" + .value) | join(" ")')
-            BUILD_ARGS_STRING="$BUILD_ARGS_STRING $ADDITIONAL_ARGS"
-          fi
 
           # Default Dockerfile if none specified
           if [ -z "$SERVICE_DOCKERFILE" ]; then
@@ -95,18 +81,15 @@ jobs:
           echo "SERVICE_WORK_DIR=$SERVICE_WORK_DIR" >> "$GITHUB_ENV"
           echo "SERVICE_IMAGE_NAME=$SERVICE_IMAGE_NAME" >> "$GITHUB_ENV"
           echo "SERVICE_DOCKERFILE=$SERVICE_DOCKERFILE" >> "$GITHUB_ENV"
-          echo "BUILD_ARGS_STRING=$BUILD_ARGS_STRING" >> "$GITHUB_ENV"
           echo "work_dir=$SERVICE_WORK_DIR" >> $GITHUB_OUTPUT
           echo "image_name=$SERVICE_IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "dockerfile=$SERVICE_DOCKERFILE" >> $GITHUB_OUTPUT
-          echo "build_args=$BUILD_ARGS_STRING" >> $GITHUB_OUTPUT
           
           # Put summary for the step
           echo "#### Application Config Summary" >> $GITHUB_STEP_SUMMARY
           echo "Application Work Directory - $SERVICE_WORK_DIR" >> $GITHUB_STEP_SUMMARY
           echo "Image Name - $SERVICE_IMAGE_NAME" >> $GITHUB_STEP_SUMMARY
           echo "Dockerfile Path - $SERVICE_DOCKERFILE" >> $GITHUB_STEP_SUMMARY
-          echo "Build Arguments - $BUILD_ARGS_STRING" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate the Next Tag
         id: tag
@@ -190,7 +173,6 @@ jobs:
           docker buildx build \
             --platform ${{ matrix.platform }} \
             --build-arg WORK_DIR=${{ needs.resolve-config.outputs.work_dir }} \
-            ${{ needs.resolve-config.outputs.build_args }} \
             --file ${{ needs.resolve-config.outputs.dockerfile }} \
             --tag egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }} \
             --cache-from=type=local,src=/tmp/.buildx-cache \

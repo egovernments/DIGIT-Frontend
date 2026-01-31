@@ -14,6 +14,7 @@ const middleWare_3 = (data, _break, _next) => {
   _next(data);
 };
 
+
 let middleWares = [middleWare_1, middleWare_2, middleWare_3];
 
 const callMiddlewares = () => {

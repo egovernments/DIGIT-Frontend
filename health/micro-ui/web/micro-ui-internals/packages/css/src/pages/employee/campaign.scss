@@ -1,0 +1,839 @@
+@import url("../../index.scss");
+@import "../../typography.scss";
+@import "./campaignCommon.scss";
+
+.summary-header {
+  @extend .typography.text-heading-l;
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem !important;
+  color: theme(digitv2.lightTheme.primary-2);
+}
+.date-field-container {
+  display: grid;
+  grid-template-columns: 20rem 20rem;
+  grid-gap: 1.5rem;
+  width: 70%;
+  padding-top: 0.3rem;
+  margin-top: 0rem;
+}
+.date-field {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: start;
+}
+.campaign-type {
+  margin-top: 0.8rem;
+  margin-right: 5rem;
+  padding-bottom: 1.2rem;
+  font-weight: bold;
+}
+.name-container {
+  margin-top: 0.8rem;
+  margin-right: 4rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+.beneficiary-type {
+  margin-right: 5.4rem;
+  font-weight: bold;
+}
+.campaign-dates {
+  display: flex;
+  font-weight: bold;
+}
+.mandatory-date {
+  color: theme(digitv2.lightTheme.error-v2) !important;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.description-type {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+}
+.name-description {
+  margin: 0rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+.dates-description {
+  margin: 0rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+.selecting-boundary-div {
+  padding-top: 0.5rem;
+  .label-field-pair {
+    margin-bottom: 1.5rem;
+  }
+}
+.campaign-table {
+  border-collapse: collapse;
+  border-color: transparent;
+  border-width: 0rem 1.5rem;
+  tbody {
+    tr:hover {
+      td {
+        background: rgba(#f47738, 0.12);
+        cursor: pointer;
+      }
+    }
+  }
+}
+.info-points {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.infoClass {
+  margin-bottom: 1.5rem;
+}
+.headerWrapperClassName {
+  display: none;
+}
+.whoLogo {
+  margin-top: -1rem;
+  margin-bottom: -1rem;
+}
+
+.digit-popup-wrapper {
+  &.popUpClass {
+    width: 50rem;
+
+    .popUpFooter {
+      .digit-popup-footer-buttons {
+        margin-left: 0px;
+        width: 100%;
+
+        button {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+.timeline-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.setup-campaign {
+  .digit-success {
+    z-index: 1000;
+  }
+}
+.digit-error {
+  z-index: 900;
+}
+.timeline-user {
+  display: flex;
+  justify-content: space-between;
+}
+.upcoming-timeline {
+  .timeline-label {
+    color: #b1b4b6;
+  }
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+.stepper-card {
+  height: 37rem;
+  padding-top: 0rem;
+}
+.stepper-subheader {
+  color: theme(digitv2.lightTheme.header-sidenav);
+}
+.container-full {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: stretch;
+  height: 100%;
+}
+.name-container-label {
+  .label-field-wrapper {
+    width: -webkit-fill-available;
+  }
+}
+.label-field-grid {
+  display: grid;
+  grid-template-columns: 20rem 20rem 20rem;
+  gap: 2rem;
+
+  .update-date-labelField {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+
+    .update-label {
+      display: flex;
+
+      p {
+        margin: 0;
+        margin-bottom: 1rem;
+      }
+
+      .mandatory-date {
+        margin-top: -0.25rem;
+      }
+    }
+  }
+
+  .digit-button-primary {
+    align-self: flex-end;
+  }
+}
+
+.hierarchy-boundary-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.hierarchy-boundary-sub-heading {
+  width: 20rem;
+  margin-top: 0.6rem;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+}
+
+.hierarchy-boundary-sub-heading2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: "Roboto", sans-serif;
+}
+.campaign-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.card-container1 {
+  width: 100%;
+}
+.campaign-tag {
+  .digit-tag-text {
+    color: #0057bd !important;
+  }
+  background-color: #eff8ff !important;
+  border-color: #0057bd !important;
+}
+.digit-popup-wrapper.dataMapping {
+  .digit-popup-children-wrap {
+    overflow: visible;
+  }
+}
+.dataMappingCard {
+  overflow-y: scroll;
+  margin-top: 0rem;
+}
+.dataMappingDropdown {
+  min-width: 13rem !important;
+}
+.data-mapping-filter-switch {
+  float: right;
+  margin-right: 0rem;
+  margin-bottom: 0rem;
+}
+.digit-label-field-pair.multiselect-label-field {
+  > div:nth-of-type(1) {
+    width: 69%;
+  }
+}
+
+.date-style {
+  max-width: 37.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.app-preview {
+  display: flex;
+  width: 29rem;
+  height: calc(100vh - 22rem);
+
+  overflow-y: auto;
+  border: 1px solid theme(digitv2.lightTheme.primary);
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  margin: 5px auto; /* updated margin since we added page no */
+  font-family: Arial, sans-serif;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #d6d5d4 #fafafa; /* Firefox */
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background: #fafafa;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d6d5d4;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
+  .digit-card-component {
+    height: max-content;
+
+    .digit-description {
+      .digit-card-text {
+        margin-bottom: 0rem;
+      }
+    }
+  }
+
+  .digit-card-header {
+    color: #0b4b66;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .digit-card-text {
+    color: #787878;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 137%;
+  }
+
+  .app-card {
+    min-height: 100%;
+    gap: 0.5rem;
+    box-shadow: none;
+    border-style: none;
+    padding: 1rem;
+    &::-webkit-scrollbar-button {
+      display: none !important;
+      height: 0 !important;
+      width: 0 !important;
+    }
+  }
+}
+.app-card {
+  flex-direction: column;
+  display: flex;
+  min-height: 100%;
+  gap: 0.5rem;
+  box-shadow: none;
+  border-style: none;
+  padding: 1rem;
+}
+.mobile-bezel-outerWrapper {
+  transform: scale(0.8);
+  margin-top: -5rem;
+}
+
+.app-config-tag-page-fixed {
+  position: fixed;
+  top: 15rem;
+  left: 67rem;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
+  font-weight: 700;
+}
+.mobile-top {
+  background-color: theme(digitv2.lightTheme.header-sidenav);
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  color: theme(digitv2.lightTheme.paper);
+  font-size: 1.5rem;
+  font-weight: theme(digitv2.fontWeight.bold);
+  width: 100%;
+  /* Full width */
+  box-sizing: border-box;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.appConfiglabelField {
+  position: relative;
+  padding: 1rem;
+  background-color: #eee;
+  border: 1px solid #d6d5d4;
+  border-radius: 0.5rem;
+}
+.appConfiglabelField.selected {
+  background-color: #f477381a;
+  border: 1px solid theme(digitv2.lightTheme.primary);
+}
+.appConfig-flow-stepper {
+  margin-top: 2rem;
+}
+.app-config-add-section {
+  margin-inline: auto;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+.appConfigScreenCard {
+  margin-bottom: 2rem;
+}
+.appConfiglabelField-label {
+  width: 25rem;
+  margin-bottom: 0.5rem;
+}
+.app-config-actionBar {
+  z-index: 9999;
+}
+
+.digit-popup-wrapper.custom-pop-up-mapping {
+  max-width: 35rem;
+
+  .digit-popup-footer {
+    padding-top: 0 !important;
+
+    .digit-popup-footer-buttons {
+      width: 100% !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .digit-button-secondary {
+        width: 100%;
+      }
+
+      .digit-button-primary {
+        width: 100%;
+      }
+    }
+  }
+
+  .digit-popup-children-wrap {
+    padding-top: 0 !important;
+    overflow: visible;
+  }
+}
+.rdt_TableBody {
+  border: 1px solid #ccc !important;
+  width: 100% !important;
+}
+.rdt_Table {
+  width: 100% !important;
+}
+.campaign-header-style {
+  color: theme(digitv2.lightTheme.primary-2);
+  font-size: 2.5rem;
+}
+.campaign-header-module-style {
+  color: theme(digitv2.lightTheme.primary-2);
+  font-size: 2.5rem;
+  margin-bottom: 1rem !important;
+}
+.SubHeadingClass {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-weight: 400;
+  font-size: 1rem;
+}
+.date-header {
+  width: 100% !important;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-weight: 700;
+  font-size: 40px;
+  padding-bottom: 0.5rem;
+}
+.descStyle {
+  font-family: "Roboto";
+  font-weight: 500;
+  font-size: 24px;
+  color: theme(digitv2.lightTheme.primary);
+  text-align: center;
+  margin-top: 1.5rem;
+  .disabledText {
+    color: #c5c5c5;
+  }
+}
+.containerStyle {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  gap: 2rem;
+}
+.cardStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 139px;
+  border: 1.5px solid theme(digitv2.lightTheme.primary);
+  border-radius: 4px;
+  margin: 1rem;
+  cursor: pointer;
+  flex-direction: column;
+  text-align: center;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  background-color: #fff;
+}
+.cardStyle:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+.disabledCard {
+  cursor: not-allowed;
+  border: 1.5px solid #c5c5c5;
+  .descStyle {
+    color: #c5c5c5;
+  }
+  svg {
+    fill: theme(digitv2.lightTheme.text-color-secondary);
+  }
+}
+
+.app-config-radio {
+  display: flex;
+  margin-top: 1rem;
+  flex-direction: column;
+}
+.create-campaign-card {
+  gap: 0;
+  grid-gap: 0;
+}
+.details-heading {
+  display: flex;
+  justify-content: space-between;
+}
+.icon-heading {
+  gap: 1rem;
+  display: flex;
+}
+.detail-desc {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+.dates {
+  margin-top: 0.5rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+}
+.detail-header {
+  font-size: theme(digitv2.fontSize.heading-m);
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: "roboto";
+}
+.details-desc {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+}
+.campaign-details-header {
+  display: flex;
+  justify-content: space-between;
+}
+.campaign-view-tag {
+  margin-left: 1rem;
+  height: fit-content;
+}
+
+.module-card {
+  width: 21rem;
+  height: 20rem;
+  border: 1px;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+                  
+}
+.modules-container {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: stretch;
+  padding-left: 0rem;
+  padding: 1rem;
+  padding-left: 0rem;
+  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+
+}
+
+.modules-feature-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1rem;
+}
+.campaign-module-button {
+  width: auto;
+}
+.date-selection {
+  width: 100% !important;
+}
+.beneficiary-selection-label {
+  margin-bottom: 0rem;
+}
+.selected-card {
+  border: 2px solid #f47738;
+  background-color: #fef1e4;
+  position: relative;
+}
+.selected-header {
+  color: theme(digitv2.lightTheme.primary);
+}
+
+.hcm-app-features {
+  .digit-toggle-toolbar {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    max-width: 90%;
+    > *:first-child label {
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+    > *:last-child label {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+  }
+}
+
+.digit-toggle-toolbar {
+  &.app-config-tab {
+    width: 10rem;
+    top: 15rem;
+    position: fixed;
+    .toggle-option-container {
+      .digit-toggle-btn-wrap {
+        height: 7.5rem;
+      }
+    }
+    > *:first-child label {
+      border-top-left-radius: 0.5rem;
+    }
+    > *:last-child label {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+  }
+}
+.module-description {
+  flex-grow: 1;
+  margin: 0 0 1rem 0;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  overflow-wrap: break-word;
+}
+.name-container-popUp {
+  margin-top: 0.8rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+  width: 3.125rem;
+}
+.date-container-popUp {
+  margin-top: 0.8rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+  width: 3.125rem;
+}
+.pop-display {
+  display: flex;
+  margin-top: 1.5rem;
+}
+.popUp-header {
+  margin-bottom: 1.5rem;
+}
+.end-date-container-popUp {
+  margin-top: 0.8rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+  width: 3.125rem;
+}
+
+.app-config-version-tags {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: fit-content;
+  padding: 0;
+  margin: 0;
+  margin-left: 54rem;
+  margin-bottom: -3.5rem;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
+  font-size: theme(digitv2.fontSize.heading-s);
+  font-weight: 700;
+
+  .app-config-placeholder-version-tag {
+    width: 30%;
+  }
+  .app-config-version-tag {
+    width: 40%;
+  }
+}
+
+.version-tag {
+  .digit-tag-text {
+    font-size: 0.75rem;
+  }
+}
+
+.content-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.content-group.no-border {
+  border-bottom: none;
+  padding-bottom: 0rem;
+  margin-bottom: 0rem;
+}
+
+.content-icon {
+  width: 6.5rem;
+  height: 6.5rem;
+  object-fit: contain;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.content-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-bold-text {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+  color: theme(digitv2.lightTheme.primary-2);
+}
+
+.content-regular-text {
+  font-size: theme(digitv2.fontSize.heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+
+/* Fallback text group */
+.text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.bold-text {
+  font-weight: bold;
+  margin: 0;
+}
+
+.regular-text {
+  margin: 0;
+}
+
+.paragraph-text {
+  margin-bottom: 12px;
+}
+
+.image-block {
+  margin: 10px 0;
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.list-block {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.campaign-requirements-heading {
+  .digit-popup-icon-header-container {
+    .digit-popup-heading-subheading-wrap {
+      .digit-popup-heading {
+        color: theme(digitv2.lightTheme.primary-2);
+      }
+    }
+  }
+}
+
+.cycleBold {
+  font-weight: 700;
+}
+
+.feature-container {
+  display: flex;
+}
+.app-config {
+  width: auto;
+}
+
+.QR-pop-up {
+  width: fit-content;
+}
+.app-config-flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 24rem;
+  margin-left: unquote("min(10%, 12rem)");
+  gap: 2rem;
+  width: fit-content;
+  align-items: flex-end;
+}
+.feature-container {
+  display: flex;
+}
+.app-config {
+  width: auto;
+  margin-top: 1rem;
+  .toggle-option-container {
+    height: 7.5rem;
+  }
+}
+.progress-popup {
+  .digit-popup-close {
+    display: none !important;
+  }
+}
+.update-boundary-header {
+  color: theme(digitv2.lightTheme.primary-2);
+  font-size: theme(fontSize.heading-xl);
+}
+.select-boundary {
+  color: theme(digitv2.lightTheme.primary-2) !important;
+}
+.appConfigLabelField-toggleVisibility {
+  position: absolute;
+  cursor: pointer;
+  top: 1rem;
+  right: 1rem;
+}
+.dynamic-image-component {
+  max-width: 100%;
+  margin-bottom: -2.5rem;
+}
+.start-header {
+  color: theme(digitv2.lightTheme.primary-2) !important;
+}
+.digit-loader-new.Overlayloader.loader-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.deliveries-pop-module{
+  max-width: fit-content;
+}
+.campaign-name-container{
+  display: ruby !important;
+}
+.campaign-name-code{
+  margin-left: 0.5rem !important;
+}
