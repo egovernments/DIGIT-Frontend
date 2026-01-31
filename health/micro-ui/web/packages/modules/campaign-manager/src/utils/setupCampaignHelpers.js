@@ -86,12 +86,32 @@ export const cycleDataRemap=(data)=> {
     const parseConditionAndCreateRules = (condition, ruleKey, products ,deliveryStrategy) => {
       const conditionParts = condition.split("and").map((part) => part.trim());
       const attributes = [];
-  
-      conditionParts.forEach((part) => {
+
+      // Track processed indices to skip parts that are part of INBETWEEN
+      const processedIndices = new Set();
+
+      for (let i = 0; i < conditionParts.length; i++) {
+        if (processedIndices.has(i)) continue;
+
+        const part = conditionParts[i];
         const parts = part.split(" ").filter(Boolean);
-  
-        // Handle "IN_BETWEEN" operator
-        if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
+
+        // Handle "IN_BETWEEN" operator with any spacing: "3<=age<=11", "3 <= age <= 11", "3<=age <= 11", etc.
+        // This regex handles all spacing variations in a single expression
+        const inBetweenMatch = part.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(\w+)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
+        if (inBetweenMatch) {
+          const fromValue = inBetweenMatch[1];
+          const toValue = inBetweenMatch[5];
+          attributes.push({
+            key: attributes.length + 1,
+            operator: { code: operatorMapping["IN_BETWEEN"] },
+            attribute: { code: inBetweenMatch[3] },
+            fromValue,
+            toValue,
+          });
+        }
+        // Fallback: Handle "IN_BETWEEN" with uniform spaces (5 space-separated parts)
+        else if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
           const fromValue = parts[0];
           const toValue = parts[4];
           attributes.push({
@@ -101,8 +121,51 @@ export const cycleDataRemap=(data)=> {
             fromValue,
             toValue,
           });
+        }
+        // Handle "IN_BETWEEN" operator without spaces: "3<=age" and "age<=11" as consecutive parts
+        else if (i + 1 < conditionParts.length) {
+          const currentPart = part;
+          const nextPart = conditionParts[i + 1];
+
+          // Match pattern like "3<=age" (value<=attribute)
+          const lowerBoundMatch = currentPart.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(.+)$/);
+          // Match pattern like "age<=11" (attribute<=value)
+          const upperBoundMatch = nextPart.match(/^(.+?)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
+
+          if (lowerBoundMatch && upperBoundMatch) {
+            const lowerAttr = lowerBoundMatch[3].trim().toLowerCase();
+            const upperAttr = upperBoundMatch[1].trim().toLowerCase();
+
+            // Check if both parts reference the same attribute
+            if (lowerAttr === upperAttr) {
+              const fromValue = lowerBoundMatch[1];
+              const toValue = upperBoundMatch[3];
+              attributes.push({
+                key: attributes.length + 1,
+                operator: { code: operatorMapping["IN_BETWEEN"] },
+                attribute: { code: lowerBoundMatch[3].trim() },
+                fromValue,
+                toValue,
+              });
+              processedIndices.add(i + 1); // Skip the next part as it's part of INBETWEEN
+              continue;
+            }
+          }
+
+          // If not INBETWEEN, process as regular condition
+          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
+          if (match) {
+            const attributeCode = match[1].trim();
+            const operatorSymbol = match[2].trim();
+            const value = match[3].trim();
+            attributes.push({
+              key: attributes.length + 1,
+              value,
+              operator: { code: operatorMapping[operatorSymbol] },
+              attribute: { code: attributeCode },
+            });
+          }
         } else {
-       
           const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
           if (match) {
             const attributeCode = match[1].trim();
@@ -116,8 +179,8 @@ export const cycleDataRemap=(data)=> {
             });
           }
         }
-      });
-  
+      }
+
       return [{
         ruleKey: ruleKey + 1,
         delivery: {},
@@ -204,9 +267,9 @@ export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
 
       // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
       if (type === "create") {
-        return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedToValue}`;
+        return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<=${roundedToValue}`;
       } else {
-        return `${roundedFromValue} <= ${attr.attribute.code} < ${roundedToValue}`;
+        return `${roundedFromValue} <= ${attr.attribute.code} <= ${roundedToValue}`;
       }
     } else {
 
