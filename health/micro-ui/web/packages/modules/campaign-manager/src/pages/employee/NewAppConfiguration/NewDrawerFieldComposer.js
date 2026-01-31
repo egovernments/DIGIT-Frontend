@@ -928,7 +928,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
                 onChipClose={(value) => {
                   // Filter out the removed item from selectedData
-                  const updatedData = selectedData.filter((item) => item.key !== value.name);
+                  const updatedData = selectedData.filter((item) => item.name !== value.name);
 
                   // Update the field with the new data (allow empty array)
                   onFieldChange({
@@ -939,7 +939,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 onClose={(selectedArray) => {
                   const extractedOptions =
                     selectedArray?.map((arr) => arr?.[1]) || [];
-
                   const mappedData = extractedOptions
                     .map((item) => {
                       let option;
@@ -958,6 +957,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                       };
                     })
                     .filter(Boolean);
+
 
                   const currentStr = JSON.stringify(selectedData);
                   const newStr = JSON.stringify(mappedData);
