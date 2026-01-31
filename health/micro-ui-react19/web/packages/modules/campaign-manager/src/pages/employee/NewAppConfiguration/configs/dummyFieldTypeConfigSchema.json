@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["type", "fieldType", "metadata"],
+  "x-unique": ["type"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Unique identifier for the field type"
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Sequential order number"
+    },
+    "fieldType": {
+      "type": "string",
+      "description": "The type of field component to render"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["type", "format"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["string", "integer", "template"]
+        },
+        "format": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "options"],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "attributeToRename": {
+      "type": "object",
+      "description": "Mapping of attributes to rename",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
