@@ -94,36 +94,37 @@ export const cycleDataRemap=(data)=> {
         if (processedIndices.has(i)) continue;
 
         const part = conditionParts[i];
-        const parts = part.split(" ").filter(Boolean);
 
-        // Handle "IN_BETWEEN" operator with any spacing: "3<=age<=11", "3 <= age <= 11", "3<=age <= 11", etc.
-        // This regex handles all spacing variations in a single expression
-        const inBetweenMatch = part.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(\w+)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
-        if (inBetweenMatch) {
-          const fromValue = inBetweenMatch[1];
-          const toValue = inBetweenMatch[5];
-          attributes.push({
-            key: attributes.length + 1,
-            operator: { code: operatorMapping["IN_BETWEEN"] },
-            attribute: { code: inBetweenMatch[3] },
-            fromValue,
-            toValue,
-          });
+        // Simple INBETWEEN detection: check if attribute is between two <= or < operators
+        // Split by <= or < and check if we have 3 parts (fromValue, attribute, toValue)
+        const operatorPattern = /(<=|<)/g;
+        const operators = part.match(operatorPattern);
+
+        if (operators && operators.length === 2) {
+          // Split by the operators to get the parts
+          const splitParts = part.split(/<=|</).map(p => p.trim());
+
+          if (splitParts.length === 3) {
+            const fromValue = splitParts[0];
+            const attributeCode = splitParts[1];
+            const toValue = splitParts[2];
+
+            // Check if fromValue and toValue are numbers and attributeCode is not a number
+            if (/^\d+(\.\d+)?$/.test(fromValue) && /^\d+(\.\d+)?$/.test(toValue) && !/^\d+(\.\d+)?$/.test(attributeCode)) {
+              attributes.push({
+                key: attributes.length + 1,
+                operator: { code: operatorMapping["IN_BETWEEN"] },
+                attribute: { code: attributeCode },
+                fromValue,
+                toValue,
+              });
+              continue;
+            }
+          }
         }
-        // Fallback: Handle "IN_BETWEEN" with uniform spaces (5 space-separated parts)
-        else if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-          const fromValue = parts[0];
-          const toValue = parts[4];
-          attributes.push({
-            key: attributes.length + 1,
-            operator: { code: operatorMapping["IN_BETWEEN"] },
-            attribute: { code: parts[2] },
-            fromValue,
-            toValue,
-          });
-        }
-        // Handle "IN_BETWEEN" operator without spaces: "3<=age" and "age<=11" as consecutive parts
-        else if (i + 1 < conditionParts.length) {
+
+        // Handle "IN_BETWEEN" as consecutive parts: "3<=age" and "age<=11"
+        if (i + 1 < conditionParts.length) {
           const currentPart = part;
           const nextPart = conditionParts[i + 1];
 
@@ -151,33 +152,20 @@ export const cycleDataRemap=(data)=> {
               continue;
             }
           }
+        }
 
-          // If not INBETWEEN, process as regular condition
-          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-          if (match) {
-            const attributeCode = match[1].trim();
-            const operatorSymbol = match[2].trim();
-            const value = match[3].trim();
-            attributes.push({
-              key: attributes.length + 1,
-              value,
-              operator: { code: operatorMapping[operatorSymbol] },
-              attribute: { code: attributeCode },
-            });
-          }
-        } else {
-          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-          if (match) {
-            const attributeCode = match[1].trim();
-            const operatorSymbol = match[2].trim();
-            const value = match[3].trim();
-            attributes.push({
-              key: attributes.length + 1,
-              value,
-              operator: { code: operatorMapping[operatorSymbol] },
-              attribute: { code: attributeCode },
-            });
-          }
+        // Regular condition: "attribute <= value" or "attribute >= value" etc.
+        const match = part.match(/^(.+?)\s*(<=|>=|<|>|==|!=)\s*(.+)$/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
         }
       }
 
