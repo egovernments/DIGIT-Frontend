@@ -4,7 +4,7 @@ const getDeliveryConfig = ({ data, projectType }) => {
     let operatorValue = "";
     let value = "";
 
-    const betweenRegex = /(\d+)\s*<=?\s*([a-zA-Z]+)\s*<\s*(\d+)/;
+    const betweenRegex = /(\d+)\s*<=?\s*([a-zA-Z]+)\s*<=?\s*(\d+)/;
     const operatorRegex = /([a-zA-Z_]+)\s*(==|<=?|>=?|=|<|>)\s*([a-zA-Z0-9_]+)/;
 
     if (betweenRegex.test(condition)) {
