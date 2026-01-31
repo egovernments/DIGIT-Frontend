@@ -6,7 +6,7 @@ const middleWare_1 = (data, _break, _next) => {
 const middleWare_2 = (data, _break, _next) => {
   data.b = "b";
   //   _break();
-  _next(data); 
+  _next(data);
 };
 
 const middleWare_3 = (data, _break, _next) => {
@@ -25,7 +25,7 @@ const callMiddlewares = () => {
     if (!applyBreak && ++itr < middleWares.length) middleWares[itr](data, _break, _next);
     else return;
   };
-  _next({}); 
+  _next({});
 };
 
 callMiddlewares();

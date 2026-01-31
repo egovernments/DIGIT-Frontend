@@ -1,80 +1,62 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
-import ReactDOM from "react-dom/client";
-import { Hooks } from "@egovernments/digit-ui-libraries";
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks;
-const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
+import "./index.css";
+import App from './App';
+import { TLCustomisations } from './Customisations/tl/TLCustomisation';
 
 
-const enabledModules = ["Workbench", "Campaign"];
+initLibraries();
 
-const initTokens = (stateCode) => {
-  const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
-  const token = window.localStorage.getItem("token") || process.env[`REACT_APP_${userType}_TOKEN`];
 
-  const citizenInfo = window.localStorage.getItem("Citizen.user-info");
-  const citizenTenantId = window.localStorage.getItem("Citizen.tenant-id") || stateCode;
-  const employeeInfo = window.localStorage.getItem("Employee.user-info");
-  const employeeTenantId = window.localStorage.getItem("Employee.tenant-id");
+window.Digit.Customizations = { PGR: {} ,TL:TLCustomisations};
 
-  const userTypeInfo = userType === "CITIZEN" || userType === "QACT" ? "citizen" : "employee";
-  window.Digit.SessionStorage.set("user_type", userTypeInfo);
-  window.Digit.SessionStorage.set("userType", userTypeInfo);
+const user = window.Digit.SessionStorage.get("User");
 
-  if (userType !== "CITIZEN") {
-    window.Digit.SessionStorage.set("User", {
-      access_token: token,
-      info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo,
-    });
+if (!user || !user.access_token || !user.info) {
+  // login detection
+
+  const parseValue = (value) => {
+    try {
+      return JSON.parse(value)
+    } catch (e) {
+      return value
+    }
   }
 
+  const getFromStorage = (key) => {
+    const value = window.localStorage.getItem(key);
+    return value && value !== "undefined" ? parseValue(value) : null;
+  }
+
+  const token = getFromStorage("token")
+
+  const citizenToken = getFromStorage("Citizen.token")
+  const citizenInfo = getFromStorage("Citizen.user-info")
+  const citizenTenantId = getFromStorage("Citizen.tenant-id")
+
+  const employeeToken = getFromStorage("Employee.token")
+  const employeeInfo = getFromStorage("Employee.user-info")
+  const employeeTenantId = getFromStorage("Employee.tenant-id")
+  const userType = token === citizenToken ? "citizen" : "employee";
+
+  window.Digit.SessionStorage.set("user_type", userType);
+  window.Digit.SessionStorage.set("userType", userType);
+
+  const getUserDetails = (access_token, info) => ({ token: access_token, access_token, info })
+
+  const userDetails = userType === "citizen" ? getUserDetails(citizenToken, citizenInfo) : getUserDetails(employeeToken, employeeInfo)
+
+  window.Digit.SessionStorage.set("User", userDetails);
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);
+  window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
+  // end
+}
 
-  if (employeeTenantId && employeeTenantId.length) {
-    window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
-  }
-};
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
-const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
-
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(<MainApp stateCode={stateCode} enabledModules={enabledModules} />);
-};
-
-const MainApp = ({ stateCode, enabledModules }) => {
-  const [isReady, setIsReady] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    initLibraries().then(async () => {
-      const {initWorkbenchComponents}=await import("@egovernments/digit-ui-module-workbench")
-      const {initCampaignComponents}=await import("@egovernments/digit-ui-module-campaign-manager")
-      initWorkbenchComponents();
-      initCampaignComponents()
-      setIsReady(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    initTokens(stateCode);
-    setLoaded(true);
-  }, [stateCode, isReady]);
-
-  if (!loaded) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      {window.Digit && (
-        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
-      )}
-    </Suspense>
-  );
-};
-
-initDigitUI();
