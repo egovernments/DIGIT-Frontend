@@ -2,6 +2,8 @@
 
 # DIGIT UI
 
+# DIGIT UI
+
 A React App built on top of DIGIT UI Core.
 
 # DIGIT
@@ -12,6 +14,7 @@ DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India'
 
 DIGIT platform is microservices based API platform enabling quick rebundling of services as per specific needs. This is a repo that lays down the core platform on top of which other mission services depend.
 
+# DIGIT UI
 # DIGIT UI
 
 This repository contains source code for web implementation of the new Digit UI modules with dependencies and libraries.
@@ -30,6 +33,7 @@ Clone the project
 
 Go to the Sub directory to run UI
 
+
 ```bash
     cd into micro-ui/web/micro-ui-internals
 ```
@@ -41,6 +45,7 @@ Install dependencies
 ```
 
 Add .env file
+
 
 ```bash
     micro-ui/web/micro-ui-internals/example/.env
@@ -57,11 +62,15 @@ Start the server
 To run this project, you will need to add the following environment variables to your .env file
 
 `REACT_APP_PROXY_API` :: `{{server url}}`
+`REACT_APP_PROXY_API` :: `{{server url}}`
 
+`REACT_APP_GLOBAL` :: `{{server url}}`
 `REACT_APP_GLOBAL` :: `{{server url}}`
 
 `REACT_APP_PROXY_ASSETS` :: `{{server url}}`
+`REACT_APP_PROXY_ASSETS` :: `{{server url}}`
 
+`REACT_APP_USER_TYPE` :: `{{EMPLOYEE||CITIZEN}}`
 `REACT_APP_USER_TYPE` :: `{{EMPLOYEE||CITIZEN}}`
 
 `SKIP_PREFLIGHT_CHECK` :: `true`
@@ -70,6 +79,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Tech Stack
 
+**Libraries:**
 **Libraries:**
 
 [React](https://react.dev/)
@@ -107,6 +117,7 @@ For support, add the issues in https://github.com/egovernments/DIGIT-core/issues
     5. Engagement
     6. Payment
     
+    
 
 ## Starting with Digit-UI App (Impelmentation Teams) - MICRO-UI
 
@@ -116,11 +127,13 @@ Go to the Sub directory to run UI
     cd into micro-ui/web
 ```
 
+
 ```bash
   yarn install
 ```
 
 Add .env file
+
 
 ```bash
     micro-ui/web/.env

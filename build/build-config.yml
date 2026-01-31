@@ -33,6 +33,22 @@ config:
         image-name: core-ui
 
   - name: builds/Digit-Frontend/sandbox-ui
+  
+
+# Core Frontend Build pipelines
+  - name: builds/Digit-Frontend/digit-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: digit-ui
+
+  - name: builds/Digit-Frontend/core-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/core/Dockerfile
+        image-name: core-ui
+
+  - name: builds/Digit-Frontend/sandbox-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/sandbox/Dockerfile
@@ -43,7 +59,47 @@ config:
     build:
       - work-dir: health/micro-ui/
         dockerfile: health/micro-ui/web/workbench/Dockerfile
+        dockerfile: micro-ui/web/sandbox/Dockerfile
+        image-name: sandbox-ui 
+
+# Health Frontend Build pipelines
+  - name: builds/Digit-Frontend/health/workbench-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
+
+  - name: builds/Digit-Frontend/health/microplan-ui
+    build:
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/microplan/Dockerfile
+      image-name: microplan-ui      
+  
+  - name: builds/Digit-Frontend/health/console
+    build:
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/console/Dockerfile
+      image-name: console  
+      
+  - name: builds/Digit-Frontend/health/payments-ui
+    build:
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/health-payments/Dockerfile
+      image-name: payments-ui
+
+  - name: builds/Digit-Frontend/health/core-ui
+    build:
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/core/Dockerfile
+      image-name: core-ui
+    
+  - name: builds/Digit-Frontend/health/dashboard-ui
+    build:
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/health-dss/Dockerfile
+      image-name: dashboard-ui   
+
+ # Others       
 
   - name: builds/Digit-Frontend/health/microplan-ui
     build:
@@ -88,12 +144,51 @@ config:
       dockerfile: micro-ui/web/micro-ui-internals/packages/components-core/docker/Dockerfile
       image-name: storybook
         
+        
 
   - name: builds/Digit-Frontend/utilities/egov-bff
     build:
       - work-dir: utilities/egov-bff
         image-name: egov-bff
 
+
+  #micro frontends
+  - name: builds/Digit-Frontend/modules/core-digit-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: core-digit-ui
+  
+  - name: builds/Digit-Frontend/modules/dss-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: dss-ui
+  
+  - name: builds/Digit-Frontend/modules/hrms-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: hrms-ui
+
+# Other Custom Builds for Impel
+  - name: builds/Digit-Frontend/modules/karnataka-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: karnataka-ui
+        
+  - name: builds/Digit-Frontend/modules/meghalaya-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: meghalaya-ui
+
+  - name: builds/Digit-Frontend/mSeva-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: mSeva-ui
 
   #micro frontends
   - name: builds/Digit-Frontend/modules/core-digit-ui

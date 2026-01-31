@@ -27,8 +27,8 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"],
-          },
+            plugins: ["@babel/plugin-proposal-optional-chaining"]
+          }
         },
       },
       {
@@ -44,13 +44,13 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: "all",
+      chunks: 'all',
       minSize: 20000,
       maxSize: 50000,
       enforceSizeThreshold: 50000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 30,
+      maxInitialRequests: 30
     },
   },
   plugins: [
