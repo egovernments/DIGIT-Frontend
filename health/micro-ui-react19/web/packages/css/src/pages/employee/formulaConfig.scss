@@ -1,0 +1,35 @@
+.formula-label-field{
+    display: flex;
+    gap:1.5rem;
+    align-items: center;
+  }
+  .equals-icon {
+    font-family: 'Roboto Condensed';  /* Set font family */
+    font-size: 2.5rem;                /* Set font size to 2.5rem */
+    font-weight: 700;                 /* Set font weight */
+    line-height: 2.93rem;             /* Set line height to 2.93rem */
+    text-align: left;                 /* Align text to the left */
+    
+    width: 1.31rem;                   /* Set width to 1.31rem */
+    height: 2.38rem;                  /* Set height to 2.38rem */
+    gap: 0;                           /* Set gap to 0rem */
+    opacity: 100;                       /* Set opacity to 0 */
+  }
+  
+  .formula-label-field > span {
+    width: 27rem;
+    @include typography-heading-s;
+  }
+
+  .icon-wrapper{
+    position: relative;
+    top: 0.28rem;
+    margin-left: 0.3rem;
+  }
+
+/* styles.css */
+.header-comp-blue {
+  margin-top: 0;             /* Set margin-top to 0 */
+  font-size: 2rem;         /* Set font size to 1.5rem */
+  color: #0B4B66 !important;            /* Set text color */
+}

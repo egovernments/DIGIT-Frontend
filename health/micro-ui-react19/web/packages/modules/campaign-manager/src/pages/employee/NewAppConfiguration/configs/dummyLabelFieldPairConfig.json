@@ -1,0 +1,366 @@
+{
+    "dummyLabelFieldConfig": [
+        {
+            "entity": "StockModel",
+            "labelFields": [
+                {
+                    "name": "RESOURCE",
+                    "fieldKey": "sku",
+                    "jsonPath": "{{item.additionalFields.fields.sku}}",
+                    "mandatory": "false",
+                    "additionalField": "true",
+                    "modules": [
+                {
+                    "INVENTORY": {
+                        "enabledPages": [
+                            "viewTransactionDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "RECEIVED_FROM",
+                    "fieldKey": "receiverId",
+                    "jsonPath": "{{item.receiverId}}",
+                    "mandatory": "false",
+                    "modules": [
+                {
+                    "INVENTORY": {
+                        "enabledPages": [
+                            "viewTransactionDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "MRN_NUMBER",
+                    "fieldKey": "mrnNumber",
+                    "jsonPath": "{{item.additionalFields.fields.mrnNumber}}",
+                    "mandatory": "false",
+                    "modules": [
+                {
+                    "INVENTORY": {
+                        "enabledPages": [
+                            "viewTransactionDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "WAYBILL_NUMBER",
+                    "fieldKey": "wayBillNumber",
+                    "jsonPath": "{{item.wayBillNumber}}",
+                    "mandatory": "false",
+                    "additionalField": "true",
+                    "modules": [
+                {
+                    "INVENTORY": {
+                        "enabledPages": [
+                            "viewTransactionDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "BATCH_NUMBER",
+                    "fieldKey": "wayBillNumber",
+                    "jsonPath": "{{item.wayBillNumber}}",
+                    "mandatory": "false",
+                    "additionalField": "true",
+                    "modules": [
+                {
+                    "INVENTORY": {
+                        "enabledPages": [
+                            "viewTransactionDetails"
+                        ]
+                    }
+                }
+            ]
+                }
+            ]
+        },
+        {
+            "entity": "IndividualModel",
+            "labelFields": [
+                {
+                    "name": "HOUSEHOLD_HEAD_NAME",
+                    "fieldKey": "headName",
+                    "jsonPath": "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
+                    "mandatory": "false",
+                      "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "householdOverview"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "ID_TYPE",
+                    "fieldKey": "idType",
+                    "jsonPath": "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierType}}",
+                    "mandatory": "false",
+                           "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "beneficiaryDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "NAME_OF_INDIVIDUAL",
+                    "fieldKey": "givenName",
+                    "jsonPath": "{{contextData.0.individuals.IndividualModel.name.givenName}}",
+                    "mandatory": "false",
+                           "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "beneficiaryDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "ID_NUMBER",
+                    "fieldKey": "idNumber",
+                    "jsonPath": "{{contextData.0.individuals.IndividualModel.identifiers.0.identifierId}}",
+                    "mandatory": "false",
+                           "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "beneficiaryDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "AGE",
+                    "fieldKey": "age",
+                    "jsonPath": "{{fn:formatDate(contextData.0.individuals.IndividualModel.dateOfBirth, 'age')}}",
+                    "mandatory": "false",
+                           "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "beneficiaryDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "GENDER",
+                    "fieldKey": "gender",
+                    "jsonPath": "{{contextData.0.individuals.IndividualModel.gender}}",
+                    "mandatory": "false",
+                           "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "beneficiaryDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "DATE_OF_REGISTRATION",
+                    "fieldKey": "dateOfRegistration",
+                    "jsonPath": "{{fn:formatDate(contextData.0.projectBeneficiaries.ProjectBeneficiaryModel.dateOfRegistration, 'date', dd MMM yyyy)}}",
+                    "mandatory": "false",
+                           "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "beneficiaryDetails",
+                            "householdOverview"
+                        ]
+                    }
+                }
+            ]
+                }
+            ]
+        },
+        {
+            "entity": "HouseholdModel",
+            "labelFields": [
+                {
+                    "name": "HOUSEHOLD_LOCALITY",
+                    "fieldKey": "locality",
+                    "jsonPath": "{{contextData.0.household.HouseholdModel.address.locality.code}}",
+                    "mandatory": "false",
+                    
+            "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "householdOverview",
+                            "beneficiaryDetails"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "MEMBER_COUNT",
+                    "fieldKey": "memberCount",
+                    "jsonPath": "{{contextData.0.household.HouseholdModel.memberCount}}",
+                    "mandatory": "false",
+                    
+            "modules": [
+                {
+                    "REGISTRATION": {
+                        "enabledPages": [
+                            "householdOverview"
+                        ]
+                    }
+                }
+            ]
+                }
+            ]
+        },
+        {
+            "entity": "ComplaintModel",
+            "labelFields": [
+                {
+                    "name": "COMPLAINT_INBOX_COMPLAINT_NUMBER",
+                    "fieldKey": "inboxComplaintNumber",
+                    "jsonPath": "{{item.PgrServiceModel.serviceRequestId}}",
+                    "mandatory": "false",
+                          "modules": [
+                {
+                    "COMPLAINTS": {
+                        "enabledPages": [
+                            "complaintInbox"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "COMPLAINT_INBOX_COMPLAINT_TYPE",
+                    "fieldKey": "inboxComplaintType",
+                    "jsonPath": "{{item.PgrServiceModel.serviceCode}}",
+                    "mandatory": "false",
+                          "modules": [
+                {
+                    "COMPLAINTS": {
+                        "enabledPages": [
+                            "complaintInbox"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "COMPLAINT_INBOX_COMPLAINT_DATE",
+                    "fieldKey": "complaintDate",
+                    "jsonPath": "{{fn:formatDate(item.PgrServiceModel.auditDetails.createdTime, dateTime, dd MMM yyyy)}}",
+                    "mandatory": "false",
+                          "modules": [
+                {
+                    "COMPLAINTS": {
+                        "enabledPages": [
+                            "complaintInbox"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "COMPLAINT_INBOX_COMPLAINT_AREA",
+                    "fieldKey": "complaintArea",
+                    "jsonPath": "{{item.PgrServiceModel.address.locality.code}}",
+                    "mandatory": "false",
+                          "modules": [
+                {
+                    "COMPLAINTS": {
+                        "enabledPages": [
+                            "complaintInbox"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "COMPLAINT_INBOX_COMPLAINT_STATUS",
+                    "fieldKey": "complaintStatus",
+                    "jsonPath": "{{item.PgrServiceModel.applicationStatus}}",
+                    "mandatory": "false",
+                          "modules": [
+                {
+                    "COMPLAINTS": {
+                        "enabledPages": [
+                            "complaintInbox"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "COMPLAINT_VIEW_COMPLAINANT_CONTACT",
+                    "fieldKey": "complaintStatus",
+                    "jsonPath": "{{item.PgrServiceModel.user.mobileNumber}}",
+                    "mandatory": "false",
+                          "modules": [
+                {
+                    "COMPLAINTS": {
+                        "enabledPages": [
+                            "complaintInbox"
+                        ]
+                    }
+                }
+            ]
+                }
+            ]
+        },
+        {
+            "entity": "HFReferralModel",
+            "labelFields": [
+                {
+                    "name": "REFERRAL_INBOX_NAME",
+                    "fieldKey": "referralName",
+                    "jsonPath": "{{0.HFReferralModel.name}}",
+                    "mandatory": "false",
+                     "modules": [
+                {
+                    "HFREFERRAL": {
+                        "enabledPages": [
+                            "referralOverview"
+                        ]
+                    }
+                }
+            ]
+                },
+                {
+                    "name": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
+                    "fieldKey": "refrralSymptom",
+                    "jsonPath": "{{0.HFReferralModel.symptom}}",
+                    "mandatory": "false",
+                     "modules": [
+                {
+                    "HFREFERRAL": {
+                        "enabledPages": [
+                            "referralOverview"
+                        ]
+                    }
+                }
+            ]
+                }
+            ]
+        }
+    ]
+}

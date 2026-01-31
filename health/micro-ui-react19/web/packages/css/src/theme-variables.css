@@ -1,0 +1,102 @@
+/* Auto-generated from tailwind.config.js */
+/* Generated: 2025-08-26T14:34:03.853Z */
+/* DO NOT EDIT MANUALLY - Run 'npm run generate-theme' to update */
+
+:root {
+  --digitv2-lightTheme-primary: #C84C0E;
+  --digitv2-lightTheme-primary-2: #0b4b66;
+  --digitv2-lightTheme-text-color-primary: #0B0C0C;
+  --digitv2-lightTheme-text-color-secondary: #505A5F;
+  --digitv2-lightTheme-text-color-disabled: #B1B4B6;
+  --digitv2-lightTheme-background: #EEEEEE;
+  --digitv2-lightTheme-paper: #FFFFFF;
+  --digitv2-lightTheme-paper-secondary: #FAFAFA;
+  --digitv2-lightTheme-divider: #D6D5D4;
+  --digitv2-lightTheme-header-sidenav: #0B4B66;
+  --digitv2-lightTheme-input-border: #505A5F;
+  --digitv2-lightTheme-primary-bg: #FEEFE7;
+  --digitv2-lightTheme-text-primary: #363636;
+  --digitv2-lightTheme-error-v2: #D4351C;
+  --digitv2-lightTheme-text-secondary: #787878;
+  --digitv2-alert-error: #b91900;
+  --digitv2-alert-error-bg: #EFC7C1;
+  --digitv2-alert-success: #00703C;
+  --digitv2-alert-success-bg: #BAD6C9;
+  --digitv2-alert-info: #3498DB;
+  --digitv2-alert-info-bg: #C7E0F1;
+  --digitv2-chart-chart-1: #048BD0;
+  --digitv2-chart-chart-1-gradient: #048BD0;
+  --digitv2-chart-chart-2: #FBC02D;
+  --digitv2-chart-chart-2-gradient: #FBC02D;
+  --digitv2-chart-chart-3: #8E29BF;
+  --digitv2-chart-chart-4: #EA8A3B;
+  --digitv2-chart-chart-5: #0BABDE;
+  --digitv2-fontSize-heading-xl-mobile: 2rem;
+  --digitv2-fontSize-heading-xl-tablet: 2.25rem;
+  --digitv2-fontSize-heading-xl-desktop: 2.5rem;
+  --digitv2-fontSize-heading-l-mobile: 1.5rem;
+  --digitv2-fontSize-heading-l-tablet: 1.75rem;
+  --digitv2-fontSize-heading-l-desktop: 2rem;
+  --digitv2-fontSize-heading-m-mobile: 1.25rem;
+  --digitv2-fontSize-heading-m-tablet: 1.375rem;
+  --digitv2-fontSize-heading-m-desktop: 1.5rem;
+  --digitv2-fontSize-heading-s-mobile: 1rem;
+  --digitv2-fontSize-heading-s-tablet: 1rem;
+  --digitv2-fontSize-heading-s-desktop: 1rem;
+  --digitv2-fontSize-heading-xs-mobile: 0.75rem;
+  --digitv2-fontSize-caption-l-mobile: 1.5rem;
+  --digitv2-fontSize-caption-l-tablet: 1.75rem;
+  --digitv2-fontSize-caption-l-desktop: 1.75rem;
+  --digitv2-fontSize-caption-m-mobile: 1.25rem;
+  --digitv2-fontSize-caption-m-tablet: 1.5rem;
+  --digitv2-fontSize-caption-m-desktop: 1.5rem;
+  --digitv2-fontSize-caption-s-mobile: 1rem;
+  --digitv2-fontSize-caption-s-tablet: 1.25rem;
+  --digitv2-fontSize-caption-s-desktop: 1.25rem;
+  --digitv2-fontSize-body-l-mobile: 1rem;
+  --digitv2-fontSize-body-l-tablet: 1.25rem;
+  --digitv2-fontSize-body-l-desktop: 1.25rem;
+  --digitv2-fontSize-body-s-mobile: 0.875rem;
+  --digitv2-fontSize-body-s-tablet: 1rem;
+  --digitv2-fontSize-body-s-desktop: 1rem;
+  --digitv2-fontSize-body-xs-mobile: 0.75rem;
+  --digitv2-fontSize-body-xs-tablet: 0.875rem;
+  --digitv2-fontSize-body-xs-desktop: 0.875rem;
+  --digitv2-fontSize-label-mobile: 1rem;
+  --digitv2-fontSize-label-tablet: 1rem;
+  --digitv2-fontSize-label-desktop: 1rem;
+  --digitv2-fontSize-link-mobile: 1rem;
+  --digitv2-fontSize-link-tablet: 1rem;
+  --digitv2-fontSize-link-desktop: 1rem;
+  --digitv2-fontFamily-sans: Roboto;
+  --digitv2-fontFamily-rc: "Roboto Condensed";
+  --digitv2-fontStyle-normal: normal;
+  --digitv2-fontStyle-italic: italic;
+  --digitv2-textDecorationLine-underline: underline;
+  --digitv2-fontWeight-regular: 400;
+  --digitv2-fontWeight-medium: 500;
+  --digitv2-fontWeight-bold: 700;
+  --digitv2-lineHeight-line-height-body-l-mobile: 1.5rem;
+  --digitv2-lineHeight-line-height-body-l-tablet: 1.75rem;
+  --digitv2-lineHeight-line-height-body-l-desktop: 1.75rem;
+  --digitv2-lineHeight-line-height-body-s-mobile: 1.0938rem;
+  --digitv2-lineHeight-line-height-body-s-tablet: 1.5rem;
+  --digitv2-lineHeight-line-height-body-s-desktop: 1.5rem;
+  --digitv2-lineHeight-line-height-body-xs-mobile: 1.125rem;
+  --digitv2-lineHeight-line-height-body-xs-tablet: 1.5rem;
+  --digitv2-lineHeight-line-height-body-xs-desktop: 1.5rem;
+  --digitv2-lineHeight-normal: normal;
+  --digitv2-screens-mobile: 400px;
+  --digitv2-screens-tablet: 768px;
+  --digitv2-screens-desktop: 1024px;
+}
+
+/* Usage Examples:
+.your-component {
+  gap: var(--digitv2-spacers-spacer3);
+  padding: var(--digitv2-spacers-spacer4);
+  color: var(--digitv2-lightTheme-text-primary);
+  font-family: var(--digitv2-fontFamily-sans);
+  font-size: var(--digitv2-fontSize-heading-s-mobile);
+}
+*/

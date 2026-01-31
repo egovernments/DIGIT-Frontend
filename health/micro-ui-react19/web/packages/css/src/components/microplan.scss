@@ -1,0 +1,578 @@
+.search-tabs-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #eee;
+
+  .search-tab-head {
+    padding: 10px 35px;
+    font-weight: 700;
+    font-size: 1rem;
+    border: 1px solid #d6d5d4;
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .search-tab-head-selected {
+    padding: 10px 35px;
+    color: rgb(244, 119, 56);
+    background-color: #fff;
+    border: 1px solid #f47738;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: 4px solid rgb(244, 119, 56);
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: -1rem;
+  }
+
+  .search-tab-head-selected:focus {
+    outline: 0;
+  }
+}
+
+/* Parent container */
+.dm-parent-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  cursor: pointer;
+}
+
+/* Uploaded file container (left side) */
+.dm-uploaded-file-container-sub {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dm-icon {
+  margin-right: 0.5rem; /* Space between icon and filename */
+}
+
+.dm-file-name {
+  color: #505a5f;
+  font-weight: 700;
+  font-size: 0.875rem; /* Smaller text size */
+}
+
+/* Actions container (right side) */
+.dm-actions-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space between edit and delete buttons */
+}
+
+/* Edit container */
+.dm-campaign-preview-edit-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dm-campaign-preview-edit-container span {
+  /*margin-right: 0.25rem;*/
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #dc5a32; /* Orange color for the text */
+}
+
+/* Button styles */
+.dm-workbench-download-template-btn {
+  border: 1px solid #dc5a32; /* Orange border */
+  background-color: transparent;
+  color: #dc5a32; /* Orange text */
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem; /* Small font size */
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover effect for the button */
+.dm-hover:hover {
+  background-color: #fbe9e6;
+  border-color: #dc5a32;
+}
+
+.subBoundarycomp-container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.125rem;
+}
+
+.view-more {
+  text-decoration: underline;
+  cursor: pointer;
+  color: orange;
+  margin-top: 0.2rem;
+}
+
+.dm-code {
+  max-width: 100%; /* Remove width constraint to avoid overflow */
+  display: block; /* Ensure each item appears on a new line */
+  white-space: normal; /* Allow text to wrap */
+  overflow: visible; /* Ensure text isn't cut off */
+}
+
+.mp-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.as-table-like {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.as-table-row {
+  display: table-row;
+  border-bottom: 1px solid #d6d5d4;
+}
+
+.as-table-cell {
+  display: table-cell;
+  padding: 10px;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+.as-key-cell {
+  font-weight: bold;
+  min-width: 20rem; /* Reduced width to allocate more space for value */
+  background-color: #fff;
+  overflow: hidden; /* Ensure content doesn't overflow */
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.as-value-cell {
+  width: 70%; /* More width allocated to value */
+  overflow: hidden; /* Ensure long text doesn't overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed content */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.mc_back {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.digit-multiselectdropdown-wrap.nestedmultiselect {
+  width: 100%;
+}
+
+.card-color {
+  background-color: #fafafa !important;
+}
+
+.marginBottom {
+  margin-bottom: 1rem;
+}
+
+.as-label-field {
+  display: grid; /* Enable grid layout */
+  grid-template-columns: 1fr 2fr; /* Define two columns with different widths */
+  gap: 1rem; /* Space between items (adjust as needed) */
+  overflow: auto; /* Allow overflow if content is larger */
+  align-items: center;
+  border-bottom: "1px solid #e0e0e0"; /* Align items vertically in the center */
+}
+
+.dm-audit-info {
+  font-size: 1rem;
+  color: #8e9497;
+  display: flex;
+}
+
+.ab-actions {
+  margin-left: 4rem;
+  display: flex;
+}
+
+/* Add these styles to your CSS file */
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.pagination-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-controls select {
+  padding: 0.3rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.pagination-controls div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination-controls button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.pagination-controls button:disabled {
+  color: #ccc;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.rdt_TableRow {
+  &.selectedRow {
+    background-color: #fbeee8 !important;
+    border-bottom-color: #d6d5d4 !important;
+  }
+}
+
+.digit-bread-crumb {
+  margin-bottom: 1.5rem;
+}
+
+.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search {
+  gap: 1.5rem;
+}
+
+.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .checkbox-wrap input,
+.checkbox-wrap .input-emp {
+  top: 13px;
+  left: -3px;
+}
+
+.horizontal-nav {
+  overflow: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.header-style {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #0b4b66 !important;
+}
+
+.digit-card-component {
+  &.activity-card {
+    .activity-card-label {
+      margin: 0rem !important;
+      color: var(--digitv2-lightTheme-text-primary);
+
+      &.disable-label {
+        color: #a0adad;
+      }
+    }
+    &:not(.disabled-activity):hover {
+      box-shadow: 0px 4px 5.2px 0px rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--digitv2-lightTheme-primary);
+
+      .activity-card-label {
+        color: #c84c0e;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.digit-popup-overlay {
+  .digit-popup-wrapper {
+    opacity: 1;
+  }
+}
+
+.mp-margin-bottom {
+  margin-bottom: 1.5rem;
+}
+
+.rdt_TableCol_Sortable {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  &:hover {
+    opacity: 1 !important;
+  }
+
+  /* Target the first div directly inside .rdt_TableCol_Sortable */
+  > div:first-child {
+    white-space: normal;
+  }
+  .__rdt_custom_sort_icon__ {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.rdt_TableCol {
+  border-radius: 0rem !important;
+
+  &:last-of-type {
+    border-left: none !important;
+  }
+}
+
+.table tbody td {
+  p {
+    margin: 0rem;
+  }
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+  text-align: -webkit-center;
+  gap: 24px;
+  margin-right: 3rem;
+}
+
+.role-summary-sub-heading {
+  color: var(--digitv2-lightTheme-primary-2) !important;
+  margin-bottom: 0rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fac-middle-child {
+  border: 1px solid #ddd;
+  border-radius: 0.1rem;
+  padding: 1rem;
+  background-color: #fafafa;
+  margin: 1rem 0;
+}
+
+.fac-kpi-container {
+  display: flex;
+  justify-content: space-between; /* Spread items evenly */
+  gap: 0rem; /* Add spacing between items */
+  align-items: center;
+}
+
+.fac-kpi-card {
+  flex: 1; /* Ensure equal width for all items */
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.fac-kpi-card:last-child {
+  border-right: none; /* Remove border from the last item */
+}
+
+.fac-kpi-card .highlighted {
+  color: #d9534f; /* Red color for emphasis (like "5500") */
+  font-weight: bold;
+}
+
+.mp-fac-key {
+  font-family: Roboto, sans-serif; /* Fallback to sans-serif in case Roboto isn't available */
+  font-size: 1rem; /* 16px */
+  font-weight: 400; /* Regular weight */
+
+  text-align: center; /* Center-align text */
+  text-underline-position: from-font; /* Preserve font-based underline position */
+  text-decoration-skip-ink: none; /* Ensure underlines do not skip over glyphs */
+}
+
+.mp-fac-value {
+  font-family: Roboto, sans-serif; /* Fallback to sans-serif in case Roboto isn't available */
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700; /* Bold weight */
+
+  text-align: center; /* Center-align text */
+  text-underline-position: from-font; /* Preserve font-based underline position */
+  text-decoration-skip-ink: none; /* Ensure underlines do not skip over glyphs */
+  color: #0b4b66;
+  line-height: normal;
+}
+
+tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dropdown-options-card {
+  position: relative;
+}
+
+.mp-heading-bold {
+  font-weight: 700;
+}
+
+.microplan-deatils-view-card {
+  .digit-view-card-header {
+    @include typography-heading-m;
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-bold);
+    line-height: var(--digitv2-lineHeight-lineheight1);
+
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: var(--digitv2-fontSize-heading-m-mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: var(--digitv2-fontSize-heading-m-tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: var(--digitv2-fontSize-heading-m-desktop);
+    }
+  }
+}
+
+.kpi-card {
+  width: fit-content;
+}
+
+.assumption-label-icon-wrapper {
+  display: inline-block;
+
+  .assumption-label-icon-wrapper-label {
+    line-height: 1.25rem;
+  }
+
+  .icon-wrapper {
+    margin-left: 0.25rem;
+    top: 0rem;
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    vertical-align: bottom;
+  }
+}
+
+.sub-boundary-summary-card {
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.action-button-open-microplan {
+  .header-dropdown-menu {
+    min-width: 20rem !important;
+    width: 20rem !important;
+  }
+}
+
+.action-bar-wrap {
+  height: 4.5rem;
+  align-items: center;
+}
+
+.tooltip-warpper-village-hierarchy {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.village-tooltip-wrap {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.accessibility-pop-up {
+  .digit-popup-children-wrap {
+    overflow: visible !important;
+  }
+}
+
+.microplan-employee-module-card {
+  min-height: 16.25rem;
+}
+
+.action-bar-wrap {
+  &.microplan-actionbar {
+    z-index: 19 !important;
+  }
+}
+
+.digit-popup-wrapper {
+  &.wrapper-popup-boundary-chips {
+    overflow: auto !important;
+
+    .digit-popup-header {
+      overflow: visible !important;
+    }
+
+    .digit-popup-children-wrap {
+      .digit-tag-container {
+        overflow-y: unset !important;
+      }
+    }
+  }
+}
+
+.gap-between-dropdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.custom-filter-names {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.37rem;
+  color: #363636;
+  font-size: 1.1rem;
+}
+
+.pop-inbox-wrapper-filter-table-wrapper.planInbox-filtercard-table-wrapper {
+  align-items: stretch;
+}
+
+.filter-card {
+  &.plan-inbox-filtercard {
+    .content-container {
+      flex: 1;
+    }
+  }
+}
+
+.my-microplans-action-button + .header-dropdown-container {
+  .header-dropdown-menu {
+    width: 18.125rem !important;
+  }
+}
+
+.bold-column {
+  font-weight: 700;
+  width: 9rem;
+  margin-top: 0.6rem;
+}
+
+.fieldv1-deleteIcon-container.addColumnsScreen .label-field-wrapper {
+  max-width: 37.5rem;
+
+  .digit-field {
+    width: 100%;
+  }
+}
+
+.mp-hypothesis-label-field.addColumnsScreen .assumption-label {
+  width: 20%;
+}

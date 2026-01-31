@@ -1,0 +1,20 @@
+/*@import 'normalize.css';*/
+/*@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap");*/
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./theme-variables.css";
+@import "./typography.scss";
+@import "./components/microplanning.scss";
+@import "./components/microplan.scss";
+@import "./pages/employee/index.scss";
+@import "./pages/employee/campaign.scss";
+@import "./pages/employee/formulaConfig.scss";
+@import "./pages/employee/microplanInbox.scss";
+@import "./pages/employee/fetchFromMicroplan.scss";
+@import "./pages/employee/checklist.scss";
+@import "./pages/employee/mapview.scss";
+@import "./pages/employee/payment.scss";
+@import "./pages/employee/healthdss.scss";
+@import "./pages/employee/mycampaignsnew.scss";

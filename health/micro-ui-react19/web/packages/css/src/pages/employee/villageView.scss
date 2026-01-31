@@ -1,0 +1,84 @@
+/* VillageView.css */
+
+.village-header {
+  @include typography-heading-xl;
+  color: var(--digitv2-lightTheme-text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-heading-title {
+  @include typography-heading-m;
+  color: var(--digitv2-lightTheme-primary-2);
+  margin: 0rem;
+}
+
+.label-pair {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.label-heading {
+  @include typography-heading-s;
+  color: var(--digitv2-lightTheme-text-primary);
+  width: 20%;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.label-text {
+  @include typography-body-l;
+  color: var(--digitv2-lightTheme-text-primary);
+  width: 80%;
+}
+
+.edit-label-field-pair {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.edit-label {
+  @include typography-heading-s;
+  color: var(--digitv2-lightTheme-text-primary);
+  width: 40%;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.edit-value {
+  width: 60%;
+  text-align: start;
+}
+
+.middle-child {
+  margin-bottom: 1.5rem;
+}
+
+.comment-label {
+  margin-bottom: 0.25rem;
+  @include typography-label;
+  color: var(--digitv2-lightTheme-text-primary);
+}
+
+.comment-label .required {
+  color: var(--digitv2-alert-error);
+}
+
+.security-question-label {
+  margin-bottom: 1.5rem;
+  @include typography-heading-m;
+  color: var(--digitv2-lightTheme-text-primary);
+}
+
+.questions-divider {
+  margin-bottom: 1rem;
+}
