@@ -1,0 +1,117 @@
+[
+  {
+    "id": "MassDeworming2025",
+    "name": "Mass Deworming 2025",
+    "usedIn": "Maputo, Mozambique",
+    "disease": "VITAMINADEFICIENCY",
+    "modules": ["Registration", "Delivery"],
+    "duration": {
+      "endDate": 1751759400000,
+      "startDate": 1751327400000
+    },
+    "description": "This campaign focuses on large-scale deworming drives for children aged 1–14 years, combining household and school-based approaches to ensure complete coverage. It includes preconfigured modules for registration, delivery tracking, and reporting.",
+    "partnerName": "Health Ministry of Mozambique",
+    "imageDetails": {
+      "url": "https://example.com/deworming-campaign.jpg",
+      "altText": "Illustration of child health and deworming campaign"
+    },
+    "deliveryCycles": [
+      {
+        "description": "School-based deworming activity",
+        "roundNumber": 1,
+        "durationInDays": 5
+      },
+      {
+        "description": "Community-based follow-up activity",
+        "roundNumber": 2,
+        "durationInDays": 5
+      }
+    ],
+    "projectTypeCode": "MR-DN"
+  },
+  {
+    "id": "MalariaSMC2024",
+    "name": "Malaria SMC 2024",
+    "usedIn": "Kano - Nigeria",
+    "disease": "MALARIA",
+    "modules": ["Registration", "Delivery", "Inventory", "Attendance"],
+    "duration": {
+      "endDate": 1715279400000,
+      "startDate": 1714329000000
+    },
+    "description": "This template includes preconfigured workflows for household registration, eligibility checks, dosage administration, and daily reporting. It supports both online and offline data capture, ensuring smooth delivery tracking across all distribution rounds. Ideal for field teams managing child-based SMC cycles in high-transmission zones.",
+    "partnerName": "Malaria Consortium",
+    "imageDetails": {
+      "url": "https://egov-qa-assets.s3.ap-south-1.amazonaws.com/health/malaria.png",
+      "altText": "Illustration of mosquito for malaria campaign"
+    },
+    "deliveryCycles": [
+      {
+        "description": "First round delivery for malaria chemoprevention",
+        "roundNumber": 1,
+        "durationInDays": 4
+      },
+      {
+        "description": "Second round delivery",
+        "roundNumber": 2,
+        "durationInDays": 4
+      },
+      {
+        "description": "Third round delivery",
+        "roundNumber": 3,
+        "durationInDays": 4
+      }
+    ],
+    "projectTypeCode": "MR-DN"
+  },
+  {
+    "id": "Malaria2024",
+    "name": "Malaria 2024",
+    "usedIn": "Ondo, Taraba - Nigeria",
+    "disease": "MALARIA",
+    "modules": ["Registration", "Delivery", "Inventory", "Attendance"],
+    "duration": {
+      "endDate": 1715279400000,
+      "startDate": 1714329000000
+    },
+    "description": "This template includes preconfigured workflows for household registration, eligibility checks, dosage administration, and daily reporting. It supports both online and offline data capture, ensuring smooth delivery tracking across all distribution rounds. Ideal for field teams managing child-based SMC cycles in high-transmission zones.",
+    "partnerName": "Malaria Consortium",
+    "imageDetails": {
+      "url": "https://egov-qa-assets.s3.ap-south-1.amazonaws.com/health/malaria.png",
+      "altText": "Illustration of mosquito for malaria campaign"
+    },
+    "deliveryCycles": [
+      {
+        "description": "Bednet Delivery",
+        "roundNumber": 1,
+        "durationInDays": 20
+      }
+    ],
+    "projectTypeCode": "Bednets"
+  },
+  {
+    "id": "PolioNID2025",
+    "name": "Polio National Immunization Day",
+    "usedIn": "Taraba - Nigeria",
+    "disease": "POLIO",
+    "modules": ["Registration", "Delivery", "Inventory", "Attendance"],
+    "duration": {
+      "endDate": 1741132200000,
+      "startDate": 1740959400000
+    },
+    "description": "Designed for high-volume vaccination drives, this template comes ready with modules for beneficiary registration, dose tracking, and real-time coverage reporting. It enables supervisors to monitor field progress and identify missed households easily. Best suited for door-to-door or booth-based immunization campaigns.",
+    "partnerName": "Solina",
+    "imageDetails": {
+      "url": "https://egov-qa-assets.s3.ap-south-1.amazonaws.com/health/polio.png",
+      "altText": "Illustration of polio vaccination campaign"
+    },
+    "deliveryCycles": [
+      {
+        "description": "Single-round mass vaccination campaign",
+        "roundNumber": 1,
+        "durationInDays": 3
+      }
+    ],
+    "projectTypeCode": "POLIO"
+  }
+]

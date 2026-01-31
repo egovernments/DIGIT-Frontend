@@ -1,0 +1,440 @@
+ {
+            "id": "42437911-9085-4997-809a-0cb47b842ccd",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "uniqueIdentifier": "DELIVERY.Bednets",
+            "data": {
+                "name": "DELIVERY",
+                "flows": [
+                    {
+                        "name": "DELIVERY",
+                        "pages": [
+                            {
+                                "page": "DeliveryDetails",
+                                "type": "object",
+                                "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+                                "order": 1,
+                                "navigateTo": {
+                                    "name": "household-acknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "integer",
+                                        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": true,
+                                        "fieldName": "dateOfRegistration",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": true,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    },
+                                    {
+                                        "type": "dynamic",
+                                        "enums": [
+                                            {
+                                                "code": "SP1",
+                                                "name": "SP1"
+                                            },
+                                            {
+                                                "code": "SP2",
+                                                "name": "SP2"
+                                            },
+                                            {
+                                                "code": "AQ1",
+                                                "name": "AQ1"
+                                            },
+                                            {
+                                                "code": "AQ2",
+                                                "name": "AQ2"
+                                            }
+                                        ],
+                                        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "resourceCard",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "dropdown",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "deliveryComment",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "scanner",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    }
+                                ],
+                                "actionLabel": "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+                                "description": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
+                            }
+                        ],
+                        "project": "CMP-2025-08-04-004846",
+                        "version": 1,
+                        "disabled": false,
+                        "onAction": [
+                            {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                    "data": [
+                                        {
+                                            "key": "ProjectBeneficiaryClientReferenceId",
+                                            "value": "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
+                                        },
+                                        {
+                                            "key": "cycleIndex",
+                                            "value": "{{navigation.cycleIndex}}"
+                                        },
+                                        {
+                                            "key": "doseIndex",
+                                            "value": "{{navigation.doseIndex}}"
+                                        }
+                                    ],
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to fetch config."
+                                            }
+                                        }
+                                    ],
+                                    "configName": "delivery"
+                                }
+                            },
+                            {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                    "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to create household."
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                    "data": [
+                                        {
+                                            "key": "ProjectBeneficiaryClientReferenceId",
+                                            "value": "{{contextData.navigation.ProjectBeneficiaryClientReferenceId}}"
+                                        },
+                                        {
+                                            "key": "HouseholdClientReferenceId",
+                                            "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+                                        }
+                                    ],
+                                    "name": "deliverySuccess",
+                                    "type": "TEMPLATE",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Navigation failed."
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "isSelected": true,
+                        "screenType": "FORM"
+                    },
+                    {
+                        "name": "REFERRAL",
+                        "pages": [
+                            {
+                                "page": "DeliveryDetails",
+                                "type": "object",
+                                "label": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_HEADING",
+                                "order": 1,
+                                "navigateTo": {
+                                    "name": "household-acknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "integer",
+                                        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_dateOfDelivery",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": true,
+                                        "fieldName": "dateOfRegistration",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": true,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    },
+                                    {
+                                        "type": "dynamic",
+                                        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_resource",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "resourceCard",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_deliveryComments",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "dropdown",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "deliveryComment",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APPONE_REGISTRATION_DELIVERYDETAILS_label_scanner",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "scanner",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false,
+                                        "includeInSummary": true
+                                    }
+                                ],
+                                "actionLabel": "APPONE_REGISTRATION_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+                                "description": "APPONE_REGISTRATION_DELIVERYDETAILS_SCREEN_DESCRIPTION"
+                            }
+                        ],
+                        "project": "CMP-2025-08-04-004846",
+                        "version": 1,
+                        "disabled": false,
+                        "onAction": [
+                            {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to fetch config."
+                                            }
+                                        }
+                                    ],
+                                    "configName": "delivery"
+                                }
+                            },
+                            {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                    "entity": "HOUSEHOLD, INDIVIDUAL, PROJECTBENEFICIARY, MEMBER",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to create household."
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                    "name": "deliverySuccess",
+                                    "type": "TEMPLATE",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Navigation failed."
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "isSelected": true,
+                        "screenType": "FORM"
+                    },
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "label": "Delivery Successful",
+                                "format": "panelCard",
+                                "fieldName": "householdDetails",
+                                "properties": {
+                                    "type": "success"
+                                },
+                                "description": "The resource is successfully delivered",
+                                "primaryAction": {
+                                    "label": "View Household Details",
+                                    "onAction": [
+                                        {
+                                            "actionType": "NAVIGATION",
+                                            "properties": {
+                                                "data": [
+                                                    {
+                                                        "key": "HouseholdClientReferenceId",
+                                                        "value": "{{contextData.navigation.HouseholdClientReferenceId}}"
+                                                    }
+                                                ],
+                                                "name": "householdOverview",
+                                                "type": "TEMPLATE"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "secondaryAction": {
+                                    "label": "Go back to home",
+                                    "onAction": [
+                                        {
+                                            "actionType": "NAVIGATION",
+                                            "properties": {
+                                                "name": "searchBeneficiary",
+                                                "type": "TEMPLATE"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "name": "deliverySuccess",
+                        "header": [
+                            {
+                                "type": "template",
+                                "label": "Back",
+                                "format": "backLink",
+                                "onAction": [
+                                    {
+                                        "actionType": "BACK_NAVIGATION",
+                                        "properties": {
+                                            "name": "householdOverview",
+                                            "type": "TEMPLATE"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "deliveryBack"
+                            }
+                        ],
+                        "heading": "Successful Delivery",
+                        "screenType": "TEMPLATE",
+                        "description": "The delivery is successful"
+                    }
+                ],
+                "order": 3,
+                "active": false,
+                "project": "Bednets",
+                "version": 1,
+                "disabled": false,
+                "isSelected": false,
+                "initialPage": "DeliveryDetails"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1764240351869,
+                "lastModifiedTime": 1764240351869
+            }
+        }

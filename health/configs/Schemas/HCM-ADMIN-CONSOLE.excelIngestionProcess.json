@@ -1,0 +1,59 @@
+ {
+            "id": "0275b8a3-55a0-4061-8db4-46869c371bf5",
+            "tenantId": "dev",
+            "code": "HCM-ADMIN-CONSOLE.excelIngestionProcess",
+            "description": null,
+            "definition": {
+                "type": "object",
+                "title": "Excel Ingestion Process Config",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "excelIngestionProcessName",
+                    "sheets"
+                ],
+                "x-unique": [
+                    "excelIngestionProcessName"
+                ],
+                "properties": {
+                    "sheets": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "sheetName"
+                            ],
+                            "properties": {
+                                "sheetName": {
+                                    "type": "string"
+                                },
+                                "schemaName": {
+                                    "type": "string"
+                                },
+                                "parseEnabled": {
+                                    "type": "boolean"
+                                },
+                                "processorClass": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "minItems": 1
+                    },
+                    "processingResultTopic": {
+                        "type": "string"
+                    },
+                    "excelIngestionProcessName": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "63a21269-d40d-4c26-878f-4f4486b1f44b",
+                "lastModifiedBy": "63a21269-d40d-4c26-878f-4f4486b1f44b",
+                "createdTime": 1759134121906,
+                "lastModifiedTime": 1759134121906
+            }
+        }

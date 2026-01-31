@@ -1,0 +1,103 @@
+{
+  "tenantId": "{{tenantId}}",
+  "code": "HCM-ADMIN-CONSOLE.campaignTypeTemplates",
+  "description": "Schema to store campaign type templates used for creating campaigns from templates",
+  "definition": {
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": [
+      "id",
+      "name",
+      "projectTypeCode",
+      "partnerName",
+      "disease",
+      "duration",
+      "deliveryCycles",
+      "imageDetails"
+    ],
+    "x-unique": ["id"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "name": {
+        "type": "string",
+        "description": "Campaign template name"
+      },
+      "usedIn": {
+        "type": "string",
+        "description": "Location or geography where the template was used (e.g., Kano, Nigeria)"
+      },
+      "disease": {
+        "type": "string",
+        "description": "Associated disease type (e.g., Malaria, Polio)"
+      },
+      "modules": {
+        "type": "array",
+        "items": {
+          "enum": ["Registration", "Delivery", "Inventory", "Attendance"],
+          "type": "string"
+        },
+        "description": "List of modules included in the campaign"
+      },
+      "duration": {
+        "type": "object",
+        "required": ["startDate", "endDate"],
+        "properties": {
+          "endDate": {
+            "type": "integer",
+            "description": "End date of the campaign (epoch time)"
+          },
+          "startDate": {
+            "type": "integer",
+            "description": "Start date of the campaign (epoch time)"
+          }
+        }
+      },
+      "partnerName": {
+        "type": "string",
+        "description": "Name of organization or partner creating the template"
+      },
+      "imageDetails": {
+        "type": "object",
+        "required": ["url", "altText"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL or path to campaign image"
+          },
+          "altText": {
+            "type": "string",
+            "description": "Alt text for the campaign image"
+          }
+        }
+      },
+      "deliveryCycles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["roundNumber", "durationInDays"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "roundNumber": {
+              "type": "integer"
+            },
+            "durationInDays": {
+              "type": "integer"
+            }
+          }
+        },
+        "description": "List of delivery cycle configurations"
+      },
+      "projectTypeCode": {
+        "type": "string",
+        "description": "Code that links to project type (e.g., HCM-PROJECT-TYPES.projectTypes)"
+      }
+    }
+  },
+  "isActive": true
+}

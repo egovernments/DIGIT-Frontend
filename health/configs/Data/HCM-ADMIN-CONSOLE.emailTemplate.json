@@ -1,0 +1,12 @@
+[
+  {
+    "bodyCodes": [
+      "USER_CREDENTIAL_BODY_INTRO",
+      "USER_CREDENTIAL_BODY_DETAILS",
+      "USER_CREDENTIAL_BODY_NOTES",
+      "USER_CREDENTIAL_BODY_SUPPORT",
+      "USER_CREDENTIAL_BODY_THANKS"
+    ],
+    "subjectCode": "USER_CREDENTIAL_SUBJECT"
+  }
+]

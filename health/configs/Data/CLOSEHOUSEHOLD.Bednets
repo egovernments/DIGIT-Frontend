@@ -1,0 +1,248 @@
+ {
+            "id": "f8abeabc-7ea0-4876-9e5d-ad1c35b97a3f",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "uniqueIdentifier": "CLOSEHOUSEHOLD.Bednets",
+            "data": {
+                "name": "CLOSEHOUSEHOLD",
+                "flows": [
+                    {
+                        "name": "closeHouseholdRegistration",
+                        "pages": [
+                            {
+                                "page": "closeHouseholdDetails",
+                                "type": "object",
+                                "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_HEADING",
+                                "order": 1,
+                                "value": null,
+                                "hidden": null,
+                                "endDate": null,
+                                "tooltip": null,
+                                "helpText": null,
+                                "readOnly": null,
+                                "required": null,
+                                "charCount": null,
+                                "startDate": null,
+                                "autoEnable": null,
+                                "innerLabel": null,
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "locality",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "administrativeArea",
+                                        "mandatory": true,
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_administrativeArea_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "latLng",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "latLng",
+                                        "mandatory": true,
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_latLng_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "headName",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "min",
+                                                "value": 3,
+                                                "message": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_headName_MIN_LENGTH_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "includeInForm": true,
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_scanner_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "scanner",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "systemDate": null,
+                                "actionLabel": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_ACTION_LABEL",
+                                "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDDETAILS_DESCRIPTION",
+                                "validations": null,
+                                "includeInForm": null,
+                                "isMultiSelect": null,
+                                "includeInSummary": null
+                            }
+                        ],
+                        "summary": true,
+                        "version": 1,
+                        "disabled": false,
+                        "onAction": [
+                            {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                    "data": [],
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to fetch config."
+                                            }
+                                        }
+                                    ],
+                                    "configName": "closeHouseholdRegistration"
+                                }
+                            },
+                            {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                    "entity": "HOUSEHOLD, INDIVIDUAL, MEMBER, PROJECTBENEFICIARY",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to create stock."
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                    "data": [],
+                                    "name": "closeHouseholdSuccess",
+                                    "type": "TEMPLATE",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Navigation failed."
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "isSelected": true,
+                        "screenType": "FORM"
+                    },
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+                                "format": "panelCard",
+                                "heading": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_HEADING",
+                                "fieldName": "closeHouseholdSuccess",
+                                "mandatory": true,
+                                "properties": {
+                                    "type": "success"
+                                },
+                                "description": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_DESCRIPTION",
+                                "primaryAction": {
+                                    "type": "template",
+                                    "label": "CLOSEHOUSEHOLD_CLOSEHOUSEHOLDSUCCESS_PRIMARY_ACTION_LABEL",
+                                    "format": "button",
+                                    "hidden": false,
+                                    "onAction": [
+                                        {
+                                            "actionType": "NAVIGATION",
+                                            "properties": {
+                                                "name": "Home",
+                                                "type": "HOME"
+                                            }
+                                        }
+                                    ],
+                                    "fieldName": "GoHome",
+                                    "properties": {
+                                        "type": "primary"
+                                    }
+                                }
+                            }
+                        ],
+                        "name": "closeHouseholdSuccess",
+                        "footer": [],
+                        "header": [],
+                        "heading": "",
+                        "screenType": "TEMPLATE",
+                        "description": "",
+                        "initActions": []
+                    }
+                ],
+                "order": 4,
+                "active": true,
+                "project": "Bednets",
+                "version": 1,
+                "disabled": false,
+                "isSelected": true,
+                "initialPage": "closeHouseholdRegistration"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1764240303029,
+                "lastModifiedTime": 1764240303029
+            }
+        }

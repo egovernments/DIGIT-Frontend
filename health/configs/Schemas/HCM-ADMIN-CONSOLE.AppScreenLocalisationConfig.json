@@ -1,0 +1,61 @@
+{
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.AppScreenLocalisationConfig",
+        "description": "HCM-ADMIN-CONSOLE.AppScreenLocalisationConfig",
+        "definition":  {
+                "type": "object",
+                "title": "Generated schema for Root",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "screenName",
+                    "LocalisationModule",
+                    "moduleVersion",
+                    "minModuleVersion",
+                    "fields"
+                ],
+                "x-unique": [
+                    "screenName"
+                ],
+                "properties": {
+                    "fields": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "fieldType"
+                            ],
+                            "properties": {
+                                "fieldType": {
+                                    "type": "string"
+                                },
+                                "applicableFieldTypes": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "localisableProperties": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "screenName": {
+                        "type": "string"
+                    },
+                    "moduleVersion": {
+                        "type": "string"
+                    },
+                    "minModuleVersion": {
+                        "type": "string"
+                    },
+                    "LocalisationModule": {
+                        "type": "string"
+                    }
+                }
+            },
+        "isActive": true
+    }

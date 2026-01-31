@@ -1,0 +1,26 @@
+[
+  {
+    "code": "COVID19",
+    "name": "COVID-19",
+    "active": true,
+    "description": "Respiratory illness caused by the SARS-CoV-2 virus, preventable through vaccination and public health campaigns."
+  },
+  {
+    "code": "VITAMINADEFICIENCY",
+    "name": "Vitamin A Deficiency",
+    "active": true,
+    "description": "A condition caused by a lack of vitamin A in the body, leading to visual impairment and immune deficiencies."
+  },
+  {
+    "code": "POLIO",
+    "name": "Polio",
+    "active": true,
+    "description": "A viral disease that can affect nerves and lead to partial or full paralysis. Preventable by vaccination."
+  },
+  {
+    "code": "MALARIA",
+    "name": "Malaria",
+    "active": true,
+    "description": "A mosquito-borne infectious disease affecting humans and animals caused by parasitic protozoans of the genus Plasmodium."
+  }
+]

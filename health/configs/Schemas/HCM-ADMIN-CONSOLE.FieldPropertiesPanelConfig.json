@@ -1,0 +1,323 @@
+{
+  "id": "uuid-to-be-generated",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+  "description": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+  "definition": {
+    "type": "object",
+    "title": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["label"],
+    "x-unique": ["label"],
+    "properties": {
+      "label": {
+        "type": "string",
+        "description": "Panel configuration label identifier"
+      },
+      "content": {
+        "type": "array",
+        "description": "Array of content field configurations",
+        "items": {
+          "$ref": "#/definitions/contentField"
+        }
+      },
+      "validation": {
+        "type": "array",
+        "description": "Array of validation field configurations",
+        "items": {
+          "$ref": "#/definitions/validationField"
+        }
+      }
+    },
+    "definitions": {
+      "contentField": {
+        "type": "object",
+        "description": "Content field configuration for drawer panel",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique field identifier"
+          },
+          "label": {
+            "type": "string",
+            "description": "Field label"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Display order"
+          },
+          "bindTo": {
+            "type": "string",
+            "description": "Property path to bind the value"
+          },
+          "tabOrder": {
+            "type": "integer",
+            "description": "Tab order for keyboard navigation"
+          },
+          "fieldType": {
+            "type": "string",
+            "description": "Type of field (text, toggle, number, fieldTypeDropdown, labelPairList, table, etc.)"
+          },
+          "defaultValue": {
+            "type": ["string", "boolean", "number", "null"],
+            "description": "Default value for the field"
+          },
+          "isPopupProperty": {
+            "type": "boolean",
+            "description": "Whether this is a popup property"
+          },
+          "isLocalisable": {
+            "type": "boolean",
+            "description": "Whether the field value is localisable"
+          },
+          "conditionalField": {
+            "type": "array",
+            "description": "Conditional fields shown based on toggle state",
+            "items": {
+              "$ref": "#/definitions/conditionalFieldItem"
+            }
+          },
+          "showFieldOnToggle": {
+            "type": "boolean",
+            "description": "Whether to show conditional fields when toggle is enabled"
+          },
+          "disableForRequired": {
+            "type": "boolean",
+            "description": "Whether to disable for required fields"
+          },
+          "visibilityEnabledFor": {
+            "type": "array",
+            "description": "List of field types for which this field is visible",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "validationField": {
+        "type": "object",
+        "description": "Validation field configuration",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique validation identifier"
+          },
+          "label": {
+            "type": "string",
+            "description": "Validation label"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Display order"
+          },
+          "bindTo": {
+            "type": "string",
+            "description": "Property path to bind the validation"
+          },
+          "fieldType": {
+            "type": "string",
+            "description": "Type of validation field (toggle, group, etc.)"
+          },
+          "defaultValue": {
+            "type": ["string", "boolean", "number", "null"],
+            "description": "Default value"
+          },
+          "conditionalField": {
+            "type": "array",
+            "description": "Conditional fields for the validation",
+            "items": {
+              "$ref": "#/definitions/conditionalFieldItem"
+            }
+          },
+          "showFieldOnToggle": {
+            "type": "boolean",
+            "description": "Whether to show conditional fields when toggle is enabled"
+          },
+          "visibilityEnabledFor": {
+            "type": "array",
+            "description": "List of field types for which this validation is visible",
+            "items": {
+              "type": "string"
+            }
+          },
+          "children": {
+            "type": "array",
+            "description": "Child fields for group type validations",
+            "items": {
+              "$ref": "#/definitions/validationChildField"
+            }
+          },
+          "validationMessage": {
+            "type": "string",
+            "description": "Message to show when validation fails"
+          },
+          "validationExpression": {
+            "type": "string",
+            "description": "Expression to evaluate for validation"
+          }
+        }
+      },
+      "validationChildField": {
+        "type": "object",
+        "description": "Child field for group validations",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Field identifier"
+          },
+          "label": {
+            "type": "string",
+            "description": "Field label"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "bindTo": {
+            "type": "string",
+            "description": "Property path to bind"
+          },
+          "tabOrder": {
+            "type": "integer"
+          },
+          "fieldType": {
+            "type": "string",
+            "description": "Type of field (number, text, date, toggle)"
+          },
+          "defaultValue": {
+            "type": ["string", "boolean", "number", "null"]
+          },
+          "isLocalisable": {
+            "type": "boolean"
+          },
+          "conditionalField": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/conditionalFieldItem"
+            }
+          },
+          "showFieldOnToggle": {
+            "type": "boolean"
+          },
+          "disableForRequired": {
+            "type": "boolean"
+          },
+          "visibilityEnabledFor": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "conditionalFieldItem": {
+        "type": "object",
+        "description": "Configuration for conditional field",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of conditional field (text, number, textarea, dropdown, options, filters, radioOptions, dependencyFieldWrapper)"
+          },
+          "label": {
+            "type": "string",
+            "description": "Field label"
+          },
+          "bindTo": {
+            "type": "string",
+            "description": "Property path to bind"
+          },
+          "condition": {
+            "type": "boolean",
+            "description": "Condition value for showing this field"
+          },
+          "isLocalisable": {
+            "type": "boolean",
+            "description": "Whether value is localisable"
+          },
+          "defaultValue": {
+            "type": ["string", "boolean", "number", "null"],
+            "description": "Default value"
+          },
+          "options": {
+            "type": "array",
+            "description": "Options for dropdown/radio fields",
+            "items": {
+              "$ref": "#/definitions/optionItem"
+            }
+          },
+          "mdmsOptions": {
+            "type": "array",
+            "description": "MDMS options configuration",
+            "items": {
+              "$ref": "#/definitions/mdmsOptionItem"
+            }
+          },
+          "jsonPath": {
+            "type": "string",
+            "description": "JSON path for extracting value"
+          },
+          "validation": {
+            "type": "object",
+            "description": "Validation configuration",
+            "properties": {
+              "pattern": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "optionItem": {
+        "type": "object",
+        "description": "Option item for dropdown/radio",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Option code"
+          },
+          "pattern": {
+            "type": "string",
+            "description": "Regex pattern for the option"
+          },
+          "description": {
+            "type": "string",
+            "description": "Option description"
+          },
+          "masterName": {
+            "type": "string"
+          },
+          "moduleName": {
+            "type": "string"
+          },
+          "schemaCode": {
+            "type": "string"
+          }
+        }
+      },
+      "mdmsOptionItem": {
+        "type": "object",
+        "description": "MDMS option configuration",
+        "properties": {
+          "masterName": {
+            "type": "string",
+            "description": "MDMS master name"
+          },
+          "moduleName": {
+            "type": "string",
+            "description": "MDMS module name"
+          },
+          "schemaCode": {
+            "type": "string",
+            "description": "MDMS schema code"
+          }
+        }
+      }
+    }
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": null,
+    "lastModifiedTime": null
+  }
+}

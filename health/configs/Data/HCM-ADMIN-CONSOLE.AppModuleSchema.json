@@ -1,0 +1,142 @@
+ [
+        {
+            "id": "e1498fc3-4523-4310-80b8-2b62c0a03dd8",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.AppModuleSchema",
+            "uniqueIdentifier": "HFREFERALFLOW",
+            "data": {
+                "code": "HFREFERALFLOW",
+                "features": [
+                    {
+                        "code": "QR_CODE_SCANNER",
+                        "type": "template",
+                        "order": 1,
+                        "format": "SecondaryButton",
+                        "disabled": false,
+                        "description": "QR_CODE_SCANNER_DESC"
+                    }
+                ],
+                "description": "HFREFERALFLOW_DESC"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756182396159,
+                "lastModifiedTime": 1756182396159
+            }
+        },
+        {
+            "id": "71125d4c-197c-4bab-b089-a53151642700",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.AppModuleSchema",
+            "uniqueIdentifier": "COMPLAINTFLOW",
+            "data": {
+                "code": "COMPLAINTFLOW",
+                "features": [
+                    {
+                        "code": "SEARCH_COMPLAINTS",
+                        "type": "form",
+                        "order": 2,
+                        "format": "searchComplaints",
+                        "disabled": false,
+                        "description": "SEARCH_COMPLAINTS_DESC"
+                    }
+                ],
+                "description": "COMPLAINTS_DESC"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+                "lastModifiedBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
+                "createdTime": 1755844435291,
+                "lastModifiedTime": 1755853222503
+            }
+        },
+        {
+            "id": "666a60c3-db0b-4041-b07a-73aeaa6decjk",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.AppModuleSchema",
+            "uniqueIdentifier": "DELIVERYFLOW",
+            "data": {
+                "code": "DELIVERYFLOW",
+                "features": [
+                    {
+                        "code": "QR_CODE_SCANNER",
+                        "type": "form",
+                        "order": 1,
+                        "format": "scanner",
+                        "disabled": false,
+                        "description": "QR_CODE_SCANNER_DESC"
+                    }
+                ],
+                "description": "DELIVERY_DESC"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "a1d59929-c4b1-43fb-8a31-b033038ad21a",
+                "lastModifiedBy": "a1d59929-c4b1-43fb-8a31-b033038ad21a",
+                "createdTime": 1747904964020,
+                "lastModifiedTime": 1749192038017
+            }
+        },
+        {
+            "id": "666a60c3-db0b-4041-b07a-73aeaa6dece0",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.AppModuleSchema",
+            "uniqueIdentifier": "REGISTRATIONFLOW",
+            "data": {
+                "code": "REGISTRATIONFLOW",
+                "features": [
+                    {
+                        "code": "QR_CODE_SCANNER",
+                        "type": "form",
+                        "order": 1,
+                        "format": "scanner",
+                        "disabled": false,
+                        "description": "QR_CODE_SCANNER_DESC"
+                    },
+                    {
+                        "code": "PROXIMITY_SEARCH",
+                        "type": "template",
+                        "order": 2,
+                        "format": "searchByProximity",
+                        "disabled": false,
+                        "description": "PROXIMITY_SEARCH_DESC"
+                    },
+                    {
+                        "code": "SEARCH_BY_ID",
+                        "type": "template",
+                        "order": 1,
+                        "format": "searchByID",
+                        "disabled": false,
+                        "description": "SEARCH_BY_ID_DESC"
+                    },
+                    {
+                        "code": "MAP_VIEW",
+                        "type": "form",
+                        "order": 3,
+                        "format": "map",
+                        "disabled": true,
+                        "description": "MAP_VIEW_DESC"
+                    },
+                    {
+                        "code": "OFFLINE_DATA_SHARING",
+                        "type": "form",
+                        "order": 4,
+                        "format": "offlinedata",
+                        "disabled": true,
+                        "description": "OFFLINE_DATA_SHARING_DESC"
+                    }
+                ],
+                "description": "REGISTRATION_DESC"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "a1d59929-c4b1-43fb-8a31-b033038ad21a",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1747904964020,
+                "lastModifiedTime": 1753098295362
+            }
+        }
+    ]

@@ -1,0 +1,29 @@
+ {
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.AllowedModules",
+        "description": "HCM-ADMIN-CONSOLE.AllowedModules",
+        "definition": {
+                "type": "object",
+                "title": "Generated schema for Root",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "allowedModule",
+                    "projectType"
+                ],
+                "x-unique": [
+                    "projectType"
+                ],
+                "properties": {
+                    "projectType": {
+                        "type": "string"
+                    },
+                    "allowedModule": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+        "isActive": true
+    }

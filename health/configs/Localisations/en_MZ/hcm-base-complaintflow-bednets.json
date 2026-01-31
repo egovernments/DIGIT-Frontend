@@ -1,0 +1,416 @@
+[
+        {
+            "code": "APPONE_COMPLAINTACKNOWLEDGEMENT_DESCRIPTION",
+            "message": "The complaint has been registered successfully and sent to the concerned person.",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTACKNOWLEDGEMENT_TITLE",
+            "message": "Complaint Submitted",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_ACTION_BUTTON_LABEL",
+            "message": "Submit",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_DESCRIPTION",
+            "message": "Details of complaint",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_HEADING",
+            "message": "Complaint Details Details",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_administrativeArea_helpText_label",
+            "message": "Help text",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_administrativeArea_label",
+            "message": "Administrative Area",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_complaintDescription_helpText_label",
+            "message": "Enter Complaint description.",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_complaintDescription_label",
+            "message": "Complaint Description",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_complaintRaisedFor_label",
+            "message": "Are you raising complaint for yourself or another user?",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_contactNumber_helpText_label",
+            "message": "Enter the mobile number",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_contactNumber_label",
+            "message": "Complainant contact number",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_dateOfRegistration_label",
+            "message": "Date of complaint",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_name_helpText_label",
+            "message": "Enter the name",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_name_label",
+            "message": "Complainant name",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_supervisorContactNumber_helpText_label",
+            "message": "Enter supervisor's contact details",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_supervisorContactNumber_label",
+            "message": "Supervisor's contact number",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_supervisorName_helpText_label",
+            "message": "Enter supervisor's name",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_SCREEN_supervisorName_label",
+            "message": "Supervisor's Name",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_administrativeArea_required_error",
+            "message": "This is required field",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_complaintDescription_required_error",
+            "message": "Field can not be empty",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_complaintRaisedFor_required_error",
+            "message": "Please select one option",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_contactNumber_required_error",
+            "message": "Field can not be empty",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_dateOfRegistration_required_error",
+            "message": "Required field",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTDETAILS_name_required_error",
+            "message": "Field can not be empty",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTINBOXFLOW_FILECOMPLAINT_LABEL",
+            "message": "File Complaint",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTINBOXFLOW_FILTER_LABEL",
+            "message": "Filter",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTINBOXFLOW_SCREEN_HEADING",
+            "message": "Complaint Inbox",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTINBOXFLOW_SEARCH_LABEL",
+            "message": "Search",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTINBOXFLOW_SORT_LABEL",
+            "message": "Sort",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_ACTION_BUTTON_LABEL",
+            "message": "Next",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_SCREEN_HEADING",
+            "message": "Complaint type",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_complaintOther_required_error",
+            "message": "Please fill the mandatory field",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_complaintType_label",
+            "message": "Select your complaint type",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_complaintType_required_error",
+            "message": "Please select one option",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_otherReason_helpText_label",
+            "message": "Add reason for selecting 'Other' option.",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_otherReason_label",
+            "message": "Please add reason",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_COMPLAINTTYPE_otherReason_tooltip_label",
+            "message": "Add clarification for selecting 'Other' option.",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SEARCH_SCREEN_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_ACTION_BUTTON_LABEL",
+            "message": "Next",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_HEADING",
+            "message": "Location Details",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_SCREEN_DESCRIPTION",
+            "message": "Enter location details",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_addressLine1_helpText_label",
+            "message": "Enter your address",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_addressLine1_label",
+            "message": "Address line 1",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_addressLine2_helpText_label",
+            "message": "Enter your address",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_addressLine2_label",
+            "message": "Address line 2",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_landmark_helpText_label",
+            "message": "Enter your landmark",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_landmark_label",
+            "message": "Landmark",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_postalCode_helpText_label",
+            "message": "Enter your postal code",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_postalCode_label",
+            "message": "Postal Code",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_LOCATIONDETAILS_SCREEN_typeOfAddress_label",
+            "message": "Type of address",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINTACKNOWLEDGEMENT_SECONDARY_ACTION_LABEL",
+            "message": "Back To Complaints",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINTFLOW_RAISED_FOR_ANOTHER_USER",
+            "message": "Another User",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINTFLOW_RAISED_FOR_MYSELF",
+            "message": "Myself",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINTS_RAISED_FOR_ANOTHER_USER",
+            "message": "Another User",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINTS_RAISED_FOR_MYSELF",
+            "message": "Myself",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINT_RAISED_FOR_ANOTHER_USER",
+            "message": "Another User",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "COMPLAINT_RAISED_FOR_MYSELF",
+            "message": "Myself",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "DataIssues",
+            "message": "Data Issues",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "NotEnoughStock",
+            "message": "Not Enough Stock",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Other",
+            "message": "Other",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "PerformanceIssue",
+            "message": "Performance Issues",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SEARCH_COMPLAINTS",
+            "message": "Search Complaints",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SEARCH_COMPLAINTS_DESC",
+            "message": "Search complaints involve gathering feedback or concerns from users.",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SecurityIssues",
+            "message": "Security Issues",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SyncNotWorking",
+            "message": "Sync Not Working",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "TechnicalIssues",
+            "message": "Technical Issues",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "UserAccountIssues",
+            "message": "User Account Issues",
+            "module": "hcm-base-complaintflow-bednets",
+            "locale": "en_MZ"
+        }
+    ]

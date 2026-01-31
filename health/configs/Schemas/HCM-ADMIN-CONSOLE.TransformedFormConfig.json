@@ -1,0 +1,53 @@
+{
+            "id": "e4d5c6ad-0a12-4113-86e3-34f80b6eefc0",
+            "tenantId": "mz",
+            "code": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
+            "description": "HCM-ADMIN-CONSOLE.TransformedFormConfig",
+            "definition": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Form Configuration Schema",
+                "type": "object",
+                "required": [
+                    "flow",
+                    "page",
+                    "order",
+                    "project",
+                    "module",
+                    "version",
+                    "body"
+                ],
+                "x-unique": [
+                    "flow",
+                    "page",
+                    "project",
+                    "module"
+                ],
+                "properties": {
+                    "flow": {
+                        "type": "string"
+                    },
+                    "page": {
+                        "type": "string"
+                    },
+                    "order": {},
+                    "project": {
+                        "type": "string"
+                    },
+                    "module": {
+                        "type": "string"
+                    },
+                    "version": {},
+                    "body": {
+                        "type": "array"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": 1766122561439,
+                "lastModifiedTime": 1766122561439
+            }
+        }

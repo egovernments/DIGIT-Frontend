@@ -1,0 +1,746 @@
+[
+  {
+    "id": "2384c96f-8c59-46e3-a930-a5addec99a5b",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+    "uniqueIdentifier": "NewPanelConfig",
+    "data": {
+      "label": "NewPanelConfig",
+      "content": [
+        {
+          "id": "popupTitle",
+          "label": "popupTitle",
+          "order": 32,
+          "bindTo": "properties.popupConfig.title",
+          "fieldType": "text",
+          "defaultValue": "",
+          "isPopupProperty": true,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["actionPopup"]
+        },
+        {
+          "label": "fieldType",
+          "order": 1,
+          "fieldType": "fieldTypeDropdown",
+          "disableForRequired": true,
+          "visibilityEnabledFor": []
+        },
+        {
+          "label": "systemDate",
+          "order": 9,
+          "bindTo": "systemDate",
+          "tabOrder": 1,
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "disableForRequired": false,
+          "visibilityEnabledFor": ["date"]
+        },
+        {
+          "id": "label",
+          "label": "label",
+          "order": 2,
+          "bindTo": "label",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": [
+            "Image",
+            "latLng",
+            "text",
+            "date",
+            "dropdown",
+            "checkbox",
+            "radio",
+            "number",
+            "numeric",
+            "mobileNumber",
+            "button",
+            "filter",
+            "buttonTemplate",
+            "searchByProximity",
+            "searchByID",
+            "PrimaryButton",
+            "qrScanner",
+            "scanner",
+            "switch",
+            "searchBar",
+            "actionPopup",
+            "locality",
+            "infoCard",
+            "dropdownTemplate",
+            "evaluationFacility"
+          ]
+        },
+        {
+          "id": "helpText",
+          "label": "helpText",
+          "order": 3,
+          "bindTo": "helpText",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "helpText"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": [
+            "text",
+            "checkbox",
+            "radio",
+            "numeric",
+            "Image",
+            "date",
+            "dropdown",
+            "number",
+            "latLng",
+            "mobileNumber",
+            "locality",
+            "evaluationFacility"
+          ]
+        },
+        {
+          "id": "required",
+          "label": "Mandatory",
+          "order": 4,
+          "bindTo": "required",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "required.message"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "disableForRequired": true,
+          "visibilityEnabledFor": [
+            "checkbox",
+            "numeric",
+            "dob",
+            "date",
+            "select",
+            "dropdown",
+            "mobileNumber",
+            "number",
+            "textArea",
+            "text",
+            "latLng",
+            "administrativeArea",
+            "radio",
+            "searchableDropdown",
+            "locality"
+          ]
+        },
+        {
+          "id": "prefixText",
+          "label": "prefixText",
+          "order": 5,
+          "bindTo": "prefixText",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "prefixText",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["mobileNumber"]
+        },
+        {
+          "id": "suffixText",
+          "label": "suffixText",
+          "order": 6,
+          "bindTo": "suffixText",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "suffixText",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["number"]
+        },
+        {
+          "id": "minSearchChars",
+          "label": "minSearchChars",
+          "order": 7,
+          "bindTo": "minSearchChars",
+          "fieldType": "number",
+          "defaultValue": 2,
+          "isLocalisable": false,
+          "conditionalField": [],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["searchBar"]
+        },
+        {
+          "id": "filter",
+          "label": "filter",
+          "order": 8,
+          "bindTo": "dropDownOptions",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "filters",
+              "label": "APPCONFIG_SELECT_SCHEMA",
+              "bindTo": "dropDownOptions",
+              "condition": true,
+              "mdmsOptions": [
+                {
+                  "masterName": "SEARCH_HOUSEHOLD_FILTERS",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                }
+              ]
+            },
+            {
+              "type": "options",
+              "bindTo": "dropDownOptions",
+              "condition": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["filter"]
+        },
+        {
+          "id": "tooltip",
+          "label": "tooltip",
+          "order": 9,
+          "bindTo": "tooltip",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "tooltip"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["text", "date", "numeric", "dropdown", "number", "mobileNumber", "Image", "latLng", "locality"]
+        },
+        {
+          "id": "readOnly",
+          "label": "readOnly",
+          "order": 10,
+          "bindTo": "readOnly",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["text", "date", "dropdown", "number", "mobileNumber", "numeric"]
+        },
+        {
+          "id": "hidden",
+          "label": "hidden",
+          "order": 11,
+          "bindTo": "hidden",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": [""]
+        },
+        {
+          "label": "isMdms",
+          "order": 12,
+          "bindTo": "isMdms",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "dropdown",
+              "label": "APPCONFIG_SELECT_SCHEMA",
+              "bindTo": "schemaCode",
+              "options": [
+                {
+                  "masterName": "GenderType",
+                  "moduleName": "common-masters",
+                  "schemaCode": "common-masters.GenderType"
+                },
+                {
+                  "masterName": "HOUSE_STRUCTURE_TYPES",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.HOUSE_STRUCTURE_TYPES"
+                },
+                {
+                  "masterName": "ID_TYPE_OPTIONS_POPULATOR",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR"
+                },
+                {
+                  "masterName": "DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR"
+                },
+                {
+                  "masterName": "ServiceDefs",
+                  "moduleName": "RAINMAKER-PGR",
+                  "schemaCode": "RAINMAKER-PGR.ServiceDefs"
+                },
+                {
+                  "masterName": "REFERRAL_REASONS",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.REFERRAL_REASONS"
+                },
+                {
+                  "masterName": "SEARCH_HOUSEHOLD_FILTERS",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                }
+              ],
+              "jsonPath": "schemaCode",
+              "condition": true
+            },
+            {
+              "type": "options",
+              "bindTo": "dropDownOptions",
+              "condition": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["dropdown", "radio", "searchableDropdown"]
+        },
+        {
+          "id": "min",
+          "label": "min",
+          "order": 13,
+          "bindTo": "min",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "number",
+              "bindTo": "min",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": [""]
+        },
+        {
+          "id": "max",
+          "label": "max",
+          "order": 14,
+          "bindTo": "max",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "number",
+              "bindTo": "max",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": [""]
+        },
+        {
+          "id": "labelPairList",
+          "label": "labelPairList",
+          "order": 15,
+          "bindTo": "data",
+          "fieldType": "labelPairList",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["labelPairList"]
+        },
+        {
+          "id": "table",
+          "label": "table",
+          "order": 15,
+          "bindTo": "data",
+          "fieldType": "table",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["table"]
+        },
+        {
+          "id": "panelTitle",
+          "label": "panelTitle",
+          "order": 16,
+          "bindTo": "label",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["panelCard"]
+        },
+        {
+          "id": "menuCardTitle",
+          "label": "menuCardTitle",
+          "order": 17,
+          "bindTo": "heading",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["menu_card"]
+        },
+        {
+          "id": "menuCardDescription",
+          "label": "menuCardDescription",
+          "order": 18,
+          "bindTo": "description",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["menu_card"]
+        },
+        {
+          "id": "infoDescription",
+          "label": "infoDescription",
+          "order": 16,
+          "bindTo": "description",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["infoCard"]
+        },
+        {
+          "id": "panelDescription",
+          "label": "panelDescription",
+          "order": 16,
+          "bindTo": "description",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": ["panelCard"]
+        },
+        {
+          "id": "defaultValue",
+          "label": "defaultValue",
+          "order": 2,
+          "bindTo": "value",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "isLocalisable": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_DEFAULT_VALUE",
+              "bindTo": "value",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["text"]
+        },
+        {
+          "id": "defaultValue",
+          "label": "defaultValue",
+          "order": 2,
+          "bindTo": "value",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "isLocalisable": false,
+          "conditionalField": [
+            {
+              "type": "number",
+              "label": "APPCONFIG_DEFAULT_VALUE",
+              "bindTo": "value",
+              "isLocalisable": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["numeric", "number", "mobileNumber"]
+        },
+        {
+          "id": "innerLabel",
+          "label": "innerLabel",
+          "order": 5,
+          "bindTo": "innerLabel",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "innerLabel"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["text"]
+        },
+        {
+          "id": "isMultiSelect",
+          "label": "isMultiSelect",
+          "order": 10,
+          "bindTo": "isMultiSelect",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": true,
+          "disableForRequired": true,
+          "visibilityEnabledFor": ["dropdown"]
+        }
+      ],
+      "validation": [
+        {
+          "id": "scannerRegex",
+          "label": "ScannerRegexPattern",
+          "order": 1,
+          "bindTo": "pattern",
+          "fieldType": "toggle",
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_CUSTOM_PATTERN",
+              "bindTo": "pattern",
+              "isLocalisable": false
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "pattern.message"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["scanner", "qrScanner"]
+        },
+        {
+          "label": "isGS1Barcode",
+          "order": 1,
+          "bindTo": "isGS1",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["scanner", "qrScanner"]
+        },
+        {
+          "label": "scanLimit",
+          "order": 2,
+          "bindTo": "scanLimit",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "number",
+              "label": "APPCONFIG_NUMBER_SCAN_LIMIT",
+              "bindTo": "scanLimit",
+              "validation": {
+                "pattern": "^(0|[1-9]\\d*)$"
+              },
+              "defaultValue": 1
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "scanLimit.message",
+              "options": []
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["scanner", "qrScanner"]
+        },
+        {
+          "id": "dependencyFieldWrapper",
+          "label": "dependencyFieldWrapper",
+          "order": 2,
+          "bindTo": "visibilityCondition.expression",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "dependencyFieldWrapper",
+              "bindTo": "visibilityCondition.expression"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": [
+            "checkbox",
+            "numeric",
+            "dob",
+            "date",
+            "select",
+            "dropdown",
+            "mobileNumber",
+            "number",
+            "textArea",
+            "text",
+            "latLng",
+            "radio",
+            "administrativeArea",
+            "searchableDropdown"
+          ]
+        },
+        {
+          "id": "regex",
+          "label": "RegexPattern",
+          "order": 3,
+          "bindTo": "pattern",
+          "fieldType": "toggle",
+          "conditionalField": [
+            {
+              "type": "radioOptions",
+              "label": "APPCONFIG_PATTERN",
+              "bindTo": "pattern",
+              "options": [
+                {
+                  "code": "CHARACTERONLY",
+                  "pattern": "^[a-zA-Z]+$",
+                  "description": "Alphabets only (uppercase and lowercase)"
+                },
+                {
+                  "code": "NUMBERONLY",
+                  "pattern": "^\\d+$",
+                  "description": "Numbers only (0-9)"
+                },
+                {
+                  "code": "ALPHANUMERICONLY",
+                  "pattern": "^[a-zA-Z0-9]+$",
+                  "description": "Letters and numbers only (no special characters)"
+                }
+              ],
+              "jsonPath": "pattern"
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_CUSTOM_PATTERN",
+              "bindTo": "pattern",
+              "isLocalisable": false
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "pattern.message"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["text"]
+        },
+        {
+          "id": "range",
+          "label": "numberRange",
+          "order": 4,
+          "children": [
+            {
+              "id": "min",
+              "label": "Minimum",
+              "bindTo": "range.min",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "max",
+              "label": "Maximum",
+              "bindTo": "range.max",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "errorMessage",
+              "label": "errorMessage",
+              "bindTo": "range.errorMessage",
+              "fieldType": "text",
+              "isLocalisable": true
+            }
+          ],
+          "fieldType": "group",
+          "validationMessage": "APPCONFIG_MIN_LESS_EQUAL_MAX",
+          "validationExpression": "range.min <= range.max",
+          "visibilityEnabledFor": ["numeric", "number"]
+        },
+        {
+          "id": "lengthRange",
+          "label": "lengthRange",
+          "order": 5,
+          "children": [
+            {
+              "id": "minLength",
+              "label": "minLength",
+              "bindTo": "lengthRange.minLength",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "maxLength",
+              "label": "maxLength",
+              "bindTo": "lengthRange.maxLength",
+              "fieldType": "number",
+              "isLocalisable": false
+            },
+            {
+              "id": "errorMessage",
+              "label": "errorMessage",
+              "bindTo": "lengthRange.errorMessage",
+              "fieldType": "text",
+              "isLocalisable": true
+            }
+          ],
+          "fieldType": "group",
+          "validationMessage": "APPCONFIG_MIN_LENGTH_LESS_EQUAL_MAX",
+          "validationExpression": "lengthRange.minLength <= lengthRange.maxLength",
+          "visibilityEnabledFor": ["text", "number", "mobileNumber"]
+        },
+        {
+          "id": "range",
+          "label": "dateRange",
+          "order": 6,
+          "children": [
+            {
+              "id": "startDate",
+              "label": "startDate",
+              "bindTo": "dateRange.startDate",
+              "fieldType": "date",
+              "isLocalisable": false
+            },
+            {
+              "id": "endDate",
+              "label": "endDate",
+              "bindTo": "dateRange.endDate",
+              "fieldType": "date",
+              "isLocalisable": false
+            },
+            {
+              "id": "errorMessage",
+              "label": "errorMessage",
+              "bindTo": "dateRange.errorMessage",
+              "fieldType": "text",
+              "isLocalisable": true
+            },
+            {
+              "label": "systemDate",
+              "order": 9,
+              "bindTo": "systemDate",
+              "tabOrder": 1,
+              "fieldType": "toggle",
+              "defaultValue": false,
+              "conditionalField": [],
+              "showFieldOnToggle": false,
+              "disableForRequired": false,
+              "visibilityEnabledFor": ["date"]
+            }
+          ],
+          "fieldType": "group",
+          "validationMessage": "APPCONFIG_MIN_DATE_LESS_EQUAL_MAX",
+          "validationExpression": "dateRange.startDate <= dateRange.endDate",
+          "visibilityEnabledFor": ["date"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+      "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+      "createdTime": 1761299753683,
+      "lastModifiedTime": 1764933573787
+    }
+  }
+]

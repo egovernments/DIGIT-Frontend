@@ -1,0 +1,33 @@
+{
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.emailTemplate",
+        "description": null,
+        "definition":  {
+                "type": "object",
+                "title": "Email Template Reference",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "subjectCode",
+                    "bodyCodes"
+                ],
+                "x-unique": [
+                    "subjectCode"
+                ],
+                "properties": {
+                    "bodyCodes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 1,
+                        "description": "List of message codes to be used in the body"
+                    },
+                    "subjectCode": {
+                        "type": "string",
+                        "description": "Message code for the localized email subject"
+                    }
+                },
+                "additionalProperties": false
+            },
+        "isActive": true
+    }

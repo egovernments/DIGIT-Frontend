@@ -1,0 +1,196 @@
+{
+  "flow": "REGISTRATION-DELIVERY",
+  "version": 1,
+  "project": "CMP-2025-08-04-004846",
+  "name": "beneficiaryLocation",
+  "type": "object",
+  "headerFields": [
+    {
+      "type": "text",
+      "label": "SCREEN_HEADING",
+      "jsonPath": "ScreenHeading",
+      "value": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING"
+    },
+    {
+      "type": "textarea",
+      "jsonPath": "ScreenDescription",
+      "label": "SCREEN_DESCRIPTION",
+      "value": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION"
+    }
+  ],
+  "header": "beneficiaryLocation-header",
+  "cards": [
+    {
+      "fields": [
+        {
+          "active": true,
+          "type": "string",
+          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea",
+          "order": 1,
+          "value": "",
+          "format": "locality",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_administrativeArea_helpText",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "administrativeArea",
+          "deleteFlag": false,
+          "innerLabel": "",
+          "systemDate": false,
+          "validations": [
+            {
+              "type": "required",
+              "value": true,
+              "message": "Required field cannot be empty"
+            }
+          ],
+          "errorMessage": "",
+          "isMultiSelect": false
+        },
+        {
+          "active": true,
+          "type": "string",
+          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong",
+          "order": 2,
+          "value": "",
+          "format": "latLng",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_latlong_helpText",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "latLng",
+          "deleteFlag": false,
+          "innerLabel": "",
+          "systemDate": false,
+          "validations": [
+            {
+              "type": "required",
+              "value": true,
+              "message": "Required field cannot be empty"
+            }
+          ],
+          "errorMessage": "",
+          "isMultiSelect": false
+        },
+        {
+          "type": "string",
+          "active": true,
+          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1",
+          "order": 3,
+          "value": "",
+          "format": "text",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine1_helpText",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "addressLine1",
+          "deleteFlag": false,
+          "innerLabel": "",
+          "systemDate": false,
+          "validations": [],
+          "errorMessage": "",
+          "isMultiSelect": false
+        },
+        {
+          "type": "string",
+          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2",
+          "active": true,
+          "order": 4,
+          "value": "",
+          "format": "text",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_addressLine2_helpText",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "addressLine2",
+          "deleteFlag": false,
+          "innerLabel": "",
+          "systemDate": false,
+          "validations": [],
+          "errorMessage": "",
+          "isMultiSelect": false
+        },
+        {
+          "type": "string",
+          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark",
+          "active": true,
+          "order": 5,
+          "value": "",
+          "format": "text",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_landmark_helpText",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "landmark",
+          "deleteFlag": false,
+          "innerLabel": "",
+          "systemDate": false,
+          "validations": [],
+          "errorMessage": "",
+          "isMultiSelect": false
+        },
+        {
+          "type": "integer",
+          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode",
+          "order": 6,
+          "active": true,
+          "value": "",
+          "format": "text",
+          "hidden": false,
+          "tooltip": "",
+          "helpText": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_pincode_helpText",
+          "infoText": "",
+          "readOnly": false,
+          "fieldName": "pincode",
+          "deleteFlag": false,
+          "innerLabel": "",
+          "systemDate": false,
+          "validations": [],
+          "errorMessage": "",
+          "isMultiSelect": false
+        }
+      ]
+    }
+  ],
+  "footer": [
+    {
+      "format": "button",
+      "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+      "properties": {
+        "type": "primary",
+        "size": "large",
+        "mainAxisSize": "max",
+        "mainAxisAlignment": "center"
+      },
+      "onAction": [
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "FORM",
+            "name": "HOUSEHOLD",
+            "data": [
+              {
+                "key": "nameOfIndividual",
+                "value": "searchBar.value"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "order": 2,
+  "page": "beneficiaryLocation",
+  "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",
+  "navigateTo": {
+    "name": "householdDetails",
+    "type": "form"
+  },
+  "actionLabel": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+  "description": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION"
+}

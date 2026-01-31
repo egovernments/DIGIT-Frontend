@@ -1,0 +1,46 @@
+ {
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.DETAILS_RENDERER_CONFIG",
+        "description": "HCM-ADMIN-CONSOLE.DETAILS_RENDERER_CONFIG",
+        "definition":{
+                "type": "object",
+                "title": "Generated schema for Root",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "entity",
+                    "displayFields"
+                ],
+                "x-unique": [
+                    "entity"
+                ],
+                "properties": {
+                    "entity": {
+                        "type": "string"
+                    },
+                    "displayFields": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "isEnum": {
+                                    "type": "string"
+                                },
+                                "isList": {
+                                    "type": "string"
+                                },
+                                "fieldKey": {
+                                    "type": "string"
+                                },
+                                "jsonPath": {
+                                    "type": "string"
+                                },
+                                "mandatory": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        "isActive": true
+    }

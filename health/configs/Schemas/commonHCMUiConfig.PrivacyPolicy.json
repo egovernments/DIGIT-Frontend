@@ -1,0 +1,74 @@
+ {
+        "tenantId": "{{tenantId}}",
+        "code": "commonHCMUiConfig.PrivacyPolicy",
+        "description": null,
+        "definition": {
+            "type": "object",
+            "title": "Generated schema for Root",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "required": [
+                "header",
+                "module"
+            ],
+            "x-unique": [
+                "module"
+            ],
+            "properties": {
+                "header": {
+                    "type": "string"
+                },
+                "module": {
+                    "type": "string"
+                },
+                "contents": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "header": {
+                                "type": "string"
+                            },
+                            "descriptions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "text": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        },
+                                        "isBold": {
+                                            "type": "boolean"
+                                        },
+                                        "subDescriptions": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "text": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "isBold": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "isSpaceRequired": {
+                                                        "type": "boolean"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "isActive": true
+    }

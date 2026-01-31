@@ -1,0 +1,60 @@
+ {
+        "tenantId": "{{tenantId}}",
+        "code": "commonUiConfig.HelpTutorial",
+        "description": "commonUiConfig.HelpTutorial",
+        "definition":  {
+                "type": "object",
+                "title": "Generated schema for Root",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "module",
+                    "helpContent"
+                ],
+                "x-unique": [
+                    "module"
+                ],
+                "properties": {
+                    "module": {
+                        "type": "string"
+                    },
+                    "helpContent": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "url",
+                                "title",
+                                "icon"
+                            ],
+                            "properties": {
+                                "url": {
+                                    "type": "string"
+                                },
+                                "icon": {
+                                    "type": "string"
+                                },
+                                "order": {
+                                    "type": "number"
+                                },
+                                "pages": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "actionText": {
+                                    "type": "string"
+                                },
+                                "iconBackground": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        "isActive": true
+    }

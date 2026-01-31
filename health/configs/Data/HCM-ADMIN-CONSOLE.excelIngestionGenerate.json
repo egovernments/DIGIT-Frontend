@@ -1,0 +1,31 @@
+[
+    {
+        "sheets": [
+            {
+                "order": 1,
+                "visible": true,
+                "sheetName": "HCM_ADMIN_CONSOLE_FACILITIES_LIST",
+                "schemaName": "facility-microplan-ingestion",
+                "generationClass": "FacilitySheetGenerator",
+                "isGenerationClassViaExcelPopulator": false
+            },
+            {
+                "order": 2,
+                "visible": true,
+                "sheetName": "HCM_ADMIN_CONSOLE_USERS_LIST",
+                "schemaName": "user-microplan-ingestion",
+                "generationClass": "UserSheetGenerator",
+                "isGenerationClassViaExcelPopulator": false
+            },
+            {
+                "order": 3,
+                "visible": true,
+                "sheetName": "HCM_CONSOLE_BOUNDARY_HIERARCHY",
+                "generationClass": "BoundaryHierarchySheetGenerator",
+                "isGenerationClassViaExcelPopulator": true
+            }
+        ],
+        "applyWorkbookProtection": true,
+        "excelIngestionGenerateName": "unified-console"
+    }
+]

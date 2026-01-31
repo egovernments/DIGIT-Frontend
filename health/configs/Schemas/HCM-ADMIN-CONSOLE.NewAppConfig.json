@@ -1,0 +1,20 @@
+{
+  "id": "123f98d1-de72-4bbb-b2a6-2eb859722e2f",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.NewAppConfig",
+  "description": "HCM-ADMIN-CONSOLE.NewAppConfig",
+  "definition": {
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["project", "name"],
+    "x-unique": ["project", "name"],
+    "additionalProperties": true
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": 1760646148163,
+    "lastModifiedTime": 1760646148163
+  }
+}

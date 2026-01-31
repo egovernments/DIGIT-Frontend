@@ -1,0 +1,74 @@
+[
+        {
+            "code": "USER_CREDENTIAL_BODY_DETAILS",
+            "message": "<strong>Campaign Details:</strong><br/><strong>Campaign:</strong> {campaignName}<br/><strong>User Credential Access Link:</strong> <a href="{accessLink}">Access Link</a><br/><strong>App Download:</strong> <a href="{appLink}">App Link</a>",
+            "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "USER_CREDENTIAL_BODY_INTRO",
+        "message": "Hi {campaignManagerName},<br/><br/>Your health campaign setup is now complete! The app has been configured and user credentials have been generated for your team.",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "USER_CREDENTIAL_BODY_NOTES",
+        "message": "<strong>Important Notes:</strong><br/>All team credentials are active and ready for use.<br/>The app includes all configurations specific to your campaign requirements.<br/>Please distribute credentials securely to authorized team members only.",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "USER_CREDENTIAL_BODY_SUPPORT",
+        "message": "<strong>Need Support?</strong><br/>If you encounter any issues during download or have questions about the setup, please contact our support team at <a href=mailto:support@egov.org.in'>support@egov.org.in</a>.",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "USER_CREDENTIAL_BODY_THANKS",
+        "message": "Your campaign is ready to go live.<br/><br/>Thank you for using Console for your health campaign management.<br/>Best regards,<br/>Console Team",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "USER_CREDENTIAL_SUBJECT",
+        "message": "{campaignName} - Your Team Credentials & App Ready for Download",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_2",
+        "message": "User Role 2",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_3",
+        "message": "User Role 3",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_4",
+        "message": "User Role 4",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_5",
+        "message": "User Role 5",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_2",
+        "message": "Target Population",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    },
+    {
+        "code": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_3",
+        "message": "Number of Bednets to be distributed",
+        "module": "hcm-admin-schemas",
+        "locale": "en_MZ"
+    }
+]

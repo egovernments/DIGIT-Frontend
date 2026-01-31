@@ -1,0 +1,383 @@
+ [
+        {
+            "id": "6311d563-2099-459a-b7ec-ebd366268149",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.AppScreenLocalisationConfig",
+            "uniqueIdentifier": "appScreenConfig",
+            "data": {
+                "fields": [
+                    {
+                        "fieldType": "textInput",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "dropdown",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "dropdownOptions",
+                            "dropDownOptions",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "number",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "numeric",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "checkbox",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "numeric",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "scanner",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "date",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "dob",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "administrativeArea",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "latLng",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "textArea",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "mobileNumber",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "editHousehold",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "editIndividual",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "addMember",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "IndividualDeliverySecondaryButton",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "IndividualDeliveryPrimaryButton",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "SecondaryButton",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "AcknowledgementTitle",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "AcknowledgementDescription",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "PrimaryButton",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "searchBar",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "searchByProximity",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "filter",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "select",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "text",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "qrscanner",
+                        "localisableProperties": [
+                            "errorMessage",
+                            "tooltip",
+                            "innerLabel",
+                            "helpText",
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "idPopulator",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "radio",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "deliveryConditionDialog",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "resourceCard",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "searchByID",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "sortComplaints",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    },
+                    {
+                        "fieldType": "searchComplaints",
+                        "localisableProperties": [
+                            "label",
+                            "message"
+                        ]
+                    }
+                ],
+                "screenName": "appScreenConfig",
+                "moduleVersion": "3",
+                "minModuleVersion": "1",
+                "LocalisationModule": "configure-app"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "a1d59929-c4b1-43fb-8a31-b033038ad21a",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1746697551857,
+                "lastModifiedTime": 1755856729720
+            }
+        }
+    ]

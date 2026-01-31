@@ -1,0 +1,460 @@
+/* LoginPage.css - Complete with Bottom-Left Carousel Content */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
+/* Base Styles */
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+}
+
+/* overrides of predefined classes */
+
+.login-container .digit-label-field-pair {
+  all: unset !important;
+}
+
+.login-container .digit-label-field-pair .digit-field {
+  width: 100%;
+}
+
+.login-container .digit-privacy-checkbox {
+  margin-top: 1rem;
+  margin-bottom: unset;
+}
+
+.login-container .bannerHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: centre
+}
+
+ .login-container .bannerHeader .bannerLogo {
+   width: 50%;
+ }
+
+ .login-form-container .digit-header-content {
+   text-align: center;
+   font-weight: 1000;
+   font-size: x-large;
+   color: rgba(20, 82, 107, 255);
+ }
+
+ .login-form-container .label-styles {
+   font-weight: 600;
+   font-size: small;
+   text-align: left;
+   overflow: unset !important;
+ }
+
+ .login-form-container .employeeForgotPassword .digit-header-content{
+   font-size: 1.25rem;
+ }
+
+/*.login-container .digit-submit-bar{
+  margin-top: 1rem;
+} */
+
+/* Carousel Section (70% width) */
+.carousel-container {
+  position: relative;
+  width: 70%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  margin-right: -1rem;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: flex;
+  align-items: flex-end;
+  /* Changed to bottom alignment */
+  justify-content: flex-start;
+  /* Changed to left alignment */
+  color: white;
+  text-align: left;
+  /* Changed to left-align text */
+  padding: 0 0 60px 60px;
+  /* Added bottom and left padding */
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-content {
+  max-width: 600px;
+  padding: 0;
+  margin-right: 1rem;
+}
+
+.carousel-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-weight: 400;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20%;
+}
+
+/* Carousel Controls */
+.carousel-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  z-index: 10;
+}
+
+.carousel-nav {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.3rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.carousel-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.carousel-indicators {
+  display: flex;
+  gap: 12px;
+}
+
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s;
+}
+
+.indicator.active {
+  background: orange;
+  transform: scale(1.2);
+}
+
+/* Login Form Section (30% width) */
+
+.login-form-container {
+  flex: 1 1 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 3rem;
+  z-index: 2;
+  position: relative;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+  min-width: 320px;
+  border-radius: 1rem 0 0 1rem;
+  /* Optional: Prevent it from shrinking too much */
+}
+
+.login-form {
+  width: 100%;
+  max-width: 380px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.logo h1 {
+  font-size: 2.8rem;
+  margin: 0;
+  color: #333;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo p {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  font-weight: 400;
+}
+
+.login-form h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.login-form p {
+  color: #666;
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 1.8rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4a6bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.15);
+}
+
+.form-group.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.form-group.checkbox input {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  accent-color: #4a6bff;
+}
+
+.form-group.checkbox label {
+  margin-bottom: 0;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.login-button {
+  width: 100%;
+  padding: 1rem;
+  background: #4a6bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 1.2rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+.login-button:hover {
+  background: #3a5bef;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(58, 91, 239, 0.2);
+}
+
+.login-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 1.8rem;
+}
+
+.forgot-password a {
+  color: #4a6bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.forgot-password a:hover {
+  color: #3a5bef;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .login-form-container {
+    padding: 2rem;
+  }
+
+  .carousel-slide {
+    padding: 0 0 50px 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .carousel-container {
+    width: 100%;
+    height: 45vh;
+    min-height: 350px;
+    margin: 0 0 -1rem 0;
+  }
+
+  .carousel-slide {
+    padding: 0 0 40px 40px;
+    align-items: flex-end;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .login-form-container {
+    width: 100%;
+    height: auto;
+    padding: 2rem 1.5rem 3rem;
+    box-shadow: none;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .login-form {
+    max-width: 500px;
+    margin: -60px auto 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    position: relative;
+    z-index: 3;
+  }
+
+  .carousel-controls {
+    bottom: 25px;
+    padding: 8px 16px;
+  }
+
+  .carousel-nav {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .carousel-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .carousel-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 2rem 1.5rem;
+    margin-top: -50px;
+    border-radius: 10px;
+  }
+
+  .carousel-slide {
+    padding: 0 0 30px 30px;
+  }
+
+  .carousel-content h2 {
+    font-size: 1.6rem;
+  }
+
+  .logo h1 {
+    font-size: 2.4rem;
+  }
+
+  .login-form h2 {
+    font-size: 1.6rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 0.8rem;
+  }
+}
+
+/* Large desktop screens */
+@media (min-width: 1600px) {
+  .login-form {
+    max-width: 420px;
+  }
+
+  .carousel-content {
+    max-width: 700px;
+  }
+}
+
+@media (min-aspect-ratio: 3 / 4) {
+  .login-form-container .digit-card-component {
+    padding-left: 0;
+    padding-bottom: 1.5rem;
+    padding-right: 0;
+    padding-top: 1.5rem;
+  }
+}

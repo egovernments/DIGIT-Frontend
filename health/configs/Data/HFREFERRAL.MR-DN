@@ -1,0 +1,1414 @@
+{
+            "id": "f9345989-8292-455e-aaaa-4f4fcf8fec73",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "uniqueIdentifier": "HFREFERRAL.MR-DN",
+            "data": {
+                "name": "HFREFERRAL",
+                "flows": [
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_INBOX_SEARCHBAR_LABEL",
+                                "format": "searchBar",
+                                "onAction": [
+                                    {
+                                        "actionType": "SEARCH_EVENT",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "name",
+                                                    "value": "field.value",
+                                                    "operation": "contains"
+                                                }
+                                            ],
+                                            "name": "hFReferral",
+                                            "type": "field.value==true ? SEARCH_EVENT : CLEAR_EVENT"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "searchBar"
+                            },
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_INBOX_INFO_CARD_HEADING",
+                                "format": "infoCard",
+                                "hidden": "{{ context.hFReferral.notEmpty }}",
+                                "description": "REFERRAL_INBOX_INFO_CARD_DESCRIPTION"
+                            },
+                            {
+                                "data": "hFReferral",
+                                "type": "template",
+                                "child": {
+                                    "format": "card",
+                                    "children": [
+                                        {
+                                            "type": "template",
+                                            "format": "row",
+                                            "children": [
+                                                {
+                                                    "type": "template",
+                                                    "value": "{{ HFReferralModel.name }}",
+                                                    "format": "textTemplate"
+                                                },
+                                                {
+                                                    "type": "template",
+                                                    "label": "Open",
+                                                    "format": "button",
+                                                    "onAction": [
+                                                        {
+                                                            "actionType": "NAVIGATION",
+                                                            "properties": {
+                                                                "data": [
+                                                                    {
+                                                                        "key": "clientReferenceId",
+                                                                        "value": "{{ HFReferralModel.clientReferenceId }}"
+                                                                    }
+                                                                ],
+                                                                "name": "referralOverview",
+                                                                "type": "TEMPLATE"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "properties": {
+                                                        "size": "medium",
+                                                        "type": "secondary"
+                                                    }
+                                                }
+                                            ],
+                                            "properties": {
+                                                "mainAxisSize": "max",
+                                                "mainAxisAlignment": "spaceBetween"
+                                            }
+                                        },
+                                        {
+                                            "value": "HF_REFERRAL_INBOX_DATE_OF_EVALUATION {{ fn:formatDate(HFReferralModel.additionalFields.fields.dateOfEvaluation) }}",
+                                            "format": "textTemplate"
+                                        }
+                                    ]
+                                },
+                                "format": "listView",
+                                "hidden": "{{ context.hFReferral.empty }}",
+                                "fieldName": "listView"
+                            }
+                        ],
+                        "name": "referralInbox",
+                        "footer": [
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_INBOX_PRIMARY_ACTION_LABEL",
+                                "format": "button",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [],
+                                            "name": "REFERRAL_CREATE",
+                                            "type": "FORM"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "createReferral",
+                                "properties": {
+                                    "size": "large",
+                                    "type": "primary",
+                                    "mainAxisSize": "max",
+                                    "mainAxisAlignment": "center"
+                                }
+                            },
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_INBOX_SECONDARY_ACTION_LABEL",
+                                "format": "qrScanner",
+                                "onAction": [
+                                    {
+                                        "actionType": "SEARCH_EVENT",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "beneficiaryId",
+                                                    "value": "field.value",
+                                                    "operation": "contains"
+                                                }
+                                            ],
+                                            "name": "hFReferral",
+                                            "type": "SEARCH_EVENT"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "scanQr",
+                                "properties": {
+                                    "size": "large",
+                                    "type": "secondary",
+                                    "mainAxisSize": "max",
+                                    "mainAxisAlignment": "center"
+                                }
+                            }
+                        ],
+                        "header": [
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_INBOX_BACK_BUTTON_LABEL",
+                                "format": "backLink",
+                                "onAction": [
+                                    {
+                                        "actionType": "BACK_NAVIGATION",
+                                        "properties": {
+                                            "name": "HOME",
+                                            "type": "HOME"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "heading": "REFERRAL_INBOX_HEADING",
+                        "screenType": "TEMPLATE",
+                        "description": "REFERRAL_INBOX_DESCRIPTION",
+                        "initActions": [],
+                        "wrapperConfig": {
+                            "filters": [],
+                            "relations": [],
+                            "rootEntity": "HFReferralModel",
+                            "wrapperName": "hFReferral",
+                            "searchConfig": {
+                                "select": [
+                                    "hFReferral"
+                                ],
+                                "primary": "hFReferral"
+                            }
+                        }
+                    },
+                    {
+                        "name": "REFERRAL_CREATE",
+                        "pages": [
+                            {
+                                "page": "facilityDetails",
+                                "type": "object",
+                                "label": "HFREFERRAL_FACILITY_DETAILS_HEADING",
+                                "order": 2,
+                                "navigateTo": {
+                                    "name": "referralDetails",
+                                    "type": "form"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_FACILITY_DETAILS_administrativeArea_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "locality",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "administrativeArea",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_FACILITY_DETAILS_administrativeArea_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "label": "HFREFERRAL_FACILITY_DETAILS_dateOfEvaluation_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "dateOfEvaluation",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": true,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_FACILITY_DETAILS_dateOfEvaluation_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "dynamic",
+                                        "enums": [],
+                                        "label": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "evaluationFacility",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": false,
+                                                "message": "HFREFERRAL_FACILITY_DETAILS_evaluationFacility_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_FACILITY_DETAILS_hfCoordinator_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "hfCoordinator",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "HFREFERRAL_FACILITY_DETAILS_ACTION_LABEL",
+                                "description": "HFREFERRAL_FACILITY_DETAILS_DESCRIPTION"
+                            },
+                            {
+                                "page": "referralDetails",
+                                "type": "object",
+                                "label": "HFREFERRAL_REFERRAL_DETAILS_HEADING",
+                                "order": 3,
+                                "navigateTo": {
+                                    "name": "ReferralReconAcknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_referralCycle_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "custom",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "referralCycle",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": false,
+                                                "message": "HFREFERRAL_REFERRAL_DETAILS_referralCycle_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_nameOfChild_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "nameOfChild",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_REFERRAL_DETAILS_nameOfChild_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_beneficiaryId_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "beneficiaryId",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_referralCode_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "referralCode",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_LABEL",
+                                        "order": 5,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "ageInMonths",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_REFERRAL_DETAILS_ageInMonths_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "OTHER",
+                                                "name": "OTHER"
+                                            },
+                                            {
+                                                "code": "FEMALE",
+                                                "name": "FEMALE"
+                                            },
+                                            {
+                                                "code": "MALE",
+                                                "name": "MALE"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_gender_LABEL",
+                                        "order": 6,
+                                        "value": "",
+                                        "format": "dropdown",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "gender",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "common-masters.GenderType",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_REFERRAL_DETAILS_gender_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_REFERRAL_DETAILS_referralReason_LABEL",
+                                        "order": 7,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "referralReason",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "HCM.REFERRAL_REASONS",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_REFERRAL_DETAILS_referralReason_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "HFREFERRAL_REFERRAL_DETAILS_ACTION_LABEL",
+                                "description": "HFREFERRAL_REFERRAL_DETAILS_DESCRIPTION",
+                                "conditionalNavigateTo": [
+                                    {
+                                        "condition": "referralDetails.referralReason==DRUG_SE_CC",
+                                        "navigateTo": {
+                                            "name": "sideEffectFromCurrentCycle",
+                                            "type": "form"
+                                        }
+                                    },
+                                    {
+                                        "condition": "referralDetails.referralReason==DRUG_SE_PC",
+                                        "navigateTo": {
+                                            "name": "sideEffectFromPreviousCycle",
+                                            "type": "form"
+                                        }
+                                    },
+                                    {
+                                        "condition": "referralDetails.referralReason==FEVER",
+                                        "navigateTo": {
+                                            "name": "sideEffectFever",
+                                            "type": "form"
+                                        }
+                                    },
+                                    {
+                                        "condition": "referralDetails.referralReason==SICK",
+                                        "navigateTo": {
+                                            "name": "sideEffectSick",
+                                            "type": "form"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "page": "sideEffectFromCurrentCycle",
+                                "type": "object",
+                                "label": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_HEADING",
+                                "order": 4.1,
+                                "navigateTo": {
+                                    "name": "ReferralReconAcknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SIDE_EFFECTQ1_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SIDE_EFFECTQ1_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sideEffectQ1",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ1_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SIDE_EFFECTQ2_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SIDE_EFFECTQ2_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sideEffectQ2",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ2_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SIDE_EFFECTQ3_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SIDE_EFFECTQ3_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sideEffectQ3",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_sideEffectQ3_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_ACTION_LABEL",
+                                "description": "HFREFERRAL_SIDEEFFECTFROMCURRENTCYCLE_DESCRIPTION"
+                            },
+                            {
+                                "page": "sideEffectFromPreviousCycle",
+                                "type": "object",
+                                "label": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_HEADING",
+                                "order": 4.2,
+                                "navigateTo": {
+                                    "name": "ReferralReconAcknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SIDE_EFFECT_PREQ1_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SIDE_EFFECT_PREQ1_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sideEffectPQ1",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ1_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SIDE_EFFECT_PREQ2_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SIDE_EFFECT_PREQ2_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sideEffectPQ2",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ2_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SIDE_EFFECT_PREQ3_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SIDE_EFFECT_PREQ3_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sideEffectPQ3",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_sideEffectPQ3_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_ACTION_LABEL",
+                                "description": "HFREFERRAL_SIDEEFFECTFROMPREVIOUSCYCLE_DESCRIPTION"
+                            },
+                            {
+                                "page": "sideEffectFever",
+                                "type": "object",
+                                "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_HEADING",
+                                "order": 4.3,
+                                "navigateTo": {
+                                    "name": "ReferralReconAcknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "FEVERQ1_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "FEVERQ1_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "feverQ1",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ1_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "POSITIVE",
+                                                "name": "FEVERQ2_POSITIVE"
+                                            },
+                                            {
+                                                "code": "NEGATIVE",
+                                                "name": "FEVERQ2_NEGATIVE"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "feverQ2",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ2_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectFever.feverQ1==YES"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "FEVERQ3_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "FEVERQ2_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "feverQ3",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ3_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectFever.feverQ2==NEGATIVE"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "FEVERQ4_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "FEVERQ4_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "feverQ4",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ4_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectFever.feverQ2==POSITIVE"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "FEVERQ5_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "FEVERQ5_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_LABEL",
+                                        "order": 5,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "feverQ5",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ5_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectFever.feverQ2==POSITIVE"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_LABEL",
+                                        "order": 6,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "feverQ6",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMFEVER_feverQ6_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectFever.feverQ5==YES"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "actionLabel": "HFREFERRAL_SIDEEFFECTFROMFEVER_ACTION_LABEL",
+                                "description": "HFREFERRAL_SIDEEFFECTFROMFEVER_DESCRIPTION"
+                            },
+                            {
+                                "page": "sideEffectSick",
+                                "type": "object",
+                                "label": "HFREFERRAL_SIDEEFFECTFROMSICK_HEADING",
+                                "order": 4.4,
+                                "navigateTo": {
+                                    "name": "ReferralReconAcknowledgement",
+                                    "type": "template"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SICKQ1_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SICKQ1_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sickQ1",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ1_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sickQ4",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ4_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectSick.sickQ1==YES"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SICKQ2_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SICKQ2_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sickQ2",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ2_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sickQ5",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ5_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false,
+                                        "visibilityCondition": {
+                                            "expression": [
+                                                {
+                                                    "condition": "sideEffectSick.sickQ2==YES"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [
+                                            {
+                                                "code": "YES",
+                                                "name": "SICKQ3_YES"
+                                            },
+                                            {
+                                                "code": "NO",
+                                                "name": "SICKQ3_NO"
+                                            }
+                                        ],
+                                        "label": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_LABEL",
+                                        "order": 5,
+                                        "value": "",
+                                        "format": "radio",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "sickQ3",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "schemaCode": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "HFREFERRAL_SIDEEFFECTFROMSICK_sickQ3_REQUIRED_ERROR"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "HFREFERRAL_SIDEEFFECTFROMSICK_ACTION_LABEL",
+                                "description": "HFREFERRAL_SIDEEFFECTFROMSICK_DESCRIPTION"
+                            }
+                        ],
+                        "project": "MR-DN",
+                        "version": 1,
+                        "disabled": false,
+                        "onAction": [
+                            {
+                                "actionType": "FETCH_TRANSFORMER_CONFIG",
+                                "properties": {
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to fetch config."
+                                            }
+                                        }
+                                    ],
+                                    "configName": "referralCreation"
+                                }
+                            },
+                            {
+                                "actionType": "CREATE_EVENT",
+                                "properties": {
+                                    "entity": "",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Failed to create household."
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "actionType": "NAVIGATION",
+                                "properties": {
+                                    "data": [],
+                                    "name": "referralAcknowledgement",
+                                    "type": "TEMPLATE",
+                                    "onError": [
+                                        {
+                                            "actionType": "SHOW_TOAST",
+                                            "properties": {
+                                                "message": "Navigation failed."
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "isSelected": true,
+                        "screenType": "FORM",
+                        "wrapperConfig": {}
+                    },
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_LABEL",
+                                "format": "panelCard",
+                                "heading": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_LABEL",
+                                "fieldName": "referralSuccess",
+                                "properties": {
+                                    "type": "success"
+                                },
+                                "description": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_DESCRIPTION",
+                                "secondaryAction": {
+                                    "type": "template",
+                                    "label": "REFERRAL_ACKNOWLEDGEMENT_PANEL_CARD_ACTION_LABEL",
+                                    "format": "button",
+                                    "onAction": [
+                                        {
+                                            "actionType": "NAVIGATION",
+                                            "properties": {
+                                                "name": "referralInbox",
+                                                "type": "TEMPLATE"
+                                            }
+                                        }
+                                    ],
+                                    "fieldName": "back"
+                                }
+                            }
+                        ],
+                        "name": "referralAcknowledgement",
+                        "header": [],
+                        "heading": "",
+                        "screenType": "TEMPLATE",
+                        "description": ""
+                    },
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "format": "card",
+                                "children": [
+                                    {
+                                        "data": [
+                                            {
+                                                "key": "REFERRAL_INBOX_NAME",
+                                                "value": "{{0.HFReferralModel.name}}"
+                                            },
+                                            {
+                                                "key": "REFERRAL_INBOX_REFERRAL_SYMPTOM",
+                                                "value": "{{0.HFReferralModel.symptom}}"
+                                            }
+                                        ],
+                                        "type": "template",
+                                        "format": "labelPairList",
+                                        "mandatory": true
+                                    }
+                                ],
+                                "properties": {
+                                    "type": "primary",
+                                    "cardType": "primary"
+                                }
+                            }
+                        ],
+                        "name": "referralOverview",
+                        "footer": [
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_OVERVIEW_PRIMARY_ACTION_LABEL",
+                                "format": "button",
+                                "onAction": [
+                                    {
+                                        "actionType": "BACK_NAVIGATION",
+                                        "properties": {
+                                            "data": [],
+                                            "name": "referralInbox",
+                                            "type": "TEMPLATE"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "backButton",
+                                "properties": {
+                                    "size": "large",
+                                    "type": "primary",
+                                    "mainAxisSize": "max",
+                                    "mainAxisAlignment": "center"
+                                }
+                            }
+                        ],
+                        "header": [
+                            {
+                                "type": "template",
+                                "label": "REFERRAL_OVERVIEW_BACK_BUTTON_LABEL",
+                                "format": "backLink",
+                                "onAction": [
+                                    {
+                                        "actionType": "BACK_NAVIGATION",
+                                        "properties": {
+                                            "name": "referralInbox",
+                                            "type": "TEMPLATE"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "heading": "REFERRAL_OVERVIEW_HEADING",
+                        "screenType": "TEMPLATE",
+                        "description": "REFERRAL_OVERVIEW_DESCRIPTION",
+                        "initActions": [
+                            {
+                                "actionType": "SEARCH_EVENT",
+                                "properties": {
+                                    "data": [
+                                        {
+                                            "key": "clientReferenceId",
+                                            "value": "{{navigation.clientReferenceId}}",
+                                            "operation": "equals"
+                                        }
+                                    ],
+                                    "name": "hFReferral",
+                                    "type": "SEARCH_EVENT"
+                                }
+                            }
+                        ],
+                        "wrapperConfig": {
+                            "filters": [],
+                            "relations": [],
+                            "rootEntity": "HFReferralModel",
+                            "wrapperName": "hFReferral",
+                            "searchConfig": {
+                                "select": [
+                                    "hFReferral"
+                                ],
+                                "primary": "hFReferral"
+                            }
+                        }
+                    }
+                ],
+                "order": 3,
+                "active": true,
+                "project": "MR-DN",
+                "version": 1,
+                "disabled": false,
+                "isSelected": true,
+                "initialPage": "referralInbox"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1764240389473,
+                "lastModifiedTime": 1764845393988
+            }
+        }

@@ -1,0 +1,105 @@
+[
+  {
+    "campaignType": "POLIO",
+    "beneficiaries": [
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_POLIO_AGE"
+        ],
+        "beneficiaryType": "INDIVIDUAL"
+      }
+    ]
+  },
+  {
+    "campaignType": "Bednets",
+    "beneficiaries": [
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET"
+        ],
+        "beneficiaryType": "INDIVIDUAL"
+      },
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_2"
+        ],
+        "beneficiaryType": "HOUSEHOLD"
+      }
+    ]
+  },
+  {
+    "campaignType": "MR-DN",
+    "beneficiaries": [
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11",
+          "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59"
+        ],
+        "beneficiaryType": "INDIVIDUAL"
+      },
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_3"
+        ],
+        "beneficiaryType": "HOUSEHOLD"
+      },
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_4"
+        ],
+        "beneficiaryType": "PRODUCT"
+      }
+    ]
+  },
+  {
+    "campaignType": "IRS-mz",
+    "beneficiaries": [
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_POPULATION"
+        ],
+        "beneficiaryType": "INDIVIDUAL"
+      },
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_ROOM"
+        ],
+        "beneficiaryType": "HOUSEHOLD"
+      }
+    ]
+  },
+  {
+    "campaignType": "LLIN-mz",
+    "beneficiaries": [
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_LLIN_TARGET_POPULATION"
+        ],
+        "beneficiaryType": "INDIVIDUAL"
+      },
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_LLIN"
+        ],
+        "beneficiaryType": "HOUSEHOLD"
+      }
+    ]
+  },
+  {
+    "campaignType": "DEFAULT",
+    "beneficiaries": [
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_INDIVIDUAL"
+        ],
+        "beneficiaryType": "INDIVIDUAL"
+      },
+      {
+        "columns": [
+          "HCM_ADMIN_CONSOLE_TARGET_HOUSEHOLD"
+        ],
+        "beneficiaryType": "HOUSEHOLD"
+      }
+    ]
+  }
+]

@@ -1,0 +1,176 @@
+[
+        {
+            "code": "sortComplaints",
+            "message": "Sort complaints",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "searchComplaints",
+            "message": "Search complaints",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "textArea",
+            "message": "Text area",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "referralCycle",
+            "message": "Referral cycle",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "evaluationFacilityKey",
+            "message": "Facility key",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "ADMINISTRATION_FAILED",
+            "message": "Administartion Failed",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "Filter",
+            "message": "Filter",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "Administrtion Failed",
+            "message": "Administration Failed",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "DISPLAY_LOGIC",
+            "message": "Display Logic",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "NO_LOGIC_ADDED",
+            "message": "No logic added",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "ADD_DISPLAY_LOGIC",
+            "message": "Add Display Logic",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HCM_SELECT_PAGE",
+            "message": "Select page",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HCM_SELECT_FIELD",
+            "message": "Select field",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HCM_COMPARISION_TYPE",
+            "message":"Comparison type",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HCM_SELECT_VALUE",
+            "message": "Enter value",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        }
+        ,{
+            "code": "REMOVE_CONDITION",
+            "message": "Remove Condition",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "ADD_CONDITION",
+            "message": "Add Condition",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "HCM_JOIN_WITH",
+            "message": "Join with",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "AND",
+            "message": "And",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "OR",
+            "message": "Or",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "EQUALS_TO",
+            "message": "Equals to",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "NOT_EQUALS_TO",
+            "message": "Not equals to",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+           {
+            "code": "GREATER_THAN_OR_EQUALS_TO",
+            "message": "Greater than or not equal to",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "LESS_THAN_OR_EQUALS_TO",
+            "message": "Less than or equal to",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "ENTER_VALUE",
+            "message": "Enter value",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICK",
+            "message": "Sick",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVER",
+            "message": "Fever",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "DRUG_SE_PC",
+            "message": "Drug side effect from the previous cycle",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "DRUG_SE_CC",
+            "message": "Drug side effect from the current cycle",
+            "module": "hcm-appconfiguration",
+            "locale": "en_MZ"
+        }
+    ]

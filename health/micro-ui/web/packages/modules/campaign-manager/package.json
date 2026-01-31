@@ -1,0 +1,96 @@
+{
+  "name": "@egovernments/digit-ui-module-campaign-manager",
+  "version": "0.4.1",
+  "description": "Campaign",
+  "license": "MIT",
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "source": "src/Module.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js",
+    "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze",
+    "publish:components": "npm publish --tag console-v0.5"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.62.16",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "react-i18next": "15.0.0",
+    "styled-components": "5.x",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-09",
+    "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
+    "@egovernments/digit-ui-components": "2.0.0-dev-32"
+  },
+  "dependencies": {
+    "@cyntler/react-doc-viewer": "1.10.3",
+    "react-data-table-component": "7.7.0",
+    "@rjsf/core": "5.10.0",
+    "@rjsf/utils": "5.10.0",
+    "@rjsf/validator-ajv8": "5.10.0",
+    "ajv": "8.12.0",
+    "exceljs": "^4.4.0",
+    "geojsonhint": "^2.0.0",
+    "leaflet": "^1.9.4",
+    "proj4": "^2.15.0",
+    "react-date-range": "1.4.0",
+    "react-drag-drop-files": "^2.3.10",
+    "react-hook-form": "6.15.8",
+    "react-select": "5.7.4",
+    "xlsx": "0.17.5",
+    "xlsx-js-style": "^1.2.0",
+    "react-table": "7.7.0",
+    "react-dnd-html5-backend": "16.0.1",
+    "react-dnd": "16.0.1",
+    "react-qr-code": "2.0.15",
+    "@reduxjs/toolkit": "^1.9.7",
+    "react-redux": "^8.1.3"
+  },
+  "sideEffects": false,
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": "JaganKumar <jagan.kumar@egov.org.in>",
+  "keywords": [
+    "digit",
+    "egov",
+    "dpg",
+    "digit-ui",
+    "core",
+    "workbench",
+    "campaign",
+    "Campaign"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@tanstack/react-query": "^5.62.16",
+    "babel-loader": "^9.1.3",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "core-js": "^3.33.0",
+    "cross-env": "7.0.3",
+    "css-loader": "^6.8.1",
+    "lint-staged": "12.3.7",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "@types/react-redux": "^7.1.33"
+  }
+}

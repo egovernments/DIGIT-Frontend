@@ -1,0 +1,91 @@
+[
+  {
+    "module": "campaign",
+    "helpContent": [
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/proximity.png",
+        "order": 0,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_START_CONFIG_FORMS",
+        "iconBackground": "#F6F0E8"
+      },
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/mapView.png",
+        "order": 1,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_HOW_TO_CONFIG_MAPVIEW",
+        "iconBackground": "#F6EBE8"
+      },
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/qrScanner.png",
+        "order": 2,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_PREVIEW_APPLICATIONS",
+        "iconBackground": "#F1F6E8"
+      },
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/proximity.png",
+        "order": 3,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_OFFLINE_QR_SCANNER",
+        "iconBackground": "#E8F4F6"
+      },
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/qrScanner.png",
+        "order": 4,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_OFFLINE_DATA_SHARING",
+        "iconBackground": "#F1F6E8"
+      },
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/mapView.png",
+        "order": 5,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_HOW_TO_CONFIG_LOCATIONTAG",
+        "iconBackground": "#F6EBE8"
+      },
+      {
+        "url": "https://youtu.be/_yxD9Wjqkfw?feature=shared",
+        "icon": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/mapView.png",
+        "order": 6,
+        "pages": [
+          "app-modules",
+          "app-features",
+          "app-configuration-redesign"
+        ],
+        "title": "CMN_CAMP_HOW_TO_CONFIG_ADMIN_AREA",
+        "iconBackground": "#F6EBE8"
+      }
+    ]
+  }
+]

@@ -1,0 +1,240 @@
+ {
+            "id": "20cc1f88-0655-4d36-b65d-4e4b9c8cc8ea",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.NewBaseAppConfig",
+            "uniqueIdentifier": "APP_PERMISSION_CONFIG.MR-DN",
+            "data": {
+                "name": "APP_PERMISSION_CONFIG",
+                "flows": [
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+                                "format": "menu_card",
+                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RECEIPT_HEADING",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "stockEntryType",
+                                                    "value": "RECEIPT"
+                                                },
+                                                {
+                                                    "key": "transactionType",
+                                                    "value": "RECEIVED"
+                                                },
+                                                {
+                                                    "key": "mrnNumber",
+                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                                                }
+                                            ],
+                                            "name": "RECORDSTOCK",
+                                            "type": "FORM"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "stockReceivedMenuCard",
+                                "mandatory": true,
+                                "properties": {
+                                    "icon": "CheckCircle"
+                                },
+                                "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RECEIVED_AT_THE_WAREHOUSE_DESCRIPTION"
+                            },
+                            {
+                                "type": "template",
+                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+                                "format": "menu_card",
+                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_ISSUED_HEADING",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "stockEntryType",
+                                                    "value": "ISSUED"
+                                                },
+                                                {
+                                                    "key": "transactionType",
+                                                    "value": "DISPATCHED"
+                                                },
+                                                {
+                                                    "key": "mrnNumber",
+                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                                                }
+                                            ],
+                                            "name": "RECORDSTOCK",
+                                            "type": "FORM"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "stockIssuedMenuCard",
+                                "properties": {
+                                    "icon": "CheckCircle"
+                                },
+                                "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_SENT_OUT_FROM_THE_WAREHOUSE_DESCRIPTION"
+                            },
+                            {
+                                "type": "template",
+                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+                                "format": "menu_card",
+                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_RETURNED_HEADING",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "stockEntryType",
+                                                    "value": "RETURNED"
+                                                },
+                                                {
+                                                    "key": "transactionType",
+                                                    "value": "RECEIVED"
+                                                },
+                                                {
+                                                    "key": "mrnNumber",
+                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                                                }
+                                            ],
+                                            "name": "RECORDSTOCK",
+                                            "type": "FORM"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "stockReturnedMenuCard",
+                                "properties": {
+                                    "icon": "CheckCircle"
+                                },
+                                "description": "APP_CONFIG_INVENTORY_manageStock_CREATE_RECORDS_FOR_STOCK_RETURNED_TO_THE_WAREHOUSE_DESCRIPTION"
+                            },
+                            {
+                                "type": "template",
+                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
+                                "format": "menu_card",
+                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_DAMAGED_HEADING",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "stockEntryType",
+                                                    "value": "DAMAGED"
+                                                },
+                                                {
+                                                    "key": "transactionType",
+                                                    "value": "DISPATCHED"
+                                                },
+                                                {
+                                                    "key": "mrnNumber",
+                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                                                }
+                                            ],
+                                            "name": "RECORDSTOCK",
+                                            "type": "FORM"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "stockDamagedMenuCard",
+                                "properties": {
+                                    "icon": "CheckCircle"
+                                },
+                                "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_DAMAGED_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION"
+                            },
+                            {
+                                "type": "template",
+                                "label": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+                                "format": "menu_card",
+                                "heading": "APP_CONFIG_INVENTORY_manageStock_RECORD_STOCK_LOSS_HEADING",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [
+                                                {
+                                                    "key": "stockEntryType",
+                                                    "value": "LOSS"
+                                                },
+                                                {
+                                                    "key": "transactionType",
+                                                    "value": "DISPATCHED"
+                                                },
+                                                {
+                                                    "key": "mrnNumber",
+                                                    "value": "{{fn:generateUniqueMaterialNoteNumber()}}"
+                                                }
+                                            ],
+                                            "name": "RECORDSTOCK",
+                                            "type": "FORM"
+                                        }
+                                    }
+                                ],
+                                "fieldName": "stockLostMenuCard",
+                                "properties": {
+                                    "icon": "CheckCircle"
+                                },
+                                "description": "APP_CONFIG_INVENTORY_manageStock_RECORD_THE_LIST_OF_RESOURCES_LOST_DURING_CAMPAIGN_OPERATIONS_DESCRIPTION"
+                            }
+                        ],
+                        "name": "appPermissionConfig",
+                        "order": 1,
+                        "footer": [
+                            {
+                                "type": "template",
+                                "label": "APP_PERMISSION_CONFIG_ALLOW_PERMISSION",
+                                "format": "button",
+                                "onAction": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "data": [],
+                                            "name": "viewTransaction",
+                                            "type": "TEMPLATE"
+                                        }
+                                    }
+                                ],
+                                "properties": {
+                                    "size": "large",
+                                    "type": "primary",
+                                    "mainAxisSize": "max",
+                                    "mainAxisAlignment": "center"
+                                }
+                            }
+                        ],
+                        "header": [
+                            {
+                                "label": "APP_CONFIG_INVENTORY_manageStock_BACK_BUTTON_LABEL",
+                                "format": "backLink",
+                                "onAction": [
+                                    {
+                                        "actionType": "BACK_NAVIGATION",
+                                        "properties": {}
+                                    }
+                                ]
+                            }
+                        ],
+                        "heading": "APP_PERMISSION_CONFIG_HEADING",
+                        "navigateTo": null,
+                        "screenType": "TEMPLATE"
+                    }
+                ],
+                "order": 4,
+                "active": false,
+                "project": "MR-DN",
+                "version": 1,
+                "disabled": false,
+                "isSelected": true,
+                "initialPage": "appPermissionConfig"
+            },
+            "isActive": false,
+            "auditDetails": {
+                "createdBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1764310027170,
+                "lastModifiedTime": 1764319054639
+            }
+        }

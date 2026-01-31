@@ -1,0 +1,32 @@
+import React from "react";
+import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
+
+export const SpatialDocument = ({ className, width = "24", height = "24", style = {}, fill = COLOR_FILL, onClick = null }) => {
+  return (
+    <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 47 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M31.2526 29.7083V28.4167H15.7526V29.7083C15.7526 30.4213 15.1739 31 14.4609 31H13.1693V46.5H14.4609C15.1739 46.5 15.7526 47.0787 15.7526 47.7917V49.0833H31.2526V47.7917C31.2526 47.0787 31.8313 46.5 32.5443 46.5H33.8359V31H32.5443C31.8313 31 31.2526 30.4213 31.2526 29.7083ZM45.4609 0H17.0443C16.9848 0 16.9358 0.0258333 16.8789 0.0335833C16.8195 0.0413333 16.7704 0.0516667 16.7136 0.0671667C16.4914 0.126583 16.2847 0.222167 16.1272 0.37975L0.62975 15.8772C0.472167 16.0347 0.376583 16.2414 0.317167 16.461C0.301667 16.5178 0.291333 16.5695 0.283583 16.6263C0.275833 16.6832 0.25 16.7323 0.25 16.7917V60.7083C0.25 61.4213 0.828667 62 1.54167 62H45.4583C46.1713 62 46.75 61.4213 46.75 60.7083V1.29167C46.7526 0.578667 46.1739 0 45.4609 0ZM15.7526 4.40975V15.5H4.66233L15.7526 4.40975ZM39.0026 29.7083C39.0026 30.4213 38.4239 31 37.7109 31H36.4193V46.5H37.7109C38.4239 46.5 39.0026 47.0787 39.0026 47.7917V52.9583C39.0026 53.6713 38.4239 54.25 37.7109 54.25H32.5443C31.8313 54.25 31.2526 53.6713 31.2526 52.9583V51.6667H15.7526V52.9583C15.7526 53.6713 15.1739 54.25 14.4609 54.25H9.29425C8.58125 54.25 8.00258 53.6713 8.00258 52.9583V47.7917C8.00258 47.0787 8.58125 46.5 9.29425 46.5H10.5859V31H9.29425C8.58125 31 8.00258 30.4213 8.00258 29.7083V24.5417C8.00258 23.8287 8.58125 23.25 9.29425 23.25H14.4609C15.1739 23.25 15.7526 23.8287 15.7526 24.5417V25.8333H31.2526V24.5417C31.2526 23.8287 31.8313 23.25 32.5443 23.25H37.7109C38.4239 23.25 39.0026 23.8287 39.0026 24.5417V29.7083Z"
+        fill={fill}
+      />
+    </svg>
+  );
+};
+
+
+SpatialDocument.propTypes = {
+  /** custom width of the svg icon */
+  width: PropTypes.string,
+  /** custom height of the svg icon */
+  height: PropTypes.string,
+  /** custom colour of the svg icon */
+  fill: PropTypes.string,
+  /** custom class of the svg icon */
+  className: PropTypes.string,
+  /** custom style of the svg icon */
+  style: PropTypes.object,
+  /** Click Event handler when icon is clicked */
+  onClick: PropTypes.func,
+};
