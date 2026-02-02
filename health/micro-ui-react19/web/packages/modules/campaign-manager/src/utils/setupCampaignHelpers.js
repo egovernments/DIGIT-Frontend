@@ -86,38 +86,89 @@ export const cycleDataRemap=(data)=> {
     const parseConditionAndCreateRules = (condition, ruleKey, products ,deliveryStrategy) => {
       const conditionParts = condition.split("and").map((part) => part.trim());
       const attributes = [];
-  
-      conditionParts.forEach((part) => {
-        const parts = part.split(" ").filter(Boolean);
-  
-        // Handle "IN_BETWEEN" operator
-        if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-          const fromValue = parts[0];
-          const toValue = parts[4];
-          attributes.push({
-            key: attributes.length + 1,
-            operator: { code: operatorMapping["IN_BETWEEN"] },
-            attribute: { code: parts[2] },
-            fromValue,
-            toValue,
-          });
-        } else {
-       
-          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-          if (match) {
-            const attributeCode = match[1].trim();
-            const operatorSymbol = match[2].trim();
-            const value = match[3].trim();
-            attributes.push({
-              key: attributes.length + 1,
-              value,
-              operator: { code: operatorMapping[operatorSymbol] },
-              attribute: { code: attributeCode },
-            });
+
+      // Track processed indices to skip parts that are part of INBETWEEN
+      const processedIndices = new Set();
+
+      for (let i = 0; i < conditionParts.length; i++) {
+        if (processedIndices.has(i)) continue;
+
+        const part = conditionParts[i];
+
+        // Simple INBETWEEN detection: check if attribute is between two <= or < operators
+        // Split by <= or < and check if we have 3 parts (fromValue, attribute, toValue)
+        const operatorPattern = /(<=|<)/g;
+        const operators = part.match(operatorPattern);
+
+        if (operators && operators.length === 2) {
+          // Split by the operators to get the parts
+          const splitParts = part.split(/<=|</).map(p => p.trim());
+
+          if (splitParts.length === 3) {
+            const fromValue = splitParts[0];
+            const attributeCode = splitParts[1];
+            const toValue = splitParts[2];
+
+            // Check if fromValue and toValue are numbers and attributeCode is not a number
+            if (/^\d+(\.\d+)?$/.test(fromValue) && /^\d+(\.\d+)?$/.test(toValue) && !/^\d+(\.\d+)?$/.test(attributeCode)) {
+              attributes.push({
+                key: attributes.length + 1,
+                operator: { code: operatorMapping["IN_BETWEEN"] },
+                attribute: { code: attributeCode },
+                fromValue,
+                toValue,
+              });
+              continue;
+            }
           }
         }
-      });
-  
+
+        // Handle "IN_BETWEEN" as consecutive parts: "3<=age" and "age<=11"
+        if (i + 1 < conditionParts.length) {
+          const currentPart = part;
+          const nextPart = conditionParts[i + 1];
+
+          // Match pattern like "3<=age" (value<=attribute)
+          const lowerBoundMatch = currentPart.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(.+)$/);
+          // Match pattern like "age<=11" (attribute<=value)
+          const upperBoundMatch = nextPart.match(/^(.+?)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
+
+          if (lowerBoundMatch && upperBoundMatch) {
+            const lowerAttr = lowerBoundMatch[3].trim().toLowerCase();
+            const upperAttr = upperBoundMatch[1].trim().toLowerCase();
+
+            // Check if both parts reference the same attribute
+            if (lowerAttr === upperAttr) {
+              const fromValue = lowerBoundMatch[1];
+              const toValue = upperBoundMatch[3];
+              attributes.push({
+                key: attributes.length + 1,
+                operator: { code: operatorMapping["IN_BETWEEN"] },
+                attribute: { code: lowerBoundMatch[3].trim() },
+                fromValue,
+                toValue,
+              });
+              processedIndices.add(i + 1); // Skip the next part as it's part of INBETWEEN
+              continue;
+            }
+          }
+        }
+
+        // Regular condition: "attribute <= value" or "attribute >= value" etc.
+        const match = part.match(/^(.+?)\s*(<=|>=|<|>|==|!=)\s*(.+)$/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
+      }
+
       return [{
         ruleKey: ruleKey + 1,
         delivery: {},
@@ -204,9 +255,9 @@ export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
 
       // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
       if (type === "create") {
-        return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedToValue}`;
+        return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<=${roundedToValue}`;
       } else {
-        return `${roundedFromValue} <= ${attr.attribute.code} < ${roundedToValue}`;
+        return `${roundedFromValue} <= ${attr.attribute.code} <= ${roundedToValue}`;
       }
     } else {
 
