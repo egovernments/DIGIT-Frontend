@@ -1139,7 +1139,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               statuses: ["completed"],
               limit: 5,
               offset: 0,
-              locale:Digit?.Utils?.getDefaultLanguage(),
+              locale:Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage(),
               referenceTypes : ["campaign"],
             },
           },
