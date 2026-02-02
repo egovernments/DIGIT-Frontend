@@ -97,7 +97,7 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
             <Button
               label={t("USE_TEMPLATE")}
               title={t("USE_TEMPLATE")}
-              id={`campaign-use-templte-action-${rowData?.data?.id}`}
+              id={`campaign-use-template-action-${rowData?.data?.id}`}
               variation="secondary"
               size="large"
               className={"use-template-button"}
