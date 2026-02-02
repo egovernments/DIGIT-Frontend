@@ -136,8 +136,9 @@ const SelectionCard = ({ field, t, props }) => {
     else {
       options = generateFallbackOptions(selectionField?.label || selectionField?.fieldName);
     }
-  } else if (hasValidMdmsData) {
-    options = mdmsData;
+  } else if (selectionField?.isMdms) {
+    // If isMdms is true, only use MDMS data. If schemaCode is invalid, show empty options.
+    options = hasValidMdmsData ? mdmsData : [];
   } else if (hasValidEnums) {
     options = selectionField.enums.filter((o) => o.isActive !== false);
   } else if (hasValidDropdownOptions) {
