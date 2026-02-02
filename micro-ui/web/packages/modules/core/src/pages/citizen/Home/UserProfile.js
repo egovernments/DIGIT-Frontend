@@ -136,9 +136,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
     const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+    const useAnIndividual = window?.globalConfigs?.getConfig("USE_AN_INDIVIDUAL");
 
     if (uuid) {
-      if (individualServicePath) {
+      if ( useAnIndividual && individualServicePath) {
         // New API using health-individual
         const response = await Digit.CustomService.getResponse({
           url: `${individualServicePath}/v1/_search`,
