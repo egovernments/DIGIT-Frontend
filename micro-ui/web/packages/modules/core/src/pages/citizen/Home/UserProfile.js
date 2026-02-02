@@ -85,6 +85,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const isMobile = window.Digit.Utils.browser.isMobile();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
+  const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+  const useAnIndividual = window?.globalConfigs?.getConfig("USE_INDIVIDUAL_MODEL");
+
   const mapConfigToRegExp = (config) => {
     return (
       config?.UserProfileValidationConfig?.[0] &&
@@ -135,8 +138,6 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
-    const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
-    const useAnIndividual = window?.globalConfigs?.getConfig("USE_AN_INDIVIDUAL");
 
     if (uuid) {
       if ( useAnIndividual && individualServicePath) {
@@ -372,9 +373,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       }
 
       let responseInfo;
-      const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
 
-      if (individualServicePath) {
+      if (useAnIndividual && individualServicePath) {
         // Build Individual object dynamically
         const individualPayload = {
           ...userDetails,

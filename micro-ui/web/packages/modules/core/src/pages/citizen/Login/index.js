@@ -36,7 +36,7 @@ const getFromLocation = (state, searchParams) => {
 
 const Login = ({ stateCode, isUserRegistered = true }) => {
   // Check if individual should be used for login
-  const useAnIndividual = window?.globalConfigs?.getConfig("USE_AN_INDIVIDUAL");
+  const useAnIndividual = window?.globalConfigs?.getConfig("USE_INDIVIDUAL_MODEL");
   const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
 
   // If useAnIndividual exists, use IndividualLogin component
