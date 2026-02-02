@@ -292,6 +292,7 @@ const transformFooter = (footer) => {
  */
 const transformFormPage = (pageData) => {
   const page = {
+    ...pageData,
     page: pageData.page,
     type: pageData.type,
     label: pageData.heading,
@@ -300,8 +301,7 @@ const transformFormPage = (pageData) => {
     order: pageData.order,
     preventScreenCapture: pageData.preventScreenCapture || false,
     submitCondition: pageData.submitCondition || null,
-    properties: transformFormProperties(pageData.body),
-    ...pageData
+    properties: transformFormProperties(pageData.body)
 
   };
 
@@ -346,24 +346,25 @@ const transformFormProperties = (body) => {
         // Destructure to exclude validations from spread (we build our own)
         const { validations: _existingValidations, ...restField } = field;
         const property = {
+          // Spread restField FIRST so explicit transformations below take precedence
+          ...restField,
           type: field.type,
           label: field.label,
           order: field.order,
           value: field.value !== undefined ? field.value : "",
           format: field.format,
           hidden: field.hidden !== undefined ? field.hidden : false,
-          tooltip:  typeof field.tooltip === "string" ? field.tooltip : "",
+          tooltip: typeof field.tooltip === "string" ? field.tooltip : "",
           helpText: typeof field.helpText === "string" ? field.helpText : "",
           infoText: typeof field.infoText === "string" ? field.infoText : "",
           readOnly: field.readOnly !== undefined ? field.readOnly : false,
           fieldName: field?.fieldName || field?.jsonPath,
           deleteFlag: field.deleteFlag !== undefined ? field.deleteFlag : false,
-          innerLabel: field.innerLabel || "",
+          innerLabel: typeof field.innerLabel === "string" ? field.innerLabel : "",
           systemDate: field.systemDate !== undefined ? field.systemDate : false,
           validations: buildValidations(field),
           errorMessage: field.errorMessage || "",
           mandatory: field?.mandatory ? field?.mandatory : false,
-          ...restField,
         };
 
 
