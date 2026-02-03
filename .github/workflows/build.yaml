@@ -22,6 +22,8 @@ on:
           - core-digit-ui
           - dss-ui
           - hrms-ui
+          - pgr-ui
+          - dashboard-ui
           - karnataka-ui
           - meghalaya-ui
 
