@@ -1,0 +1,1140 @@
+[
+        {
+            "id": "6c0a9e43-3b3b-498b-ac09-d7ad6c852d23",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-Schisto",
+            "data": {
+                "title": "target-Schisto",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_1",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age less than 5 and height less than 94",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age equal or more than 5 and height equal or more than 94",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "Total Households",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1757832119283,
+                "lastModifiedTime": 1757832119283
+            }
+        },
+        {
+            "id": "f8fbd514-9a36-4edf-b54d-efc063e17c8b",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-Oncho",
+            "data": {
+                "title": "target-Oncho",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_1",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age less than 5 and height less than 94",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age equal or more than 5 and height equal or more than 94",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "Total Households",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1757832083261,
+                "lastModifiedTime": 1757832083261
+            }
+        },
+        {
+            "id": "50d7a84d-b435-4f4b-aac8-9245f4c9cbc8",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-NTD1",
+            "data": {
+                "title": "target-NTD1",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_1",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age less than 5 and height less than 94",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - for age equal or more than 5 and height equal or more than 94",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "Total Households",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756978231817,
+                "lastModifiedTime": 1757484530396
+            }
+        },
+        {
+            "id": "c8b8ad2b-397f-492c-80e7-43f239551854",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "user-microplan-ingestion",
+            "data": {
+                "title": "user-microplan-ingestion",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "enumProperties": [
+                        {
+                            "enum": [
+                                "Temporary",
+                                "Permanent"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_USER_EMPLOYMENT_TYPE",
+                            "color": "#93c47d",
+                            "uniqueKey": "userEmployementType",
+                            "isRequired": true,
+                            "description": "Employement Type",
+                            "orderNumber": 4,
+                            "errorMessage": "Employment Type is missing or invalid.",
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Active",
+                                "Inactive"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_USER_USAGE",
+                            "color": "#93c47d",
+                            "uniqueKey": "userUsage",
+                            "isRequired": true,
+                            "description": "User Usage",
+                            "orderNumber": 5,
+                            "errorMessage": "User usage is missing or invalid."
+                        }
+                    ],
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 9999999999,
+                            "minimum": 1000000000,
+                            "pattern": "^[0-9]{10}$",
+                            "isUnique": true,
+                            "uniqueKey": "userPhoneNumber",
+                            "isRequired": true,
+                            "description": "Phone Number",
+                            "orderNumber": 2,
+                            "errorMessage": "Phone Number must be a 10-digit number.",
+                            "freezeColumnIfFilled": true
+                        }
+                    ],
+                    "stringProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_USER_ROLE",
+                            "color": "#93c47d",
+                            "prefix": "ACCESSCONTROL_ROLES_ROLES_",
+                            "uniqueKey": "userRoles",
+                            "hideColumn": true,
+                            "description": "User Role",
+                            "orderNumber": 3,
+                            "errorMessage": "At least one user role is required.",
+                            "freezeTillData": true,
+                            "multiSelectDetails": {
+                                "enum": [
+                                    "DISTRIBUTOR",
+                                    "DASHBOARD_VIEWER",
+                                    "HEALTH_FACILITY_WORKER",
+                                    "WAREHOUSE_MANAGER",
+                                    "NATIONAL_SUPERVISOR",
+                                    "PROVINCIAL_SUPERVISOR",
+                                    "DISTRICT_SUPERVISOR",
+                                    "FIELD_SUPERVISOR",
+                                    "REGISTRAR",
+                                    "SUPERVISOR",
+                                    "HELPDESK_USER",
+                                    "MONITOR_LOCAL",
+                                    "LOGISTICAL_OFFICER",
+                                    "TEAM_SUPERVISOR"
+                                ],
+                                "maxSelections": 5,
+                                "minSelections": 1
+                            },
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_USER_NAME",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "pattern": "^[A-Za-z0-9 \\-]{2,128}$",
+                            "maxLength": 128,
+                            "minLength": 2,
+                            "uniqueKey": "userPrefferedName",
+                            "isRequired": true,
+                            "description": "User Name",
+                            "orderNumber": 1,
+                            "errorMessage": "Name must be alphanumeric, can include spaces and hyphens, and be between 2 to 128 characters.",
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "UserService Uuids",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "uniqueKey": "userServiceUuids",
+                            "hideColumn": true,
+                            "description": "uuid",
+                            "orderNumber": 11,
+                            "freezeColumn": true
+                        },
+                        {
+                            "name": "UserName",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "pattern": "^[a-zA-Z][a-zA-Z0-9._-]{2,29}$",
+                            "isUnique": true,
+                            "uniqueKey": "userUserName",
+                            "description": "user name",
+                            "orderNumber": 7,
+                            "errorMessage": "Username must be 3–30 characters long, start with a letter, and contain only letters, numbers, dots (.), underscores (_), or hyphens (-).",
+                            "freezeColumn": false,
+                            "freezeTillData": true,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "Password",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$",
+                            "minLength": 8,
+                            "uniqueKey": "userPassword",
+                            "hideColumn": true,
+                            "description": "password",
+                            "orderNumber": 8,
+                            "freezeColumn": true,
+                            "showInProcessed": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756807917671,
+                "lastModifiedTime": 1760512783583
+            }
+        },
+        {
+            "id": "698b32b4-d2ea-476a-b91e-ac0a62a3fd96",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "facility-microplan-ingestion",
+            "data": {
+                "title": "facility-microplan-ingestion",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "enumProperties": [
+                        {
+                            "enum": [
+                                "Warehouse",
+                                "Health Facility",
+                                "Storing Resource"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_TYPE",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityType",
+                            "isRequired": true,
+                            "description": "Facility type",
+                            "orderNumber": 3,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Temporary",
+                                "Permanent"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_STATUS",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityStatus",
+                            "isRequired": true,
+                            "description": "Facility status",
+                            "orderNumber": 4,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Active",
+                                "Inactive"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_USAGE",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityUsage",
+                            "isRequired": true,
+                            "description": "Facility usage",
+                            "orderNumber": 7
+                        }
+                    ],
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 10000000,
+                            "minimum": 1,
+                            "uniqueKey": "facilityCapacity",
+                            "isRequired": true,
+                            "description": "Capacity",
+                            "orderNumber": 5,
+                            "errorMessage": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_ERROR",
+                            "freezeColumnIfFilled": true
+                        }
+                    ],
+                    "stringProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_NAME",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "isUnique": true,
+                            "maxLength": 200,
+                            "minLength": 2,
+                            "uniqueKey": "facilityName",
+                            "isRequired": true,
+                            "description": "Facility Name",
+                            "orderNumber": 2,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_CODE",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "isUnique": true,
+                            "maxLength": 2000,
+                            "minLength": 1,
+                            "uniqueKey": "facilityCode",
+                            "hideColumn": true,
+                            "description": "Facility Code",
+                            "orderNumber": 1
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756807863671,
+                "lastModifiedTime": 1759729567619
+            }
+        },
+        {
+            "id": "d0e358d0-dcd9-439a-8340-14da8c5f2162",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-DEFAULT",
+            "data": {
+                "title": "target-DEFAULT",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_INDIVIDUAL",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Total population",
+                            "orderNumber": 1,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_HOUSEHOLD",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": true,
+                            "description": "Total rooms",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1754984293433,
+                "lastModifiedTime": 1754984293433
+            }
+        },
+        {
+            "id": "1dfe25c3-94da-4bf3-933b-4cd85b26a6ca",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-IRS-mz",
+            "data": {
+                "title": "target-IRS-mz",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_POPULATION",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Total population",
+                            "orderNumber": 1,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_IRS_TOTAL_ROOM",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": true,
+                            "description": "Total rooms",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1754984274399,
+                "lastModifiedTime": 1754984274399
+            }
+        },
+        {
+            "id": "00b04748-a48b-4e4d-adfb-29e52b0c78a5",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-Bednets",
+            "data": {
+                "title": "target-Bednets",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at the Selected Boundary Level",
+                            "orderNumber": 1,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": false,
+                            "description": "Target Population",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": false,
+                            "description": "Number of Bednets to be Distributed",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1751951933714,
+                "lastModifiedTime": 1751951933714
+            }
+        },
+        {
+            "id": "b1828fd4-f482-4795-b98e-7c5092f99247",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "user-readme",
+            "data": {
+                "title": "user-readme",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "stringProperties": [
+                        {
+                            "name": "USERWITHBOUNDARY_README_MAINHEADER",
+                            "type": "string",
+                            "color": "#f25449",
+                            "width": 120,
+                            "wrapText": true,
+                            "uniqueKey": "userReadmeHeader",
+                            "description": "Readme header",
+                            "orderNumber": 1,
+                            "adjustHeight": true,
+                            "freezeColumn": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1750763135547,
+                "lastModifiedTime": 1750763135547
+            }
+        },
+        {
+            "id": "7d5dcbd3-0f87-42b7-a669-c8c03686721b",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "user",
+            "data": {
+                "title": "user",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "enumProperties": [
+                        {
+                            "enum": [
+                                "Temporary",
+                                "Permanent"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_USER_EMPLOYMENT_TYPE",
+                            "color": "#93c47d",
+                            "uniqueKey": "userEmployementType",
+                            "isRequired": true,
+                            "description": "Employement Type",
+                            "orderNumber": 4,
+                            "errorMessage": "Employment Type is missing or invalid.",
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Active",
+                                "Inactive"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_USER_USAGE",
+                            "color": "#93c47d",
+                            "uniqueKey": "userUsage",
+                            "isRequired": true,
+                            "description": "User Usage",
+                            "orderNumber": 5,
+                            "errorMessage": "User usage is missing or invalid."
+                        }
+                    ],
+                    "stringProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_USER_ROLE",
+                            "color": "#93c47d",
+                            "prefix": "ACCESSCONTROL_ROLES_ROLES_",
+                            "uniqueKey": "userRoles",
+                            "hideColumn": true,
+                            "description": "User Role",
+                            "orderNumber": 3,
+                            "errorMessage": "At least one user role is required.",
+                            "freezeTillData": true,
+                            "multiSelectDetails": {
+                                "enum": [
+                                    "DISTRIBUTOR",
+                                    "DASHBOARD_VIEWER",
+                                    "HEALTH_FACILITY_WORKER",
+                                    "WAREHOUSE_MANAGER",
+                                    "NATIONAL_SUPERVISOR",
+                                    "PROVINCIAL_SUPERVISOR",
+                                    "DISTRICT_SUPERVISOR",
+                                    "FIELD_SUPERVISOR",
+                                    "REGISTRAR",
+                                    "SUPERVISOR",
+                                    "HELPDESK_USER",
+                                    "MONITOR_LOCAL",
+                                    "LOGISTICAL_OFFICER",
+                                    "TEAM_SUPERVISOR"
+                                ],
+                                "maxSelections": 5,
+                                "minSelections": 1
+                            },
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "pattern": "^[0-9]{10}$",
+                            "isUnique": true,
+                            "uniqueKey": "userPhoneNumber",
+                            "isRequired": true,
+                            "description": "Phone Number",
+                            "orderNumber": 2,
+                            "errorMessage": "Phone Number must be 10 digits and entered with a leading ' to keep leading zeros (e.g., '0801234567).",
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_USER_NAME",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "pattern": "^[A-Za-z0-9 \\-]{2,128}$",
+                            "uniqueKey": "userPrefferedName",
+                            "isRequired": true,
+                            "description": "User Name",
+                            "orderNumber": 1,
+                            "errorMessage": "Name must be alphanumeric, can include spaces and hyphens, and be between 2 to 128 characters.",
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_MANDATORY",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "uniqueKey": "boundaryCodes",
+                            "isRequired": true,
+                            "description": "Boundary Code (Mandatory)",
+                            "orderNumber": 7,
+                            "errorMessage": "Boundary Code is required and must be a valid string."
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_BOUNDARY_NAME",
+                            "type": "string",
+                            "color": "#93C47D",
+                            "uniqueKey": "boundaryName",
+                            "isRequired": false,
+                            "description": "Boundary Name",
+                            "orderNumber": 12
+                        },
+                        {
+                            "name": "#status#",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "hideColumn": true,
+                            "description": "status",
+                            "orderNumber": 9,
+                            "freezeColumn": true,
+                            "showInProcessed": true
+                        },
+                        {
+                            "name": "UserService Uuids",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "uniqueKey": "userServiceUuids",
+                            "hideColumn": true,
+                            "description": "uuid",
+                            "orderNumber": 11,
+                            "freezeColumn": true
+                        },
+                        {
+                            "name": "#errorDetails#",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "hideColumn": true,
+                            "description": "error details",
+                            "orderNumber": 10,
+                            "freezeColumn": true,
+                            "showInProcessed": true
+                        },
+                        {
+                            "name": "UserName",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "pattern": "^[a-zA-Z][a-zA-Z0-9._-]{2,29}$",
+                            "isUnique": true,
+                            "uniqueKey": "userUserName",
+                            "description": "user name",
+                            "orderNumber": 7,
+                            "errorMessage": "Username must be 3–30 characters long, start with a letter, and contain only letters, numbers, dots (.), underscores (_), or hyphens (-).",
+                            "freezeColumn": false,
+                            "freezeTillData": true,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "Password",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$",
+                            "minLength": 8,
+                            "uniqueKey": "userPassword",
+                            "hideColumn": true,
+                            "description": "password",
+                            "orderNumber": 8,
+                            "freezeColumn": true,
+                            "showInProcessed": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750763115805,
+                "lastModifiedTime": 1765793913816
+            }
+        },
+        {
+            "id": "cb993e87-86d3-4f88-9303-644a03bd3d1b",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "boundary-data",
+            "data": {
+                "title": "boundary-data",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "stringProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
+                            "type": "string",
+                            "color": "#f3842d",
+                            "width": 40,
+                            "uniqueKey": "boundaryCodes",
+                            "description": "Boundary Code Header",
+                            "orderNumber": 1,
+                            "freezeColumn": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1750763097544,
+                "lastModifiedTime": 1750763097544
+            }
+        },
+        {
+            "id": "6e2312c7-14a1-478a-a1ed-df55c75f1e65",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-LLIN-mz",
+            "data": {
+                "title": "target-LLIN-mz",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at the Selected Boundary Level",
+                            "orderNumber": 1,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_2",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": false,
+                            "description": "Target Population",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_BEDNET_COLUMN_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "isRequired": false,
+                            "description": "Number of Bednets to be Distributed",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1750763082406,
+                "lastModifiedTime": 1750763082406
+            }
+        },
+        {
+            "id": "08ed6697-f403-4275-9a76-4d5d80e9ea6f",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-readme",
+            "data": {
+                "title": "target-readme",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "stringProperties": [
+                        {
+                            "name": "BOUNDARY_README_MAINHEADER",
+                            "type": "string",
+                            "color": "#f25449",
+                            "width": 120,
+                            "wrapText": true,
+                            "uniqueKey": "boundaryReadmeHeader",
+                            "description": "Readme header",
+                            "orderNumber": 1,
+                            "adjustHeight": true,
+                            "freezeColumn": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1750763064870,
+                "lastModifiedTime": 1750763064870
+            }
+        },
+        {
+            "id": "1eeab453-738e-4b78-83f4-e253275794c2",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "target-MR-DN",
+            "data": {
+                "title": "target-MR-DN",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - Age 3 to 11 Months (Mandatory and to be entered by the user)",
+                            "orderNumber": 2,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": true,
+                            "multipleOf": 1,
+                            "description": "Target at village level - Age 12 to 59 Months (Mandatory and to be entered by the user)",
+                            "orderNumber": 3,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_3",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "SPAQ1 required per cycle for age 3 to 11 months",
+                            "orderNumber": 4,
+                            "unFreezeColumnTillData": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_TARGET_SMC_COLUUM_4",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 0,
+                            "isRequired": false,
+                            "multipleOf": 1,
+                            "description": "SPAQ1 required per cycle for age 12 to 59 months",
+                            "orderNumber": 5,
+                            "unFreezeColumnTillData": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750763042771,
+                "lastModifiedTime": 1764852386236
+            }
+        },
+        {
+            "id": "46bed5d5-b501-49da-a80c-8c05271b2c83",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "facility-readme",
+            "data": {
+                "title": "facility-readme",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "stringProperties": [
+                        {
+                            "name": "FACILITYWITHBOUNDARY_README_MAINHEADER",
+                            "type": "string",
+                            "color": "#f25449",
+                            "width": 120,
+                            "wrapText": true,
+                            "description": "Readme header",
+                            "orderNumber": 1,
+                            "adjustHeight": true,
+                            "freezeColumn": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1750763029447,
+                "lastModifiedTime": 1750763029447
+            }
+        },
+        {
+            "id": "682d56d0-2da4-4a51-8b6c-fc91c8bcc27f",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.schemas",
+            "uniqueIdentifier": "facility",
+            "data": {
+                "title": "facility",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "properties": {
+                    "enumProperties": [
+                        {
+                            "enum": [
+                                "Warehouse",
+                                "Health Facility",
+                                "Storing Resource"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_TYPE",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityType",
+                            "isRequired": true,
+                            "description": "Facility type",
+                            "orderNumber": 3,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Temporary",
+                                "Permanent"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_STATUS",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityStatus",
+                            "isRequired": true,
+                            "description": "Facility status",
+                            "orderNumber": 4,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Active",
+                                "Inactive"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_USAGE",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityUsage",
+                            "isRequired": true,
+                            "description": "Facility usage",
+                            "orderNumber": 7
+                        }
+                    ],
+                    "numberProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY",
+                            "type": "number",
+                            "color": "#93c47d",
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "uniqueKey": "facilityCapacity",
+                            "isRequired": true,
+                            "description": "Capacity",
+                            "orderNumber": 5,
+                            "freezeColumnIfFilled": true
+                        }
+                    ],
+                    "stringProperties": [
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_NAME",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "isUnique": true,
+                            "maxLength": 2000,
+                            "minLength": 1,
+                            "uniqueKey": "facilityName",
+                            "isRequired": true,
+                            "description": "Facility Name",
+                            "orderNumber": 2,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_CODE",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "isUnique": true,
+                            "maxLength": 2000,
+                            "minLength": 1,
+                            "uniqueKey": "facilityCode",
+                            "hideColumn": true,
+                            "description": "Facility Code",
+                            "orderNumber": 1
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_BOUNDARY_CODE_MANDATORY",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "uniqueKey": "boundaryCodes",
+                            "isRequired": true,
+                            "description": "Boundary Code",
+                            "orderNumber": 6
+                        },
+                        {
+                            "name": "#status#",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "hideColumn": true,
+                            "description": "status",
+                            "orderNumber": 8,
+                            "freezeColumn": true,
+                            "showInProcessed": true
+                        },
+                        {
+                            "name": "#errorDetails#",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "hideColumn": true,
+                            "description": "error details",
+                            "orderNumber": 9,
+                            "freezeColumn": true,
+                            "showInProcessed": true
+                        }
+                    ]
+                }
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "lastModifiedBy": "bfab6822-ec28-40f0-aef1-efd1cda8fcd5",
+                "createdTime": 1750763011576,
+                "lastModifiedTime": 1750763011576
+            }
+        }
+    ]

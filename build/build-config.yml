@@ -41,9 +41,11 @@ config:
 # Health Frontend Build pipelines
   - name: builds/Digit-Frontend/health/workbench-ui
     build:
-      - work-dir: health/micro-ui/
-        dockerfile: health/micro-ui/web/workbench/Dockerfile
+      - work-dir: health/micro-ui-react19/
+        dockerfile: health/micro-ui-react19/web/docker/Dockerfile
         image-name: workbench-ui
+        build-args:
+          BUILD_VARIANT: workbench-ui
 
   - name: builds/Digit-Frontend/health/microplan-ui
     build:

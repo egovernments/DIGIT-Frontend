@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["version", "project", "flows"],
+  "x-unique": ["project"],
+  "properties": {
+    "version": {
+      "type": "number",
+      "description": "Configuration version number"
+    },
+    "project": {
+      "type": "string",
+      "description": "Unique project identifier",
+      "minLength": 1
+    },
+    "flows": {
+      "type": "array",
+      "description": "Array of flows in the project",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "project", "name", "order", "pages"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique flow identifier",
+            "minLength": 1
+          },
+          "project": {
+            "type": "string",
+            "description": "Reference to parent project"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable flow name",
+            "minLength": 1
+          },
+          "order": {
+            "type": "number",
+            "description": "Order of flow in the project",
+            "minimum": 1
+          },
+          "indexRoute": {
+            "type": "string",
+            "description": "Optional starting page name"
+          },
+          "roles": {
+            "type": "array",
+            "description": "Optional roles that can access this flow",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pages": {
+            "type": "array",
+            "description": "Array of pages in this flow",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["flow", "project", "name", "order"],
+              "properties": {
+                "flow": {
+                  "type": "string",
+                  "description": "Reference to parent flow ID"
+                },
+                "project": {
+                  "type": "string",
+                  "description": "Reference to parent project"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Unique page name within flow",
+                  "minLength": 1
+                },
+                "order": {
+                  "type": "number",
+                  "description": "Order of page in the flow",
+                  "minimum": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

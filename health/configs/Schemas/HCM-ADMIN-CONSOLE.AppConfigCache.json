@@ -1,0 +1,32 @@
+ {
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.AppConfigCache",
+        "description": "HCM-ADMIN-CONSOLE.AppConfigCache",
+        "definition": {
+                "type": "object",
+                "title": "Flexible App Config with Campaign Constraint",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "campaignNumber",
+                    "projectType",
+                    "flow"
+                ],
+                "x-unique": [
+                    "campaignNumber",
+                    "projectType",
+                    "flow"
+                ],
+                "properties": {
+                    "flow": {
+                        "type": "string"
+                    },
+                    "projectType": {
+                        "type": "string"
+                    },
+                    "campaignNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+        "isActive": true
+    }

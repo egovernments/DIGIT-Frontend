@@ -1,0 +1,20 @@
+{
+  "id": "uuid-to-be-generated",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "description": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+  "definition": {
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["name", "project"],
+    "x-unique": ["name", "project"],
+    "additionalProperties": true
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": null,
+    "lastModifiedTime": null
+  }
+}

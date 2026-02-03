@@ -75,7 +75,7 @@ export const getPattern = (type) => {
       case "IFSC":
         return /^[A-Z]{4}0[A-Z0-9]{6}$/;
       case "ApplicationNo":
-        return /^[a-zA-z0-9\s\\/\-]$/i;
+        return /^[a-zA-Z0-9\s\\/-]$/i;
       case "Password":
         return /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%])(?=\S+$).{8,15}$/;
       case "MozMobileNo":
