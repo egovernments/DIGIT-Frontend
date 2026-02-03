@@ -34,7 +34,7 @@ const getLocalizedValue = (code, localizationData, currentLocale) => {
 // Returns true if: code is missing/empty, entry doesn't exist, or localized value is empty
 const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
   // If code itself is empty/missing, consider it as empty localization
-  if (!code || (typeof code === "string" && code.trim() === "")) {
+  if (!code || (typeof code === "string" && !(code !== ""))) {
     return true;
   }
   const value = getLocalizedValue(code, localizationData, currentLocale);
