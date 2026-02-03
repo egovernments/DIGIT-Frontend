@@ -255,3 +255,14 @@ header {
 .pagination{
   background-color: #ffffff;
 }
+
+.digit-action-bar-wrap{
+  &.dateUpdateAction{
+    span{
+      button{
+          margin-left: 4rem;
+          min-width: 12.5rem;
+      }
+    }
+  }
+}
