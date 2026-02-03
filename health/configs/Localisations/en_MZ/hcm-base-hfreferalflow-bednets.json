@@ -1,0 +1,800 @@
+[
+        {
+            "code": "APPONE_HFREFERALFLOW_ACKNOWLEDGEMENT_SCREEN_HEADING",
+            "message": " ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_ACTION_BUTTON_LABEL",
+            "message": "Next",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_Adminstative_area_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_Adminstative_area_helpText_label",
+            "message": "Administrative unit",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_Adminstative_area_label",
+            "message": "Administrative unit",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_Adminstative_area_tooltip_label",
+            "message": "Administrative unit",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_CC_CYCLE_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_HELPTEXT_KEY_LABEL",
+            "message": "Enter Health facility for evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_KEY_LABEL",
+            "message": "Health facility",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_EVALUATION_FACILITY_TOOLTIP_KEY_LABEL",
+            "message": "Health facility for evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_FEVER_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_PRE_CYCLE_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_QR_LABEL",
+            "message": "Scan QR Code",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_REGISTRATION_LABEL",
+            "message": "Create New Referral",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SCREEN_HEADING",
+            "message": "Health Facility Details",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SEARCH_BAR",
+            "message": "Enter name of the Referral",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SEARCH_SCREEN_HEADING",
+            "message": "Search Referrals",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SICK_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_COMMENT_FOR_DIAGNOSIS",
+            "message": "Enter comment for diagnosis",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_ADMINT_TRANSFER",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_ADMINT_TRANSFER_help",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_ADMINT_TRANSFER_tool",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_CHILD_EVALUATED",
+            "message": "Child evaluated for adverse reaction for SP and AQ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_PHARMACOVIGILANCE_HEAD_help",
+            "message": "Child evaluated for adverse reaction for SP and AQ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_PHARMACOVIGILANCE_HEAD_tool",
+            "message": "Child evaluated for adverse reaction for SP and AQ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_CURRENT_CYCLE_SCREEN_HEADER",
+            "message": "Side effect from current cycle checklist",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_NAME_DOSE_DRUG",
+            "message": "Name and dose of the drug",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_CHILD_ADMINT_TRANSFER",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_CHILD_ADMINT_TRANSFER_help",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_CHILD_ADMINT_TRANSFER_tool",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_CHILD_EVALUATED",
+            "message": "Child evaluated for adverse reaction for SP and AQ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_PHARMACOVIGILANCE_HEAD",
+            "message": "The national Pharmacovigilance has been filled out?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_PHARMACOVIGILANCE_HEAD_help",
+            "message": "Child evaluated for adverse reaction for SP and AQ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_HEADER",
+            "message": "Side effect from previous cycle checklist",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_1_LABEL",
+            "message": "Child evaluated for adverse reaction for SP and AQ ?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_1_LABEL_helpText",
+            "message": "Question 1",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_1_LABEL_tooltip",
+            "message": "Question 1",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_2_LABEL",
+            "message": "The national Pharmacovigilance has been filled out ?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_2_LABEL_helpText",
+            "message": "Question 2",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_2_LABEL_tooltip",
+            "message": "Question 2",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_3_LABEL",
+            "message": "Was the child admitted / transferred to the hospital due to serious illness ?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_3_LABEL_helpText",
+            "message": "Question 3",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREVIOUS_CYCLE_SCREEN_QUESTION_3_LABEL_tooltip",
+            "message": "Question 3",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREV_CYCLE_SCREEN_ADVERSE_REACTION",
+            "message": "Child evaluated to determine the cause of illness?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_PREV_CYCLE_SCREEN_HEADING",
+            "message": "Side effect from previous cycle Checklist",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_SICK_SCREEN_HEADING",
+            "message": "Sick checklist",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_SIDE_EFFECT_sickQ2_label",
+            "message": "Was the child treated?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_dateOfEvaluation_label",
+            "message": "Date of evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_evaluationFacilityKey_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_facilityDetails_helpText_label",
+            "message": "Date of evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_facilityDetails_tooltip_label",
+            "message": "Date of evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_hfCoordinatorKey_helpText_label",
+            "message": "Name of the health facility coordinator",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_hfCoordinatorKey_label",
+            "message": "Name of the health facility coordinator",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_hfCoordinatorKey_tooltip_label",
+            "message": "Name of the health facility coordinator",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_referredByKey_helpText_label",
+            "message": "Refer By(CDD)",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_referredByKey_label",
+            "message": "Refer By(CDD)",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_HFREFERALFLOW_referredByKey_tooltip_label",
+            "message": "Refer By(CDD)",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_ACTION_BUTTON_LABEL",
+            "message": "Next",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_HEADING",
+            "message": "Fever Checklist",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_LABEL",
+            "message": "Was the child tested for malaria?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_MALARIA_LABEL",
+            "message": "Result of malaria diagnostic test",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_NEGATIVE_MALARIA_LABEL",
+            "message": "Child with negative malaria test received SPAQ in this Cycle",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_ANTI_MALARIA__LABEL",
+            "message": "Child with positive malaria test treated with anti malarial?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_ANTI_MALARIA__LABEL_YES",
+            "message": "Description for Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_FEVER_CHECKLIST_POSITIVE_MALARIA_HOSPITAL_LABEL",
+            "message": "Was the child admitted/ transferred to the nearest hospital due to serious illness?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_HEADING",
+            "message": "Referral Details",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_SCREEN_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_helpText_label",
+            "message": "Age in months",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_ageInMonths_label",
+            "message": "Age in months",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_beneficiaryId_helpText_label",
+            "message": "Beneficiary Id",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_beneficiaryId_label",
+            "message": "Beneficiary Id",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_cycle_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_cycle_helpText_label",
+            "message": "Select cycle",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_cycle_label",
+            "message": "Select cycle",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_gender_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_gender_helpText_label",
+            "message": "Gender",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_gender_label",
+            "message": "Gender",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_helpText_label",
+            "message": "Name of the child",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_nameOfChild_label",
+            "message": "Name of the child",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_referralCode_helpText_label",
+            "message": "Referral code",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_referralCode_label",
+            "message": "Referral code",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_referralReason_REQUIRED",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_referralReason_helpText_label",
+            "message": "what is the reason for referral?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REFERRALDETAILS_SCREEN_referralReason_label",
+            "message": "what is the reason for referral?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Aappone_hfreferalflow_adminstative_area_helptext_label",
+            "message": "Administrative unit",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_adminstative_area_tooltip_label",
+            "message": "Administrative unit",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_facilitydetails_helptext_label",
+            "message": "Date of evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_facilitydetails_tooltip_label",
+            "message": "Date of evaluation",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_hfcoordinatorkey_helptext_label",
+            "message": "Name of the health facility coordinator",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_hfcoordinatorkey_tooltip_label",
+            "message": "Name of the health facility coordinator",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_referredbykey_helptext_label",
+            "message": "refer By(CDD)",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_hfreferalflow_referredbykey_tooltip_label",
+            "message": "refer By(CDD)",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_ageinmonths_helptext_label",
+            "message": "Age in months",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_beneficiaryid_helptext_label",
+            "message": "Beneficiary Id",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_cycle_helptext_label",
+            "message": "Select cycle",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_cycle_required",
+            "message": "required",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_gender_helptext_label",
+            "message": "Gender",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_nameofchild_helptext_label",
+            "message": "Name of the child",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_referralcode_helptext_label",
+            "message": "Referral code",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Appone_referraldetails_screen_referralreason_helptext_label",
+            "message": "what is the reason for referral?",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ1_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ1_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ2_NEGATIVE",
+            "message": "Negative",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ2_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ2_POSITIVE",
+            "message": "Positive",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ3_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ4_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ4_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ5_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FEVERQ5_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HFREFERALFLOW_ACKNOWLEDGEMENT_DESCRIPTION",
+            "message": "The Data has been recorded successfully",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HFREFERALFLOW_ACKNOWLEDGEMENT_PRIMARY_LABEL",
+            "message": "Go Back",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "HFREFERALFLOW_ACKNOWLEDGEMENT_TITLE",
+            "message": "Data recorded successfully",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICKQ1_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICKQ1_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICKQ2_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICKQ2_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICKQ3_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SICKQ3_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECTQ1_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECTQ1_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECTQ2_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECTQ2_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECTQ3_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECTQ3_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECT_PREQ1_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECT_PREQ1_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECT_PREQ2_NO",
+            "message": "No",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SIDE_EFFECT_PREQ2_YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "YES",
+            "message": "Yes",
+            "module": "hcm-base-hfreferalflow-bednets",
+            "locale": "en_MZ"
+        }
+    ]
