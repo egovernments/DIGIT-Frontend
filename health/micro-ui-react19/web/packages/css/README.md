@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-health-css":"^0.1.0",
+"@egovernments/digit-ui-health-css":"1.0.0",
 ```
 
 then navigate to App.js
