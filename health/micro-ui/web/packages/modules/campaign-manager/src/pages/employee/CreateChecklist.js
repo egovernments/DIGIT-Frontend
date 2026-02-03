@@ -55,7 +55,7 @@ const CreateChecklist = () => {
   const currentLocales = languages?.map((locale) => locale.value);
 
   const presentLocale = Digit?.SessionStorage.get("locale") || locale;
-  module = "hcm-checklist";
+  module = `hcm-checklist-${campaignNumber}`;
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
   let processedData = [];
@@ -239,13 +239,13 @@ const CreateChecklist = () => {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-        module: "hcm-checklist",
+        module: `hcm-checklist-${campaignNumber}`,
       },
       {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || "",
-        module: "hcm-checklist",
+        module: `hcm-checklist-${campaignNumber}`,
       }
     );
 
@@ -414,7 +414,7 @@ const CreateChecklist = () => {
       required: item?.isRequired,
       isActive: item?.isActive,
       reGex: item?.isRegex ? item?.regex?.regex : null,
-      order: item?.key,
+      order: parseInt(item?.key, 10) || 0,
       additionalFields: {
         schema: "serviceDefinition",
         version: 1,
