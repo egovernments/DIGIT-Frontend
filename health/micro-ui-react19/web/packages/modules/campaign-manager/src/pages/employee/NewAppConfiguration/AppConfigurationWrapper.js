@@ -383,7 +383,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     panelLabel: panelItem.label,
                     message: "VALIDATION_SCHEMA_CODE_REQUIRED",
                     messageParams: {
-                      fieldName: field?.label || field?.fieldName || "Unknown Field"
+                      fieldName: customTranslate(field?.label || field?.fieldName)
                     },
                     tab: tabKey,
                   });
@@ -399,7 +399,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     panelLabel: panelItem.label,
                     message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
                     messageParams: {
-                      fieldName: field?.label || field?.fieldName || "Unknown Field"
+                      fieldName: customTranslate(field?.label || field?.fieldName)
                     },
                     tab: tabKey,
                   });
@@ -415,7 +415,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                       panelLabel: panelItem.label,
                       message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
                       messageParams: {
-                        fieldName: field?.label || field?.fieldName || "Unknown Field"
+                        fieldName: customTranslate(field?.label || field?.fieldName)
                       },
                       tab: tabKey,
                     });
@@ -431,7 +431,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                         panelLabel: panelItem.label,
                         message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
                         messageParams: {
-                          fieldName: field?.label || field?.fieldName || "Unknown Field"
+                          fieldName: customTranslate(field?.label || field?.fieldName)
                         },
                         tab: tabKey,
                       });
@@ -447,7 +447,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       // Validation for popup config fields
       const popupConfig = field?.properties?.popupConfig;
       if (popupConfig) {
-        const fieldLabel = field?.label || field?.fieldName || "Unknown Field";
+        const fieldLabel = customTranslate(field?.label || field?.fieldName);
 
         // Validate popup title - check if localized value is empty
         if (popupConfig.title) {
