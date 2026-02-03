@@ -1,0 +1,20 @@
+{
+  "id": "4652dd3d-fd0a-40ea-8975-a857cbd66177",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.NewApkConfig",
+  "description": "HCM-ADMIN-CONSOLE.NewApkConfig",
+  "definition": {
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["project", "name"],
+    "x-unique": ["project", "name"],
+    "additionalProperties": true
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": 1761160944531,
+    "lastModifiedTime": 1761160944531
+  }
+}

@@ -1,0 +1,330 @@
+
+[
+  {
+    "links": [
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=FormConfigTemplate",
+        "code": "FormTemplate",
+        "icon": "work",
+        "order": "1",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=FieldPropertiesPanelConfig",
+        "code": "PanelFieldSettings",
+        "icon": "work",
+        "order": "2",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=FieldTypeMappingConfig",
+        "code": "FieldTypeMappingConfig",
+        "icon": "work",
+        "order": "4",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=FormConfig",
+        "code": "FormConfig",
+        "icon": "work",
+        "order": "6",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=AppScreenLocalisationConfig",
+        "code": "AppScreenLocalisationConfig",
+        "icon": "work",
+        "order": "5",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=AppModuleSchema",
+        "code": "AppModuleSchema",
+        "icon": "work",
+        "order": "3",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      }
+    ],
+    "screen": "app-config-settings"
+  },
+  {
+    "links": [
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=baseTimeOut",
+        "code": "BaseTimeout",
+        "icon": "work",
+        "order": "1",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-PROJECT-TYPES&masterName=projectTypes",
+        "code": "Project types",
+        "icon": "work",
+        "order": "2",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      }
+    ],
+    "screen": "advanced-landing-screen"
+  },
+  {
+    "links": [
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectConfig",
+        "code": "SearchProject",
+        "icon": "Work",
+        "order": "0",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectFacilityConfig",
+        "code": "Project Facility Search",
+        "icon": "work",
+        "order": "2",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectResourceConfig",
+        "code": "Project Resource",
+        "icon": "work",
+        "order": "3",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectStaffConfig",
+        "code": "Project Staff ",
+        "icon": "work",
+        "order": "4",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectBeneficiaryConfig",
+        "code": "Project Beneficiary",
+        "icon": "work",
+        "order": "4",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectTaskConfig",
+        "code": "Project Task",
+        "icon": "work",
+        "order": "4",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchHouseholdConfig",
+        "code": "Search Household",
+        "icon": "work",
+        "order": "6",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      }
+    ],
+    "screen": "project-landing-screen"
+  },
+  {
+    "links": [
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=HierarchySchema",
+        "code": "boundary",
+        "icon": "Work",
+        "order": "0",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=commonHCMUiConfig&masterName=MasterLandingScreen",
+        "code": "Master Landing Setting",
+        "icon": "Announcement",
+        "order": "1",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/hcmworkbench/master/project-landing-screen",
+        "code": "Project ",
+        "icon": "Work",
+        "order": "4",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchFacilityConfig",
+        "code": "Facility",
+        "icon": "work",
+        "order": "5",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchStaffConfig",
+        "code": "Employee",
+        "icon": "work",
+        "order": "5",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductConfig",
+        "code": "Product",
+        "icon": "work",
+        "order": "5",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductVariantConfig",
+        "code": "ProductVariant",
+        "icon": "work",
+        "order": "5",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=ChecklistTemplates",
+        "code": "checklist",
+        "icon": "work",
+        "order": "7",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/hcmworkbench/master/advanced-landing-screen",
+        "code": "Advanced settings",
+        "icon": "work",
+        "order": "11",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/hcmworkbench/master/app-config-settings",
+        "code": "Advanced App settings",
+        "icon": "work",
+        "order": "13",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      }
+    ],
+    "screen": "master-landing-screen"
+  },
+  {
+    "links": [
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductConfig",
+        "code": "Product",
+        "icon": "Work",
+        "order": "0",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductVariantConfig",
+        "code": "Product Variant",
+        "icon": "Announcement",
+        "order": "2",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-PROJECT-TYPES&masterName=projectTypes",
+        "code": "Project Types",
+        "icon": "Engineering",
+        "order": "3",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectConfig",
+        "code": "Project",
+        "icon": "Announcement",
+        "order": "1",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectResourceConfig",
+        "code": "Project Resource",
+        "icon": "Work",
+        "order": "2",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      }
+    ],
+    "screen": "test-landing-screen"
+  },
+  {
+    "links": [
+      {
+        "url": "/workbench-ui/employee/hcmworkbench/user",
+        "code": "NamedUser",
+        "icon": "Work",
+        "order": "2",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/health-ui/employee/hrms/inbox",
+        "code": "HRMS",
+        "icon": "Announcement",
+        "order": "1",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      },
+      {
+        "url": "/workbench-ui/employee/hcmworkbench/help-screen/coded-user",
+        "code": "CodedUser",
+        "icon": "Engineering",
+        "order": "3",
+        "roles": [
+          "CAMPAIGN_ADMIN"
+        ]
+      }
+    ],
+    "screen": "user-landing-screen"
+  }
+]

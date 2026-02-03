@@ -1,0 +1,20 @@
+{
+  "id": "ec461f79-b5be-4091-b7ea-1b6d92424ef2",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.NewFieldType",
+  "description": "HCM-ADMIN-CONSOLE.NewFieldType",
+  "definition": {
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["type"],
+    "x-unique": ["type"],
+    "additionalProperties": true
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": 1760090969190,
+    "lastModifiedTime": 1760090969190
+  }
+}

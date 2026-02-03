@@ -1,0 +1,534 @@
+ {
+            "id": "b446385c-b159-406a-85ee-44138ca7e130",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+            "uniqueIdentifier": "PERMISSIONHANDLER.MR-DN",
+            "data": {
+                "name": "PERMISSIONHANDLER",
+                "flows": [
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "format": "column",
+                                "children": [
+                                    {
+                                        "type": "template",
+                                        "format": "card",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "row",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "NotificationsActive",
+                                                                "format": "icon"
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "format": "column",
+                                                                "children": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "value": "CORE_COMMON_PERMISSION_NOTIFICATION",
+                                                                        "format": "textTemplate",
+                                                                        "required": true,
+                                                                        "fieldName": "CORE_COMMON_PERMISSION_NOTIFICATION"
+                                                                    }
+                                                                ],
+                                                                "properties": {
+                                                                    "mainAxisSize": "min",
+                                                                    "mainAxisAlignment": "start"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "start"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "GRANT_PERMISSION",
+                                                        "format": "button",
+                                                        "hidden": false,
+                                                        "visible": "{{ !context.notificationPermissionGranted }}",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "REQUEST_PERMISSION",
+                                                                "properties": {
+                                                                    "permission": "notification"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "small",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "center"
+                                                        },
+                                                        "visibilityCondition": "{{ context.notificationPermissionGranted }}"
+                                                    }
+                                                ],
+                                                "properties": {
+                                                    "mainAxisSize": "max",
+                                                    "mainAxisAlignment": "spaceBetween"
+                                                }
+                                            },
+                                            {
+                                                "type": "template",
+                                                "label": "{{context.notificationPermissionStatus}}",
+                                                "format": "tag",
+                                                "fieldName": "NOTIFICATION_PERMISSION_TAG"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "template",
+                                        "format": "card",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "row",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "SettingsCell",
+                                                                "format": "icon"
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "format": "column",
+                                                                "children": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "value": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS",
+                                                                        "format": "textTemplate",
+                                                                        "required": true,
+                                                                        "fieldName": "CORE_COMMON_PERMISSION_IGNOREBATTERYOPTIMIZATIONS"
+                                                                    }
+                                                                ],
+                                                                "expanded": true,
+                                                                "properties": {
+                                                                    "mainAxisSize": "min",
+                                                                    "mainAxisAlignment": "start"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "expanded": true,
+                                                        "properties": {
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "start"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "GRANT_PERMISSION",
+                                                        "format": "button",
+                                                        "hidden": false,
+                                                        "\"visible\":\n                          \"{{ !context.ignoreBatteryOptimizationsPermissionGranted }}\",\n                      ": "",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "REQUEST_PERMISSION",
+                                                                "properties": {
+                                                                    "permission": "ignoreBatteryOptimizations"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "small",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "center"
+                                                        },
+                                                        "visibilityCondition": "{{ context.ignoreBatteryOptimizationsPermissionGranted }}"
+                                                    }
+                                                ],
+                                                "properties": {
+                                                    "mainAxisSize": "max",
+                                                    "mainAxisAlignment": "spaceBetween"
+                                                }
+                                            },
+                                            {
+                                                "type": "template",
+                                                "label": "{{context.ignoreBatteryOptimizationsPermissionStatus}}",
+                                                "format": "tag",
+                                                "fieldName": "batteryOptimizationTag",
+                                                "properties": {
+                                                    "type": "{{context.ignoreBatteryOptimizationsPermission}}"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "template",
+                                        "format": "card",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "row",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "LocationOn",
+                                                                "format": "icon"
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "format": "column",
+                                                                "children": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "value": "CORE_COMMON_PERMISSION_LOCATION",
+                                                                        "format": "textTemplate",
+                                                                        "required": true,
+                                                                        "fieldName": "CORE_COMMON_PERMISSION_LOCATION"
+                                                                    }
+                                                                ],
+                                                                "properties": {
+                                                                    "mainAxisSize": "min",
+                                                                    "mainAxisAlignment": "start"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "start"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "GRANT_PERMISSION",
+                                                        "format": "button",
+                                                        "hidden": false,
+                                                        "visible": "{{ !context.locationPermissionGranted }}",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "REQUEST_PERMISSION",
+                                                                "properties": {
+                                                                    "permission": "location"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "small",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "center"
+                                                        },
+                                                        "visibilityCondition": "{{ context.locationPermissionGranted }}"
+                                                    }
+                                                ],
+                                                "properties": {
+                                                    "mainAxisSize": "max",
+                                                    "mainAxisAlignment": "spaceBetween"
+                                                }
+                                            },
+                                            {
+                                                "type": "template",
+                                                "label": "{{context.locationPermissionStatus}}",
+                                                "format": "tag",
+                                                "fieldName": "permissionStatus",
+                                                "properties": {
+                                                    "type": "{{context.locationPermission}}"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "template",
+                                        "format": "card",
+                                        "visible": "{{ context.showNearbyWifiDevices }}",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "row",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "PermScanWifi",
+                                                                "format": "icon"
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "format": "column",
+                                                                "children": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "value": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES",
+                                                                        "format": "textTemplate",
+                                                                        "required": true,
+                                                                        "fieldName": "CORE_COMMON_PERMISSION_NEARBYWIFIDEVICES"
+                                                                    }
+                                                                ],
+                                                                "properties": {
+                                                                    "mainAxisSize": "min",
+                                                                    "mainAxisAlignment": "start"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "start"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "GRANT_PERMISSION",
+                                                        "format": "button",
+                                                        "hidden": false,
+                                                        "visible": "{{ !context.nearbyWifiDevicesPermissionGranted }}",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "REQUEST_PERMISSION",
+                                                                "properties": {
+                                                                    "permission": "nearbyWifiDevices"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "small",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "center"
+                                                        },
+                                                        "visibilityCondition": "{{ context.nearbyWifiDevicesPermissionGranted }}"
+                                                    }
+                                                ],
+                                                "properties": {
+                                                    "mainAxisSize": "max",
+                                                    "mainAxisAlignment": "spaceBetween"
+                                                }
+                                            },
+                                            {
+                                                "type": "template",
+                                                "label": "{{context.nearbyWifiDevicesPermissionStatus}}",
+                                                "format": "tag",
+                                                "fieldName": "{{context.nearbyWifiDevicesPermissionStatus}}",
+                                                "properties": {
+                                                    "type": "{{context.nearbyWifiDevicesPermission}}"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "template",
+                                        "format": "card",
+                                        "visible": "{{ context.showBluetoothScan }}",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "row",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "SettingsBluetooth",
+                                                                "format": "icon"
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "format": "column",
+                                                                "children": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "value": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN",
+                                                                        "format": "textTemplate",
+                                                                        "required": true,
+                                                                        "fieldName": "CORE_COMMON_PERMISSION_BLUETOOTHSCAN"
+                                                                    }
+                                                                ],
+                                                                "properties": {
+                                                                    "mainAxisSize": "min",
+                                                                    "mainAxisAlignment": "start"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "start"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "GRANT_PERMISSION",
+                                                        "format": "button",
+                                                        "hidden": false,
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "REQUEST_PERMISSION",
+                                                                "properties": {
+                                                                    "permission": "bluetoothScan"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "small",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "center"
+                                                        },
+                                                        "visibilityCondition": "{{ context.bluetoothScanPermissionGranted }}"
+                                                    }
+                                                ],
+                                                "properties": {
+                                                    "mainAxisSize": "max",
+                                                    "mainAxisAlignment": "spaceBetween"
+                                                }
+                                            },
+                                            {
+                                                "type": "template",
+                                                "label": "{{context.bluetoothScanPermissionStatus}}",
+                                                "format": "tag",
+                                                "fieldName": "blueToothScan",
+                                                "properties": {
+                                                    "type": "{{context.bluetoothScanPermission}}"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "template",
+                                        "format": "card",
+                                        "children": [
+                                            {
+                                                "type": "template",
+                                                "format": "row",
+                                                "children": [
+                                                    {
+                                                        "type": "template",
+                                                        "format": "row",
+                                                        "children": [
+                                                            {
+                                                                "type": "template",
+                                                                "value": "PermCameraMic",
+                                                                "format": "icon"
+                                                            },
+                                                            {
+                                                                "type": "template",
+                                                                "format": "column",
+                                                                "children": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "value": "CORE_COMMON_PERMISSION_CAMERA",
+                                                                        "format": "textTemplate",
+                                                                        "fieldName": "CORE_COMMON_PERMISSION_CAMERA"
+                                                                    }
+                                                                ],
+                                                                "properties": {
+                                                                    "mainAxisSize": "min",
+                                                                    "mainAxisAlignment": "start"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "start"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "template",
+                                                        "label": "GRANT_PERMISSION",
+                                                        "format": "button",
+                                                        "hidden": false,
+                                                        "visible": "{{ !context.cameraPermissionGranted }}",
+                                                        "onAction": [
+                                                            {
+                                                                "actionType": "REQUEST_PERMISSION",
+                                                                "properties": {
+                                                                    "permission": "camera"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "properties": {
+                                                            "size": "small",
+                                                            "type": "primary",
+                                                            "mainAxisSize": "min",
+                                                            "mainAxisAlignment": "center"
+                                                        },
+                                                        "visibilityCondition": "{{ context.cameraPermissionGranted }}"
+                                                    }
+                                                ],
+                                                "properties": {
+                                                    "mainAxisSize": "max",
+                                                    "mainAxisAlignment": "spaceBetween"
+                                                }
+                                            },
+                                            {
+                                                "type": "template",
+                                                "label": "{{context.cameraPermissionStatus}}",
+                                                "format": "tag",
+                                                "fieldName": "cameraPermissionStatus",
+                                                "properties": {
+                                                    "type": "{{context.cameraPermission}}"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "properties": {
+                                    "mainAxisSize": "min",
+                                    "mainAxisAlignment": "start"
+                                }
+                            }
+                        ],
+                        "name": "permissionHandler",
+                        "footer": [],
+                        "header": [
+                            {
+                                "label": "CORE_COMMON_BACK",
+                                "format": "backLink",
+                                "onAction": [
+                                    {
+                                        "actionType": "BACK_NAVIGATION",
+                                        "properties": {}
+                                    }
+                                ]
+                            }
+                        ],
+                        "heading": "CORE_COMMON_ALLOW_PERMISSIONS",
+                        "screenType": "TEMPLATE",
+                        "description": "CORE_COMMON_ALLOW_PERMISSIONS",
+                        "initActions": [],
+                        "wrapperConfig": {
+                            "rootEntity": "PermissionModel",
+                            "wrapperName": "PermissionWrapper"
+                        }
+                    }
+                ],
+                "order": 7,
+                "active": true,
+                "project": "MR-DN",
+                "version": 1,
+                "disabled": false,
+                "isSelected": true,
+                "initialPage": "permissionHandler"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1767949963945,
+                "lastModifiedTime": 1768213990180
+            }
+        }

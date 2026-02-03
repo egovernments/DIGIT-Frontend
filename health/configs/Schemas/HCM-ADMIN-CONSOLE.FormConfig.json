@@ -1,0 +1,51 @@
+{
+  "id": "uuid-to-be-generated",
+  "tenantId": "mz",
+  "code": "HCM-ADMIN-CONSOLE.FormConfig",
+  "description": "HCM-ADMIN-CONSOLE.FormConfig",
+  "definition": {
+    "type": "object",
+    "title": "HCM-ADMIN-CONSOLE.FormConfig",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["name", "flows", "order", "project", "version"],
+    "x-unique": ["name", "project"],
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "flows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "screenType": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "order": {
+        "type": "integer"
+      },
+      "project": {
+        "type": "string"
+      },
+      "version": {
+        "type": "integer"
+      }
+    },
+    "additionalProperties": true
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": null,
+    "lastModifiedBy": null,
+    "createdTime": null,
+    "lastModifiedTime": null
+  }
+}
