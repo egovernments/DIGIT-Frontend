@@ -534,7 +534,7 @@ const getAvailableActions = (status) => {
                                     isSuffix
                                     label={t(`HCM_AM_BILL_ACTIONS`)}
                                     title={t(`HCM_AM_BILL_ACTIONS`)}
-                                    showBottom={isLastRow && props.data.length !== 1 ? false : true}
+                                    showBottom={isLastRow ? false : true}
                                     onOptionSelect={(value) => {
                                         if (value.code === "HCM_AM_VERIFY") {
                                             setVerifyPopupState({ open: true, row });

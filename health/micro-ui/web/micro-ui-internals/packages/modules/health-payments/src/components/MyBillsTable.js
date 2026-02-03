@@ -34,7 +34,13 @@ const MyBillsTable = ({ ...props }) => {
                 ),
                 selector: (row) => {
                     return (
-                        <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}>
+                        <div className="ellipsis-cell" 
+                        style={{
+                            whiteSpace: "normal",
+                            wordBreak: "break-word",
+                            lineHeight: "1.4",
+                          }}
+                          title={t(row?.billNumber) || t("NA")}>
                             {t(row?.billNumber) || t("NA")}
                         </div>
                     );

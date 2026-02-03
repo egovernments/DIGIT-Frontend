@@ -307,7 +307,7 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
           onError: (error) => {
             setSelectedRows([]);  
             setClearSelectedRows(prev => !prev);      
-                console.log("12Error updating bill detail workflow:", error);
+                console.log("Error updating bill detail workflow:", error);
             setShowToast({
               key: "error",
               label: error?.response?.data?.Errors?.[0]?.message || t(`HCM_AM_BILL_DETAILS_${wfAction}_ERROR`),//TODO UPDATE TOAST MSG
@@ -844,6 +844,11 @@ const lastGeneratedAt = reportList.length
     },
   ];
 
+  const hasPaidWorker =
+  billData?.billDetails?.some(
+    (worker) => worker?.status === "PAID"
+  );
+
   const handleDownloadSelect = (option) => {
     try {
       if (option.code === "DOWNLOAD_EXCEL") {
@@ -911,7 +916,7 @@ const lastGeneratedAt = reportList.length
                   {t(billData?.status || "NA")}
                 </span>
               )}
-<div >
+<div>
   {/* Transaction Report Section */}
   <div
     style={{
@@ -921,21 +926,19 @@ const lastGeneratedAt = reportList.length
       gap: "6px",
     }}
   >
-    {/* Outline Heading */}
-    <span style={{
-      display: "inline-block",
-      border: "1.5px solid #F47738",
-      color: "#F47738",
-      padding: "0.25rem 0.6rem",
-      borderRadius: "4px",
-      fontWeight: 600,
-      fontSize: "18px",
-      width: "fit-content",
-    }}>
+    {/* Section Heading */}
+    <span
+      style={{
+        // color: "#F47738",
+        fontWeight: 600,
+        fontSize: "18px",
+        width: "fit-content",
+      }}
+    >
       {t("HCM_AM_TRANSACTION_REPORT")}
     </span>
 
-    {/* Generated time */}
+    {/* Generated Time */}
     <span className="view-label-text">
       {lastGeneratedAt ? (
         <>
@@ -943,11 +946,12 @@ const lastGeneratedAt = reportList.length
           {formatTimestampToDateTime(lastGeneratedAt)}
         </>
       ) : (
-        <strong>{t("HCM_AM_REPORT_NOT_GENERATED")}</strong>
+        <>{t("HCM_AM_REPORT_NOT_GENERATED")}</>
+
       )}
     </span>
 
-    {/* Error */}
+    {/* Error Message */}
     {reportError && (
       <InfoCard
         variant="error"
@@ -958,45 +962,80 @@ const lastGeneratedAt = reportList.length
     )}
   </div>
 
+  {/* Actions */}
   <div
-  style={{
-    display: "flex",
-    gap: "12px",
-    marginTop: "12px",
-    alignItems: "center",
-  }}
->
-  {/* Generate */}
-  <Button
-    label={t("HCM_AM_GENERATE_REPORT")}
-    variation="primary"
-    isDisabled={reportLoading}
-    onClick={async () => {
-      try {
-        await generateReport("EXCEL");
-        await generateReport("PDF");
-      } catch (e) {
-        console.error("Error generating report", e);
-      }
+    style={{
+      display: "flex",
+      gap: "12px",
+      marginTop: "12px",
+      alignItems: "center",
     }}
-  />
+  >
+    {/* Generate Report */}
+    <Button
+      label={t("HCM_AM_GENERATE_REPORT")}
+      variation="primary"
+      isDisabled={reportLoading}
+      onClick={async () => {
+        if (!hasPaidWorker) {
+          setShowToast({
+            key: "error",
+            label: t("HCM_AM_NO_PAID_WORKERS"),
+            transitionTime: 4000,
+          });
+          return;
+        }
 
-  {/* Download Dropdown */}
-  <Button
-    icon="ArrowDropDown"
-    isSuffix
-    label={t("HCM_AM_DOWNLOAD")}
-    variation="secondary"
-    type="actionButton"
-    options={downloadOptions}
-    optionsKey="name"
-    onOptionSelect={handleDownloadSelect}
-    isDisabled={!latestExcel?.fileStoreId && !latestPdf?.fileStoreId}
-    style={{ minWidth: "10rem" }}
-    showBottom={true}
-  />
+        try {
+          await generateReport("EXCEL");
+          await generateReport("PDF");
+        } catch (e) {
+          console.error("Error generating report", e);
+        }
+      }}
+    />
+
+    {/* Download */}
+    <Button
+      icon="ArrowDropDown"
+      isSuffix
+      label={t("HCM_AM_DOWNLOAD")}
+      variation="secondary"
+      type="actionButton"
+      options={downloadOptions}
+      optionsKey="name"
+      onOptionSelect={handleDownloadSelect}
+      isDisabled={!latestExcel?.fileStoreId && !latestPdf?.fileStoreId}
+      style={{ minWidth: "10rem" }}
+      showBottom={true}
+    />
+  </div>
+
+  {/* Disclaimer */}
+  <div
+    style={{
+      marginTop: "11px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "4px",
+    }}
+  >
+    <span
+    className="view-label-text"
+    style={{ fontSize: "12px",}}
+  >
+    <strong>{t("HCM_AM_REPORT_DISCLAIMER_HEADER")}{" : "}</strong>
+  </span>
+
+  <span
+    className="view-label-text"
+    style={{ fontSize: "12px", color: "#6B6B6B" }}
+  >
+    {t("HCM_AM_REPORT_DISCLAIMER_INFO")}
+  </span>
+  </div>
 </div>
-</div>
+
 
               {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>

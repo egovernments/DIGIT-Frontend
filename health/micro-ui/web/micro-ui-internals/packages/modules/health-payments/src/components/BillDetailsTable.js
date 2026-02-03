@@ -343,7 +343,7 @@ const BillDetailsTable = ({ ...props }) => {
             },
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ borderRight: "2px solid #787878", width: "75%", textAlign: "start" }}>
                         {t(`HCM_AM_MNO_NAME`)}
                     </div>
                 ),
@@ -360,7 +360,7 @@ const BillDetailsTable = ({ ...props }) => {
             },
             {
                 name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    <div style={{ borderRight: "2px solid #787878", width: "75%", textAlign: "start" }}>
                         {t("HCM_AM_NUMBER_OF_DAYS")}
                     </div>
                 ),
@@ -384,14 +384,17 @@ const BillDetailsTable = ({ ...props }) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_WAGE")}
+                         {t("HCM_AM_WAGE")}
+      {workerRatesData?.currency
+        ? ` (${workerRatesData.currency})`
+        : ""}
                     </div>
                 ),
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                             {/* {t(row?.wage) || t("NA")} */}
-                            {row?.wage ? `${row.wage} ${workerRatesData?.currency}` : t("NA")}
+                            {`${row.wage}`}
                         </div>
                     );
                 },
@@ -402,13 +405,15 @@ const BillDetailsTable = ({ ...props }) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_TOTAL_AMOUNT")}
+                        {t("HCM_AM_TOTAL_AMOUNT")} {workerRatesData?.currency
+        ? ` (${workerRatesData.currency})`
+        : ""}
                     </div>
                 ),
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {row?.totalAmount ? `${row.totalAmount} ${workerRatesData?.currency}` : t("NA")}
+                            {`${row.totalAmount}`}
                         </div>
                     );
                 },
@@ -419,7 +424,9 @@ const BillDetailsTable = ({ ...props }) => {
             {
             name: (
                 <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                {t("HCM_AM_TOTAL_AMOUNT_WITH_FEES")}
+                {t("HCM_AM_TOTAL_AMOUNT_WITH_FEES")} {workerRatesData?.currency
+        ? ` (${workerRatesData.currency})`
+        : ""}
                 </div>
             ),
             selector: (row) => {
@@ -433,8 +440,7 @@ const BillDetailsTable = ({ ...props }) => {
                 return (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                     {finalAmount !== null
-                    ? `${finalAmount} ${workerRatesData?.currency}`
-                    : t("NA")}
+                    ? `${finalAmount}` : 0}
                 </div>
                 );
             },
