@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-campaign-manager",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "Campaign",
   "license": "MIT",
   "main": "dist/main.js",

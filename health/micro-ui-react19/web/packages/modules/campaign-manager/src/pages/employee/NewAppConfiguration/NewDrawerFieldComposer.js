@@ -445,15 +445,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         };
         return (
           <>
-            <Switch
-              label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
-              onToggle={handleToggleChange}
-              isCheckedInitially={localToggle}
-              shapeOnOff
-              disabled={isDisabled}
-              isLabelFirst={true}
-              className={"digit-sidepanel-switch-wrap"}
-            />
+            <div id={`digit-sidepanel-switch-wrap-${panelItem.label}`}>
+              <Switch
+                label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+                onToggle={handleToggleChange}
+                isCheckedInitially={localToggle}
+                shapeOnOff
+                disabled={isDisabled}
+                isLabelFirst={true}
+                className={"digit-sidepanel-switch-wrap"}
+              />
+            </div>
             {/* Render Conditional Fields based on condition property */}
             {getConditionalFields().map((cField, index) => (
               <ConditionalField
