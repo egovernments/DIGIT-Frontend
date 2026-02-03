@@ -1,0 +1,93 @@
+name: Blank Common Console Workflow
+on:
+  push:
+    branches: ['*'] # Trigger on any branch
+    paths:
+      - 'health/micro-ui/web/console/**'
+  workflow_dispatch: # Enable manual triggering with inputs
+    inputs:
+      folder_name:
+        description: 'Specify the folder for Docker build (default: console)'
+        required: false
+        default: 'console'
+
+jobs:
+  docker_image-build:
+    outputs:
+      run_job_digit_ui: ${{ steps.check_files.outputs.run_job_digit_ui }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v1
+
+      - name: Check modified files
+        id: check_files
+        run: |
+          echo "=============== List modified files ==============="
+          git diff --name-only HEAD^ HEAD
+
+          echo "========== Check paths of modified files =========="
+          git diff --name-only HEAD^ HEAD > files.txt
+          run_job_digit_ui=false
+          while IFS= read -r file
+          do
+            if [[ $file == health/micro-ui/* ]]; then
+              echo "This modified file is under the 'digit_ui' folder."
+              run_job_digit_ui=true
+            fi
+          done < files.txt
+
+          # Set the output based on whether the job should run
+          echo "::set-output name=run_job_digit_ui::$run_job_digit_ui"
+          echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV  # Extract last 8 characters of SHA
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Login to egovio Docker Container Registry
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Build and Push Docker images for digit-ui
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+        run: |
+          # Use input folder name or default
+          DOCKER_IMAGE_VARIANT=${{ github.event.inputs.folder_name || 'console' }}
+          echo "Original folder for Docker build: $DOCKER_IMAGE_VARIANT"
+
+          # Remove '-ui' if it exists in the folder name
+          SANITIZED_FOLDER=${ORIGINAL_FOLDER//-ui/}
+          echo "Sanitized folder for Docker build: $SANITIZED_FOLDER"
+
+          IMAGE_NAME_1=$DOCKER_IMAGE_VARIANT:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME_1 -f $SANITIZED_FOLDER/dockerfile . &
+
+          # Wait for the build to complete
+          wait
+
+          # Tag and push Docker image
+          docker tag $IMAGE_NAME_1 egovio/$IMAGE_NAME_1
+          docker push egovio/$IMAGE_NAME_1
+
+          # Set outputs for the summary
+          echo "IMAGE_NAME_1=egovio/$IMAGE_NAME_1" >> $GITHUB_ENV
+        working-directory: health/micro-ui
+
+      - name: Display Docker images in Actions tab
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+        run: |
+          echo "First Docker image: ${{ env.IMAGE_NAME_1 }}"
+          echo "::set-output name=first_image::$IMAGE_NAME_1"
+
+      - name: Show Docker images in job summary
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+        run: |
+          echo "## Docker images built and pushed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ env.IMAGE_NAME_1 }}" >> $GITHUB_STEP_SUMMARY

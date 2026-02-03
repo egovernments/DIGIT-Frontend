@@ -1,0 +1,2273 @@
+{
+    "ResponseInfo": null,
+    "MdmsRes": {
+        "commonHCMUiConfig": {
+            "SearchProductConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_PRODUCT",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "DRUG_NAME",
+                                        "type": "text",
+                                        "label": "DRUG_NAME",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "name",
+                                            "error": "PRODUCT_DRUG_NAME_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "DRUG_MANUFACTURER",
+                                        "type": "text",
+                                        "label": "DRUG_MANUFACTURER",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "manufacturer",
+                                            "error": "PRODUCT_DRUG_MANUFACTURER_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "DRUG_TYPE",
+                                        "type": "text",
+                                        "label": "DRUG_TYPE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "type",
+                                            "error": "PRODUCT_DRUG_TYPE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "DRUG_IDS",
+                                        "type": "text",
+                                        "label": "DRUG_IDS",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PRODUCT_DRUG_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "name": "",
+                                    "type": "",
+                                    "manufacturer": ""
+                                },
+                                "formClassName": " ",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "DRUG_NAME",
+                                        "jsonPath": "name"
+                                    },
+                                    {
+                                        "label": "DRUG_MANUFACTURER",
+                                        "jsonPath": "manufacturer"
+                                    },
+                                    {
+                                        "label": "DRUG_TYPE",
+                                        "jsonPath": "type"
+                                    },
+                                    {
+                                        "label": "DRUG_IDS",
+                                        "jsonPath": "id"
+                                    }
+                                ],
+                                "resultsJsonPath": "Product",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=Product",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "limit": 10,
+                            "offset": 0,
+                            "Product": {},
+                            "tenantId": "mz",
+                            "apiOperation": "SEARCH"
+                        },
+                        "serviceName": "/product/v1/_search",
+                        "requestParam": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.Product",
+                        "searchFormJsonPath": "requestBody.Product",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PRODUCT",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchProjectTaskConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_TASK",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "TASK_ID",
+                                        "type": "text",
+                                        "label": "TASK_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PROJECT_TASK_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "CLIENT_REFERENCE_ID",
+                                        "type": "text",
+                                        "label": "CLIENT_REFERENCE_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "clientReferenceId",
+                                            "error": "PROJECT_CLIENT_REFERENCE_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_ID",
+                                        "type": "text",
+                                        "label": "PROJECT_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectId",
+                                            "error": "PROJECT_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_BENEFICIARY_ID",
+                                        "type": "text",
+                                        "label": "PROJECT_BENEFICIARY_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectBeneficiaryId",
+                                            "error": "PROJECT_BENEFICIARY_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "START_DATE",
+                                        "type": "date",
+                                        "label": "START_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "plannedStartDate",
+                                            "error": "PROJECT_START_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "END_DATE",
+                                        "type": "date",
+                                        "label": "END_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "plannedEndDate",
+                                            "error": "PROJECT_END_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "ACTUAL_START_DATE",
+                                        "type": "date",
+                                        "label": "ACTUAL_START_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "actualStartDate",
+                                            "error": "PROJECT_START_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "ACTUAL_END_DATE",
+                                        "type": "date",
+                                        "label": "ACTUAL_END_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "actualEndDate",
+                                            "error": "PROJECT_END_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "LOCALITY_CODE",
+                                        "type": "text",
+                                        "label": "LOCALITY_CODE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "localityCode",
+                                            "error": "PROJECT_LOCALITY_CODE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "STATUS",
+                                        "type": "text",
+                                        "label": "STATUS",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "status",
+                                            "error": "PROJECT_STATUS_CODE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": [
+                                        ""
+                                    ],
+                                    "status": "",
+                                    "projectId": "",
+                                    "localityCode": "",
+                                    "actualEndDate": "",
+                                    "plannedEndDate": "",
+                                    "actualStartDate": "",
+                                    "plannedStartDate": "",
+                                    "clientReferenceId": [
+                                        ""
+                                    ],
+                                    "projectBeneficiaryId": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "TASK_ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "CLIENT_REFERENCE_ID",
+                                        "jsonPath": "clientReferenceId"
+                                    },
+                                    {
+                                        "label": "PROJECT_ID",
+                                        "jsonPath": "projectId"
+                                    },
+                                    {
+                                        "label": "PROJECT_BENEFICIARY_ID",
+                                        "jsonPath": "projectBeneficiaryId"
+                                    },
+                                    {
+                                        "label": "START_DATE",
+                                        "jsonPath": "plannedStartDate"
+                                    },
+                                    {
+                                        "label": "END_DATE",
+                                        "jsonPath": "plannedEndDate"
+                                    },
+                                    {
+                                        "label": "ACTUAL_START_DATE",
+                                        "jsonPath": "actualStartDate"
+                                    },
+                                    {
+                                        "label": "ACTUAL_END_DATE",
+                                        "jsonPath": "actualEndDate"
+                                    },
+                                    {
+                                        "label": "LOCALITY_CODE",
+                                        "jsonPath": "localityCode"
+                                    },
+                                    {
+                                        "label": "STATUS",
+                                        "jsonPath": "status"
+                                    }
+                                ],
+                                "resultsJsonPath": "Tasks",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=ProjectTask",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "Task": {},
+                            "tenantId": "mz"
+                        },
+                        "serviceName": "/project/task/v1/_search",
+                        "requestParam": {
+                            "limit": 100,
+                            "offset": 0,
+                            "tenantId": "mz",
+                            "includeDeleted": true
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.Task",
+                        "searchFormJsonPath": "requestBody.Task",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_TASK",
+                    "additionalSections": {}
+                }
+            ],
+            "HelpScreen": [
+                {
+                    "link": "egov@egov.com",
+                    "type": "mail",
+                    "screen": "coded-user",
+                    "message": "For setting up of Coded user for any campaign related data, please click on the following link to send an email to eGov DIGIT Success Team"
+                },
+                {
+                    "link": "egov@egov.com",
+                    "type": "mail",
+                    "screen": "basic-setup",
+                    "message": "For setting up of Campaign Name, Language and Tenant related data, please click on the following link to send an email to eGov DIGIT Success Team "
+                },
+                {
+                    "link": "egov@egov.com",
+                    "type": "mail",
+                    "screen": "check-list",
+                    "message": "For setting up of Checklist for any campaign related data, please click on the following link to send an email to eGov DIGIT Success Team "
+                }
+            ],
+            "SearchStaffConfig": [
+                {
+                    "type": "search",
+                    "label": "USER_MANAGEMENT",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "type": "search",
+                                "fields": [
+                                    {
+                                        "type": "text",
+                                        "label": "NAME",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "name",
+                                            "error": "ERR_INVALID_NAME",
+                                            "style": {
+                                                "marginBottom": "0px"
+                                            }
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "type": "text",
+                                        "label": "EMPLOYEE_CODE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "codes",
+                                            "error": "ERR_INVALID_NAME",
+                                            "style": {
+                                                "marginBottom": "0px"
+                                            }
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "type": "number",
+                                        "label": "CONTACT_NUMBER",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "phone",
+                                            "error": "ERR_INVALID_PHONE_NUMBER",
+                                            "style": {
+                                                "marginBottom": "0px"
+                                            }
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "type": "text",
+                                        "label": "Role",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "role",
+                                            "error": "ERR_INVALID_ROLE",
+                                            "style": {
+                                                "marginBottom": "0px"
+                                            }
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "typeMobile": "filter",
+                                "headerLabel": "ES_COMMON_SEARCH",
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "Search",
+                                "defaultValues": {
+                                    "codes": "",
+                                    "limit": 10,
+                                    "names": "",
+                                    "phone": "",
+                                    "roles": "",
+                                    "offset": 0,
+                                    "sortBy": "lastModifiedTime",
+                                    "tenantId": "mz",
+                                    "sortOrder": "DESC"
+                                },
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
+                                "searchWrapperStyles": {
+                                    "marginTop": "1.4rem",
+                                    "alignItems": "center",
+                                    "gridColumn": "3",
+                                    "flexDirection": "column-reverse",
+                                    "justifyContent": "end"
+                                }
+                            },
+                            "labelMobile": "ES_COMMON_SEARCH"
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "USER_MANAGEMENT_CODE",
+                                        "jsonPath": "code"
+                                    },
+                                    {
+                                        "label": "USER_MANAGEMENT_NAME",
+                                        "jsonPath": "user.name"
+                                    },
+                                    {
+                                        "label": "USER_MANAGEMENT_MOBILE_NO",
+                                        "jsonPath": "user.mobileNumber"
+                                    },
+                                    {
+                                        "label": "MP_USER_MANAGEMENT_ROLE",
+                                        "jsonPath": "user.roles[0].code"
+                                    },
+                                    {
+                                        "label": "USER_MANAGEMENT_EMAIL",
+                                        "jsonPath": "user.emailId"
+                                    }
+                                ],
+                                "rowClassName": "table-row-mdms table-row-mdms-hover",
+                                "tableClassName": "table pqm-table",
+                                "resultsJsonPath": "Employees",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {},
+                        "serviceName": "/egov-hrms/employees/_search",
+                        "requestParam": {
+                            "limit": 10,
+                            "names": "",
+                            "roles": "",
+                            "offset": 0,
+                            "sortBy": "lastModifiedTime",
+                            "tenantId": "mz",
+                            "sortOrder": "DESC"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestParam",
+                        "searchFormJsonPath": "requestParam",
+                        "minParametersForFilterForm": 0,
+                        "minParametersForSearchForm": 0
+                    },
+                    "persistFormData": true,
+                    "additionalSections": {},
+                    "showAsRemovableTagsInMobile": true
+                }
+            ],
+            "MasterLandingScreen": [
+                {
+                    "links": [
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=baseTimeOut",
+                            "code": "BaseTimeout",
+                            "icon": "work",
+                            "order": "1",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-PROJECT-TYPES&masterName=projectTypes",
+                            "code": "Project types",
+                            "icon": "work",
+                            "order": "2",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        }
+                    ],
+                    "screen": "advanced-landing-screen"
+                },
+                {
+                    "links": [
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectConfig",
+                            "code": "SearchProject",
+                            "icon": "Work",
+                            "order": "0",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectFacilityConfig",
+                            "code": "Project Facility Search",
+                            "icon": "work",
+                            "order": "2",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectResourceConfig",
+                            "code": "Project Resource",
+                            "icon": "work",
+                            "order": "3",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectStaffConfig",
+                            "code": "Project Staff ",
+                            "icon": "work",
+                            "order": "4",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectBeneficiaryConfig",
+                            "code": "Project Beneficiary",
+                            "icon": "work",
+                            "order": "4",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectTaskConfig",
+                            "code": "Project Task",
+                            "icon": "work",
+                            "order": "4",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchHouseholdConfig",
+                            "code": "Search Household",
+                            "icon": "work",
+                            "order": "6",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        }
+                    ],
+                    "screen": "project-landing-screen"
+                },
+                {
+                    "links": [
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductConfig",
+                            "code": "Product",
+                            "icon": "Work",
+                            "order": "0",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductVariantConfig",
+                            "code": "Product Variant",
+                            "icon": "Announcement",
+                            "order": "2",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-PROJECT-TYPES&masterName=projectTypes",
+                            "code": "Project Types",
+                            "icon": "Engineering",
+                            "order": "3",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectConfig",
+                            "code": "Project",
+                            "icon": "Announcement",
+                            "order": "1",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProjectResourceConfig",
+                            "code": "Project Resource",
+                            "icon": "Work",
+                            "order": "2",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        }
+                    ],
+                    "screen": "test-landing-screen"
+                },
+                {
+                    "links": [
+                        {
+                            "url": "/workbench-ui/employee/hcmworkbench/user",
+                            "code": "NamedUser",
+                            "icon": "Work",
+                            "order": "2",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/health-ui/employee/hrms/inbox",
+                            "code": "HRMS",
+                            "icon": "Announcement",
+                            "order": "1",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/hcmworkbench/help-screen/coded-user",
+                            "code": "CodedUser",
+                            "icon": "Engineering",
+                            "order": "3",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        }
+                    ],
+                    "screen": "user-landing-screen"
+                },
+                {
+                    "links": [
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=hierarchyConfig",
+                            "code": "Boundary settings",
+                            "icon": "Work",
+                            "order": "0",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=commonHCMUiConfig&masterName=MasterLandingScreen",
+                            "code": "Master Landing Setting",
+                            "icon": "Announcement",
+                            "order": "1",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/hcmworkbench/master/project-landing-screen",
+                            "code": "Project ",
+                            "icon": "Work",
+                            "order": "4",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/campaign/setup-campaign",
+                            "code": "Workbench Campaign",
+                            "icon": "work",
+                            "order": "6",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchFacilityConfig",
+                            "code": "Facility",
+                            "icon": "work",
+                            "order": "5",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchStaffConfig",
+                            "code": "Employee",
+                            "icon": "work",
+                            "order": "5",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductConfig",
+                            "code": "Product",
+                            "icon": "work",
+                            "order": "5",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/utilities/search/commonHCMUiConfig/SearchProductVariantConfig",
+                            "code": "ProductVariant",
+                            "icon": "work",
+                            "order": "5",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=HierarchySchema",
+                            "code": "boundary",
+                            "icon": "work",
+                            "order": "6",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/workbench/mdms-search-v2?moduleName=HCM-ADMIN-CONSOLE&masterName=ChecklistTemplates",
+                            "code": "checklist",
+                            "icon": "work",
+                            "order": "7",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        },
+                        {
+                            "url": "/workbench-ui/employee/hcmworkbench/master/advanced-landing-screen",
+                            "code": "Advanced settings",
+                            "icon": "work",
+                            "order": "11",
+                            "roles": [
+                                "CAMPAIGN_ADMIN"
+                            ]
+                        }
+                    ],
+                    "screen": "master-landing-screen"
+                }
+            ],
+            "SearchProjectFacilityConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_PROJECT_FACILITY",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "ID",
+                                        "type": "text",
+                                        "label": "ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PROJECT_ID_ERROR_MESSAGE"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_ID",
+                                        "type": "text",
+                                        "label": "PROJECT_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectId",
+                                            "error": "PROJECT_TYPE_ERR_MSG"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "FACILITY_ID",
+                                        "type": "text",
+                                        "label": "FACILITY_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "facilityId",
+                                            "error": "PROJECT_SUB_TYPE_ERR_MSG"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "projectId": "",
+                                    "facilityId": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "FACILITY_ID",
+                                        "jsonPath": "facilityId"
+                                    },
+                                    {
+                                        "label": "PROJECT_ID",
+                                        "jsonPath": "projectId",
+                                        "additionalCustomization": "true"
+                                    },
+                                    {
+                                        "label": "PROJECT_ISDELETED",
+                                        "jsonPath": "isDeleted"
+                                    }
+                                ],
+                                "resultsJsonPath": "ProjectFacilities",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=ProjectFacility",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz",
+                            "apiOperation": "SEARCH",
+                            "ProjectFacility": {}
+                        },
+                        "serviceName": "/project/facility/v1/_search",
+                        "requestParam": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.ProjectFacility",
+                        "searchFormJsonPath": "requestBody.ProjectFacility",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PROJECT_FACILITY",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchProjectStaffConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_PROJECT_STAFF",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "ID",
+                                        "type": "text",
+                                        "label": "ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PROJECT_STAFF_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "USER_ID",
+                                        "type": "text",
+                                        "label": "USER_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "staffId",
+                                            "error": "PROJECT_USER_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$\"<>?\\\\~`!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_ID",
+                                        "type": "text",
+                                        "label": "PROJECT_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectId",
+                                            "error": "PROJECT_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "START_DATE",
+                                        "type": "date",
+                                        "label": "START_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "startDate",
+                                            "error": "PROJECT_START_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "END_DATE",
+                                        "type": "date",
+                                        "label": "END_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "endDate",
+                                            "error": "PROJECT_END_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "endDate": "",
+                                    "staffId": "",
+                                    "projectId": "",
+                                    "startDate": ""
+                                },
+                                "formClassName": " ",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "USER_ID",
+                                        "jsonPath": "userId"
+                                    },
+                                    {
+                                        "label": "PROJECT_ID",
+                                        "jsonPath": "projectId",
+                                        "additionalCustomization": "true"
+                                    },
+                                    {
+                                        "label": "START_DATE",
+                                        "jsonPath": "startDate"
+                                    },
+                                    {
+                                        "label": "END_DATE",
+                                        "jsonPath": "endDate"
+                                    }
+                                ],
+                                "resultsJsonPath": "ProjectStaff",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=ProjectStaff",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "tenantId": "mz",
+                            "ProjectStaff": {}
+                        },
+                        "serviceName": "/project/staff/v1/_search",
+                        "requestParam": {
+                            "limit": 100,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.ProjectStaff",
+                        "searchFormJsonPath": "requestBody.ProjectStaff",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PROJECT_STAFF",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchProjectConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_PROJECT",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "ID",
+                                        "type": "text",
+                                        "label": "ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PROJECT_ID_ERROR_MESSAGE",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_TYPE",
+                                        "type": "text",
+                                        "label": "PROJECT_TYPE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectType",
+                                            "error": "PROJECT_TYPE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_BOUNDARY_CODE",
+                                        "type": "text",
+                                        "label": "PROJECT_BOUNDARY_CODE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "boundary",
+                                            "error": "PROJECT_BOUNDARY_CODE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_NAME",
+                                        "type": "text",
+                                        "label": "PROJECT_NAME",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "name",
+                                            "error": "PROJECT_NAME_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_NUMBER",
+                                        "type": "text",
+                                        "label": "PROJECT_NUMBER",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectNumber",
+                                            "error": "PROJECT_NUMBER_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "CAMPAIGN_NUMBER",
+                                        "type": "text",
+                                        "label": "CAMPAIGN_NUMBER",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "referenceID",
+                                            "error": "CAMP_NUMBER_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "START_DATE",
+                                        "type": "date",
+                                        "label": "START_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "startDate",
+                                            "error": "PROJECT_START_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "END_DATE",
+                                        "type": "date",
+                                        "label": "END_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "endDate",
+                                            "error": "PROJECT_END_DATE_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "name": "",
+                                    "endDate": "",
+                                    "boundary": "",
+                                    "startDate": "",
+                                    "projectType": "",
+                                    "referenceID": "",
+                                    "projectNumber": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "PROJECT_NUMBER",
+                                        "jsonPath": "projectNumber",
+                                        "additionalCustomization": true
+                                    },
+                                    {
+                                        "label": "PROJECT_NAME",
+                                        "jsonPath": "name"
+                                    },
+                                    {
+                                        "label": "PROJECT_TYPE",
+                                        "jsonPath": "projectType"
+                                    },
+                                    {
+                                        "label": "PROJECT_BOUNDARY_TYPE",
+                                        "jsonPath": "address.boundaryType"
+                                    },
+                                    {
+                                        "label": "PROJECT_BOUNDARY",
+                                        "jsonPath": "address.boundary"
+                                    },
+                                    {
+                                        "label": "PROJECT_CREATED_TIME",
+                                        "jsonPath": "auditDetails.createdTime",
+                                        "additionalCustomization": true
+                                    }
+                                ],
+                                "resultsJsonPath": "Project",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=Project",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "limit": 10,
+                            "offset": 0,
+                            "Projects": {
+                                "tenantId": "mz"
+                            },
+                            "tenantId": "mz",
+                            "apiOperation": "SEARCH"
+                        },
+                        "serviceName": "/project/v1/_search",
+                        "requestParam": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.Projects",
+                        "searchFormJsonPath": "requestBody.Projects",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PROJECT"
+                }
+            ],
+            "SearchProductConfig2": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_PRODUCT",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "DRUG_NAME",
+                                        "type": "text",
+                                        "label": "DRUG_NAME",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "name",
+                                            "error": "PRODUCT_DRUG_NAME_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "DRUG_MANUFACTURER",
+                                        "type": "text",
+                                        "label": "DRUG_MANUFACTURER",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "manufacturer",
+                                            "error": "PRODUCT_DRUG_MANUFACTURER_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "DRUG_TYPE",
+                                        "type": "text",
+                                        "label": "DRUG_TYPE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "type",
+                                            "error": "PRODUCT_DRUG_TYPE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "DRUG_IDS",
+                                        "type": "text",
+                                        "label": "DRUG_IDS",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PRODUCT_DRUG_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "name": "",
+                                    "type": "",
+                                    "manufacturer": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "DRUG_NAME",
+                                        "jsonPath": "name"
+                                    },
+                                    {
+                                        "label": "DRUG_MANUFACTURER",
+                                        "jsonPath": "manufacturer"
+                                    },
+                                    {
+                                        "label": "DRUG_TYPE",
+                                        "jsonPath": "type"
+                                    },
+                                    {
+                                        "label": "DRUG_IDS",
+                                        "jsonPath": "id"
+                                    }
+                                ],
+                                "resultsJsonPath": "Product",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v2?moduleName=Health&masterName=Product2",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "limit": 10,
+                            "offset": 0,
+                            "Product": {},
+                            "tenantId": "mz",
+                            "apiOperation": "SEARCH"
+                        },
+                        "serviceName": "/product/v1/_search",
+                        "requestParam": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.Product",
+                        "searchFormJsonPath": "requestBody.Product",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PRODUCT",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchProductVariantConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_PRODUCT_VARIANT",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "PRODUCT_SKU",
+                                        "type": "text",
+                                        "label": "PRODUCT_SKU",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "sku",
+                                            "error": "PRODUCT_SKU_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PRODUCT_VARIATION",
+                                        "type": "text",
+                                        "label": "PRODUCT_VARIATION",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "variation",
+                                            "error": "PRODUCT_VARIATION_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PRODUCT_IDS",
+                                        "type": "text",
+                                        "label": "PRODUCT_IDS",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PRODUCT_IDS_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PRODUCT_ID",
+                                        "type": "text",
+                                        "label": "PRODUCT_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "productId",
+                                            "error": "PRODUCT_ID_ERR_MSG",
+                                            "validation": {}
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "sku": "",
+                                    "productId": "",
+                                    "variation": ""
+                                },
+                                "formClassName": " ",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "ProductVariant",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "PRODUCT_SKU",
+                                        "jsonPath": "sku"
+                                    },
+                                    {
+                                        "label": "PRODUCT_VARIATION",
+                                        "jsonPath": "variation"
+                                    },
+                                    {
+                                        "label": "VARIANT_ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "PRODUCT_ID",
+                                        "jsonPath": "productId"
+                                    }
+                                ],
+                                "resultsJsonPath": "ProductVariant",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=ProductVariant",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "tenantId": "mz",
+                            "ProductVariant": {}
+                        },
+                        "serviceName": "/product/variant/v1/_search",
+                        "requestParam": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.ProductVariant",
+                        "searchFormJsonPath": "requestBody.ProductVariant",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PRODUCT_VARIANT",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchHouseholdConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_HOUSEHOLD",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "CLIENT_ID",
+                                        "type": "text",
+                                        "label": "CLIENT_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "HOUSEHOLD_CLIENT_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "CLIENT_REF_ID",
+                                        "type": "text",
+                                        "label": "CLIENT_REF_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "clientReferenceId",
+                                            "error": "HOUSEHOLD_CLIENT_REFF_ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "BOUNDARY_CODE",
+                                        "type": "text",
+                                        "label": "BOUNDARY_CODE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "boundaryCode",
+                                            "error": "HOUSEHOLD_BOUNDARY_CODE_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "boundaryCode": "",
+                                    "clientReferenceId": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "Household",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "CLIENT_ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "CLIENT_REF_ID",
+                                        "jsonPath": "clientReferenceId"
+                                    },
+                                    {
+                                        "label": "BOUNDARY_CODE",
+                                        "jsonPath": "boundaryCode"
+                                    }
+                                ],
+                                "resultsJsonPath": "Households",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=Household",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "Household": {
+                                "tenantId": "mz"
+                            }
+                        },
+                        "serviceName": "/household/v1/_search",
+                        "requestParam": {
+                            "limit": 1,
+                            "offset": 0,
+                            "tenantId": "mz",
+                            "includeDeleted": true
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.Household",
+                        "searchFormJsonPath": "requestBody.Household",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_HOUSEHOLD",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchFacilityConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_FACILITY",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "FACILITY_ID",
+                                        "type": "text",
+                                        "label": "FACILITY_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "PROJECT_PATTERN_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "FACILITY_USAGE",
+                                        "type": "text",
+                                        "label": "FACILITY_USAGE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "usage",
+                                            "error": "COMMON_PATTERN_ERR_MSG_MUSTER_ID",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "FACILITY_STORAGE_CAPACITY",
+                                        "type": "text",
+                                        "label": "FACILITY_STORAGE_CAPACITY",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "storageCapacity",
+                                            "error": "COMMON_PATTERN_ERR_MSG_MUSTER_ID",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "FACILITY_LOCALITY_CODE",
+                                        "type": "text",
+                                        "label": "FACILITY_LOCALITY_CODE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "boundaryCode",
+                                            "error": "COMMON_PATTERN_ERR_MSG_MUSTER_ID",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,100}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": "",
+                                    "usage": "",
+                                    "boundaryCode": "",
+                                    "storageCapacity": ""
+                                },
+                                "formClassName": " ",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "Facility",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "FACILITY_ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "FACILITY_NAME",
+                                        "jsonPath": "name"
+                                    },
+                                    {
+                                        "label": "FACILITY_IS_PERMANENT",
+                                        "jsonPath": "isPermanent"
+                                    },
+                                    {
+                                        "label": "FACILITY_USAGE",
+                                        "jsonPath": "usage"
+                                    },
+                                    {
+                                        "label": "FACILITY_STORAGE_CAPACITY",
+                                        "jsonPath": "storageCapacity"
+                                    },
+                                    {
+                                        "label": "FACILITY_LOCALITY_CODE",
+                                        "jsonPath": "address.locality.code"
+                                    }
+                                ],
+                                "resultsJsonPath": "Facilities",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=Facility",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "Facility": {}
+                        },
+                        "serviceName": "/facility/v1/_search",
+                        "requestParam": {
+                            "limit": 1,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.Facility",
+                        "searchFormJsonPath": "requestBody.Facility",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_FACILITY",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchProjectResourceConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_RESOURCE",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "RESOURCE_ID",
+                                        "type": "text",
+                                        "label": "RESOURCE_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "RESOURCE_ID_ERR_MSG"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "RESOURCE_ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "PRODUCT_VARIANT_ID",
+                                        "jsonPath": "resource.productVariantId"
+                                    },
+                                    {
+                                        "label": "TYPE",
+                                        "jsonPath": "resource.type"
+                                    },
+                                    {
+                                        "label": "BASE_UNIT_VARIATION",
+                                        "jsonPath": "resource.isBaseUnitVariant"
+                                    }
+                                ],
+                                "resultsJsonPath": "ProjectResources",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=ProjectResource",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "limit": 10,
+                            "offset": 0,
+                            "tenantId": "mz",
+                            "apiOperation": "SEARCH",
+                            "ProjectResource": {}
+                        },
+                        "serviceName": "/project/resource/v1/_search",
+                        "requestParam": {
+                            "limit": 2,
+                            "offset": 0,
+                            "tenantId": "mz"
+                        },
+                        "tableFormJsonPath": "requestParam",
+                        "filterFormJsonPath": "requestBody.ProjectResource",
+                        "searchFormJsonPath": "requestBody.ProjectResource",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_RESOURCE",
+                    "additionalSections": {}
+                }
+            ],
+            "SearchProjectBeneficiaryConfig": [
+                {
+                    "type": "search",
+                    "label": "SEARCH_BENEFICIARY",
+                    "sections": {
+                        "search": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "fields": [
+                                    {
+                                        "key": "ID",
+                                        "type": "text",
+                                        "label": "ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "id",
+                                            "error": "ID_ERR_MSG",
+                                            "validation": {
+                                                "pattern": "^[^\\$<>?\\\\~!@$%^()+={}\\[\\]*:;“”‘’]{1,50}$"
+                                            }
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": true
+                                    },
+                                    {
+                                        "key": "CLIENT_REFERENCE_ID",
+                                        "type": "text",
+                                        "label": "CLIENT_REFERENCE_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "clientReferenceId",
+                                            "error": "PROJECT_CLIENT_REFERENCE_ID_ERR_MSG"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "PROJECT_ID",
+                                        "type": "text",
+                                        "label": "PROJECT_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "projectId",
+                                            "error": "PROJECT_ID_ERR_MSG"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "BENEFICIARY_ID",
+                                        "type": "text",
+                                        "label": "BENEFICIARY_ID",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "beneficiaryId",
+                                            "error": "PROJECT_BENEFICIARY_ID_ERR_MSG"
+                                        },
+                                        "preProcess": {
+                                            "convertStringToRegEx": [
+                                                "populators.validation.pattern"
+                                            ]
+                                        },
+                                        "isMandatory": false
+                                    },
+                                    {
+                                        "key": "REGISTRATION_DATE",
+                                        "type": "date",
+                                        "label": "REGISTRATION_DATE",
+                                        "disable": false,
+                                        "populators": {
+                                            "name": "dateOfRegistration",
+                                            "error": "PROJECT_REGISTRATION_DATE_ERR_MSG"
+                                        },
+                                        "isMandatory": false
+                                    }
+                                ],
+                                "headerStyle": null,
+                                "minReqFields": 0,
+                                "primaryLabel": "ES_COMMON_SEARCH",
+                                "defaultValues": {
+                                    "id": [
+                                        ""
+                                    ],
+                                    "projectId": "",
+                                    "beneficiaryId": "",
+                                    "clientReferenceId": "",
+                                    "dateOfRegistration": ""
+                                },
+                                "formClassName": "custom-both-clear-search",
+                                "secondaryLabel": "ES_COMMON_CLEAR_SEARCH"
+                            }
+                        },
+                        "searchResult": {
+                            "show": true,
+                            "label": "",
+                            "children": {},
+                            "uiConfig": {
+                                "columns": [
+                                    {
+                                        "label": "ID",
+                                        "jsonPath": "id"
+                                    },
+                                    {
+                                        "label": "CLIENT_REFERENCE_ID",
+                                        "jsonPath": "clientReferenceId"
+                                    },
+                                    {
+                                        "label": "PROJECT_ID",
+                                        "jsonPath": "projectId"
+                                    },
+                                    {
+                                        "label": "BENEFICIARY_ID",
+                                        "jsonPath": "beneficiaryId"
+                                    },
+                                    {
+                                        "label": "REGISTRATION_DATE",
+                                        "jsonPath": "dateOfRegistration"
+                                    }
+                                ],
+                                "resultsJsonPath": "ProjectBeneficiaries",
+                                "enableColumnSort": true,
+                                "enableGlobalSearch": false
+                            }
+                        }
+                    },
+                    "actionLink": "workbench-ui/employee/workbench/mdms-add-v4?moduleName=Health&masterName=ProjectBeneficiary",
+                    "actionRole": "SYSTEM_ADMINISTRATOR",
+                    "apiDetails": {
+                        "masterName": "commonUiConfig",
+                        "moduleName": "SearchDefaultConfig",
+                        "requestBody": {
+                            "limit": 1,
+                            "offset": 0,
+                            "tenantId": "mz",
+                            "includeDeleted": true,
+                            "ProjectBeneficiary": {}
+                        },
+                        "serviceName": "/project/beneficiary/v1/_search",
+                        "requestParam": {
+                            "limit": 1,
+                            "offset": 0,
+                            "tenantId": "mz",
+                            "includeDeleted": true
+                        },
+                        "tableFormJsonPath": "requestBody",
+                        "filterFormJsonPath": "requestBody.ProjectBeneficiary",
+                        "searchFormJsonPath": "requestBody.ProjectBeneficiary",
+                        "minParametersForSearchForm": 0
+                    },
+                    "actionLabel": "HCM_ADD_PROJECT_BENEFICIARY",
+                    "additionalSections": {}
+                }
+            ]
+        }
+    }
+}
