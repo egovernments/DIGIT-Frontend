@@ -36,7 +36,7 @@
   }
 
   .radio-btn-wrap input:checked ~ .radio-btn-checkmark:after {
-    @apply block bg-primary-main h-5 w-5 rounded-full absolute top-10 left-10;
+    @apply block bg-primary-main h-5 w-5 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
   }
 }
 .reverse-radio-selection-wrapper{

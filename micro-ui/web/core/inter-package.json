@@ -15,7 +15,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
+    "start": "run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
@@ -50,11 +50,11 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/babel-preset-react-app": "10.0.0",
-    "**/@babel/traverse":"7.25.9",
+    "**/@babel/traverse": "7.25.9",
     "**/ajv": "8.11.2",
     "**/ajv-formats": "2.1.1",
     "**/@jridgewell/gen-mapping": "0.3.5",
-    "fast-uri":"2.1.0",
+    "fast-uri": "2.1.0",
     "**/minimatch": "^3.0.4",
     "**/glob": "^7.1.2"
   },
@@ -72,7 +72,7 @@
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "@egovernments/digit-ui-react-components": "1.8.22",
-    "@egovernments/digit-ui-components":"0.2.0",
+    "@egovernments/digit-ui-components": "0.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",

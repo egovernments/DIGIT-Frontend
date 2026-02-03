@@ -8,8 +8,8 @@ import {
 import {
   initPGRComponents,
   PGRReducers,
-} from "@egovernments/digit-ui-module-pgr";
-import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
+} from "@egovernments/digit-ui-module-ccrs";
+import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
@@ -70,7 +70,7 @@ function App() {
       stateCode={stateCode}
       enabledModules={enabledModules}
       moduleReducers={moduleReducers}
-      // defaultLanding="employee"
+    // defaultLanding="employee"
     />
   );
 }

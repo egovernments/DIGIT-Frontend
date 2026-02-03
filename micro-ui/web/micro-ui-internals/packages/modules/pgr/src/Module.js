@@ -68,15 +68,15 @@ const componentsToRegister = {
   PGRModule,
   PGRLinks,
   PGRCard,
-  PGRComplaintDetails : ComplaintDetails,
-  PGRCreateComplaintEmp : CreateComplaintEmp,
-  PGRInbox : Inbox,
-  PGRResponseEmp : ResponseEmp,
-  PGRCreateComplaintCitizen : CreateComplaintCitizen,
-  PGRComplaintsList : ComplaintsList,
-  PGRComplaintDetailsPage : ComplaintDetailsPage,
-  PGRSelectRating : SelectRating,
-  PGRResponseCitzen : ResponseCitizen
+  PGRComplaintDetails: ComplaintDetails,
+  PGRCreateComplaintEmp: CreateComplaintEmp,
+  PGRInbox: Inbox,
+  PGRResponseEmp: ResponseEmp,
+  PGRCreateComplaintCitizen: CreateComplaintCitizen,
+  PGRComplaintsList: ComplaintsList,
+  PGRComplaintDetailsPage: ComplaintDetailsPage,
+  PGRSelectRating: SelectRating,
+  PGRResponseCitzen: ResponseCitizen
 };
 
 const setupLibraries = (Library, service, method) => {

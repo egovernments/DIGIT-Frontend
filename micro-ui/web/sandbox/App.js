@@ -6,10 +6,10 @@ import { UICustomizations } from "./Customisations/UICustomizations";
 import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";import {
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench"; import {
   initPGRComponents,
   PGRReducers,
-} from "@egovernments/digit-ui-module-pgr";
+} from "@egovernments/digit-ui-module-ccrs";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -52,7 +52,7 @@ function App() {
   const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
 
   if (isMultiRootTenant) {
-     const pathname = window.location.pathname;
+    const pathname = window.location.pathname;
     const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
     const start = pathname.indexOf(context) + context.length + 1;
     const employeeIndex = pathname.indexOf("employee");
@@ -77,7 +77,7 @@ function App() {
       stateCode={stateCode}
       enabledModules={enabledModules}
       moduleReducers={moduleReducers}
-      // defaultLanding="employee"
+    // defaultLanding="employee"
     />
   );
 }
