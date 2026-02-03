@@ -1,0 +1,1081 @@
+[
+  {
+    "version": 1,
+    "flow": "REGISTRATION",
+    "project": "CMP-2025-08-04-004846",
+    "page": "SearchBeneficiary",
+    "type": "template",
+    "order": 1,
+    "heading": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
+    "description": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
+    "navigateTo": {
+      "name": "overview",
+      "type": "template"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_PROXIMITY",
+            "order": 1,
+            "value": true,
+            "format": "searchByProximity",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "searchByProximity",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_ID_SEARCH",
+            "order": 1,
+            "value": true,
+            "format": "searchByID",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "searchByID",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR",
+            "order": 2,
+            "value": "",
+            "format": "searchBar",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "searchBar",
+            "deleteFlag": false,
+            "innerLabel": "enter the name of household",
+            "systemDate": false,
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR_mandatory_message"
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_FILTER_LABEL",
+            "order": 3,
+            "value": [],
+            "format": "filter",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "filter",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL",
+            "order": 4,
+            "value": "",
+            "format": "PrimaryButton",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "PrimaryButton",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL_mandatory_message"
+          },
+          {
+            "type": "button",
+            "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_QR_LABEL",
+            "order": 5,
+            "value": true,
+            "format": "scanner",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "SecondaryButton",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false
+          }
+        ]
+      }
+    ],
+    "footer": [
+      {
+        "format": "button",
+        "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": [
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "FORM",
+              "name": "HOUSEHOLD",
+              "data": [
+                {
+                  "key": "nameOfIndividual",
+                  "value": "searchBar.value"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "flow": "REGISTRATION",
+    "project": "CMP-2025-08-04-004846",
+    "page": "beneficiaryLocation",
+    "type": "object",
+    "heading": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_HEADING",
+    "description": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_DESCRIPTION",
+    "order": 2,
+    "navigateTo": {
+      "name": "REGISRATIONFLOW",
+      "type": "form"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea",
+            "order": 1,
+            "value": "",
+            "format": "locality",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "administrativeArea",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message"
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
+            "order": 2,
+            "value": "",
+            "format": "latLng",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
+            "infoText": "",
+            "readOnly": true,
+            "innerLabel": "",
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message"
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1",
+            "order": 3,
+            "value": "",
+            "format": "text",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_helpText",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "addressLine1",
+            "innerLabel": ""
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2",
+            "order": 4,
+            "value": "",
+            "format": "text",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_helpText",
+            "infoText": "",
+            "fieldName": "addressLine2",
+            "innerLabel": ""
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark",
+            "order": 5,
+            "value": "",
+            "format": "text",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_helpText",
+            "infoText": "",
+            "fieldName": "landmark",
+            "deleteFlag": false,
+            "innerLabel": ""
+          },
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode",
+            "order": 6,
+            "value": "",
+            "format": "text",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
+            "infoText": "",
+            "fieldName": "pincode",
+            "innerLabel": "",
+            "systemDate": false
+          },
+          {
+            "type": "string",
+            "enums": [
+              {
+                "code": "PERMANENT",
+                "name": "BENEFICIARYLOCATION_PERMANENT"
+              },
+              {
+                "code": "CORRESPONDENCE",
+                "name": "BENEFICIARYLOCATION_CORRESPONDENCE"
+              },
+              {
+                "code": "OTHER",
+                "name": "BENEFICIARYLOCATION_OTHER"
+              }
+            ],
+            "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_typeOfAddress",
+            "order": 7,
+            "value": "PERMANENT",
+            "format": "dropdown",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "typeOfAddress",
+            "innerLabel": "",
+            "includeInForm": true,
+            "includeInSummary": false
+          }
+        ]
+      }
+    ],
+    "footer": [
+      {
+        "format": "button",
+        "label": "APPONE_REGISTRATION_BENEFICIARYLOCATION_ACTION_BUTTON_LABEL_1",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": [
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "FORM",
+              "name": "HOUSEHOLD",
+              "data": [
+                {
+                  "key": "nameOfIndividual",
+                  "value": "searchBar.value"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "flow": "REGISTRATION",
+    "project": "CMP-2025-08-04-004846",
+    "page": "householdDetails",
+    "type": "object",
+    "heading": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+    "description": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
+    "order": 3,
+    "navigateTo": {
+      "name": "REGISRATIONFLOW",
+      "type": "form"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
+            "order": 1,
+            "value": "",
+            "format": "date",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "dateOfRegistration",
+            "innerLabel": "",
+            "systemDate": true,
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message"
+          },
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
+            "order": 2,
+            "value": "0",
+            "format": "numeric",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "childrenCount",
+            "innerLabel": ""
+          },
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount",
+            "order": 3,
+            "value": "0",
+            "format": "numeric",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "pregnantWomenCount",
+            "innerLabel": ""
+          },
+          {
+            "type": "integer",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
+            "order": 4,
+            "value": "1",
+            "format": "numeric",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "memberCount",
+            "innerLabel": "",
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_mandatory_message",
+            "min": 1,
+            "min.message": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_min_message",
+            "max": 10,
+            "max.message": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message"
+          }
+        ]
+      }
+    ],
+    "footer": [
+      {
+        "format": "button",
+        "label": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": [
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "FORM",
+              "name": "HOUSEHOLD",
+              "data": [
+                {
+                  "key": "nameOfIndividual",
+                  "value": "searchBar.value"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "flow": "REGISTRATION",
+    "project": "CMP-2025-08-04-004846",
+    "page": "beneficiaryDetails",
+    "type": "object",
+    "heading": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+    "description": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+    "order": 4,
+    "navigateTo": {
+      "name": "beneficiary-details",
+      "type": "template"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
+            "order": 1,
+            "value": "",
+            "format": "text",
+            "hidden": false,
+            "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+            "infoText": "",
+            "fieldName": "nameOfIndividual",
+            "innerLabel": "",
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message",
+            "minLength": 2,
+            "minLength.message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_min_message",
+            "maxLength": 200,
+            "maxLength.message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message"
+          },
+          {
+            "type": "boolean",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+            "order": 2,
+            "value": false,
+            "format": "checkbox",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "isHeadOfFamily",
+            "innerLabel": "",
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message"
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+            "order": 3,
+            "value": "",
+            "format": "idPopulator",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "identifiers",
+            "innerLabel": "",
+            "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR",
+            "includeInForm": true,
+            "includeInSummary": false
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
+            "order": 5,
+            "value": "",
+            "format": "dob",
+            "hidden": false,
+            "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
+            "infoText": "",
+            "fieldName": "dobPicker",
+            "innerLabel": ""
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
+            "order": 6,
+            "value": "",
+            "format": "select",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "gender",
+            "innerLabel": "",
+            "schemaCode": "common-masters.GenderType"
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+            "order": 7,
+            "value": "",
+            "format": "mobileNumber",
+            "hidden": false,
+            "tooltip": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
+            "helpText": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+            "infoText": "",
+            "fieldName": "phone",
+            "innerLabel": ""
+          },
+          {
+            "type": "string",
+            "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
+            "order": 8,
+            "value": "",
+            "format": "scanner",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "fieldName": "scanner",
+            "innerLabel": ""
+          }
+        ]
+      }
+    ],
+    "footer": [
+      {
+        "format": "button",
+        "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": [
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "FORM",
+              "name": "HOUSEHOLD",
+              "data": [
+                {
+                  "key": "nameOfIndividual",
+                  "value": "searchBar.value"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "flow": "REGISTRATION",
+    "project": "CMP-2025-08-04-004846",
+    "page": "HouseholdOverview",
+    "type": "template",
+    "heading": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_HEADING",
+    "description": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_DESCRIPTION",
+    "order": 5,
+    "navigateTo": {
+      "name": "beneficiary-details",
+      "type": "template"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_EDIT_HOUSEHOLD",
+            "order": 1,
+            "value": true,
+            "format": "editHousehold",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "editHousehold",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "validations": [],
+            "isMultiSelect": false
+          },
+          {
+            "type": "template",
+            "enums": [
+              {
+                "code": "Individual.name",
+                "name": "name",
+                "fieldKey": "name",
+                "jsonPath": "Individual.name.givenName",
+                "mandatory": "true"
+              },
+              {
+                "code": "Household.locality",
+                "name": "locality",
+                "isList": "true",
+                "fieldKey": "locality",
+                "jsonPath": "Household.address.locality.code",
+                "mandatory": "false"
+              },
+              {
+                "code": "Household.memberCount",
+                "name": "memberCount",
+                "fieldKey": "memberCount",
+                "jsonPath": "Household.memberCount",
+                "mandatory": "true"
+              }
+            ],
+            "label": "",
+            "order": 2,
+            "value": "",
+            "format": "DetailsCard",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "DetailsCard",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": "",
+            "isMultiSelect": false
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_EDIT_INDIVIDUAL",
+            "order": 3,
+            "value": "",
+            "format": "editIndividual",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "editIndividual",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "isMultiSelect": false
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_ADD_MEMBER",
+            "order": 4,
+            "value": [],
+            "format": "addMember",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "addMember",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false
+          },
+          {
+            "type": "template",
+            "label": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL",
+            "order": 5,
+            "value": "",
+            "format": "PrimaryButton",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "PrimaryButton",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "required": true,
+            "required.message": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL_mandatory_message"
+          }
+        ]
+      }
+    ],
+    "footer": []
+  },
+  {
+    "version": 1,
+    "flow": "DELIVERY",
+    "project": "CMP-2025-08-04-004846",
+    "page": "BeneficiaryDetails",
+    "type": "template",
+    "heading": "APPONE_DELIVERY_BENEFICIARYDETAILS_SCREEN_HEADING",
+    "description": "APPONE_DELIVERY_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+    "order": 1,
+    "navigateTo": {
+      "name": "DELIVERYFLOW",
+      "type": "form"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "template",
+            "enums": [
+              {
+                "code": "Individual.name",
+                "name": "name",
+                "fieldKey": "name",
+                "jsonPath": "Individual.name.givenName",
+                "mandatory": "true"
+              },
+              {
+                "code": "Household.locality",
+                "name": "locality",
+                "fieldKey": "locality",
+                "jsonPath": "Household.address.locality.code",
+                "mandatory": "false"
+              },
+              {
+                "code": "Individual.dateOfBirth",
+                "name": "dateOfBirth",
+                "fieldKey": "dateOfBirth",
+                "jsonPath": "Individual.dateOfBirth",
+                "mandatory": "false"
+              },
+              {
+                "code": "Individual.identifierId",
+                "name": "identifierId",
+                "fieldKey": "identifierId",
+                "jsonPath": "Individual.identifiers[0].identifierId",
+                "mandatory": "false"
+              }
+            ],
+            "label": "APPONE_DELIVERY_BENEFICIARYDETAILS_TITLE",
+            "order": 1,
+            "value": "",
+            "format": "DetailsCard",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "DetailsCard",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": ""
+          },
+          {
+            "type": "template",
+            "enums": [
+              {
+                "code": "Task.doseIndex",
+                "name": "doseIndex",
+                "fieldKey": "doseIndex",
+                "jsonPath": "Task.additionalFields",
+                "mandatory": "false",
+                "additionalField": "true"
+              },
+              {
+                "code": "Task.status",
+                "name": "deliveryStatus",
+                "fieldKey": "status",
+                "jsonPath": "Task.status",
+                "mandatory": "false"
+              },
+              {
+                "code": "Task.createdTime",
+                "name": "createdTime",
+                "fieldKey": "createdTime",
+                "jsonPath": "Task.auditDetails.createdTime",
+                "mandatory": "false"
+              }
+            ],
+            "label": "DELIVERY_BENEFICIARYDETAILS_TABLE_HEADER",
+            "order": 2,
+            "value": "",
+            "format": "Table",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "Table",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": ""
+          },
+          {
+            "type": "dynamic",
+            "enums": [],
+            "label": "APPONE_DELIVERY_BENEFICIARY_DETAILS_deliveryConditiondialog_label",
+            "order": 3,
+            "value": "",
+            "format": "custom",
+            "hidden": true,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "deliveryConditionDialog",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": "",
+            "includeInForm": true,
+            "includeInSummary": true
+          },
+          {
+            "type": "template",
+            "label": "DELIVERY_BENEFICIARYDETAILS_RECORD_DELIVERY_PRIMARY_LABEL",
+            "order": 3,
+            "value": "",
+            "format": "PrimaryButton",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "PrimaryButton",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "required": true,
+            "required.message": "DELIVERY_BENEFICIARYDETAILS_RECORD_DELIVERY_PRIMARY_LABEL_mandatory_message",
+            "errorMessage": ""
+          }
+        ]
+      }
+    ],
+    "footer": []
+  },
+  {
+    "version": 1,
+    "flow": "DELIVERY",
+    "project": "CMP-2025-08-04-004846",
+    "page": "DeliveryDetails",
+    "type": "object",
+    "heading": "APPONE_DELIVERY_DELIVERYDETAILS_SCREEN_HEADING",
+    "description": "APPONE_DELIVERY_DELIVERYDETAILS_SCREEN_DESCRIPTION",
+    "order": 2,
+    "navigateTo": {
+      "name": "household-acknowledgement",
+      "type": "template"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "integer",
+            "label": "APPONE_DELIVERY_DELIVERYDETAILS_label_dateOfDelivery",
+            "order": 1,
+            "value": "",
+            "format": "date",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": true,
+            "fieldName": "dateOfRegistration",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": true,
+            "errorMessage": ""
+          },
+          {
+            "type": "dynamic",
+            "enums": [
+              {
+                "code": "SP1",
+                "name": "SP1"
+              },
+              {
+                "code": "SP2",
+                "name": "SP2"
+              },
+              {
+                "code": "AQ1",
+                "name": "AQ1"
+              },
+              {
+                "code": "AQ2",
+                "name": "AQ2"
+              }
+            ],
+            "label": "APPONE_DELIVERY_DELIVERYDETAILS_label_resource",
+            "order": 2,
+            "value": "",
+            "format": "custom",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "resourceCard",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "required": true,
+            "required.message": "APPONE_DELIVERY_DELIVERYDETAILS_label_resource_mandatory_message",
+            "errorMessage": ""
+          },
+          {
+            "type": "string",
+            "label": "APPONE_DELIVERY_BENEFICIARYDETAILS_label_deliveryComments",
+            "order": 3,
+            "value": "",
+            "format": "dropdown",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "deliveryComment",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+            "systemDate": false,
+            "errorMessage": ""
+          },
+          {
+            "type": "string",
+            "label": "APPONE_DELIVERY_DELIVERYDETAILS_label_scanner",
+            "order": 4,
+            "value": "",
+            "format": "scanner",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "scanner",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": ""
+          }
+        ]
+      }
+    ],
+    "footer": [
+      {
+        "format": "button",
+        "label": "APPONE_DELIVERY_DELIVERYDETAILS_ACTION_BUTTON_LABEL_1",
+        "properties": {
+          "type": "primary",
+          "size": "large",
+          "mainAxisSize": "max",
+          "mainAxisAlignment": "center"
+        },
+        "onAction": [
+          {
+            "actionType": "NAVIGATION",
+            "properties": {
+              "type": "FORM",
+              "name": "HOUSEHOLD",
+              "data": [
+                {
+                  "key": "nameOfIndividual",
+                  "value": "searchBar.value"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "flow": "DELIVERY",
+    "project": "CMP-2025-08-04-004846",
+    "page": "HouseholdAcknowledgement",
+    "type": "template",
+    "heading": "APPONE_REGISTRATION_HOUSEHOLDACKNOWLEDGEMENT_SCREEN_HEADING",
+    "description": "APPONE_DELIVERY_HOUSEHOLDACKNOWLEDGEMENT_SCREEN_DESCRIPTION",
+    "order": 3,
+    "navigateTo": {
+      "name": "search-household",
+      "type": "template"
+    },
+    "body": [
+      {
+        "fields": [
+          {
+            "type": "template",
+            "label": "HOUSEHOLDACKNOWLEDGEMENT_TITLE",
+            "order": 1,
+            "value": "",
+            "format": "AcknowledgementTitle",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "AcknowledgementTitle",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "required": true,
+            "required.message": "HOUSEHOLDACKNOWLEDGEMENT_TITLE_mandatory_message",
+            "errorMessage": ""
+          },
+          {
+            "type": "template",
+            "label": "HOUSEHOLDACKNOWLEDGEMENT_DESCRIPTION",
+            "order": 2,
+            "value": "",
+            "format": "AcknowledgementDescription",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "AcknowledgementDescription",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": ""
+          },
+          {
+            "type": "template",
+            "label": "HOUSEHOLDACKNOWLEDGEMENT_SECONDARY_LABEL",
+            "order": 3,
+            "value": true,
+            "format": "SecondaryButton",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "SecondaryButton",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": ""
+          },
+          {
+            "type": "template",
+            "label": "HOUSEHOLDACKNOWLEDGEMENT_PRIMARY_LABEL",
+            "order": 4,
+            "value": "",
+            "format": "PrimaryButton",
+            "hidden": false,
+            "tooltip": "",
+            "helpText": "",
+            "infoText": "",
+            "readOnly": false,
+            "fieldName": "PrimaryButton",
+            "deleteFlag": false,
+            "innerLabel": "",
+            "systemDate": false,
+            "errorMessage": "",
+            "required": true,
+            "required.message": "HOUSEHOLDACKNOWLEDGEMENT_PRIMARY_LABEL_mandatory_message"
+          }
+        ]
+      }
+    ],
+    "footer": []
+  }
+]
