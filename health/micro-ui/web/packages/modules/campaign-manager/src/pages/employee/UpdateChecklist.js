@@ -10,11 +10,11 @@ import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
 
 const UpdateChecklist = () => {
   const { t } = useTranslation();
-  const module = "hcm-checklist";
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
+  const module =`hcm-checklist-${campaignNumber}`;
   const role = searchParams.get("role");
   const rlt = searchParams.get("role");
   const projectType = searchParams.get("projectType");
@@ -207,13 +207,13 @@ const UpdateChecklist = () => {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-        module: "hcm-checklist",
+        module: `hcm-checklist-${campaignNumber}`,
       },
       {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || ".",
-        module: "hcm-checklist",
+        module: `hcm-checklist-${campaignNumber}`,
       }
     );
     // Helper function to generate codes recursively
@@ -246,7 +246,7 @@ const UpdateChecklist = () => {
 
       codes[question.id] = code;
 
-      let moduleChecklist = "hcm-checklist";
+      let moduleChecklist = `hcm-checklist-${campaignNumber}`;
       let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
       let roleTemp = LocalisationCodeUpdate(role);
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
@@ -396,7 +396,7 @@ const UpdateChecklist = () => {
       required: item?.isRequired,
       isActive: item?.isActive,
       reGex: item?.isRegex ? item?.regex?.regex : null,
-      order: item?.key,
+      order: parseInt(item?.key, 10) || 0,
       additionalFields: {
         schema: "serviceDefinition",
         version: 1,
