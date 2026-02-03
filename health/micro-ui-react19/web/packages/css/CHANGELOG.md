@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.0 - 2026-02-03
+
+#### Admin Console
+
+- **React 19 Migration**
+  Updated CSS package for React 19 compatibility.
+
+- **Campaign Templates CSS**
+  Added styles for the new campaign templates feature including template cards and listing views.
+
+- **My Campaigns Redesign CSS**
+  New styles for the redesigned My Campaigns page with improved card layouts and status indicators.
+
+- **App Configuration CSS**
+  Comprehensive styles for the new app configuration system including drag-drop areas, field panels, and mobile preview.
+
+- **Campaign Common CSS**
+  Consolidated common campaign styles for improved consistency across campaign-related pages.
+
+- **Core Override Updates**
+  Updated core override styles for better integration with the new UI components.
+
 ## 0.3.5 - 2025-7-17
 
 #### Admin console

@@ -9,12 +9,12 @@ ARG WORK_DIR
 
 WORKDIR /app
 
-# Copy the entire micro-ui directory into the container
-COPY health/micro-ui .
+# Copy the entire micro-ui-react19 directory into the container
+COPY health/micro-ui-react19 .
 
 # Copy variant-specific files (index.js, package.json) from builds folder
-COPY health/micro-ui/web/builds/${BUILD_VARIANT}/index.js ./web/src/index.js
-COPY health/micro-ui/web/builds/${BUILD_VARIANT}/package.json ./web/package.json
+COPY health/micro-ui-react19/web/builds/${BUILD_VARIANT}/index.js ./web/src/index.js
+COPY health/micro-ui-react19/web/builds/${BUILD_VARIANT}/package.json ./web/package.json
 
 # If variant has public folder files, copy them too
 # Using conditional copy with proper syntax
@@ -38,6 +38,6 @@ RUN mkdir -p ${WORK_DIR}
 COPY --from=build /app/web/build ${WORK_DIR}/
 
 # Copy the nginx template and substitute the BUILD_VARIANT
-COPY health/micro-ui/web/docker/nginx.conf.template /tmp/nginx.conf.template
+COPY health/micro-ui-react19/web/docker/nginx.conf.template /tmp/nginx.conf.template
 RUN envsubst '${BUILD_VARIANT}' < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf \
     && rm /tmp/nginx.conf.template

@@ -34,7 +34,7 @@ const getLocalizedValue = (code, localizationData, currentLocale) => {
 // Returns true if: code is missing/empty, entry doesn't exist, or localized value is empty
 const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
   // If code itself is empty/missing, consider it as empty localization
-  if (!code || (typeof code === "string" && code.trim() === "")) {
+  if (!code || (typeof code === "string" && !(code !== ""))) {
     return true;
   }
   const value = getLocalizedValue(code, localizationData, currentLocale);
@@ -269,19 +269,20 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   (cField) => cField.condition === true || cField.condition === undefined
                 );
 
+                // Group conditional fields by their bindTo property
+                const fieldsByBindTo = {};
                 activeConditionalFields.forEach((cField) => {
                   if (!cField.bindTo) return;
+                  if (!fieldsByBindTo[cField.bindTo]) {
+                    fieldsByBindTo[cField.bindTo] = [];
+                  }
+                  fieldsByBindTo[cField.bindTo].push(cField);
+                });
 
-                  const conditionalBindTo = cField.bindTo;
-                  const isMatchingBindTo = conditionalBindTo === toggleBindTo;
-
-                  // Get the value for this conditional field
-                  let conditionalValue;
-                  conditionalValue = field?.[conditionalBindTo];
-
-
-                  const isLocalisable = cField.isLocalisable !== false;
-                  const conditionalFieldType = cField.type;
+                // Validate each group of fields with the same bindTo
+                Object.entries(fieldsByBindTo).forEach(([bindTo, fieldsGroup]) => {
+                  const conditionalValue = field?.[bindTo];
+                  const isMatchingBindTo = bindTo === toggleBindTo;
 
                   if (isMatchingBindTo) {
                     // Same bindTo as parent toggle - value should NOT be just boolean true
@@ -295,23 +296,24 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                         },
                         tab: tabKey,
                       });
-                    } else if (
-                      isLocalisable &&
-                      conditionalFieldType !== "number" && // Skip localization for number fields
-                      typeof fieldValue === "string" &&
-                      fieldValue.trim() !== ""
-                    ) {
-                      // Check localization for string values (not number fields)
-                      if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
-                        errors.push({
-                          fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                          panelLabel: panelItem.label,
-                          message: `VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY`,
-                          messageParams: {
-                            fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
-                          },
-                          tab: tabKey,
-                        });
+                    } else if (typeof fieldValue === "string" && fieldValue.trim() !== "") {
+                      // Value exists - check if ANY field in the group allows non-localized values
+                      const hasNonLocalisableField = fieldsGroup.some((f) => f.isLocalisable === false);
+
+                      // If any field in the group is non-localisable, skip localization check
+                      if (!hasNonLocalisableField) {
+                        // All fields require localization - check if localized value exists
+                        if (isLocalizedValueEmpty(fieldValue, localizationData, currentLocale)) {
+                          errors.push({
+                            fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                            panelLabel: panelItem.label,
+                            message: `VALIDATION_TOGGLE_LOCALIZED_VALUE_EMPTY`,
+                            messageParams: {
+                              fieldName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label
+                            },
+                            tab: tabKey,
+                          });
+                        }
                       }
                     }
                   } else {
@@ -323,23 +325,29 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                         message: `VALIDATION_CONDITIONAL_FIELD_REQUIRED`,
                         messageParams: {
                           toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
-                          fieldName: t(cField.label) || cField.bindTo
+                          fieldName: fieldsGroup.map((f) => t(f.label) || f.bindTo).join(" / ")
                         },
                         tab: tabKey,
                       });
-                    } else if (isLocalisable && typeof conditionalValue === "string" && conditionalValue.trim() !== "" && panelItem.label !== "isMdms") {
-                      // Check localization for string values
-                      if (isLocalizedValueEmpty(conditionalValue, localizationData, currentLocale)) {
-                        errors.push({
-                          fieldLabel: field?.label || field?.fieldName || "Unknown Field",
-                          panelLabel: panelItem.label,
-                          message: `VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY`,
-                          messageParams: {
-                            toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
-                            fieldName: t(cField.label) || cField.bindTo
-                          },
-                          tab: tabKey,
-                        });
+                    } else if (typeof conditionalValue === "string" && conditionalValue.trim() !== "" && panelItem.label !== "isMdms") {
+                      // Value exists - check if ANY field in the group allows non-localized values
+                      const hasNonLocalisableField = fieldsGroup.some((f) => f.isLocalisable === false);
+
+                      // If any field in the group is non-localisable, skip localization check
+                      if (!hasNonLocalisableField) {
+                        // All fields require localization - check if localized value exists
+                        if (isLocalizedValueEmpty(conditionalValue, localizationData, currentLocale)) {
+                          errors.push({
+                            fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                            panelLabel: panelItem.label,
+                            message: `VALIDATION_CONDITIONAL_FIELD_LOCALIZED_EMPTY`,
+                            messageParams: {
+                              toggleName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`)) || panelItem.label,
+                              fieldName: fieldsGroup.map((f) => t(f.label) || f.bindTo).join(" / ")
+                            },
+                            tab: tabKey,
+                          });
+                        }
                       }
                     }
                   }
@@ -375,7 +383,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     panelLabel: panelItem.label,
                     message: "VALIDATION_SCHEMA_CODE_REQUIRED",
                     messageParams: {
-                      fieldName: field?.label || field?.fieldName || "Unknown Field"
+                      fieldName: customTranslate(field?.label || field?.fieldName)
                     },
                     tab: tabKey,
                   });
@@ -391,7 +399,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     panelLabel: panelItem.label,
                     message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
                     messageParams: {
-                      fieldName: field?.label || field?.fieldName || "Unknown Field"
+                      fieldName: customTranslate(field?.label || field?.fieldName)
                     },
                     tab: tabKey,
                   });
@@ -407,7 +415,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                       panelLabel: panelItem.label,
                       message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
                       messageParams: {
-                        fieldName: field?.label || field?.fieldName || "Unknown Field"
+                        fieldName: customTranslate(field?.label || field?.fieldName)
                       },
                       tab: tabKey,
                     });
@@ -423,7 +431,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                         panelLabel: panelItem.label,
                         message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
                         messageParams: {
-                          fieldName: field?.label || field?.fieldName || "Unknown Field"
+                          fieldName: customTranslate(field?.label || field?.fieldName)
                         },
                         tab: tabKey,
                       });
@@ -439,7 +447,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       // Validation for popup config fields
       const popupConfig = field?.properties?.popupConfig;
       if (popupConfig) {
-        const fieldLabel = field?.label || field?.fieldName || "Unknown Field";
+        const fieldLabel = customTranslate(field?.label || field?.fieldName);
 
         // Validate popup title - check if localized value is empty
         if (popupConfig.title) {

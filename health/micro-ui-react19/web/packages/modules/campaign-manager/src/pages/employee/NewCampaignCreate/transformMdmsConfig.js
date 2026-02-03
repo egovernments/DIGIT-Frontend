@@ -228,6 +228,7 @@ const transformPropertiesToFields = (properties) => {
 
   return properties.map((prop) => {
     const field = {
+      ...prop,
       type: prop.type,
       label: prop.label,
       order: prop.order,
@@ -244,7 +245,6 @@ const transformPropertiesToFields = (properties) => {
       systemDate: prop.systemDate || false,
       errorMessage: prop.errorMessage || "",
       mandatory: prop.mandatory || false,
-      ...prop,
     };
 
     // Add enums if present
