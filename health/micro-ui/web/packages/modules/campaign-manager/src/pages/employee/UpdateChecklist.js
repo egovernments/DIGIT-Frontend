@@ -30,7 +30,7 @@ const UpdateChecklist = () => {
   const serviceCode = `${campaignName}.${checklistType}.${role}`;
   const [searching, setSearching] = useState(true);
   const [viewData, setViewData] = useState(null);
-  let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  let locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const presentLocale = Digit?.SessionStorage.get("locale");
   const { mutateAsync } = Digit.Hooks.campaign.useUpdateChecklist(tenantId);
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
