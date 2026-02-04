@@ -62,22 +62,21 @@ const Checkboxes = ({
             typeOfCall={typeOfCall}
             parentNumber={parentNumber}
           />
+          {/* Removed: optionComment textarea field
           {item.optionComment && (
             <FieldV1
-              // className="example"
-              // disabled={dis}
               nonEditable={dis}
               type={"textarea"}
               populators={{
                 resizeSmart: true,
               }}
-              // props={{ fieldStyle: example }}
               name="Short Answer"
               value={item.comment || ""}
               onChange={(event) => addComment({ value: event.target.value, target: "value", id: item.key, parentId: field.id })}
               placeholder={""}
             />
           )}
+          */}
           {item.optionDependency && (
             <CreateQuestion
               className={subQclassName}
@@ -221,6 +220,7 @@ const CheckBoxOption = ({
           )}
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          {/* Removed: ADD_COMMENT checkbox
           {commentsEnabled && !dis && (
             <>
               <CheckBox
@@ -234,6 +234,7 @@ const CheckBoxOption = ({
               />
             </>
           )}
+          */}
           {!dis && !disableDelete && (
             <Button
               icon="Delete"
