@@ -64,20 +64,19 @@ const MultipleChoice = ({
             subQlevel={subQlevel}
             maxDepth={maxDepth}
           ></RadioButtonOption>
+          {/* Removed: optionComment textarea field
           {item.optionComment && <FieldV1
-            // className="example"
-            // disabled={dis}
             nonEditable={dis}
             type={"textarea"}
             populators={{
               resizeSmart: true
             }}
-            // props={{ fieldStyle: example }}
             name="Short Answer"
             value={item.comment || ""}
             onChange={(event) => addComment({ value: event.target.value, target: "value", id: item.key, parentId: field.id })}
             placeholder={""}
           />}
+          */}
           {item.optionDependency && (
             <>
               {/* JavaScript logic goes here */}
@@ -241,12 +240,13 @@ export const RadioButtonOption = ({
           )}
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          {/* Removed: ADD_COMMENT checkbox
           {commentsEnabled && !dis && (
             <>
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionDependency ? true : false }  
+                disabled={optionDependency ? true : false }
                 label={t("ADD_COMMENT_(OR)")}
                 checked={optionComment}
                 onChange={(event) => handleOptionComment(optionId)}
@@ -254,12 +254,13 @@ export const RadioButtonOption = ({
               />
             </>
           )}
+          */}
           {!dis && (
             <>
               <CheckBox
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
-                disabled={optionComment ? true : false || subQlevel>=maxDepth+1}
+                disabled={subQlevel>=maxDepth+1}
                 label={t("LINK_NESTED_CHECKLIST")}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}
