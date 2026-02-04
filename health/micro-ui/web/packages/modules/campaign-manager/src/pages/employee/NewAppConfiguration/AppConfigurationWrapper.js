@@ -370,6 +370,70 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
               }
             }
 
+            // Validation for group fields with validationExpression (min/max, minLength/maxLength range checks)
+            if (panelItem.fieldType === "group" && panelItem.validationExpression && panelItem.validationMessage) {
+              // Parse the validation expression to get the field paths
+              // Examples: "lengthRange.minLength <= lengthRange.maxLength", "range.min <= range.max"
+              // Supports various spacing: "a<=b", "a <= b", "a  <=  b"
+              const expression = panelItem.validationExpression;
+              const match = expression.match(/^([\w.]+)\s*(<=|>=|<|>|==|!=)\s*([\w.]+)$/);
+
+              if (match) {
+                const [, leftPath, operator, rightPath] = match;
+
+                // Get values from field using the paths
+                const getNestedValue = (obj, path) => {
+                  return path.split('.').reduce((current, key) => current?.[key], obj);
+                };
+
+                const leftValue = getNestedValue(field, leftPath);
+                const rightValue = getNestedValue(field, rightPath);
+
+                // Only validate if both values are defined (not null/undefined)
+                // This allows users to leave fields empty
+                if (leftValue !== null && leftValue !== undefined && leftValue !== "" &&
+                    rightValue !== null && rightValue !== undefined && rightValue !== "") {
+                  const leftNum = Number(leftValue);
+                  const rightNum = Number(rightValue);
+
+                  // Check if both are valid numbers
+                  if (!isNaN(leftNum) && !isNaN(rightNum)) {
+                    let isValid = false;
+
+                    switch (operator) {
+                      case "<=":
+                        isValid = leftNum <= rightNum;
+                        break;
+                      case ">=":
+                        isValid = leftNum >= rightNum;
+                        break;
+                      case "<":
+                        isValid = leftNum < rightNum;
+                        break;
+                      case ">":
+                        isValid = leftNum > rightNum;
+                        break;
+                      default:
+                        isValid = true;
+                    }
+
+                    if (!isValid) {
+                      errors.push({
+                        fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                        panelLabel: panelItem.label,
+                        message: panelItem.validationMessage,
+                        messageParams: {
+                          fieldName: customTranslate(field?.label || field?.fieldName || "Unknown Field"),
+                          propertyName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))
+                        },
+                        tab: tabKey,
+                      });
+                    }
+                  }
+                }
+              }
+            }
+
             // Special validation for isMdms toggle field
             // Check if isMdms is enabled and validate schemaCode or dropDownOptions accordingly
             if (panelItem.bindTo === "isMdms" && panelItem.fieldType === "toggle") {
@@ -732,12 +796,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       setIsUpdating(true);
 
       // Transform and filter localization data to match API format
+      // Allow empty string messages to be upserted (for cleared values)
       const transformedLocalizationData = localizationData
         .filter((item) => {
           const code = item?.code;
           const message = item?.[currentLocale];
-          // Only accept string values for code and message
-          return typeof code === "string" && code.trim() !== "" && typeof message === "string" && message !== "";
+          // Only require valid code; allow empty string messages
+          return typeof code === "string" && code.trim() !== "" && typeof message === "string";
         })
         .map((item) => ({
           code: item.code,
