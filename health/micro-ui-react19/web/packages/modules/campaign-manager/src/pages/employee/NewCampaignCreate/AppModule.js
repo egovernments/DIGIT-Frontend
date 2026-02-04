@@ -19,7 +19,7 @@ const AppModule = () => {
   const tenantId = searchParams.get("tenantId");
   const [selectedModuleCodes, setSelectedModuleCodes] = useState([]);
   const [showToast, setShowToast] = useState(null);
-  const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
   const url = getMDMSUrl(true);
   const [isCreatingModule, setIsCreatingModule] = useState(false);
