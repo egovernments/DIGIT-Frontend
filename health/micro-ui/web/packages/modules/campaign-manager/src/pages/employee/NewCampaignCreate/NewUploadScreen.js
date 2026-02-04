@@ -26,10 +26,17 @@ const NewUploadScreen = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const id = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.id;
 
+  // React Router-safe URL update - only updates if URL key differs from state
   const updateUrlParams = (p) => {
+    const currentUrlKey = parseInt(new URLSearchParams(window.location.search).get("key"));
+    const newKey = p.key;
+    // Skip if URL already has the correct key (e.g., from navigate() in edit flow)
+    if (currentUrlKey === newKey) return;
+
     const url = new URL(window.location.href);
     Object.entries(p).forEach(([k, v]) => url.searchParams.set(k, v));
-    window.history.replaceState({}, "", url);
+    // Use navigate with replace to keep React Router in sync
+    navigate(`${window.location.pathname}?${url.searchParams.toString()}`, { replace: true });
   };
 
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(
