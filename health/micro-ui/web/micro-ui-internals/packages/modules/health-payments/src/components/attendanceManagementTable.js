@@ -66,7 +66,7 @@ const AttendanceManagementTable = ({ ...props }) => {
       selector: (row) => {
         return (
           <div  className="ellipsis-cell" title={row?.[2] || t("NA")}>
-            {row?.[2] || t("NA")}
+            {row?.[2] || t("ES_COMMON_NA")}
           </div>
         );
       },
@@ -148,16 +148,18 @@ const AttendanceManagementTable = ({ ...props }) => {
         </div>
       ),
       selector: (row) => {
+        const roleText = row?.[3] ? t(row?.[3]) : t("ES_COMMON_NA");
+    
         return (
-          <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
-            {t(row?.[3]) || t("NA")}
+          <div className="ellipsis-cell" title={roleText}>
+            {roleText}
           </div>
         );
       },
     },
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div style={{ borderRight: "2px solid #787878", width: "50%", textAlign: "start" }}>
           {t(`HCM_AM_USERTYPE`)}
         </div>
       ),

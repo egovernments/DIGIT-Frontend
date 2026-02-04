@@ -74,7 +74,7 @@ const BillDetailsTable = ({ ...props }) => {
                                     display: "inline-block",
                                     marginRight: "4px",
                                 }}
-                                title={t(row?.billNumber) || t("NA")}
+                                title={t(row?.userId) || t("NA")}
                             >
                                {t(row?.userId) || t("NA")}
                             </span>
@@ -343,6 +343,24 @@ const BillDetailsTable = ({ ...props }) => {
             },
             {
                 name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t(`HCM_AM_ROLE`)}
+                    </div>
+                ),
+                selector: (row) => {
+                    return (
+                        <span className="ellipsis-cell" 
+                        title={t(row?.role) || t("NA")} style={{ fontSize: "14px" }}>
+                            {t(row?.role) || t("NA")}
+                        </span>
+                    );
+                },
+                style: {
+                    justifyContent: "start",
+                },
+            },
+            {
+                name: (
                     <div style={{ borderRight: "2px solid #787878", width: "75%", textAlign: "start" }}>
                         {t(`HCM_AM_MNO_NAME`)}
                     </div>
@@ -365,14 +383,9 @@ const BillDetailsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
-                    const totalAmount = parseInt(row?.totalAmount) || 0;
-                    const wage = parseInt(row?.wage) || 0;
-                    const days = wage > 0 ? (totalAmount / wage) : 0; //TODO : ADD LOGIC TO CALCULATE DAYS FROM MUSTERROLL
-
-                    console.log("days", row?.additionalDetails?.noOfDaysWorked);
+                    
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {/* {(days)} */}
                             {t(row?.additionalDetails?.noOfDaysWorked) || t("NA")}
                         </div>
                     );

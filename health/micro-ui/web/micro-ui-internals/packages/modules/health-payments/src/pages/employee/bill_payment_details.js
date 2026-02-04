@@ -184,9 +184,15 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
       const individual = individualsData?.Individual?.find(
         (ind) => ind.id === billDetail?.payee?.identifier
       );
-      const rateObj = workerRatesData?.rates?.find(
-        (rate) => rate?.skillCode === individual?.userDetails?.roles?.[0]?.code //TODO: Confirm if user will have one role only, so that wage can be fetched for that role
+
+      const matchedSkill = individual?.skills?.find((skill) =>
+        workerRatesData?.rates?.some(
+          (rate) => rate?.skillCode === skill?.type
+        )
       );
+
+      const rateObj = workerRatesData?.rates?.find(
+        (rate) => rate?.skillCode === matchedSkill?.type);
 
       const rateBreakup = rateObj?.rateBreakup || {};
       const wage =
@@ -198,6 +204,7 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
         givenName: individual?.name?.givenName,
         mobileNumber: individual?.mobileNumber,
         userId: individual?.userDetails?.username,
+        role: matchedSkill?.type,
         wage: wage,
       };
     });
