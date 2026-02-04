@@ -275,7 +275,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
   const projectName = searchParams.get("name");
   const flow = searchParams.get("flow");
   const role = searchParams.get("role");
-  let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  let locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { questionData, dispatchQuestionData } = useContext(QuestionContext);
   
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
