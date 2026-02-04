@@ -13,7 +13,7 @@ const CreateQuestionContext = ({ onSelect, ...props }) => {
   const projectName = searchParams.get("name");
   const flow = searchParams.get("flow");
   const role = searchParams.get("role");
-  const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
 
   const { defaultData, setDefaultData } = data_hook();
 

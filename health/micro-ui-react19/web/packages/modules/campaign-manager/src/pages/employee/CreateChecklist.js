@@ -40,7 +40,7 @@ const CreateChecklist = () => {
   const [previewData, setPreviewData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [loading_new, setLoading_New] = useState(true);
-  let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  let locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const enabledModules = Digit?.SessionStorage.get("initData")?.languages;
   const { mutateAsync } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
   const navigate = useNavigate();
