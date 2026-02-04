@@ -195,7 +195,7 @@ function UpdateDatesWithBoundaries() {
         className="date-update"
         cardClassName={"date-update-card"}
         onFormValueChange={onFormValueChange}
-        actionClassName={"dateUpdateAction"}
+        actionClassName={"dateUpdateAction single-button"}
         noCardStyle={true}
       />
       <AlertCard

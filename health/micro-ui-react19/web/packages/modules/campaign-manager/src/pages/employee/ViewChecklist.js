@@ -274,7 +274,7 @@ const ViewChecklist = () => {
           fieldStyle={{ marginRight: 0 }}
           noBreakLine={true}
           isDisabled={updateDisable}
-          actionClassName={"checklistCreate"}
+          actionClassName={"dateUpdateAction single-button"}
           noCardStyle={true}
         />
       )}

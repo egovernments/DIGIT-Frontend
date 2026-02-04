@@ -667,7 +667,7 @@ const UpdateChecklist = () => {
               fieldStyle={{ marginRight: 0 }}
               noBreakLine={true}
               onFormValueChange={onFormValueChange}
-              actionClassName={"checklistCreate"}
+              actionClassName={"dateUpdateAction single-button"}
               noCardStyle={true}
             />
           )}

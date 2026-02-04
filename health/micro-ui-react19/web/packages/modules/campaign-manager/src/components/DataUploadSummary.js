@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
@@ -78,6 +78,7 @@ const fetchcd = async (tenantId, projectId) => {
 const DataUploadSummary = (props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id") || props?.props?.campaignData?.id;
@@ -91,7 +92,10 @@ const DataUploadSummary = (props) => {
   const [summaryErrors, setSummaryErrors] = useState(null);
   const [projectId, setprojectId] = useState(null);
   const isPreview = searchParams.get("preview");
-  const currentKey = searchParams.get("key");
+
+  // normalize key to number
+  const currentKey = Number(searchParams.get("key"));
+
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -110,14 +114,12 @@ const DataUploadSummary = (props) => {
   const handleRedirect = useCallback(
     (step, activeCycle) => {
       const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get("id");
       urlParams.set("key", step);
       urlParams.set("preview", false);
       if (activeCycle) {
         urlParams.set("activeCycle", activeCycle);
       }
-      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-      navigate(newUrl);
+      navigate(`${window.location.pathname}?${urlParams.toString()}`);
     },
     [navigate]
   );
@@ -125,22 +127,21 @@ const DataUploadSummary = (props) => {
   const campaignName = props?.props?.campaignData?.campaignName;
 
   useEffect(() => {
-    setKey(currentKey);
-    setCurrentStep(currentKey - baseKey + 1);
+    if (!Number.isNaN(currentKey)) {
+      setKey(currentKey);
+      setCurrentStep(currentKey - baseKey + 1);
+    }
   }, [currentKey]);
 
-  const updateUrlParams = useCallback((params) => {
-    const url = new URL(window.location.href);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    window.history.replaceState({}, "", url);
-  }, []);
-
+  // Only dispatch "checking" event for SetupCampaign to sync
+  // Don't call updateUrlParams here - handleRedirect already navigates
   useEffect(() => {
-    updateUrlParams({ key: key });
-    window.dispatchEvent(new Event("checking"));
-  }, [key, updateUrlParams]);
+    // Check if URL key matches state key to avoid unnecessary event dispatch
+    const urlKey = Number(new URLSearchParams(window.location.search).get("key"));
+    if (urlKey === key) {
+      window.dispatchEvent(new Event("checking"));
+    }
+  }, [key]);
 
   useEffect(() => {
     if (props?.props?.summaryErrors) {
