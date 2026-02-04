@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment, useReducer, useMemo } from "react
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
-import { Button, Card, Dropdown, MultiSelectDropdown, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, MultiSelectDropdown, Toast,HeaderComponent } from "@egovernments/digit-ui-components";
 import BoundaryWithDate from "./BoundaryWithDate";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
@@ -288,9 +288,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   return (
     <>
       <Card className={"campaign-update-container"} style={{ marginTop: "1rem" }}>
-        <Header className="header" styles={{ marginBottom: "0rem" }}>
-          {t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}
-        </Header>
+        <HeaderComponent className="select-boundary-screen-heading">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</HeaderComponent>
         <div className={"search-field-container"}>
           <p className="field-description" style={{ marginTop: "0rem", marginBottom: "1rem" }}>
             {t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}

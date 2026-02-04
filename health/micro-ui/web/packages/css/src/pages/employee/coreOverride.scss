@@ -264,5 +264,10 @@ header {
           min-width: 12.5rem;
       }
     }
+     &.single-button{
+      .spanWrapper{
+        margin-left: auto;
+      }
+    }
   }
 }

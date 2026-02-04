@@ -2,7 +2,7 @@ import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { Toast, Stepper, Loader } from "@egovernments/digit-ui-components";
+import { Toast, Stepper, Loader ,SVG} from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
@@ -1012,12 +1012,15 @@ const UpdateCampaign = ({ hierarchyData }) => {
         isDisabled={isDataCreating}
         showSecondaryLabel={true}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
-        actionClassName={"actionBarClass"}
+        actionClassName={"actionBarClass setup-campaign-action-bar"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
         label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_UPDATE") : t("HCM_NEXT")}
+        secondaryActionIcon={<SVG.ArrowBack />}
+        primaryActionIconAsSuffix={true}
+        primaryActionIcon={"ArrowForward"}
       />
       {showToast && (
         <Toast
