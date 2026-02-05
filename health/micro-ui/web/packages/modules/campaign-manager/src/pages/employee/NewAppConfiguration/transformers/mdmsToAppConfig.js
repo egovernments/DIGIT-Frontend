@@ -154,7 +154,6 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
 const transformTemplate = (screenData) => {
   const transformedFields = (screenData.body?.[0]?.fields || []).map((field) => {
 
-    console.log("Transforming field:", field)
     if (field.format === "panelCard") {
       return {
         ...field,
