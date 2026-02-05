@@ -513,11 +513,21 @@
   }
 }
 .containerStyle {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
 }
+@media (max-width: 1200px) {
+  .containerStyle {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .containerStyle {
+    grid-template-columns: 1fr;
+  }
+}
+
 .cardStyle {
   display: flex;
   justify-content: center;
@@ -968,6 +978,9 @@
   gap: 1rem;
   padding: 1rem;
   box-shadow: 0rem 0.125rem 0.25rem 0rem #C84C0E26;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
 
   &:hover {
     transform: translateY(-12px);
