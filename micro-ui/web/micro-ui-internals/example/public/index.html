@@ -14,7 +14,9 @@
 
   <!-- <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css/dist/index.css"/> -->
   <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
-  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@0.2.0/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@0.2.0-beta.14/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@0.2.113/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.8.37/dist/index.css" />
   <script src="%REACT_APP_GLOBAL%"></script>
   <!-- Matomo -->
   <script>
@@ -336,125 +338,11 @@
     border-radius: .375rem;
   }
 
-  .digit-inbox-search-composer-label-pair .digit-employee-select-wrap {
-    margin-top: -0.5rem !important;
-  }
-
-  /* Hide email login link on citizen login page */
-  div[style*="margin-top: -24px"][style*="margin-bottom: 1.5rem"] {
-    display: none !important;
-  }
-
-  /* Align label and input field horizontally on desktop - Only for user profile page */
-  @media (min-width: 768px) {
-    .user-profile .digit-label-field-pair {
-      display: flex !important;
-      align-items: center !important;
-      gap: 1rem !important;
-      padding-left: 1.5rem !important;
-    }
-
-    .user-profile .digit-label-field-pair .digit-card-label {
-      margin: 0 !important;
-      min-width: 150px !important;
-      flex-shrink: 0 !important;
-    }
-
-    /* Add padding to save button on desktop */
-    .user-profile button[style*="margin-top: 24px"] {
-      margin-left: 1.5rem !important;
-    }
-  }
-
-  /* Stack vertically on mobile - Only for user profile page */
-  @media (max-width: 767px) {
-    .user-profile .digit-label-field-pair {
-      display: block !important;
-      padding-left: 1rem !important;
-    }
-
-    .user-profile .digit-label-field-pair .digit-card-label {
-      margin-bottom: 0.5rem !important;
-    }
-
-    /* Add padding to save button on mobile */
-    .user-profile button[style*="margin-top: 24px"] {
-      margin-left: 1rem !important;
-    }
-  }
-
-  .digit-label-field-pair.boundary-filter-label-left-align {
-    display: block !important;
-
-    .digit-header-content.label {
-      display: none !important;
-    }
-
-    .digit-field {
-      width: 100% !important;
-
-      .selecting-boundary-div {
-        .boundary-item {
-          margin-bottom: 24px !important;
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
-          gap: unquote("clamp(1rem, 2.5vw, 2rem)") !important;
-
-          h2.boundary-selection-label {
-            margin: 0 !important;
-            width: 32.33% !important;
-            padding: 0 !important;
-            font-weight: normal !important;
-            font-size: 1rem !important;
-            color: #0b0c0c !important;
-            line-height: 19px !important;
-            margin-bottom: 0px !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            text-overflow: ellipsis !important;
-          }
-
-          .digit-field-full {
-            width: auto !important;
-            flex: 1 !important;
-            min-width: 0 !important;
-
-            .padding-dropdown {
-              width: 100% !important;
-              display: flex !important;
-              justify-content: flex-start !important;
-
-              .digit-dropdown-employee-select-wrap {
-                width: 100% !important;
-
-                @media (min-aspect-ratio: 3/4) {
-                  max-width: 37.5rem;
-                }
-
-                .digit-dropdown-select {
-                  width: 100% !important;
-                  max-width: 37.5rem !important;
-
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .digit-header-content.label .label-container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    width: 100%;
-    grid-gap: .25rem;
-    gap: .25rem;
+  .sandbox-custom-otp-subheader,
+  .sandbox-custom-otp-header,
+  .sandbox-custom-otp-email {
+    text-align: center !important;
+    width: 100% !important;
   }
 </style>
 
