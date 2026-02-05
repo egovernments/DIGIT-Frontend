@@ -16,6 +16,793 @@
     <title>DIGIT</title>
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
+     <!-- Matomo Analytics - Scalable Configuration-Driven Approach -->
+  <script>
+    /**
+     * ============================================
+     * ENVIRONMENT CONFIGURATION
+     * ============================================
+     */
+     window.MATOMO_CONFIG = window.MATOMO_CONFIG || {
+        url: window?.globalConfigs?.getConfig("MATOMO_URL") || "https://unified-uat.digit.org/matomo/",
+        siteId: window?.globalConfigs?.getConfig("MATOMO_SITE_ID") || "1",
+        environment: window?.globalConfigs?.getConfig("ENVIRONMENT") || "uat",
+        countryCode: window?.globalConfigs?.getConfig("COUNTRY_CODE") || "IN",
+        enabled: window?.globalConfigs?.getConfig("MATOMO_ENABLED") !== "false",
+        debug: false
+};
+
+    /**
+     * ============================================
+     * PAGE TITLE MAPPING
+     * ============================================
+     */
+    window.MATOMO_PAGE_TITLES = {
+      "employee/servicedesigner/LandingPage": "Service Designer - Landing Page",
+      "employee/servicedesigner/Service-Builder-Home": "Service Designer - Service Builder Home",
+      "employee/servicedesigner/Workflow": "Service Designer - Workflow Designer",
+      "employee/servicedesigner/Checklist": "Service Designer - Checklist Management",
+      "employee/servicedesigner/create-checklist": "Service Designer - Create Checklist",
+      "employee/servicedesigner/update-checklist": "Service Designer - Update Checklist",
+      "employee/servicedesigner/Roles": "Service Designer - Role Management",
+      "employee/servicedesigner/form-builder": "Service Designer - Form Builder",
+      "employee/servicedesigner/forms": "Service Designer - Form Management",
+      "employee/servicedesigner/notifications": "Service Designer - Notification Management",
+      "employee/servicedesigner/create-notification": "Service Designer - Create Notification",
+    };
+
+    /**
+     * ============================================
+     * KPI EVENT CONFIGURATION
+     * ============================================
+     */
+    window.MATOMO_EVENTS = {
+      // Service Events (unique action names for Goals)
+      "service-create": { category: "Service", action: "Service_Create_Started" },
+      "service-create-content": { category: "Service", action: "Service_Create_Started" },
+      "service-save": { category: "Service", action: "Service_Save_Attempt" },
+      "service-save-content": { category: "Service", action: "Service_Save_Attempt" },
+      "service-publish": { category: "Service", action: "Service_Publish_Attempt" },
+      "service-publish-content": { category: "Service", action: "Service_Publish_Attempt" },
+
+      // Form Events
+      "form-create": { category: "Form", action: "Form_Create_Attempt" },
+      "form-create-content": { category: "Form", action: "Form_Create_Attempt" },
+      "form-update": { category: "Form", action: "Form_Update_Attempt" },
+      "form-update-content": { category: "Form", action: "Form_Update_Attempt" },
+      "form-field-add": { category: "FormBuilder", action: "FormBuilder_Field_Added" },
+
+      // Checklist Events
+      "checklist-create": { category: "Checklist", action: "Checklist_Create_Attempt" },
+      "checklist-create-content": { category: "Checklist", action: "Checklist_Create_Attempt" },
+      "checklist-update": { category: "Checklist", action: "Checklist_Update_Attempt" },
+      "checklist-update-content": { category: "Checklist", action: "Checklist_Update_Attempt" },
+
+      // Checklist Builder - Question Added (separate for depth/count KPI)
+      "checklist-question-add": { category: "ChecklistBuilder", action: "Question_Added" },
+      "checklist-question-add-content": { category: "ChecklistBuilder", action: "Question_Added" },
+
+      // Checklist Feature Usage - consolidated under single action
+      "checklist-preview": { category: "ChecklistBuilder", action: "Feature_Used", name: "Preview" },
+      "checklist-preview-content": { category: "ChecklistBuilder", action: "Feature_Used", name: "Preview" },
+      "checklist-clear": { category: "ChecklistBuilder", action: "Feature_Used", name: "Clear All" },
+      "checklist-clear-content": { category: "ChecklistBuilder", action: "Feature_Used", name: "Clear All" },
+      "checklist-question-delete": { category: "ChecklistBuilder", action: "Feature_Used", name: "Delete Question" },
+      "checklist-question-delete-content": { category: "ChecklistBuilder", action: "Feature_Used", name: "Delete Question" },
+
+      // Notification Events
+      "notification-create": { category: "Notification", action: "Notification_Create_Attempt" },
+      "notification-create-content": { category: "Notification", action: "Notification_Create_Attempt" },
+      "notification-update": { category: "Notification", action: "Notification_Update_Attempt" },
+      "notification-update-content": { category: "Notification", action: "Notification_Update_Attempt" },
+
+      // Notification Channel Adoption (separate for % distribution)
+      "notification-channel-email": { category: "Notification", action: "Channel_Selected", name: "Email" },
+      "notification-channel-email-content": { category: "Notification", action: "Channel_Selected", name: "Email" },
+      "notification-channel-sms": { category: "Notification", action: "Channel_Selected", name: "SMS" },
+      "notification-channel-sms-content": { category: "Notification", action: "Channel_Selected", name: "SMS" },
+      "notification-channel-push": { category: "Notification", action: "Channel_Selected", name: "Push" },
+      "notification-channel-push-content": { category: "Notification", action: "Channel_Selected", name: "Push" },
+
+      // Notification Feature Usage
+      "notification-edit": { category: "Notification", action: "Feature_Used", name: "Edit Notification" },
+      "notification-edit-content": { category: "Notification", action: "Feature_Used", name: "Edit Notification" },
+      "notification-variable-add": { category: "Notification", action: "Feature_Used", name: "Add Variable" },
+      "notification-variable-add-content": { category: "Notification", action: "Feature_Used", name: "Add Variable" },
+
+      // Workflow Events
+      "workflow-save": { category: "Workflow", action: "Workflow_Save" },
+      "workflow-save-content": { category: "Workflow", action: "Workflow_Save" },
+
+      // Workflow Complexity - State Added (separate for counting states)
+      "workflow-state-start": { category: "Workflow", action: "State_Added", name: "Start State" },
+      "workflow-state-start-content": { category: "Workflow", action: "State_Added", name: "Start State" },
+      "workflow-state-intermediate": { category: "Workflow", action: "State_Added", name: "Intermediate State" },
+      "workflow-state-intermediate-content": { category: "Workflow", action: "State_Added", name: "Intermediate State" },
+      "workflow-state-end": { category: "Workflow", action: "State_Added", name: "End State" },
+      "workflow-state-end-content": { category: "Workflow", action: "State_Added", name: "End State" },
+
+      // Workflow Feature Usage - consolidated under single action
+      "workflow-state-update": { category: "Workflow", action: "Feature_Used", name: "Update State" },
+      "workflow-state-update-content": { category: "Workflow", action: "Feature_Used", name: "Update State" },
+      "workflow-state-delete": { category: "Workflow", action: "Feature_Used", name: "Delete State" },
+      "workflow-state-delete-content": { category: "Workflow", action: "Feature_Used", name: "Delete State" },
+      "workflow-action-update": { category: "Workflow", action: "Feature_Used", name: "Update Action" },
+      "workflow-action-update-content": { category: "Workflow", action: "Feature_Used", name: "Update Action" },
+      "workflow-action-delete": { category: "Workflow", action: "Feature_Used", name: "Delete Action" },
+      "workflow-action-delete-content": { category: "Workflow", action: "Feature_Used", name: "Delete Action" },
+
+      // Role Events
+      "role-create": { category: "Role", action: "Role_Create_Attempt" },
+      "role-create-content": { category: "Role", action: "Role_Create_Attempt" },
+      "role-update": { category: "Role", action: "Role_Update_Attempt" },
+      "role-update-content": { category: "Role", action: "Role_Update_Attempt" },
+
+      // Form Builder - Field Added (separate for field type distribution KPI)
+      "field-add": { category: "FormBuilder", action: "Field_Added" },
+      "field-add-content": { category: "FormBuilder", action: "Field_Added" },
+
+      // Form Builder Feature Usage - consolidated under single action
+      "form-section-add": { category: "FormBuilder", action: "Feature_Used", name: "Add Section" },
+      "form-section-add-content": { category: "FormBuilder", action: "Feature_Used", name: "Add Section" },
+      "form-section-delete": { category: "FormBuilder", action: "Feature_Used", name: "Delete Section" },
+      "form-section-delete-content": { category: "FormBuilder", action: "Feature_Used", name: "Delete Section" },
+      "form-field-delete": { category: "FormBuilder", action: "Feature_Used", name: "Delete Field" },
+      "form-field-delete-content": { category: "FormBuilder", action: "Feature_Used", name: "Delete Field" },
+    };
+
+    /**
+     * ============================================
+     * MATOMO TRACKER INITIALIZATION
+     * ============================================
+     */
+    var _paq = window._paq = window._paq || [];
+
+    function getPageTitle(url) {
+      try {
+        var pathname = new URL(url).pathname;
+        var path = pathname.replace(/^\/+|\/+$/g, '');
+        var pageTitleMap = window.MATOMO_PAGE_TITLES;
+
+        if (pageTitleMap[path]) return pageTitleMap[path];
+        for (var key in pageTitleMap) {
+          if (path.includes(key)) return pageTitleMap[key];
+        }
+        return "DIGIT Studio";
+      } catch (e) {
+        return "DIGIT Studio";
+      }
+    }
+
+    function getUrlParams() {
+      var params = new URLSearchParams(window.location.search);
+      return {
+        module: params.get('module') || '',
+        service: params.get('service') || ''
+      };
+    }
+
+    function logDebug(message, data) {
+      if (window.MATOMO_CONFIG.debug) {
+        console.log('[Matomo]', message, data || '');
+      }
+    }
+
+    /**
+     * ============================================
+     * GLOBAL TRACKING API
+     * ============================================
+     */
+    window.MatomoTracker = {
+      trackEvent: function(category, action, name, value) {
+        if (!window.MATOMO_CONFIG.enabled) return;
+
+        var eventData = [category, action];
+        if (name) eventData.push(name);
+        if (value !== undefined && value !== null) eventData.push(value);
+
+        _paq.push(['trackEvent'].concat(eventData));
+        logDebug('Event tracked:', { category: category, action: action, name: name, value: value });
+      },
+
+      track: function(eventKey, label, value) {
+        var eventConfig = window.MATOMO_EVENTS[eventKey];
+        if (!eventConfig) {
+          logDebug('Unknown event key:', eventKey);
+          return;
+        }
+
+        var params = getUrlParams();
+        // Use predefined name from config if available, otherwise use label or URL params
+        var name = eventConfig.name || label || (params.module + '/' + params.service);
+
+        this.trackEvent(eventConfig.category, eventConfig.action, name, value);
+      },
+
+      trackFieldType: function(component, fieldType, context) {
+        this.trackEvent(component, 'FieldType_' + fieldType, context);
+      },
+
+      trackValidationError: function(component, errorType, message) {
+        var params = getUrlParams();
+        var context = params.service + ': ' + message;
+        this.trackEvent('Validation_Error', component + '_' + errorType, context);
+      },
+
+      trackGoal: function(goalId, revenue) {
+        if (!window.MATOMO_CONFIG.enabled) return;
+        _paq.push(['trackGoal', goalId, revenue || 0]);
+        logDebug('Goal tracked:', goalId);
+      }
+    };
+
+    /**
+     * ============================================
+     * AUTO-TRACKING VIA BUTTON ID
+     * ============================================
+     * Buttons with id="btn-{event-key}" will be auto-tracked
+     * Example: id="btn-checklist-create" tracks "checklist-create" event
+     */
+    function initAutoTracking() {
+      document.addEventListener('click', function(e) {
+        // Find button with id starting with "btn-"
+        var button = e.target.closest('[id^="btn-"]');
+        if (!button) return;
+
+        var buttonId = button.getAttribute('id');
+        // Extract event key from id (remove "btn-" prefix)
+        var eventKey = buttonId.replace('btn-', '');
+
+        var params = getUrlParams();
+        var label = params.module + '/' + params.service;
+
+        // Special handling for field-add button - capture field type
+        if (buttonId === 'btn-field-add' || buttonId === 'btn-field-add-content') {
+          var fieldType = getSelectedFieldType();
+          if (fieldType) {
+            window.MatomoTracker.trackEvent('FormBuilder', 'Field_Added', fieldType);
+            logDebug('Field added tracked:', { fieldType: fieldType });
+            return;
+          }
+        }
+
+        window.MatomoTracker.track(eventKey, label);
+        logDebug('Button tracked:', { id: buttonId, event: eventKey, label: label });
+      }, true);
+
+      logDebug('Auto-tracking initialized (id-based)');
+    }
+
+    /**
+     * Get selected field type from add field popup dropdown
+     */
+    function getSelectedFieldType() {
+      try {
+        // Find the field type dropdown input by ID
+        var fieldTypeInput = document.querySelector('#servicedesigner-form-builder-field-type');
+        if (fieldTypeInput && fieldTypeInput.value) {
+          return fieldTypeInput.value.trim();
+        }
+
+        // Fallback: find in popup context
+        var popup = document.querySelector('.app-config-add-field-popup');
+        if (popup) {
+          var input = popup.querySelector('input[id*="field-type"]');
+          if (input && input.value) {
+            return input.value.trim();
+          }
+        }
+
+        return null;
+      } catch (e) {
+        logDebug('Error getting field type:', e);
+        return null;
+      }
+    }
+
+    /**
+     * ============================================
+     * CLICK COUNT BEFORE COMPLETION
+     * ============================================
+     * Tracks number of clicks before form/checklist is saved
+     */
+    var clickCountBeforeCompletion = 0;
+    var lastPagePath = window.location.pathname;
+
+    // Count all button clicks
+    document.addEventListener('click', function(e) {
+      var target = e.target.closest('button, [role="button"], .digit-btn, [id^="btn-"]');
+      if (target) {
+        clickCountBeforeCompletion++;
+        logDebug('Click count:', clickCountBeforeCompletion);
+      }
+    }, true);
+
+    // Reset count on page navigation
+    function resetClickCount() {
+      var currentPath = window.location.pathname;
+      if (currentPath !== lastPagePath) {
+        clickCountBeforeCompletion = 0;
+        lastPagePath = currentPath;
+        logDebug('Click count reset on navigation');
+      }
+    }
+
+    // Check for navigation on history changes
+    window.addEventListener('popstate', resetClickCount);
+    var originalPushState = history.pushState;
+    history.pushState = function() {
+      originalPushState.apply(this, arguments);
+      resetClickCount();
+    };
+
+    /**
+     * ============================================
+     * RAGE CLICK DETECTION
+     * ============================================
+     */
+    var clickHistory = {};
+    var RAGE_THRESHOLD = 3;
+    var RAGE_WINDOW = 1000;
+
+    document.addEventListener('click', function(e) {
+      var target = e.target.closest('button, [role="button"], .digit-btn');
+      if (!target) return;
+
+      var key = target.id || target.className || 'unknown';
+      var now = Date.now();
+
+      if (!clickHistory[key]) clickHistory[key] = [];
+
+      clickHistory[key] = clickHistory[key].filter(function(t) {
+        return now - t < RAGE_WINDOW;
+      });
+
+      clickHistory[key].push(now);
+
+      if (clickHistory[key].length >= RAGE_THRESHOLD) {
+        window.MatomoTracker.trackEvent('UX_Issue', 'Rage_Click', key);
+        clickHistory[key] = [];
+        logDebug('Rage click detected:', key);
+      }
+    }, true);
+
+    /**
+     * ============================================
+     * TOAST SUCCESS/FAILURE TRACKING
+     * ============================================
+     * Tracks success/failure events based on toast type and current page URL
+     * Language-independent - uses class names and URL patterns
+     */
+    var PAGE_FEATURE_MAP = {
+      'create-checklist': { category: 'Checklist', createAction: 'Checklist_Create', updateAction: 'Checklist_Update' },
+      'update-checklist': { category: 'Checklist', createAction: 'Checklist_Create', updateAction: 'Checklist_Update' },
+      'checklist': { category: 'Checklist', createAction: 'Checklist_Create', updateAction: 'Checklist_Update' },
+      'form-builder': { category: 'Form', createAction: 'Form_Create', updateAction: 'Form_Update' },
+      'forms': { category: 'Form', createAction: 'Form_Create', updateAction: 'Form_Update' },
+      'create-notification': { category: 'Notification', createAction: 'Notification_Create', updateAction: 'Notification_Update' },
+      'notifications': { category: 'Notification', createAction: 'Notification_Create', updateAction: 'Notification_Update' },
+      'roles': { category: 'Role', createAction: 'Role_Create', updateAction: 'Role_Update' },
+      'workflow': { category: 'Workflow', createAction: 'Workflow_Save', updateAction: 'Workflow_Save' },
+      'service-builder': { category: 'Service', createAction: 'Service_Create', updateAction: 'Service_Update' },
+    };
+
+    var lastToastTime = 0;
+    var TOAST_DEBOUNCE = 2000; // Prevent duplicate tracking within 2 seconds
+    var lastActionType = null; // 'create' or 'update' - set by button clicks
+
+    // Track button clicks to determine action type
+    var lastButtonCategory = null; // Track category from button (e.g., 'service', 'workflow')
+
+    document.addEventListener('click', function(e) {
+      var button = e.target.closest('[id^="btn-"]');
+      if (button) {
+        var buttonId = button.getAttribute('id').toLowerCase();
+
+        // Detect action type
+        if (buttonId.includes('create')) {
+          lastActionType = 'create';
+        } else if (buttonId.includes('update')) {
+          lastActionType = 'update';
+        } else if (buttonId.includes('save')) {
+          lastActionType = 'save';
+        } else if (buttonId.includes('publish')) {
+          lastActionType = 'publish';
+        }
+
+        // Detect category from button ID (e.g., btn-service-save → service)
+        if (buttonId.includes('service')) {
+          lastButtonCategory = 'Service';
+        } else if (buttonId.includes('workflow')) {
+          lastButtonCategory = 'Workflow';
+        } else if (buttonId.includes('form')) {
+          lastButtonCategory = 'Form';
+        } else if (buttonId.includes('checklist')) {
+          lastButtonCategory = 'Checklist';
+        } else if (buttonId.includes('notification')) {
+          lastButtonCategory = 'Notification';
+        } else if (buttonId.includes('role')) {
+          lastButtonCategory = 'Role';
+        }
+      }
+    }, true);
+
+    function detectFeatureFromPageUrl() {
+      var path = window.location.pathname.toLowerCase();
+      var search = window.location.search.toLowerCase();
+
+      // If button category is set (e.g., service save/publish on workflow page), use it
+      if (lastButtonCategory) {
+        var action;
+        if (lastActionType === 'publish') {
+          action = lastButtonCategory + '_Publish';
+        } else if (lastActionType === 'save') {
+          action = lastButtonCategory + '_Save';
+        } else if (lastActionType === 'create') {
+          action = lastButtonCategory + '_Create';
+        } else if (lastActionType === 'update') {
+          action = lastButtonCategory + '_Update';
+        } else {
+          action = lastButtonCategory + '_Create';
+        }
+        return {
+          category: lastButtonCategory,
+          action: action
+        };
+      }
+
+      // Fallback to URL-based detection
+      for (var key in PAGE_FEATURE_MAP) {
+        if (path.includes(key)) {
+          var feature = PAGE_FEATURE_MAP[key];
+          var isUpdate;
+
+          // Button click takes precedence over URL
+          if (lastActionType === 'create') {
+            isUpdate = false;
+          } else if (lastActionType === 'update') {
+            isUpdate = true;
+          } else {
+            // Fallback to URL patterns if no button was clicked
+            isUpdate = path.includes('update') ||
+                       search.includes('edit=true') ||
+                       search.includes('editmode=true') ||
+                       search.includes('isupdate=true');
+          }
+
+          return {
+            category: feature.category,
+            action: isUpdate ? feature.updateAction : feature.createAction
+          };
+        }
+      }
+      return null;
+    }
+
+    function initToastTracking() {
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1) {
+              // Look for digit-toast elements
+              var toasts = [];
+              if (node.className && typeof node.className === 'string' && node.className.includes('digit-toast')) {
+                toasts = [node];
+              } else if (node.querySelectorAll) {
+                toasts = node.querySelectorAll('[class*="digit-toast"]');
+              }
+
+              toasts.forEach(function(toast) {
+                var className = toast.className || '';
+                var now = Date.now();
+
+                // Debounce to prevent duplicate tracking
+                if (now - lastToastTime < TOAST_DEBOUNCE) return;
+                lastToastTime = now;
+
+                // Detect success or error from class name
+                // Note: Both success and error toasts have 'digit-toast-success' class
+                // The difference is 'digit-success' vs 'digit-error'
+                var isError = className.includes('digit-error');
+                var isSuccess = className.includes('digit-success') && !isError;
+
+                if (!isSuccess && !isError) return;
+
+                // Get feature from current page URL
+                var feature = detectFeatureFromPageUrl();
+                if (!feature) return;
+
+                var params = getUrlParams();
+                var context = params.module + '/' + params.service;
+
+                // Get toast message from .toast-label element
+                var toastLabel = toast.querySelector('.toast-label');
+                var toastMessage = toastLabel ? toastLabel.textContent.trim() : '';
+
+                if (isSuccess) {
+                  // Success event - include click count as value
+                  window.MatomoTracker.trackEvent(feature.category, feature.action + '_Success', context, clickCountBeforeCompletion);
+                  logDebug('Toast tracked:', { category: feature.category, action: feature.action + '_Success', type: 'success', clicks: clickCountBeforeCompletion });
+
+                  // Also track clicks as separate event for easier analysis
+                  if (clickCountBeforeCompletion > 0) {
+                    window.MatomoTracker.trackEvent(feature.category, feature.action + '_Clicks_To_Complete', context, clickCountBeforeCompletion);
+                  }
+
+                  // Reset click count after successful completion
+                  clickCountBeforeCompletion = 0;
+                } else if (isError) {
+                  // Failure event - include message in Event Name for drill-down
+                  var eventName = context + (toastMessage ? ' | ' + toastMessage : '');
+                  window.MatomoTracker.trackEvent(feature.category, feature.action + '_Failure', eventName);
+                  logDebug('Toast tracked:', { category: feature.category, action: feature.action + '_Failure', message: toastMessage });
+                }
+
+                // Reset action tracking variables after toast is tracked
+                // This prevents stale values from affecting subsequent toasts
+                lastButtonCategory = null;
+                lastActionType = null;
+              });
+            }
+          });
+        });
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+      logDebug('Toast tracking initialized');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initToastTracking);
+    } else {
+      initToastTracking();
+    }
+
+    /**
+     * ============================================
+     * API RESPONSE AUTO-TRACKING
+     * ============================================
+     */
+    var API_TRACKING_CONFIG = {
+      endpoints: {
+        'Studio.ServiceConfigurationDrafts': { category: 'Service' },
+        'Studio.Checklists': { category: 'Checklist' },
+        'Studio.Notifications': { category: 'Notification' },
+        'Studio.Forms': { category: 'Form' },
+        'Studio.Roles': { category: 'Role' }
+      }
+    };
+
+    function detectFeatureFromUrl(url) {
+      if (!url) return null;
+      var urlStr = typeof url === 'string' ? url : url.toString();
+
+      for (var key in API_TRACKING_CONFIG.endpoints) {
+        if (urlStr.includes(key)) {
+          return API_TRACKING_CONFIG.endpoints[key];
+        }
+      }
+      return null;
+    }
+
+    function detectFeatureFromBody(body) {
+      if (!body) return null;
+      var bodyStr = typeof body === 'string' ? body : JSON.stringify(body);
+
+      for (var key in API_TRACKING_CONFIG.endpoints) {
+        if (bodyStr.includes(key)) {
+          return API_TRACKING_CONFIG.endpoints[key];
+        }
+      }
+      return null;
+    }
+
+    // Intercept Fetch API
+    var originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+      var startTime = Date.now();
+      var method = (options && options.method) || 'GET';
+      var body = options && options.body;
+      var urlStr = typeof url === 'string' ? url : url.toString();
+
+      return originalFetch.apply(this, arguments).then(function(response) {
+        var duration = Date.now() - startTime;
+
+        if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase())) {
+          // Check URL first, then fallback to body
+          var feature = detectFeatureFromUrl(urlStr) || detectFeatureFromBody(body);
+          var params = getUrlParams();
+          var context = params.module + '/' + params.service;
+
+          if (feature) {
+            // Check page URL to determine Create vs Update
+            var pageUrl = window.location.href.toLowerCase();
+            var isEditMode = pageUrl.includes('editmode=true') ||
+                             pageUrl.includes('edit=true') ||
+                             pageUrl.includes('update-');
+            var action = isEditMode ? 'Update' : 'Create';
+            // Use unique action names: Category_Action_Result (e.g., Form_Create_Success)
+            var uniqueAction = feature.category + '_' + action;
+
+            if (response.ok) {
+              window.MatomoTracker.trackEvent(feature.category, uniqueAction + '_Success', context, duration);
+              logDebug('API Success:', { category: feature.category, action: uniqueAction + '_Success', context: context });
+            } else {
+              window.MatomoTracker.trackEvent(feature.category, uniqueAction + '_Failure', context + ' (HTTP ' + response.status + ')');
+              logDebug('API Failure:', { category: feature.category, action: uniqueAction + '_Failure', status: response.status });
+            }
+          }
+        }
+
+        return response;
+      }).catch(function(error) {
+        // Check URL first, then fallback to body
+        var feature = detectFeatureFromUrl(urlStr) || detectFeatureFromBody(body);
+        var params = getUrlParams();
+        var context = params.module + '/' + params.service;
+
+        if (feature) {
+          window.MatomoTracker.trackEvent(feature.category, 'Network_Error', context + ': ' + error.message);
+        }
+
+        throw error;
+      });
+    };
+
+    /**
+     * ============================================
+     * INITIALIZE MATOMO
+     * ============================================
+     */
+    if (window.MATOMO_CONFIG.enabled) {
+      var initialPageTitle = getPageTitle(location.href);
+      document.title = initialPageTitle;
+      _paq.push(['setDocumentTitle', initialPageTitle]);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+
+      (function() {
+        var u = window.MATOMO_CONFIG.url;
+        _paq.push(['setTrackerUrl', u + 'matomo.php']);
+        _paq.push(['setSiteId', window.MATOMO_CONFIG.siteId]);
+        var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+        g.async = true; g.src = u + 'matomo.js';
+        s.parentNode.insertBefore(g, s);
+      })();
+
+      // SPA URL tracking
+      (function() {
+        var lastUrl = location.href;
+
+        /**
+         * Clean URL for tracking - keeps only essential parameters
+         * This groups similar pages together in Matomo reports
+         */
+        function cleanUrlForTracking(url) {
+          try {
+            var urlObj = new URL(url);
+            var pathname = urlObj.pathname;
+            var params = urlObj.searchParams;
+
+            // Essential parameters to keep
+            var essentialParams = ['module', 'service'];
+            var cleanParams = new URLSearchParams();
+
+            // Keep essential params
+            essentialParams.forEach(function(key) {
+              if (params.has(key)) {
+                cleanParams.set(key, params.get(key));
+              }
+            });
+
+            // Detect and add mode (create/edit/update)
+            var isEdit = params.has('editMode') || params.has('edit') ||
+                         pathname.includes('update-');
+            if (isEdit) {
+              cleanParams.set('mode', 'edit');
+            }
+
+            // Build clean URL
+            var cleanUrl = urlObj.origin + pathname;
+            var paramString = cleanParams.toString();
+            if (paramString) {
+              cleanUrl += '?' + paramString;
+            }
+
+            return cleanUrl;
+          } catch (e) {
+            return url; // Return original if parsing fails
+          }
+        }
+
+        function trackUrlChange() {
+          var url = location.href;
+          if (url !== lastUrl) {
+            var pageTitle = getPageTitle(url);
+            var cleanUrl = cleanUrlForTracking(url);
+            document.title = pageTitle;
+            _paq.push(['setCustomUrl', cleanUrl]);
+            _paq.push(['setDocumentTitle', pageTitle]);
+            _paq.push(['deleteCustomVariables', 'page']);
+            _paq.push(['trackPageView']);
+            lastUrl = url;
+            logDebug('Page view:', { title: pageTitle, cleanUrl: cleanUrl });
+          }
+        }
+
+        history.pushState = (function(original) {
+          return function pushState() {
+            var result = original.apply(this, arguments);
+            trackUrlChange();
+            return result;
+          };
+        })(history.pushState);
+
+        history.replaceState = (function(original) {
+          return function replaceState() {
+            var result = original.apply(this, arguments);
+            trackUrlChange();
+            return result;
+          };
+        })(history.replaceState);
+
+        window.addEventListener('popstate', trackUrlChange);
+      })();
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAutoTracking);
+      } else {
+        initAutoTracking();
+      }
+
+      logDebug('Matomo initialized with config:', window.MATOMO_CONFIG);
+    }
+  </script>
+  <!-- End Matomo Code -->
+
+  <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
+  <!-- Adding a temporary config 
+  <script src="%REACT_APP_GLOBAL%"></script>
+   <script>
+      var globalConfigs = (function () {
+      var stateTenantId = 'od'
+      var gmaps_api_key = 'AIzaSyAQOd09-vjmk1sXFb_ZQYDz2nlfhXq7Wf8'
+      var finEnv = 'uat'
+      var centralInstanceEnabled = false;
+      var footerBWLogoURL = 'https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer-bw.png'
+      var footerLogoURL = 'https://s3.ap-south-1.amazonaws.com/egov-uat-assets/digit-footer.png'
+      var digitHomeURL = 'https://www.digit.org/'
+      var assetS3Bucket = 'pg-egov-assets';
+      var getConfig = function (key) {
+        if (key === 'STATE_LEVEL_TENANT_ID') {
+          return stateTenantId;
+        }
+        else if (key === 'GMAPS_API_KEY') {
+          return gmaps_api_key;
+        }
+        else if (key === 'FIN_ENV') {
+          return finEnv;
+        } else if (key === 'ENABLE_SINGLEINSTANCE') {
+          return centralInstanceEnabled;
+        } else if (key === 'DIGIT_FOOTER_BW') {
+          return footerBWLogoURL;
+        } else if (key === 'DIGIT_FOOTER') {
+          return footerLogoURL;
+        } else if (key === 'DIGIT_HOME_URL') {
+          return digitHomeURL;
+        } else if (key === 'S3BUCKET') {
+          return assetS3Bucket;
+        } else if (key === "JWT_TOKEN"){
+          return "ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0";
+        }
+      };
+      return {
+        getConfig
+      };
+}());
+    </script> 
+ -->
+    
   </head>
 
   <body>
