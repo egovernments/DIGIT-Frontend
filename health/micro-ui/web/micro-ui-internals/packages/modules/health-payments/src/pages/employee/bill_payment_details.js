@@ -186,7 +186,7 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
       );
 
       const matchedSkill = individual?.skills?.find((skill) =>
-        workerRatesData?.rates?.some(
+        !skill?.isDeleted && workerRatesData?.rates?.some(
           (rate) => rate?.skillCode === skill?.type
         )
       );

@@ -396,7 +396,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         const uniqueId = matchingIndividual?.name?.familyName || t("NA");
         const userId = matchingIndividual?.userDetails?.username || t("NA");
         const matchedSkill = matchingIndividual?.skills?.find((skill) =>
-          workerRatesData?.rates?.some(
+          !skill?.isDeleted && workerRatesData?.rates?.some(
             (rate) => rate?.skillCode === skill?.type
           )
         );
