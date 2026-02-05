@@ -11,6 +11,7 @@ import {
     SVG,
     CheckBox,
     FieldV1,
+    Divider,
 } from "@egovernments/digit-ui-components";
 import ReactDOM from "react-dom";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
@@ -154,6 +155,12 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
         "Please complete all conditions and select a target page before confirming.";
     const logicLabel = t("HCM_LOGIC") || "Logic";
 
+    // Rule Summary labels
+    const ifLabel = t("IF") || "If";
+    const thenNavigateToLabel = t("THEN_NAVIGATE_TO") || "Then navigate to";
+    const andLabel = t("AND") || "And";
+    const onPageLabel = t("ON_PAGE") || "on page";
+
     // ----- constants / helpers -----
     const LOGICALS = [
         { code: "&&", name: t("AND") || "AND" },
@@ -296,6 +303,99 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         return ALL_OPERATOR_OPTIONS;
     };
+
+    // Helper function to get field label
+    const getFieldLabel = useCallback((fieldCode) => {
+        const field = currentPageFieldOptions.find(f => f.code === fieldCode);
+        if (field?.label) {
+            return customT(field.label) || field.code;
+        }
+        return fieldCode;
+    }, [currentPageFieldOptions, customT]);
+
+    // Helper function to get translated value label based on field type
+    const getValueLabel = useCallback((fieldCode, value) => {
+        const field = currentPageFieldOptions.find(f => f.code === fieldCode);
+
+        if (!field) return value;
+
+        // For checkbox fields, translate true/false to Yes/No
+        if (isCheckboxField(field)) {
+            const boolValue = String(value).toLowerCase() === "true";
+            return boolValue ? (t("YES") || "Yes") : (t("NO") || "No");
+        }
+
+        // For dropdown/radio/select fields with enums
+        const format = (field.format || "").toLowerCase();
+        if (["dropdown", "radio", "select"].includes(format) && field.enums?.length > 0) {
+            const enumOption = field.enums.find(en => String(en.code) === String(value));
+            if (enumOption) {
+                return customT(enumOption.name) || enumOption.name || value;
+            }
+        }
+
+        // For fields with schemaCode (MDMS dropdown)
+        if (field.schemaCode) {
+            return t(value) || value;
+        }
+
+        return value;
+    }, [currentPageFieldOptions, isCheckboxField, t, customT]);
+
+    // Helper function to get target page label
+    const getTargetPageLabel = useCallback((pageCode) => {
+        const page = allPageOptions.find(p => p.code === pageCode || p.name === pageCode);
+        if (page) {
+            return page.code || page.name;
+        }
+        return t(pageCode);
+    }, [allPageOptions]);
+
+    // Generate condition summary for Rule Summary card
+    const generateConditionSummary = useCallback((conds, targetPage) => {
+        if (!conds || conds.length === 0) return null;
+
+        // Check if all conditions are complete
+        const isComplete = conds.every(c => c.selectedField?.code && c.comparisonType?.code && String(c.fieldValue ?? "").trim() !== "");
+        if (!isComplete) return null;
+
+        // Get operator display name
+        const getOperatorDisplay = (code) => {
+            const operator = ALL_OPERATOR_OPTIONS.find(op => op.code === code);
+            if (operator?.name) {
+                return t(operator.name) || operator.name;
+            }
+            return code;
+        };
+
+        const elements = [];
+
+        conds.forEach((cond, idx) => {
+            const fieldLabel = getFieldLabel(cond.selectedField?.code);
+            const valueLabel = getValueLabel(cond.selectedField?.code, cond.fieldValue);
+
+            // Add joiner between conditions
+            if (idx > 0) {
+                const joinerText = cond.joiner?.code === "||" ? (t("OR") || "Or") : andLabel;
+                elements.push(
+                    <div key={`joiner-${idx}`} className="rule-summary__joiner">
+                        <Tag label={joinerText} type="warning" />
+                    </div>
+                );
+            }
+
+            elements.push(
+                <div key={`cond-${idx}`} className="rule-summary__condition-row">
+                    <span className="rule-summary__text-primary">{ifLabel}</span>
+                    <Tag label={fieldLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                    <span className="rule-summary__text-secondary">{getOperatorDisplay(cond.comparisonType?.code)}</span>
+                    <Tag label={valueLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                </div>
+            );
+        });
+
+        return elements;
+    }, [ifLabel, andLabel, getFieldLabel, getValueLabel, ALL_OPERATOR_OPTIONS, t]);
 
     // ----- parse / serialize expression strings -----
     const parseSingle = (expression = "") => {
@@ -707,8 +807,8 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
     if (!campaignNumber || !flowId || !currentPageName) {
         return (
             <Card type="secondary">
-                <div style={{ padding: "1rem" }}>
-                    <p style={{ opacity: 0.7, margin: 0 }}>
+                <div className="navigation-logic-wrapper__loading">
+                    <p className="navigation-logic-wrapper__loading-text">
                         {t("LOADING_CONFIGURATION") || "Loading configuration..."}
                     </p>
                 </div>
@@ -723,55 +823,31 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
 
     // ---- small UI helpers to render the outside list with OR separators ----
     const JoinerRow = () => (
-        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <div className="navigation-logic-wrapper__or-separator">
             <Tag
                 type={"monochrome"}
                 label={`(${orText})`}
             />
-            {/* <span
-                style={{
-                    background:"#EFF8FF",
-                    height: "fit-content",
-                }}
-            >
-                {orText.toUpperCase()}
-            </span> */}
         </div>
     );
 
     const RuleRow = ({ idx }) => (
-        <div
-            style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                alignItems: "center",
-                gap: "0.75rem",
-            }}
-        >
+        <div className="navigation-logic-wrapper__rule-row">
             <Tag
                 label={formatRuleSummary(rules[idx], idx)}
                 showIcon={false}
                 stroke={true}
-                style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #C84C0E",
-                    borderRadius: 8,
-                    height: "fit-content",
-                    padding: "0.25rem 0.5rem",
-                    width: "100%",
-                    maxWidth: "100%",
-                }}
-                className={"version-tag"}
+                className="navigation-logic-wrapper__rule-tag"
                 labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
             />
 
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
+            <div className="navigation-logic-wrapper__rule-actions">
                 <div
                     role="button"
                     title={navLogicTitle}
                     aria-label={navLogicTitle}
                     onClick={() => openEditor(idx)}
-                    style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+                    className="navigation-logic-wrapper__action-button"
                 >
                     {SVG?.Edit ? (
                         <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
@@ -781,15 +857,17 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                 </div>
 
                 {/* Show delete icon for all rules, but only when more than 1 rule exists */}
-                {rules.length > 1 && (<div
-                    role="button"
-                    title={deleteRuleLabel}
-                    aria-label={deleteRuleLabel}
-                    onClick={() => deleteRuleFromList(idx)}
-                    style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
-                >
-                    <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                </div>)}
+                {rules.length > 1 && (
+                    <div
+                        role="button"
+                        title={deleteRuleLabel}
+                        aria-label={deleteRuleLabel}
+                        onClick={() => deleteRuleFromList(idx)}
+                        className="navigation-logic-wrapper__action-button"
+                    >
+                        <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -798,14 +876,14 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
     return (
         <Card type="secondary">
             {/* Title */}
-            <div style={{ marginBottom: "0.5rem" }}>
-                <h3 style={{ margin: 0 }}>{navLogicTitle}</h3>
+            <div className="navigation-logic-wrapper__header">
+                <h3 className="navigation-logic-wrapper__title">{navLogicTitle}</h3>
             </div>
 
             {/* Rules list separated by centered OR */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.75rem" }}>
+            <div className="navigation-logic-wrapper__rules-list">
                 {rules.length === 0 ? (
-                    <p style={{ opacity: 0.7, margin: 0 }}>{noRulesYet}</p>
+                    <p className="navigation-logic-wrapper__no-rules-text">{noRulesYet}</p>
                 ) : (
                     <>
                         <RuleRow idx={0} />
@@ -820,14 +898,14 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             </div>
 
             {/* Add Logic button */}
-            <div>
+            <div className="navigation-logic-wrapper__add-button-container">
                 <Button
                     variation="secondary"
                     label={addRuleLabel}
                     title={addRuleLabel}
                     onClick={addRule}
                     icon="Add"
-                    style={{ width: "100%" }}
+                    className="navigation-logic-wrapper__add-button"
                 />
             </div>
 
@@ -840,17 +918,14 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                             type={"default"}
                             heading={navLogicTitle}
                             children={[
-                                <div key="single-rule-editor" style={{ display: "grid", gap: "1rem" }}>
+                                <div key="single-rule-editor" className="navigation-logic-popup__editor-content">
                                     {(() => {
                                         const rule = rules[editorIndex];
 
                                         return (
                                             <div
                                                 key={`rule-card-${editorIndex}`}
-                                                style={{
-                                                    display: "grid",
-                                                    gap: "1rem",
-                                                }}
+                                                className="navigation-logic-popup__conditions-wrapper"
                                             >
                                                 {/* Conditions */}
                                                 {rule.conds.map((cond, idx) => {
@@ -869,7 +944,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                         <React.Fragment key={`cond-row-${editorIndex}-${idx}`}>
                                                             {/* "And" tag OUTSIDE the card */}
                                                             {idx > 0 && (
-                                                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0.5rem 0" }}>
+                                                                <div className="navigation-logic-popup__joiner-container">
                                                                     <Tag
                                                                         type={"monochrome"}
                                                                         label={t(cond.joiner?.name || (cond.joiner?.code === "&&" ? "AND" : "OR"))}
@@ -892,22 +967,13 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     </div>
                                                                 </div>
                                                             )} */}
-                                                            <div
-                                                                style={{
-                                                                    background: "#FAFAFA",
-                                                                    border: "1px solid #D6D5D4",
-                                                                    borderRadius: 4,
-                                                                    padding: "0.75rem",
-                                                                    display: "grid",
-                                                                    gap: "0.5rem",
-                                                                }}
-                                                            >
-                                                                <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", alignItems: "flex-end" }}>
+                                                            <div className="navigation-logic-popup__condition-card">
+                                                                <div className="navigation-logic-popup__field-row">
                                                                     {/* Field */}
-                                                                    <div style={{ minWidth: 260, flex: "1 1 280px" }}>
+                                                                    <div className="navigation-logic-popup__field-container navigation-logic-popup__field-container--field">
                                                                         <LabelFieldPair vertical removeMargin>
-                                                                            <p style={{ margin: 0 }}>{selectFieldLabel}</p>
-                                                                            <div className="digit-field" style={{ width: "100%" }}>
+                                                                            <p className="navigation-logic-popup__label">{selectFieldLabel}</p>
+                                                                            <div className="digit-field navigation-logic-popup__field-input">
                                                                                 <Dropdown
                                                                                     option={currentPageFieldOptions}
                                                                                     optionKey="label"
@@ -941,10 +1007,10 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     </div>
 
                                                                     {/* Operator */}
-                                                                    <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                                                    <div className="navigation-logic-popup__field-container navigation-logic-popup__field-container--operator">
                                                                         <LabelFieldPair vertical removeMargin>
-                                                                            <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
-                                                                            <div className="digit-field" style={{ width: "100%" }}>
+                                                                            <p className="navigation-logic-popup__label">{comparisonTypeLabel}</p>
+                                                                            <div className="digit-field navigation-logic-popup__field-input">
                                                                                 <Dropdown
                                                                                     option={operatorOptions}
                                                                                     optionKey="name"
@@ -961,10 +1027,10 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     </div>
 
                                                                     {/* Value */}
-                                                                    <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                                                    <div className="navigation-logic-popup__field-container navigation-logic-popup__field-container--value">
                                                                         <LabelFieldPair vertical removeMargin>
-                                                                            <p style={{ margin: 0 }}>{selectValueLabel}</p>
-                                                                            <div className="digit-field" style={{ width: "100%" }}>
+                                                                            <p className="navigation-logic-popup__label">{selectValueLabel}</p>
+                                                                            <div className="digit-field navigation-logic-popup__field-input">
                                                                                 {(() => {
                                                                                     if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
                                                                                         const boolVal = String(cond.fieldValue).toLowerCase() === "true";
@@ -1115,21 +1181,14 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     {/* Remove condition - only show when more than 1 condition exists */}
                                                                     {rule.conds.length > 1 && (
                                                                         <div
-                                                                            style={{
-                                                                                display: "flex",
-                                                                                alignItems: "center",
-                                                                                gap: "0.25rem",
-                                                                                cursor: "pointer",
-                                                                                alignSelf: "flex-end",
-                                                                                paddingBottom: "0.5rem",
-                                                                            }}
+                                                                            className="navigation-logic-popup__delete-condition"
                                                                             onClick={() => removeCondition(editorIndex, idx)}
                                                                             title={removeConditionLabel}
                                                                             aria-label={removeConditionLabel}
                                                                             role="button"
                                                                         >
                                                                             <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
-                                                                            <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
+                                                                            <span className="navigation-logic-popup__delete-condition-text">
                                                                                 {removeConditionLabel}
                                                                             </span>
                                                                         </div>
@@ -1138,19 +1197,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
 
                                                                 {/* Per-condition error */}
                                                                 {validationStarted && !isCondComplete(cond) && (
-                                                                    <div
-                                                                        style={{
-                                                                            border: "1px solid #FCA5A5",
-                                                                            background: "#FEF2F2",
-                                                                            color: "#B91C1C",
-                                                                            borderRadius: 6,
-                                                                            padding: "0.5rem 0.75rem",
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            justifyContent: "space-between",
-                                                                            gap: "0.75rem",
-                                                                        }}
-                                                                    >
+                                                                    <div className="navigation-logic-popup__error-box">
                                                                         <span>{completeAllMsg}</span>
                                                                         <SVG.Close
                                                                             width={"1.1rem"}
@@ -1161,7 +1208,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                 setGlobalFormError(null)
                                                                             }}
                                                                             tabIndex={0}
-                                                                            style={{ cursor: "pointer" }}
+                                                                            className="navigation-logic-popup__error-close"
                                                                         />
                                                                     </div>
                                                                 )}
@@ -1171,22 +1218,21 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                 })}
 
                                                 {/* Add condition */}
-                                                <div>
+                                                <div className="navigation-logic-popup__add-condition-wrapper">
                                                     <Button
                                                         variation="secondary"
                                                         label={addConditionLabel}
                                                         title={addConditionLabel}
                                                         icon="Add"
                                                         onClick={() => addCondition(editorIndex)}
-                                                        style={{ minWidth: "auto" }}
                                                     />
                                                 </div>
 
                                                 {/* Target page */}
-                                                <div style={{ minWidth: 260 }}>
+                                                <div className="navigation-logic-popup__target-page">
                                                     <LabelFieldPair vertical removeMargin>
-                                                        <p style={{ margin: 0 }}>{targetPageLabel}</p>
-                                                        <div className="digit-field" style={{ width: "100%" }}>
+                                                        <p className="navigation-logic-popup__label">{targetPageLabel}</p>
+                                                        <div className="digit-field navigation-logic-popup__field-input">
                                                             <Dropdown
                                                                 option={targetPages?.length > 0 ? targetPages : allPageOptions}
                                                                 optionKey="code"
@@ -1206,21 +1252,42 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                     </LabelFieldPair>
                                                 </div>
 
+                                                {/* Divider before Rule Summary */}
+                                                {generateConditionSummary(rule.conds, rule.targetPage) && (
+                                                    <Divider className="navigation-logic-popup__divider" />
+                                                )}
+
+                                                {/* Rule Summary Card - shows when all conditions are complete */}
+                                                {generateConditionSummary(rule.conds, rule.targetPage) && (
+                                                    <div className="rule-summary">
+                                                        {/* Condition rows with joiners */}
+                                                        {generateConditionSummary(rule.conds, rule.targetPage)}
+
+                                                        {/* Then navigate to row */}
+                                                        {rule.targetPage?.code && (
+                                                            <div className="rule-summary__then-show">
+                                                                <span className="rule-summary__then-show-label">
+                                                                    {thenNavigateToLabel}
+                                                                </span>
+                                                                <Tag
+                                                                    label={getTargetPageLabel(rule.targetPage.code)}
+                                                                    type="monochrome"
+                                                                    className="rule-summary__tag"
+                                                                    stroke={true}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                {/* Divider after Rule Summary */}
+                                                {generateConditionSummary(rule.conds, rule.targetPage) && (
+                                                    <Divider className="navigation-logic-popup__divider" />
+                                                )}
+
                                                 {/* GLOBAL ERROR (shows when Submit clicked with missing target page or incomplete conditions) */}
                                                 {globalFormError ? (
-                                                    <div
-                                                        style={{
-                                                            border: "1px solid #FCA5A5",
-                                                            background: "#FEF2F2",
-                                                            color: "#B91C1C",
-                                                            borderRadius: 6,
-                                                            padding: "0.5rem 0.75rem",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            justifyContent: "space-between",
-                                                            gap: "0.75rem",
-                                                        }}
-                                                    >
+                                                    <div className="navigation-logic-popup__error-box">
                                                         <span>{globalFormError}</span>
                                                         <SVG.Close
                                                             width={"1.1rem"}
@@ -1228,7 +1295,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                             fill={"#7F1D1D"}
                                                             onClick={() => setGlobalFormError("")}
                                                             tabIndex={0}
-                                                            style={{ cursor: "pointer" }}
+                                                            className="navigation-logic-popup__error-close"
                                                         />
                                                     </div>
                                                 ) : null}
