@@ -1364,7 +1364,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange, fieldValue, dispatch, currentLocale, shouldSkipLocalization]);
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
-  const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
+  const isMobileNumberPrefix = cField.bindTo === "prefixText";
+  const isPrefixOrSuffix = cField.bindTo === "prefixText" || cField.bindTo === "suffixText";
   const maxPrefixLength = 5; // Maximum length for mobile number prefix to prevent UI breaking
 
   switch (cField.type) {
@@ -1381,7 +1382,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
               let newValue = event.target.value;
 
               // For mobile number prefix, only allow numbers and limit length
-              if (isMobileNumberPrefix) {
+              if (isPrefixOrSuffix) {
                 // Remove any non-numeric characters
                 newValue = newValue.replace(/[^0-9]/g, "");
                 // Limit the length
@@ -1395,7 +1396,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...(isMobileNumberPrefix && { maxLength: maxPrefixLength }) }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...((isPrefixOrSuffix) && { maxLength: maxPrefixLength }) }}
           />
         </div>
       );

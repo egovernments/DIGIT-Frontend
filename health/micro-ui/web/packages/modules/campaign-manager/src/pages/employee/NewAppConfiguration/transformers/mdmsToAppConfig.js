@@ -115,7 +115,7 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
                 }
               };
             }
-          else {
+            else {
               // Navigation target exists but not in conditionalNavigateTo - set as NOT_CONFIGURED
               return {
                 ...actionItem,
@@ -159,22 +159,36 @@ const transformTemplate = (screenData) => {
 
         ...(field?.primaryAction && field?.primaryActionLabel
           ? {
-              primaryAction: {
-                ...field.primaryAction,
-                label: field.primaryActionLabel,
-              },
-            }
+            primaryAction: {
+              ...field.primaryAction,
+              label: field.primaryActionLabel,
+            },
+          }
           : {}),
 
         ...(field?.secondaryAction && field?.secondaryActionLabel
           ? {
-              secondaryAction: {
-                ...field.secondaryAction,
-                label: field.secondaryActionLabel,
-              },
-            }
+            secondaryAction: {
+              ...field.secondaryAction,
+              label: field.secondaryActionLabel,
+            },
+          }
           : {}),
       };
+    }
+
+    if (field?.format?.toLowerCase() === "searchBar") {
+      const validations = [];
+      validations.push({
+        type: "minSearchChars",
+        value: field?.minSearchChars,
+        message: field["minSearchChars.message"],
+      });
+
+      return {
+        ...field,
+        validations,
+      }
     }
 
     if (field?.format?.toLowerCase() === "scanner" || field?.format?.toLowerCase() === "qrscanner") {
@@ -203,14 +217,6 @@ const transformTemplate = (screenData) => {
         ...field,
         validations,
       };
-    }
-
-    if(field?.minSearchChars){
-      validations.push({
-        type: "minSearchChars",
-        value: field?.minSearchChars,
-        message: field["minSearchChars.message"],
-      })
     }
 
     // Handle isMdms toggle: if true, use schemaCode and clear enums; if false, use dropDownOptions as enums
@@ -244,7 +250,7 @@ const transformTemplate = (screenData) => {
   if (screenData.navigateTo !== undefined) template.navigateTo = screenData.navigateTo;
   if (screenData.initActions) template.initActions = screenData.initActions;
   if (screenData.wrapperConfig) template.wrapperConfig = screenData.wrapperConfig;
-  if(screenData.scrollListener) template.scrollListener = screenData.scrollListener;
+  if (screenData.scrollListener) template.scrollListener = screenData.scrollListener;
 
   // Default screenType to TEMPLATE if not set
   if (!template.screenType) {
@@ -484,7 +490,7 @@ const buildValidations = (field) => {
     });
   }
 
-    if (field.minSearchChars) {
+  if (field.minSearchChars) {
     validations.push({
       type: "minSearchChars",
       value: field?.minSearchChars,
@@ -492,9 +498,9 @@ const buildValidations = (field) => {
     });
   }
 
-  if(field.pattern){
+  if (field.pattern) {
     validations.push({
-        type: "pattern",
+      type: "pattern",
       value: field?.pattern,
       message: field["pattern.message"],
     })

@@ -1250,7 +1250,7 @@ function NewDependentFieldWrapper({ t }) {
                                                         <div className="dependent-field-popup__field-grid">
                                                             {/* Page Dropdown */}
                                                             <LabelFieldPair vertical removeMargin>
-                                                                <p className="dependent-field-popup__label">
+                                                                <p className="dependent-field-popup__label" style={{margin:"0rem"}}>
                                                                     {selectPageLabel}
                                                                 </p>
                                                                 <Dropdown
@@ -1289,7 +1289,7 @@ function NewDependentFieldWrapper({ t }) {
 
                                                             {/* Field Dropdown */}
                                                             <LabelFieldPair vertical removeMargin>
-                                                                <p className="dependent-field-popup__label">
+                                                                <p className="dependent-field-popup__label" style={{margin:"0rem"}}>
                                                                     {selectFieldLabel}
                                                                 </p>
                                                                 <Dropdown
@@ -1326,7 +1326,7 @@ function NewDependentFieldWrapper({ t }) {
 
                                                         {/* Row 2: Operator */}
                                                         <LabelFieldPair vertical removeMargin>
-                                                            <p className="dependent-field-popup__label">
+                                                            <p className="dependent-field-popup__label" style={{margin:"0rem"}}>
                                                                 {comparisonTypeLabel}
                                                             </p>
                                                             <Dropdown
@@ -1410,7 +1410,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                             /* Field Comparison: Page + Field dropdowns in grid */
                                                                             <div className="dependent-field-popup__field-grid">
                                                                                 <LabelFieldPair vertical removeMargin>
-                                                                                    <p className="dependent-field-popup__label">{selectPageLabel}</p>
+                                                                                    <p className="dependent-field-popup__label" style={{margin:"0rem"}}>{selectPageLabel}</p>
                                                                                     <Dropdown
                                                                                         showToolTip={true}
                                                                                         option={pageOptions}
@@ -1431,7 +1431,7 @@ function NewDependentFieldWrapper({ t }) {
                                                                                     />
                                                                                 </LabelFieldPair>
                                                                                 <LabelFieldPair vertical removeMargin>
-                                                                                    <p className="dependent-field-popup__label">{selectFieldLabel}</p>
+                                                                                    <p className="dependent-field-popup__label" style={{margin:"0rem"}}>{selectFieldLabel}</p>
                                                                                     <Dropdown
                                                                                         showToolTip={true}
                                                                                         option={cond.rightPage ? rightFieldOptions : []}

@@ -972,7 +972,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     {/* Field */}
                                                                     <div className="navigation-logic-popup__field-container navigation-logic-popup__field-container--field">
                                                                         <LabelFieldPair vertical removeMargin>
-                                                                            <p className="navigation-logic-popup__label">{selectFieldLabel}</p>
+                                                                            <p className="navigation-logic-popup__label" style={{margin:"0rem"}}>{selectFieldLabel}</p>
                                                                             <div className="digit-field navigation-logic-popup__field-input">
                                                                                 <Dropdown
                                                                                     option={currentPageFieldOptions}
@@ -1009,7 +1009,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     {/* Operator */}
                                                                     <div className="navigation-logic-popup__field-container navigation-logic-popup__field-container--operator">
                                                                         <LabelFieldPair vertical removeMargin>
-                                                                            <p className="navigation-logic-popup__label">{comparisonTypeLabel}</p>
+                                                                            <p className="navigation-logic-popup__label" style={{margin:"0rem"}}>{comparisonTypeLabel}</p>
                                                                             <div className="digit-field navigation-logic-popup__field-input">
                                                                                 <Dropdown
                                                                                     option={operatorOptions}
@@ -1029,7 +1029,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     {/* Value */}
                                                                     <div className="navigation-logic-popup__field-container navigation-logic-popup__field-container--value">
                                                                         <LabelFieldPair vertical removeMargin>
-                                                                            <p className="navigation-logic-popup__label">{selectValueLabel}</p>
+                                                                            <p className="navigation-logic-popup__label" style={{margin:"0rem"}}>{selectValueLabel}</p>
                                                                             <div className="digit-field navigation-logic-popup__field-input">
                                                                                 {(() => {
                                                                                     if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
@@ -1232,7 +1232,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                 {/* Target page */}
                                                 <div className="navigation-logic-popup__target-page">
                                                     <LabelFieldPair vertical removeMargin>
-                                                        <p className="navigation-logic-popup__label">{targetPageLabel}</p>
+                                                        <p className="navigation-logic-popup__label" style={{margin:"0rem"}}>{targetPageLabel}</p>
                                                         <div className="digit-field navigation-logic-popup__field-input">
                                                             <Dropdown
                                                                 option={targetPages?.length > 0 ? targetPages : allPageOptions}
