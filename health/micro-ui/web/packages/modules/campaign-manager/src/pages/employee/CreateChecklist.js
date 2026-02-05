@@ -33,7 +33,7 @@ const CreateChecklist = () => {
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
-  let module = searchParams.get("module");
+  let module = `hcm-checklist-${campaignNumber}`;
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
   const [config, setConfig] = useState(null);

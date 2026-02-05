@@ -523,6 +523,21 @@ const AddDeliveryRuleWrapper = React.memo(({
     });
   }, [deliveryTypeConfig, projectConfig?.code]);
 
+  // Determine radio options based on delivery number
+  // For Delivery 1 in each cycle: show only the first delivery type option
+  // For other deliveries (2, 3, etc.): show all filtered delivery type options
+  const radioDeliveryTypeOptions = useMemo(() => {
+    const isFirstDelivery = activeDelivery?.deliveryIndex === 0 ||
+                            activeDelivery?.deliveryNumber === 1 ||
+                            activeDelivery?.key === 1;
+
+    if (isFirstDelivery && filteredDeliveryTypeConfig?.length > 0) {
+      return [filteredDeliveryTypeConfig[0]];
+    }
+
+    return filteredDeliveryTypeConfig;
+  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig]);
+
   const handleAddRule = useCallback(() => {
     addRule();
   }, [addRule]);
@@ -536,9 +551,9 @@ const AddDeliveryRuleWrapper = React.memo(({
   }, [updateDeliveryTypeForEachDelivery]);
 
   const selectedDeliveryType = useMemo(() =>
-    filteredDeliveryTypeConfig?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) ||
-    filteredDeliveryTypeConfig?.[0] // default to first option
-  , [filteredDeliveryTypeConfig, activeDelivery?.deliveryType]);
+    radioDeliveryTypeOptions?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) ||
+    radioDeliveryTypeOptions?.[0] // default to first option
+  , [radioDeliveryTypeOptions, activeDelivery?.deliveryType, activeDelivery?.deliveryStrategy]);
 
   // Calculate if we can add more rules
   const canAddMore = useMemo(() => {
@@ -560,14 +575,14 @@ const AddDeliveryRuleWrapper = React.memo(({
   }
 return (
     <>
-     {filteredDeliveryTypeConfig && filteredDeliveryTypeConfig?.length > 0 && (
+     {radioDeliveryTypeOptions && radioDeliveryTypeOptions?.length > 0 && (
         <Card className="delivery-type-container">
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
               <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
             </div>
             <RadioButtons
-              options={filteredDeliveryTypeConfig}
+              options={radioDeliveryTypeOptions}
               selectedOption={selectedDeliveryType}
               optionsKey="code"
               value={selectedDeliveryType?.code}

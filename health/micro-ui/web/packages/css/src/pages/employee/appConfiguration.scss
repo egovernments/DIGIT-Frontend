@@ -537,3 +537,532 @@
 .react-datepicker-popper {
   z-index: 99999 !important;
 }
+
+// ===============================================
+// Dependent Field Wrapper Styles
+// ===============================================
+
+.dependent-field-wrapper {
+  // Loading state
+  &__loading {
+    padding: 1rem;
+  }
+
+  &__loading-text {
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  // Header section
+  &__header {
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  // Rules list container
+  &__rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__no-rules-text {
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  // OR separator between rules
+  &__or-separator {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__or-badge {
+    background: #FFFFFF;
+    color: #C84C0E;
+    border-radius: 4px;
+    border: 1px solid #C84C0E;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  // Rule row (logic item)
+  &__rule-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__rule-tag {
+    background: #EFF8FF;
+    height: fit-content;
+  }
+
+  &__rule-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+
+  &__action-button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // Add button container
+  &__add-button-container {
+    width: 100%;
+  }
+
+  // Editor content
+  &__editor-content {
+    display: grid;
+    gap: 1rem;
+  }
+
+  &__conditions-wrapper {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  // Add condition button
+  &__add-condition-wrapper {
+    margin-top: 0.5rem;
+  }
+
+  // Divider styling
+  &__divider {
+    margin: 1rem 0;
+  }
+
+  // Error message box
+  &__error-box {
+    border: 1px solid #FCA5A5;
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  &__error-close {
+    cursor: pointer;
+  }
+}
+
+// ===============================================
+// Dependent Field Popup Styles
+// ===============================================
+
+.dependent-field-popup {
+  // Joiner container between conditions in editor
+  &__joiner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem 0;
+  }
+
+  // Condition card container
+  &__condition-card {
+    background: #FAFAFA;
+    border: 1px solid #D6D5D4;
+    border-radius: 8px;
+    padding: 1rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  // Header row with "If" label and delete button
+  &__condition-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__condition-header-label {
+    font-weight: 600;
+    color: #0B4B66;
+  }
+
+  // Delete condition button
+  &__delete-condition {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    color: #C84C0E;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__delete-condition-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  // Grid layout for form fields (2 columns)
+  &__field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  // Radio option cards container
+  &__radio-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  // Individual radio card
+  &__radio-card {
+    border: 1px solid #D6D5D4;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+
+    &--selected {
+      border: 2px solid #C84C0E;
+      background: #FEF5F0;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__radio-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  // Custom radio button circle
+  &__radio-circle {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    border: 2px solid #787878;
+    box-sizing: border-box;
+
+    &--selected {
+      border: 6px solid #C84C0E;
+    }
+  }
+
+  &__radio-card-title {
+    font-weight: 600;
+    color: #0B4B66;
+  }
+
+  &__radio-card-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #505A5F;
+  }
+
+  // Label field styling
+  &__label {
+    margin: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  // Text colors
+  &__text-primary {
+    font-weight: 500;
+    color: #0B4B66;
+  }
+
+  &__text-secondary {
+    color: #505A5F;
+  }
+}
+
+// ===============================================
+// Rule Summary Card Styles
+// ===============================================
+
+.rule-summary {
+
+  // Joiner container (And/Or between conditions)
+  &__joiner {
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0;
+  }
+
+  // Individual condition row card
+  &__condition-row {
+    background: #FFFFFF;
+    border: 1px solid #D6E0EB;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  // Tag styling within rule summary
+  &__tag {
+    margin: 0 0.25rem;
+    display: inline-flex;
+  }
+
+  // Text styles
+  &__text-primary {
+    font-weight: 500;
+    color: #0B4B66;
+  }
+
+  &__text-secondary {
+    color: #505A5F;
+  }
+
+  // "Then show" row
+  &__then-show {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__then-show-label {
+    font-weight: 500;
+    color: #0B4B66;
+  }
+}
+
+// ===============================================
+// Navigation Logic Wrapper Styles
+// ===============================================
+
+.navigation-logic-wrapper {
+  // Loading state
+  &__loading {
+    padding: 1rem;
+  }
+
+  &__loading-text {
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  // Header section
+  &__header {
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  // Rules list container
+  &__rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__no-rules-text {
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  // OR separator between rules
+  &__or-separator {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  // Rule row
+  &__rule-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__rule-tag {
+    background: #FFFFFF;
+    border: 1px solid #C84C0E;
+    border-radius: 8px;
+    height: fit-content;
+    padding: 0.25rem 0.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  &__rule-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+
+  &__action-button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // Add button container
+  &__add-button-container {
+    width: 100%;
+  }
+
+  &__add-button {
+    width: 100%;
+  }
+}
+
+// ===============================================
+// Navigation Logic Popup Styles
+// ===============================================
+
+.navigation-logic-popup {
+  // Editor content wrapper
+  &__editor-content {
+    display: grid;
+    gap: 1rem;
+  }
+
+  &__conditions-wrapper {
+    display: grid;
+    gap: 1rem;
+  }
+
+  // Joiner container between conditions in editor
+  &__joiner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem 0;
+  }
+
+  // Condition card container
+  &__condition-card {
+    background: #FAFAFA;
+    border: 1px solid #D6D5D4;
+    border-radius: 4px;
+    padding: 0.75rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  // Field row layout
+  &__field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+  }
+
+  // Field containers
+  &__field-container {
+    &--field {
+      min-width: 260px;
+      flex: 1 1 280px;
+    }
+
+    &--operator {
+      min-width: 220px;
+      flex: 0 1 220px;
+    }
+
+    &--value {
+      min-width: 220px;
+      flex: 0 1 220px;
+    }
+  }
+
+  &__field-input {
+    width: 100%;
+  }
+
+  // Label styling
+  &__label {
+    margin: 0;
+  }
+
+  // Delete condition button
+  &__delete-condition {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    align-self: flex-end;
+    padding-bottom: 0.5rem;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__delete-condition-text {
+    color: #C84C0E;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  // Add condition button wrapper
+  &__add-condition-wrapper {
+    margin-top: 0.5rem;
+  }
+
+  // Target page container
+  &__target-page {
+    min-width: 260px;
+  }
+
+  // Divider styling
+  &__divider {
+    margin: 1rem 0;
+  }
+
+  // Error message box
+  &__error-box {
+    border: 1px solid #FCA5A5;
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  &__error-close {
+    cursor: pointer;
+  }
+}

@@ -177,7 +177,7 @@ const transformTemplate = (screenData) => {
       };
     }
 
-    if (field.format === "scanner" || field.format === "qrscanner") {
+    if (field?.format?.toLowerCase() === "scanner" || field?.format?.toLowerCase() === "qrscanner") {
       const validations = [];
 
       validations.push({
@@ -203,6 +203,14 @@ const transformTemplate = (screenData) => {
         ...field,
         validations,
       };
+    }
+
+    if(field?.minSearchChars){
+      validations.push({
+        type: "minSearchChars",
+        value: field?.minSearchChars,
+        message: field["minSearchChars.message"],
+      })
     }
 
     // Handle isMdms toggle: if true, use schemaCode and clear enums; if false, use dropDownOptions as enums
@@ -254,7 +262,7 @@ const transformFooter = (footer) => {
   if (!footer || !Array.isArray(footer)) return [];
 
   const updatedFooter = footer.map((foo) => {
-    if (foo.format === "scanner" || foo.format === "qrscanner") {
+    if (foo.format?.toLowerCase() === "scanner" || foo.format?.toLowerCase() === "qrscanner") {
       const validations = [];
 
       validations.push({
