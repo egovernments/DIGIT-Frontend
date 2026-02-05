@@ -54,7 +54,7 @@ const useDropdownOptions = (schemaCode, tenantId) => {
           },
         },
       });
-      
+
       const moduleName = code.split(".")[0];
       const schemaName = code.split(".")[1];
       const data = response?.MdmsRes?.[moduleName]?.[schemaName] || [];
@@ -82,7 +82,7 @@ const AddAttributeField = React.memo(({
   const { updateAttributeField } = useDeliveryRules();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  
+
   const { options: dropdownOptions, loading: optionsLoading, fetchOptions } = useDropdownOptions(null, tenantId);
 
   // Memoize selected attribute and operator
@@ -101,7 +101,7 @@ const AddAttributeField = React.memo(({
     const usedCodes = rule.attributes
       .filter(attr => attr.key !== attribute.key && attr.attribute?.code)
       .map(attr => attr.attribute.code);
-    
+
     const available = attributeConfig?.filter(item => !usedCodes.includes(item.code)) || [];
     return available;
   }, [attributeConfig, rule.attributes, attribute.key]);
@@ -116,32 +116,32 @@ const AddAttributeField = React.memo(({
   }, [selectedAttribute, operatorConfig]);
 
   const selectedDropdownValue = useMemo(() => {
-  if (!attribute?.value) return null;
-  
-  // If value is already an object with code, use it
-  if (typeof attribute.value === 'object' && attribute.value.code) {
-    return attribute.value;
-  }
-  
-  // If value is a string, find the matching option
-  if (typeof attribute.value === 'string' && dropdownOptions.length > 0) {
-    // Try to find by code first
-    const matchedOption = dropdownOptions.find(opt => opt.code === attribute.value);
-    if (matchedOption) {
-      return matchedOption;
+    if (!attribute?.value) return null;
+
+    // If value is already an object with code, use it
+    if (typeof attribute.value === 'object' && attribute.value.code) {
+      return attribute.value;
     }
-    
-    // If no exact code match, try case-insensitive match
-    const caseInsensitiveMatch = dropdownOptions.find(
-      opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
-    );
-    if (caseInsensitiveMatch) {
-      return caseInsensitiveMatch;
+
+    // If value is a string, find the matching option
+    if (typeof attribute.value === 'string' && dropdownOptions.length > 0) {
+      // Try to find by code first
+      const matchedOption = dropdownOptions.find(opt => opt.code === attribute.value);
+      if (matchedOption) {
+        return matchedOption;
+      }
+
+      // If no exact code match, try case-insensitive match
+      const caseInsensitiveMatch = dropdownOptions.find(
+        opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
+      );
+      if (caseInsensitiveMatch) {
+        return caseInsensitiveMatch;
+      }
     }
-  }
-  
-  return null;
-}, [attribute?.value, dropdownOptions]);
+
+    return null;
+  }, [attribute?.value, dropdownOptions]);
 
   // Fetch dropdown options when attribute changes
   React.useEffect(() => {
@@ -162,11 +162,11 @@ const AddAttributeField = React.memo(({
     let val = e.target.value;
     val = val.replace(/[^\d.]/g, "");
     val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    
+
     if (isNaN(val) || [" ", "e", "E"].some(f => val.includes(f))) {
       return;
     }
-    
+
     updateAttributeField(rule.ruleKey, attribute.key, 'value', val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
@@ -178,17 +178,17 @@ const AddAttributeField = React.memo(({
     let val = e.target.value;
     val = val.replace(/[^\d.]/g, "");
     val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    
+
     if (isNaN(val) || [" ", "e", "E"].some(f => val.includes(f))) {
       return;
     }
-    
+
     const field = range === "to" ? "toValue" : "fromValue";
     updateAttributeField(rule.ruleKey, attribute.key, field, val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
   const isRangeOperator = attribute?.operator?.code === "IN_BETWEEN";
-  const isDropdownValue = selectedAttribute?.valuesSchema || 
+  const isDropdownValue = selectedAttribute?.valuesSchema ||
     (typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value));
 
 
@@ -291,11 +291,11 @@ const AddAttributeField = React.memo(({
   );
 });
 
-const AddAttributeWrapper = React.memo(({ 
-  rule, 
-  attributeConfig, 
-  operatorConfig, 
-  projectConfig 
+const AddAttributeWrapper = React.memo(({
+  rule,
+  attributeConfig,
+  operatorConfig,
+  projectConfig
 }) => {
   const { addAttributeToRule, removeAttributeFromRule } = useDeliveryRules();
   const { t } = useTranslation();
@@ -308,7 +308,7 @@ const AddAttributeWrapper = React.memo(({
     removeAttributeFromRule(rule.ruleKey, attributeKey);
   }, [removeAttributeFromRule, rule.ruleKey]);
 
-  const canAddMore = !projectConfig?.attrAddDisable && 
+  const canAddMore = !projectConfig?.attrAddDisable &&
     rule.attributes.length < (attributeConfig?.length || 0);
 
   return (
@@ -325,7 +325,7 @@ const AddAttributeWrapper = React.memo(({
           onDelete={() => handleRemoveAttribute(attribute.key)}
         />
       ))}
-      
+
       {canAddMore && (
         <Button
           variation="secondary"
@@ -340,14 +340,14 @@ const AddAttributeWrapper = React.memo(({
   );
 });
 
-const AddDeliveryRule = React.memo(({ 
-  rule, 
-  attributeConfig, 
-  operatorConfig, 
+const AddDeliveryRule = React.memo(({
+  rule,
+  attributeConfig,
+  operatorConfig,
   deliveryTypeConfig,
   projectConfig,
   canDelete,
-  onDelete 
+  onDelete
 }) => {
 
   const { updateRuleProducts, updateRuleDeliveryType } = useDeliveryRules();
@@ -359,7 +359,7 @@ const AddDeliveryRule = React.memo(({
     const updatedProducts = rule.products
       .filter(product => product.value !== productItem.value)
       .map((product, index) => ({ ...product, key: index + 1 }));
-    
+
     updateRuleProducts(rule.ruleKey, updatedProducts);
   }, [rule.products, rule.ruleKey, updateRuleProducts]);
 
@@ -367,12 +367,12 @@ const AddDeliveryRule = React.memo(({
   const confirmResources = useCallback(() => {
     const products = prodRef.current || [];
     const isValid = products.every(item => item?.quantity && item?.value);
-    
+
     if (!isValid) {
       // Handle validation error
       return;
     }
-    
+
     updateRuleProducts(rule.ruleKey, products);
     setShowModal(false);
   }, [rule.ruleKey, updateRuleProducts]);
@@ -523,20 +523,37 @@ const AddDeliveryRuleWrapper = React.memo(({
     });
   }, [deliveryTypeConfig, projectConfig?.code]);
 
-  // Determine radio options based on delivery number
-  // For Delivery 1 in each cycle: show only the first delivery type option
-  // For other deliveries (2, 3, etc.): show all filtered delivery type options
+  // Determine radio options based on delivery number and observationStrategy
+  // If observationStrategy is DOT1:
+  //   - First delivery in each cycle: show only DIRECT option
+  //   - 2nd delivery onwards: show only INDIRECT option
+  // If observationStrategy is NOT DOT1:
+  //   - All deliveries: show only DIRECT option
   const radioDeliveryTypeOptions = useMemo(() => {
-    const isFirstDelivery = activeDelivery?.deliveryIndex === 0 ||
-                            activeDelivery?.deliveryNumber === 1 ||
-                            activeDelivery?.key === 1;
+    const isFirstDelivery = activeDelivery?.deliveryIndex === "1" ||
+      activeDelivery?.deliveryIndex === 1
+    activeDelivery?.deliveryNumber === 1 ||
+      activeDelivery?.key === 1;
 
-    if (isFirstDelivery && filteredDeliveryTypeConfig?.length > 0) {
-      return [filteredDeliveryTypeConfig[0]];
+    const observationStrategy = projectConfig?.observationStrategy;
+    const isDOT1 = observationStrategy === "DOT1";
+
+    // Find DIRECT and INDIRECT options from filtered config
+    const directOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "DIRECT");
+    const indirectOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "INDIRECT");
+
+    if (isDOT1) {
+      // For DOT1: First delivery = DIRECT only, 2nd+ delivery = INDIRECT only
+      if (isFirstDelivery) {
+        return directOption ? [directOption] : [];
+      } else {
+        return indirectOption ? [indirectOption] : [];
+      }
+    } else {
+      // For non-DOT1: All deliveries = DIRECT only
+      return directOption ? [directOption] : [];
     }
-
-    return filteredDeliveryTypeConfig;
-  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig]);
+  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig, projectConfig?.observationStrategy]);
 
   const handleAddRule = useCallback(() => {
     addRule();
@@ -546,14 +563,14 @@ const AddDeliveryRuleWrapper = React.memo(({
     removeRule(ruleKey);
   }, [removeRule]);
 
-   const handleDeliveryTypeChange = useCallback((value) => {
+  const handleDeliveryTypeChange = useCallback((value) => {
     updateDeliveryTypeForEachDelivery(value?.code);
   }, [updateDeliveryTypeForEachDelivery]);
 
   const selectedDeliveryType = useMemo(() =>
-    radioDeliveryTypeOptions?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) ||
+    radioDeliveryTypeOptions?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy)) ||
     radioDeliveryTypeOptions?.[0] // default to first option
-  , [radioDeliveryTypeOptions, activeDelivery?.deliveryType, activeDelivery?.deliveryStrategy]);
+    , [radioDeliveryTypeOptions, activeDelivery?.deliveryType, activeDelivery?.deliveryStrategy]);
 
   // Calculate if we can add more rules
   const canAddMore = useMemo(() => {
@@ -573,9 +590,9 @@ const AddDeliveryRuleWrapper = React.memo(({
   if (!attributeConfig || !operatorConfig) {
     return <Loader page variant="PageLoader" />;
   }
-return (
+  return (
     <>
-     {radioDeliveryTypeOptions && radioDeliveryTypeOptions?.length > 0 && (
+      {radioDeliveryTypeOptions && radioDeliveryTypeOptions?.length > 0 && (
         <Card className="delivery-type-container">
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
@@ -605,7 +622,7 @@ return (
           onDelete={() => handleRemoveRule(rule.ruleKey)}
         />
       ))}
-      
+
       {canAddMore && (
         <Button
           variation="secondary"
