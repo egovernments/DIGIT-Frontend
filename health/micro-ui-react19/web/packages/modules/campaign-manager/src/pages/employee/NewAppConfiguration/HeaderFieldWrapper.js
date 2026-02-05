@@ -10,7 +10,12 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentLocale = useSelector((state) => state.localization.currentLocale);
-  const localizedValue = useCustomT(value ? value : `${currentCard?.flow}_${currentCard?.parent}_${currentCard?.name}_${label}`);
+ // Generate fallback localization code using available properties
+  const generateLocCode = useCallback(
+    () => `${currentCard?.flow || currentCard?.module || ''}_${currentCard?.page || currentCard?.name || ''}_${label}`,
+    [currentCard?.flow, currentCard?.module, currentCard?.page, currentCard?.name, label]
+  );
+  const localizedValue = useCustomT(value ? value : generateLocCode());
   const [localValue, setLocalValue] = useState(localizedValue || "");
   const debounceTimerRef = useRef(null);
 
@@ -29,33 +34,24 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
   }, []);
 
   const dispatchUpdates = useCallback((newValue) => {
+    const locCode = value || generateLocCode();
     // Update localization
-    if (value) {
-      dispatch(
-        updateLocalizationEntry({
-          code: value,
-          locale: currentLocale || "en_IN",
-          message: newValue,
-        })
-      );
-    } else {
-      dispatch(
-        updateLocalizationEntry({
-          code: `${currentCard?.flow}_${currentCard?.parent}_${currentCard?.name}_${label}`,
-          locale: currentLocale || "en_IN",
-          message: newValue,
-        })
-      );
-    }
+    dispatch(
+      updateLocalizationEntry({
+        code: locCode,
+        locale: currentLocale || "en_IN",
+        message: newValue,
+      })
+    );
 
     // Update header property in Redux - use new action if fieldKey is provided
     if (fieldKey) {
-      dispatch(updateHeaderProperty({ fieldKey, value: value || `${currentCard?.flow}_${currentCard?.parent}_${currentCard?.name}_${label}` }));
+      dispatch(updateHeaderProperty({ fieldKey, value: locCode }));
     } else {
       // Fallback to old method for backward compatibility
       dispatch(updateHeaderField({ cardIndex, fieldIndex: index, value: label }));
     }
-  }, [value, currentCard, label, currentLocale, cardIndex, index, fieldKey, dispatch]);
+  }, [value, generateLocCode, currentLocale, cardIndex, index, fieldKey, dispatch]);
 
   const handleChange = useCallback((e) => {
     const newValue = e.target.value;

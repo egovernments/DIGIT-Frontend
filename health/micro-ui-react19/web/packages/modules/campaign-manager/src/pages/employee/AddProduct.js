@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { addProductConfig } from "../../configs/addProductConfig";
-import { Toast } from "@egovernments/digit-ui-components";
+import { Toast ,SVG} from "@egovernments/digit-ui-components";
 
 function AddProduct() {
   const { t } = useTranslation();
@@ -197,12 +197,15 @@ function AddProduct() {
         onSubmit={onSubmit}
         fieldStyle={{ marginRight: 0 }}
         noBreakLine={true}
-        cardClassName={"page-padding-fix"}
+        cardClassName={"page-padding-fix add-product-screen"}
         onFormValueChange={onFormValueChange}
-        actionClassName={"addProductActionClass"}
+        actionClassName={"addProductActionClass setup-campaign-action-bar"}
         showSecondaryLabel={true}
         secondaryLabel={t("HCM_BACK")}
         onSecondayActionClick={onSecondayActionClick}
+        secondaryActionIcon={<SVG.ArrowBack />}
+        primaryActionIconAsSuffix={true}
+        primaryActionIcon={"CheckCircleOutline"}
       />
 
       {showToast && (

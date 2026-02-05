@@ -29,8 +29,8 @@ const SidePanelApp = ({ showPanelProperties }) => {
 
   // Determine page type tag based on data.type
   const pageTypeTag = currentData?.type === "template"
-    ? { label: t("TEMPLATE_SCREEN"), type: "warning" }
-    : { label: t("FORM_SCREEN"), type: "default" };
+    ? { label: `${t("TEMPLATE_SCREEN")} ${t("PARTIALLY_CONFIGURABLE_PARENTHESES")}`, type: "warning" }
+    : { label: `${t("FORM_SCREEN")} ${t("FULLY_CONFIGURABLE_PARENTHESES")}`, type: "default" };
 
   const labelStyles = {
     fontFamily: "Roboto",
@@ -53,7 +53,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
       footer={[]}
       header={[
         showPanelProperties ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px", width: "100%" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%" }}>
             <Button
               className=""
               variation="secondary"

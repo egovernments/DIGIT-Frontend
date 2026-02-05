@@ -33,7 +33,7 @@ const CreateChecklist = () => {
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
-  let module = searchParams.get("module");
+  let module = `hcm-checklist-${campaignNumber}`;
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
   const [config, setConfig] = useState(null);
@@ -539,9 +539,9 @@ const CreateChecklist = () => {
           state: {
             message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
             preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-            // actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+            actionLabel: "CHECKLIST_SUCCESS_RESPONSE",
             actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
-            secondaryActionLabel: "VIEW_DETAILS",
+            secondaryActionLabel: "VIEW_DETAILS_CHECKLIST_RESPONSE",
             secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
           },
         });
@@ -680,30 +680,33 @@ const CreateChecklist = () => {
               <div style={{ width: "20%", fontWeight: "500"}}>{t("NAME_OF_CHECKLIST")}</div>
               <div className="digit-field" style={{width:"80%"}}>
                 <TextInput
-                disabled={true}
-                className="tetxinput-example"
-                type={"text"}
-                name={t("NAME_OF_CHECKLIST")}
-                // value={`${checklistTypeLocal} ${roleLocal}`}
-                value={`${clTranslated} ${rlTranslated}`}
-                // onChange={(event) => addChecklistName(event.target.value)}
-                placeholder={"Checklist Name"}
-                textInputStyle={{width:"80%"}}
-              />
+                  // disabled={true}
+                  className="tetxinput-example checklist-create"
+                  type={"text"}
+                  name={t("NAME_OF_CHECKLIST")}
+                  // value={`${checklistTypeLocal} ${roleLocal}`}
+                  value={`${clTranslated} ${rlTranslated}`}
+                  // onChange={(event) => addChecklistName(event.target.value)}
+                  placeholder={"Checklist Name"}
+                  textInputStyle={{ width: "80%" }}
+                  nonEditable={true}
+                />
               </div>
             </div>
-            <div style={{ display: "flex" ,gap:"1.5rem"}}>
-              <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
-              <TextArea
-                disabled={false}
-                className="tetxinput-example"
-                // type={"text"}
-                name={t("CHECKLIST_HELP_TEXT")}
-                value={helpText}
-                // value={`${clTranslated} ${rlTranslated}`}
-                onChange={(event) => setHelpText(event.target.value)}
-                placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
-              />
+            <div style={{ display: "flex", gap: "1.5rem" }}>
+              <div style={{ width: "20%", fontWeight: "500" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+              <div className="digit-field" style={{ width: "80%" }}>
+                <TextArea
+                  disabled={false}
+                  className="tetxinput-example checklist-create"
+                  // type={"text"}
+                  name={t("CHECKLIST_HELP_TEXT")}
+                  value={helpText}
+                  // value={`${clTranslated} ${rlTranslated}`}
+                  onChange={(event) => setHelpText(event.target.value)}
+                  placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                />
+              </div>
             </div>
           </Card>
           <div style={{ height: "1.5rem" }}></div>

@@ -453,7 +453,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 shapeOnOff
                 disabled={isDisabled}
                 isLabelFirst={true}
-                className={"digit-sidepanel-switch-wrap"}
+                className={"digit-sidepanel-switch-wrap sidepanel"}
               />
             </div>
             {/* Render Conditional Fields based on condition property */}
@@ -662,11 +662,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         return (
           <>
             <div
-              style={{
-                fontWeight: "600",
-                marginBottom: "12px",
-                fontSize: "14px",
-              }}
+              className={"app-config-group-heading"}
             >
               {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             </div>
@@ -1365,7 +1361,9 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
   const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
-  const maxPrefixLength = 5; // Maximum length for mobile number prefix to prevent UI breaking
+  // Check if this is a prefix or suffix field for integer/number type
+  const isIntegerPrefixOrSuffix = selectedField?.type === "integer" && (cField.bindTo === "prefixText" || cField.bindTo === "suffixText");
+  const maxPrefixSuffixLength = 5; // Maximum length for prefix/suffix to prevent UI breaking
 
   switch (cField.type) {
     case "text":
@@ -1385,8 +1383,15 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
                 // Remove any non-numeric characters
                 newValue = newValue.replace(/[^0-9]/g, "");
                 // Limit the length
-                if (newValue.length > maxPrefixLength) {
-                  newValue = newValue.slice(0, maxPrefixLength);
+                if (newValue.length > maxPrefixSuffixLength) {
+                  newValue = newValue.slice(0, maxPrefixSuffixLength);
+                }
+              }
+
+              // For number type prefix/suffix, limit length
+              if (isIntegerPrefixOrSuffix) {
+                if (newValue.length > maxPrefixSuffixLength) {
+                  newValue = newValue.slice(0, maxPrefixSuffixLength);
                 }
               }
 
@@ -1395,7 +1400,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...(isMobileNumberPrefix && { maxLength: maxPrefixLength }) }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }) }}
           />
         </div>
       );

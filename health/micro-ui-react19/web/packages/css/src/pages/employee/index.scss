@@ -109,7 +109,7 @@
 }
 
 .previous-button {
-  margin-left: 4rem;
+  margin-left: 3rem;
   min-width: 12.5rem;
 }
 
@@ -285,7 +285,7 @@
   }
 
   &.delivery-preview-screen {
-    margin-bottom: 0rem;
+    margin-bottom: 0rem !important;
     h2 {
       margin-bottom: 0rem;
     }
@@ -412,7 +412,8 @@ tbody {
     gap: 1.5rem;
 
     .view-composer-header-section {
-      .employee-card-sub-header {
+      .employee-card-sub-header,
+      .card-sub-header{
         margin-bottom: 0rem !important;
       }
     }
@@ -522,6 +523,12 @@ tbody {
 .page-padding-fix {
   margin-top: 1.5rem;
   padding: 1.5rem;
+
+  &.add-product-screen{
+    .label-field-pair {
+      margin-top: -16px !important;
+    }
+  }
 }
 
 .addProductActionClass {
@@ -1080,10 +1087,7 @@ tbody {
   border: 1px solid #c84c0e;
 }
 .app-config-field-tag {
-  background-color: #0057bd0d !important;
   word-break: break-word;
-  border: 0.0031rem solid #0b4b66;
-  color: #0b4b66;
   font-size: 0.75rem;
   font-weight: 400;
   height: 1.5rem;
@@ -1093,6 +1097,11 @@ tbody {
   }
   .digit-tag-wrapper {
     border-radius: 0.5rem;
+  }
+  &.normal {
+    border: 0.0031rem solid #0b4b66;
+    background-color: #0057bd0d !important;
+    color: #0b4b66;
   }
 }
 .app-configure-drawer-footer-button {
@@ -1143,10 +1152,18 @@ tbody {
   }
 }
 .appConfigLabelField-label-container {
-  width: 12rem;
+  width: 100%;
 }
 .app-config-drawer-button {
   width: 100%;
+
+  &.add-field {
+    .icon-label-container {
+      h2.digit-button-label {
+        margin: revert !important;
+      }
+    }
+  }
 }
 .app-preview-sub-heading {
   font-family: "Roboto";
@@ -1587,7 +1604,7 @@ tbody {
 .digit-action-bar-wrap {
   &.custom-action-bar {
     .action-bar-individual-action-field:first-of-type {
-      margin-left: 4rem;
+      margin-left: 3rem;
     }
   }
 }
@@ -1667,6 +1684,15 @@ input{
       h2{
         width: unset !important;
       }
+    }
+  }
+}
+
+.campaign-response-screen {
+  .action-bar-individual-action-field {
+    button{
+      min-width: 350px;
+      width: auto;
     }
   }
 }

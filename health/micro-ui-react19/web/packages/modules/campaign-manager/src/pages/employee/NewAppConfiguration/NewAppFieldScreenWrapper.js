@@ -201,14 +201,6 @@ function NewAppFieldScreenWrapper() {
 
   return (
     <React.Fragment>
-      <Switch
-        className={"app-config-drawer-subheader"}
-        isLabelFirst={true}
-        label={t("PREVENT_SCREEN_CAPTURE")}
-        isCheckedInitially={currentCard?.preventScreenCapture || false}
-        onToggle={handleTogglePreventScreenCapture}
-      />
-      <Divider />
       {/* <div className="app-config-drawer-subheader">
         <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
@@ -296,11 +288,11 @@ function NewAppFieldScreenWrapper() {
               );
             })}
             {currentCard?.type !== "template" && (<Button
-              className={"app-config-drawer-button"}
+              className={"app-config-drawer-button add-field"}
               type={"button"}
               size={"medium"}
               icon={"AddIcon"}
-              variation={"teritiary"}
+              variation="secondary"
               label={t("ADD_FIELD")}
               title={t("ADD_FIELD")}
               onClick={() => handleAddField(currentCard, card[index])}
@@ -341,6 +333,19 @@ function NewAppFieldScreenWrapper() {
         currentCard?.footer?.map((footerButtonConfig, index) => (
           <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} />
         ))}
+      <Divider />
+      <div className="app-config-drawer-subheader">
+        <div>{t("APPCONFIG_PRIVACY_CONTROLS")}</div>
+      </div>
+      <div className="app-config-privacy-controls-container">
+        <div className="app-config-privacy-controls-container-text">{t("PREVENT_SCREEN_CAPTURE")}</div>
+        <Switch
+          className={"app-config-drawer-subheader"}
+          isLabelFirst={true}
+          isCheckedInitially={currentCard?.preventScreenCapture || false}
+          onToggle={handleTogglePreventScreenCapture}
+        />
+      </div>
     </React.Fragment>
   );
 }

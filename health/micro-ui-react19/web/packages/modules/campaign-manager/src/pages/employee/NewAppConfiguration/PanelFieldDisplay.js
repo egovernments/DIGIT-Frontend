@@ -77,28 +77,27 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
     >
       <LabelFieldPair className={`appConfigLabelField`}>
         <div className="appConfigLabelField-label-container">
-          {isDependent && (
-            <div className="appConfigLabelField-label">
-              <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
-            </div>
-          )}
           <div className="appConfigLabelField-label">
             <span>{label}</span>
           </div>
-
-          <Tag
-            icon=""
-            label={t(
-              getFieldTypeFromMasterData2(
-                config || { type, format: rest?.format, fieldName: rest?.fieldName },
-                fieldTypeMaster.fieldTypeMappingConfig
-              )
+          <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
+            {isDependent && (
+              <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag dependent-field-tag" labelStyle={{}} showIcon={false} style={{}} type={"warning"} stroke={true} />
             )}
-            className="app-config-field-tag"
-            labelStyle={{}}
-            showIcon={false}
-            style={{}}
-          />
+            <Tag
+              icon=""
+              label={t(
+                getFieldTypeFromMasterData2(
+                  config || { type, format: rest?.format, fieldName: rest?.fieldName },
+                  fieldTypeMaster.fieldTypeMappingConfig
+                )
+              )}
+              className={`app-config-field-tag normal`}
+              labelStyle={{}}
+              showIcon={false}
+              style={{}}
+            />
+          </div>
         </div>
 
         {/* Control to show/hide the field */}

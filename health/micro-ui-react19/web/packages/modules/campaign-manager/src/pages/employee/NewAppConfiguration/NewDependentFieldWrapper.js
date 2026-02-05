@@ -950,10 +950,14 @@ function NewDependentFieldWrapper({ t }) {
                 display: "grid",
                 gridTemplateColumns: "1fr auto",
                 alignItems: "center",
-                gap: "0.75rem",
+                gap: "8px",
+                border:"1px solid #d6d5d4",
+                borderRadius:"8px",
+                padding:"8px",
+                backgroundColor:"#fafafa"
             }}
         >
-            <Tag
+            {/* <Tag
                 label={`${logicLabel} ${idx + 1}`}
                 showIcon={false}
                 stroke={true}
@@ -963,7 +967,8 @@ function NewDependentFieldWrapper({ t }) {
                 }}
                 className={"version-tag"}
                 labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
-            />
+            /> */}
+            <div className="logic-rule-number version-tag">{`${logicLabel} ${idx + 1}`}</div>
 
             <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
                 <div
@@ -973,7 +978,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onEdit(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} />}
+                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} size={"medium"} />}
                 </div>
 
                 <div
@@ -983,7 +988,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onDelete(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Delete ? <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel} title={deleteRuleLabel} onClick={() => onDelete(idx)} />}
+                    {SVG?.Delete ? <SVG.DeleteForever fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel} title={deleteRuleLabel} onClick={() => onDelete(idx)} />}
                 </div>
             </div>
         </div>
@@ -1017,978 +1022,843 @@ function NewDependentFieldWrapper({ t }) {
 
     // ---------- UI ----------
     return (
-        <Card type="secondary">
-            <div style={{ marginBottom: "0.5rem" }}>
-                <h3 style={{ margin: 0 }}>{displayLogicLabel}</h3>
-            </div>
+      <Card type="primary" style={{ border: "1px solid #d6d5d4" }}>
+        <div>
+          <h3 className="display-logic-heading" style={{ margin: 0 }}>
+            {displayLogicLabel}
+          </h3>
+        </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                {(!rules || rules.length === 0) ? (
-                    <p style={{ opacity: 0.7, margin: 0 }}>{noLogicAddedLabel}</p>
-                ) : (
-                    <>
-                        <RuleRow idx={0} onEdit={openEditor} onDelete={deleteRuleFromList} />
-                        {rules.slice(1).map((r, i) => (
-                            <React.Fragment key={`logic-block-${i + 1}`}>
-                                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                                    <span style={{ background: "#FFFFFFFF", color: "#C84C0E", borderRadius: 4, border: "1px solid #C84C0E", padding: "0.1rem 0.5rem", fontSize: "0.75rem", fontWeight: 600 }}>
-                                        {t("OR") || "OR"}
-                                    </span>
-                                </div>
-                                <RuleRow idx={i + 1} onEdit={openEditor} onDelete={deleteRuleFromList} />
-                            </React.Fragment>
-                        ))}
-                    </>
-                )}
-            </div>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
+          {!rules || rules.length === 0 ? (
+            <p style={{ opacity: 0.7, margin: 0 }}>{noLogicAddedLabel}</p>
+          ) : (
+            <>
+              <RuleRow
+                idx={0}
+                onEdit={openEditor}
+                onDelete={deleteRuleFromList}
+              />
+              {rules.slice(1).map((r, i) => (
+                <React.Fragment key={`logic-block-${i + 1}`}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <span
+                      style={{
+                        background: "#deefff",
+                        color: "#0057bd",
+                        borderRadius: "0.5rem",
+                        padding: "0.25rem 0.75rem",
+                        fontSize: "0.75rem",
+                        fontWeight: 400,
+                      }}
+                    >
+                      {t("OR") || "OR"}
+                    </span>
+                  </div>
+                  <RuleRow
+                    idx={i + 1}
+                    onEdit={openEditor}
+                    onDelete={deleteRuleFromList}
+                  />
+                </React.Fragment>
+              ))}
+            </>
+          )}
+        </div>
 
-            <div>
-                <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={openEditorForNew} icon="Add" style={{ width: "100%" }} />
-            </div>
+        <div>
+          <Button
+            variation="secondary"
+            label={addDisplayLogicLabel}
+            title={addDisplayLogicLabel}
+            onClick={openEditorForNew}
+            icon="Add"
+            style={{ width: "100%" }}
+            size={"medium"}
+          />
+        </div>
 
-            {/* Editor popup */}
-            {showPopUp && draftRule && (
-                <BodyPortal>
-                    <div className="popup-portal-overlay">
-                        <PopUp
-                            className="digit-popup--fullscreen popup-editor"
-                            type={"default"}
-                            heading={addDisplayLogicLabel}
-                            children={[
-                                <div key="single-rule-editor" style={{ display: "grid", gap: "1rem" }}>
-                                    <div style={{ display: "grid", gap: "0.75rem" }}>
-                                        {/* list of sub-conditions */}
-                                        {draftRule.conds.map((cond, idx) => {
-                                            // derive left page/field options
-                                            const leftPageSelected = cond.leftPage;
-                                            const leftFieldOptions = leftPageSelected ? getFieldOptions(leftPageSelected) : [];
-                                            const selectedLeftField = leftFieldOptions.find((f) => f.code === cond.leftField) || cond.leftField;
+        {/* Editor popup */}
+        {showPopUp && draftRule && (
+          <BodyPortal>
+            <div className="popup-portal-overlay">
+              <PopUp
+                className="digit-popup--fullscreen popup-editor"
+                type={"default"}
+                heading={addDisplayLogicLabel}
+                children={[
+                  <div
+                    key="single-rule-editor"
+                    style={{ display: "grid", gap: "1rem" }}
+                  >
+                    <div style={{ display: "grid", gap: "0.75rem" }}>
+                      {/* list of sub-conditions */}
+                      {draftRule.conds.map((cond, idx) => {
+                        // derive left page/field options
+                        const leftPageSelected = cond.leftPage;
+                        const leftFieldOptions = leftPageSelected
+                          ? getFieldOptions(leftPageSelected)
+                          : [];
+                        const selectedLeftField =
+                          leftFieldOptions.find(
+                            (f) => f.code === cond.leftField,
+                          ) || cond.leftField;
 
-                                            // right side options when field comparison
-                                            const rightPageSelected = cond.rightPage;
-                                            // when showing rightFieldOptions, exclude the selectedField (global) as well
-                                            const rightFieldOptions = rightPageSelected ? getFieldOptions(rightPageSelected) : [];
-                                            const selectedRightField = rightFieldOptions.find((f) => f.code === cond.rightField) || cond.rightField;
+                        // right side options when field comparison
+                        const rightPageSelected = cond.rightPage;
+                        // when showing rightFieldOptions, exclude the selectedField (global) as well
+                        const rightFieldOptions = rightPageSelected
+                          ? getFieldOptions(rightPageSelected)
+                          : [];
+                        const selectedRightField =
+                          rightFieldOptions.find(
+                            (f) => f.code === cond.rightField,
+                          ) || cond.rightField;
 
-                                            const selectedLeftFieldMeta = leftFieldOptions.find((f) => f.code === cond.leftField);
-                                            const operatorOptions = getOperatorOptions(selectedLeftFieldMeta);
-                                            const selectedOperator = selectedLeftFieldMeta ? getSelectedOperatorFromOptions(selectedLeftFieldMeta, cond.comparisonType) : getSelectedOperatorFromOptions(null, cond.comparisonType);
+                        const selectedLeftFieldMeta = leftFieldOptions.find(
+                          (f) => f.code === cond.leftField,
+                        );
+                        const operatorOptions = getOperatorOptions(
+                          selectedLeftFieldMeta,
+                        );
+                        const selectedOperator = selectedLeftFieldMeta
+                          ? getSelectedOperatorFromOptions(
+                              selectedLeftFieldMeta,
+                              cond.comparisonType,
+                            )
+                          : getSelectedOperatorFromOptions(
+                              null,
+                              cond.comparisonType,
+                            );
 
-                                            const isSelect = selectedLeftFieldMeta && (selectedLeftFieldMeta.format === "dropdown" || selectedLeftFieldMeta.format === "radio" || selectedLeftFieldMeta.format === "select" || selectedLeftFieldMeta.type === "selection");
-                                            const isCheckbox = selectedLeftFieldMeta && isCheckboxField(selectedLeftFieldMeta);
-                                            const isDob = selectedLeftFieldMeta && isDobLike(selectedLeftFieldMeta);
-                                            const isDate = selectedLeftFieldMeta && (isDatePickerNotDob(selectedLeftFieldMeta));
-                                            const isProductVariantOrMultiselectField = selectedLeftFieldMeta && isProductVariantOrMultiselect(selectedLeftFieldMeta);
-                                            const useMdms = selectedLeftFieldMeta && (["dropdown", "radio", "select"].includes((selectedLeftFieldMeta.format || "").toLowerCase())) && !!selectedLeftFieldMeta.schemaCode; // Option A behavior
+                        const isSelect =
+                          selectedLeftFieldMeta &&
+                          (selectedLeftFieldMeta.format === "dropdown" ||
+                            selectedLeftFieldMeta.format === "radio" ||
+                            selectedLeftFieldMeta.format === "select" ||
+                            selectedLeftFieldMeta.type === "selection");
+                        const isCheckbox =
+                          selectedLeftFieldMeta &&
+                          isCheckboxField(selectedLeftFieldMeta);
+                        const isDob =
+                          selectedLeftFieldMeta &&
+                          isDobLike(selectedLeftFieldMeta);
+                        const isDate =
+                          selectedLeftFieldMeta &&
+                          isDatePickerNotDob(selectedLeftFieldMeta);
+                        const isProductVariantOrMultiselectField =
+                          selectedLeftFieldMeta &&
+                          isProductVariantOrMultiselect(selectedLeftFieldMeta);
+                        const useMdms =
+                          selectedLeftFieldMeta &&
+                          ["dropdown", "radio", "select"].includes(
+                            (selectedLeftFieldMeta.format || "").toLowerCase(),
+                          ) &&
+                          !!selectedLeftFieldMeta.schemaCode; // Option A behavior
 
-                                            return (
-                                                <React.Fragment
-                                                    key={`cond-row-${idx}`}
-                                                >
-                                                    {/* Show centered joiner Tag between conditions */}
-                                                    {idx > 0 && (
-                                                        <div
-                                                            style={{
-                                                                display: "flex",
-                                                                justifyContent: "center",
-                                                                alignItems: "center",
-                                                                margin: "0.5rem 0",
-                                                            }}
-                                                        >
-                                                            <Tag
-                                                                type={"monochrome"}
-                                                                label={t(
-                                                                    cond.joiner?.name ||
-                                                                    (cond.joiner?.code ===
-                                                                        "&&"
-                                                                        ? "AND"
-                                                                        : "OR")
-                                                                )}
-                                                                stroke={true}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div
-                                                        style={{
-                                                            background: "#FAFAFA",
-                                                            border: "1px solid #D6D5D4",
-                                                            borderRadius: 4,
-                                                            padding: "0.75rem",
-                                                            display: "grid",
-                                                            gap: "0.5rem",
-                                                        }}
-                                                    >
-                                                        <div
-                                                            style={{
-                                                                display: "flex",
-                                                                flexWrap: "wrap",
-                                                                gap: "0.75rem",
-                                                                alignItems: "flex-end",
-                                                            }}
-                                                        >
-                                                            {/* Left Page */}
-                                                            <div
-                                                                style={{
-                                                                    minWidth: 220,
-                                                                    flex: "1 1 240px",
-                                                                }}
-                                                            >
-                                                                <LabelFieldPair
-                                                                    vertical
-                                                                    removeMargin
-                                                                >
-                                                                    <p
-                                                                        style={{ margin: 0 }}
-                                                                    >
-                                                                        {selectPageLabel}
-                                                                    </p>
-                                                                    <div
-                                                                        className="digit-field"
-                                                                        style={{
-                                                                            width: "100%",
-                                                                        }}
-                                                                    >
-                                                                        <Dropdown
-                                                                            showToolTip={true}
-                                                                            option={pageOptions}
-                                                                            optionKey="displayName"
-                                                                            optionCardStyles={{
-                                                                                maxHeight: "15vh",
-                                                                                overflow: "auto",
-                                                                                zIndex: 10000,
-                                                                            }}
-                                                                            name={`left-page-${idx}`}
-                                                                            t={t}
-                                                                            select={(e) => {
-                                                                                handlePageSelection(
-                                                                                    e.code
-                                                                                );
-                                                                                updateSubCond(
-                                                                                    idx,
-                                                                                    {
-                                                                                        leftPage:
-                                                                                            e.code,
-                                                                                        leftField: "",
-                                                                                        comparisonType: {},
-                                                                                        fieldValue:
-                                                                                            "",
-                                                                                        isFieldComparison: false,
-                                                                                        rightPage: null,
-                                                                                        rightField: null,
-                                                                                    }
-                                                                                );
-                                                                            }}
-                                                                            selected={
-                                                                                cond.leftPage
-                                                                                    ? pageOptions.find(
-                                                                                        (p) =>
-                                                                                            p.code ===
-                                                                                            cond.leftPage
-                                                                                    ) || {
-                                                                                        code:
-                                                                                            cond.leftPage,
-                                                                                        displayName:
-                                                                                            cond.leftPage,
-                                                                                    }
-                                                                                    : {
-                                                                                        code:
-                                                                                            cond.leftPage,
-                                                                                    }
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </LabelFieldPair>
-                                                            </div>
-
-                                                            {/* Left Field */}
-                                                            <div
-                                                                style={{
-                                                                    minWidth: 260,
-                                                                    flex: "1 1 280px",
-                                                                }}
-                                                            >
-                                                                <LabelFieldPair
-                                                                    vertical
-                                                                    removeMargin
-                                                                >
-                                                                    <p
-                                                                        style={{ margin: 0 }}
-                                                                    >
-                                                                        {selectFieldLabel}
-                                                                    </p>
-                                                                    <div
-                                                                        className="digit-field"
-                                                                        style={{
-                                                                            width: "100%",
-                                                                        }}
-                                                                    >
-                                                                        <Dropdown
-                                                                            showToolTip={true}
-                                                                            option={
-                                                                                cond.leftPage
-                                                                                    ? leftFieldOptions
-                                                                                    : []
-                                                                            }
-                                                                            optionKey="label"
-                                                                            name={`left-field-${idx}`}
-                                                                            t={useT}
-                                                                            optionCardStyles={{
-                                                                                maxHeight: "15vh",
-                                                                                overflow: "auto",
-                                                                                zIndex: 10000,
-                                                                            }}
-                                                                            select={(e) => {
-                                                                                const nextOps = getOperatorOptions(
-                                                                                    e
-                                                                                );
-                                                                                const canKeep =
-                                                                                    cond
-                                                                                        ?.comparisonType
-                                                                                        ?.code &&
-                                                                                    nextOps.some(
-                                                                                        (o) =>
-                                                                                            o.code ===
-                                                                                            cond
-                                                                                                .comparisonType
-                                                                                                ?.code
-                                                                                    );
-
-                                                                                const isCk = isCheckboxField(
-                                                                                    e
-                                                                                );
-                                                                                updateSubCond(
-                                                                                    idx,
-                                                                                    {
-                                                                                        leftField:
-                                                                                            e.code,
-                                                                                        isAge: isDob
-                                                                                            ? true
-                                                                                            : false,
-                                                                                        comparisonType: canKeep
-                                                                                            ? cond.comparisonType
-                                                                                            : isCk
-                                                                                                ? nextOps.find(
-                                                                                                    (o) =>
-                                                                                                        o.code ===
-                                                                                                        "=="
-                                                                                                )
-                                                                                                : {},
-                                                                                        fieldValue: isCk
-                                                                                            ? [
-                                                                                                "true",
-                                                                                                "false",
-                                                                                            ].includes(
-                                                                                                String(
-                                                                                                    cond.fieldValue
-                                                                                                ).toLowerCase()
-                                                                                            )
-                                                                                                ? cond.fieldValue
-                                                                                                : "false"
-                                                                                            : "",
-                                                                                    }
-                                                                                );
-                                                                            }}
-                                                                            selected={
-                                                                                cond.leftPage &&
-                                                                                    cond.leftField
-                                                                                    ? leftFieldOptions.find(
-                                                                                        (f) =>
-                                                                                            f.code ===
-                                                                                            cond.leftField
-                                                                                    ) || {
-                                                                                        code:
-                                                                                            cond.leftField,
-                                                                                        label:
-                                                                                            cond.leftField,
-                                                                                    }
-                                                                                    : {
-                                                                                        code: "",
-                                                                                        label: selectPageFirstLabel,
-                                                                                    }
-                                                                            }
-                                                                            disabled={
-                                                                                !cond.leftPage
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </LabelFieldPair>
-                                                            </div>
-
-                                                            {/* Operator */}
-                                                            <div
-                                                                style={{
-                                                                    minWidth: 220,
-                                                                    flex: "0 1 220px",
-                                                                }}
-                                                            >
-                                                                <LabelFieldPair
-                                                                    vertical
-                                                                    removeMargin
-                                                                >
-                                                                    <p
-                                                                        style={{ margin: 0 }}
-                                                                    >
-                                                                        {comparisonTypeLabel}
-                                                                    </p>
-                                                                    <div
-                                                                        className="digit-field"
-                                                                        style={{
-                                                                            width: "100%",
-                                                                        }}
-                                                                    >
-                                                                        <Dropdown
-                                                                            showToolTip={true}
-                                                                            option={
-                                                                                operatorOptions
-                                                                            }
-                                                                            optionKey="name"
-                                                                            optionCardStyles={{
-                                                                                maxHeight: "15vh",
-                                                                                overflow: "auto",
-                                                                                zIndex: 10000,
-                                                                            }}
-                                                                            name={`op-${idx}`}
-                                                                            t={t}
-                                                                            select={(e) =>
-                                                                                updateSubCond(
-                                                                                    idx,
-                                                                                    {
-                                                                                        comparisonType: e,
-                                                                                    }
-                                                                                )
-                                                                            }
-                                                                            selected={
-                                                                                selectedOperator
-                                                                            }
-                                                                            disabled={
-                                                                                !cond.leftField
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </LabelFieldPair>
-                                                            </div>
-
-                                                            {/* Right: either value input OR page+field when isFieldComparison */}
-                                                            <div
-                                                                style={{
-                                                                    minWidth: 260,
-                                                                    flex: "1 1 280px",
-                                                                }}
-                                                            >
-                                                                <LabelFieldPair
-                                                                    vertical
-                                                                    removeMargin
-                                                                >
-                                                                    <div
-                                                                        className="digit-field"
-                                                                        style={{
-                                                                            width: "100%",
-                                                                        }}
-                                                                    >
-                                                                        {/* Toggle for field comparison */}
-                                                                        {!isProductVariantOrMultiselectField && (
-                                                                            <div
-                                                                                style={{
-                                                                                    marginBottom:
-                                                                                        "0.25rem",
-                                                                                }}
-                                                                            >
-                                                                                <CheckBox
-                                                                                    mainClassName={
-                                                                                        "app-config-checkbox-main"
-                                                                                    }
-                                                                                    labelClassName={
-                                                                                        "app-config-checkbox-label"
-                                                                                    }
-                                                                                    onChange={(
-                                                                                        v
-                                                                                    ) => {
-                                                                                        const checked =
-                                                                                            typeof v ===
-                                                                                                "boolean"
-                                                                                                ? v
-                                                                                                : !!v
-                                                                                                    ?.target
-                                                                                                    ?.checked;
-                                                                                        updateSubCond(
-                                                                                            idx,
-                                                                                            {
-                                                                                                isFieldComparison: checked,
-                                                                                                fieldValue: checked
-                                                                                                    ? ""
-                                                                                                    : cond.fieldValue,
-                                                                                                rightPage: checked
-                                                                                                    ? currentPageName
-                                                                                                    : null,
-                                                                                                rightField: checked
-                                                                                                    ? ""
-                                                                                                    : null,
-                                                                                            }
-                                                                                        );
-                                                                                        if (checked)
-                                                                                            handlePageSelection(
-                                                                                                currentPageName
-                                                                                            );
-                                                                                    }}
-                                                                                    value={
-                                                                                        !!cond.isFieldComparison
-                                                                                    }
-                                                                                    label={
-                                                                                        compareFieldToggleLabel
-                                                                                    }
-                                                                                    checked={
-                                                                                        !!cond.isFieldComparison
-                                                                                    }
-                                                                                    isLabelFirst={
-                                                                                        false
-                                                                                    }
-                                                                                    disabled={
-                                                                                        !cond.leftField
-                                                                                    }
-                                                                                />
-                                                                            </div>
-                                                                        )}
-
-                                                                        {/* If field comparison: show Page + Field dropdowns */}
-                                                                        {cond.isFieldComparison ? (
-                                                                            <div
-                                                                                style={{
-                                                                                    display: "flex",
-                                                                                    gap: "0.5rem",
-                                                                                    alignItems:
-                                                                                        "center",
-                                                                                }}
-                                                                            >
-                                                                                <div
-                                                                                    style={{
-                                                                                        minWidth: 160,
-                                                                                        flex:
-                                                                                            "1 1 160px",
-                                                                                    }}
-                                                                                >
-                                                                                    <Dropdown
-                                                                                        showToolTip={true}
-                                                                                        option={
-                                                                                            pageOptions
-                                                                                        }
-                                                                                        optionKey="displayName"
-                                                                                        name={`right-page-${idx}`}
-                                                                                        t={t}
-                                                                                        optionCardStyles={{
-                                                                                            maxHeight:
-                                                                                                "15vh",
-                                                                                            overflow:
-                                                                                                "auto",
-                                                                                            zIndex: 10000,
-                                                                                        }}
-                                                                                        select={(
-                                                                                            e
-                                                                                        ) => {
-                                                                                            handlePageSelection(
-                                                                                                e.code
-                                                                                            );
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    rightPage:
-                                                                                                        e.code,
-                                                                                                    rightField:
-                                                                                                        "",
-                                                                                                }
-                                                                                            );
-                                                                                        }}
-                                                                                        selected={
-                                                                                            cond.rightPage
-                                                                                                ? pageOptions.find(
-                                                                                                    (p) =>
-                                                                                                        p.code ===
-                                                                                                        cond.rightPage
-                                                                                                ) || {
-                                                                                                    code:
-                                                                                                        cond.rightPage,
-                                                                                                    displayName:
-                                                                                                        cond.rightPage,
-                                                                                                }
-                                                                                                : {}
-                                                                                        }
-                                                                                        disabled={
-                                                                                            !cond.leftField
-                                                                                        }
-                                                                                    />
-                                                                                </div>
-
-                                                                                <div
-                                                                                    style={{
-                                                                                        minWidth: 160,
-                                                                                        flex:
-                                                                                            "1 1 160px",
-                                                                                    }}
-                                                                                >
-                                                                                    <Dropdown
-                                                                                        showToolTip={true}
-                                                                                        option={
-                                                                                            cond.rightPage
-                                                                                                ? rightFieldOptions
-                                                                                                : []
-                                                                                        }
-                                                                                        optionKey="label"
-                                                                                        name={`right-field-${idx}`}
-                                                                                        t={useT}
-                                                                                        optionCardStyles={{
-                                                                                            maxHeight:
-                                                                                                "15vh",
-                                                                                            overflow:
-                                                                                                "auto",
-                                                                                            zIndex: 10000,
-                                                                                        }}
-                                                                                        select={(e) =>
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    rightField:
-                                                                                                        e.code,
-                                                                                                }
-                                                                                            )
-                                                                                        }
-                                                                                        selected={
-                                                                                            cond.rightPage &&
-                                                                                                cond.rightField
-                                                                                                ? rightFieldOptions.find(
-                                                                                                    (f) =>
-                                                                                                        f.code ===
-                                                                                                        cond.rightField
-                                                                                                ) || {
-                                                                                                    code:
-                                                                                                        cond.rightField,
-                                                                                                    label:
-                                                                                                        cond.rightField,
-                                                                                                }
-                                                                                                : {
-                                                                                                    code:
-                                                                                                        "",
-                                                                                                    label: selectPageFirstLabel,
-                                                                                                }
-                                                                                        }
-                                                                                        disabled={
-                                                                                            !cond.rightPage
-                                                                                        }
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <>
-                                                                                {/* Value input handling: when schemaCode exists & format is dropdown/radio -> use MdmsValueDropdown (Option A) */}
-                                                                                {useMdms ? (
-                                                                                    <MdmsValueDropdown
-                                                                                        showToolTip={true}
-                                                                                        schemaCode={
-                                                                                            selectedLeftFieldMeta?.schemaCode
-                                                                                        }
-                                                                                        value={
-                                                                                            cond.fieldValue
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            v
-                                                                                        ) =>
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    fieldValue: v,
-                                                                                                }
-                                                                                            )
-                                                                                        }
-                                                                                        t={t}
-                                                                                    />
-                                                                                ) : isCheckbox ? (
-                                                                                    <CheckBox
-                                                                                        mainClassName={
-                                                                                            "app-config-checkbox-main"
-                                                                                        }
-                                                                                        labelClassName={
-                                                                                            "app-config-checkbox-label"
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            v
-                                                                                        ) => {
-                                                                                            const checkedVal =
-                                                                                                typeof v ===
-                                                                                                    "boolean"
-                                                                                                    ? v
-                                                                                                    : !!v
-                                                                                                        ?.target
-                                                                                                        ?.checked;
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    fieldValue: checkedVal
-                                                                                                        ? "true"
-                                                                                                        : "false",
-                                                                                                }
-                                                                                            );
-                                                                                        }}
-                                                                                        value={
-                                                                                            String(
-                                                                                                cond.fieldValue
-                                                                                            ).toLowerCase() ===
-                                                                                            "true"
-                                                                                        }
-                                                                                        label={
-                                                                                            t(
-                                                                                                selectedLeftFieldMeta?.label
-                                                                                            ) ||
-                                                                                            selectedLeftFieldMeta?.label ||
-                                                                                            ""
-                                                                                        }
-                                                                                        isLabelFirst={
-                                                                                            false
-                                                                                        }
-                                                                                        disabled={
-                                                                                            !cond.leftField
-                                                                                        }
-                                                                                    />
-                                                                                ) : isDob ? (
-                                                                                    <TextInput
-                                                                                        type="number"
-                                                                                        populators={{
-                                                                                            name: `months-${editorIndex}-${idx}`,
-                                                                                        }}
-                                                                                        placeholder={
-                                                                                            t(
-                                                                                                "ENTER_INTEGER_VALUE"
-                                                                                            ) ||
-                                                                                            enterValueLabel
-                                                                                        }
-                                                                                        value={
-                                                                                            cond.fieldValue
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            event
-                                                                                        ) =>
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    isAge: true, // 👈 IMPORTANT
-                                                                                                    isFieldComparison: false,
-                                                                                                    fieldValue: sanitizeIntegerInput(
-                                                                                                        event
-                                                                                                            .target
-                                                                                                            .value
-                                                                                                    ),
-                                                                                                }
-                                                                                            )
-                                                                                        }
-                                                                                    />
-                                                                                ) : isDate ? (
-                                                                                    (() => {
-                                                                                        const isoValue = toISOFromDDMMYYYY(cond.fieldValue);
-                                                                                        return (
-                                                                                            <TextInput
-                                                                                                type="date"
-                                                                                                name={`date-${idx}`}
-                                                                                                className="appConfigLabelField-Input"
-                                                                                                value={isoValue}
-                                                                                                populators={{
-                                                                                                    newDateFormat: true,
-                                                                                                    useFixedPosition: true
-                                                                                                }}
-                                                                                                onChange={(
-                                                                                                    d
-                                                                                                ) => {
-                                                                                                    // Convert to DD/MM/YYYY, handling ISO timestamps with local timezone
-                                                                                                    const ddmmyyyy = toDDMMYYYY(d);
-                                                                                                    updateSubCond(
-                                                                                                        idx,
-                                                                                                        {
-                                                                                                            fieldValue: ddmmyyyy,
-                                                                                                            isDate: true,
-                                                                                                        }
-                                                                                                    );
-                                                                                                }}
-                                                                                                disabled={
-                                                                                                    !cond.leftField
-                                                                                                }
-                                                                                            />
-                                                                                        );
-                                                                                    })()
-
-                                                                                ) : isSelect &&
-                                                                                    !useMdms ? (
-                                                                                    // select from enum values
-                                                                                    (() => {
-                                                                                        const enumOptions = (
-                                                                                            selectedLeftFieldMeta?.enums ||
-                                                                                            []
-                                                                                        ).map(
-                                                                                            (en) => ({
-                                                                                                code: String(
-                                                                                                    en.code
-                                                                                                ),
-                                                                                                name:
-                                                                                                    en.name ||
-                                                                                                    en.code,
-                                                                                            })
-                                                                                        );
-                                                                                        const selectedEnum = enumOptions.find(
-                                                                                            (eo) =>
-                                                                                                eo.code ===
-                                                                                                String(
-                                                                                                    cond.fieldValue
-                                                                                                )
-                                                                                        );
-                                                                                        return (
-                                                                                            <Dropdown
-                                                                                                showToolTip={true}
-                                                                                                option={
-                                                                                                    enumOptions
-                                                                                                }
-                                                                                                optionKey="name"
-                                                                                                name={`enum-${idx}`}
-                                                                                                optionCardStyles={{
-                                                                                                    maxHeight:
-                                                                                                        "15vh",
-                                                                                                    overflow:
-                                                                                                        "auto",
-                                                                                                    zIndex: 10000,
-                                                                                                }}
-                                                                                                t={useT}
-                                                                                                select={(
-                                                                                                    e
-                                                                                                ) =>
-                                                                                                    updateSubCond(
-                                                                                                        idx,
-                                                                                                        {
-                                                                                                            fieldValue:
-                                                                                                                e.code,
-                                                                                                        }
-                                                                                                    )
-                                                                                                }
-                                                                                                selected={
-                                                                                                    selectedEnum
-                                                                                                }
-                                                                                                disabled={
-                                                                                                    !cond.leftField
-                                                                                                }
-                                                                                            />
-                                                                                        );
-                                                                                    })()
-                                                                                ) : isProductVariantOrMultiselectField &&
-                                                                                    productVariants?.length >
-                                                                                    0 ? (
-                                                                                    (() => {
-                                                                                        const selectedProductVariant = productVariants.find(
-                                                                                            (eo) =>
-                                                                                                eo.productVariantId ===
-                                                                                                String(
-                                                                                                    cond.fieldValue
-                                                                                                )
-                                                                                        );
-                                                                                        return (
-                                                                                            <Dropdown
-                                                                                                showToolTip={true}
-                                                                                                option={
-                                                                                                    productVariants
-                                                                                                }
-                                                                                                optionKey="name"
-                                                                                                optionCardStyles={{
-                                                                                                    maxHeight:
-                                                                                                        "15vh",
-                                                                                                    overflow:
-                                                                                                        "auto",
-                                                                                                    zIndex: 10000,
-                                                                                                }}
-                                                                                                name={`product-variant-${idx}`}
-                                                                                                t={t}
-                                                                                                select={(
-                                                                                                    e
-                                                                                                ) =>
-                                                                                                    updateSubCond(
-                                                                                                        idx,
-                                                                                                        {
-                                                                                                            fieldValue:
-                                                                                                                e.code,
-                                                                                                        }
-                                                                                                    )
-                                                                                                }
-                                                                                                selected={
-                                                                                                    selectedProductVariant
-                                                                                                }
-                                                                                                disabled={
-                                                                                                    !cond.leftField
-                                                                                                }
-                                                                                            />
-                                                                                        );
-                                                                                    })()
-                                                                                ) : (
-                                                                                    <TextInput
-                                                                                        type={
-                                                                                            isNumericField(
-                                                                                                selectedLeftFieldMeta
-                                                                                            )
-                                                                                                ? "number"
-                                                                                                : "text"
-                                                                                        }
-                                                                                        placeholder={
-                                                                                            enterValueLabel
-                                                                                        }
-                                                                                        value={
-                                                                                            cond.fieldValue
-                                                                                        }
-                                                                                        onChange={(
-                                                                                            ev
-                                                                                        ) => {
-                                                                                            const v =
-                                                                                                ev?.target
-                                                                                                    ?.value ??
-                                                                                                "";
-                                                                                            updateSubCond(
-                                                                                                idx,
-                                                                                                {
-                                                                                                    fieldValue: isNumericField(
-                                                                                                        selectedLeftFieldMeta
-                                                                                                    )
-                                                                                                        ? sanitizeIntegerInput(
-                                                                                                            v
-                                                                                                        )
-                                                                                                        : v,
-                                                                                                }
-                                                                                            );
-                                                                                        }}
-                                                                                        disabled={
-                                                                                            !cond.leftField
-                                                                                        }
-                                                                                    />
-                                                                                )}
-                                                                            </>
-                                                                        )}
-                                                                    </div>
-                                                                </LabelFieldPair>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Footer row below each condition - only show Remove button for non-last conditions */}
-                                                        {idx !==
-                                                            draftRule.conds.length -
-                                                            1 && (
-                                                                <div
-                                                                    style={{
-                                                                        display: "flex",
-                                                                        justifyContent:
-                                                                            "flex-end",
-                                                                        alignItems: "center",
-                                                                        marginTop: "0.5rem",
-                                                                    }}
-                                                                >
-                                                                    <div
-                                                                        style={{
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            gap: "0.25rem",
-                                                                            cursor: "pointer",
-                                                                        }}
-                                                                        onClick={() =>
-                                                                            removeSubCondition(
-                                                                                idx
-                                                                            )
-                                                                        }
-                                                                        title={
-                                                                            removeConditionLabel
-                                                                        }
-                                                                        aria-label={
-                                                                            removeConditionLabel
-                                                                        }
-                                                                        role="button"
-                                                                    >
-                                                                        <SVG.Delete
-                                                                            fill={"#C84C0E"}
-                                                                            width={"1.25rem"}
-                                                                            height={"1.25rem"}
-                                                                        />
-                                                                        <span
-                                                                            style={{
-                                                                                color: "#C84C0E",
-                                                                                fontSize:
-                                                                                    "0.875rem",
-                                                                                fontWeight: 500,
-                                                                            }}
-                                                                        >
-                                                                            {removeConditionLabel}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                    </div>
-                                                </React.Fragment>
-                                            );
-                                        })}
-
-                                        {/* Add Condition button after the last condition */}
-                                        <div style={{ marginTop: "0.5rem" }}>
-                                            <Button variation="secondary" icon={"Add"} label={addConditionLabel} title={addConditionLabel} onClick={addSubCondition} />
-                                        </div>
-
-                                        {/* show any form-level error here */}
-                                        {globalFormError ? (
-                                            <div
-                                                style={{
-                                                    border: "1px solid #FCA5A5",
-                                                    background: "#FEF2F2",
-                                                    color: "#B91C1C",
-                                                    borderRadius: 6,
-                                                    padding: "0.5rem 0.75rem",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "space-between",
-                                                    gap: "0.75rem",
-                                                }}
-                                            >
-                                                <span>{globalFormError}</span>
-                                                <SVG.Close
-                                                    width={"1.1rem"}
-                                                    height={"1.1rem"}
-                                                    fill={"#7F1D1D"}
-                                                    onClick={() => setGlobalFormError("")}
-                                                    tabIndex={0}
-                                                    style={{ cursor: "pointer" }}
-                                                />
-                                            </div>
-                                        ) : null}
+                        return (
+                          <React.Fragment key={`cond-row-${idx}`}>
+                            {/* Show centered joiner Tag between conditions */}
+                            {idx > 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  margin: "0.5rem 0",
+                                }}
+                              >
+                                <Tag
+                                  type={"monochrome"}
+                                  label={t(
+                                    cond.joiner?.name ||
+                                      (cond.joiner?.code === "&&"
+                                        ? "AND"
+                                        : "OR"),
+                                  )}
+                                  stroke={true}
+                                />
+                              </div>
+                            )}
+                            <div
+                              style={{
+                                background: "#FAFAFA",
+                                border: "1px solid #D6D5D4",
+                                borderRadius: 4,
+                                padding: "0.75rem",
+                                display: "grid",
+                                gap: "0.5rem",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexWrap: "wrap",
+                                  gap: "0.75rem",
+                                  alignItems: "flex-end",
+                                }}
+                              >
+                                {/* Left Page */}
+                                <div
+                                  style={{
+                                    minWidth: 220,
+                                    flex: "1 1 240px",
+                                  }}
+                                >
+                                  <LabelFieldPair vertical removeMargin>
+                                    <p style={{ margin: 0 }}>
+                                      {selectPageLabel}
+                                    </p>
+                                    <div
+                                      className="digit-field"
+                                      style={{
+                                        width: "100%",
+                                      }}
+                                    >
+                                      <Dropdown
+                                        showToolTip={true}
+                                        option={pageOptions}
+                                        optionKey="displayName"
+                                        optionCardStyles={{
+                                          maxHeight: "15vh",
+                                          overflow: "auto",
+                                          zIndex: 10000,
+                                        }}
+                                        name={`left-page-${idx}`}
+                                        t={t}
+                                        select={(e) => {
+                                          handlePageSelection(e.code);
+                                          updateSubCond(idx, {
+                                            leftPage: e.code,
+                                            leftField: "",
+                                            comparisonType: {},
+                                            fieldValue: "",
+                                            isFieldComparison: false,
+                                            rightPage: null,
+                                            rightField: null,
+                                          });
+                                        }}
+                                        selected={
+                                          cond.leftPage
+                                            ? pageOptions.find(
+                                                (p) => p.code === cond.leftPage,
+                                              ) || {
+                                                code: cond.leftPage,
+                                                displayName: cond.leftPage,
+                                              }
+                                            : {
+                                                code: cond.leftPage,
+                                              }
+                                        }
+                                      />
                                     </div>
-                                </div>,
-                            ]}
-                            footerChildren={
-                                [
-                                    <Button
-                                        key="close"
-                                        type={"button"}
-                                        size={"large"}
-                                        variation={"secondary"}
-                                        label={closeLabel}
-                                        title={closeLabel}
-                                        onClick={discardAndCloseEditor}
-                                    />,
-                                    <Button
-                                        key="submit"
-                                        type={"button"}
-                                        size={"large"}
-                                        variation={"primary"}
-                                        label={submitLabel}
-                                        title={submitLabel}
-                                        onClick={submitAndClose}
-                                        disabled={!isRuleComplete(draftRule)}
+                                  </LabelFieldPair>
+                                </div>
+
+                                {/* Left Field */}
+                                <div
+                                  style={{
+                                    minWidth: 260,
+                                    flex: "1 1 280px",
+                                  }}
+                                >
+                                  <LabelFieldPair vertical removeMargin>
+                                    <p style={{ margin: 0 }}>
+                                      {selectFieldLabel}
+                                    </p>
+                                    <div
+                                      className="digit-field"
+                                      style={{
+                                        width: "100%",
+                                      }}
+                                    >
+                                      <Dropdown
+                                        showToolTip={true}
+                                        option={
+                                          cond.leftPage ? leftFieldOptions : []
+                                        }
+                                        optionKey="label"
+                                        name={`left-field-${idx}`}
+                                        t={useT}
+                                        optionCardStyles={{
+                                          maxHeight: "15vh",
+                                          overflow: "auto",
+                                          zIndex: 10000,
+                                        }}
+                                        select={(e) => {
+                                          const nextOps = getOperatorOptions(e);
+                                          const canKeep =
+                                            cond?.comparisonType?.code &&
+                                            nextOps.some(
+                                              (o) =>
+                                                o.code ===
+                                                cond.comparisonType?.code,
+                                            );
+
+                                          const isCk = isCheckboxField(e);
+                                          updateSubCond(idx, {
+                                            leftField: e.code,
+                                            isAge: isDob ? true : false,
+                                            comparisonType: canKeep
+                                              ? cond.comparisonType
+                                              : isCk
+                                              ? nextOps.find(
+                                                  (o) => o.code === "==",
+                                                )
+                                              : {},
+                                            fieldValue: isCk
+                                              ? ["true", "false"].includes(
+                                                  String(
+                                                    cond.fieldValue,
+                                                  ).toLowerCase(),
+                                                )
+                                                ? cond.fieldValue
+                                                : "false"
+                                              : "",
+                                          });
+                                        }}
+                                        selected={
+                                          cond.leftPage && cond.leftField
+                                            ? leftFieldOptions.find(
+                                                (f) =>
+                                                  f.code === cond.leftField,
+                                              ) || {
+                                                code: cond.leftField,
+                                                label: cond.leftField,
+                                              }
+                                            : {
+                                                code: "",
+                                                label: selectPageFirstLabel,
+                                              }
+                                        }
+                                        disabled={!cond.leftPage}
+                                      />
+                                    </div>
+                                  </LabelFieldPair>
+                                </div>
+
+                                {/* Operator */}
+                                <div
+                                  style={{
+                                    minWidth: 220,
+                                    flex: "0 1 220px",
+                                  }}
+                                >
+                                  <LabelFieldPair vertical removeMargin>
+                                    <p style={{ margin: 0 }}>
+                                      {comparisonTypeLabel}
+                                    </p>
+                                    <div
+                                      className="digit-field"
+                                      style={{
+                                        width: "100%",
+                                      }}
+                                    >
+                                      <Dropdown
+                                        showToolTip={true}
+                                        option={operatorOptions}
+                                        optionKey="name"
+                                        optionCardStyles={{
+                                          maxHeight: "15vh",
+                                          overflow: "auto",
+                                          zIndex: 10000,
+                                        }}
+                                        name={`op-${idx}`}
+                                        t={t}
+                                        select={(e) =>
+                                          updateSubCond(idx, {
+                                            comparisonType: e,
+                                          })
+                                        }
+                                        selected={selectedOperator}
+                                        disabled={!cond.leftField}
+                                      />
+                                    </div>
+                                  </LabelFieldPair>
+                                </div>
+
+                                {/* Right: either value input OR page+field when isFieldComparison */}
+                                <div
+                                  style={{
+                                    minWidth: 260,
+                                    flex: "1 1 280px",
+                                  }}
+                                >
+                                  <LabelFieldPair vertical removeMargin>
+                                    <div
+                                      className="digit-field"
+                                      style={{
+                                        width: "100%",
+                                      }}
+                                    >
+                                      {/* Toggle for field comparison */}
+                                      {!isProductVariantOrMultiselectField && (
+                                        <div
+                                          style={{
+                                            marginBottom: "0.25rem",
+                                          }}
+                                        >
+                                          <CheckBox
+                                            mainClassName={
+                                              "app-config-checkbox-main"
+                                            }
+                                            labelClassName={
+                                              "app-config-checkbox-label"
+                                            }
+                                            onChange={(v) => {
+                                              const checked =
+                                                typeof v === "boolean"
+                                                  ? v
+                                                  : !!v?.target?.checked;
+                                              updateSubCond(idx, {
+                                                isFieldComparison: checked,
+                                                fieldValue: checked
+                                                  ? ""
+                                                  : cond.fieldValue,
+                                                rightPage: checked
+                                                  ? currentPageName
+                                                  : null,
+                                                rightField: checked ? "" : null,
+                                              });
+                                              if (checked)
+                                                handlePageSelection(
+                                                  currentPageName,
+                                                );
+                                            }}
+                                            value={!!cond.isFieldComparison}
+                                            label={compareFieldToggleLabel}
+                                            checked={!!cond.isFieldComparison}
+                                            isLabelFirst={false}
+                                            disabled={!cond.leftField}
+                                          />
+                                        </div>
+                                      )}
+
+                                      {/* If field comparison: show Page + Field dropdowns */}
+                                      {cond.isFieldComparison ? (
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            gap: "0.5rem",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          <div
+                                            style={{
+                                              minWidth: 160,
+                                              flex: "1 1 160px",
+                                            }}
+                                          >
+                                            <Dropdown
+                                              showToolTip={true}
+                                              option={pageOptions}
+                                              optionKey="displayName"
+                                              name={`right-page-${idx}`}
+                                              t={t}
+                                              optionCardStyles={{
+                                                maxHeight: "15vh",
+                                                overflow: "auto",
+                                                zIndex: 10000,
+                                              }}
+                                              select={(e) => {
+                                                handlePageSelection(e.code);
+                                                updateSubCond(idx, {
+                                                  rightPage: e.code,
+                                                  rightField: "",
+                                                });
+                                              }}
+                                              selected={
+                                                cond.rightPage
+                                                  ? pageOptions.find(
+                                                      (p) =>
+                                                        p.code ===
+                                                        cond.rightPage,
+                                                    ) || {
+                                                      code: cond.rightPage,
+                                                      displayName:
+                                                        cond.rightPage,
+                                                    }
+                                                  : {}
+                                              }
+                                              disabled={!cond.leftField}
+                                            />
+                                          </div>
+
+                                          <div
+                                            style={{
+                                              minWidth: 160,
+                                              flex: "1 1 160px",
+                                            }}
+                                          >
+                                            <Dropdown
+                                              showToolTip={true}
+                                              option={
+                                                cond.rightPage
+                                                  ? rightFieldOptions
+                                                  : []
+                                              }
+                                              optionKey="label"
+                                              name={`right-field-${idx}`}
+                                              t={useT}
+                                              optionCardStyles={{
+                                                maxHeight: "15vh",
+                                                overflow: "auto",
+                                                zIndex: 10000,
+                                              }}
+                                              select={(e) =>
+                                                updateSubCond(idx, {
+                                                  rightField: e.code,
+                                                })
+                                              }
+                                              selected={
+                                                cond.rightPage &&
+                                                cond.rightField
+                                                  ? rightFieldOptions.find(
+                                                      (f) =>
+                                                        f.code ===
+                                                        cond.rightField,
+                                                    ) || {
+                                                      code: cond.rightField,
+                                                      label: cond.rightField,
+                                                    }
+                                                  : {
+                                                      code: "",
+                                                      label: selectPageFirstLabel,
+                                                    }
+                                              }
+                                              disabled={!cond.rightPage}
+                                            />
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <>
+                                          {/* Value input handling: when schemaCode exists & format is dropdown/radio -> use MdmsValueDropdown (Option A) */}
+                                          {useMdms ? (
+                                            <MdmsValueDropdown
+                                              showToolTip={true}
+                                              schemaCode={
+                                                selectedLeftFieldMeta?.schemaCode
+                                              }
+                                              value={cond.fieldValue}
+                                              onChange={(v) =>
+                                                updateSubCond(idx, {
+                                                  fieldValue: v,
+                                                })
+                                              }
+                                              t={t}
+                                            />
+                                          ) : isCheckbox ? (
+                                            <CheckBox
+                                              mainClassName={
+                                                "app-config-checkbox-main"
+                                              }
+                                              labelClassName={
+                                                "app-config-checkbox-label"
+                                              }
+                                              onChange={(v) => {
+                                                const checkedVal =
+                                                  typeof v === "boolean"
+                                                    ? v
+                                                    : !!v?.target?.checked;
+                                                updateSubCond(idx, {
+                                                  fieldValue: checkedVal
+                                                    ? "true"
+                                                    : "false",
+                                                });
+                                              }}
+                                              value={
+                                                String(
+                                                  cond.fieldValue,
+                                                ).toLowerCase() === "true"
+                                              }
+                                              label={
+                                                t(
+                                                  selectedLeftFieldMeta?.label,
+                                                ) ||
+                                                selectedLeftFieldMeta?.label ||
+                                                ""
+                                              }
+                                              isLabelFirst={false}
+                                              disabled={!cond.leftField}
+                                            />
+                                          ) : isDob ? (
+                                            <TextInput
+                                              type="number"
+                                              populators={{
+                                                name: `months-${editorIndex}-${idx}`,
+                                              }}
+                                              placeholder={
+                                                t("ENTER_INTEGER_VALUE") ||
+                                                enterValueLabel
+                                              }
+                                              value={cond.fieldValue}
+                                              onChange={(event) =>
+                                                updateSubCond(idx, {
+                                                  isAge: true, // 👈 IMPORTANT
+                                                  isFieldComparison: false,
+                                                  fieldValue: sanitizeIntegerInput(
+                                                    event.target.value,
+                                                  ),
+                                                })
+                                              }
+                                            />
+                                          ) : isDate ? (
+                                            (() => {
+                                              const isoValue = toISOFromDDMMYYYY(
+                                                cond.fieldValue,
+                                              );
+                                              return (
+                                                <TextInput
+                                                  type="date"
+                                                  name={`date-${idx}`}
+                                                  className="appConfigLabelField-Input"
+                                                  value={isoValue}
+                                                  populators={{
+                                                    newDateFormat: true,
+                                                    useFixedPosition: true,
+                                                  }}
+                                                  onChange={(d) => {
+                                                    // Convert to DD/MM/YYYY, handling ISO timestamps with local timezone
+                                                    const ddmmyyyy = toDDMMYYYY(
+                                                      d,
+                                                    );
+                                                    updateSubCond(idx, {
+                                                      fieldValue: ddmmyyyy,
+                                                      isDate: true,
+                                                    });
+                                                  }}
+                                                  disabled={!cond.leftField}
+                                                />
+                                              );
+                                            })()
+                                          ) : isSelect && !useMdms ? (
+                                            // select from enum values
+                                            (() => {
+                                              const enumOptions = (
+                                                selectedLeftFieldMeta?.enums ||
+                                                []
+                                              ).map((en) => ({
+                                                code: String(en.code),
+                                                name: en.name || en.code,
+                                              }));
+                                              const selectedEnum = enumOptions.find(
+                                                (eo) =>
+                                                  eo.code ===
+                                                  String(cond.fieldValue),
+                                              );
+                                              return (
+                                                <Dropdown
+                                                  showToolTip={true}
+                                                  option={enumOptions}
+                                                  optionKey="name"
+                                                  name={`enum-${idx}`}
+                                                  optionCardStyles={{
+                                                    maxHeight: "15vh",
+                                                    overflow: "auto",
+                                                    zIndex: 10000,
+                                                  }}
+                                                  t={useT}
+                                                  select={(e) =>
+                                                    updateSubCond(idx, {
+                                                      fieldValue: e.code,
+                                                    })
+                                                  }
+                                                  selected={selectedEnum}
+                                                  disabled={!cond.leftField}
+                                                />
+                                              );
+                                            })()
+                                          ) : isProductVariantOrMultiselectField &&
+                                            productVariants?.length > 0 ? (
+                                            (() => {
+                                              const selectedProductVariant = productVariants.find(
+                                                (eo) =>
+                                                  eo.productVariantId ===
+                                                  String(cond.fieldValue),
+                                              );
+                                              return (
+                                                <Dropdown
+                                                  showToolTip={true}
+                                                  option={productVariants}
+                                                  optionKey="name"
+                                                  optionCardStyles={{
+                                                    maxHeight: "15vh",
+                                                    overflow: "auto",
+                                                    zIndex: 10000,
+                                                  }}
+                                                  name={`product-variant-${idx}`}
+                                                  t={t}
+                                                  select={(e) =>
+                                                    updateSubCond(idx, {
+                                                      fieldValue: e.code,
+                                                    })
+                                                  }
+                                                  selected={
+                                                    selectedProductVariant
+                                                  }
+                                                  disabled={!cond.leftField}
+                                                />
+                                              );
+                                            })()
+                                          ) : (
+                                            <TextInput
+                                              type={
+                                                isNumericField(
+                                                  selectedLeftFieldMeta,
+                                                )
+                                                  ? "number"
+                                                  : "text"
+                                              }
+                                              placeholder={enterValueLabel}
+                                              value={cond.fieldValue}
+                                              onChange={(ev) => {
+                                                const v =
+                                                  ev?.target?.value ?? "";
+                                                updateSubCond(idx, {
+                                                  fieldValue: isNumericField(
+                                                    selectedLeftFieldMeta,
+                                                  )
+                                                    ? sanitizeIntegerInput(v)
+                                                    : v,
+                                                });
+                                              }}
+                                              disabled={!cond.leftField}
+                                            />
+                                          )}
+                                        </>
+                                      )}
+                                    </div>
+                                  </LabelFieldPair>
+                                </div>
+                              </div>
+
+                              {/* Footer row below each condition - show Remove button for all conditions when more than 1 exists */}
+                              {draftRule.conds.length > 1 && (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    alignItems: "center",
+                                    marginTop: "0.5rem",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "0.25rem",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => removeSubCondition(idx)}
+                                    title={removeConditionLabel}
+                                    aria-label={removeConditionLabel}
+                                    role="button"
+                                  >
+                                    <SVG.Delete
+                                      fill={"#C84C0E"}
+                                      width={"1.25rem"}
+                                      height={"1.25rem"}
                                     />
-                                ]
-                                // <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", width: "100%" }}>
-                                //     <Button variation="tertiary" label={closeLabel} onClick={discardAndCloseEditor} />
-                                //     <Button variation="primary" label={submitLabel} onClick={submitAndClose} />
-                                // </div>
-                            }
-                            onOverlayClick={discardAndCloseEditor}
-                            onClose={discardAndCloseEditor}
+                                    <span
+                                      style={{
+                                        color: "#C84C0E",
+                                        fontSize: "0.875rem",
+                                        fontWeight: 500,
+                                      }}
+                                    >
+                                      {removeConditionLabel}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </React.Fragment>
+                        );
+                      })}
+
+                      {/* Add Condition button after the last condition */}
+                      <div style={{ marginTop: "0.5rem" }}>
+                        <Button
+                          variation="secondary"
+                          icon={"Add"}
+                          label={addConditionLabel}
+                          title={addConditionLabel}
+                          onClick={addSubCondition}
+                          size={"medium"}
                         />
+                      </div>
+
+                      {/* show any form-level error here */}
+                      {globalFormError ? (
+                        <div
+                          style={{
+                            border: "1px solid #FCA5A5",
+                            background: "#FEF2F2",
+                            color: "#B91C1C",
+                            borderRadius: 6,
+                            padding: "0.5rem 0.75rem",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "0.75rem",
+                          }}
+                        >
+                          <span>{globalFormError}</span>
+                          <SVG.Close
+                            width={"1.1rem"}
+                            height={"1.1rem"}
+                            fill={"#7F1D1D"}
+                            onClick={() => setGlobalFormError("")}
+                            tabIndex={0}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </div>
+                      ) : null}
                     </div>
-                </BodyPortal>
-            )}
-        </Card>
+                  </div>,
+                ]}
+                footerChildren={
+                  [
+                    <Button
+                      key="close"
+                      type={"button"}
+                      size={"large"}
+                      variation={"secondary"}
+                      label={closeLabel}
+                      title={closeLabel}
+                      onClick={discardAndCloseEditor}
+                    />,
+                    <Button
+                      key="submit"
+                      type={"button"}
+                      size={"large"}
+                      variation={"primary"}
+                      label={submitLabel}
+                      title={submitLabel}
+                      onClick={submitAndClose}
+                      disabled={!isRuleComplete(draftRule)}
+                    />,
+                  ]
+                  // <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", width: "100%" }}>
+                  //     <Button variation="tertiary" label={closeLabel} onClick={discardAndCloseEditor} />
+                  //     <Button variation="primary" label={submitLabel} onClick={submitAndClose} />
+                  // </div>
+                }
+                onOverlayClick={discardAndCloseEditor}
+                onClose={discardAndCloseEditor}
+              />
+            </div>
+          </BodyPortal>
+        )}
+      </Card>
     );
 }
 

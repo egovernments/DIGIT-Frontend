@@ -86,7 +86,7 @@ const Response = () => {
             />
           ),
         ]}
-        className=""
+        className={state?.footerClassName || ""}
         maxActionFieldsAllowed={5}
         setactionFieldsToRight
         sortActionFields

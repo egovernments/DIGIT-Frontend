@@ -586,6 +586,7 @@ const CampaignDetails = () => {
       },
       {
         onSuccess: async (data) => {
+          sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", "1"); // Set to upcoming tab
           navigate(
             `/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`,
             {
@@ -593,10 +594,12 @@ const CampaignDetails = () => {
                 message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
                 text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
                 info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                actionLabel: "BACK_TO__CAMPAIGN_HOME",
-                actionLink: `/${window.contextPath}/employee`,
-                secondaryActionLabel: "GO_TO_MY_CAMPAIGNS",
-                secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+                secondaryActionLabel: "BACK_TO__CAMPAIGN_HOME",
+                secondaryActionLink: `/${window.contextPath}/employee`,
+                actionLabel: "GO_TO_MY_CAMPAIGNS",
+                actionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+                primaryActionVariation:"primary",
+                footerClassName:"campaign-response-screen"
               },
             }
           );

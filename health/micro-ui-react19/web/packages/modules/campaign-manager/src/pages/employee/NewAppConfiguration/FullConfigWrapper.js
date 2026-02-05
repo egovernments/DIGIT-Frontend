@@ -268,7 +268,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Left Sidebar - Menu Items */}
         <div ref={sidebarRef} className="full-config-wrapper__left-sidebar">
           <div
-            className={`full-config-wrapper__sidebar-menu-item ${
+            className={`full-config-wrapper__sidebar-menu-item roles-disabled${
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
             onClick={() => handleToggleSidePanel("roles")}
@@ -304,9 +304,9 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
-                <div className="full-config-wrapper__slide-panel-title">{t("APP_CONFIG_ROLES")}</div>
+                <div className="full-config-wrapper__slide-panel-title disabled">{t("APP_CONFIG_ROLES")}</div>
                 <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
-                  <SVG.Close fill="#787878" />
+                  <SVG.Close fill="#B1B4B6" />
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">

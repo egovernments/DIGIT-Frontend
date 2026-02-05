@@ -723,12 +723,13 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
 
     // ---- small UI helpers to render the outside list with OR separators ----
     const JoinerRow = () => (
-        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <Tag
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        {/* <Tag
                 type={"monochrome"}
                 label={`(${orText})`}
-            />
-            {/* <span
+                stroke={true}
+            /> */}
+        {/* <span
                 style={{
                     background:"#EFF8FF",
                     height: "fit-content",
@@ -736,7 +737,23 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             >
                 {orText.toUpperCase()}
             </span> */}
+        <div
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
+        >
+          <span
+            style={{
+              background: "#deefff",
+              color: "#0057bd",
+              borderRadius:"0.5rem",
+              padding: "0.25rem 0.75rem",
+              fontSize: "0.75rem",
+              fontWeight: 400,
+            }}
+          >
+            {`(${orText})`}
+          </span>
         </div>
+      </div>
     );
 
     const RuleRow = ({ idx }) => (
@@ -745,10 +762,14 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                 display: "grid",
                 gridTemplateColumns: "1fr auto",
                 alignItems: "center",
-                gap: "0.75rem",
+                gap: "8px",
+                border:"1px solid #d6d5d4",
+                borderRadius:"8px",
+                padding:"8px",
+                backgroundColor:"#ffffff"
             }}
         >
-            <Tag
+            {/* <Tag
                 label={formatRuleSummary(rules[idx], idx)}
                 showIcon={false}
                 stroke={true}
@@ -763,8 +784,8 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                 }}
                 className={"version-tag"}
                 labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
-            />
-
+            /> */}
+            <div className="logic-rule-number version-tag">{formatRuleSummary(rules[idx], idx)}</div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
                 <div
                     role="button"
@@ -780,14 +801,15 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                     )}
                 </div>
 
-                {idx !== 0 && (<div
+                {/* Show delete icon for all rules, but only when more than 1 rule exists */}
+                {rules.length > 1 && (<div
                     role="button"
                     title={deleteRuleLabel}
                     aria-label={deleteRuleLabel}
                     onClick={() => deleteRuleFromList(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
+                    <SVG.DeleteForever fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
                 </div>)}
             </div>
         </div>
@@ -797,12 +819,11 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
     return (
         <Card type="secondary">
             {/* Title */}
-            <div style={{ marginBottom: "0.5rem" }}>
-                <h3 style={{ margin: 0 }}>{navLogicTitle}</h3>
-            </div>
-
+            {/* <div>
+                <h3 className="display-logic-heading" style={{ margin: 0 }}>{navLogicTitle}</h3>
+            </div> */}
             {/* Rules list separated by centered OR */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.75rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem"}}>
                 {rules.length === 0 ? (
                     <p style={{ opacity: 0.7, margin: 0 }}>{noRulesYet}</p>
                 ) : (
@@ -826,6 +847,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                     title={addRuleLabel}
                     onClick={addRule}
                     icon="Add"
+                    size={"medium"}
                     style={{ width: "100%" }}
                 />
             </div>
@@ -1178,6 +1200,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                         icon="Add"
                                                         onClick={() => addCondition(editorIndex)}
                                                         style={{ minWidth: "auto" }}
+                                                        size={"medium"}
                                                     />
                                                 </div>
 

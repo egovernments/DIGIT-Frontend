@@ -95,6 +95,11 @@
       font-weight: 600;
       color: #0b4b66;
     }
+
+    &.roles-disabled{
+      pointer-events: none;
+      cursor: not-allowed;
+    }
   }
 
   &__sidebar-menu-icon {
@@ -186,6 +191,10 @@
     font-size: 1rem;
     font-weight: 700;
     color: #787878;
+
+    &.disabled{
+      color: var(--digitv2-lightTheme-text-color-disabled);
+    }
   }
 
   &__close-button {
@@ -525,10 +534,11 @@
     border-radius: 0.5rem;
 }
 
-.digit-sidepanel-switch-wrap{
+.digit-sidepanel-switch-wrap {
   width: 100%;
-  .digit-switch-label{
-    &.labelFirst{
+
+  .digit-switch-label {
+    &.labelFirst {
       margin-right: auto !important;
     }
   }
@@ -536,4 +546,104 @@
 
 .react-datepicker-popper {
   z-index: 99999 !important;
+}
+
+.drawer-toggle-field-container {
+  .drawer-container-tooltip {
+    .digit-switch-container {
+      &.sidepanel {
+        .digit-switch-label {
+          font-family: var(--digitv2-fontFamily-sans);
+          font-style: var(--digitv2-fontStyle-normal);
+          font-weight: var(--digitv2-fontWeight-bold);
+          color: #0b4b66;
+
+          @media (max-aspect-ratio: 9/16) {
+            /* Media query for mobile */
+            font-size: var(--digitv2-fontSize-heading-s-mobile);
+          }
+
+          @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+            /* Media query for tablets */
+            font-size: var(--digitv2-fontSize-heading-s-tablet);
+          }
+
+          @media (min-aspect-ratio: 3/4) {
+            /* Media query for desktop */
+            font-size: var(--digitv2-fontSize-heading-s-desktop);
+          }
+        }
+      }
+    }
+  }
+}
+.app-config-privacy-controls-container{
+  border: 1px solid #d6d5d4;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-bold);
+  background-color: var(--digitv2-lightTheme-paper-secondary);
+  line-height: var(--digitv2-lineHeight-lineheight1);
+  color: var(--digitv2-lightTheme-text-secondary);
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-heading-xs-mobile);
+  }
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-heading-xs-tablet);
+  }
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-heading-xs-desktop);
+  }
+}
+
+.display-logic-heading{
+  color: var(--digitv2-lightTheme-primary-2);
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-bold);
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-heading-xs-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-heading-xs-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-heading-xs-desktop);
+  }
+}
+.app-config-group-heading {
+  color: var(--digitv2-lightTheme-primary-2);
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-bold);
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-heading-s-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-heading-s-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-heading-s-desktop);
+  }
 }

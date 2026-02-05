@@ -65,37 +65,37 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           additionalElements={[<Button className={"error alert-card-error-button"} label={i?.button} title={i?.button} variation="secondary" onClick={i.onClick} />]}
         />
       ))}
-      <div className="employee-data-table ">
-        {data?.startDate && (
-          <Row
-            key={t("startDate")}
-            label={`${t("Start Date")}`}
-            text={data?.startDate}
-            className="border-none"
-            rowContainerStyle={{ display: "flex" }}
-            labelStyle={{ fontWeight: "500" }}
-          />
-        )}
-        {data?.endDate && (
-          <Row
-            key={t("endDate")}
-            label={`${t("End Date")}`}
-            text={data?.endDate}
-            className="border-none"
-            rowContainerStyle={{ display: "flex" }}
-            labelStyle={{ fontWeight: "500" }}
-          />
-        )}
-      </div>
-
-      <hr style={{ border: "1px solid #d6d5d4" ,marginTop:"-1.5rem"}} />
+      {(data?.startDate || data?.endDate) && (
+        <div className="employee-data-table ">
+          {data?.startDate && (
+            <Row
+              key={t("startDate")}
+              label={`${t("Start Date")}`}
+              text={data?.startDate}
+              className="border-none"
+              rowContainerStyle={{ display: "flex" }}
+              labelStyle={{ fontWeight: "500" }}
+            />
+          )}
+          {data?.endDate && (
+            <Row
+              key={t("endDate")}
+              label={`${t("End Date")}`}
+              text={data?.endDate}
+              className="border-none"
+              rowContainerStyle={{ display: "flex" }}
+              labelStyle={{ fontWeight: "500" }}
+            />
+          )}
+        </div>
+      )}
 
       <Tabs deliveryData={deliveryData} tabCount={deliveryData?.length} activeTab={activeTab} onTabChange={handleTabChange} />
 
       {deliveryData?.find((i) => i?.active === true)
         ?.deliveryRules?.map((rules, ruleIndex) => {
           return (
-            <Card className="delivery-preview-card delivery-preview-screen" style={{marginBottom:"0rem"}}>
+            <Card className="delivery-preview-card delivery-preview-screen" style={{marginBottom:"0rem !important"}}>
               {rules?.attributes?.length > 0 && (
                 <DetailsTable
                   className="campaign-attribute-table"
