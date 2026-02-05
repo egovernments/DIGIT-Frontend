@@ -153,6 +153,7 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
  */
 const transformTemplate = (screenData) => {
   const transformedFields = (screenData.body?.[0]?.fields || []).map((field) => {
+
     if (field.format === "panelCard") {
       return {
         ...field,
@@ -177,7 +178,7 @@ const transformTemplate = (screenData) => {
       };
     }
 
-    if (field?.format?.toLowerCase() === "searchBar") {
+    if (field?.format?.toLowerCase() === "searchbar") {
       const validations = [];
       validations.push({
         type: "minSearchChars",
