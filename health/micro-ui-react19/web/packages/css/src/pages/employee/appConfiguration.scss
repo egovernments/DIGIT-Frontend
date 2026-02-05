@@ -647,3 +647,8 @@
     font-size: var(--digitv2-fontSize-heading-s-desktop);
   }
 }
+
+// Override library style for digit-field width inside LabelFieldPair
+.digit-label-field-pair .digit-field {
+  width: 100%;
+}

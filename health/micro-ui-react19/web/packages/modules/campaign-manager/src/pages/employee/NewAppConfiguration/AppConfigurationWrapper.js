@@ -504,6 +504,40 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 }
               }
             }
+
+            // Validation for prefixText - max 5 characters
+            if (panelItem.bindTo === "prefixText") {
+              const maxPrefixLength = 5;
+              if (field?.prefixText && typeof field.prefixText === "string" && field.prefixText.length > maxPrefixLength) {
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: panelItem.label,
+                  message: "VALIDATION_PREFIX_TEXT_MAX_LENGTH",
+                  messageParams: {
+                    fieldName: customTranslate(field?.label || field?.fieldName),
+                    maxLength: maxPrefixLength
+                  },
+                  tab: tabKey,
+                });
+              }
+            }
+
+            // Validation for suffixText - max 5 characters
+            if (panelItem.bindTo === "suffixText") {
+              const maxSuffixLength = 5;
+              if (field?.suffixText && typeof field.suffixText === "string" && field.suffixText.length > maxSuffixLength) {
+                errors.push({
+                  fieldLabel: field?.label || field?.fieldName || "Unknown Field",
+                  panelLabel: panelItem.label,
+                  message: "VALIDATION_SUFFIX_TEXT_MAX_LENGTH",
+                  messageParams: {
+                    fieldName: customTranslate(field?.label || field?.fieldName),
+                    maxLength: maxSuffixLength
+                  },
+                  tab: tabKey,
+                });
+              }
+            }
           }
         });
       });

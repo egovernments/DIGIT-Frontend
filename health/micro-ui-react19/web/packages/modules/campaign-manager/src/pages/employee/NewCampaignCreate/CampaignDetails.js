@@ -234,11 +234,11 @@ const CampaignDetails = () => {
     )
   );
 
-  // Check if all form configs have version > 1
+  // Check if at least one form config has version > 1
   const isFormConfigured = useMemo(() => {
     if (!formConfigData?.length > 0) return false;
     const formConfigs = formConfigData;
-    return formConfigs?.length > 0 && formConfigs?.filter((flow) => flow?.data?.active)?.every((item) => item?.data?.version > 1);
+    return formConfigs?.length > 0 && formConfigs?.filter((flow) => flow?.data?.active)?.some((item) => item?.data?.version > 1);
   }, [formConfigData]);
 
   // Using the checklist search hook to check if any checklists are configured
