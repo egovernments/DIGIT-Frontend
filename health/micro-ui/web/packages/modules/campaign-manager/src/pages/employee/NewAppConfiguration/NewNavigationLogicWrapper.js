@@ -1224,6 +1224,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                         label={addConditionLabel}
                                                         title={addConditionLabel}
                                                         icon="Add"
+                                                        size="medium"
                                                         onClick={() => addCondition(editorIndex)}
                                                     />
                                                 </div>
