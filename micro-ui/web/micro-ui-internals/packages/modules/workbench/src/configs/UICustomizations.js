@@ -832,8 +832,7 @@ export const UICustomizations = {
           label: "Enable Master",
         });
 
-      switch (true) {
-        case hostname.includes("mukta-uat") || hostname.includes("localhost") || hostname.includes("mukta.odisha"): {
+
           if (data?.data?.sorType?.includes("W")) {
             if (isActive && hasRoleAccess("ADD_SOR_COMPOSITION"))
               actionItems?.push({
@@ -854,8 +853,6 @@ export const UICustomizations = {
           if (props?.masterName === "Rates" && props?.sorData?.data?.sorType === "W") {
             actionItems = actionItems.filter((ac) => ac?.action !== "EDIT");
           }
-        }
-      }
       return actionItems;
     },
     onActionSelect: (action, props) => {
