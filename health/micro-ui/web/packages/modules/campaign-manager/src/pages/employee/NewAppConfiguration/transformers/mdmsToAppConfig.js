@@ -293,6 +293,7 @@ const transformFooter = (footer) => {
 const transformFormPage = (pageData) => {
   const page = {
     ...pageData,
+    body: null,
     page: pageData.page,
     type: pageData.type,
     label: pageData.heading,
@@ -412,6 +413,7 @@ const buildValidations = (field) => {
     "maxAge",
     "startDate",
     "endDate",
+    "pattern"
   ];
 
   // Handle required validation
@@ -480,6 +482,14 @@ const buildValidations = (field) => {
       value: field?.minSearchChars,
       message: field["minSearchChars.message"],
     });
+  }
+
+  if(field.pattern){
+    validations.push({
+        type: "pattern",
+      value: field?.pattern,
+      message: field["pattern.message"],
+    })
   }
 
   // Handle grouped validations (range, lengthRange, dateRange)

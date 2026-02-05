@@ -806,7 +806,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         })
         .map((item) => ({
           code: item.code,
-          message: item[currentLocale],
+          // Replace empty string messages with a space character (API may not accept empty strings)
+          message: item[currentLocale] === "" ? " " : item[currentLocale],
           module: localeModule,
           locale: currentLocale,
         }));
