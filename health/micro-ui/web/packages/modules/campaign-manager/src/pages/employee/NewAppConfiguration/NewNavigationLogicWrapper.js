@@ -780,7 +780,8 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                     )}
                 </div>
 
-                {idx !== 0 && (<div
+                {/* Show delete icon for all rules, but only when more than 1 rule exists */}
+                {rules.length > 1 && (<div
                     role="button"
                     title={deleteRuleLabel}
                     aria-label={deleteRuleLabel}

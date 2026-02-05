@@ -1865,10 +1865,8 @@ function NewDependentFieldWrapper({ t }) {
                                                             </div>
                                                         </div>
 
-                                                        {/* Footer row below each condition - only show Remove button for non-last conditions */}
-                                                        {idx !==
-                                                            draftRule.conds.length -
-                                                            1 && (
+                                                        {/* Footer row below each condition - show Remove button for all conditions when more than 1 exists */}
+                                                        {draftRule.conds.length > 1 && (
                                                                 <div
                                                                     style={{
                                                                         display: "flex",
