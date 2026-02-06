@@ -26,6 +26,7 @@ import {
   setError,
   syncCycles,
   syncDeliveries,
+  updateObservationStrategy,
 } from './deliveryRulesSlice';
 import { CONSOLE_MDMS_MODULENAME } from '../../../Module';
 
@@ -145,6 +146,10 @@ export const useDeliveryRules = () => {
     dispatch(syncDeliveries({ newDeliveryCount, effectiveDeliveryConfig, attributeConfig, operatorConfig }));
   }, [dispatch]);
 
+  const updateObservationStrategyAction = useCallback((observationStrategy) => {
+    dispatch(updateObservationStrategy({ observationStrategy }));
+  }, [dispatch]);
+
   return {
     // State
     campaignData,
@@ -174,6 +179,7 @@ export const useDeliveryRules = () => {
     updateDeliveryTypeForEachDelivery,
     syncCycleCount,
     syncDeliveryCount,
+    updateObservationStrategyAction,
   };
 };
 
