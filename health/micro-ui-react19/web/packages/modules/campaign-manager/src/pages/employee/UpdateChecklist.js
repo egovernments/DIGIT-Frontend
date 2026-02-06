@@ -632,7 +632,20 @@ const UpdateChecklist = () => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
                     const enrichedArray = enrichLocalizationData(generatedLocal, searchLocalisationData);
-                    onSubmit(null, 1, tempFormData, [...savedTranslations, ...enrichedArray]);
+                    // Transform enrichedArray from search format { code, module, en_MZ: "text", pt_MZ: "text" }
+                    // to upsert format { code, message, module, locale } per locale entry
+                    const flattenedEnriched = enrichedArray.flatMap((item) => {
+                      const { code, module: mod, ...localeEntries } = item;
+                      return Object.entries(localeEntries)
+                        .filter(([_, message]) => message && String(message).trim() !== "")
+                        .map(([loc, message]) => ({
+                          code,
+                          message: String(message),
+                          module: mod,
+                          locale: loc,
+                        }));
+                    });
+                    onSubmit(null, 1, tempFormData, [...savedTranslations, ...flattenedEnriched]);
                     setShowPopUp(false);
                   }}
                 />,

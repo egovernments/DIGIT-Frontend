@@ -519,6 +519,16 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }
           }
 
+          // isGS1 and scanner regex pattern are mutually exclusive
+          if (newToggleValue) {
+            const resolvedBindTo = bindTo.replace("toArray.", "");
+            if (resolvedBindTo === "isGS1") {
+              updatedField = { ...updatedField, pattern: false };
+            } else if (resolvedBindTo === "pattern") {
+              updatedField = { ...updatedField, isGS1: false };
+            }
+          }
+
           onFieldChange(updatedField);
         };
         return (
