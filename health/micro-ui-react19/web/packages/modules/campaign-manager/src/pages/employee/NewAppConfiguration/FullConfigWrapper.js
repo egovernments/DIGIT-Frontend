@@ -268,17 +268,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Left Sidebar - Menu Items */}
         <div ref={sidebarRef} className="full-config-wrapper__left-sidebar">
           <div
-            className={`full-config-wrapper__sidebar-menu-item roles-disabled${
-              activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
-            }`}
-            onClick={() => handleToggleSidePanel("roles")}
-          >
-            {activeSidePanel === "roles" ? <SVG.Person fill="#0B4B66" /> : <SVG.PersonOutline fill="#0B4B66" />}
-
-            <span>{t("APP_CONFIG_ROLES")}</span>
-          </div>
-
-          <div
             className={`full-config-wrapper__sidebar-menu-item ${
               activeSidePanel === "flows" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
@@ -287,6 +276,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             {/* <Earbuds fill="#0B4B66" /> */}
             {activeSidePanel === "flows" ? <FlowFilled/> : <FlowUnfilled/>}
             <span>{t("APP_CONFIG_FLOWS")}</span>
+          </div>
+          <div
+            className={`full-config-wrapper__sidebar-menu-item roles-disabled${
+              activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
+            }`}
+            onClick={() => handleToggleSidePanel("roles")}
+          >
+            {activeSidePanel === "roles" ? <SVG.Person fill="#B1B4B6" /> : <SVG.PersonOutline fill="#B1B4B6" />}
+
+            <span>{t("APP_CONFIG_ROLES")}</span>
           </div>
         </div>
 
@@ -306,7 +305,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               <div className="full-config-wrapper__slide-panel-header">
                 <div className="full-config-wrapper__slide-panel-title disabled">{t("APP_CONFIG_ROLES")}</div>
                 <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
-                  <SVG.Close fill="#B1B4B6" />
+                  <SVG.Close fill="#787878" />
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">

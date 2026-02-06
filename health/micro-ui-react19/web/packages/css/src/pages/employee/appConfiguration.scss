@@ -64,7 +64,7 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0rem;
     box-shadow: 0.063rem 0.125rem 0.55rem 0rem #00000017;
     z-index: 100;
     position: relative;
@@ -99,6 +99,10 @@
     &.roles-disabled{
       pointer-events: none;
       cursor: not-allowed;
+
+      span{
+        color: var(--digitv2-lightTheme-text-color-disabled);
+      }
     }
   }
 
@@ -193,7 +197,7 @@
     color: #787878;
 
     &.disabled{
-      color: var(--digitv2-lightTheme-text-color-disabled);
+      color: var(--digitv2-lightTheme-text-color-disabled) !important;
     }
   }
 
