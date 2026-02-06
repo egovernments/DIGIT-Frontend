@@ -1,6 +1,6 @@
 import React, { useReducer, Fragment, useEffect, useState, act } from "react";
 import { useTranslation } from "react-i18next";
-import { TextInput, Loader, FieldV1,Card,LabelFieldPair,CardText,CardLabel, HeaderComponent } from "@egovernments/digit-ui-components";
+import { TextInput, Loader, FieldV1,Card,LabelFieldPair,CardText,CardLabel, HeaderComponent, RadioButtons } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
@@ -28,6 +28,12 @@ const initialState = (saved, filteredDeliveryConfig, refetch) => {
           : filteredDeliveryConfig?.cycleConfig
           ? filteredDeliveryConfig?.cycleConfig?.IsDisable
           : false,
+      observationStrategy:
+        saved?.cycleConfgureDate?.observationStrategy && !refetch
+          ? saved?.cycleConfgureDate?.observationStrategy
+          : filteredDeliveryConfig?.cycleConfig?.observationStrategy
+          ? filteredDeliveryConfig?.cycleConfig?.observationStrategy
+          : "DOT1",
     },
     cycleData: saved?.cycleData ? [...saved?.cycleData] : [],
   };
@@ -43,6 +49,8 @@ const reducer = (state, action) => {
       return { ...state, cycleConfgureDate: { ...state.cycleConfgureDate, cycle: action.payload } };
     case "UPDATE_DELIVERY":
       return { ...state, cycleConfgureDate: { ...state.cycleConfgureDate, deliveries: action.payload } };
+    case "UPDATE_OBSERVATION_STRATEGY":
+      return { ...state, cycleConfgureDate: { ...state.cycleConfgureDate, observationStrategy: action.payload } };
     case "SELECT_TO_DATE":
       return {
         ...state,
@@ -273,6 +281,10 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     dispatch({ type: "UPDATE_DELIVERY", payload: d?.target?.value ? Number(d?.target?.value) : d });
   };
 
+  const updateObservationStrategy = (value) => {
+    dispatch({ type: "UPDATE_OBSERVATION_STRATEGY", payload: value });
+  };
+
   const selectToDate = (index, d) => {
     const localDate = new Date(d);
     localDate.setHours(0, 0, 0, 0); // Local midnight
@@ -369,6 +381,37 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   type="numeric"
                   value={cycleConfgureDate?.deliveries}
                   onChange={(d) => updateDelivery(d)}
+                  disabled={cycleConfgureDate?.isDisable}
+                />
+              </LabelFieldPair>
+            </Card>
+          </div>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <Card>
+              <HeaderComponent className="cycle-configuration-heading">
+                {t(`CAMPAIGN_OBSERVATION_STRATEGY_HEADING`)}
+              </HeaderComponent>
+              <CardText style={{fontSize:"16px",color:"#505a5f", marginBottom: "1rem"}}>
+                {t(`CAMPAIGN_OBSERVATION_STRATEGY_DESCRIPTION`)}
+              </CardText>
+              <LabelFieldPair>
+                <CardLabel className="cycleBold" style={{ fontWeight: "700", width:"40%" }}>
+                  {t(`CAMPAIGN_OBSERVATION_STRATEGY`)}
+                  <span className="mandatory-span">*</span>
+                </CardLabel>
+                <RadioButtons
+                  options={[
+                    { code: "DOT1", i18nKey: "CAMPAIGN_OBSERVATION_STRATEGY_DOT1" },
+                    { code: "DOTN", i18nKey: "CAMPAIGN_OBSERVATION_STRATEGY_DOTN" }
+                  ]}
+                  selectedOption={cycleConfgureDate?.observationStrategy ?
+                    { code: cycleConfgureDate.observationStrategy, i18nKey: `CAMPAIGN_OBSERVATION_STRATEGY_${cycleConfgureDate.observationStrategy}` } :
+                    { code: "DOT1", i18nKey: "CAMPAIGN_OBSERVATION_STRATEGY_DOT1" }
+                  }
+                  optionsKey="code"
+                  value={cycleConfgureDate?.observationStrategy || "DOT1"}
+                  onSelect={(value) => updateObservationStrategy(value?.code)}
+                  t={t}
                   disabled={cycleConfgureDate?.isDisable}
                 />
               </LabelFieldPair>
