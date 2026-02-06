@@ -645,17 +645,12 @@
 
   &__conditions-wrapper {
     display: grid;
-    gap: 0.75rem;
-  }
-
-  // Add condition button
-  &__add-condition-wrapper {
-    margin-top: 0.5rem;
+    gap: 24px;
   }
 
   // Divider styling
   &__divider {
-    margin: 1rem 0;
+    margin:0rem;
   }
 
   // Error message box
@@ -696,7 +691,7 @@
     border-radius: 8px;
     padding: 1rem;
     display: grid;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   // Header row with "If" label and delete button
@@ -706,10 +701,27 @@
     align-items: center;
   }
 
-  &__condition-header-label {
-    font-weight: 600;
-    color: #0B4B66;
-  }
+    &__condition-header-label {
+      color: #0B4B66;
+      font-family: var(--digitv2-fontFamily-sans);
+      font-style: var(--digitv2-fontStyle-normal);
+      font-weight: var(--digitv2-fontWeight-medium);
+  
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        font-size: var(--digitv2-fontSize-caption-s-mobile);
+      }
+  
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        font-size: var(--digitv2-fontSize-caption-s-tablet);
+      }
+  
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        font-size: var(--digitv2-fontSize-caption-s-desktop);
+      }
+    }
 
   // Delete condition button
   &__delete-condition {
@@ -745,7 +757,7 @@
 
   // Individual radio card
   &__radio-card {
-    border: 1px solid #D6D5D4;
+    border: 1px solid #505A5F;
     border-radius: 8px;
     padding: 1rem;
     cursor: pointer;
@@ -770,41 +782,99 @@
     margin-bottom: 0.5rem;
   }
 
-  // Custom radio button circle
-  &__radio-circle {
-    width: 1.25rem;
-    height: 1.25rem;
-    border-radius: 50%;
-    border: 2px solid #787878;
-    box-sizing: border-box;
+  // Native radio input styling
+  &__radio-input {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #C84C0E;
 
-    &--selected {
-      border: 6px solid #C84C0E;
+    &::after {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: transparent;
+      display: block;
     }
   }
 
-  &__radio-card-title {
-    font-weight: 600;
-    color: #0B4B66;
-  }
 
-  &__radio-card-description {
-    margin: 0;
-    font-size: 0.875rem;
-    color: #505A5F;
-  }
-
+    &__radio-card-title {
+      color: #0B4B66;
+      font-family: var(--digitv2-fontFamily-sans);
+      font-style: var(--digitv2-fontStyle-normal);
+      font-weight: var(--digitv2-fontWeight-regular);
+  
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        font-size: var(--digitv2-fontSize-body-s-mobile);
+      }
+  
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        font-size: var(--digitv2-fontSize-body-s-tablet);
+      }
+  
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        font-size: var(--digitv2-fontSize-body-s-desktop);
+      }
+    }
+  
+    &__radio-card-description {
+      margin: 0;
+      color: #505A5F;
+      font-family: var(--digitv2-fontFamily-sans);
+      font-style: var(--digitv2-fontStyle-normal);
+      font-weight: var(--digitv2-fontWeight-regular);
+  
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        font-size: var(--digitv2-fontSize-body-xs-mobile);
+      }
+  
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        font-size: var(--digitv2-fontSize-body-xs-tablet);
+      }
+  
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        font-size: var(--digitv2-fontSize-body-xs-desktop);
+      }
+    }
   // Label field styling
   &__label {
     margin: 0;
     margin-bottom: 0.5rem;
   }
 
-  // Text colors
-  &__text-primary {
-    font-weight: 500;
-    color: #0B4B66;
-  }
+    // Text colors
+    &__text-primary {
+      font-weight: 500;
+      color: #0B4B66;
+      font-family: var(--digitv2-fontFamily-sans);
+      font-style: var(--digitv2-fontStyle-normal);
+      font-weight: var(--digitv2-fontWeight-bold);
+      color: #0b4b66;
+  
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        font-size: var(--digitv2-fontSize-heading-s-mobile);
+      }
+  
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        font-size: var(--digitv2-fontSize-heading-s-tablet);
+      }
+  
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        font-size: var(--digitv2-fontSize-heading-s-desktop);
+      }
+    }
 
   &__text-secondary {
     color: #505A5F;
@@ -817,6 +887,10 @@
 
 .rule-summary {
 
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
   // Joiner container (And/Or between conditions)
   &__joiner {
     display: flex;
@@ -827,9 +901,9 @@
   // Individual condition row card
   &__condition-row {
     background: #FFFFFF;
-    border: 1px solid #D6E0EB;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
+    border: 1px solid #D6D5D4;
+    border-radius: 12px;
+    padding: 12px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -837,19 +911,67 @@
   }
 
   // Tag styling within rule summary
-  &__tag {
-    margin: 0 0.25rem;
-    display: inline-flex;
-  }
+    &__tag {
+      margin: 0 0.25rem;
+      display: inline-flex;
+      border-radius: 12px;
+      gap: 10px;
+      padding-top: 4px;
+      padding-right: 12px;
+      padding-bottom: 4px;
+      padding-left: 12px;
+      font-family: "Roboto";
+      font-weight: 700;
+      font-style: Bold;
+      font-size: 16px;
+    }
 
   // Text styles
-  &__text-primary {
-    font-weight: 500;
-    color: #0B4B66;
-  }
+    &__text-primary {
+      font-weight: 500;
+      color: #0B4B66;
+      font-family: var(--digitv2-fontFamily-sans);
+      font-style: var(--digitv2-fontStyle-normal);
+      font-weight: var(--digitv2-fontWeight-bold);
+  
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        font-size: var(--digitv2-fontSize-heading-s-mobile);
+      }
+  
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        font-size: var(--digitv2-fontSize-heading-s-tablet);
+      }
+  
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        font-size: var(--digitv2-fontSize-heading-s-desktop);
+      }
+  
+    }
 
   &__text-secondary {
-    color: #505A5F;
+      color: #0B4B66;
+      font-family: var(--digitv2-fontFamily-sans);
+      font-style: var(--digitv2-fontStyle-normal);
+      font-weight: var(--digitv2-fontWeight-bold);
+      color: #0b4b66;
+  
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        font-size: var(--digitv2-fontSize-heading-s-mobile);
+      }
+  
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        font-size: var(--digitv2-fontSize-heading-s-tablet);
+      }
+  
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        font-size: var(--digitv2-fontSize-heading-s-desktop);
+      }
   }
 
   // "Then show" row
@@ -968,7 +1090,7 @@
 
   &__conditions-wrapper {
     display: grid;
-    gap: 1rem;
+    gap: 24px;
   }
 
   // Joiner container between conditions in editor
@@ -986,7 +1108,7 @@
     border-radius: 4px;
     padding: 0.75rem;
     display: grid;
-    gap: 0.5rem;
+    gap: 1.5rem;
   }
 
   // Field row layout
@@ -1044,11 +1166,6 @@
     font-weight: 500;
   }
 
-  // Add condition button wrapper
-  &__add-condition-wrapper {
-    margin-top: 0.5rem;
-  }
-
   // Target page container
   &__target-page {
     min-width: 260px;
@@ -1056,7 +1173,7 @@
 
   // Divider styling
   &__divider {
-    margin: 1rem 0;
+    margin:0rem;
   }
 
   // Error message box
@@ -1186,3 +1303,76 @@
 .digit-label-field-pair .digit-field {
   width: 100%;
 }
+
+.rule-summary__tag {
+  margin: 0 0.25rem;
+  display: inline-flex;
+  border-radius: 12px;
+  gap: 10px;
+  padding-top: 4px;
+  padding-right: 12px;
+  padding-bottom: 4px;
+  padding-left: 12px;
+  background: #DEEFFF;
+
+  .digit-tag-text {
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 16px;
+    color: #0B4B66;
+  }
+
+  &.final {
+    border-radius: 6px;
+    background-color: #EFF8FF;
+  }
+}
+
+.digit-popup-icon-header-container{
+  display: flex;
+  align-items: center;
+}
+.rule-summary__condition-row {
+  .digit-tag-wrapper {
+    &.rule-summary__tag {
+      margin: 0 0.25rem;
+      display: inline-flex;
+      border-radius: 12px;
+      gap: 10px;
+      padding-top: 4px;
+      padding-right: 12px;
+      padding-bottom: 4px;
+      padding-left: 12px;
+      background: #DEEFFF;
+
+      .digit-tag-text {
+        font-family: "Roboto";
+        font-weight: 700;
+        font-style: Bold;
+        font-size: 16px;
+        color: #0B4B66;
+      }
+
+      &.final{
+        border-radius: 6px;
+        background-color: #EFF8FF;
+      }
+
+    }
+
+    &.rule-summary__joiner {
+      background: #FFFDE7;
+
+      .digit-tag-text {
+        color: #9E5F00;
+        font-family: "Roboto";
+        font-weight: 400;
+        font-style: Regular;
+        font-size: 16px;
+
+      }
+    }
+  }
+}
+

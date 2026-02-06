@@ -1056,18 +1056,18 @@ function NewDependentFieldWrapper({ t }) {
             elements.push(
                 <div key={`cond-${idx}`} className="rule-summary__condition-row">
                     <span className="rule-summary__text-primary">{ifLabel}</span>
-                    <Tag label={leftFieldLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                    <Tag label={leftFieldLabel} type="monochrome" className="rule-summary__tag" stroke={false} />
                     <span className="rule-summary__text-secondary">{onPageLabel}</span>
-                    <Tag label={leftPageLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                    <Tag label={leftPageLabel} type="monochrome" className="rule-summary__tag" stroke={false} />
                     <span className="rule-summary__text-secondary">{getOperatorDisplay(cond.comparisonType?.code)}</span>
                     {cond.isFieldComparison && cond.rightPage && cond.rightField ? (
                         <>
-                            <Tag label={getFieldLabel(cond.rightPage, cond.rightField)} type="monochrome" className="rule-summary__tag" stroke={true} />
+                            <Tag label={getFieldLabel(cond.rightPage, cond.rightField)} type="monochrome" className="rule-summary__tag" stroke={false} />
                             <span className="rule-summary__text-secondary">{onPageLabel}</span>
-                            <Tag label={getPageLabel(cond.rightPage)} type="monochrome" className="rule-summary__tag" stroke={true} />
+                            <Tag label={getPageLabel(cond.rightPage)} type="monochrome" className="rule-summary__tag" stroke={false} />
                         </>
                     ) : (
-                        <Tag label={valueLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                        <Tag label={valueLabel} type="monochrome" className="rule-summary__tag" stroke={false} />
                     )}
                 </div>
             );
@@ -1227,6 +1227,9 @@ function NewDependentFieldWrapper({ t }) {
                 className="digit-popup--fullscreen popup-editor"
                 type={"default"}
                 heading={addDisplayLogicLabel}
+                showIcon={true}
+                customIcon={"AddIcon"}
+                iconFill={"#C84C0E"}
                 children={[
                   <div
                     key="single-rule-editor"
@@ -1321,20 +1324,14 @@ function NewDependentFieldWrapper({ t }) {
                                   {ifLabel}
                                 </span>
                                 {draftRule.conds.length > 1 && (
-                                  <div
-                                    className="dependent-field-popup__delete-condition"
+                                  <Button
+                                    variation="teritiary"
+                                    icon={"Delete"}
+                                    size={"small"}
+                                    label={deleteConditionLabel}
+                                    title={deleteConditionLabel}
                                     onClick={() => removeSubCondition(idx)}
-                                    role="button"
-                                  >
-                                    <SVG.Delete
-                                      fill={"#C84C0E"}
-                                      width={"1rem"}
-                                      height={"1rem"}
-                                    />
-                                    <span className="dependent-field-popup__delete-condition-text">
-                                      {deleteConditionLabel}
-                                    </span>
-                                  </div>
+                                  />
                                 )}
                               </div>
 
@@ -1350,6 +1347,7 @@ function NewDependentFieldWrapper({ t }) {
                                   </p>
                                   <Dropdown
                                     showToolTip={true}
+                                    placeholder={"CHOOSE_A_PAGE"}
                                     option={pageOptions}
                                     optionKey="displayName"
                                     optionCardStyles={{
@@ -1394,6 +1392,7 @@ function NewDependentFieldWrapper({ t }) {
                                   </p>
                                   <Dropdown
                                     showToolTip={true}
+                                    placeholder={"CHOOSE_A_FIELD"}
                                     option={
                                       cond.leftPage ? leftFieldOptions : []
                                     }
@@ -1462,6 +1461,7 @@ function NewDependentFieldWrapper({ t }) {
                                 </p>
                                 <Dropdown
                                   showToolTip={true}
+                                  placeholder={"CHOOSE_AN_OPERATOR_FOR_COMPARISION"}
                                   option={operatorOptions}
                                   optionKey="name"
                                   optionCardStyles={{
@@ -1504,12 +1504,11 @@ function NewDependentFieldWrapper({ t }) {
                                     }}
                                   >
                                     <div className="dependent-field-popup__radio-card-header">
-                                      <div
-                                        className={`dependent-field-popup__radio-circle${
-                                          !cond.isFieldComparison
-                                            ? " dependent-field-popup__radio-circle--selected"
-                                            : ""
-                                        }`}
+                                      <input
+                                        type="radio"
+                                        className="dependent-field-popup__radio-input"
+                                        checked={!cond.isFieldComparison}
+                                        readOnly
                                       />
                                       <span className="dependent-field-popup__radio-card-title">
                                         {enterValueLabel}
@@ -1544,12 +1543,11 @@ function NewDependentFieldWrapper({ t }) {
                                     }}
                                   >
                                     <div className="dependent-field-popup__radio-card-header">
-                                      <div
-                                        className={`dependent-field-popup__radio-circle${
-                                          cond.isFieldComparison
-                                            ? " dependent-field-popup__radio-circle--selected"
-                                            : ""
-                                        }`}
+                                      <input
+                                        type="radio"
+                                        className="dependent-field-popup__radio-input"
+                                        checked={cond.isFieldComparison}
+                                        readOnly
                                       />
                                       <span className="dependent-field-popup__radio-card-title">
                                         {useAnotherFieldLabel}
@@ -1577,6 +1575,7 @@ function NewDependentFieldWrapper({ t }) {
                                       showToolTip={true}
                                       option={pageOptions}
                                       optionKey="displayName"
+                                      placeholder={"CHOOSE_A_PAGE"}
                                       name={`right-page-${idx}`}
                                       t={t}
                                       optionCardStyles={{
@@ -1613,6 +1612,7 @@ function NewDependentFieldWrapper({ t }) {
                                     </p>
                                     <Dropdown
                                       showToolTip={true}
+                                      placeholder={"CHOOSE_A_FIELD"}
                                       option={
                                         cond.rightPage ? rightFieldOptions : []
                                       }
@@ -1860,7 +1860,7 @@ function NewDependentFieldWrapper({ t }) {
 
                           {/* Then show row */}
                           <div className="rule-summary__then-show">
-                            <span className="rule-summary__then-show-label">
+                            <span className="rule-summary__text-primary">
                               {thenShowLabel}
                             </span>
                             <Tag
@@ -1870,16 +1870,11 @@ function NewDependentFieldWrapper({ t }) {
                                 "Field"
                               }
                               type="monochrome"
-                              className="rule-summary__tag"
-                              stroke={true}
+                              className="rule-summary__tag final"
+                              stroke={false}
                             />
                           </div>
                         </div>
-                      )}
-
-                      {/* Divider after Rule Summary */}
-                      {generateConditionSummary(draftRule?.conds) && (
-                        <Divider className="dependent-field-wrapper__divider" />
                       )}
 
                       {/* show any form-level error here */}

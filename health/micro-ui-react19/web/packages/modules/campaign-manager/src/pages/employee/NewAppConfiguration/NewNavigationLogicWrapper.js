@@ -385,9 +385,9 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             elements.push(
                 <div key={`cond-${idx}`} className="rule-summary__condition-row">
                     <span className="rule-summary__text-primary">{ifLabel}</span>
-                    <Tag label={fieldLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                    <Tag label={fieldLabel} type="monochrome" className="rule-summary__tag" stroke={false} />
                     <span className="rule-summary__text-secondary">{getOperatorDisplay(cond.comparisonType?.code)}</span>
-                    <Tag label={valueLabel} type="monochrome" className="rule-summary__tag" stroke={true} />
+                    <Tag label={valueLabel} type="monochrome" className="rule-summary__tag" stroke={false} />
                 </div>
             );
         });
@@ -1319,7 +1319,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     label={getTargetPageLabel(rule.targetPage.code)}
                                                                     type="monochrome"
                                                                     className="rule-summary__tag"
-                                                                    stroke={true}
+                                                                    stroke={false}
                                                                 />
                                                             </div>
                                                         )}
