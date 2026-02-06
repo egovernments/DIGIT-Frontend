@@ -115,7 +115,7 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
                 }
               };
             }
-          else {
+            else {
               // Navigation target exists but not in conditionalNavigateTo - set as NOT_CONFIGURED
               return {
                 ...actionItem,
@@ -159,25 +159,39 @@ const transformTemplate = (screenData) => {
 
         ...(field?.primaryAction && field?.primaryActionLabel
           ? {
-              primaryAction: {
-                ...field.primaryAction,
-                label: field.primaryActionLabel,
-              },
-            }
+            primaryAction: {
+              ...field.primaryAction,
+              label: field.primaryActionLabel,
+            },
+          }
           : {}),
 
         ...(field?.secondaryAction && field?.secondaryActionLabel
           ? {
-              secondaryAction: {
-                ...field.secondaryAction,
-                label: field.secondaryActionLabel,
-              },
-            }
+            secondaryAction: {
+              ...field.secondaryAction,
+              label: field.secondaryActionLabel,
+            },
+          }
           : {}),
       };
     }
 
-    if (field.format === "scanner" || field.format === "qrscanner") {
+    if (field?.format?.toLowerCase() === "searchbar") {
+      const validations = [];
+      validations.push({
+        type: "minSearchChars",
+        value: field?.minSearchChars,
+        message: field["minSearchChars.message"],
+      });
+
+      return {
+        ...field,
+        validations,
+      }
+    }
+
+    if (field?.format?.toLowerCase() === "scanner" || field?.format?.toLowerCase() === "qrscanner") {
       const validations = [];
 
       validations.push({
@@ -236,7 +250,7 @@ const transformTemplate = (screenData) => {
   if (screenData.navigateTo !== undefined) template.navigateTo = screenData.navigateTo;
   if (screenData.initActions) template.initActions = screenData.initActions;
   if (screenData.wrapperConfig) template.wrapperConfig = screenData.wrapperConfig;
-  if(screenData.scrollListener) template.scrollListener = screenData.scrollListener;
+  if (screenData.scrollListener) template.scrollListener = screenData.scrollListener;
 
   // Default screenType to TEMPLATE if not set
   if (!template.screenType) {
@@ -254,7 +268,7 @@ const transformFooter = (footer) => {
   if (!footer || !Array.isArray(footer)) return [];
 
   const updatedFooter = footer.map((foo) => {
-    if (foo.format === "scanner" || foo.format === "qrscanner") {
+    if (foo.format?.toLowerCase() === "scanner" || foo.format?.toLowerCase() === "qrscanner") {
       const validations = [];
 
       validations.push({
@@ -293,6 +307,7 @@ const transformFooter = (footer) => {
 const transformFormPage = (pageData) => {
   const page = {
     ...pageData,
+    body: null,
     page: pageData.page,
     type: pageData.type,
     label: pageData.heading,
@@ -412,6 +427,7 @@ const buildValidations = (field) => {
     "maxAge",
     "startDate",
     "endDate",
+    "pattern"
   ];
 
   // Handle required validation
@@ -474,12 +490,20 @@ const buildValidations = (field) => {
     });
   }
 
-    if (field.minSearchChars) {
+  if (field.minSearchChars) {
     validations.push({
       type: "minSearchChars",
       value: field?.minSearchChars,
       message: field["minSearchChars.message"],
     });
+  }
+
+  if (field.pattern) {
+    validations.push({
+      type: "pattern",
+      value: field?.pattern,
+      message: field["pattern.message"],
+    })
   }
 
   // Handle grouped validations (range, lengthRange, dateRange)

@@ -2,25 +2,33 @@ import { Row } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DetailsTable from "./DetailsTable";
-import { Button, AlertCard , Card } from "@egovernments/digit-ui-components";
+import { Button, AlertCard, Card, Toggle } from "@egovernments/digit-ui-components";
 
 const Tabs = ({ deliveryData, onTabChange }) => {
-  // const { campaignData, dispatchCampaignData } = useContext(CycleContext);
   const { t } = useTranslation();
 
+  const activeItem = deliveryData?.find((d) => d.active === true);
+  const activeIndex = activeItem ? deliveryData.indexOf(activeItem) : 0;
+
+  const toggleOptions = deliveryData?.map((delivery, index) => ({
+    code: String(index),
+    name: `${t("CAMPAIGN_DELIVERY")} ${index + 1}`,
+  })) || [];
+
   return (
-    <div style={{display: "flex" }}>
-      {deliveryData?.map((_, index) => (
-        <button
-          key={index}
-          type="button"
-          className={`campaign-sub-tab-head ${_.active === true ? "active" : ""} hover`}
-          onClick={() => onTabChange(_.deliveryIndex, index)}
-        >
-          {t(`CAMPAIGN_DELIVERY`)} {index + 1}
-        </button>
-      ))}
-    </div>
+    <Toggle
+      options={toggleOptions}
+      optionsKey="name"
+      selectedOption={String(activeIndex)}
+      onSelect={(code) => {
+        const idx = Number(code);
+        const delivery = deliveryData[idx];
+        if (delivery) {
+          onTabChange(delivery.deliveryIndex, idx);
+        }
+      }}
+      style={{}}
+    />
   );
 };
 
@@ -65,37 +73,37 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
           additionalElements={[<Button className={"error alert-card-error-button"} label={i?.button} title={i?.button} variation="secondary" onClick={i.onClick} />]}
         />
       ))}
-      <div className="employee-data-table ">
-        {data?.startDate && (
-          <Row
-            key={t("startDate")}
-            label={`${t("Start Date")}`}
-            text={data?.startDate}
-            className="border-none"
-            rowContainerStyle={{ display: "flex" }}
-            labelStyle={{ fontWeight: "500" }}
-          />
-        )}
-        {data?.endDate && (
-          <Row
-            key={t("endDate")}
-            label={`${t("End Date")}`}
-            text={data?.endDate}
-            className="border-none"
-            rowContainerStyle={{ display: "flex" }}
-            labelStyle={{ fontWeight: "500" }}
-          />
-        )}
-      </div>
-
-      <hr style={{ border: "1px solid #d6d5d4" ,marginTop:"-1.5rem"}} />
+      {(data?.startDate || data?.endDate) && (
+        <div className="employee-data-table ">
+          {data?.startDate && (
+            <Row
+              key={t("startDate")}
+              label={`${t("Start Date")}`}
+              text={data?.startDate}
+              className="border-none"
+              rowContainerStyle={{ display: "flex" }}
+              labelStyle={{ fontWeight: "500" }}
+            />
+          )}
+          {data?.endDate && (
+            <Row
+              key={t("endDate")}
+              label={`${t("End Date")}`}
+              text={data?.endDate}
+              className="border-none"
+              rowContainerStyle={{ display: "flex" }}
+              labelStyle={{ fontWeight: "500" }}
+            />
+          )}
+        </div>
+      )}
 
       <Tabs deliveryData={deliveryData} tabCount={deliveryData?.length} activeTab={activeTab} onTabChange={handleTabChange} />
 
       {deliveryData?.find((i) => i?.active === true)
         ?.deliveryRules?.map((rules, ruleIndex) => {
           return (
-            <Card className="delivery-preview-card delivery-preview-screen" style={{marginBottom:"0rem"}}>
+            <Card className="delivery-preview-card delivery-preview-screen" style={{marginBottom:"0rem !important"}}>
               {rules?.attributes?.length > 0 && (
                 <DetailsTable
                   className="campaign-attribute-table"

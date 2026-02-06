@@ -91,11 +91,12 @@ const PopupConfigEditor = ({ selectedField }) => {
         {(hasBodyLabels || hasConfigurableBodyItems) && (
           <>
             <div
-              style={{
-                fontWeight: "600",
-                fontSize: "14px",
-                marginTop: "8px",
-              }}
+              // style={{
+              //   fontWeight: "600",
+              //   fontSize: "14px",
+              //   marginTop: "8px",
+              // }}
+              className="app-config-group-heading"
             >
               {t("POPUP_BODY_FIELDS")}
             </div>
@@ -151,11 +152,12 @@ const PopupConfigEditor = ({ selectedField }) => {
         {hasFooterLabels && (
           <>
             <div
-              style={{
-                fontWeight: "600",
-                fontSize: "14px",
-                marginTop: "8px",
-              }}
+              // style={{
+              //   fontWeight: "600",
+              //   fontSize: "14px",
+              //   marginTop: "8px",
+              // }}
+              className="app-config-group-heading"
             >
               {t("POPUP_FOOTER_ACTIONS_LABELS")}
             </div>

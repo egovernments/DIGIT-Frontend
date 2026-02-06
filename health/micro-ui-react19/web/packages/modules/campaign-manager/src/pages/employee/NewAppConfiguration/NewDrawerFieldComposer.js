@@ -55,6 +55,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const [localToggle, setLocalToggle] = useState(false);
 
   const debounceTimerRef = useRef(null);
+  // Ref to always have latest local value (prevents stale closure in blur handler)
+  const localValueRef = useRef("");
+  // Ref to track if user is actively editing (prevents useEffect from overwriting local value)
+  const isEditingRef = useRef(false);
 
   // Ref to track latest selectedField for use in debounced callbacks (prevents stale closures)
   const selectedFieldRef = useRef(selectedField);
@@ -170,11 +174,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
   // Initialize local value when field changes
   useEffect(() => {
+    // Don't overwrite local value while user is actively editing
+    if (isEditingRef.current) return;
     if (panelItem.fieldType === "text") {
-      setLocalValue(localizedFieldValue || "");
+      const newVal = localizedFieldValue || "";
+      setLocalValue(newVal);
+      localValueRef.current = newVal;
     } else if (panelItem.fieldType === "number") {
       const value = getFieldValue();
-      setLocalValue(value !== undefined && value !== null && value !== "" ? value : "");
+      const newVal = value !== undefined && value !== null && value !== "" ? value : "";
+      setLocalValue(newVal);
+      localValueRef.current = newVal;
     }
   }, [panelItem.fieldType, localizedFieldValue, getFieldValue]);
 
@@ -342,33 +352,101 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     [panelItem.bindTo, onFieldChange]
   );
 
-  // Force dispatch on blur
+  // Force dispatch immediately on blur (bypasses debounce)
   const handleBlur = useCallback(() => {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
 
-    // Immediately dispatch the current value
+    // Use refs for latest values (prevents stale closure when blur fires right after onChange)
+    const currentLocalValue = localValueRef.current;
+    const currentSelectedField = selectedFieldRef.current;
+    const bindTo = panelItem.bindTo;
+
+    // Dispatch immediately to Redux (not debounced)
     if (panelItem.fieldType === "text") {
-      // If isLocalisable is false, save directly without localization
-      // If undefined or true, use localization
       if (panelItem?.isLocalisable === false) {
-        handleFieldChange(localValue);
+        // Non-localizable text: save raw value directly
+        if (bindTo.includes(".")) {
+          const keys = bindTo.split(".");
+          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          let current = newField;
+          for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]]) current[keys[i]] = {};
+            current = current[keys[i]];
+          }
+          current[keys[keys.length - 1]] = currentLocalValue;
+          onFieldChange(newField);
+        } else {
+          onFieldChange({ ...currentSelectedField, [bindTo]: currentLocalValue });
+        }
       } else {
-        handleFieldChangeWithLoc(fieldValue, localValue);
+        // Localizable text: handle localization code
+        const currentFieldValue = getFieldValueByPath(currentSelectedField, bindTo, panelItem.defaultValue || "");
+        let finalValueToSave;
+        if (currentFieldValue) {
+          dispatch(
+            updateLocalizationEntry({
+              code: currentFieldValue,
+              locale: currentLocale || "en_IN",
+              message: currentLocalValue,
+            })
+          );
+          finalValueToSave = currentFieldValue;
+        } else if (currentLocalValue && typeof currentLocalValue === "string" && currentLocalValue.trim() !== "") {
+          const timestamp = Date.now();
+          const fieldName = bindTo.replace(/\./g, "_").toUpperCase();
+          const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
+          dispatch(
+            updateLocalizationEntry({
+              code: uniqueCode,
+              locale: currentLocale || "en_IN",
+              message: currentLocalValue,
+            })
+          );
+          finalValueToSave = uniqueCode;
+        }
+        if (bindTo.includes(".")) {
+          const keys = bindTo.split(".");
+          const newField = JSON.parse(JSON.stringify(currentSelectedField));
+          let current = newField;
+          for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]]) current[keys[i]] = {};
+            current = current[keys[i]];
+          }
+          current[keys[keys.length - 1]] = finalValueToSave;
+          onFieldChange(newField);
+        } else {
+          onFieldChange({ ...currentSelectedField, [bindTo]: finalValueToSave });
+        }
       }
     } else if (panelItem.fieldType === "number") {
-      handleNumberChange(localValue);
+      // Number: save value directly
+      const numValue = currentLocalValue === "" || currentLocalValue === null || currentLocalValue === undefined ? null : currentLocalValue;
+      if (bindTo.includes(".")) {
+        const keys = bindTo.split(".");
+        const newField = JSON.parse(JSON.stringify(currentSelectedField));
+        let current = newField;
+        for (let i = 0; i < keys.length - 1; i++) {
+          if (!current[keys[i]]) current[keys[i]] = {};
+          current = current[keys[i]];
+        }
+        current[keys[keys.length - 1]] = numValue;
+        onFieldChange(newField);
+      } else {
+        onFieldChange({ ...currentSelectedField, [bindTo]: numValue });
+      }
     }
+    isEditingRef.current = false;
   }, [
     panelItem.fieldType,
     panelItem?.isLocalisable,
-    fieldValue,
-    localValue,
-    handleFieldChangeWithLoc,
-    handleNumberChange,
-    handleFieldChange,
+    panelItem.bindTo,
+    panelItem.defaultValue,
+    dispatch,
+    currentLocale,
+    onFieldChange,
   ]);
 
   const renderMainField = () => {
@@ -453,7 +531,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 shapeOnOff
                 disabled={isDisabled}
                 isLabelFirst={true}
-                className={"digit-sidepanel-switch-wrap"}
+                className={"digit-sidepanel-switch-wrap sidepanel"}
               />
             </div>
             {/* Render Conditional Fields based on condition property */}
@@ -478,7 +556,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
+              isEditingRef.current = true;
               setLocalValue(event.target.value);
+              localValueRef.current = event.target.value;
               // If isLocalisable is false, save directly without localization
               // If undefined or true, use localization
               if (panelItem?.isLocalisable === false) {
@@ -509,10 +589,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
+              isEditingRef.current = true;
               const inputValue = event.target.value;
               // Allow empty string to clear the field
               if (inputValue === "" || inputValue === null || inputValue === undefined) {
                 setLocalValue("");
+                localValueRef.current = "";
                 handleNumberChange(null);
                 return;
               }
@@ -523,6 +605,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               if (!isValidFormat) {
                 // Clear the field for invalid format
                 setLocalValue("");
+                localValueRef.current = "";
                 handleNumberChange(null);
                 return;
               }
@@ -534,14 +617,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 if (shouldPreventNegative && value < 0) {
                   // Clear the field for negative values in length/range fields
                   setLocalValue("");
+                  localValueRef.current = "";
                   handleNumberChange(null);
                   return;
                 }
                 setLocalValue(value);
+                localValueRef.current = value;
                 handleNumberChange(value);
               } else {
                 // Clear the field for NaN
                 setLocalValue("");
+                localValueRef.current = "";
                 handleNumberChange(null);
               }
             }}
@@ -662,11 +748,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         return (
           <>
             <div
-              style={{
-                fontWeight: "600",
-                marginBottom: "12px",
-                fontSize: "14px",
-              }}
+              className={"app-config-group-heading"}
             >
               {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             </div>
@@ -1256,6 +1338,22 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
 
   const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue === true ? "" : translatedValue || "");
   const conditionalDebounceRef = useRef(null);
+  // Ref to track if user is actively editing (prevents useEffect from overwriting local value)
+  const isEditingRef = useRef(false);
+  // Ref to always have latest local value (prevents stale closure in blur handler)
+  const localValueRef = useRef(conditionalLocalValue);
+  // Ref to always have latest selectedField (prevents stale closure in debounced callbacks)
+  const selectedFieldRef = useRef(selectedField);
+  // Ref to always have latest fieldValue
+  const fieldValueRef = useRef(fieldValue);
+
+  // Keep refs in sync
+  useEffect(() => {
+    selectedFieldRef.current = selectedField;
+  }, [selectedField]);
+  useEffect(() => {
+    fieldValueRef.current = fieldValue;
+  }, [fieldValue]);
 
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -1267,7 +1365,11 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   }, []);
 
   useEffect(() => {
-    setConditionalLocalValue(translatedValue === true ? "" : translatedValue || "");
+    // Don't overwrite local value while user is actively editing
+    if (isEditingRef.current) return;
+    const newVal = translatedValue === true ? "" : translatedValue || "";
+    setConditionalLocalValue(newVal);
+    localValueRef.current = newVal;
   }, [translatedValue]);
 
   const handleConditionalChange = useCallback(
@@ -1277,6 +1379,9 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       }
 
       conditionalDebounceRef.current = setTimeout(() => {
+        // Use refs to get latest values (prevents stale closures)
+        const currentSelectedField = selectedFieldRef.current;
+        const currentFieldValue = fieldValueRef.current;
         let finalValueToSave;
 
         // Skip localization for prefixText and suffixText
@@ -1284,16 +1389,16 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
           finalValueToSave = value; // Save the raw value directly
         } else {
           // Handle localization
-          if (fieldValue && typeof fieldValue === "string") {
+          if (currentFieldValue && typeof currentFieldValue === "string") {
             // If a code already exists (and it's a string, not a boolean), update the localization entry
             dispatch(
               updateLocalizationEntry({
-                code: fieldValue,
+                code: currentFieldValue,
                 locale: currentLocale || "en_IN",
                 message: value,
               })
             );
-            finalValueToSave = fieldValue; // Save the code instead of the value
+            finalValueToSave = currentFieldValue; // Save the code instead of the value
           } else if (value && typeof value === "string" && value.trim() !== "") {
             // Create a unique code if no code is provided
             const timestamp = Date.now();
@@ -1312,12 +1417,12 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
           }
         }
 
-        const newField = { ...selectedField };
+        const newField = { ...currentSelectedField };
         newField[cField.bindTo] = finalValueToSave;
         onFieldChange(newField);
       }, 800);
     },
-    [selectedField, cField.bindTo, onFieldChange, fieldValue, dispatch, currentLocale, shouldSkipLocalization]
+    [cField.bindTo, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]
   );
 
   const handleConditionalBlur = useCallback(() => {
@@ -1326,23 +1431,28 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       conditionalDebounceRef.current = null;
     }
 
+    // Use refs for latest values (prevents stale closure when blur fires right after onChange)
+    const currentLocalValue = localValueRef.current;
+    const currentSelectedField = selectedFieldRef.current;
+    const currentFieldValue = fieldValueRef.current;
+
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
     // Skip localization for prefixText and suffixText
     if (shouldSkipLocalization) {
-      finalValueToSave = conditionalLocalValue; // Save the raw value directly
+      finalValueToSave = currentLocalValue; // Save the raw value directly
     } else {
-      if (fieldValue && typeof fieldValue === "string") {
+      if (currentFieldValue && typeof currentFieldValue === "string") {
         dispatch(
           updateLocalizationEntry({
-            code: fieldValue,
+            code: currentFieldValue,
             locale: currentLocale || "en_IN",
-            message: conditionalLocalValue,
+            message: currentLocalValue,
           })
         );
-        finalValueToSave = fieldValue;
-      } else if (conditionalLocalValue && typeof conditionalLocalValue === "string" && conditionalLocalValue.trim() !== "") {
+        finalValueToSave = currentFieldValue;
+      } else if (currentLocalValue && typeof currentLocalValue === "string" && currentLocalValue.trim() !== "") {
         const timestamp = Date.now();
         const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
         const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
@@ -1351,21 +1461,24 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
           updateLocalizationEntry({
             code: uniqueCode,
             locale: currentLocale || "en_IN",
-            message: conditionalLocalValue,
+            message: currentLocalValue,
           })
         );
         finalValueToSave = uniqueCode;
       }
     }
 
-    const newField = { ...selectedField };
+    const newField = { ...currentSelectedField };
     newField[cField.bindTo] = finalValueToSave;
     onFieldChange(newField);
-  }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange, fieldValue, dispatch, currentLocale, shouldSkipLocalization]);
+    isEditingRef.current = false;
+  }, [cField.bindTo, onFieldChange, dispatch, currentLocale, shouldSkipLocalization]);
 
   // Check if this is a prefix field for mobileNumber : should only accept numbers
   const isMobileNumberPrefix = selectedField?.format === "mobileNumber" && cField.bindTo === "prefixText";
-  const maxPrefixLength = 5; // Maximum length for mobile number prefix to prevent UI breaking
+  // Check if this is a prefix or suffix field for integer/number type
+  const isIntegerPrefixOrSuffix = selectedField?.type === "integer" && (cField.bindTo === "prefixText" || cField.bindTo === "suffixText");
+  const maxPrefixSuffixLength = 5; // Maximum length for prefix/suffix to prevent UI breaking
 
   switch (cField.type) {
     case "text":
@@ -1385,17 +1498,26 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
                 // Remove any non-numeric characters
                 newValue = newValue.replace(/[^0-9]/g, "");
                 // Limit the length
-                if (newValue.length > maxPrefixLength) {
-                  newValue = newValue.slice(0, maxPrefixLength);
+                if (newValue.length > maxPrefixSuffixLength) {
+                  newValue = newValue.slice(0, maxPrefixSuffixLength);
                 }
               }
 
+              // For number type prefix/suffix, limit length
+              if (isIntegerPrefixOrSuffix) {
+                if (newValue.length > maxPrefixSuffixLength) {
+                  newValue = newValue.slice(0, maxPrefixSuffixLength);
+                }
+              }
+
+              isEditingRef.current = true;
               setConditionalLocalValue(newValue);
+              localValueRef.current = newValue;
               handleConditionalChange(newValue);
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...(isMobileNumberPrefix && { maxLength: maxPrefixLength }) }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field", validation: cField.validation,...((isMobileNumberPrefix || isIntegerPrefixOrSuffix) && { maxLength: maxPrefixSuffixLength }) }}
           />
         </div>
       );

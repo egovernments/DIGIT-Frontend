@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader,TextArea } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const CreateChecklist = () => {
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
-  let module = searchParams.get("module");
+  let module = `hcm-checklist-${campaignNumber}`;
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
   const [config, setConfig] = useState(null);
@@ -50,12 +50,13 @@ const CreateChecklist = () => {
 
   const [showLocalisationPopup, setShowLocalisationPopup] = useState(false);
   const [localisationData, setLocalisationData] = useState([]);
+  const [savedTranslations, setSavedTranslations] = useState([]);
+  const localisationRef = useRef(null);
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
   const currentLocales = languages?.map((locale) => locale.value);
 
   const presentLocale = Digit?.SessionStorage.get("locale") || locale;
-  module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
   let processedData = [];
@@ -239,13 +240,13 @@ const CreateChecklist = () => {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-        module: "hcm-checklist",
+        module: module,
       },
       {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || "",
-        module: "hcm-checklist",
+        module: module,
       }
     );
 
@@ -279,7 +280,7 @@ const CreateChecklist = () => {
 
       codes[question.id] = code;
 
-      let moduleChecklist = "hcm-checklist";
+      let moduleChecklist = module;
       let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
       let roleTemp = LocalisationCodeUpdate(role);
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
@@ -539,9 +540,9 @@ const CreateChecklist = () => {
           state: {
             message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
             preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-            // actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+            actionLabel: "CHECKLIST_SUCCESS_RESPONSE",
             actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
-            secondaryActionLabel: "VIEW_DETAILS",
+            secondaryActionLabel: "VIEW_DETAILS_CHECKLIST_RESPONSE",
             secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
           },
         });
@@ -607,6 +608,22 @@ const CreateChecklist = () => {
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
                 onClick={popShow}
               />
+              {enabledModules && enabledModules.length > 1 && (
+                <Button
+                  variation="secondary"
+                  label={t("ADD_TRANSLATIONS")}
+                  title={t("ADD_TRANSLATIONS")}
+                  className={"hover"}
+                  style={{ marginTop: "2rem", marginBottom: "2rem" }}
+                  onClick={() => {
+                    const processed = organizeQuestions(tempFormData);
+                    const { local: generatedLocal } = generateCodes(processed);
+                    const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
+                    setLocalisationData(currentLocalisationData);
+                    setShowLocalisationPopup(true);
+                  }}
+                />
+              )}
             </div>
           </div>
           {showPopUp && (
@@ -639,16 +656,8 @@ const CreateChecklist = () => {
                   label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
                   title={t("CONFIRM_CHECKLIST_CONFIGURATION")}
                   onClick={() => {
-                    const processed = organizeQuestions(tempFormData);
-                    const { local: generatedLocal } = generateCodes(processed);
-                    const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
-                    setLocalisationData(currentLocalisationData);
-                    if (enabledModules && enabledModules.length > 1) {
-                      setShowLocalisationPopup(true);
-                      setShowPopUp(false);
-                    } else {
-                      onSubmit(null, 1, tempFormData, []);
-                    }
+                    onSubmit(null, 1, tempFormData, savedTranslations);
+                    setShowPopUp(false);
                   }}
                 />,
               ]}
@@ -680,30 +689,33 @@ const CreateChecklist = () => {
               <div style={{ width: "20%", fontWeight: "500"}}>{t("NAME_OF_CHECKLIST")}</div>
               <div className="digit-field" style={{width:"80%"}}>
                 <TextInput
-                disabled={true}
-                className="tetxinput-example"
-                type={"text"}
-                name={t("NAME_OF_CHECKLIST")}
-                // value={`${checklistTypeLocal} ${roleLocal}`}
-                value={`${clTranslated} ${rlTranslated}`}
-                // onChange={(event) => addChecklistName(event.target.value)}
-                placeholder={"Checklist Name"}
-                textInputStyle={{width:"80%"}}
-              />
+                  // disabled={true}
+                  className="tetxinput-example checklist-create"
+                  type={"text"}
+                  name={t("NAME_OF_CHECKLIST")}
+                  // value={`${checklistTypeLocal} ${roleLocal}`}
+                  value={`${clTranslated} ${rlTranslated}`}
+                  // onChange={(event) => addChecklistName(event.target.value)}
+                  placeholder={"Checklist Name"}
+                  textInputStyle={{ width: "80%" }}
+                  nonEditable={true}
+                />
               </div>
             </div>
-            <div style={{ display: "flex" ,gap:"1.5rem"}}>
-              <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
-              <TextArea
-                disabled={false}
-                className="tetxinput-example"
-                // type={"text"}
-                name={t("CHECKLIST_HELP_TEXT")}
-                value={helpText}
-                // value={`${clTranslated} ${rlTranslated}`}
-                onChange={(event) => setHelpText(event.target.value)}
-                placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
-              />
+            <div style={{ display: "flex", gap: "1.5rem" }}>
+              <div style={{ width: "20%", fontWeight: "500" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+              <div className="digit-field" style={{ width: "80%" }}>
+                <TextArea
+                  disabled={false}
+                  className="tetxinput-example checklist-create"
+                  // type={"text"}
+                  name={t("CHECKLIST_HELP_TEXT")}
+                  value={helpText}
+                  // value={`${clTranslated} ${rlTranslated}`}
+                  onChange={(event) => setHelpText(event.target.value)}
+                  placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                />
+              </div>
             </div>
           </Card>
           <div style={{ height: "1.5rem" }}></div>
@@ -734,21 +746,67 @@ const CreateChecklist = () => {
           {showLocalisationPopup && (
             <PopUp
               className="localisation-popup-container"
+              type={"default"}
               heading={t("ADD_TRANSLATIONS")}
               onClose={() => setShowLocalisationPopup(false)}
               onOverlayClick={() => {
                 setShowLocalisationPopup(false);
               }}
+              footerChildren={[
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"secondary"}
+                  label={t("CANCEL")}
+                  title={t("CANCEL")}
+                  onClick={() => {
+                    setShowLocalisationPopup(false);
+                  }}
+                />,
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"primary"}
+                  label={t("SAVE_TRANSLATIONS")}
+                  title={t("SAVE_TRANSLATIONS")}
+                  onClick={async () => {
+                    const translations = localisationRef.current?.getFormattedTranslations() || [];
+                    if (translations.length === 0) {
+                      setShowLocalisationPopup(false);
+                      return;
+                    }
+                    try {
+                      const groupedByLocale = translations.reduce((acc, entry) => {
+                        acc[entry.locale] = acc[entry.locale] || [];
+                        acc[entry.locale].push(entry);
+                        return acc;
+                      }, {});
+                      for (const [localeCode, entries] of Object.entries(groupedByLocale)) {
+                        const result = await localisationMutateAsync(entries);
+                        if (!result.success) {
+                          setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+                          return;
+                        }
+                      }
+                      setSavedTranslations(translations);
+                      setShowLocalisationPopup(false);
+                      setShowToast({ label: "TRANSLATIONS_ADDED_SUCCESSFULLY" });
+                    } catch (error) {
+                      setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+                    }
+                  }}
+                />,
+              ]}
+              sortFooterChildren={true}
             >
               <LocalisationEditorPopup
+                ref={localisationRef}
                 locales={currentLocales.filter((local) => local !== presentLocale)}
                 languages={languages.filter((item) => item.value !== presentLocale)}
                 currentLocale={presentLocale}
                 localisationData={localisationData}
-                onSave={(translations) => {
-                  onSubmit(null, 1, tempFormData, translations);
-                }}
-                onClose={() => setShowLocalisationPopup(false)}
+                module={module}
+                tenantId={tenantId}
               />
             </PopUp>
           )}

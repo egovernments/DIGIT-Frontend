@@ -275,6 +275,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
   const [showQRPopUp, setShowQRPopUp] = useState(false);
+  const [showDeleteConfirmPopUp, setShowDeleteConfirmPopUp] = useState(false);
   const actionButtons = getActionButtons(
     rowData,
     tabData,
@@ -422,7 +423,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               key={"DeleteCampaign"}
               icon={"Delete"}
               label={t("CANCEL_CAMPAIGN")}
-              onClick={handleCancelClick}
+              onClick={() => setShowDeleteConfirmPopUp(true)}
               variation={"teritiary"}
               size={"medium"}
               title={t("CANCEL_CAMPAIGN")}
@@ -538,6 +539,34 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         ></PopUp>
       )}
       {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
+      {showDeleteConfirmPopUp && (
+        <PopUp
+          type={"alert"}
+          alertHeading={t("HCM_DELETE_CAMPAIGN_CONFIRM_HEADER")}
+          alertMessage={t("HCM_DELETE_CAMPAIGN_CONFIRM_MESSAGE", { campaignName: rowData?.campaignName, campaignNumber: rowData?.campaignNumber })}
+          onOverlayClick={() => setShowDeleteConfirmPopUp(false)}
+          onClose={() => setShowDeleteConfirmPopUp(false)}
+          footerChildren={[
+            <Button
+              key="cancel"
+              label={t("HCM_CANCEL")}
+              variation="secondary"
+              onClick={() => setShowDeleteConfirmPopUp(false)}
+              size="medium"
+            />,
+            <Button
+              key="confirm"
+              label={t("HCM_CONFIRM_DELETE")}
+              variation="primary"
+              onClick={() => {
+                setShowDeleteConfirmPopUp(false);
+                handleCancelClick();
+              }}
+              size="medium"
+            />,
+          ]}
+        />
+      )}
     </>
   );
 };

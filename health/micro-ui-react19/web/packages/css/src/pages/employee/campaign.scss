@@ -513,11 +513,21 @@
   }
 }
 .containerStyle {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
 }
+@media (max-width: 1200px) {
+  .containerStyle {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .containerStyle {
+    grid-template-columns: 1fr;
+  }
+}
+
 .cardStyle {
   display: flex;
   justify-content: center;
@@ -558,7 +568,6 @@
 
 .app-config-radio {
   display: flex;
-  margin-top: 1rem;
   flex-direction: column;
 }
 .create-campaign-card {
@@ -745,6 +754,28 @@
   }
 }
 
+.logic-rule-number {
+  word-break: break-word;
+  white-space: normal;
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-regular);
+  color: var(--digitv2-lightTheme-text-color-secondary);
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-body-xs-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-body-xs-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-body-xs-desktop);
+  }
+}
 .content-group {
   display: flex;
   align-items: center;
@@ -947,6 +978,9 @@
   gap: 1rem;
   padding: 1rem;
   box-shadow: 0rem 0.125rem 0.25rem 0rem #C84C0E26;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
 
   &:hover {
     transform: translateY(-12px);

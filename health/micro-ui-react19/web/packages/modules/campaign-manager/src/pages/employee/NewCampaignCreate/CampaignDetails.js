@@ -234,11 +234,11 @@ const CampaignDetails = () => {
     )
   );
 
-  // Check if all form configs have version > 1
+  // Check if at least one form config has version > 1
   const isFormConfigured = useMemo(() => {
     if (!formConfigData?.length > 0) return false;
     const formConfigs = formConfigData;
-    return formConfigs?.length > 0 && formConfigs?.filter((flow) => flow?.data?.active)?.every((item) => item?.data?.version > 1);
+    return formConfigs?.length > 0 && formConfigs?.filter((flow) => flow?.data?.active)?.some((item) => item?.data?.version > 1);
   }, [formConfigData]);
 
   // Using the checklist search hook to check if any checklists are configured
@@ -586,6 +586,7 @@ const CampaignDetails = () => {
       },
       {
         onSuccess: async (data) => {
+          sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", "1"); // Set to upcoming tab
           navigate(
             `/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`,
             {
@@ -593,10 +594,12 @@ const CampaignDetails = () => {
                 message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
                 text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
                 info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                actionLabel: "BACK_TO__CAMPAIGN_HOME",
-                actionLink: `/${window.contextPath}/employee`,
-                secondaryActionLabel: "GO_TO_MY_CAMPAIGNS",
-                secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+                secondaryActionLabel: "BACK_TO__CAMPAIGN_HOME",
+                secondaryActionLink: `/${window.contextPath}/employee`,
+                actionLabel: "GO_TO_MY_CAMPAIGNS",
+                actionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+                primaryActionVariation:"primary",
+                footerClassName:"campaign-response-screen"
               },
             }
           );

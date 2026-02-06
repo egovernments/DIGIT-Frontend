@@ -260,7 +260,7 @@ header {
   &.dateUpdateAction{
     span{
       button{
-          margin-left: 4rem;
+          margin-left: 3rem;
           min-width: 12.5rem;
       }
     }
@@ -269,5 +269,63 @@ header {
         margin-left: auto;
       }
     }
+  }
+}
+
+.digit-card-component{
+  &.digit-landing-page-card{
+    border-radius: 12px !important;
+  }
+}
+
+.digit-custom-checkbox{
+  &.digit-custom-checkbox-emp{
+    border-radius: 4px !important;
+  }
+}
+
+.digit-popup-wrapper{
+  border-radius: 12px !important;
+}
+
+.digit-multiselectdropodwn-custom-checkbox{
+  border-radius: 4px !important;
+}
+
+.digit-multiselectdropodwn-custom-checkbox-selectAll{
+  border-radius: 4px !important;
+}
+
+.page-padding-fix {
+  &.add-product-screen{
+    .label-field-pair {
+      margin-top: -16px !important;
+    }
+  }
+}
+
+.view-composer-header-section{
+  .card-sub-header{
+    font-family: "Roboto";
+  }
+}
+
+.digit-multiselectdropdown-server,
+.digit-dropdown-options-card {
+  border-radius: var(--digitv2-borderRadius-radius1);
+}
+
+.checklist-create {
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    max-width: 27.5rem;
+  }
+
+  @media (max-aspect-ratio: 9/16) {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    max-width: 37.5rem;
   }
 }

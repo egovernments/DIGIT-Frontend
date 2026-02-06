@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Paragraph, CardText, Tab, Toggle } from "@egovernments/digit-ui-components";
 import { useDeliveryRules } from "./useDeliveryRules";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import TagComponent from "../../../components/TagComponent";
@@ -10,25 +10,23 @@ const Tabs = React.memo(() => {
   const { campaignData, activeTabIndex, changeTab } = useDeliveryRules();
   const { t } = useTranslation();
 
-  const handleTabChange = (cycleIndex, tabIndex) => {
-    changeTab(tabIndex);
-  };
+  const tabItems = campaignData.map((cycle, index) => ({
+    code: String(index),
+    name: `${t("CAMPAIGN_CYCLE")} ${index + 1}`,
+  }));
 
   return (
-    <div className="campaign-tabs">
-      {campaignData.map((cycle, index) => (
-        <button
-          key={cycle.cycleIndex}
-          type="button"
-          className={`campaign-tab-head ${index === activeTabIndex ? "active" : ""} hover`}
-          onClick={() => handleTabChange(cycle.cycleIndex, index)}
-        >
-          <p style={{ margin: 0, position: "relative", top: "-0.1rem" }}>
-            {t(`CAMPAIGN_CYCLE`)} {index + 1}
-          </p>
-        </button>
-      ))}
-    </div>
+    <Tab
+      activeLink={String(activeTabIndex)}
+      configItemKey="code"
+      configDisplayKey="name"
+      configNavItems={tabItems}
+      setActiveLink={(code) => {
+        changeTab(Number(code));
+      }}
+      showNav={true}
+      style={{}}
+    />
   );
 });
 
@@ -36,27 +34,25 @@ const SubTabs = React.memo(() => {
   const { activeCycle, activeSubTabIndex, changeSubTab } = useDeliveryRules();
   const { t } = useTranslation();
 
-  const handleSubTabChange = (deliveryIndex, subTabIndex) => {
-    changeSubTab(subTabIndex);
-  };
-
   if (!activeCycle?.deliveries) {
     return null;
   }
 
+  const toggleOptions = activeCycle.deliveries.map((delivery, index) => ({
+    code: String(index),
+    name: `${t("CAMPAIGN_DELIVERY")} ${index + 1}`,
+  }));
+
   return (
-    <div>
-      {activeCycle.deliveries.map((delivery, index) => (
-        <button
-          key={delivery.deliveryIndex}
-          type="button"
-          className={`campaign-sub-tab-head ${index === activeSubTabIndex ? "active" : ""} hover`}
-          onClick={() => handleSubTabChange(delivery.deliveryIndex, index)}
-        >
-          {t(`CAMPAIGN_DELIVERY`)} {index + 1}
-        </button>
-      ))}
-    </div>
+    <Toggle
+      options={toggleOptions}
+      optionsKey="name"
+      selectedOption={String(activeSubTabIndex)}
+      onSelect={(code) => {
+        changeSubTab(Number(code));
+      }}
+      style={{}}
+    />
   );
 });
 

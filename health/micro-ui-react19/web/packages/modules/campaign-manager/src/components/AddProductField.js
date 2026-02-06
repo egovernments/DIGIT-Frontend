@@ -74,13 +74,12 @@ const AddProductField = ({ onSelect }) => {
                   style={{
                     cursor: "pointer",
                     fontWeight: "600",
-                    marginLeft: "1rem",
                     fontSize: "1rem",
                     color: PRIMARY_COLOR,
                     display: "flex",
                     gap: "0.5rem",
                     alignItems: "center",
-                    marginTop: "1rem",
+                    margin: "0rem",
                   }}
                 >
                   <DustbinIcon />

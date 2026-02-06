@@ -242,7 +242,7 @@ const DeliveryDetailsSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" ,marginBottom:"1rem"} },
                   // cardSecondaryAction: noAction !== "false" && (
                   //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                   //     <span>{t(`CAMPAIGN_EDIT`)}</span>

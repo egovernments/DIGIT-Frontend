@@ -116,32 +116,32 @@ const AddAttributeField = React.memo(({
   }, [selectedAttribute, operatorConfig]);
 
   const selectedDropdownValue = useMemo(() => {
-  if (!attribute?.value) return null;
-  
-  // If value is already an object with code, use it
-  if (typeof attribute.value === 'object' && attribute.value.code) {
-    return attribute.value;
-  }
-  
-  // If value is a string, find the matching option
-  if (typeof attribute.value === 'string' && dropdownOptions.length > 0) {
-    // Try to find by code first
-    const matchedOption = dropdownOptions.find(opt => opt.code === attribute.value);
-    if (matchedOption) {
-      return matchedOption;
+    if (!attribute?.value) return null;
+
+    // If value is already an object with code, use it
+    if (typeof attribute.value === 'object' && attribute.value.code) {
+      return attribute.value;
     }
-    
-    // If no exact code match, try case-insensitive match
-    const caseInsensitiveMatch = dropdownOptions.find(
-      opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
-    );
-    if (caseInsensitiveMatch) {
-      return caseInsensitiveMatch;
+
+    // If value is a string, find the matching option
+    if (typeof attribute.value === 'string' && dropdownOptions.length > 0) {
+      // Try to find by code first
+      const matchedOption = dropdownOptions.find(opt => opt.code === attribute.value);
+      if (matchedOption) {
+        return matchedOption;
+      }
+
+      // If no exact code match, try case-insensitive match
+      const caseInsensitiveMatch = dropdownOptions.find(
+        opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
+      );
+      if (caseInsensitiveMatch) {
+        return caseInsensitiveMatch;
+      }
     }
-  }
-  
-  return null;
-}, [attribute?.value, dropdownOptions]);
+
+    return null;
+  }, [attribute?.value, dropdownOptions]);
 
   // Fetch dropdown options when attribute changes
   React.useEffect(() => {
@@ -188,7 +188,7 @@ const AddAttributeField = React.memo(({
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
   const isRangeOperator = attribute?.operator?.code === "IN_BETWEEN";
-  const isDropdownValue = selectedAttribute?.valuesSchema || 
+  const isDropdownValue = selectedAttribute?.valuesSchema ||
     (typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value));
 
 
@@ -523,6 +523,38 @@ const AddDeliveryRuleWrapper = React.memo(({
     });
   }, [deliveryTypeConfig, projectConfig?.code]);
 
+  // Determine radio options based on delivery number and observationStrategy
+  // If observationStrategy is DOT1:
+  //   - First delivery in each cycle: show only DIRECT option
+  //   - 2nd delivery onwards: show only INDIRECT option
+  // If observationStrategy is NOT DOT1:
+  //   - All deliveries: show only DIRECT option
+  const radioDeliveryTypeOptions = useMemo(() => {
+    const isFirstDelivery = activeDelivery?.deliveryIndex === "1" ||
+      activeDelivery?.deliveryIndex === 1
+    activeDelivery?.deliveryNumber === 1 ||
+      activeDelivery?.key === 1;
+
+    const observationStrategy = projectConfig?.observationStrategy;
+    const isDOT1 = observationStrategy === "DOT1";
+
+    // Find DIRECT and INDIRECT options from filtered config
+    const directOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "DIRECT");
+    const indirectOption = filteredDeliveryTypeConfig?.find(opt => opt.code === "INDIRECT");
+
+    if (isDOT1) {
+      // For DOT1: First delivery = DIRECT only, 2nd+ delivery = INDIRECT only
+      if (isFirstDelivery) {
+        return directOption ? [directOption] : [];
+      } else {
+        return indirectOption ? [indirectOption] : [];
+      }
+    } else {
+      // For non-DOT1: All deliveries = DIRECT only
+      return directOption ? [directOption] : [];
+    }
+  }, [activeDelivery?.deliveryIndex, activeDelivery?.deliveryNumber, activeDelivery?.key, filteredDeliveryTypeConfig, projectConfig?.observationStrategy]);
+
   const handleAddRule = useCallback(() => {
     addRule();
   }, [addRule]);
@@ -531,14 +563,14 @@ const AddDeliveryRuleWrapper = React.memo(({
     removeRule(ruleKey);
   }, [removeRule]);
 
-   const handleDeliveryTypeChange = useCallback((value) => {
+  const handleDeliveryTypeChange = useCallback((value) => {
     updateDeliveryTypeForEachDelivery(value?.code);
   }, [updateDeliveryTypeForEachDelivery]);
 
   const selectedDeliveryType = useMemo(() =>
-    filteredDeliveryTypeConfig?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) ||
-    filteredDeliveryTypeConfig?.[0] // default to first option
-  , [filteredDeliveryTypeConfig, activeDelivery?.deliveryType]);
+    radioDeliveryTypeOptions?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy)) ||
+    radioDeliveryTypeOptions?.[0] // default to first option
+  , [radioDeliveryTypeOptions, activeDelivery?.deliveryType, activeDelivery?.deliveryStrategy]);
 
   // Calculate if we can add more rules
   const canAddMore = useMemo(() => {
@@ -560,14 +592,14 @@ const AddDeliveryRuleWrapper = React.memo(({
   }
 return (
     <>
-     {filteredDeliveryTypeConfig && filteredDeliveryTypeConfig?.length > 0 && (
+     {radioDeliveryTypeOptions && radioDeliveryTypeOptions?.length > 0 && (
         <Card className="delivery-type-container">
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
               <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
             </div>
             <RadioButtons
-              options={filteredDeliveryTypeConfig}
+              options={radioDeliveryTypeOptions}
               selectedOption={selectedDeliveryType}
               optionsKey="code"
               value={selectedDeliveryType?.code}
