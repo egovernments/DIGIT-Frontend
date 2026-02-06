@@ -25,6 +25,7 @@ const CampaignHome = () => {
     window.Digit.SessionStorage.del("SelectedFeaturesByModule");
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UNIFIED_UPLOAD_DATA");
+    window.Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
     sessionStorage.removeItem("HCM_CAMPAIGN_NUMBER");
 
   }, []);

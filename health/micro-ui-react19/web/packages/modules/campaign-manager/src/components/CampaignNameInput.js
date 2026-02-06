@@ -71,21 +71,29 @@ const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
     setHasInteracted(true);
   };
 
+  const handleFocus = () => {
+    window.dispatchEvent(new CustomEvent("campaignNameFocus"));
+    // Persist in a separate key so it survives step navigation (HCM_ADMIN_CONSOLE_DATA gets overwritten by setParams)
+    Digit.SessionStorage.set("CAMPAIGN_NAME_INFO_VISIBLE", true);
+  };
+
   return (
     <LabelFieldPair className="name-container-label" style={{ display: "flex" }}>
       <div className="name-container">
         <span>{`${t("HCM_SELECT_CAMPAIGN_NAME")}`}</span>
         <span className="mandatory-span">*</span>
       </div>
-      <FieldV1
-        type="text"
-        error={error?.message ? t(error?.message) : ""}
-        style={{ width: "-webkit-fill-available", marginBottom: "0" }}
-        populators={{ name: "CampaignName" }}
-        placeholder={t("HCM_CAMPAIGNNAME_DATE_MONTH_YEAR")}
-        value={name}
-        onChange={handleChange}
-      />
+      <div className="digit-field" style={{width:"100%"}} onFocus={handleFocus}>
+        <FieldV1
+          type="text"
+          error={error?.message ? t(error?.message) : ""}
+          style={{ width: "-webkit-fill-available", marginBottom: "0" }}
+          populators={{ name: "CampaignName" }}
+          placeholder={t("HCM_CAMPAIGNNAME_DATE_MONTH_YEAR")}
+          value={name}
+          onChange={handleChange}
+        />
+      </div>
     </LabelFieldPair>
   );
 };

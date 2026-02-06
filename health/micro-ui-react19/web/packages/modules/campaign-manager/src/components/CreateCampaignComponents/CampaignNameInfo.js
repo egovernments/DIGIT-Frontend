@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo,Fragment } from "react";
+import React, { useState, useEffect, useLayoutEffect, useMemo,Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-components";
 import { CheckCircle, Close, InfoOutline } from "@egovernments/digit-ui-svg-components";
@@ -12,9 +12,11 @@ const CampaignNameInfo = () => {
   // Local state for campaign name - will be updated via custom event
   const [campaignName, setCampaignName] = useState("");
   const [hasStartedTyping, setHasStartedTyping] = useState(false);
+  const [hasFocused, setHasFocused] = useState(false);
 
-  // Listen for campaign name changes from CampaignName component
-  useEffect(() => {
+  // Use useLayoutEffect to register listeners BEFORE CampaignNameInput's useEffect dispatches events
+  // This avoids the race condition where events are dispatched before listeners are registered
+  useLayoutEffect(() => {
     const handleNameChange = (event) => {
       const newName = event.detail || "";
       setCampaignName(newName);
@@ -23,12 +25,23 @@ const CampaignNameInfo = () => {
       }
     };
 
-    // Listening for custom event
-    window.addEventListener("campaignNameChange", handleNameChange);
+    const handleFocus = () => {
+      setHasFocused(true);
+    };
 
-    // Check session storage on mount for initial value from the campaign form data
-    const formData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-    const sessionName = formData?.HCM_CAMPAIGN_NAME?.CampaignName || formData?.HCM_CAMPAIGN_NAME?.campaignName;
+    // Listening for custom events
+    window.addEventListener("campaignNameChange", handleNameChange);
+    window.addEventListener("campaignNameFocus", handleFocus);
+
+    // Check separate session key for persisted focus flag (survives step navigation)
+    const infoVisible = Digit.SessionStorage.get("CAMPAIGN_NAME_INFO_VISIBLE");
+    // Also show immediately when editing an existing campaign's name
+    const editName = new URLSearchParams(window.location.search).get("editName");
+    if (infoVisible || editName === "true") {
+      setHasFocused(true);
+    }
+    const consoleData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA");
+    const sessionName = consoleData?.CampaignName;
     if (sessionName && sessionName.length > 0) {
       setCampaignName(sessionName);
       setHasStartedTyping(true);
@@ -36,6 +49,7 @@ const CampaignNameInfo = () => {
 
     return () => {
       window.removeEventListener("campaignNameChange", handleNameChange);
+      window.removeEventListener("campaignNameFocus", handleFocus);
     };
   }, []);
 
@@ -93,6 +107,10 @@ const CampaignNameInfo = () => {
 
   if (infoLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
+  }
+
+  if (!hasFocused) {
+    return null;
   }
 
   return (
