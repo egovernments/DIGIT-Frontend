@@ -1525,3 +1525,10 @@ textarea.light-placeholder::placeholder {
     content: none !important;
   }
 }
+
+@media (max-width: 768px) {
+  .digit-submit-bar {
+    min-width: unset;
+    width: 50%;
+  }
+}
