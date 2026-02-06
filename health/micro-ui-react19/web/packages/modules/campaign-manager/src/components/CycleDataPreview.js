@@ -2,25 +2,33 @@ import { Row } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DetailsTable from "./DetailsTable";
-import { Button, AlertCard , Card } from "@egovernments/digit-ui-components";
+import { Button, AlertCard, Card, Toggle } from "@egovernments/digit-ui-components";
 
 const Tabs = ({ deliveryData, onTabChange }) => {
-  // const { campaignData, dispatchCampaignData } = useContext(CycleContext);
   const { t } = useTranslation();
 
+  const activeItem = deliveryData?.find((d) => d.active === true);
+  const activeIndex = activeItem ? deliveryData.indexOf(activeItem) : 0;
+
+  const toggleOptions = deliveryData?.map((delivery, index) => ({
+    code: String(index),
+    name: `${t("CAMPAIGN_DELIVERY")} ${index + 1}`,
+  })) || [];
+
   return (
-    <div style={{display: "flex" }}>
-      {deliveryData?.map((_, index) => (
-        <button
-          key={index}
-          type="button"
-          className={`campaign-sub-tab-head ${_.active === true ? "active" : ""} hover`}
-          onClick={() => onTabChange(_.deliveryIndex, index)}
-        >
-          {t(`CAMPAIGN_DELIVERY`)} {index + 1}
-        </button>
-      ))}
-    </div>
+    <Toggle
+      options={toggleOptions}
+      optionsKey="name"
+      selectedOption={String(activeIndex)}
+      onSelect={(code) => {
+        const idx = Number(code);
+        const delivery = deliveryData[idx];
+        if (delivery) {
+          onTabChange(delivery.deliveryIndex, idx);
+        }
+      }}
+      style={{}}
+    />
   );
 };
 
