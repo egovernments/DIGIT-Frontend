@@ -531,11 +531,11 @@ const AddDeliveryRuleWrapper = React.memo(({
   //   - All deliveries: show only DIRECT option
   const radioDeliveryTypeOptions = useMemo(() => {
     const isFirstDelivery = activeDelivery?.deliveryIndex === "1" ||
-      activeDelivery?.deliveryIndex === 1
-    activeDelivery?.deliveryNumber === 1 ||
+      activeDelivery?.deliveryIndex === 1 ||
+      activeDelivery?.deliveryNumber === 1 ||
       activeDelivery?.key === 1;
 
-    const observationStrategy = projectConfig?.observationStrategy;
+    const observationStrategy = projectConfig?.observationStrategy || "DOT1";
     const isDOT1 = observationStrategy === "DOT1";
 
     // Find DIRECT and INDIRECT options from filtered config
