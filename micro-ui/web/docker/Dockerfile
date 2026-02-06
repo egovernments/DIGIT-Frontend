@@ -8,7 +8,7 @@ ENV NODE_OPTIONS="--max-old-space-size=8168 --max-http-header-size=81920"
 ENV GIT_TOKEN=${GIT_TOKEN}
 
 # --- ADD THIS LINE HERE ---
-ARG CACHEBUST=1 
+# ARG CACHEBUST=1 
 # --------------------------
 
 COPY ${WORK_DIR} .
@@ -18,6 +18,10 @@ RUN ls -lah
 WORKDIR /app/web
 
 RUN chmod +x ./install-deps.sh
+
+# This will always be different, busting cache for everything below
+RUN echo "Build timestamp: $(date +%s)"
+
 RUN ./install-deps.sh
 
 # Increase timeout before install (recommended for GitHub Actions)
