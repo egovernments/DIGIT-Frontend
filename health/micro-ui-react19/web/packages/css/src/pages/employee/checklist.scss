@@ -425,6 +425,59 @@
   }
 }
 
+.localisation-popup-container {
+  width: fit-content !important;
+  min-width: 40rem;
+
+  .digit-popup-children-wrap {
+    padding-top: 0 !important;
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+  }
+
+  .localisation-editor-content {
+    .rdt_Table {
+      margin-top: 1rem;
+    }
+
+    .rdt_TableHeadRow {
+      font-weight: 700;
+    }
+
+    .rdt_TableRow {
+      padding: 0.5rem 0;
+    }
+
+    .rdt_TableCell {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .digit-popup-footer {
+    margin-top: 1rem;
+    padding-top: 0 !important;
+
+    .digit-popup-footer-buttons {
+      width: 100% !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      .digit-button-secondary {
+        width: 100%;
+      }
+
+      .digit-button-primary {
+        width: 100%;
+      }
+    }
+  }
+}
+
 .custom-popup-boundary {
   max-width: 100%;
   height: 11rem;
