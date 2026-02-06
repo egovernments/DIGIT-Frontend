@@ -41,6 +41,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     resetData,
     syncCycleCount,
     syncDeliveryCount,
+    updateObservationStrategyAction,
   } = useDeliveryRules();
 
   // Track previous project type and campaign ID to detect changes
@@ -62,12 +63,24 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // Get effective delivery configuration - prioritize cycle data over project config
   const effectiveDeliveryConfig = useMemo(() => {
     const cycleDeliveryConfig = cycleData?.deliveryConfig;
+    const observationStrategy = cycleData?.cycleConfgureDate?.observationStrategy || "DOT1";
 
+    let config;
     if (cycleDeliveryConfig) {
-      return cycleDeliveryConfig;
+      config = cycleDeliveryConfig;
+    } else {
+      config = projectConfig;
     }
 
-    return projectConfig;
+    // Add observation strategy to the config
+    if (config) {
+      return {
+        ...config,
+        observationStrategy: observationStrategy
+      };
+    }
+
+    return config;
   }, [cycleData, projectConfig]);
 
   // Get saved delivery rules
@@ -92,6 +105,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   const prevCycleCountRef = useRef(null);
   const prevDeliveryCountRef = useRef(null);
   const hasInitialSyncRef = useRef(false);
+  const prevObservationStrategyRef = useRef(null);
 
   // Detect when project type or campaign changes and reset if necessary
   useEffect(() => {
@@ -148,6 +162,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
 
     const currentCycles = cycleData.cycleConfgureDate.cycle;
     const currentDeliveries = cycleData.cycleConfgureDate.deliveries;
+    const currentObservationStrategy = cycleData.cycleConfgureDate.observationStrategy || "DOT1";
     const savedCycles = campaignData.length;
     const savedDeliveries = campaignData[0]?.deliveries?.length || 0;
 
@@ -170,11 +185,54 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
       }
     }
 
+    // Check if saved delivery types match the observation strategy
+    // If not, force update to match the observation strategy
+    const needsObservationStrategySync = campaignData.some((cycle) =>
+      cycle.deliveries?.some((delivery, deliveryIndex) => {
+        const expectedDeliveryType = currentObservationStrategy === "DOT1"
+          ? (deliveryIndex === 0 ? "DIRECT" : "INDIRECT")
+          : "DIRECT";
+        return delivery.deliveryType !== expectedDeliveryType;
+      })
+    );
+
+    if (needsObservationStrategySync) {
+      try {
+        updateObservationStrategyAction(currentObservationStrategy);
+      } catch (error) {
+        console.error('Error syncing observation strategy on initial load:', error);
+        setErrorState(error.message);
+      }
+    }
+
     // Set initial refs
     prevCycleCountRef.current = currentCycles;
     prevDeliveryCountRef.current = currentDeliveries;
+    prevObservationStrategyRef.current = currentObservationStrategy;
     hasInitialSyncRef.current = true;
-  }, [initialized, campaignData, cycleData?.cycleConfgureDate, effectiveDeliveryConfig, syncCycleCount, syncDeliveryCount, setErrorState]);
+  }, [initialized, campaignData, cycleData?.cycleConfgureDate, effectiveDeliveryConfig, syncCycleCount, syncDeliveryCount, updateObservationStrategyAction, setErrorState]);
+
+  // Sync observation strategy when it changes
+  useEffect(() => {
+    if (!initialized || !cycleData?.cycleConfgureDate) {
+      return;
+    }
+
+    const currentObservationStrategy = cycleData.cycleConfgureDate.observationStrategy || "DOT1";
+
+    // Check if observation strategy has changed after initial sync
+    if (hasInitialSyncRef.current && prevObservationStrategyRef.current !== null && prevObservationStrategyRef.current !== currentObservationStrategy) {
+      try {
+        updateObservationStrategyAction(currentObservationStrategy);
+      } catch (error) {
+        console.error('Error updating observation strategy:', error);
+        setErrorState(error.message);
+      }
+    }
+
+    // Update ref for next comparison (do this after hasInitialSyncRef check to allow initial setting)
+    prevObservationStrategyRef.current = currentObservationStrategy;
+  }, [cycleData?.cycleConfgureDate?.observationStrategy, initialized, updateObservationStrategyAction, setErrorState]);
 
   // Sync cycles and deliveries when their counts change after initialization
   useEffect(() => {
@@ -252,7 +310,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
 
   return (
     <MultiTab
-      projectConfig={projectConfig}
+      projectConfig={effectiveDeliveryConfig}
       attributeConfig={attributeConfig}
       operatorConfig={operatorConfig}
       deliveryTypeConfig={deliveryTypeConfig}

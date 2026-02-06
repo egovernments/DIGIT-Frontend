@@ -217,6 +217,7 @@ const deliveryRulesSlice = createSlice({
     syncCycles: (state, action) => {
       const { newCycleCount, effectiveDeliveryConfig, attributeConfig, operatorConfig } = action.payload;
       const currentCycleCount = state.campaignData.length;
+      const observationStrategy = effectiveDeliveryConfig?.observationStrategy || "DOT1";
 
       if (newCycleCount > currentCycleCount) {
         // Add new cycles
@@ -232,14 +233,19 @@ const deliveryRulesSlice = createSlice({
                 const cycle = effectiveDeliveryConfig.cycles[i];
                 if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
                   const delivery = cycle.deliveries[deliveryIndex];
-                  deliveryStrategy = delivery?.deliveryStrategy || "DIRECT";
+                  deliveryStrategy = delivery?.deliveryStrategy;
                 }
+              }
+
+              // If no delivery strategy from config, use observation strategy to determine
+              if (!deliveryStrategy) {
+                deliveryStrategy = getDeliveryTypeByStrategy(observationStrategy, deliveryIndex);
               }
 
               return {
                 deliveryIndex: (deliveryIndex + 1).toString(),
                 active: deliveryIndex === 0,
-                deliveryType: deliveryStrategy || "DIRECT",
+                deliveryType: deliveryStrategy,
                 deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig),
               };
             }),
@@ -261,6 +267,7 @@ const deliveryRulesSlice = createSlice({
 
     syncDeliveries: (state, action) => {
       const { newDeliveryCount, effectiveDeliveryConfig, attributeConfig, operatorConfig } = action.payload;
+      const observationStrategy = effectiveDeliveryConfig?.observationStrategy || "DOT1";
 
       state.campaignData.forEach((cycle, cycleIndex) => {
         const currentDeliveryCount = cycle.deliveries?.length || 0;
@@ -274,14 +281,19 @@ const deliveryRulesSlice = createSlice({
               const configCycle = effectiveDeliveryConfig.cycles[cycleIndex];
               if (configCycle?.deliveries && Array.isArray(configCycle.deliveries)) {
                 const delivery = configCycle.deliveries[i];
-                deliveryStrategy = delivery?.deliveryStrategy || "DIRECT";
+                deliveryStrategy = delivery?.deliveryStrategy;
               }
+            }
+
+            // If no delivery strategy from config, use observation strategy to determine
+            if (!deliveryStrategy) {
+              deliveryStrategy = getDeliveryTypeByStrategy(observationStrategy, i);
             }
 
             cycle.deliveries.push({
               deliveryIndex: (i + 1).toString(),
               active: false,
-              deliveryType: deliveryStrategy || "DIRECT",
+              deliveryType: deliveryStrategy,
               deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, i, attributeConfig, operatorConfig),
             });
           }
@@ -299,32 +311,70 @@ const deliveryRulesSlice = createSlice({
         }
       });
     },
+
+    updateObservationStrategy: (state, action) => {
+      const { observationStrategy } = action.payload;
+
+
+      // Update delivery types for all deliveries in all cycles based on new observation strategy
+      state.campaignData = state.campaignData.map((cycle, cycleIdx) => ({
+        ...cycle,
+        deliveries: cycle.deliveries?.map((delivery, deliveryIndex) => {
+          const newDeliveryType = getDeliveryTypeByStrategy(observationStrategy, deliveryIndex);
+          return {
+            ...delivery,
+            deliveryType: newDeliveryType,
+          };
+        }),
+      }));
+
+    },
   },
 });
 
+// Helper function to determine delivery type based on observation strategy
+function getDeliveryTypeByStrategy(observationStrategy, deliveryIndex) {
+  const isDOT1 = observationStrategy === "DOT1";
+  const isFirstDelivery = deliveryIndex === 0;
+
+  if (isDOT1) {
+    // DOT1: First delivery = DIRECT, rest = INDIRECT
+    return isFirstDelivery ? "DIRECT" : "INDIRECT";
+  } else {
+    // DOTN or any other: All deliveries = DIRECT
+    return "DIRECT";
+  }
+}
+
 // Helper function to generate initial campaign data
 function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig = [], operatorConfig = []) {
-  
+  const observationStrategy = effectiveDeliveryConfig?.observationStrategy || "DOT1";
+
   return Array.from({ length: cycles }, (_, cycleIndex) => ({
     cycleIndex: (cycleIndex + 1).toString(),
     active: cycleIndex === 0,
     deliveries: Array.from({ length: deliveries }, (_, deliveryIndex) => {
       // Extract delivery strategy from the effectiveDeliveryConfig
       let deliveryStrategy = null;
-      
+
       // Check if we have cycles data in effectiveDeliveryConfig
       if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles) && effectiveDeliveryConfig.cycles.length > 0) {
         const cycle = effectiveDeliveryConfig.cycles[cycleIndex];
         if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
           const delivery = cycle.deliveries[deliveryIndex];
-          deliveryStrategy = delivery?.deliveryStrategy || "DIRECT";
+          deliveryStrategy = delivery?.deliveryStrategy;
         }
       }
-      
+
+      // If no delivery strategy from config, use observation strategy to determine
+      if (!deliveryStrategy) {
+        deliveryStrategy = getDeliveryTypeByStrategy(observationStrategy, deliveryIndex);
+      }
+
       return {
         deliveryIndex: (deliveryIndex + 1).toString(),
         active: deliveryIndex === 0,
-        deliveryType: deliveryStrategy || "DIRECT", // Default to "DIRECT" if not found
+        deliveryType: deliveryStrategy,
         deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig),
       };
     }),
@@ -590,6 +640,7 @@ export const {
   setError,
   syncCycles,
   syncDeliveries,
+  updateObservationStrategy,
 } = deliveryRulesSlice.actions;
 
 export default deliveryRulesSlice.reducer;
