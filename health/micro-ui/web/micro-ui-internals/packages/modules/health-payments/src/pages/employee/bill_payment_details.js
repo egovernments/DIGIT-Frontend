@@ -47,17 +47,17 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   // --------------------
 // Report (PDF / EXCEL)
 // --------------------
-const [reportType, setReportType] = useState("EXCEL"); // PDF | EXCEL
-const [reportList, setReportList] = useState([]);
-const [reportLoading, setReportLoading] = useState(false);
-const [reportError, setReportError] = useState(null);
-const reportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
-  url: `/health-expense/v1/transactions/report/_search`,
-});
+// const [reportType, setReportType] = useState("EXCEL"); // PDF | EXCEL
+// const [reportList, setReportList] = useState([]);
+// const [reportLoading, setReportLoading] = useState(false);
+// const [reportError, setReportError] = useState(null);
+// const reportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
+//   url: `/health-expense/v1/transactions/report/_search`,
+// });
 
-const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
-  url: `/health-expense/v1/transactions/report/_generate`,
-});
+// const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
+//   url: `/health-expense/v1/transactions/report/_generate`,
+// });
 
   // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
   const [limitAndOffset, setLimitAndOffset] = useState({
@@ -605,29 +605,29 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
  
 
   // Fetch reports
-  const fetchReports = async (billId) => {
-    setReportLoading(true);
-    try {
-      const res = await reportSearchMutation.mutateAsync({
-        body: {
-          searchCriteria: {
-            billId,
-            tenantId,
-          },
-        },
-      });
+  // const fetchReports = async (billId) => {
+  //   setReportLoading(true);
+  //   try {
+  //     const res = await reportSearchMutation.mutateAsync({
+  //       body: {
+  //         searchCriteria: {
+  //           billId,
+  //           tenantId,
+  //         },
+  //       },
+  //     });
   
-      setReportList(res?.billTransactionReports || []);
-      setReportError(null);
-    } catch (e) {
-      setReportError(
-        e?.response?.data?.Errors?.[0]?.message ||
-        t("HCM_AM_REPORT_FETCH_FAILED")
-      );
-    } finally {
-      setReportLoading(false);
-    }
-  };
+  //     setReportList(res?.billTransactionReports || []);
+  //     setReportError(null);
+  //   } catch (e) {
+  //     setReportError(
+  //       e?.response?.data?.Errors?.[0]?.message ||
+  //       t("HCM_AM_REPORT_FETCH_FAILED")
+  //     );
+  //   } finally {
+  //     setReportLoading(false);
+  //   }
+  // };
 
   
   useEffect(() => {
@@ -706,7 +706,7 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
           console.warn("Task status check failed for", billId, e);
           setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
         };
-        fetchReports(billId);
+        // fetchReports(billId);
       }
     }
   }, [BillData, editBillDetails]);
@@ -779,110 +779,110 @@ const reportGenerateMutation = Digit.Hooks.useCustomAPIMutationHook({
  
 
 // Generate report (single type only)
-const generateReport = async (reportType) => {
-  setReportLoading(true);
-  try {
-    await reportGenerateMutation.mutateAsync({
-      body: {
-        billTransactionReport: {
-          billId: billData?.id,
-          tenantId,
-          type: reportType, // PDF or EXCEL}
-      },
-    }
-  });
+// const generateReport = async (reportType) => {
+//   setReportLoading(true);
+//   try {
+//     await reportGenerateMutation.mutateAsync({
+//       body: {
+//         billTransactionReport: {
+//           billId: billData?.id,
+//           tenantId,
+//           type: reportType, // PDF or EXCEL}
+//       },
+//     }
+//   });
 
-    setShowToast({
-      key: "info",
-      label: t("HCM_AM_TXN_REPORT_GENERATION_STARTED"),
-      transitionTime: 10000,
-    });
+//     setShowToast({
+//       key: "info",
+//       label: t("HCM_AM_TXN_REPORT_GENERATION_STARTED"),
+//       transitionTime: 10000,
+//     });
 
-  } catch (e) {
-    setShowToast({
-      key: "error",
-      label:
-        e?.response?.data?.Errors?.[0]?.message ||
-        t("HCM_AM_TXN_REPORT_GENERATION_FAILED"),
-      transitionTime: 10000,
-    });
-  } finally {
-    setReportLoading(false);
-  }
-};
+//   } catch (e) {
+//     setShowToast({
+//       key: "error",
+//       label:
+//         e?.response?.data?.Errors?.[0]?.message ||
+//         t("HCM_AM_TXN_REPORT_GENERATION_FAILED"),
+//       transitionTime: 10000,
+//     });
+//   } finally {
+//     setReportLoading(false);
+//   }
+// };
 
 
-// Get latest COMPLETED report by type
-const getLatestReportByType = (type) => {
-  const completed = reportList
-    .filter(
-      (r) => r.type === type && r.status === "GENERATED"
-    )
-    .sort(
-      (a, b) =>
-        (b.auditDetails?.createdTime || 0) -
-        (a.auditDetails?.createdTime || 0)
-    );
+// // Get latest COMPLETED report by type
+// const getLatestReportByType = (type) => {
+//   const completed = reportList
+//     .filter(
+//       (r) => r.type === type && r.status === "GENERATED"
+//     )
+//     .sort(
+//       (a, b) =>
+//         (b.auditDetails?.createdTime || 0) -
+//         (a.auditDetails?.createdTime || 0)
+//     );
 
-  return completed[0];
-};
+//   return completed[0];
+// };
 
-const latestPdf = getLatestReportByType("PDF");
-const latestExcel = getLatestReportByType("EXCEL");
-console.log("Latest PDF Report:", latestPdf);
-console.log("Latest EXCEL Report:", latestExcel);
+// const latestPdf = getLatestReportByType("PDF");
+// const latestExcel = getLatestReportByType("EXCEL");
+// console.log("Latest PDF Report:", latestPdf);
+// console.log("Latest EXCEL Report:", latestExcel);
 
-const lastGeneratedAt = reportList.length
-  ? Math.max(
-      ...reportList
-        .filter((r) => r.status === "GENERATED")
-        .map((r) => r.auditDetails?.createdTime || 0)
-    )
-  : null;
+// const lastGeneratedAt = reportList.length
+//   ? Math.max(
+//       ...reportList
+//         .filter((r) => r.status === "GENERATED")
+//         .map((r) => r.auditDetails?.createdTime || 0)
+//     )
+//   : null;
 
-  const downloadOptions = [
-    {
-      code: "DOWNLOAD_EXCEL",
-      name: t("HCM_AM_DOWNLOAD_EXCEL"),
-    },
-    {
-      code: "DOWNLOAD_PDF",
-      name: t("HCM_AM_DOWNLOAD_PDF"),
-    },
-  ];
+//   const downloadOptions = [
+//     {
+//       code: "DOWNLOAD_EXCEL",
+//       name: t("HCM_AM_DOWNLOAD_EXCEL"),
+//     },
+//     {
+//       code: "DOWNLOAD_PDF",
+//       name: t("HCM_AM_DOWNLOAD_PDF"),
+//     },
+//   ];
 
-  const hasPaidWorker =
-  billData?.billDetails?.some(
-    (worker) => worker?.status === "PAID"
-  );
+//   const hasPaidWorker =
+//   billData?.billDetails?.some(
+//     (worker) => worker?.status === "PAID"
+//   );
 
-  const handleDownloadSelect = (option) => {
-    try {
-      if (option.code === "DOWNLOAD_EXCEL") {
-        if (!latestExcel?.fileStoreId) throw new Error();
-        downloadFileWithName({
-          fileStoreId: latestExcel.fileStoreId,
-          customName: `Transaction_Report_${billID}`,
-          type: "excel",
-        });
-      }
+//   const handleDownloadSelect = (option) => {
+//     try {
+//       if (option.code === "DOWNLOAD_EXCEL") {
+//         if (!latestExcel?.fileStoreId) throw new Error();
+//         downloadFileWithName({
+//           fileStoreId: latestExcel.fileStoreId,
+//           customName: `Transaction_Report_${billID}`,
+//           type: "excel",
+//         });
+//       }
   
-      if (option.code === "DOWNLOAD_PDF") {
-        if (!latestPdf?.fileStoreId) throw new Error();
-        downloadFileWithName({
-          fileStoreId: latestPdf.fileStoreId,
-          customName: `Transaction_Report_${billID}`,
-          type: "pdf",
-        });
-      }
-    } catch {
-      setShowToast({
-        key: "error",
-        label: t("HCM_AM_REPORT_DOWNLOAD_FAILED"),
-        transitionTime: 3000,
-      });
-    }
-  };
+//       if (option.code === "DOWNLOAD_PDF") {
+//         if (!latestPdf?.fileStoreId) throw new Error();
+//         downloadFileWithName({
+//           fileStoreId: latestPdf.fileStoreId,
+//           customName: `Transaction_Report_${billID}`,
+//           type: "pdf",
+//         });
+//       }
+//     } catch {
+//       setShowToast({
+//         key: "error",
+//         label: t("HCM_AM_REPORT_DOWNLOAD_FAILED"),
+//         transitionTime: 3000,
+//       });
+//     }
+//   };
 
 
   return (
@@ -923,8 +923,9 @@ const lastGeneratedAt = reportList.length
                   {t(billData?.status || "NA")}
                 </span>
               )}
-<div>
-  {/* Transaction Report Section */}
+
+ {/* uncomment this block to show report generation and download section               */}
+{/* <div>
   <div
     style={{
       marginTop: "1rem",
@@ -933,10 +934,8 @@ const lastGeneratedAt = reportList.length
       gap: "6px",
     }}
   >
-    {/* Section Heading */}
     <span
       style={{
-        // color: "#F47738",
         fontWeight: 600,
         fontSize: "18px",
         width: "fit-content",
@@ -945,7 +944,6 @@ const lastGeneratedAt = reportList.length
       {t("HCM_AM_TRANSACTION_REPORT")}
     </span>
 
-    {/* Generated Time */}
     <span className="view-label-text">
       {lastGeneratedAt ? (
         <>
@@ -958,7 +956,6 @@ const lastGeneratedAt = reportList.length
       )}
     </span>
 
-    {/* Error Message */}
     {reportError && (
       <InfoCard
         variant="error"
@@ -969,7 +966,6 @@ const lastGeneratedAt = reportList.length
     )}
   </div>
 
-  {/* Actions */}
   <div
     style={{
       display: "flex",
@@ -978,7 +974,6 @@ const lastGeneratedAt = reportList.length
       alignItems: "center",
     }}
   >
-    {/* Generate Report */}
     <Button
       label={t("HCM_AM_GENERATE_REPORT")}
       variation="primary"
@@ -1002,7 +997,6 @@ const lastGeneratedAt = reportList.length
       }}
     />
 
-    {/* Download */}
     <Button
       icon="ArrowDropDown"
       isSuffix
@@ -1018,7 +1012,6 @@ const lastGeneratedAt = reportList.length
     />
   </div>
 
-  {/* Disclaimer */}
   <div
     style={{
       marginTop: "11px",
@@ -1041,7 +1034,7 @@ const lastGeneratedAt = reportList.length
     {t("HCM_AM_REPORT_DISCLAIMER_INFO")}
   </span>
   </div>
-</div>
+</div> */}
 
 
               {
