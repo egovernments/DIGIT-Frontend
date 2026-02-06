@@ -1,13 +1,71 @@
-import React, { useState } from "react";
-import { TextInput, Button, Tab } from "@egovernments/digit-ui-components";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { TextInput, Tab, Loader } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
-import { wrap } from "lodash";
 
-const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisationData, onSave, onClose }) => {
+const LocalisationEditorPopup = forwardRef(({ locales, languages, currentLocale, localisationData, module = "hcm-checklist", tenantId }, ref) => {
   const { t } = useTranslation();
   const [activeLocale, setActiveLocale] = useState(locales[0]);
   const [translations, setTranslations] = useState({});
+  const [mergedData, setMergedData] = useState(localisationData);
+  const [searching, setSearching] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  const searchLocalisations = async (localeToSearch) => {
+    if (!localeToSearch) return;
+    try {
+      setSearching(true);
+      const response = await Digit.CustomService.getResponse({
+        url: "/localization/messages/v1/_search",
+        params: { tenantId: tenantId, module: module, locale: localeToSearch },
+        body: {},
+      });
+      const messages = response?.messages || [];
+      setMergedData((prev) => {
+        const updated = prev.map((item) => ({ ...item }));
+        messages.forEach(({ code, message }) => {
+          const existing = updated.find((item) => item.code === code);
+          if (existing) {
+            existing[localeToSearch] = message;
+          }
+        });
+        return updated;
+      });
+    } catch (error) {
+      // silently fail search
+    } finally {
+      setSearching(false);
+      setInitialLoading(false);
+    }
+  };
+
+  // Search on mount for the first active locale
+  useEffect(() => {
+    if (locales[0]) {
+      searchLocalisations(locales[0]);
+    }
+  }, []);
+
+  const handleTabClick = (newLocale) => {
+    const localeValue = newLocale?.value || newLocale;
+    setActiveLocale(localeValue);
+    searchLocalisations(localeValue);
+  };
+
+  useImperativeHandle(ref, () => ({
+    getFormattedTranslations: () => {
+      return Object.entries(translations)
+        .flatMap(([code, localesMap]) =>
+          Object.entries(localesMap).map(([locale, message]) => ({
+            code,
+            message: message.trim(),
+            module: module,
+            locale,
+          }))
+        )
+        .filter((entry) => entry.message !== "");
+    },
+  }));
 
   const columns = [
     {
@@ -45,52 +103,44 @@ const LocalisationEditorPopup = ({ locales, languages, currentLocale, localisati
     },
   ];
 
-  return (
-    <div style={{ minWidth: "min-content" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}></div>
+  if (initialLoading) {
+    return (
+      <div className="localisation-editor-content">
+        <div style={{ display: "flex", justifyContent: "center", padding: "3rem 0" }}>
+          <Loader />
+        </div>
+      </div>
+    );
+  }
 
+  return (
+    <div className="localisation-editor-content">
       <Tab
         activeLink={activeLocale}
         configItemKey="value"
         configNavItems={languages}
-        onTabClick={(v) => {}}
+        onTabClick={handleTabClick}
         setActiveLink={setActiveLocale}
         showNav
         style={{}}
       />
 
-      <DataTable
-        columns={columns}
-        data={localisationData.filter((row) => row.message?.trim() !== "")}
-        pagination
-        highlightOnHover
-        noHeader
-        persistTableHead
-      />
-
-      <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "2rem" }}>
-        <Button label={t("CANCEL")} title={t("CANCEL")} variation="secondary" onClick={onClose} />
-        <Button
-          label={t("SAVE_TRANSLATIONS")}
-          title={t("SAVE_TRANSLATIONS")}
-          variation="primary"
-          onClick={() => {
-            const formatted = Object.entries(translations)
-              .flatMap(([code, localesMap]) =>
-                Object.entries(localesMap).map(([locale, message]) => ({
-                  code,
-                  message: message.trim(), // Remove whitespace
-                  module: "hcm-checklist",
-                  locale,
-                }))
-              )
-              .filter((entry) => entry.message !== ""); // Filter out empty translations
-            onSave(formatted);
-          }}
+      {searching ? (
+        <div style={{ display: "flex", justifyContent: "center", padding: "3rem 0" }}>
+          <Loader />
+        </div>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={mergedData.filter((row) => row.message?.trim() !== "")}
+          pagination
+          highlightOnHover
+          noHeader
+          persistTableHead
         />
-      </div>
+      )}
     </div>
   );
-};
+});
 
 export default LocalisationEditorPopup;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState, useRef, createContext, useContext } from "react";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import { SummaryCardFieldPair, Toast, Card, Button, PopUp,Loader ,TextArea} from "@egovernments/digit-ui-components";
@@ -10,11 +10,11 @@ import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
 
 const UpdateChecklist = () => {
   const { t } = useTranslation();
-  const module = "hcm-checklist";
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
+  const module = `hcm-checklist-${campaignNumber}`;
   const role = searchParams.get("role");
   const rlt = searchParams.get("role");
   const projectType = searchParams.get("projectType");
@@ -45,6 +45,8 @@ const UpdateChecklist = () => {
   const [helpText, setHelpText] = useState("");
   const [showLocalisationPopup, setShowLocalisationPopup] = useState(false);
   const [localisationData, setLocalisationData] = useState([]);
+  const [savedTranslations, setSavedTranslations] = useState([]);
+  const localisationRef = useRef(null);
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
   const currentLocales = languages.map((locale) => locale.value);
@@ -207,13 +209,13 @@ const UpdateChecklist = () => {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-        module: "hcm-checklist",
+        module: module,
       },
       {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || ".",
-        module: "hcm-checklist",
+        module: module,
       }
     );
     // Helper function to generate codes recursively
@@ -246,7 +248,7 @@ const UpdateChecklist = () => {
 
       codes[question.id] = code;
 
-      let moduleChecklist = "hcm-checklist";
+      let moduleChecklist = module;
       let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
       let roleTemp = LocalisationCodeUpdate(role);
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
@@ -578,6 +580,23 @@ const UpdateChecklist = () => {
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
                 onClick={popShow}
               />
+              {currentLocales?.length > 1 && (
+                <Button
+                  variation="secondary"
+                  label={t("ADD_TRANSLATIONS")}
+                  title={t("ADD_TRANSLATIONS")}
+                  className={"hover"}
+                  style={{ marginTop: "10px", marginBottom: "1.5rem" }}
+                  onClick={() => {
+                    const processed = organizeQuestions(tempFormData);
+                    const { local: generatedLocal } = generateCodes(processed);
+                    const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
+                    const enrichedArray = enrichLocalizationData(generatedLocal, searchLocalisationData);
+                    freshMessage(currentLocalisationData, enrichedArray);
+                    setShowLocalisationPopup(true);
+                  }}
+                />
+              )}
             </div>
           </div>
           {showPopUp && (
@@ -612,10 +631,8 @@ const UpdateChecklist = () => {
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
-                    const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
                     const enrichedArray = enrichLocalizationData(generatedLocal, searchLocalisationData);
-                    const fresh = freshMessage(currentLocalisationData, enrichedArray);
-                    setShowLocalisationPopup(true);
+                    onSubmit(null, 1, tempFormData, [...savedTranslations, ...enrichedArray]);
                     setShowPopUp(false);
                   }}
                 />,
@@ -677,19 +694,65 @@ const UpdateChecklist = () => {
           {showLocalisationPopup && (
             <PopUp
               className="localisation-popup-container"
+              type={"default"}
               heading={t("ADD_TRANSLATIONS")}
               onClose={() => setShowLocalisationPopup(false)}
               onOverlayClick={() => setShowLocalisationPopup(false)}
+              footerChildren={[
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"secondary"}
+                  label={t("CANCEL")}
+                  title={t("CANCEL")}
+                  onClick={() => {
+                    setShowLocalisationPopup(false);
+                  }}
+                />,
+                <Button
+                  type={"button"}
+                  size={"large"}
+                  variation={"primary"}
+                  label={t("SAVE_TRANSLATIONS")}
+                  title={t("SAVE_TRANSLATIONS")}
+                  onClick={async () => {
+                    const translations = localisationRef.current?.getFormattedTranslations() || [];
+                    if (translations.length === 0) {
+                      setShowLocalisationPopup(false);
+                      return;
+                    }
+                    try {
+                      const groupedByLocale = translations.reduce((acc, entry) => {
+                        acc[entry.locale] = acc[entry.locale] || [];
+                        acc[entry.locale].push(entry);
+                        return acc;
+                      }, {});
+                      for (const [localeCode, entries] of Object.entries(groupedByLocale)) {
+                        const result = await localisationMutateAsync(entries);
+                        if (!result.success) {
+                          setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+                          return;
+                        }
+                      }
+                      setSavedTranslations(translations);
+                      setShowLocalisationPopup(false);
+                      setShowToast({ label: "TRANSLATIONS_ADDED_SUCCESSFULLY" });
+                    } catch (error) {
+                      setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+                    }
+                  }}
+                />,
+              ]}
+              sortFooterChildren={true}
             >
               <LocalisationEditorPopup
+                ref={localisationRef}
                 locales={currentLocales.filter((local) => local !== locale)}
                 currentLocale={locale}
                 languages={languages.filter((item) => item.value !== locale)}
                 localisationData={localisationData}
-                onSave={(translations) => {
-                  onSubmit(null, 1, tempFormData, translations);
-                }}
-                onClose={() => setShowLocalisationPopup(false)}
+                module={module}
+                tenantId={tenantId}
               />
             </PopUp>
           )}
