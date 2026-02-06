@@ -2,9 +2,14 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText, TextBlock, Switch } from "@egovernments/digit-ui-components";
+// Removed TextBlock and Switch imports - unified campaign toggle card is commented out (controlled by DEFAULT_IS_UNIFIED_CAMPAIGN)
+// import {  TextBlock, Switch } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
+
+// Default value for unified campaign mode. Change this to `false` to revert to normal campaign mode.
+const DEFAULT_IS_UNIFIED_CAMPAIGN = true;
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   // Stabilize props reference to prevent unnecessary re-renders
@@ -64,9 +69,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   });
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [restrictSelection, setRestrictSelection] = useState(null);
-  const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
-    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign || false
-  );
+  // setIsUnifiedCampaign is not used since toggle is removed; kept as comment for future re-enablement
+  // const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
+  //   props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign || false
+  // );
+  const [isUnifiedCampaign] = useState(DEFAULT_IS_UNIFIED_CAMPAIGN);
 
   // useEffect(() => {
   //   setKey(currentKey);
@@ -99,9 +106,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     // Only load from campaignData if sessionData is not available
     if (!sessionData && campaignData?.boundaries) {
       setSelectedData(campaignData?.boundaries || []);
-      if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
-        setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
-      }
+      // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
+      // if (campaignData?.additionalDetails?.isUnifiedCampaign !== undefined) {
+      //   setIsUnifiedCampaign(campaignData?.additionalDetails?.isUnifiedCampaign);
+      // }
     } else if (sessionData) {
       // Session data takes priority - only set if different to avoid unnecessary re-renders
       if (sessionData?.selectedData && JSON.stringify(sessionData.selectedData) !== JSON.stringify(selectedData)) {
@@ -110,9 +118,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       if (sessionData?.boundaryData && JSON.stringify(sessionData.boundaryData) !== JSON.stringify(boundaryOptions)) {
         setBoundaryOptions(sessionData.boundaryData);
       }
-      if (sessionData?.isUnifiedCampaign !== undefined && sessionData.isUnifiedCampaign !== isUnifiedCampaign) {
-        setIsUnifiedCampaign(sessionData.isUnifiedCampaign);
-      }
+      // Commented: isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN, user toggle removed
+      // if (sessionData?.isUnifiedCampaign !== undefined && sessionData.isUnifiedCampaign !== isUnifiedCampaign) {
+      //   setIsUnifiedCampaign(sessionData.isUnifiedCampaign);
+      // }
     }
 
     // Mark data as loaded only after we've processed available data
@@ -288,7 +297,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             ]}
             label={"Info"}
           /> */}
-          <Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
+          {/* Commented: Unified campaign toggle card removed - isUnifiedCampaign is now always controlled by DEFAULT_IS_UNIFIED_CAMPAIGN constant.
+              To re-enable the toggle, uncomment this card and restore the session/API overrides in the useEffects above. */}
+          {/* <Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <TextBlock
                 subHeader={t("HCM_UNIFIED_UPLOAD_OPTION")}
@@ -303,7 +314,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 disabled={restrictSelection}
               />
             </div>
-          </Card>
+          </Card> */}
         </div>
       </div>
       {showPopUp && (
