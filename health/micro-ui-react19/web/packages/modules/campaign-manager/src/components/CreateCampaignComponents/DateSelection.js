@@ -50,7 +50,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
         {t(`HCM_CAMPAIGN_DATES_HEADER`)}
       </HeaderComponent>
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
-      <LabelFieldPair className={"boldLabel"} style={{}} vertical={false} removeMargin={false}>
+      <LabelFieldPair className={"boldLabel"} style={{borderRadius:"12px"}} vertical={false} removeMargin={false}>
         <div className="digit-header-content label " style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
           <div>{t(`HCM_CAMPAIGN_DATES`)}</div>
           <span className="mandatory-date">*</span>

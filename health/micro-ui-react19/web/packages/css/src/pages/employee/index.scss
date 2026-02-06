@@ -1076,7 +1076,7 @@ tbody {
   margin-bottom: unset;
 }
 .draggableField-cont {
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
   width: 100%;
   border-radius: 0.5rem;
   border: 1px solid #d6d5d4;
@@ -1118,7 +1118,8 @@ tbody {
 }
 .appConfigLabelField-label {
   @include typography-heading-s;
-  width: 12rem !important;
+  min-width: 12rem !important;
+  width: 100% !important;
   word-break: break-word;
   color: var(--digitv2-lightTheme-text-secondary);
   margin-bottom: 0.5rem;
@@ -1565,7 +1566,7 @@ tbody {
     .icon-label-container h2.digit-button-label {
       display: flex;
       align-items: center;
-      line-height: 0.875rem;
+      line-height: normal;
     }
   }
 }

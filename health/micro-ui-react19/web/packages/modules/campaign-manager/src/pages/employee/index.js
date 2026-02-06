@@ -159,7 +159,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       internalLink: pathVar.includes("my-campaign-new") ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       content: t("MY_CAMPAIGN"),
-      show: pathVar.includes("my-campaign-new") || pathVar.includes("checklist/update") ? true : false,
+      show: pathVar.includes("my-campaign-new") ? true : false,
     },
     {
       internalLink: "",
@@ -178,6 +178,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("app-features") ||
         pathVar.includes("update-campaign") ||
         pathVar.includes("checklist/search") ||
+        pathVar.includes("checklist/update") ||
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
         pathVar.includes("update-dates-boundary") ||
@@ -195,7 +196,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("SEARCH_CHECKLIST"),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&name=${name}&campaignId=${campaignId}&projectType=${projectType}&role=${role}`,
       show:
-        pathVar.includes("checklist/search") || pathVar.includes("checklist/create") || pathVar.includes("checklist/view") ? true : false,
+        pathVar.includes("checklist/search") || pathVar.includes("checklist/create") || pathVar.includes("checklist/view") || pathVar.includes("checklist/update") ? true : false,
     },
     {
       internalLink: "",
@@ -213,9 +214,10 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
-      internalLink: "",
+      internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,
       content: t("VIEW_CHECKLIST"),
-      show: pathVar.includes("checklist/view") ? true : false,
+      query: `campaignName=${name}&role=${role}&checklistType=${url?.checklistType}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show: pathVar.includes("checklist/view") || pathVar.includes("checklist/update") ? true : false,
     },
     {
       internalLink: "",

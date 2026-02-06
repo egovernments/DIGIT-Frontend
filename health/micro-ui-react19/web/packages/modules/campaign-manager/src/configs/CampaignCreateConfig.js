@@ -131,6 +131,7 @@ export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
               },
               populators: {
                 name: "DateSelection",
+                fieldPairClassName:"date-selection-field",
                 // optionsKey: "code",
                 error: "ES__REQUIRED_DATE",
                 required: true,

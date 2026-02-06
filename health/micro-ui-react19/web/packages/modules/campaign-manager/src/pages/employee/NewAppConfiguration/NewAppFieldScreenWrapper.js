@@ -79,7 +79,7 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
   }
 
   return (
-    <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
+    <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
       <div className="">
         <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
       </div>
@@ -322,7 +322,7 @@ function NewAppFieldScreenWrapper() {
           onClick={handleAddSection}
         />
       )}
-      <Divider className="app-config-drawer-action-divider" />
+      {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
       {currentCard?.footer?.length > 0 && (
         <div className="app-config-drawer-subheader">
           <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
@@ -332,7 +332,7 @@ function NewAppFieldScreenWrapper() {
         currentCard?.footer.length > 0 &&
         currentCard?.footer?.map((footerButtonConfig, index) => (
           <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} />
-        ))}
+      ))}
       <Divider />
       <div className="app-config-drawer-subheader">
         <div>{t("APPCONFIG_PRIVACY_CONTROLS")}</div>
