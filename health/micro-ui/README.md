@@ -164,7 +164,7 @@ This README should provide clarity on setting up and running your project locall
 
 ## Documentation
 
-[Documentation](https://https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
+[Documentation](https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
 
 ## Support
