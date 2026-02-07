@@ -61,6 +61,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
   // Check if field has configurable (non-custom) visibility conditions
   const expressions = config?.visibilityCondition?.expression;
   const isDependent = Array.isArray(expressions) && expressions.filter((e) => e.type !== "custom").length > 0;
+  const hasToggle = !config?.deleteFlag && !config?.mandatory;
 
   return (
     <div
@@ -76,7 +77,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
       style={{}}
     >
       <LabelFieldPair className={`appConfigLabelField`}>
-        <div className="appConfigLabelField-label-container">
+        <div className="appConfigLabelField-label-container" style={hasToggle ? {width:"80%"} : {width:"100%"}}>
           <div className="appConfigLabelField-label">
             <span>{label}</span>
           </div>
