@@ -614,23 +614,25 @@
 }
 
 .module-card {
-  width: 21rem;
+  /* width: 21rem; */ /* Removed fixed width so grid 1fr can control card sizing */
   height: 20rem;
   border: 1px;
   border-radius: 0.75rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
 }
 .modules-container {
-  display: flex;
+  /* display: flex; */ /* Switched from flex to grid to eliminate right-side gap */
+  /* flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
   gap: 1.5rem;
-  flex-wrap: wrap;
   align-items: stretch;
   padding-left: 0rem;
   padding: 1rem;
   padding-left: 0rem;
-  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
 }
 
 .modules-feature-container {

@@ -329,3 +329,18 @@ header {
     max-width: 37.5rem;
   }
 }
+.digit-inbox-search-wrapper {
+  .digit-inbox-search-component-wrapper {
+    .digit-sections-parent {
+      &.search {
+        .digit-section {
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+}
+
+.digit-panelcard-wrap{
+  border-radius: 12px !important;
+}

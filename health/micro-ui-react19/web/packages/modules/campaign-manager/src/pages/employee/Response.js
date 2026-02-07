@@ -51,7 +51,7 @@ const Response = () => {
         info={t(state?.info)}
         footerChildren={[]}
         children={children}
-        showAsSvg={false}
+        showAsSvg={true}
       />
       <Footer
         actionFields={[
