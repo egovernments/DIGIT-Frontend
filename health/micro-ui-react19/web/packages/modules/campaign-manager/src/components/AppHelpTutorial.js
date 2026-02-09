@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Button, Loader } from "@egovernments/digit-ui-components";
 import { Close, TutorialGuide } from "@egovernments/digit-ui-svg-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const SampleHelpContent = [
   {
@@ -131,7 +132,7 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
         <div className="tutorial-header">
           <span style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
             <TutorialGuide />
-            {t("EXPLORE_TUTORIALS")}
+            {t(I18N_KEYS.COMPONENTS.EXPLORE_TUTORIALS)}
           </span>
           <Close className="tutorial-close" height="32" width="32" fill="#0B0C0C" onClick={handleClose} />
         </div>

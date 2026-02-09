@@ -6,6 +6,7 @@ import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import PopupFieldConfigurator from "../../../components/PopupFieldConfigurator";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const PopupConfigEditor = ({ selectedField }) => {
   const { t } = useTranslation();
@@ -67,9 +68,9 @@ const PopupConfigEditor = ({ selectedField }) => {
     <>
       <Divider />
       <div className="app-config-drawer-subheader">
-        <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_POPUP_PROPERTIES")}</div>
+        <div className={"app-config-drawer-subheader-text"}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_POPUP_PROPERTIES)}</div>
         <span className="icon-wrapper new">
-          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_POPUP_PROPERTIES")} />
+          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_POPUP_PROPERTIES)} />
         </span>
       </div>
 
@@ -98,7 +99,7 @@ const PopupConfigEditor = ({ selectedField }) => {
               // }}
               className="app-config-group-heading"
             >
-              {t("POPUP_BODY_FIELDS")}
+              {t(I18N_KEYS.APP_CONFIGURATION.POPUP_BODY_FIELDS)}
             </div>
             {popupConfig.body.map((bodyItem, index) => {
               // Check if this field has a label
@@ -132,7 +133,7 @@ const PopupConfigEditor = ({ selectedField }) => {
                       <label
                         style={{ fontWeight: "500", fontSize: "14px" }}
                       >
-                        {t("CONFIGURE_OPTIONS_FOR") + `${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}`}
+                        {t(I18N_KEYS.APP_CONFIGURATION.CONFIGURE_OPTIONS_FOR) + `${bodyItem.label ? (customTranslate(bodyItem.label) || t(bodyItem.format)) : customTranslate(bodyItem.fieldName)}`}
                       </label>
                       <PopupFieldConfigurator
                         field={bodyItem}
@@ -159,7 +160,7 @@ const PopupConfigEditor = ({ selectedField }) => {
               // }}
               className="app-config-group-heading"
             >
-              {t("POPUP_FOOTER_ACTIONS_LABELS")}
+              {t(I18N_KEYS.APP_CONFIGURATION.POPUP_FOOTER_ACTIONS_LABELS)}
             </div>
             {popupConfig.footerActions.map((footerAction, index) => {
               if (footerAction.label !== undefined) {
@@ -181,7 +182,7 @@ const PopupConfigEditor = ({ selectedField }) => {
         {/* Show message if no configurable properties found */}
         {!popupConfig.title && !hasBodyLabels && !hasConfigurableBodyItems && !hasFooterLabels && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            <Tag showIcon={true} label={t("CMP_DRAWER_NO_CONFIG_ERROR_CONTENT")} type="error" />
+            <Tag showIcon={true} label={t(I18N_KEYS.APP_CONFIGURATION.CMP_DRAWER_NO_CONFIG_ERROR_CONTENT)} type="error" />
           </div>
         )}
       </div>
@@ -210,7 +211,7 @@ const PopupLabelField = ({ label, path, value, selectedField }) => {
       <FieldV1
         value={localizedValue}
         type="text"
-        placeholder={t("ENTER_LABEL_TEXT") || ""}
+        placeholder={t(I18N_KEYS.APP_CONFIGURATION.ENTER_LABEL_TEXT) || ""}
         withoutLabel={true}
         onChange={(e) => {
           const val = e.target.value;

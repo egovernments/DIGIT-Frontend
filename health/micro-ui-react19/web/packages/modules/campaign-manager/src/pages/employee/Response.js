@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PanelCard, Footer, Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -71,12 +72,12 @@ const Response = () => {
               label={
                 state?.secondaryActionLabel
                   ? t(state?.secondaryActionLabel)
-                  : t("ES_CAMPAIGN_RESPONSE_ACTION")
+                  : t(I18N_KEYS.PAGES.ES_CAMPAIGN_RESPONSE_ACTION)
               }
               title={
                 state?.secondaryActionLabel
                   ? t(state?.secondaryActionLabel)
-                  : t("ES_CAMPAIGN_RESPONSE_ACTION")
+                  : t(I18N_KEYS.PAGES.ES_CAMPAIGN_RESPONSE_ACTION)
               }
               isSuffix={state?.isSecondaryIconSuffix || false}
               icon={state?.secondaryActionIcon}

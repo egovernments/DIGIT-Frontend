@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { SVG } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const NoResultsFound = (props) => {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ const NoResultsFound = (props) => {
   return (
     <div className={`digit-no-data-found ${props?.className ? props?.className : ""}`} style={props?.style}>
       <SVG.NoResultsFoundIcon height={iconHeight} width={iconWidth} />
-      <span className="digit-error-msg">{props?.text ? t(props?.text) : t("COMMON_NO_RESULTS_FOUND")}</span>
+      <span className="digit-error-msg">{props?.text ? t(props?.text) : t(I18N_KEYS.COMPONENTS.COMMON_NO_RESULTS_FOUND)}</span>
     </div>
   );
 };

@@ -18,6 +18,7 @@ import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updatePageConditionalNav } from "./redux/remoteConfigSlice";
 import { fetchFlowPages, clearFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
@@ -132,45 +133,45 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
     }, [dispatch, currentPageName, flowId, campaignNumber, pageConfigs, pageFieldsLoading, tenantId]);
 
     // ----- labels -----
-    const navLogicTitle = t("NAVIGATION_LOGIC") || "Navigation Logic";
-    const addRuleLabel = t("ADD_NAVIGATION_LOGIC") || "Add Rule";
-    const editLabel = t("EDIT") || "Edit";
-    const deleteRuleLabel = t("HCM_REMOVE_RULE") || "Delete Rule";
-    const noRulesYet = t("HCM_NO_RULES_YET") || "No navigation rules added yet.";
-    const joinWithLabel = t("HCM_JOIN_WITH") || "Join with";
-    const selectFieldLabel = t("HCM_SELECT_FIELD") || "Select Field";
-    const comparisonTypeLabel = t("HCM_COMPARISION_TYPE") || "Comparison";
-    const selectValueLabel = t("HCM_SELECT_VALUE") || "Select Value";
-    const enterValueLabel = t("ENTER_VALUE") || "Enter value";
-    const targetPageLabel = t("HCM_TARGET_PAGE") || "Navigate to page";
-    const removeConditionLabel = t("REMOVE_CONDITION") || "Delete Condition";
-    const addConditionLabel = t("ADD_CONDITION") || "Add Condition";
-    const closeLabel = t("CLOSE") || "Cancel";
-    const submitLabel = t("CONFIRM_NAVIGATION_LOGIC") || "Submit";
-    const andText = t("AND") || "And";
-    const orText = t("OR") || "Or";
-    const incompleteExprLabel = t("INCOMPLETE_EXPRESSION") || "(incomplete)";
+    const navLogicTitle = t(I18N_KEYS.APP_CONFIGURATION.NAVIGATION_LOGIC) || "Navigation Logic";
+    const addRuleLabel = t(I18N_KEYS.APP_CONFIGURATION.ADD_NAVIGATION_LOGIC) || "Add Rule";
+    const editLabel = t(I18N_KEYS.APP_CONFIGURATION.EDIT) || "Edit";
+    const deleteRuleLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_REMOVE_RULE) || "Delete Rule";
+    const noRulesYet = t(I18N_KEYS.APP_CONFIGURATION.HCM_NO_RULES_YET) || "No navigation rules added yet.";
+    const joinWithLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_JOIN_WITH) || "Join with";
+    const selectFieldLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_FIELD) || "Select Field";
+    const comparisonTypeLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_COMPARISION_TYPE) || "Comparison";
+    const selectValueLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_VALUE) || "Select Value";
+    const enterValueLabel = t(I18N_KEYS.APP_CONFIGURATION.ENTER_VALUE) || "Enter value";
+    const targetPageLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_TARGET_PAGE) || "Navigate to page";
+    const removeConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.REMOVE_CONDITION) || "Delete Condition";
+    const addConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.ADD_CONDITION) || "Add Condition";
+    const closeLabel = t(I18N_KEYS.COMMON.CLOSE) || "Cancel";
+    const submitLabel = t(I18N_KEYS.APP_CONFIGURATION.CONFIRM_NAVIGATION_LOGIC) || "Submit";
+    const andText = t(I18N_KEYS.APP_CONFIGURATION.AND) || "And";
+    const orText = t(I18N_KEYS.APP_CONFIGURATION.OR) || "Or";
+    const incompleteExprLabel = t(I18N_KEYS.APP_CONFIGURATION.INCOMPLETE_EXPRESSION) || "(incomplete)";
     const completeAllMsg =
-        t("PLEASE_COMPLETE_ALL_CONDITIONS") ||
+        t(I18N_KEYS.APP_CONFIGURATION.PLEASE_COMPLETE_ALL_CONDITIONS) ||
         "Please complete all conditions and select a target page before confirming.";
-    const logicLabel = t("HCM_LOGIC") || "Logic";
+    const logicLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_LOGIC) || "Logic";
     // Rule Summary labels
-    const ifLabel = t("IF") || "If";
-    const thenNavigateToLabel = t("THEN_NAVIGATE_TO") || "Then navigate to";
-    const andLabel = t("AND") || "And";
-    const onPageLabel = t("ON_PAGE") || "on page";
+    const ifLabel = t(I18N_KEYS.APP_CONFIGURATION.IF) || "If";
+    const thenNavigateToLabel = t(I18N_KEYS.APP_CONFIGURATION.THEN_NAVIGATE_TO) || "Then navigate to";
+    const andLabel = t(I18N_KEYS.APP_CONFIGURATION.AND) || "And";
+    const onPageLabel = t(I18N_KEYS.APP_CONFIGURATION.ON_PAGE) || "on page";
     // ----- constants / helpers -----
     const LOGICALS = [
-        { code: "&&", name: t("AND") || "AND" },
-        { code: "||", name: t("OR") || "OR" },
+        { code: "&&", name: t(I18N_KEYS.APP_CONFIGURATION.AND) || "AND" },
+        { code: "||", name: t(I18N_KEYS.APP_CONFIGURATION.OR) || "OR" },
     ];
     const ALL_OPERATOR_OPTIONS = [
-        { code: "==", name: t("EQUALS_TO") || "equals to" },
-        { code: "!=", name: t("NOT_EQUALS_TO") || "not equals to" },
-        { code: ">=", name: t("GREATER_THAN_OR_EQUALS_TO") || "greater than or equals to" },
-        { code: "<=", name: t("LESS_THAN_OR_EQUALS_TO") || "less than or equals to" },
-        { code: ">", name: t("GREATER_THAN") || "greater than" },
-        { code: "<", name: t("LESS_THAN") || "less than" },
+        { code: "==", name: t(I18N_KEYS.APP_CONFIGURATION.EQUALS_TO) || "equals to" },
+        { code: "!=", name: t(I18N_KEYS.APP_CONFIGURATION.NOT_EQUALS_TO) || "not equals to" },
+        { code: ">=", name: t(I18N_KEYS.APP_CONFIGURATION.GREATER_THAN_OR_EQUALS_TO) || "greater than or equals to" },
+        { code: "<=", name: t(I18N_KEYS.APP_CONFIGURATION.LESS_THAN_OR_EQUALS_TO) || "less than or equals to" },
+        { code: ">", name: t(I18N_KEYS.APP_CONFIGURATION.GREATER_THAN) || "greater than" },
+        { code: "<", name: t(I18N_KEYS.APP_CONFIGURATION.LESS_THAN) || "less than" },
     ];
 
     const PARSE_OPERATORS = useMemo(
@@ -320,7 +321,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
         // For checkbox fields, translate true/false to Yes/No
         if (isCheckboxField(field)) {
             const boolValue = String(value).toLowerCase() === "true";
-            return boolValue ? (t("YES") || "Yes") : (t("NO") || "No");
+            return boolValue ? (t(I18N_KEYS.COMMON.YES) || "Yes") : (t(I18N_KEYS.COMMON.NO) || "No");
         }
 
         // For dropdown/radio/select fields with enums
@@ -374,7 +375,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
 
             // Add joiner between conditions
             if (idx > 0) {
-                const joinerText = cond.joiner?.code === "||" ? (t("OR") || "Or") : andLabel;
+                const joinerText = cond.joiner?.code === "||" ? (t(I18N_KEYS.APP_CONFIGURATION.OR) || "Or") : andLabel;
                 elements.push(
                     <div key={`joiner-${idx}`} className="rule-summary__joiner">
                         <Tag label={joinerText} type="warning" />
@@ -807,7 +808,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             <Card type="secondary">
                 <div className="navigation-logic-wrapper__loading">
                     <p className="navigation-logic-wrapper__loading-text">
-                        {t("LOADING_CONFIGURATION") || "Loading configuration..."}
+                        {t(I18N_KEYS.APP_CONFIGURATION.LOADING_CONFIGURATION) || "Loading configuration..."}
                     </p>
                 </div>
             </Card>
@@ -1099,7 +1100,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                             <TextInput
                                                                                                 type="text"
                                                                                                 populators={{ name: `months-${editorIndex}-${idx}` }}
-                                                                                                placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                                placeholder={t(I18N_KEYS.APP_CONFIGURATION.ENTER_INTEGER_VALUE) || enterValueLabel}
                                                                                                 value={cond.fieldValue}
                                                                                                 onChange={(event) =>
                                                                                                     updateCond(editorIndex, idx, {
@@ -1195,7 +1196,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                             <TextInput
                                                                                                 type="text"
                                                                                                 populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                                placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                                placeholder={t(I18N_KEYS.APP_CONFIGURATION.ENTER_INTEGER_VALUE) || enterValueLabel}
                                                                                                 value={cond.fieldValue}
                                                                                                 onChange={(event) =>
                                                                                                     updateCond(editorIndex, idx, {

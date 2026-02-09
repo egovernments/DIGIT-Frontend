@@ -19,6 +19,7 @@ import { useCustomT, useCustomTranslate } from "./hooks/useCustomT";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { fetchFlowPages } from "./redux/flowPagesSlice";
 import { fetchPageFields } from "./redux/pageFieldsSlice";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
@@ -138,48 +139,48 @@ function NewDependentFieldWrapper({ t }) {
     }, [dispatch, currentPageName, flowId, campaignNumber, pageConfigs, pageFieldsLoading, tenantId]);
 
     // ---------- labels ----------
-    const displayLogicLabel = t("DISPLAY_LOGIC") || "Display Logic";
-    const noLogicAddedLabel = t("NO_LOGIC_ADDED") || "No logic added yet.";
-    const addDisplayLogicLabel = t("ADD_DISPLAY_LOGIC") || "Add Display Logic";
-    const editLabel = t("EDIT") || "Edit";
-    const deleteRuleLabel = t("HCM_REMOVE_RULE") || "Delete Rule";
-    const selectPageLabel = t("HCM_SELECT_PAGE") || "Select Page";
-    const selectFieldLabel = t("HCM_SELECT_FIELD") || "Select Field";
-    const comparisonTypeLabel = t("HCM_COMPARISION_TYPE") || "Comparison";
-    const selectValueLabel = t("HCM_SELECT_VALUE") || "Select Value";
-    const enterValueLabel = t("ENTER_VALUE") || "Enter value";
-    const closeLabel = t("CLOSE") || "Cancel";
-    const submitLabel = t("CONFIRM_DISPLAY_LOGIC") || "Submit";
-    const addConditionLabel = t("ADD_CONDITION") || "Add Condition";
-    const removeConditionLabel = t("REMOVE_CONDITION") || "Remove Condition";
-    const compareFieldToggleLabel = t("COMPARE_WITH_FIELD") || "Compare with another field";
+    const displayLogicLabel = t(I18N_KEYS.APP_CONFIGURATION.DISPLAY_LOGIC) || "Display Logic";
+    const noLogicAddedLabel = t(I18N_KEYS.APP_CONFIGURATION.NO_LOGIC_ADDED) || "No logic added yet.";
+    const addDisplayLogicLabel = t(I18N_KEYS.APP_CONFIGURATION.ADD_DISPLAY_LOGIC) || "Add Display Logic";
+    const editLabel = t(I18N_KEYS.APP_CONFIGURATION.EDIT) || "Edit";
+    const deleteRuleLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_REMOVE_RULE) || "Delete Rule";
+    const selectPageLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_PAGE) || "Select Page";
+    const selectFieldLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_FIELD) || "Select Field";
+    const comparisonTypeLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_COMPARISION_TYPE) || "Comparison";
+    const selectValueLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_VALUE) || "Select Value";
+    const enterValueLabel = t(I18N_KEYS.APP_CONFIGURATION.ENTER_VALUE) || "Enter value";
+    const closeLabel = t(I18N_KEYS.COMMON.CLOSE) || "Cancel";
+    const submitLabel = t(I18N_KEYS.APP_CONFIGURATION.CONFIRM_DISPLAY_LOGIC) || "Submit";
+    const addConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.ADD_CONDITION) || "Add Condition";
+    const removeConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.REMOVE_CONDITION) || "Remove Condition";
+    const compareFieldToggleLabel = t(I18N_KEYS.APP_CONFIGURATION.COMPARE_WITH_FIELD) || "Compare with another field";
     const completeAllMsg =
-        t("PLEASE_COMPLETE_ALL_CONDITIONS") || "Please complete all condition fields before confirming.";
-    const logicLabel = t("HCM_LOGIC") || "Logic";
-    const selectPageFirstLabel = t("SELECT_PAGE_FIRST") || "Select page first";
-    const ruleSummaryLabel = t("RULE_SUMMARY") || "Rule Summary";
-    const ifLabel = t("IF") || "If";
-    const thenShowLabel = t("THEN_SHOW") || "Then show";
-    const andLabel = t("AND") || "and";
-    const orLabel = t("OR") || "or";
-    const isLabel = t("IS") || "is";
-    const isNotLabel = t("IS_NOT") || "is not";
-    const greaterThanLabel = t("GREATER_THAN") || "is greater than";
-    const lessThanLabel = t("LESS_THAN") || "is less than";
-    const greaterOrEqualLabel = t("GREATER_OR_EQUAL") || "is greater than or equal to";
-    const lessOrEqualLabel = t("LESS_OR_EQUAL") || "is less than or equal to";
-    const containsLabel = t("CONTAINS") || "contains";
-    const onPageLabel = t("ON_PAGE") || "on page";
-    const enterValueHelpText = t("ENTER_VALUE_HELP_TEXT") || "Enter a number or text (or) choose value from the options";
-    const useAnotherFieldLabel = t("USE_ANOTHER_FIELD") || "Use Another Field";
-    const useAnotherFieldHelpText = t("USE_ANOTHER_FIELD_HELP_TEXT") || "Compare with an existing field in the form";
-    const deleteConditionLabel = t("DELETE_CONDITION") || "Delete Condition";
-    const valueLabel = t("VALUE") || "Value";
+        t(I18N_KEYS.APP_CONFIGURATION.PLEASE_COMPLETE_ALL_CONDITIONS) || "Please complete all condition fields before confirming.";
+    const logicLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_LOGIC) || "Logic";
+    const selectPageFirstLabel = t(I18N_KEYS.APP_CONFIGURATION.SELECT_PAGE_FIRST) || "Select page first";
+    const ruleSummaryLabel = t(I18N_KEYS.APP_CONFIGURATION.RULE_SUMMARY) || "Rule Summary";
+    const ifLabel = t(I18N_KEYS.APP_CONFIGURATION.IF) || "If";
+    const thenShowLabel = t(I18N_KEYS.APP_CONFIGURATION.THEN_SHOW) || "Then show";
+    const andLabel = t(I18N_KEYS.APP_CONFIGURATION.AND) || "and";
+    const orLabel = t(I18N_KEYS.APP_CONFIGURATION.OR) || "or";
+    const isLabel = t(I18N_KEYS.APP_CONFIGURATION.IS) || "is";
+    const isNotLabel = t(I18N_KEYS.APP_CONFIGURATION.IS_NOT) || "is not";
+    const greaterThanLabel = t(I18N_KEYS.APP_CONFIGURATION.GREATER_THAN) || "is greater than";
+    const lessThanLabel = t(I18N_KEYS.APP_CONFIGURATION.LESS_THAN) || "is less than";
+    const greaterOrEqualLabel = t(I18N_KEYS.APP_CONFIGURATION.GREATER_OR_EQUAL) || "is greater than or equal to";
+    const lessOrEqualLabel = t(I18N_KEYS.APP_CONFIGURATION.LESS_OR_EQUAL) || "is less than or equal to";
+    const containsLabel = t(I18N_KEYS.APP_CONFIGURATION.CONTAINS) || "contains";
+    const onPageLabel = t(I18N_KEYS.APP_CONFIGURATION.ON_PAGE) || "on page";
+    const enterValueHelpText = t(I18N_KEYS.APP_CONFIGURATION.ENTER_VALUE_HELP_TEXT) || "Enter a number or text (or) choose value from the options";
+    const useAnotherFieldLabel = t(I18N_KEYS.APP_CONFIGURATION.USE_ANOTHER_FIELD) || "Use Another Field";
+    const useAnotherFieldHelpText = t(I18N_KEYS.APP_CONFIGURATION.USE_ANOTHER_FIELD_HELP_TEXT) || "Compare with an existing field in the form";
+    const deleteConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.DELETE_CONDITION) || "Delete Condition";
+    const valueLabel = t(I18N_KEYS.APP_CONFIGURATION.VALUE) || "Value";
 
     // ---------- constants & helpers ----------
     const LOGICALS = [
-        { code: "&&", name: t("AND") || "AND" },
-        { code: "||", name: t("OR") || "OR" },
+        { code: "&&", name: t(I18N_KEYS.APP_CONFIGURATION.AND) || "AND" },
+        { code: "||", name: t(I18N_KEYS.APP_CONFIGURATION.OR) || "OR" },
     ];
     const ALL_OPERATOR_OPTIONS = [
         { code: "==", name: "EQUALS_TO" },
@@ -993,7 +994,7 @@ function NewDependentFieldWrapper({ t }) {
         // For checkbox fields, translate true/false to Yes/No
         if (isCheckboxField(field)) {
             const boolValue = String(value).toLowerCase() === "true";
-            return boolValue ? (t("YES") || "Yes") : (t("NO") || "No");
+            return boolValue ? (t(I18N_KEYS.COMMON.YES) || "Yes") : (t(I18N_KEYS.COMMON.NO) || "No");
         }
 
         // For dropdown/radio/select fields with enums, find and translate the enum label
@@ -1147,7 +1148,7 @@ function NewDependentFieldWrapper({ t }) {
         return (
             <Card type="secondary">
                 <div className="dependent-field-wrapper__loading">
-                    <p className="dependent-field-wrapper__loading-text">{t("LOADING_CONFIGURATION") || "Loading configuration..."}</p>
+                    <p className="dependent-field-wrapper__loading-text">{t(I18N_KEYS.APP_CONFIGURATION.LOADING_CONFIGURATION) || "Loading configuration..."}</p>
                 </div>
             </Card>
         );
@@ -1193,7 +1194,7 @@ function NewDependentFieldWrapper({ t }) {
                         fontWeight: 400,
                       }}
                     >
-                      {t("OR") || "OR"}
+                      {t(I18N_KEYS.APP_CONFIGURATION.OR) || "OR"}
                     </span>
                   </div>
                   <RuleRow
@@ -1347,7 +1348,7 @@ function NewDependentFieldWrapper({ t }) {
                                   </p>
                                   <Dropdown
                                     showToolTip={true}
-                                    placeholder={t("CHOOSE_A_PAGE")}
+                                    placeholder={t(I18N_KEYS.APP_CONFIGURATION.CHOOSE_A_PAGE)}
                                     option={pageOptions}
                                     optionKey="displayName"
                                     optionCardStyles={{
@@ -1392,7 +1393,7 @@ function NewDependentFieldWrapper({ t }) {
                                   </p>
                                   <Dropdown
                                     showToolTip={true}
-                                    placeholder={t("CHOOSE_A_FIELD")}
+                                    placeholder={t(I18N_KEYS.APP_CONFIGURATION.CHOOSE_A_FIELD)}
                                     option={
                                       cond.leftPage ? leftFieldOptions : []
                                     }
@@ -1461,7 +1462,7 @@ function NewDependentFieldWrapper({ t }) {
                                 </p>
                                 <Dropdown
                                   showToolTip={true}
-                                  placeholder={t("CHOOSE_AN_OPERATOR_FOR_COMPARISION")}
+                                  placeholder={t(I18N_KEYS.APP_CONFIGURATION.CHOOSE_AN_OPERATOR_FOR_COMPARISION)}
                                   option={operatorOptions}
                                   optionKey="name"
                                   optionCardStyles={{
@@ -1575,7 +1576,7 @@ function NewDependentFieldWrapper({ t }) {
                                       showToolTip={true}
                                       option={pageOptions}
                                       optionKey="displayName"
-                                      placeholder={t("CHOOSE_A_PAGE")}
+                                      placeholder={t(I18N_KEYS.APP_CONFIGURATION.CHOOSE_A_PAGE)}
                                       name={`right-page-${idx}`}
                                       t={t}
                                       optionCardStyles={{
@@ -1612,7 +1613,7 @@ function NewDependentFieldWrapper({ t }) {
                                     </p>
                                     <Dropdown
                                       showToolTip={true}
-                                      placeholder={t("CHOOSE_A_FIELD")}
+                                      placeholder={t(I18N_KEYS.APP_CONFIGURATION.CHOOSE_A_FIELD)}
                                       option={
                                         cond.rightPage ? rightFieldOptions : []
                                       }
@@ -1700,7 +1701,7 @@ function NewDependentFieldWrapper({ t }) {
                                         name: `months-${editorIndex}-${idx}`,
                                       }}
                                       placeholder={
-                                        t("ENTER_INTEGER_VALUE") ||
+                                        t(I18N_KEYS.APP_CONFIGURATION.ENTER_INTEGER_VALUE) ||
                                         enterValueLabel
                                       }
                                       value={cond.fieldValue}

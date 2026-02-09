@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, PopUp, Toast, Loader, FieldV1 } from "@egovernments/digit-ui-components";
 import { useNavigate } from "react-router-dom";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const CloneCampaignWrapper = (props) => {
   const { t } = useTranslation();
@@ -82,7 +83,7 @@ const CloneCampaignWrapper = (props) => {
     setIsValidatingName(true);
     let temp = await fetchValidCampaignName(tenantId, name);
     if (temp.length != 0) {
-      setToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
+      setToast({ key: "error", label: t(I18N_KEYS.COMMON.CAMPAIGN_NAME_ALREADY_EXIST) });
       setIsValidatingName(false);
       return;
     }
@@ -114,7 +115,7 @@ const CloneCampaignWrapper = (props) => {
         if (res?.CampaignDetails?.campaignNumber) {
           setToast({
             key: "success",
-            label: `${res.CampaignDetails.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`,
+            label: `${res.CampaignDetails.campaignNumber} ${t(I18N_KEYS.COMPONENTS.CAMPAIGN_CREATED_SUCCESSFULLY)}`,
             type: "success",
           });
           setTimeout(() => {
@@ -136,7 +137,7 @@ const CloneCampaignWrapper = (props) => {
     <>
       <PopUp
         type={"default"}
-        heading={t("HCM_CREATE_COPY_OF_CAMPAIGN")}
+        heading={t(I18N_KEYS.COMPONENTS.HCM_CREATE_COPY_OF_CAMPAIGN)}
         className={"copy-campaign-popup"}
         onOverlayClick={() => props.setCampaignCopying(false)}
         onClose={() => props.setCampaignCopying(false)}
@@ -146,29 +147,29 @@ const CloneCampaignWrapper = (props) => {
             type={"button"}
             size={"large"}
             variation={"primary"}
-            label={t("SUBMIT")}
-            title={t("SUBMIT")}
+            label={t(I18N_KEYS.COMPONENTS.SUBMIT)}
+            title={t(I18N_KEYS.COMPONENTS.SUBMIT)}
             onClick={onNextClick}
             isDisabled={isLoading || isValidatingName}
           />
         ]}
       >
         {(isLoading || isValidatingName) && (
-          <Loader className="digit-center-loader" loaderText={isValidatingName ? t("VALIDATING_CAMPAIGN_NAME") : t("CREATING_CAMPAIGN_COPY")} />
+          <Loader className="digit-center-loader" loaderText={isValidatingName ? t(I18N_KEYS.COMMON.VALIDATING_CAMPAIGN_NAME) : t(I18N_KEYS.COMPONENTS.CREATING_CAMPAIGN_COPY)} />
         )}
         {!isLoading && !isValidatingName && (
           <div className="container">
             <div className="card-container2">
               <div>
                 {/* <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent> */}
-                <p className="name-description">{t("HCM_CAMPAIGN_NAME_DESCRIPTION")}</p>
+                <p className="name-description">{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_DESCRIPTION)}</p>
                 <div
                   className="clone-campaign-fields-wrapper"
                   style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1rem" }}
                 >
                   <FieldV1
                     type="text"
-                    label={t("HCM_CAMPAIGN_NAME")}
+                    label={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME)}
                     required={true}
                     style={{ width: "-webkit-fill-available", marginBottom: "0" }}
                     error={nameError?.message ? t(nameError.message) : ""}
@@ -180,17 +181,17 @@ const CloneCampaignWrapper = (props) => {
                         pattern: /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,29}$)^.*$/u,
                       },
                     }}
-                    placeholder={t("HCM_CAMPAIGN_NAME_EXAMPLE")}
+                    placeholder={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_EXAMPLE)}
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                   />
                   <FieldV1
                     error={startError?.message ? t(startError.message) : ""}
-                    label={t("CAMPAIGN_START_DATE")}
+                    label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_START_DATE)}
                     required={true}
                     type="date"
                     value={startDate}
-                    placeholder={t("CAMPAIGN_START_DATE")}
+                    placeholder={t(I18N_KEYS.COMPONENTS.CAMPAIGN_START_DATE)}
                     populators={{
                       fieldPairClassName: "clonecampaign-popup-field",
                       validation: {
@@ -205,11 +206,11 @@ const CloneCampaignWrapper = (props) => {
                   />
                   <FieldV1
                     error={endError?.message ? t(endError.message) : ""}
-                    label={t("CAMPAIGN_END_DATE")}
+                    label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_END_DATE)}
                     required={true}
                     type="date"
                     value={endDate}
-                    placeholder={t("CAMPAIGN_END_DATE")}
+                    placeholder={t(I18N_KEYS.COMPONENTS.CAMPAIGN_END_DATE)}
                     populators={{
                       fieldPairClassName: "clonecampaign-popup-field",
                       validation: {

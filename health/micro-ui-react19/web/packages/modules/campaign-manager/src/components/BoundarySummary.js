@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -37,7 +38,7 @@ const BoundarySummary = (props) => {
   const id = searchParams.get("id");
   const [showToast, setShowToast] = useState(null);
   const currentKey = searchParams.get("key");
-  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName || t("NA");
+  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName || t(I18N_KEYS.COMMON.NA);
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -129,13 +130,13 @@ const BoundarySummary = (props) => {
   return (
     <>
       {(isLoading || (!data && !error) || isFetching) && (
-        <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />
+        <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />
       )}
       <div className="container-full">
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.ES_BOUNDARY_SUMMARY_HEADING)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container boundary-summary">
             <ViewComposer data={updatedObject} />

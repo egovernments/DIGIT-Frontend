@@ -7,6 +7,7 @@ import MultipleChoice from "./MultipleChoice";
 import Checkboxes from "./Checkboxes";
 import Dropdowns from "./Dropdowns";
 import { QuestionContext } from "./CreateQuestionContext";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const maxDepth = 3;
 
@@ -31,7 +32,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
         id: newOptionId,
         key: 1,
         parentQuestionId: field.id,
-        label: `${t("HCM_CHECKLIST_OPTION")} 1`,
+        label: `${t(I18N_KEYS.COMMON.HCM_CHECKLIST_OPTION)} 1`,
         optionDependency: false,
         optionComment: false,
       };
@@ -92,7 +93,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
           id: crypto.randomUUID(),
           key: prev.length + 1,
           parentQuestionId: field.id,
-          label: `${t("HCM_CHECKLIST_OPTION")} ${field.options.length + 1}`,
+          label: `${t(I18N_KEYS.COMMON.HCM_CHECKLIST_OPTION)} ${field.options.length + 1}`,
           optionDependency: false
         },
       ];
@@ -182,7 +183,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return (
         <MultipleChoice
           maxLength={60}
-          titleHover={t("MAX_LENGTH_60")}
+          titleHover={t(I18N_KEYS.COMPONENTS.MAX_LENGTH_60)}
           t={t}
           addOption={handleAddOption}
           updateOption={handleUpdateOption}
@@ -209,7 +210,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return (
         <Checkboxes
           maxLength={60}
-          titleHover={t("MAX_LENGTH_60")}
+          titleHover={t(I18N_KEYS.COMPONENTS.MAX_LENGTH_60)}
           t={t}
           addOption={handleAddOption}
           updateOption={handleUpdateOption}
@@ -236,7 +237,7 @@ const FieldSelector = ({ type, name, value, onChange, placeholder = "", t, field
       return (
         <Dropdowns
           maxLength={60}
-          titleHover={t("MAX_LENGTH_60")}
+          titleHover={t(I18N_KEYS.COMPONENTS.MAX_LENGTH_60)}
           t={t}
           addOption={handleAddOption}
           updateOption={handleUpdateOption}
@@ -453,7 +454,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                     <div className="question-label" style={{ height: "3.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
                       <div style={{ display: "flex", gap: "1rem" , alignItems: "center"}}>
                         {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span> */}
-                        <span style={{ fontWeight: "700", fontSize: "1.5rem", display: "flex", justifyContent: "center", alignItems: "center" }}>{`${t("HCM_CHECKLIST_QUESTION")} ${questionNumber}`}</span>
+                        <span style={{ fontWeight: "700", fontSize: "1.5rem", display: "flex", justifyContent: "center", alignItems: "center" }}>{`${t(I18N_KEYS.COMPONENTS.HCM_CHECKLIST_QUESTION)} ${questionNumber}`}</span>
                         <div style={{ alignItems: "center" }}>
                           <CheckBox
                             disabled={dis}
@@ -461,7 +462,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                             key={field.key}
                             mainClassName={"checkboxOptionVariant"}
                             // disabled={optionDependency ? true : false}
-                            label={t("REQUIRED")}
+                            label={t(I18N_KEYS.COMPONENTS.REQUIRED)}
                             checked={field?.isRequired}
                             // onChange={handleRequiredField(field.id)}
                             onChange={() => handleRequiredField(field.id)}
@@ -499,7 +500,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                             name="title"
                             value={field?.title || ""}
                             onChange={(event) => handleUpdateField(event.target.value, "title", field.key, field.id)}
-                            placeholder={t("TYPE_YOUR_QUESTION_HERE")}
+                            placeholder={t(I18N_KEYS.COMPONENTS.TYPE_YOUR_QUESTION_HERE)}
                           />
                           {!dis && <Dropdown
                             style={{ width: "20%" }}
@@ -574,7 +575,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                               name="Text"
                               value={field.value || ""}
                               onChange={(event) => handleUpdateField(event.target.value, "value", field.key, field.id)}
-                              placeholder={t("HCM_CHECKLIST_TEXT_PLACEHOLDER")}
+                              placeholder={t(I18N_KEYS.COMPONENTS.HCM_CHECKLIST_TEXT_PLACEHOLDER)}
                             />
                           )
                         }
@@ -587,7 +588,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                               name="Number"
                               value={field.value || ""}
                               onChange={(event) => handleUpdateField(event.target.value, "value", field.key, field.id)}
-                              placeholder={t("HCM_CHECKLIST_NUMBER_PLACEHOLDER")}
+                              placeholder={t(I18N_KEYS.COMPONENTS.HCM_CHECKLIST_NUMBER_PLACEHOLDER)}
                             />
                           )
                         }
@@ -617,8 +618,8 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
           <Button
             variation="secondary"
             size="medium"
-            label={`${t("ADD_QUESTION")} ${nextQuestionNumber}`}
-            title={`${t("ADD_QUESTION")} ${nextQuestionNumber}`}
+            label={`${t(I18N_KEYS.COMPONENTS.ADD_QUESTION)} ${nextQuestionNumber}`}
+            title={`${t(I18N_KEYS.COMPONENTS.ADD_QUESTION)} ${nextQuestionNumber}`}
             className={"hover"}
             icon="Add"
             iconFill=""

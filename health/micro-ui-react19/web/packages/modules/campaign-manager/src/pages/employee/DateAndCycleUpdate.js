@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Card, FieldV1 } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const initialState = (projectData) => {
   return projectData;
@@ -199,7 +200,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             type="date"
             value={startDate}
             nonEditable={startDate && startDate?.length > 0 && today >= startDate ? true : false}
-            placeholder={t("HCM_START_DATE")}
+            placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
             populators={
               today >= startDate
                 ? { newDateFormat: true }
@@ -221,7 +222,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             type="date"
             value={endDate}
             nonEditable={endDate && endDate?.length > 0 && today >= endDate ? true : false}
-            placeholder={t("HCM_END_DATE")}
+            placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
             populators={{
               newDateFormat: true,
               min:
@@ -253,7 +254,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                   type="date"
                   value={item?.startDate}
                   nonEditable={item?.startDate && item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
-                  placeholder={t("HCM_START_DATE")}
+                  placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
                   populators={{
                     newDateFormat: true,
                     min:
@@ -287,7 +288,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                       ? true
                       : false
                   }
-                  placeholder={t("HCM_END_DATE")}
+                  placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
                   populators={{
                     newDateFormat: true,
                     min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())

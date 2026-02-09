@@ -6,6 +6,7 @@ import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ViewChecklist = () => {
   const { t } = useTranslation();
@@ -182,14 +183,14 @@ const ViewChecklist = () => {
       <TagComponent campaignName={campaignName} />
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
         <div>
-          <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" ,color:"#0b4b66"}}>{t("VIEW_CHECKLIST")}</h2>
+          <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" ,color:"#0b4b66"}}>{t(I18N_KEYS.PAGES.VIEW_CHECKLIST)}</h2>
         </div>
         <div style={{ display: "flex", gap: "1rem" }}>
           <Button
             icon="Preview"
             variation="secondary"
-            label={t("PREVIEW_CHECKLIST")}
-            title={t("PREVIEW_CHECKLIST")}
+            label={t(I18N_KEYS.PAGES.PREVIEW_CHECKLIST)}
+            title={t(I18N_KEYS.PAGES.PREVIEW_CHECKLIST)}
             className={"hover"}
             style={{ marginTop: "10px", marginBottom: "1.5rem" }}
             // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -201,7 +202,7 @@ const ViewChecklist = () => {
         <PopUp
           className={"custom-pop-up"}
           type={"default"}
-          heading={t("CHECKLIST_PREVIEW")}
+          heading={t(I18N_KEYS.PAGES.CHECKLIST_PREVIEW)}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -215,8 +216,8 @@ const ViewChecklist = () => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("CLOSE")}
-              title={t("CLOSE")}
+              label={t(I18N_KEYS.COMMON.CLOSE)}
+              title={t(I18N_KEYS.COMMON.CLOSE)}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -252,9 +253,9 @@ const ViewChecklist = () => {
               disabled={true}
               className="tetxinput-example"
               // type={"text"}
-              name={t("CHECKLIST_HELP_TEXT")}
+              name={t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT)}
               value={helpText}
-              placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+              placeholder={t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT_PALCEHOLDER)}
             />
           </div>
         }

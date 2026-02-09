@@ -5,6 +5,7 @@ import { DustbinIcon } from "./icons/DustbinIcon";
 // import { productType } from "../configs/productType";
 import { PRIMARY_COLOR } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const AddProductField = ({ onSelect }) => {
   const { t } = useTranslation();
@@ -98,7 +99,7 @@ const AddProductField = ({ onSelect }) => {
                   whiteSpace: "normal",
                 }}
               >
-                <span>{t("HCM_PRODUCT_NAME")}</span>
+                <span>{t(I18N_KEYS.COMPONENTS.HCM_PRODUCT_NAME)}</span>
                 <span className="mandatory-span">*</span>
               </div>
               <div style={{ flex: 1 }}>
@@ -121,7 +122,7 @@ const AddProductField = ({ onSelect }) => {
                   whiteSpace: "normal",
                 }}
               >
-                <span>{t("HCM_PRODUCT_TYPE")}</span>
+                <span>{t(I18N_KEYS.COMPONENTS.HCM_PRODUCT_TYPE)}</span>
                 <span className="mandatory-span">*</span>
               </div>
               <div style={{ flex: 1 }}>
@@ -147,7 +148,7 @@ const AddProductField = ({ onSelect }) => {
                   whiteSpace: "normal",
                 }}
               >
-                <span>{t("HCM_PRODUCT_VARIANT")}</span>
+                <span>{t(I18N_KEYS.COMPONENTS.HCM_PRODUCT_VARIANT)}</span>
                 <span className="mandatory-span">*</span>
               </div>
               <div style={{ flex: 1 }}>

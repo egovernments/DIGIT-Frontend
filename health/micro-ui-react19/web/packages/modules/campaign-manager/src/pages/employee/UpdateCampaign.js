@@ -7,6 +7,7 @@ import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } from "../../utils/setupCampaignHelpers";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * The `UpdateCampaign` function in JavaScript handles the Updating of campaign details,
@@ -351,10 +352,10 @@ const UpdateCampaign = ({ hierarchyData }) => {
                     }&isSuccess=${true}`,
                     {
                       state: {
-                        message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                        text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                        info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                        actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
+                        message: t(I18N_KEYS.COMMON.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE),
+                        text: t(I18N_KEYS.COMMON.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT),
+                        info: t(I18N_KEYS.COMMON.ES_CAMPAIGN_SUCCESS_INFO_TEXT),
+                        actionLabel: t(I18N_KEYS.PAGES.HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION),
                         actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
                       },
                     }
@@ -632,18 +633,18 @@ const UpdateCampaign = ({ hierarchyData }) => {
           // setRefetchGenerate(checkEqual === false ? true : false);
           return true;
         } else {
-          setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+          setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_SELECT_BOUNDARY)}` });
           return false;
         }
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+          setShowToast({ key: "info", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
           if (formData?.uploadBoundary?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
-          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION)}` });
           return false;
         } else {
           setShowToast(null);
@@ -652,12 +653,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
       case "uploadFacility":
         if (formData?.uploadFacility?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+          setShowToast({ key: "info", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadFacility?.isError) {
           if (formData?.uploadFacility?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
-          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION)}` });
           return false;
         } else {
           setShowToast(null);
@@ -665,12 +666,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
         }
       case "uploadUser":
         if (formData?.uploadUser?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+          setShowToast({ key: "info", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadUser?.isError) {
           if (formData?.uploadUser?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
-          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION)}` });
           return false;
         } else {
           setShowToast(null);
@@ -696,9 +697,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
           if (isUnifiedError) {
             setSummaryErrors((prev) => ({
               ...prev,
-              unified: [{ name: `unified`, error: t(`UNIFIED_FILE_MISSING`) }],
+              unified: [{ name: `unified`, error: t(I18N_KEYS.CAMPAIGN_CREATE.UNIFIED_FILE_MISSING) }],
             }));
-            setShowToast({ key: "error", label: "UNIFIED_FILE_MISSING" });
+            setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.UNIFIED_FILE_MISSING) });
             return false;
           }
           setShowToast(null);
@@ -717,7 +718,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 target: [
                   {
                     name: `target`,
-                    error: t(`TARGET_FILE_MISSING`),
+                    error: t(I18N_KEYS.CAMPAIGN_CREATE.TARGET_FILE_MISSING),
                   },
                 ],
               };
@@ -731,7 +732,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 facility: [
                   {
                     name: `facility`,
-                    error: t(`FACILITY_FILE_MISSING`),
+                    error: t(I18N_KEYS.CAMPAIGN_CREATE.FACILITY_FILE_MISSING),
                   },
                 ],
               };
@@ -745,14 +746,14 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 user: [
                   {
                     name: `user`,
-                    error: t(`USER_FILE_MISSING`),
+                    error: t(I18N_KEYS.CAMPAIGN_CREATE.USER_FILE_MISSING),
                   },
                 ],
               };
             }),
             true);
         if (isTargetError && isFacilityError && isUserError) {
-          setShowToast({ key: "error", label: "AT_LEAST_ONE_FILE_REQUIRED_ERROR" });
+          setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.AT_LEAST_ONE_FILE_REQUIRED_ERROR) });
           return false;
         }
         if (isTargetError && isBoundaryDiff(CampaignData?.CampaignDetails?.[0]?.boundaries, updateBoundary)) {

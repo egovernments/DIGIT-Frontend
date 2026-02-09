@@ -12,6 +12,7 @@ import { useCustomT, useCustomTranslate, useFieldDataLabel } from "./hooks/useCu
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
 import { getFieldTypeFromMasterData, getFieldTypeFromMasterData2, getFieldTypeOptionFromMasterData } from "./helpers";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Helper function to check if a value is empty (null, undefined, empty string, or empty array)
 const isValueEmpty = (value) => {
@@ -961,12 +962,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           // Initialize config with the fetched data
           dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
-          setPageConfigError(t("APP_CONFIG_NO_PAGE_CONFIG_FOUND"));
+          setPageConfigError(t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_NO_PAGE_CONFIG_FOUND));
           console.error("No page configuration found for:", { flow, pageName, campaignNumber });
         }
       } catch (err) {
         console.error("Error fetching page config:", err);
-        setPageConfigError(t("APP_CONFIG_FAILED_TO_FETCH_PAGE_CONFIG"));
+        setPageConfigError(t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FAILED_TO_FETCH_PAGE_CONFIG));
       } finally {
         setIsLoadingPageConfig(false);
       }
@@ -1047,7 +1048,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   if (pageConfigError) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", flexDirection: "column" }}>
-        <h3 style={{ color: "#d32f2f" }}>{t("APP_CONFIG_ERROR_LOADING_CONFIGURATION")}</h3>
+        <h3 style={{ color: "#d32f2f" }}>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ERROR_LOADING_CONFIGURATION)}</h3>
         <p>{pageConfigError}</p>
       </div>
     );
@@ -1080,7 +1081,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         <PopUp
           className="app-config-add-field-popup"
           type={"default"}
-          heading={t("ADD_FIELD")}
+          heading={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
           onOverlayClick={() => {
             dispatch(handleShowAddFieldPopup(null));
             setNewFieldType(null);
@@ -1097,19 +1098,19 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           <>
             <LabelFieldPair removeMargin={true}>
               <span style={{ fontWeight: "600", width: "33%" }}>
-                {t("FIELD_LABEL")} <span style={{ color: "red" }}>*</span>
+                {t(I18N_KEYS.APP_CONFIGURATION.FIELD_LABEL)} <span style={{ color: "red" }}>*</span>
               </span>
               <TextInput
                 name="fieldLabel"
                 value={fieldDataLabel}
-                placeholder={t("ENTER_FIELD_LABEL")}
+                placeholder={t(I18N_KEYS.APP_CONFIGURATION.ENTER_FIELD_LABEL)}
                 onChange={(event) => handleFieldChange(event.target.value)}
               />
             </LabelFieldPair>
 
             <LabelFieldPair removeMargin={true}>
               <span style={{ fontWeight: "600", width: "33%" }}>
-                {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
+                {t(I18N_KEYS.APP_CONFIGURATION.FIELD_TYPE)} <span style={{ color: "red" }}>*</span>
               </span>
               <Dropdown
                 className="app-config-pop-dropdown"
@@ -1127,12 +1128,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
                   return [
                     {
-                      name: t("FIELD_CATEGORY_BASIC"),
+                      name: t(I18N_KEYS.APP_CONFIGURATION.FIELD_CATEGORY_BASIC),
                       code: "basic",
                       options: basicOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
                     },
                     {
-                      name: t("FIELD_CATEGORY_ADVANCED"),
+                      name: t(I18N_KEYS.APP_CONFIGURATION.FIELD_CATEGORY_ADVANCED),
                       code: "advanced",
                       options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
                     },
@@ -1146,7 +1147,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   const updatedData = { ...newFieldType, field: value };
                   setNewFieldType(updatedData);
                 }}
-                placeholder={t("SELECT_FIELD_TYPE")}
+                placeholder={t(I18N_KEYS.APP_CONFIGURATION.SELECT_FIELD_TYPE)}
                 t={t}
                 isSearchable={true}
                 optionCardStyles={{ maxHeight: "20vh" }}
@@ -1158,8 +1159,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 type="button"
                 size="medium"
                 variation="secondary"
-                label={t("CANCEL")}
-                title={t("CANCEL")}
+                label={t(I18N_KEYS.COMMON.CANCEL)}
+                title={t(I18N_KEYS.COMMON.CANCEL)}
                 onClick={() => {
                   dispatch(handleShowAddFieldPopup(null));
                   setNewFieldType(null);
@@ -1169,8 +1170,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 type="button"
                 size="medium"
                 variation="primary"
-                label={t("ADD")}
-                title={t("ADD")}
+                label={t(I18N_KEYS.APP_CONFIGURATION.ADD)}
+                title={t(I18N_KEYS.APP_CONFIGURATION.ADD)}
                 isDisabled={!newFieldType?.label || !newFieldType?.field}
                 onClick={handleAddNewField}
               />

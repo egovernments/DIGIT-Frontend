@@ -9,6 +9,7 @@ import MobileChecklist from "../../components/MobileChecklist";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
 import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 let temp_data = [];
 

@@ -6,6 +6,7 @@ import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { convertEpochToNewDateFormat } from "../../utils/convertEpochToNewDateFormat";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -430,7 +431,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                 <div className="date-field-container">
                   <FieldV1
                     type="date"
-                    placeholder={t("FROM_DATE")}
+                    placeholder={t(I18N_KEYS.PAGES.FROM_DATE)}
                     // value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
                     value={
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
@@ -457,7 +458,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   />
                   <FieldV1
                     type="date"
-                    placeholder={t("TO_DATE")}
+                    placeholder={t(I18N_KEYS.PAGES.TO_DATE)}
                     // value={cycleData?.find((j) => j.key === index + 1)?.toDate}
                     value={
                       cycleData?.find((j) => j.key === index + 1)?.toDate

@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import CampaignDocumentsPreview from "./CampaignDocumentsPreview";
 import { CardText } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function CampaignResourceDocuments({ resources = [], svgStyles = {}, isUserGenerate = false }) {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ function CampaignResourceDocuments({ resources = [], svgStyles = {}, isUserGener
   }, [isLoading, resourceData]);
 
   if (!processData?.[0]?.id) {
-    return <CardText>{t("NO_DOCUMENTS_AVAILABLE")}</CardText>;
+    return <CardText>{t(I18N_KEYS.COMPONENTS.NO_DOCUMENTS_AVAILABLE)}</CardText>;
   }
   return (
     <div>

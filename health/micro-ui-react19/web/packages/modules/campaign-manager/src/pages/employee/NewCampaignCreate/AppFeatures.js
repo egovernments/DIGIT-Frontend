@@ -6,6 +6,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { TEMPLATE_BASE_CONFIG_MASTER } from "./AppModule";
 import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
@@ -288,11 +289,11 @@ const AppFeatures = () => {
     <>
       <div className="hcm-app-features">
         {(isSelectedFeatureLoading || isModuleToggleLoading) && <Loader page={true} variant={"PageLoader"} />}
-        {isUpdateLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />}
-        <HeaderComponent className="campaign-header-module-style">{t("HCM_CHOOSE_FEATURE_FOR_APP")}</HeaderComponent>
+        {isUpdateLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.SAVING_FEATURES_CONFIG_IN_SERVER)} />}
+        <HeaderComponent className="campaign-header-module-style">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CHOOSE_FEATURE_FOR_APP)}</HeaderComponent>
         <TextBlock
           body=""
-          caption={t("CMP_DRAWER_WHAT_IS_FEATURE_APP_CONFIG_SCREEN")}
+          caption={t(I18N_KEYS.CAMPAIGN_CREATE.CMP_DRAWER_WHAT_IS_FEATURE_APP_CONFIG_SCREEN)}
           header=""
           captionClassName="camp-drawer-caption"
           subHeader=""
@@ -311,8 +312,8 @@ const AppFeatures = () => {
         actionFields={[
           <Button
             key="back"
-            label={t("GO_BACK")}
-            title={t("GO_BACK")}
+            label={t(I18N_KEYS.COMMON.GO_BACK)}
+            title={t(I18N_KEYS.COMMON.GO_BACK)}
             variation="secondary"
             style={{ marginLeft: "2.5rem" }}
             icon={"ArrowBack"}
@@ -324,8 +325,8 @@ const AppFeatures = () => {
           />,
           <Button
             key="next"
-            label={t("NEXT")}
-            title={t("NEXT")}
+            label={t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
+            title={t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
             variation="primary"
             icon={"ArrowDirection"}
             isSuffix
@@ -337,10 +338,10 @@ const AppFeatures = () => {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("SURE_TO_CLEAR_CACHE")}
+          heading={t(I18N_KEYS.CAMPAIGN_CREATE.SURE_TO_CLEAR_CACHE)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("SURE_TO_CLEAR_CACHE_MODAL_TEXT")}</CardText>
+              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.CAMPAIGN_CREATE.SURE_TO_CLEAR_CACHE_MODAL_TEXT)}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -355,8 +356,8 @@ const AppFeatures = () => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("NO")}
-              title={t("NO")}
+              label={t(I18N_KEYS.COMMON.NO)}
+              title={t(I18N_KEYS.COMMON.NO)}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -366,8 +367,8 @@ const AppFeatures = () => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("CONFIRM")}
-              title={t("CONFIRM")}
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.CONFIRM)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.CONFIRM)}
               onClick={() => {
                 handleNext(showPopUp);
                 setShowPopUp(false);
@@ -404,8 +405,8 @@ const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedF
               size="large"
               isDisabled={feature?.disabled}
               variation={featureSelected ? "secondary" : "primary"}
-              label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
-              title={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
+              label={featureSelected ? t(I18N_KEYS.CAMPAIGN_CREATE.DESELECT) : feature?.disabled ? t(I18N_KEYS.CAMPAIGN_CREATE.ES_FEATURE_DISABLED) : t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_SELECT)}
+              title={featureSelected ? t(I18N_KEYS.CAMPAIGN_CREATE.DESELECT) : feature?.disabled ? t(I18N_KEYS.CAMPAIGN_CREATE.ES_FEATURE_DISABLED) : t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_SELECT)}
               onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
             />
           </Card>

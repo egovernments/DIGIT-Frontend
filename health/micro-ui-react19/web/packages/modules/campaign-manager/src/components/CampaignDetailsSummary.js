@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const CampaignDetailsSummary = (props) => {
   const { t } = useTranslation();
@@ -63,29 +64,29 @@ const CampaignDetailsSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
+                      <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                       <EditIcon />
                     </div>
                   ),
                   values: [
                     {
                       key: "CAMPAIGN_TYPE",
-                      value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.projectType ? t(`CAMPAIGN_PROJECT_${data?.[0]?.projectType?.toUpperCase()}`) : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NAME",
-                      value: data?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.campaignName || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_START_DATE",
-                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_END_DATE",
-                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
+                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -143,7 +144,7 @@ const CampaignDetailsSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
@@ -157,7 +158,7 @@ const CampaignDetailsSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <HeaderComponent className="summary-header">{t("HCM_CAMPAIGN_DETAILS_SUMMARY")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DETAILS_SUMMARY)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container">
             <ViewComposer data={updatedObject} />

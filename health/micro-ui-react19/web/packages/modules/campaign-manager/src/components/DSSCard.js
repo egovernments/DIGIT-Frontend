@@ -1,7 +1,8 @@
 import { EmployeeModuleCard, ModuleCardFullWidth, SVG } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-// TODO delete file and remove its dependecy @bhavya 
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
+// TODO delete file and remove its dependecy @bhavya
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
   propertytax: { key: "national-propertytax", stateKey: "propertytax", label: "NURT_PROPERTY_TAX", active: true, nActive: true },

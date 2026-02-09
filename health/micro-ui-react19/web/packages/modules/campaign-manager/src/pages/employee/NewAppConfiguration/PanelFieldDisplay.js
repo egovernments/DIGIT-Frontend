@@ -6,6 +6,7 @@ import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { getFieldTypeFromMasterData } from "./helpers";
 import { getFieldTypeFromMasterData2 } from "./helpers/getFieldTypeFromMasterData";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
 const ToggleVisibilityControl = ({ config, onToggle }) => {
@@ -83,7 +84,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
           </div>
           <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
             {isDependent && (
-              <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag dependent-field-tag" labelStyle={{}} showIcon={false} style={{}} type={"warning"} stroke={true} />
+              <Tag icon="" label={t(I18N_KEYS.APP_CONFIGURATION.DEPENDENT_FIELD_TAG)} className="app-config-field-tag dependent-field-tag" labelStyle={{}} showIcon={false} style={{}} type={"warning"} stroke={true} />
             )}
             <Tag
               icon=""

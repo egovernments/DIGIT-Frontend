@@ -7,6 +7,7 @@ import { Button, AlertCard, PopUp, Toast, Loader } from "@egovernments/digit-ui-
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
@@ -175,7 +176,7 @@ function UpdateDatesWithBoundaries() {
     <div>
       <TagComponent campaignName={campaignName} />
       <FormComposerV2
-        label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
+        label={t(I18N_KEYS.PAGES.CAMPAIGN_UPDATE_DATE_SUBMIT)}
         config={
           DateWithBoundary
             ? dateChangeBoundaryConfig?.map((config) => {
@@ -216,7 +217,7 @@ function UpdateDatesWithBoundaries() {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_CHANGE_DATE_CONFIRM")}
+          heading={t(I18N_KEYS.PAGES.ES_CAMPAIGN_CHANGE_DATE_CONFIRM)}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -229,8 +230,8 @@ function UpdateDatesWithBoundaries() {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("NO")}
-              title={t("NO")}
+              label={t(I18N_KEYS.COMMON.NO)}
+              title={t(I18N_KEYS.COMMON.NO)}
               onClick={() => {
                 setShowPopUp(null);
               }}
@@ -239,8 +240,8 @@ function UpdateDatesWithBoundaries() {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("YES")}
-              title={t("YES")}
+              label={t(I18N_KEYS.COMMON.YES)}
+              title={t(I18N_KEYS.COMMON.YES)}
               onClick={() => {
                 onConfirm(showPopUp);
               }}

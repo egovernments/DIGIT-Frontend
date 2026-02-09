@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
 import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const UpdateChecklist = () => {
   const { t } = useTranslation();
@@ -726,8 +727,8 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("SAVE_TRANSLATIONS")}
-                  title={t("SAVE_TRANSLATIONS")}
+                  label={t(I18N_KEYS.PAGES.SAVE_TRANSLATIONS)}
+                  title={t(I18N_KEYS.PAGES.SAVE_TRANSLATIONS)}
                   onClick={async () => {
                     const translations = localisationRef.current?.getFormattedTranslations() || [];
                     if (translations.length === 0) {
