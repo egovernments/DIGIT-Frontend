@@ -21,6 +21,7 @@ RUN chmod +x ./install-deps.sh
 
 # This will always be different, busting cache for everything below
 RUN echo "Build timestamp: $(date +%s)"
+RUN echo "Token length: $(echo -n $GIT_TOKEN | wc -c)"
 
 RUN ./install-deps.sh
 
