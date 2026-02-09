@@ -4,7 +4,6 @@ import UploadData from "./UploadData";
 import { useTranslation } from "react-i18next";
 import UploadDataMappingWrapper from "./UploadDataMappingWrapper";
 import NewUploadData from "./CreateCampaignComponents/NewUploadData";
-import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function DataUploadWrapper({ formData, props, onSelect }) {
   const { t } = useTranslation();

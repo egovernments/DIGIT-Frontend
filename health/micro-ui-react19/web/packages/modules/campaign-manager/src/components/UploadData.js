@@ -504,7 +504,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               if (error.keyword === "required") {
                 const missingProperty = error.params?.missingProperty || "";
                 return `${t(I18N_KEYS.COMPONENTS.HCM_DATA_AT_ROW)} ${index} ${t(I18N_KEYS.COMPONENTS.HCM_IN_COLUMN)} '${missingProperty}' ${t(
-                  "HCM_DATA_SHOULD_NOT_BE_EMPTY"
+                  I18N_KEYS.COMPONENTS.HCM_DATA_SHOULD_NOT_BE_EMPTY
                 )} at ${sheetName}`;
               }
               if (error.keyword === "type" && error.message === "must be string") {
@@ -659,7 +659,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           } else if (typeof value !== "number") {
             targetError.push(
               `${t(I18N_KEYS.COMPONENTS.HCM_DATA_AT_ROW)} ${jsonData.indexOf(row) + 2} ${t(I18N_KEYS.COMPONENTS.HCM_IN_COLUMN)} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_NUMBER"
+                I18N_KEYS.COMPONENTS.HCM_DATA_SHOULD_BE_NUMBER
               )} at ${sheetName}`
             );
           }

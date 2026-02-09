@@ -153,7 +153,7 @@ const CreateChecklist = () => {
             id: crypto.randomUUID(),
             key: 1,
             parentQuestionId: newId,
-            label: `${t("HCM_CHECKLIST_OPTION")} 1`,
+            label: `${t(I18N_KEYS.COMMON.HCM_CHECKLIST_OPTION)} 1`,
             optionDependency: false,
             optionComment: false,
           },
@@ -586,13 +586,13 @@ const CreateChecklist = () => {
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t("CREATE_NEW_CHECKLIST")}</h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t(I18N_KEYS.COMMON.HCM_CREATE_CHECKLIST)}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
                 variation="secondary"
-                label={t("HCM_CHECKLIST_CLEAR")}
-                title={t("HCM_CHECKLIST_CLEAR")}
+                label={t(I18N_KEYS.COMMON.HCM_CHECKLIST_CLEAR)}
+                title={t(I18N_KEYS.COMMON.HCM_CHECKLIST_CLEAR)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -602,8 +602,8 @@ const CreateChecklist = () => {
               <Button
                 icon="Preview"
                 variation="secondary"
-                label={t("PREVIEW_CHECKLIST")}
-                title={t("PREVIEW_CHECKLIST")}
+                label={t(I18N_KEYS.COMMON.HCM_PREVIEW_CHECKLIST)}
+                title={t(I18N_KEYS.COMMON.HCM_PREVIEW_CHECKLIST)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -612,8 +612,8 @@ const CreateChecklist = () => {
               {enabledModules && enabledModules.length > 1 && (
                 <Button
                   variation="secondary"
-                  label={t("ADD_TRANSLATIONS")}
-                  title={t("ADD_TRANSLATIONS")}
+                  label={t(I18N_KEYS.COMMON.HCM_ADD_TRANSLATIONS)}
+                  title={t(I18N_KEYS.COMMON.HCM_ADD_TRANSLATIONS)}
                   className={"hover"}
                   style={{ marginTop: "2rem", marginBottom: "2rem" }}
                   onClick={() => {
@@ -631,7 +631,7 @@ const CreateChecklist = () => {
             <PopUp
               className={"custom-pop-up"}
               type={"default"}
-              heading={t("CHECKLIST_PREVIEW")}
+              heading={t(I18N_KEYS.PAGES.CHECKLIST_PREVIEW)}
               children={[]}
               onOverlayClick={() => {
                 setShowPopUp(false);
@@ -644,8 +644,8 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CLOSE")}
-                  title={t("CLOSE")}
+                  label={t(I18N_KEYS.COMMON.CLOSE)}
+                  title={t(I18N_KEYS.COMMON.CLOSE)}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -654,8 +654,8 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
-                  title={t("CONFIRM_CHECKLIST_CONFIGURATION")}
+                  label={t(I18N_KEYS.PAGES.CONFIRM_CHECKLIST_CONFIGURATION)}
+                  title={t(I18N_KEYS.PAGES.CONFIRM_CHECKLIST_CONFIGURATION)}
                   onClick={() => {
                     onSubmit(null, 1, tempFormData, savedTranslations);
                     setShowPopUp(false);
@@ -687,13 +687,13 @@ const CreateChecklist = () => {
             ))}
             {<hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />}
             <div style={{ display: "flex",gap:"1.5rem" }}>
-              <div style={{ width: "20%", fontWeight: "500"}}>{t("NAME_OF_CHECKLIST")}</div>
+              <div style={{ width: "20%", fontWeight: "500"}}>{t(I18N_KEYS.PAGES.NAME_OF_CHECKLIST)}</div>
               <div className="digit-field" style={{width:"80%"}}>
                 <TextInput
                   // disabled={true}
                   className="tetxinput-example checklist-create"
                   type={"text"}
-                  name={t("NAME_OF_CHECKLIST")}
+                  name={t(I18N_KEYS.PAGES.NAME_OF_CHECKLIST)}
                   // value={`${checklistTypeLocal} ${roleLocal}`}
                   value={`${clTranslated} ${rlTranslated}`}
                   // onChange={(event) => addChecklistName(event.target.value)}
@@ -710,11 +710,11 @@ const CreateChecklist = () => {
                   disabled={false}
                   className="tetxinput-example checklist-create"
                   // type={"text"}
-                  name={t("CHECKLIST_HELP_TEXT")}
+                  name={t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT)}
                   value={helpText}
                   // value={`${clTranslated} ${rlTranslated}`}
                   onChange={(event) => setHelpText(event.target.value)}
-                  placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                  placeholder={t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT_PLACEHOLDER)}
                 />
               </div>
             </div>
@@ -722,7 +722,7 @@ const CreateChecklist = () => {
           <div style={{ height: "1.5rem" }}></div>
           <FormComposerV2
             showMultipleCardsWithoutNavs={true}
-            label={t("CREATE_CHECKLIST")}
+            label={t(I18N_KEYS.PAGES.CREATE_CHECKLIST)}
             config={config}
             onSubmit={popShow}
             fieldStyle={{ marginRight: 0 }}
@@ -731,7 +731,7 @@ const CreateChecklist = () => {
             actionClassName={"actionBarClass"}
             noCardStyle={true}
             showSecondaryLabel={true}
-            secondaryLabel={t("HCM_BACK")}
+            secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
             onSecondayActionClick={onSecondayActionClick}
           />
 
@@ -748,7 +748,7 @@ const CreateChecklist = () => {
             <PopUp
               className="localisation-popup-container"
               type={"default"}
-              heading={t("ADD_TRANSLATIONS")}
+              heading={t(I18N_KEYS.PAGES.ADD_TRANSLATIONS)}
               onClose={() => setShowLocalisationPopup(false)}
               onOverlayClick={() => {
                 setShowLocalisationPopup(false);
@@ -758,8 +758,8 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CANCEL")}
-                  title={t("CANCEL")}
+                  label={t(I18N_KEYS.COMMON.CANCEL)}
+                  title={t(I18N_KEYS.COMMON.CANCEL)}
                   onClick={() => {
                     setShowLocalisationPopup(false);
                   }}
@@ -768,8 +768,8 @@ const CreateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("SAVE_TRANSLATIONS")}
-                  title={t("SAVE_TRANSLATIONS")}
+                  label={t(I18N_KEYS.PAGES.SAVE_TRANSLATIONS)}
+                  title={t(I18N_KEYS.PAGES.SAVE_TRANSLATIONS)}
                   onClick={async () => {
                     const translations = localisationRef.current?.getFormattedTranslations() || [];
                     if (translations.length === 0) {

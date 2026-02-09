@@ -142,40 +142,27 @@ function NewDependentFieldWrapper({ t }) {
     const displayLogicLabel = t(I18N_KEYS.APP_CONFIGURATION.DISPLAY_LOGIC) || "Display Logic";
     const noLogicAddedLabel = t(I18N_KEYS.APP_CONFIGURATION.NO_LOGIC_ADDED) || "No logic added yet.";
     const addDisplayLogicLabel = t(I18N_KEYS.APP_CONFIGURATION.ADD_DISPLAY_LOGIC) || "Add Display Logic";
-    const editLabel = t(I18N_KEYS.APP_CONFIGURATION.EDIT) || "Edit";
     const deleteRuleLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_REMOVE_RULE) || "Delete Rule";
     const selectPageLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_PAGE) || "Select Page";
     const selectFieldLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_FIELD) || "Select Field";
     const comparisonTypeLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_COMPARISION_TYPE) || "Comparison";
-    const selectValueLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_SELECT_VALUE) || "Select Value";
     const enterValueLabel = t(I18N_KEYS.APP_CONFIGURATION.ENTER_VALUE) || "Enter value";
     const closeLabel = t(I18N_KEYS.COMMON.CLOSE) || "Cancel";
     const submitLabel = t(I18N_KEYS.APP_CONFIGURATION.CONFIRM_DISPLAY_LOGIC) || "Submit";
     const addConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.ADD_CONDITION) || "Add Condition";
-    const removeConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.REMOVE_CONDITION) || "Remove Condition";
-    const compareFieldToggleLabel = t(I18N_KEYS.APP_CONFIGURATION.COMPARE_WITH_FIELD) || "Compare with another field";
     const completeAllMsg =
         t(I18N_KEYS.APP_CONFIGURATION.PLEASE_COMPLETE_ALL_CONDITIONS) || "Please complete all condition fields before confirming.";
     const logicLabel = t(I18N_KEYS.APP_CONFIGURATION.HCM_LOGIC) || "Logic";
     const selectPageFirstLabel = t(I18N_KEYS.APP_CONFIGURATION.SELECT_PAGE_FIRST) || "Select page first";
-    const ruleSummaryLabel = t(I18N_KEYS.APP_CONFIGURATION.RULE_SUMMARY) || "Rule Summary";
     const ifLabel = t(I18N_KEYS.APP_CONFIGURATION.IF) || "If";
     const thenShowLabel = t(I18N_KEYS.APP_CONFIGURATION.THEN_SHOW) || "Then show";
     const andLabel = t(I18N_KEYS.APP_CONFIGURATION.AND) || "and";
     const orLabel = t(I18N_KEYS.APP_CONFIGURATION.OR) || "or";
-    const isLabel = t(I18N_KEYS.APP_CONFIGURATION.IS) || "is";
-    const isNotLabel = t(I18N_KEYS.APP_CONFIGURATION.IS_NOT) || "is not";
-    const greaterThanLabel = t(I18N_KEYS.APP_CONFIGURATION.GREATER_THAN) || "is greater than";
-    const lessThanLabel = t(I18N_KEYS.APP_CONFIGURATION.LESS_THAN) || "is less than";
-    const greaterOrEqualLabel = t(I18N_KEYS.APP_CONFIGURATION.GREATER_OR_EQUAL) || "is greater than or equal to";
-    const lessOrEqualLabel = t(I18N_KEYS.APP_CONFIGURATION.LESS_OR_EQUAL) || "is less than or equal to";
-    const containsLabel = t(I18N_KEYS.APP_CONFIGURATION.CONTAINS) || "contains";
     const onPageLabel = t(I18N_KEYS.APP_CONFIGURATION.ON_PAGE) || "on page";
     const enterValueHelpText = t(I18N_KEYS.APP_CONFIGURATION.ENTER_VALUE_HELP_TEXT) || "Enter a number or text (or) choose value from the options";
     const useAnotherFieldLabel = t(I18N_KEYS.APP_CONFIGURATION.USE_ANOTHER_FIELD) || "Use Another Field";
     const useAnotherFieldHelpText = t(I18N_KEYS.APP_CONFIGURATION.USE_ANOTHER_FIELD_HELP_TEXT) || "Compare with an existing field in the form";
     const deleteConditionLabel = t(I18N_KEYS.APP_CONFIGURATION.DELETE_CONDITION) || "Delete Condition";
-    const valueLabel = t(I18N_KEYS.APP_CONFIGURATION.VALUE) || "Value";
 
     // ---------- constants & helpers ----------
     const LOGICALS = [

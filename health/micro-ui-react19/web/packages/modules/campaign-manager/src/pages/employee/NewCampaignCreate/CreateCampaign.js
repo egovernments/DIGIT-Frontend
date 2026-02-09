@@ -192,7 +192,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         onSuccess: async (result) => {
           setShowToast({
             key: "success",
-            label: t(editName ? "HCM_UPDATE_SUCCESS" : I18N_KEYS.PAGES.HCM_DRAFT_SUCCESS),
+            label: t(editName ? I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS : I18N_KEYS.PAGES.HCM_DRAFT_SUCCESS),
           });
           setTimeout(() => {
             // Clear session storage before navigating to ensure fresh data is fetched

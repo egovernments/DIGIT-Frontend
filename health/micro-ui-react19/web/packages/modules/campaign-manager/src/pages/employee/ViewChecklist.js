@@ -265,7 +265,7 @@ const ViewChecklist = () => {
       {!isLoading && (
         <FormComposerV2
           showMultipleCardsWithoutNavs={true}
-          label={t("UPDATE")}
+          label={t(I18N_KEYS.PAGES.UPDATE)}
           config={config}
           onSubmit={() => {
             navigate(

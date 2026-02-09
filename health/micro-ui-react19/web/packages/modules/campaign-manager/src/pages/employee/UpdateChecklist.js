@@ -568,14 +568,14 @@ const UpdateChecklist = () => {
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t("UPDATE_CHECKLIST")}</h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t(I18N_KEYS.PAGES.UPDATE_CHECKLIST)}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
                 icon="Preview"
                 variation="secondary"
-                label={t("PREVIEW_CHECKLIST")}
-                title={t("PREVIEW_CHECKLIST")}
+                label={t(I18N_KEYS.PAGES.PREVIEW_CHECKLIST)}
+                title={t(I18N_KEYS.PAGES.PREVIEW_CHECKLIST)}
                 className={"hover"}
                 style={{ marginTop: "10px", marginBottom: "1.5rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -584,8 +584,8 @@ const UpdateChecklist = () => {
               {currentLocales?.length > 1 && (
                 <Button
                   variation="secondary"
-                  label={t("ADD_TRANSLATIONS")}
-                  title={t("ADD_TRANSLATIONS")}
+                  label={t(I18N_KEYS.PAGES.ADD_TRANSLATIONS)}
+                  title={t(I18N_KEYS.PAGES.ADD_TRANSLATIONS)}
                   className={"hover"}
                   style={{ marginTop: "10px", marginBottom: "1.5rem" }}
                   onClick={() => {
@@ -604,7 +604,7 @@ const UpdateChecklist = () => {
             <PopUp
               className={"custom-pop-up"}
               type={"default"}
-              heading={t("CHECKLIST_PREVIEW")}
+              heading={t(I18N_KEYS.PAGES.CHECKLIST_PREVIEW)}
               children={[]}
               onOverlayClick={() => {
                 setShowPopUp(false);
@@ -617,8 +617,8 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CLOSE")}
-                  title={t("CLOSE")}
+                  label={t(I18N_KEYS.COMMON.CLOSE)}
+                  title={t(I18N_KEYS.COMMON.CLOSE)}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -627,8 +627,8 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CONFIRM_CHECKLIST_CONFIGURATION")}
-                  title={t("CONFIRM_CHECKLIST_CONFIGURATION")}
+                  label={t(I18N_KEYS.PAGES.CONFIRM_CHECKLIST_CONFIGURATION)}
+                  title={t(I18N_KEYS.PAGES.CONFIRM_CHECKLIST_CONFIGURATION)}
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
@@ -675,15 +675,15 @@ const UpdateChecklist = () => {
             ))}
             {
               <div style={{ display: "flex" ,gap:"1.5rem"}}>
-                <div style={{ width: "20%", fontWeight: "500"}}>{t("CHECKLIST_HELP_TEXT")}</div>
+                <div style={{ width: "20%", fontWeight: "500"}}>{t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT)}</div>
                 <TextArea
                   disabled={false}
                   className="tetxinput-example"
                   // type={"text"}
-                  name={t("CHECKLIST_HELP_TEXT")}
+                  name={t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT)}
                   value={helpText}
                   onChange={(event) => setHelpText(event.target.value)}
-                  placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                  placeholder={t(I18N_KEYS.PAGES.CHECKLIST_HELP_TEXT_PLACEHOLDER)}
                 />
               </div>
             }
@@ -692,7 +692,7 @@ const UpdateChecklist = () => {
           {!isLoading && (
             <FormComposerV2
               showMultipleCardsWithoutNavs={true}
-              label={t("UPDATE_CHECKLIST")}
+              label={t(I18N_KEYS.PAGES.UPDATE_CHECKLIST)}
               config={config}
               onSubmit={popShow}
               fieldStyle={{ marginRight: 0 }}
@@ -709,7 +709,7 @@ const UpdateChecklist = () => {
             <PopUp
               className="localisation-popup-container"
               type={"default"}
-              heading={t("ADD_TRANSLATIONS")}
+              heading={t(I18N_KEYS.PAGES.ADD_TRANSLATIONS)}
               onClose={() => setShowLocalisationPopup(false)}
               onOverlayClick={() => setShowLocalisationPopup(false)}
               footerChildren={[
@@ -717,8 +717,8 @@ const UpdateChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CANCEL")}
-                  title={t("CANCEL")}
+                  label={t(I18N_KEYS.COMMON.CANCEL)}
+                  title={t(I18N_KEYS.COMMON.CANCEL)}
                   onClick={() => {
                     setShowLocalisationPopup(false);
                   }}

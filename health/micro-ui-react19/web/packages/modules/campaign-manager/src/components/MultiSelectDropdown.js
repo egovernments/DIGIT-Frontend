@@ -1009,8 +1009,8 @@ const MultiSelectDropdown = ({
           )}
           {alreadyQueuedSelectedState.length > 0 && !disableClearAll && (
             <Button
-              label={t(config?.clearLabel ? config?.clearLabel : t(I18N_KEYS.COMMON.CLEAR_ALL))}
-              title={t(config?.clearLabel ? config?.clearLabel : t(I18N_KEYS.COMMON.CLEAR_ALL))}
+              label={config?.clearLabel ? t(config?.clearLabel) : t(I18N_KEYS.COMMON.CLEAR_ALL)}
+              title={config?.clearLabel ? t(config?.clearLabel) : t(I18N_KEYS.COMMON.CLEAR_ALL)}
               onClick={handleClearAll}
               variation=""
               style={{
