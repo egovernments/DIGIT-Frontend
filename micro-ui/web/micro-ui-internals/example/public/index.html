@@ -133,16 +133,32 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function () {
-      var u = window?.globalConfigs?.getConfig("MATOMO_URL") || "https://unified-demo.digit.org/matomo/";
+      function resolveMatomoUrl() {
+        // 1️⃣ Config override if present
+        try {
+          const cfg = window?.globalConfigs?.getConfig?.("MATOMO_URL");
+          if (cfg) return cfg.endsWith("/") ? cfg : cfg + "/";
+        } catch (e) { }
+
+        // 2️⃣ Same-origin auto resolution
+        return `${window.location.origin}/matomo/`;
+      }
+
+      var u = resolveMatomoUrl();
+
       _paq.push(['setTrackerUrl', u + 'matomo.php']);
-      // For SANDBOX DASHBOARD IN MATOMO
       _paq.push(['setSiteId', '2']);
-      // FOR UNIFIED-DEMO DASHBOARD IN MATOMO(HAS BOTH UNIFIED-DEMO AND SANDBOX)
       _paq.push(['addTracker', u + 'matomo.php', 1]);
-      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-      g.async = true; g.src = u + 'matomo.js';
+
+      var d = document,
+        g = d.createElement('script'),
+        s = d.getElementsByTagName('script')[0];
+
+      g.async = true;
+      g.src = u + 'matomo.js';
       s.parentNode.insertBefore(g, s);
     })();
+
     (function () {
       let lastUrl = location.href;
       let lastPageTitle = getPageTitle(location.href);
