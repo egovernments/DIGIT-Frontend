@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Chip, PopUp } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const BoundaryDetailsSummary = (props) => {
   const { t } = useTranslation();
@@ -55,10 +56,10 @@ const BoundaryDetailsSummary = (props) => {
                 {groupedByParent[parentKey].length > 10 && (
                   <Button
                     label={
-                      expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`
+                      expandedGroups[parentKey] ? t(I18N_KEYS.COMPONENTS.HCM_SHOW_LESS_SELECTED) : `+${groupedByParent[parentKey].length - 10} ${t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}`
                     }
                     title={
-                      expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`
+                      expandedGroups[parentKey] ? t(I18N_KEYS.COMPONENTS.HCM_SHOW_LESS_SELECTED) : `+${groupedByParent[parentKey].length - 10} ${t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}`
                     }
                     onClick={() => handleToggle(parentKey)}
                     variation="link"
@@ -69,7 +70,7 @@ const BoundaryDetailsSummary = (props) => {
           </div>
         ))}
       {/* Show the button if there are more than 2 parent keys */}
-      {Object.keys(groupedByParent).length > 2 && <Button label={t("HCM_SHOW_MORE_ALL")} title={t("HCM_SHOW_MORE_ALL")} onClick={handleShowAllToggle} variation="link" />}
+      {Object.keys(groupedByParent).length > 2 && <Button label={t(I18N_KEYS.COMPONENTS.HCM_SHOW_MORE_ALL)} title={t(I18N_KEYS.COMPONENTS.HCM_SHOW_MORE_ALL)} onClick={handleShowAllToggle} variation="link" />}
       {showPopUp && (
         <PopUp
           // className={"boundaries-pop-module"}
@@ -89,8 +90,8 @@ const BoundaryDetailsSummary = (props) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("HCM_BOUNDARY_CLOSE")}
-              title={t("HCM_BOUNDARY_CLOSE")}
+              label={t(I18N_KEYS.COMPONENTS.HCM_BOUNDARY_CLOSE)}
+              title={t(I18N_KEYS.COMPONENTS.HCM_BOUNDARY_CLOSE)}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -109,10 +110,10 @@ const BoundaryDetailsSummary = (props) => {
                   {groupedByParent[parentKey].length > 10 && (
                     <Button
                       label={
-                        expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`
+                        expandedGroups[parentKey] ? t(I18N_KEYS.COMPONENTS.HCM_SHOW_LESS_SELECTED) : `+${groupedByParent[parentKey].length - 10} ${t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}`
                       }
                       title={
-                        expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`
+                        expandedGroups[parentKey] ? t(I18N_KEYS.COMPONENTS.HCM_SHOW_LESS_SELECTED) : `+${groupedByParent[parentKey].length - 10} ${t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}`
                       }
                       onClick={() => handleToggle(parentKey)}
                       variation="link"

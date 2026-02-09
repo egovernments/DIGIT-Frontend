@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function boundaryDataGrp(boundaryData, hierarchyDefinition) {
   if (!hierarchyDefinition || !boundaryData) return [];
@@ -137,25 +138,25 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
         sections: [
           {
             type: "DATA",
-            cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             values: [
               {
                 key: "CAMPAIGN_TYPE",
                 value: mainCampaign?.projectType
                   ? t(`CAMPAIGN_PROJECT_${mainCampaign?.projectType?.toUpperCase()}`)
-                  : t("CAMPAIGN_SUMMARY_NA"),
+                  : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
               },
               {
                 key: "CAMPAIGN_NAME",
-                value: mainCampaign?.campaignName || campaignName || t("CAMPAIGN_SUMMARY_NA"),
+                value: mainCampaign?.campaignName || campaignName || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
               },
               {
                 key: "CAMPAIGN_START_DATE",
-                value: mainCampaign?.startDate ? Digit.Utils.date.convertEpochToDate(mainCampaign?.startDate) : t("CAMPAIGN_SUMMARY_NA"),
+                value: mainCampaign?.startDate ? Digit.Utils.date.convertEpochToDate(mainCampaign?.startDate) : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
               },
               {
                 key: "CAMPAIGN_END_DATE",
-                value: mainCampaign?.endDate ? Digit.Utils.date.convertEpochToDate(mainCampaign?.endDate) : t("CAMPAIGN_SUMMARY_NA"),
+                value: mainCampaign?.endDate ? Digit.Utils.date.convertEpochToDate(mainCampaign?.endDate) : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
               },
             ],
           },
@@ -202,7 +203,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
               documents: unifiedFiles,
               showAsButton:true
             },
-            cardHeader: { value: t("UNIFIED_DATA_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            cardHeader: { value: t(I18N_KEYS.COMPONENTS.UNIFIED_DATA_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.unified?.length > 0 && {
               cardSecondaryAction: <span style={{ color: "red" }}>{summaryErrors.unified[0].error}</span>,
             }),
@@ -222,7 +223,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
               documents: facilityFiles,
               showAsButton:true
             },
-            cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.facility?.length > 0 && {
               cardSecondaryAction: <span style={{ color: "red" }}>{summaryErrors.facility[0].error}</span>,
             }),
@@ -241,7 +242,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
               documents: userFiles,
               showAsButton:true
             },
-            cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            cardHeader: { value: t(I18N_KEYS.COMPONENTS.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.user?.length > 0 && {
               cardSecondaryAction: <span style={{ color: "red" }}>{summaryErrors.user[0].error}</span>,
             }),
@@ -260,7 +261,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
               documents: targetFiles,
               showAsButton:true
             },
-            cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+            cardHeader: { value: t(I18N_KEYS.COMPONENTS.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
             ...(summaryErrors?.target?.length > 0 && {
               cardSecondaryAction: <span style={{ color: "red" }}>{summaryErrors.target[0].error}</span>,
             }),
@@ -277,17 +278,17 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
           {
             name: "card1",
             active: true,
-            code: t("HCM_CAMPAIGN_SETUP_DETAILS"),
+            code: t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SETUP_DETAILS),
           },
           {
             name: "card2",
             active: true,
-            code: t("HCM_BOUNDARY_DETAILS"),
+            code: t(I18N_KEYS.COMPONENTS.HCM_BOUNDARY_DETAILS),
           },
           {
             name: "card3",
             active: true,
-            code: t("HCM_DATA_UPLOAD"),
+            code: t(I18N_KEYS.COMPONENTS.HCM_DATA_UPLOAD),
           },
         ],
         activeByDefault: "card1",
@@ -334,7 +335,7 @@ const CampaignUpdateSummary = ({ formData, props, onSelect }) => {
       <TagComponent campaignName={campaignName || parentCampaign?.campaignName} />
 
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem", marginTop: "1.5rem" }}>
-        <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
+        <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.ES_TQM_SUMMARY_HEADING)}</HeaderComponent>
       </div>
 
       <div className="campaign-summary-container campaign-update-summary">

@@ -3,6 +3,7 @@ import { CheckBox, Tooltip } from "@egovernments/digit-ui-components";
 import CreateQuestion from "./CreateQuestion";
 import { DustbinIcon } from "./icons/DustbinIcon";
 import { FieldV1, Button } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const MultipleChoice = ({
   t,
@@ -106,10 +107,10 @@ const MultipleChoice = ({
           className="width-auto"
           icon="AddIcon"
           iconFill=""
-          label={`${t("ADD_OPTIONS")} ${questionNumber}`}
+          label={`${t(I18N_KEYS.COMPONENTS.ADD_OPTIONS)} ${questionNumber}`}
           onClick={() => addOption()}
           size="medium"
-          title={`${t("ADD_OPTIONS")} ${questionNumber}`}
+          title={`${t(I18N_KEYS.COMPONENTS.ADD_OPTIONS)} ${questionNumber}`}
           variation="link"
           textStyles={{ width: 'unset' }}
         />
@@ -261,7 +262,7 @@ export const RadioButtonOption = ({
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
                 disabled={subQlevel>=maxDepth+1}
-                label={t("LINK_NESTED_CHECKLIST")}
+                label={t(I18N_KEYS.COMPONENTS.LINK_NESTED_CHECKLIST)}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}
                 index={field.key}

@@ -4,6 +4,7 @@ import { TextInput, Tooltip, CheckBox, Button, FieldV1 } from "@egovernments/dig
 import { DustbinIcon } from "./icons/DustbinIcon";
 
 import CreateQuestion from "./CreateQuestion";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const Dropdowns = ({
   t,
@@ -101,10 +102,10 @@ const Dropdowns = ({
             className="width-auto"
             icon="AddIcon"
             iconFill=""
-            label={`${t("ADD_OPTIONS")} ${questionNumber}`}
+            label={`${t(I18N_KEYS.COMPONENTS.ADD_OPTIONS)} ${questionNumber}`}
             onClick={() => addOption()}
             size="medium"
-            title={`${t("ADD_OPTIONS")} ${questionNumber}`}
+            title={`${t(I18N_KEYS.COMPONENTS.ADD_OPTIONS)} ${questionNumber}`}
             variation="link"
             textStyles={{ width: "unset" }}
           />
@@ -242,7 +243,7 @@ const DropdownOption = ({
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
                 disabled={subQlevel >= maxDepth + 1}
-                label={t("LINK_NESTED_CHECKLIST")}
+                label={t(I18N_KEYS.COMPONENTS.LINK_NESTED_CHECKLIST)}
                 checked={optionDependency}
                 onChange={(event) => handleOptionDependency(optionId)}
                 index={field.key}

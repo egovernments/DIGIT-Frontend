@@ -2,6 +2,7 @@ import { Card, LabelFieldPair, Row } from "@egovernments/digit-ui-react-componen
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import DetailsTable from "./DetailsTable";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function mergeObjects(item) {
   const arr = item?.conditions;
@@ -42,7 +43,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
     <>
       <Row
         key={item?.cycleNumber}
-        label={`${t("CYCLE_NUMBER")}`}
+        label={`${t(I18N_KEYS.COMPONENTS.CYCLE_NUMBER)}`}
         text={item?.cycleNumber}
         className="border-none"
         rowContainerStyle={{ display: "flex", marginBottom: "1rem" }}
@@ -51,7 +52,7 @@ const CycleDetaisPreview = ({ data, items, index }) => {
       />
       <Row
         key={item?.deliveryNumber}
-        label={`${t("DELIVERY_NUMBER")}`}
+        label={`${t(I18N_KEYS.COMPONENTS.DELIVERY_NUMBER)}`}
         text={item?.deliveryNumber}
         className="border-none"
         rowContainerStyle={{ display: "flex", marginBottom: "1rem" }}
@@ -59,18 +60,18 @@ const CycleDetaisPreview = ({ data, items, index }) => {
         textStyle={{ width: "60%" }}
       />
       {/* <LabelFieldPair>
-        <span>{`${t("CYCLE_NUMBER")}`}</span>
+        <span>{`${t(I18N_KEYS.COMPONENTS.CYCLE_NUMBER)}`}</span>
         <span>{item?.cycleNumber}</span>
       </LabelFieldPair>
       <LabelFieldPair>
-        <span>{`${t("DELIVERY_NUMBER")}`}</span>
+        <span>{`${t(I18N_KEYS.COMPONENTS.DELIVERY_NUMBER)}`}</span>
         <span>{item?.deliveryNumber}</span>
       </LabelFieldPair> */}
       {item?.startDate || item?.endDate ? (
         <Card className="card-with-background" style={{ maxWidth: "45%", marginLeft: "0px" }}>
           <div className="card-head">
             <h2>
-              {t(`CYCLE`)} {item?.cycleNumber}
+              {t(I18N_KEYS.COMPONENTS.CYCLE)} {item?.cycleNumber}
             </h2>
           </div>
           {item?.startDate && (

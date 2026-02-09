@@ -4,6 +4,7 @@ import { Card, CardHeader, CardText, Button, PopUp } from "@egovernments/digit-u
 import MobileBezelFrame from "../../../components/MobileBezelFrame";
 import { isFieldSelected, renderTemplateComponent } from "./helpers/templateRendererHelpers";
 import { setShowPopupPreview } from "./redux/remoteConfigSlice";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 /**
  * Render a section (body or footer)
@@ -98,7 +99,7 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
       {showPopupPreview && selectedField?.format === "actionPopup" && (
         <PopUp
           type={popupConfig.type || "default"}
-          heading={t(popupConfig.title) || t("DEFAULT_POPUP_HEADING")}
+          heading={t(popupConfig.title) || t(I18N_KEYS.APP_CONFIGURATION.DEFAULT_POPUP_HEADING)}
           onClose={() => {
             dispatch(setShowPopupPreview(false));
           }}

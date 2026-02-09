@@ -6,6 +6,7 @@ import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egove
 import { downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function mergeObjects(item) {
   const arr = item;
@@ -201,10 +202,10 @@ const DataUploadSummary = (props) => {
                     props: {
                       documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
                     },
-                    cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(facilityKey)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -222,10 +223,10 @@ const DataUploadSummary = (props) => {
                     props: {
                       documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                     },
-                    cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: t(I18N_KEYS.COMPONENTS.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(userKey)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -243,10 +244,10 @@ const DataUploadSummary = (props) => {
                     props: {
                       documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                     },
-                    cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: t(I18N_KEYS.COMPONENTS.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: noAction !== "false" && (
                       <div className="campaign-preview-edit-container" onClick={() => handleRedirect(targetKey)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
                         <EditIcon />
                       </div>
                     ),
@@ -316,7 +317,7 @@ const DataUploadSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
@@ -335,7 +336,7 @@ const DataUploadSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_DATA_UPLOAD_SUMMARY)}</HeaderComponent>
             {/* {userCredential && (
           <Button
             label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}

@@ -2,6 +2,7 @@ import React, { useState, useEffect , Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldV1 ,Stepper , TextBlock , Card , AlertCard ,LabelFieldPair ,HeaderComponent  } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -118,7 +119,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
       <div className="container">
         <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DETAILS)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
@@ -146,7 +147,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
                   withoutLabel={true}
                   type="date"
                   value={startDate}
-                  placeholder={t("HCM_START_DATE")}
+                  placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
                   populators={{
                     validation: {
                       min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
@@ -163,7 +164,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
                   withoutLabel={true}
                   type="date"
                   value={endDate}
-                  placeholder={t("HCM_END_DATE")}
+                  placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
                   populators={{
                     validation: {
                       min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
@@ -184,7 +185,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
                 name: "infocard",
               }}
               variant="info"
-              text={t("HCM_UPDATE_DATE_INFO")}
+              text={t(I18N_KEYS.COMPONENTS.HCM_UPDATE_DATE_INFO)}
               style={{ marginTop: "1rem", maxWidth: "100%" }}
             />
           )}

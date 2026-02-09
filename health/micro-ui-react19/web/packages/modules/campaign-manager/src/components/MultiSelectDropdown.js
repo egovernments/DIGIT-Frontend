@@ -14,6 +14,7 @@ import { SVG } from "@egovernments/digit-ui-components";
 import { Chip } from "@egovernments/digit-ui-components";
 import { PopUp } from "@egovernments/digit-ui-components";
 import { CardLabel } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const Colors = {
   lightTheme: {
@@ -110,7 +111,7 @@ const Wrapper = ({
     <PopUp
       className={"selecting-boundaries-pop"}
       type={"default"}
-      heading={`${t((hierarchyType + "_" + boundaryType).toUpperCase())} ${t("DIGIT_SELECT")}`}
+      heading={`${t((hierarchyType + "_" + boundaryType).toUpperCase())} ${t(I18N_KEYS.COMPONENTS.DIGIT_SELECT)}`}
       children={[]}
       onOverlayClick={() => {
         setShowPopUp(false);
@@ -121,8 +122,8 @@ const Wrapper = ({
           type={"button"}
           size={"large"}
           variation={"secondary"}
-          label={t("DIGIT_CLOSE")}
-          title={t("DIGIT_CLOSE")}
+          label={t(I18N_KEYS.COMPONENTS.DIGIT_CLOSE)}
+          title={t(I18N_KEYS.COMPONENTS.DIGIT_CLOSE)}
           onClick={() => {
             setShowPopUp(false);
           }}
@@ -132,8 +133,8 @@ const Wrapper = ({
           type={"button"}
           size={"large"}
           variation={"primary"}
-          label={t("DIGIT_CONFIRM_SELECTION")}
-          title={t("DIGIT_CONFIRM_SELECTION")}
+          label={t(I18N_KEYS.COMPONENTS.DIGIT_CONFIRM_SELECTION)}
+          title={t(I18N_KEYS.COMPONENTS.DIGIT_CONFIRM_SELECTION)}
           onClick={() => {
             const selectedPropsData = dummySelected.map((item) => item.propsData);
             onSelect(selectedPropsData);
@@ -230,8 +231,8 @@ const Wrapper = ({
           </div>
           {!disableClearAll && (
             <Button
-              label={t("HCM_CLEAR_ALL")}
-              title={t("HCM_CLEAR_ALL")}
+              label={t(I18N_KEYS.COMPONENTS.HCM_CLEAR_ALL)}
+              title={t(I18N_KEYS.COMPONENTS.HCM_CLEAR_ALL)}
               onClick={() => {
                 const updatedDummySelected = dummySelected.filter((item) => item?.propsData?.[1]?.parent !== parent);
                 setDummySelected(updatedDummySelected);
@@ -854,7 +855,7 @@ const MultiSelectDropdown = ({
       <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
         <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
       </div>
-      <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t("SELECT_ALL")}</p>
+      <p className={`digit-label ${addSelectAllCheck ? "selectAll" : ""}`}>{selectAllLabel ? selectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</p>
     </div>
   );
   const Menu = () => {
@@ -863,7 +864,7 @@ const MultiSelectDropdown = ({
     if (!optionsToRender || optionsToRender?.length === 0) {
       return (
         <div className={`digit-multiselectdropodwn-menuitem ${variant ? variant : ""} unsuccessfulresults`} key={"-1"} onClick={() => {}}>
-          {<span> {t("NO_RESULTS_FOUND")}</span>}
+          {<span> {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}</span>}
         </div>
       );
     }
@@ -878,7 +879,7 @@ const MultiSelectDropdown = ({
                 <div className="digit-category-name">{t(option[optionsKey])}</div>
                 {addCategorySelectAllCheck && (
                   <div className="digit-category-selectAll" onClick={() => handleCategorySelection(option)}>
-                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t("SELECT_ALL")}</div>
+                    <div className="category-selectAll-label">{categorySelectAllLabel ? categorySelectAllLabel : t(I18N_KEYS.COMMON.SELECT_ALL)}</div>
                     <input type="checkbox" checked={selectAllChecked || categorySelected[option.code]} />
                     <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
                       <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
@@ -986,8 +987,8 @@ const MultiSelectDropdown = ({
 
           {alreadyQueuedSelectedState.length > (config?.numberOfChips || 4) && (
             <Button
-              label={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t("HCM_SELECTED")}`}
-              title={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t("HCM_SELECTED")}`}
+              label={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}`}
+              title={`+${alreadyQueuedSelectedState.length - (config?.numberOfChips || 4)} ${t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}`}
               onClick={() => openPopUp(alreadyQueuedSelectedState)}
               variation="link"
             />
@@ -1008,8 +1009,8 @@ const MultiSelectDropdown = ({
           )}
           {alreadyQueuedSelectedState.length > 0 && !disableClearAll && (
             <Button
-              label={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
-              title={t(config?.clearLabel ? config?.clearLabel : t("CLEAR_ALL"))}
+              label={config?.clearLabel ? t(config?.clearLabel) : t(I18N_KEYS.COMMON.CLEAR_ALL)}
+              title={config?.clearLabel ? t(config?.clearLabel) : t(I18N_KEYS.COMMON.CLEAR_ALL)}
               onClick={handleClearAll}
               variation=""
               style={{

@@ -5,6 +5,7 @@ import XlsPreview from "./XlsPreview";
 import { XlsxFile } from "./icons/XlsxFile";
 import { downloadExcelWithCustomName } from "../utils";
 import { AlertCard ,Button} from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenerate = false, cardErrors,showAsButton }) {
   const { t } = useTranslation();
@@ -114,7 +115,7 @@ function CampaignDocumentsPreview({ documents = [], svgStyles = {}, isUserGenera
           )
         ) : (
           <div className="summary-doc-error" style={{ width: "100%" }}>
-            <p>{t("ES_CAMPAIGN_NO_DOCUMENTS_AVAILABLE")}</p>
+            <p>{t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_NO_DOCUMENTS_AVAILABLE)}</p>
             {cardErrors?.map((i) => (
               <AlertCard
                 populators={{

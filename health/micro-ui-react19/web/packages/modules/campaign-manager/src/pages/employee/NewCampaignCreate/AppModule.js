@@ -7,6 +7,7 @@ import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 export const TEMPLATE_BASE_CONFIG_MASTER = "FormConfigTemplate";
 //TODO @bhavya @jagan Cleanup and handle negative scenarios for unselect etc remove isSelected and make changes in the mdms v2
@@ -100,7 +101,7 @@ const AppModule = () => {
     const uniqueModules = [...new Set(selectedModuleCodes)];
 
     if (uniqueModules.length === 0) {
-      setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.SELECT_ATLEAST_ONE_MODULE) });
       return;
     }
 
@@ -109,7 +110,7 @@ const AppModule = () => {
     if (!areAllowedModulesPresent) {
       setShowToast({
         key: "error",
-        label: `${t("HCM_MANDATORY_MODULES")} ${allowedModules?.allowedModule.map((m) => t(m)).join(", ")}`,
+        label: `${t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MANDATORY_MODULES)} ${allowedModules?.allowedModule.map((m) => t(m)).join(", ")}`,
       });
       return;
     }
@@ -164,7 +165,7 @@ const AppModule = () => {
         });
       } catch (error) {
         console.error(`Failed to update module ${moduleCode}:`, error);
-        setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPDATE_ERROR") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MDMS_DATA_UPDATE_ERROR) });
         return;
       } finally {
         setIsCreatingModule(false);
@@ -194,7 +195,7 @@ const AppModule = () => {
           });
         } catch (e) {
           console.error(`Failed to fetch localisation for locale ${loc}`, e);
-          setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.LOCALISATION_FETCH_ERROR) });
           return;
         } finally {
           setIsCreatingModule(false);
@@ -219,7 +220,7 @@ const AppModule = () => {
             });
           } catch (error) {
             console.error(`Failed to upsert localization for ${moduleName} (${loc}):`, error);
-            setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
+            setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.LOCALISATION_ERROR) });
             return;
           } finally {
             setIsCreatingModule(false);
@@ -262,18 +263,18 @@ const AppModule = () => {
   };
 
   if (productTypeLoading || isLoading || mdmsData?.length == 0) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />;
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.SAVING_FEATURES_CONFIG_IN_SERVER)} />;
   }
 
   return (
     <div className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
-          {t(`HCM_CHOOSE_MODULE`)}
+          {t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}
         </HeaderComponent>
-        <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
+        <TextBlock body="" caption={t(I18N_KEYS.CAMPAIGN_CREATE.CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN)} header="" captionClassName="camp-drawer-caption" subHeader="" />
       </div>
-      {isCreatingModule && <Loader page={true} variant={"OverlayLoader"} loaderText={t("COPYING_CONFIG_FOR_SELECTED_MODULES")} />}
+      {isCreatingModule && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.COPYING_CONFIG_FOR_SELECTED_MODULES)} />}
       <EqualHeightWrapper deps={[modulesData]}>
         <div className="modules-container">
           {modulesData
@@ -306,8 +307,8 @@ const AppModule = () => {
                   size={"large"}
                   isDisabled={module?.data?.disabled}
                   variation={selectedModuleCodes.includes(module?.data?.name) ? "secondary" : "primary"}
-                  label={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
-                  title={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
+                  label={selectedModuleCodes.includes(module?.data?.name) ? t(I18N_KEYS.CAMPAIGN_CREATE.DESELECT) : t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_SELECT)}
+                  title={selectedModuleCodes.includes(module?.data?.name) ? t(I18N_KEYS.CAMPAIGN_CREATE.DESELECT) : t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_SELECT)}
                   onClick={() => handleSelectModule(module?.data?.name)}
                 />
               </Card>
@@ -317,8 +318,8 @@ const AppModule = () => {
       <Footer
         actionFields={[
           <Button
-            label={t("GO_BACK")}
-            title={t("GO_BACK")}
+            label={t(I18N_KEYS.COMMON.GO_BACK)}
+            title={t(I18N_KEYS.COMMON.GO_BACK)}
             variation="secondary"
             style={{
               marginLeft: "2.5rem",
@@ -328,7 +329,7 @@ const AppModule = () => {
             }}
             icon={"ArrowBack"}
           />,
-          <Button label={t("NEXT")} title={t("NEXT")} variation="primary" icon={"ArrowDirection"} isSuffix onClick={handleNext} />,
+          <Button label={t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)} title={t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)} variation="primary" icon={"ArrowDirection"} isSuffix onClick={handleNext} />,
         ]}
       />
       {showToast && (

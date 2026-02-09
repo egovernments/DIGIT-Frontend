@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const NewAppModule = () => {
   const { t } = useTranslation();
@@ -43,14 +44,14 @@ const NewAppModule = () => {
   };
 
   if (isLoading) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING")} />;
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING)} />;
   }
 
   return (
     <div className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
-          {t(`HCM_CHOOSE_MODULE`)}
+          {t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}
         </HeaderComponent>
       </div>
       <EqualHeightWrapper deps={[sortedMdmsData]}>
@@ -92,8 +93,8 @@ const NewAppModule = () => {
                   variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
                   icon={isVisited ? "Edit" : null}
                   className={`campaign-module-button ${isVisited || isActive ? "primaryButton" : "secondButton"}`}
-                  label={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
-                  title={isVisited ? t("EDIT_CONFIGURATION") : isActive ? t("CONFIGURE_MODULE") : t("UPCOMING_MODULE")}
+                  label={isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
+                  title={isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card click
                     if (isActive) {
@@ -117,8 +118,8 @@ const NewAppModule = () => {
         actionFields={[
           <Button
             icon="ArrowBack"
-            label={t("GO_BACK")}
-            title={t("GO_BACK")}
+            label={t(I18N_KEYS.COMMON.GO_BACK)}
+            title={t(I18N_KEYS.COMMON.GO_BACK)}
             onClick={() => {
               // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);

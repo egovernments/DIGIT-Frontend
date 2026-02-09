@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { uploadConfig } from "../../../configs/uploadConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const NewUploadScreen = () => {
   const { t } = useTranslation();
@@ -181,16 +182,16 @@ const NewUploadScreen = () => {
         !!getNested(totalFormData, "HCM_CAMPAIGN_UPLOAD_USER_DATA", "uploadUser")?.uploadedFile?.[0]?.fileStoreId;
 
       if (!hasBoundary) {
-        setSummaryErrors((prev) => ({ ...prev, target: [{ name: "target", error: t("TARGET_FILE_MISSING") }] }));
-        return showErrorToast(t("TARGET_DETAILS_ERROR"));
+        setSummaryErrors((prev) => ({ ...prev, target: [{ name: "target", error: t(I18N_KEYS.CAMPAIGN_CREATE.TARGET_FILE_MISSING) }] }));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.TARGET_DETAILS_ERROR));
       }
       if (!hasFacility) {
-        setSummaryErrors((prev) => ({ ...prev, facility: [{ name: "facility", error: t("FACILITY_FILE_MISSING") }] }));
-        return showErrorToast(t("FACILITY_DETAILS_ERROR"));
+        setSummaryErrors((prev) => ({ ...prev, facility: [{ name: "facility", error: t(I18N_KEYS.CAMPAIGN_CREATE.FACILITY_FILE_MISSING) }] }));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.FACILITY_DETAILS_ERROR));
       }
       if (!hasUser) {
-        setSummaryErrors((prev) => ({ ...prev, user: [{ name: "user", error: t("USER_FILE_MISSING") }] }));
-        return showErrorToast(t("USER_DETAILS_ERROR"));
+        setSummaryErrors((prev) => ({ ...prev, user: [{ name: "user", error: t(I18N_KEYS.CAMPAIGN_CREATE.USER_FILE_MISSING) }] }));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.USER_DETAILS_ERROR));
       }
 
       navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`);
@@ -204,7 +205,7 @@ const NewUploadScreen = () => {
       const anyActive = data.some((r) => r.HCM_ADMIN_CONSOLE_FACILITY_USAGE === "Active");
       if (!anyActive) {
         setLoader(false);
-        return showErrorToast(t("ONE_FACILITY_ATLEAST_SHOULD_BE_ACTIVE"));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ONE_FACILITY_ATLEAST_SHOULD_BE_ACTIVE));
       }
       const schemas = formData?.uploadFacilityMapping?.schemas;
       const invalid = data.some(
@@ -214,7 +215,7 @@ const NewUploadScreen = () => {
       );
       if (invalid) {
         setLoader(false);
-        return showErrorToast(t("NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY"));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY));
       }
 
       return updateMapping(
@@ -265,7 +266,7 @@ const NewUploadScreen = () => {
               setCurrentKey((k) => k + 1);
             } catch (e) {
               setLoader(false);
-              showErrorToast(e?.response?.data?.Errors?.[0]?.description || t("UPLOAD_MAPPING_ERROR"));
+              showErrorToast(e?.response?.data?.Errors?.[0]?.description || t(I18N_KEYS.CAMPAIGN_CREATE.UPLOAD_MAPPING_ERROR));
             }
           },
         }
@@ -278,7 +279,7 @@ const NewUploadScreen = () => {
       const anyActive = data.some((r) => r.HCM_ADMIN_CONSOLE_USER_USAGE === "Active");
       if (!anyActive) {
         setLoader(false);
-        return showErrorToast(t("ONE_USER_ATLEAST_SHOULD_BE_ACTIVE"));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ONE_USER_ATLEAST_SHOULD_BE_ACTIVE));
       }
       const schemas = formData?.uploadUserMapping?.schemas;
       const invalid = data.some(
@@ -288,7 +289,7 @@ const NewUploadScreen = () => {
       );
       if (invalid) {
         setLoader(false);
-        return showErrorToast(t("NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER"));
+        return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER));
       }
 
       return updateMapping(
@@ -337,7 +338,7 @@ const NewUploadScreen = () => {
               setCurrentKey((k) => k + 1);
             } catch (e) {
               setLoader(false);
-              showErrorToast(e?.response?.data?.Errors?.[0]?.description || t("UPLOAD_MAPPING_ERROR"));
+              showErrorToast(e?.response?.data?.Errors?.[0]?.description || t(I18N_KEYS.CAMPAIGN_CREATE.UPLOAD_MAPPING_ERROR));
             }
           },
         }
@@ -357,7 +358,7 @@ const NewUploadScreen = () => {
       (slice?.uploadedFile?.length && slice?.isError) ||
       (slice?.uploadedFile?.length && slice?.apiError)
     ) {
-      return showErrorToast(t("ENTER_VALID_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
     }
 
     if (latestConfig?.form?.[0]?.last) {
@@ -387,7 +388,7 @@ const NewUploadScreen = () => {
           setCurrentKey((k) => k + 1);
         },
         onError: () => {
-          showErrorToast(t("HCM_ERROR_IN_CAMPAIGN_CREATION"));
+          showErrorToast(t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION));
           setLoader(false);
         },
       }
@@ -403,7 +404,7 @@ const NewUploadScreen = () => {
     }
   };
 
-  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />;
+  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />;
 
   const closeToast = () => setShowToast(null);
 
@@ -414,7 +415,7 @@ const NewUploadScreen = () => {
         onSubmit={onSubmit}
         defaultValues={params}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}

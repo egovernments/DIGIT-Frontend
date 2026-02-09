@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 function mergeObjects(item) {
   const arr = item;
@@ -242,7 +243,7 @@ const DeliveryDetailsSummary = (props) => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" ,marginBottom:"1rem"} },
+                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" ,marginBottom:"1rem"} },
                   // cardSecondaryAction: noAction !== "false" && (
                   //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                   //     <span>{t(`CAMPAIGN_EDIT`)}</span>
@@ -254,13 +255,13 @@ const DeliveryDetailsSummary = (props) => {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
                         ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        : t("CAMPAIGN_SUMMARY_NA"),
+                        : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
                         ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        : t("CAMPAIGN_SUMMARY_NA"),
+                        : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -274,7 +275,7 @@ const DeliveryDetailsSummary = (props) => {
                   {
                     name: `CYCLE_${index + 1}`,
                     type: "COMPONENT",
-                    cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardHeader: { value: `${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     // cardSecondaryAction: noAction !== "false" && (
                     //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
                     //     <span>{t(`CAMPAIGN_EDIT`)}</span>
@@ -335,7 +336,7 @@ const DeliveryDetailsSummary = (props) => {
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t(I18N_KEYS.COMPONENTS.DATA_SYNC_WITH_SERVER)} />}
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
@@ -353,7 +354,7 @@ const DeliveryDetailsSummary = (props) => {
         <div className="card-container-delivery">
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
-            <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
+            <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_DELIVERY_DETAILS_SUMMARY)}</HeaderComponent>
           </div>
           <div className="campaign-summary-container delivery-summary">
             <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
