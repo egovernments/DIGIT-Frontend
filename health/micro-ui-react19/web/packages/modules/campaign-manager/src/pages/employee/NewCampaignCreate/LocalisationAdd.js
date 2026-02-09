@@ -7,6 +7,7 @@ import * as XLSX from "xlsx";
 import GenerateExcelJs from "../../../components/GenerateExcelJs";
 import BulkUpload from "../../../components/BulkUpload";
 import TagComponent from "../../../components/TagComponent";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const LocalisationBulkUpload = () => {
   const { t } = useTranslation();
@@ -48,37 +49,37 @@ const LocalisationBulkUpload = () => {
   // Base modules contain default messages (e.g., hcm-base-complaints-mr-dn)
   const allowedModules = [
     {
-      name: t("DIGIT_HCM_REGISTRATION_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_REGISTRATION_MODULE),
       value: `hcm-registration-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-registrationflow-${projectTypeSuffix}` : null
     },
     {
-      name: t("DIGIT_HCM_STOCKREPORTS_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_STOCKREPORTS_MODULE),
       value: `hcm-stockreports-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-stockreports-${projectTypeSuffix}` : null
     },
     {
-      name: t("DIGIT_HCM_HFREFERRAL_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_HFREFERRAL_MODULE),
       value: `hcm-hfreferral-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-hfreferralflow-${projectTypeSuffix}` : null
     },
     {
-      name: t("DIGIT_HCM_COMPLAINTS_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_COMPLAINTS_MODULE),
       value: `hcm-complaints-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-complaints-${projectTypeSuffix}` : null
     },
     {
-      name: t("DIGIT_HCM_INVENTORY_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_INVENTORY_MODULE),
       value: `hcm-inventory-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-inventory-${projectTypeSuffix}` : null
     },
     {
-      name: t("HCM_STOCKRECONCILIATION_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_STOCKRECONCILIATION_MODULE),
       value: `hcm-stockreconciliation-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-stockreconciliation-${projectTypeSuffix}` : null
     },
     {
-      name: t("DIGIT_HCM_CLOSEHOUSEHOLD_MODULE"),
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_HCM_CLOSEHOUSEHOLD_MODULE),
       value: `hcm-closehousehold-${campaignNumber}`,
       baseModule: projectTypeSuffix ? `hcm-base-closehousehold-${projectTypeSuffix}` : null
     },
@@ -145,7 +146,7 @@ const LocalisationBulkUpload = () => {
         setJsonResult(combinedResults);
       } catch (err) {
         setShowToast({
-          label: t("DIGIT_LOC_MODULE_DATA_LOAD_FAILED"),
+          label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_MODULE_DATA_LOAD_FAILED),
           type: "error",
         });
       } finally {
@@ -227,7 +228,7 @@ const LocalisationBulkUpload = () => {
           Object.keys(row).forEach((k) => (normalized[k.toLowerCase()] = row[k]));
 
           // Support both hardcoded "code" and localized header for backward compatibility
-          const codeHeader = t("DIGIT_LOC_CODE_HEADER").toLowerCase();
+          const codeHeader = t(I18N_KEYS.COMMON.DIGIT_LOC_CODE_HEADER).toLowerCase();
           const code = (normalized[codeHeader] || normalized.code)?.toString().trim();
           const moduleName = normalized.module?.toString().trim() || matchedModule.value;
           if (!code) return;
@@ -277,7 +278,7 @@ const LocalisationBulkUpload = () => {
       });
 
       if (!allMessages.length) {
-        setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
+        setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_NO_VALID_ENTRIES), type: "error" });
         setUploadedFile([]); // Clear file on error
         setIsUploading(false);
         return;
@@ -333,16 +334,16 @@ const LocalisationBulkUpload = () => {
 
       // Show warning if some messages were empty, otherwise show success
       if (emptyMessageCount > 0) {
-        setShowToast({ label: t("DIGIT_LOC_MESSAGES_EMPTY_WARNING"), type: "warning" });
+        setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_MESSAGES_EMPTY_WARNING), type: "warning" });
       } else {
-        setShowToast({ label: t("DIGIT_LOC_UPSERT_SUCCESS"), type: "success" });
+        setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPSERT_SUCCESS), type: "success" });
         // // Redirect to view details after showing success toast
         // setTimeout(() => {
         //   navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
         // }, 2000);
       }
     } catch (e) {
-      setShowToast({ label: t("DIGIT_LOC_UPSERT_FAILED"), type: "error" });
+      setShowToast({ label: t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPSERT_FAILED), type: "error" });
       setUploadedFile([]); // Clear file on error
     } finally {
       setIsUploading(false);
@@ -396,8 +397,8 @@ const LocalisationBulkUpload = () => {
           <TagComponent campaignName={campaignName} />
           <Button
             variation="secondary"
-            label={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
-            title={t("DIGIT_LOC_DOWNLOAD_TEMPLATE")}
+            label={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE)}
+            title={t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_DOWNLOAD_TEMPLATE)}
             onClick={() => inputRef.current?.click()}
             isDisabled={!isTemplateReady}
             icon={"FileDownload"}
@@ -407,14 +408,14 @@ const LocalisationBulkUpload = () => {
         {/* Header */}
         <div className="campaign-bulk-upload">
           <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-            {t("DIGIT_LOC_BULK_UPLOAD_XLS")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_BULK_UPLOAD_XLS)}
           </HeaderComponent>
         </div>
 
         {/* Info text when no file uploaded */}
         {uploadedFile.length === 0 && (
           <div className="info-text">
-            {t("DIGIT_LOC_UPLOAD_MESSAGE")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.DIGIT_LOC_UPLOAD_MESSAGE)}
           </div>
         )}
 
@@ -453,8 +454,8 @@ const LocalisationBulkUpload = () => {
         actionFields={[
           <Button
             key="go-back"
-            label={t("GO_BACK")}
-            title={t("GO_BACK")}
+            label={t(I18N_KEYS.COMMON.GO_BACK)}
+            title={t(I18N_KEYS.COMMON.GO_BACK)}
             variation="secondary"
             style={{marginLeft:'4rem',minWidth:"12.5rem"}}
             icon={"ArrowBack"}

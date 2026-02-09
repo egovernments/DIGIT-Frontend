@@ -6,6 +6,7 @@ import { Stepper, Toast, Button, Footer, Loader, FormComposerV2, PopUp, CardText
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -191,7 +192,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         onSuccess: async (result) => {
           setShowToast({
             key: "success",
-            label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
+            label: t(editName ? I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS : I18N_KEYS.PAGES.HCM_DRAFT_SUCCESS),
           });
           setTimeout(() => {
             // Clear session storage before navigating to ensure fresh data is fetched
@@ -207,7 +208,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
           }, 2000);
         },
         onError: () => {
-          setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
           setLoader(false);
         },
       }
@@ -237,7 +238,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     if (formData?.CampaignName && !editName && !campaignNumber && !isProjectTypeChanged) {
       const campaignNamePattern = /^(?!.*[ _-]{2})(?!^[\s_-])(?!.*[\s_-]$)(?=^[A-Za-z][A-Za-z0-9 _\-\(\)]{4,29}$)^.*$/;
       if (!campaignNamePattern.test(formData?.CampaignName)) {
-        setShowToast({ key: "error", label: t("CAMPAIGN_NAME_INVALID_FORMAT") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.CAMPAIGN_NAME_INVALID_FORMAT) });
         return;
       }
       if (formData?.CampaignName?.length > 30) {
@@ -249,7 +250,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
-        setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.CAMPAIGN_NAME_ALREADY_EXIST) });
         setIsValidatingName(false);
         return;
       } else {
@@ -261,13 +262,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     if (name === "HCM_CAMPAIGN_DATE" && formData?.DateSelection) {
       const { startDate, endDate } = formData.DateSelection;
       if (!startDate || !endDate) {
-        setShowToast({ key: "error", label: t("HCM_CAMPAIGN_DATE_MISSING") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING) });
         return;
       }
       const start = new Date(startDate).getTime();
       const end = new Date(endDate).getTime();
       if (start >= end) {
-        setShowToast({ key: "error", label: t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE) });
         return;
       }
     }
@@ -343,7 +344,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         <Loader
           page={true}
           variant={"OverlayLoader"}
-          loaderText={isValidatingName ? t("VALIDATING_CAMPAIGN_NAME") : t("PLEASE_WAIT_WHILE_UPDATING")}
+          loaderText={isValidatingName ? t(I18N_KEYS.COMMON.VALIDATING_CAMPAIGN_NAME) : t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)}
         />
       )}
       <Stepper
@@ -363,13 +364,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         onSubmit={onSubmit}
         defaultValues={params}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         noCardStyle={currentKey === 3}
         onSecondayActionClick={onSecondayActionClick}
         isDisabled={isDataCreating}
-        label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t(I18N_KEYS.COMMON.HCM_SUBMIT) : t(I18N_KEYS.COMMON.HCM_NEXT)}
         noBreakLine={true}
         secondaryActionIcon={"ArrowBack"}
         primaryActionIconAsSuffix={true}
@@ -379,10 +380,10 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         <PopUp
           className={"deliveries-pop-module"}
           type={"warning"}
-          heading={t("ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS")}
+          heading={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.COMMON.ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -397,8 +398,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_DELIVERY_BACK")}
-              title={t("ES_CAMPAIGN_DELIVERY_BACK")}
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_BACK)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_BACK)}
               onClick={() => {
                 setShowPopUp(false);
               }}
@@ -408,8 +409,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
-              title={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
               onClick={() => {
                 setShowPopUp(false);
                 if (pendingFormData) {

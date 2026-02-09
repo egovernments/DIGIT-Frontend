@@ -7,6 +7,7 @@ import { Wrapper } from "./SelectingBoundaryComponent";
 import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 // Default value for unified campaign mode. Change this to `false` to revert to normal campaign mode.
 const DEFAULT_IS_UNIFIED_CAMPAIGN = true;
@@ -321,10 +322,10 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          heading={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -338,8 +339,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
-              title={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              label={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
+              title={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
               onClick={() => {
                 checkDataPresent({ action: false });
               }}
@@ -348,8 +349,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
-              title={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              label={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
+              title={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
               onClick={() => {
                 checkDataPresent({ action: true });
               }}

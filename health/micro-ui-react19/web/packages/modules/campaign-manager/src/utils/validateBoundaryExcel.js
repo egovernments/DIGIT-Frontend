@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "./i18nKeyConstants";
 
 const validateBoundaryExcelContent = async (file, t) => {
     return new Promise((resolve) => {
@@ -18,7 +19,7 @@ const validateBoundaryExcelContent = async (file, t) => {
         let rows = jsonData.slice(1); // Remaining rows are data
   
         if (headers.length === 0) {
-          resolve({ success: false, error: t("BOUNDARY_EMPTY_SHEET") });
+          resolve({ success: false, error: t(I18N_KEYS.UTILS.BOUNDARY_EMPTY_SHEET) });
           return;
         }
 
@@ -28,12 +29,12 @@ const validateBoundaryExcelContent = async (file, t) => {
         }
 
         if (rows.length === 0) {
-          resolve({ success: false, error: t("BOUNDARY_NO_VALID_ROWS") });
+          resolve({ success: false, error: t(I18N_KEYS.UTILS.BOUNDARY_NO_VALID_ROWS) });
           return;
         }
 
         // Find the index of "Service Boundary Code" to exclude validations
-        const excludeStartIndex = headers.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+        const excludeStartIndex = headers.indexOf(t(I18N_KEYS.COMMON.HCM_ADMIN_CONSOLE_BOUNDARY_CODE));
         const validateColumnsCount = excludeStartIndex === -1 ? headers.length : excludeStartIndex;
   
         // Perform validations
@@ -43,7 +44,7 @@ const validateBoundaryExcelContent = async (file, t) => {
         rows.forEach((row, rowIndex) => {
           // Single country validation (based on the first column)
           if (row[0]?.trim() && row[0]?.trim() !== referenceCountry) {
-            errors.push(`${t("Row")} ${rowIndex + 2}: ${t("MULTIPLE_COUNTRIES_CANNOT_EXIST")}`);
+            errors.push(`${t(I18N_KEYS.UTILS.Row)} ${rowIndex + 2}: ${t(I18N_KEYS.UTILS.MULTIPLE_COUNTRIES_CANNOT_EXIST)}`);
           }
   
           // Hierarchical dependency validation
@@ -52,7 +53,7 @@ const validateBoundaryExcelContent = async (file, t) => {
             const previousCell = row[colIndex - 1]?.trim();
             if (currentCell && !previousCell) {
               errors.push(
-                `${t("BOUNDARY_ROW")} ${rowIndex + 2}: ${t("BOUNDARY_COLUMN")} "${headers[colIndex]}" ${t("BOUNDARY_FILLED")} "${headers[colIndex - 1]}" ${t("BOUNDARY_EMPTY")}`
+                `${t(I18N_KEYS.UTILS.BOUNDARY_ROW)} ${rowIndex + 2}: ${t(I18N_KEYS.UTILS.BOUNDARY_COLUMN)} "${headers[colIndex]}" ${t(I18N_KEYS.UTILS.BOUNDARY_FILLED)} "${headers[colIndex - 1]}" ${t(I18N_KEYS.UTILS.BOUNDARY_EMPTY)}`
               );
             }
           }

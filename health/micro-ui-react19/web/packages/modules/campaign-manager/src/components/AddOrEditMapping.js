@@ -1,6 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown, TextInput, LabelFieldPair, CardLabel, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allSelectedBoundary, typeOfOperation, curData }, ref) => {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
         return (
           <div style={{ marginBottom: "1rem" }}>
             <div style={{ display: "flex" }}>
-              <label>{t("CHOOSE_BOUNDARY_LEVEL")}</label>
+              <label>{t(I18N_KEYS.COMPONENTS.CHOOSE_BOUNDARY_LEVEL)}</label>
               {column?.isRequired && <span className="mandatory-span">*</span>}
             </div>
             <Dropdown
@@ -70,7 +71,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             />
             <div style={{ height: "1rem" }}></div>
             <div style={{ display: "flex" }}>
-              <label>{t("CHOOSE_BOUNDARY")}</label>
+              <label>{t(I18N_KEYS.COMPONENTS.CHOOSE_BOUNDARY)}</label>
               <span className="mandatory-span">*</span>
             </div>
             <MultiSelectDropdown

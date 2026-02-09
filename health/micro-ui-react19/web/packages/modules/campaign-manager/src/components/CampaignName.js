@@ -2,6 +2,7 @@ import React, { useState, useEffect ,Fragment} from "react";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { ErrorMessage, FieldV1 , Stepper , TextBlock ,Card , HeaderComponent } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
@@ -110,11 +111,11 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
       
       <div className="card-container2">
         <Card className = "setup-campaign-card">
-        <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</HeaderComponent>
-        <p className="name-description">{t(`HCM_CAMPAIGN_NAME_DESCRIPTION`)}</p>
+        <HeaderComponent styles={{ margin: '0px' }}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_HEADER)}</HeaderComponent>
+        <p className="name-description">{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_DESCRIPTION)}</p>
       <LabelFieldPair className="name-container-label" style={{ display: "flex" }}>
         <div className="name-container">
-          <span>{`${t("HCM_CAMPAIGN_NAME")}`}</span>
+          <span>{`${t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME)}`}</span>
           <span className="mandatory-span">*</span>
         </div>
         <FieldV1
@@ -122,7 +123,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
           error={error?.message ? t(error?.message) : ""}
           style={{ width: "-webkit-fill-available", marginBottom: "0" }}
           populators={{ name: "campaignName" }}
-          placeholder={t("HCM_CAMPAIGN_NAME_EXAMPLE")}
+          placeholder={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_NAME_EXAMPLE)}
           value={name}
           onChange={(event) => {
             setStartValidation(true);

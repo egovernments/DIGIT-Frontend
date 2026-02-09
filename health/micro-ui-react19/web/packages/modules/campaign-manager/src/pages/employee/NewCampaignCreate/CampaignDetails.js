@@ -11,6 +11,7 @@ import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { downloadExcelWithCustomName } from "../../../utils";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 function transformCampaignData(inputObj = {}) {
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
@@ -349,15 +350,15 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
-              headingName: t("HCM_BOUNDARY_SELECT_HEADING"),
-              desc: t("HCM_SELECT_BOUNDARY_DESC"),
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_BOUNDARY_SELECT_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_BOUNDARY_DESC),
               buttonId: campaignData?.boundaries?.length > 0 ? `campaign-details-page-button-edit-selecting-boundaries` : `campaign-details-page-button-selecting-boundaries`,
               buttonLabel:
                 campaignData?.status === "created" || campaignData?.parentId
-                  ? t("HCM_UPDATE_BOUNDARIES")
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPDATE_BOUNDARIES)
                   : campaignData?.boundaries?.length > 0
-                  ? t("HCM_EDIT_BOUNDARY_BUTTON")
-                  : t("HCM_SELECT_BOUNDARY_BUTTON"),
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_BOUNDARY_BUTTON)
+                  : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_BOUNDARY_BUTTON),
               navLink:
                 campaignData?.status === "created" || campaignData?.parentId
                   ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&isUnifiedCampaign=${campaignData?.additionalDetails?.isUnifiedCampaign} `
@@ -377,14 +378,14 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
-              headingName: t("HCM_DELIVERY_HEADING"),
-              desc: t("HCM_DELIVERY_DESC"),
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELIVERY_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELIVERY_DESC),
               buttonLabel:
                 campaignData?.status === "created" || campaignData?.parentId
-                  ? t("HCM_EDIT_DELIVERY_DATES")
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_DELIVERY_DATES)
                   : campaignData?.deliveryRules?.[0]?.cycles?.length > 0
-                  ? t("HCM_EDIT_DELIVERY_BUTTON")
-                  : t("HCM_DELIVERY_BUTTON"),
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_DELIVERY_BUTTON)
+                  : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELIVERY_BUTTON),
               buttonId:
                 campaignData?.status === "created" || campaignData?.parentId
                   ? `campaign-details-page-button-edit-delivery-strategy`
@@ -409,9 +410,9 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
-              headingName: t("HCM_MOBILE_APP_HEADING"),
-              desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel: isFormConfigured ? t("HCM_EDIT_MOBILE_APP_BUTTON") : t("HCM_MOBILE_APP_BUTTON"),
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_DESC),
+              buttonLabel: isFormConfigured ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_MOBILE_APP_BUTTON) : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_BUTTON),
               buttonId: isFormConfigured ? `campaign-details-page-button-edit-mobile-app` : `campaign-details-page-button-setup-mobile-app`,
               type: isFormConfigured ? "secondary" : "primary",
               navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
@@ -443,13 +444,13 @@ const CampaignDetails = () => {
                   component: "ViewDetailComponent",
                   noCardStyle: true,
                   props: {
-                    headingName: t("HCM_UPLOAD_UNIFIED_DATA_HEADING"),
-                    desc: t("HCM_UPLOAD_UNIFIED_DATA_DESC"),
+                    headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_UNIFIED_DATA_HEADING),
+                    desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_UNIFIED_DATA_DESC),
                     buttonLabel: campaignData?.resources?.some(
                       (r) => r.type === "unified-console" || r.type === "unified-console-resources"
                     )
-                      ? t("HCM_EDIT_UPLOAD_DATA_BUTTON")
-                      : t("HCM_UPLOAD_DATA_BUTTON"),
+                      ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_UPLOAD_DATA_BUTTON)
+                      : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_BUTTON),
                     buttonId: campaignData?.resources?.some(
                       (r) => r.type === "unified-console" || r.type === "unified-console-resources"
                     )
@@ -479,9 +480,9 @@ const CampaignDetails = () => {
                   component: "ViewDetailComponent",
                   noCardStyle: true,
                   props: {
-                    headingName: t("HCM_UPLOAD_DATA_HEADING"),
-                    desc: t("HCM_UPLOAD_DATA_DESC"),
-                    buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
+                    headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_HEADING),
+                    desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_DESC),
+                    buttonLabel: campaignData?.resources?.length > 0 ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_UPLOAD_DATA_BUTTON) : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_DATA_BUTTON),
                     buttonId: campaignData?.resources?.length > 0 ? `campaign-details-page-button-edit-data` : `campaign-details-page-button-upload-data`,
                     navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
                     type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
@@ -504,9 +505,9 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
-              headingName: t("HCM_UPLOAD_LOCALIZATION_DATA_HEADING"),
-              desc: t("HCM_UPLOAD_LOCALIZATION_DATA_DESC"),
-              buttonLabel: t("HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON"),
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATION_DATA_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATION_DATA_DESC),
+              buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON),
               buttonId: `campaign-details-page-button-localizations-data-upload`,
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}&campaignName=${campaignData?.campaignName}`,
               navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}&campaignName=${campaignData?.campaignName}`,
@@ -526,9 +527,9 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
-              headingName: t("HCM_CHECKLIST_HEADING"),
-              desc: t("HCM_CHECKLIST_DESC"),
-              buttonLabel: isChecklistConfigured ? t("HCM_EDIT_CHECKLIST_BUTTON") : t("HCM_CHECKLIST_BUTTON"),
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CHECKLIST_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CHECKLIST_DESC),
+              buttonLabel: isChecklistConfigured ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_CHECKLIST_BUTTON) : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CHECKLIST_BUTTON),
               buttonId: isChecklistConfigured ? `campaign-details-page-button-edit-checklist` : `campaign-details-page-button-checklist`,
               type: isChecklistConfigured ? "secondary" : "primary",
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
@@ -591,9 +592,9 @@ const CampaignDetails = () => {
             `/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`,
             {
               state: {
-                message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                message: t(I18N_KEYS.COMMON.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE),
+                text: t(I18N_KEYS.COMMON.ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT),
+                info: t(I18N_KEYS.COMMON.ES_CAMPAIGN_SUCCESS_INFO_TEXT),
                 secondaryActionLabel: "BACK_TO__CAMPAIGN_HOME",
                 secondaryActionLink: `/${window.contextPath}/employee`,
                 actionLabel: "GO_TO_MY_CAMPAIGNS",
@@ -606,7 +607,7 @@ const CampaignDetails = () => {
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          setShowToast({ key: "error", label: errorCode ? t(errorCode) : t("ERROR_CREATE_CAMPAIGN") });
+          setShowToast({ key: "error", label: errorCode ? t(errorCode) : t(I18N_KEYS.CAMPAIGN_CREATE.ERROR_CREATE_CAMPAIGN) });
         },
       }
     );
@@ -677,7 +678,7 @@ const CampaignDetails = () => {
           <Tag label={t(campaignData?.projectType)} showIcon={false} className={"campaign-view-tag"} type={"warning"} stroke={true}></Tag>
           {campaignData?.deliveryRules?.[0]?.cycles?.length >= 1 && (
             <Tag
-              label={campaignData?.deliveryRules?.[0]?.cycles?.length > 1 ? t("HCM_MULTIROUND") : t("HCM_SINGLE_ROUND")}
+              label={campaignData?.deliveryRules?.[0]?.cycles?.length > 1 ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MULTIROUND) : t(I18N_KEYS.COMMON.HCM_SINGLE_ROUND)}
               showIcon={false}
               className={"campaign-view-tag"}
               type={"monochrome"}
@@ -711,7 +712,7 @@ const CampaignDetails = () => {
           <Edit width={"18"} height={"18"} />
         </div>
       </div>
-      <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
+      <div className="detail-desc">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_DETAILS_DESCRIPTION)}</div>
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>
@@ -722,8 +723,8 @@ const CampaignDetails = () => {
                 <Button
                   icon="CheckCircleOutline"
                   id={"campaign-details-page-final-save-campaign"}
-                  label={t("HCM_CREATE_CAMPAIGN")}
-                  title={t("HCM_CREATE_CAMPAIGN")}
+                  label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_CAMPAIGN)}
+                  title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_CAMPAIGN)}
                   onClick={onsubmit}
                   isDisabled={
                     campaignData?.boundaries?.length === 0 ||
@@ -738,14 +739,14 @@ const CampaignDetails = () => {
             : [
                 <Button
                   icon="CloudDownload"
-                  label={t("HCM_DOWNLOAD_CREDENTIALS")}
-                  title={t("HCM_DOWNLOAD_CREDENTIALS")}
+                  label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DOWNLOAD_CREDENTIALS)}
+                  title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DOWNLOAD_CREDENTIALS)}
                   onClick={() => onDownloadCredentails(campaignData)}
                   type="button"
                   variation="primary"
                   id={"campaign-details-page-final-download-credentials"}
                 />,
-                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} title={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" id={"campaign-details-page-final-download-app"}/>,
+                <Button icon="CloudDownload" label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DOWNLOAD_APP)} title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DOWNLOAD_APP)} onClick={onDownloadApp} type="button" variation="primary" id={"campaign-details-page-final-download-app"}/>,
               ]
         }
         maxActionFieldsAllowed={5}

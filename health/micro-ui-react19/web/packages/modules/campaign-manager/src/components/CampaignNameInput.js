@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { FieldV1 } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * CampaignNameInput component for the create-campaign flow.
@@ -80,7 +81,7 @@ const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
   return (
     <LabelFieldPair className="name-container-label" style={{ display: "flex" }}>
       <div className="name-container">
-        <span>{`${t("HCM_SELECT_CAMPAIGN_NAME")}`}</span>
+        <span>{`${t(I18N_KEYS.COMPONENTS.HCM_SELECT_CAMPAIGN_NAME)}`}</span>
         <span className="mandatory-span">*</span>
       </div>
       <div className="digit-field" style={{width:"100%"}} onFocus={handleFocus}>
@@ -89,7 +90,7 @@ const CampaignNameInput = ({ onSelect, formData, customProps, ...props }) => {
           error={error?.message ? t(error?.message) : ""}
           style={{ width: "-webkit-fill-available", marginBottom: "0" }}
           populators={{ name: "CampaignName" }}
-          placeholder={t("HCM_CAMPAIGNNAME_DATE_MONTH_YEAR")}
+          placeholder={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGNNAME_DATE_MONTH_YEAR)}
           value={name}
           onChange={handleChange}
         />

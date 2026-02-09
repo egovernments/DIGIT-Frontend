@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const { t } = useTranslation();
@@ -268,12 +269,12 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
       <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
-            <HeaderComponent className="unified-upload-header">{t("HCM_UNIFIED_UPLOAD_OPTION")}</HeaderComponent>
-            <p className="dates-description">{t("HCM_UNIFIED_UPLOAD_OPTION_DESC")}</p>
+            <HeaderComponent className="unified-upload-header">{t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION)}</HeaderComponent>
+            <p className="dates-description">{t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION_DESC)}</p>
           </div>
           <Switch
             isLabelFirst={true}
-            label={t("HCM_USE_UNIFIED_UPLOAD")}
+            label={t(I18N_KEYS.COMPONENTS.HCM_USE_UNIFIED_UPLOAD)}
             isCheckedInitially={isUnifiedCampaign}
             disable={restrictSelection}
             onToggle={(checked) => setIsUnifiedCampaign(checked)}
@@ -283,7 +284,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
       <div style={{ marginTop: "1rem" }}>
         <AlertCard
           label="Info"
-          text={t("CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES")}
+          text={t(I18N_KEYS.COMPONENTS.CAMPAIGN_CANNOT_REMOVE_PREVIOUS_BOUNDARIES)}
           variant="default"
           style={{ margin: "0rem", maxWidth: "100%", marginTop: "1.5rem", marginBottom: "2rem" }}
         />
@@ -292,10 +293,10 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          heading={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT) + " "}</CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -309,8 +310,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
-              title={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              label={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
+              title={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_BACK)}
               onClick={() => {
                 checkDataPresent({ action: false });
               }}
@@ -319,8 +320,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
-              title={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              label={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
+              title={t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT)}
               onClick={() => {
                 checkDataPresent({ action: true });
               }}

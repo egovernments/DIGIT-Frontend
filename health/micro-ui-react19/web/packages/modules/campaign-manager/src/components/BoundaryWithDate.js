@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Card, FieldV1 } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDelete, onDeleteCard }) => {
   const { t } = useTranslation();
@@ -90,7 +91,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             type="date"
             value={startDate}
             nonEditable={startDate?.length > 0 && today >= startDate ? true : false}
-            placeholder={t("HCM_START_DATE")}
+            placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
             populators={
               today >= startDate
                 ? {}
@@ -111,7 +112,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             type="date"
             value={endDate}
             nonEditable={endDate?.length > 0 && today >= endDate ? true : false}
-            placeholder={t("HCM_END_DATE")}
+            placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
             populators={{
               validation: {
                 min:
@@ -134,7 +135,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
           {cycleDates?.map((item, index) => (
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
-                <p>{`${t(`CYCLE`)} ${item?.cycleIndex}`}</p>
+                <p>{`${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="date-field-container">
@@ -143,7 +144,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   type="date"
                   nonEditable={item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
                   value={item?.startDate}
-                  placeholder={t("HCM_START_DATE")}
+                  placeholder={t(I18N_KEYS.COMMON.HCM_START_DATE)}
                   populators={{
                     validation: {
                       min:
@@ -176,7 +177,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                       ? true
                       : false
                   }
-                  placeholder={t("HCM_END_DATE")}
+                  placeholder={t(I18N_KEYS.COMMON.HCM_END_DATE)}
                   populators={{
                     validation: {
                       min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())

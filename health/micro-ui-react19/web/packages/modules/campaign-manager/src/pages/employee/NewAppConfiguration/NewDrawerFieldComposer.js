@@ -12,6 +12,7 @@ import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import PopupConfigEditor from "./PopUpConfigEditor";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Utility functions for date conversion
 const convertEpochToDateString = (epoch) => {
@@ -116,7 +117,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
           window.__appConfig_showToast({
             key: "error",
-            label: t("AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE"),
+            label: t(I18N_KEYS.APP_CONFIGURATION.AT_LEAST_ONE_COLUMN_MUST_BE_VISIBLE),
           });
         }
         return;
@@ -160,12 +161,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
     return [
       {
-        name: t("FIELD_CATEGORY_BASIC"),
+        name: t(I18N_KEYS.APP_CONFIGURATION.FIELD_CATEGORY_BASIC),
         code: "basic",
         options: basicOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
       },
       {
-        name: t("FIELD_CATEGORY_ADVANCED"),
+        name: t(I18N_KEYS.APP_CONFIGURATION.FIELD_CATEGORY_ADVANCED),
         code: "advanced",
         options: advancedOptions.map((item) => ({ ...item, name: item.type, code: t(`${item.category}.${item.type}`) })),
       },
@@ -818,7 +819,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
           >
-            {isDisabled && <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>}
+            {isDisabled && <span className="onhover-tooltip-text"> {t(I18N_KEYS.APP_CONFIGURATION.MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT)}</span>}
             <FieldV1
               config={{
                 step: "",
@@ -989,8 +990,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 disablePortal={true}
                 type="multiselectdropdown"
                 variant="nestedmultiselect"
-                selectAllLabel={t("SELECT_ALL")}
-                clearLabel={t("CLEAR_ALL")}
+                selectAllLabel={t(I18N_KEYS.COMMON.SELECT_ALL)}
+                clearLabel={t(I18N_KEYS.COMMON.CLEAR_ALL)}
                 config={{ isDropdownWithChip: true }}
                 selected={selectedOptions} // Pass actual option objects directly
                 onSelect={(selectedArray) => {
@@ -1123,11 +1124,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                       <LocalizationInput
                         key={`${column.header}-${index}`}
                         code={column.header}
-                        label={`${t("COLUMN")} ${index + 1} - ${t(column.header)}`}
+                        label={`${t(I18N_KEYS.COMMON.COLUMN)} ${index + 1} - ${t(column.header)}`}
                         currentLocale={currentLocale}
                         dispatch={dispatch}
                         t={t}
-                        placeholder={t("ADD_HEADER_LOCALIZATION")}
+                        placeholder={t(I18N_KEYS.COMMON.ADD_HEADER_LOCALIZATION)}
                         column={column}
                         columnIndex={index}
                         onColumnToggle={handleColumnVisibilityToggle}
@@ -1139,7 +1140,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               )}
 
               {columns.length === 0 && (
-                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>{t("NO_TABLE_COLUMNS_FOUND")}</div>
+                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>{t(I18N_KEYS.APP_CONFIGURATION.NO_TABLE_COLUMNS_FOUND)}</div>
               )}
             </div>
           </>
@@ -1232,7 +1233,7 @@ const LocalizationInput = React.memo(
           <FieldV1
             value={localizedValue}
             type="text"
-            placeholder={placeholder || t("ADD_LOCALIZATION")}
+            placeholder={placeholder || t(I18N_KEYS.COMMON.ADD_LOCALIZATION)}
             onChange={(e) => {
               const val = e.target.value;
               // Update localization for the code
@@ -1305,7 +1306,7 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
 
   return (
     <div style={{ display: "flex", gap: "1rem" }}>
-      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t("OPTION_PLACEHOLDER")} onChange={handleChange} />
+      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)} onChange={handleChange} />
       <div
         onClick={onDelete}
         style={{
@@ -1562,8 +1563,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             icon="AddIcon"
             size="small"
             variation="tertiary"
-            label={t("ADD_OPTIONS_SIDEPANEL")}
-            title={t("ADD_OPTIONS_SIDEPANEL")}
+            label={t(I18N_KEYS.APP_CONFIGURATION.ADD_OPTIONS_SIDEPANEL)}
+            title={t(I18N_KEYS.APP_CONFIGURATION.ADD_OPTIONS_SIDEPANEL)}
             className={`app-config-add-option-button`}
             style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
             textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}
@@ -1775,7 +1776,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
   if (!selectedField) {
     return (
       <div style={{ padding: "16px" }}>
-        <p>{t("APP_CONFIG_NO_FIELD_SELECTED")}</p>
+        <p>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_NO_FIELD_SELECTED)}</p>
       </div>
     );
   }
@@ -1810,7 +1811,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
       {/* Hidden Field Warning */}
       {selectedField?.hidden && (
         <div style={{ marginBottom: "16px" }}>
-          <Tag showIcon={true} label={t("CMP_DRAWER_FIELD_DISABLED_SINCE_HIDDEN")} type="warning" />
+          <Tag showIcon={true} label={t(I18N_KEYS.APP_CONFIGURATION.CMP_DRAWER_FIELD_DISABLED_SINCE_HIDDEN)} type="warning" />
         </div>
       )}
 

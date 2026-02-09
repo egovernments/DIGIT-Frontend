@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import React, { Fragment, useEffect } from "react";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const ROLES = {
   CAMPAIGN_MANAGER: ["CAMPAIGN_MANAGER", "MICROPLAN_CAMPAIGN_INTEGRATOR"],
@@ -44,21 +45,21 @@ const CampaignCard = () => {
     //   // count: isLoading?"-":data
     // },
     {
-      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      label: t(I18N_KEYS.COMPONENTS.ACTION_TEST_CREATE_CAMPAIGN),
       link: `/workbench-ui/employee/campaign/campaign-home`,
       id:`admin-console-home-screen-create-campaign-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
     {
-      label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
+      label: t(I18N_KEYS.COMPONENTS.ACTION_TEST_MY_CAMPAIGN_NEW),
       link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       id:`admin-console-home-screen-my-campaign-new-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
     {
-      label: t("CAMPAIGN_TEMPLATES"),
+      label: t(I18N_KEYS.COMMON.CAMPAIGN_TEMPLATES),
       link: `/${window?.contextPath}/employee/campaign/campaign-templates`,
       id:`admin-console-home-screen-campaign-templates-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
@@ -70,18 +71,18 @@ const CampaignCard = () => {
     //   // count: isLoading?"-":data
     // },
     {
-      label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
+      label: t(I18N_KEYS.COMPONENTS.ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
       roles: ROLES.BOUNDARY_MANAGER,
     },
     {
-      label: t("NATIONAL_DASHBOARD"),
+      label: t(I18N_KEYS.COMPONENTS.NATIONAL_DASHBOARD),
       link: "/digit-ui/employee",
       roles: ROLES.NATIONAL_SUPERVISOR,
       // count: isLoading?"-":data
     },
     {
-      label: t("BOUNDARY_MANAGEMENT"),
+      label: t(I18N_KEYS.COMPONENTS.BOUNDARY_MANAGEMENT),
       link: `/${window?.contextPath}/employee/workbench/boundary/home`,
       id:`admin-console-home-screen-boundary-management-link`,
       roles: ROLES.BOUNDARY_MANAGER,
@@ -117,7 +118,7 @@ const CampaignCard = () => {
 
   const propsForModuleCard = {
     Icon: "Engineering",
-    moduleName: t("ACTION_TEST_CAMPAIGN"),
+    moduleName: t(I18N_KEYS.COMPONENTS.ACTION_TEST_CAMPAIGN),
     kpis: [],
     links: links,
   };

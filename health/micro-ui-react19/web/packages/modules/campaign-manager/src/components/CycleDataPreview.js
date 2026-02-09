@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DetailsTable from "./DetailsTable";
 import { Button, AlertCard, Card, Toggle } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const Tabs = ({ deliveryData, onTabChange }) => {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ const Tabs = ({ deliveryData, onTabChange }) => {
 
   const toggleOptions = deliveryData?.map((delivery, index) => ({
     code: String(index),
-    name: `${t("CAMPAIGN_DELIVERY")} ${index + 1}`,
+    name: `${t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY)} ${index + 1}`,
   })) || [];
 
   return (
@@ -107,18 +108,18 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
               {rules?.attributes?.length > 0 && (
                 <DetailsTable
                   className="campaign-attribute-table"
-                  cardHeader={{ value: `${t("CAMPAIGN_CONDITION")} ${ruleIndex + 1}` }}
+                  cardHeader={{ value: `${t(I18N_KEYS.COMPONENTS.CAMPAIGN_CONDITION)} ${ruleIndex + 1}` }}
                   columnsData={[
                     {
-                      Header: t("CAMPAIGN_ATTRIBUTE_LABEL"),
+                      Header: t(I18N_KEYS.COMPONENTS.CAMPAIGN_ATTRIBUTE_LABEL),
                       accessor: "attribute",
                     },
                     {
-                      Header: t("CAMPAIGN_OPERATOR_LABEL"),
+                      Header: t(I18N_KEYS.COMPONENTS.CAMPAIGN_OPERATOR_LABEL),
                       accessor: "operator",
                     },
                     {
-                      Header: t("CAMPAIGN_VALUE_LABEL"),
+                      Header: t(I18N_KEYS.COMPONENTS.CAMPAIGN_VALUE_LABEL),
                       accessor: "value",
                     },
                   ]}
@@ -131,11 +132,11 @@ const CycleDataPreview = ({ data, items, index, errors, onErrorClick, cardErrors
                   // cardHeader={{ value: "Product Details" }}
                   columnsData={[
                     {
-                      Header: t("CAMPAIGN_PRODUCT_LABEL"),
+                      Header: t(I18N_KEYS.COMPONENTS.CAMPAIGN_PRODUCT_LABEL),
                       accessor: "name",
                     },
                     {
-                      Header: t("CAMPAIGN_COUNT_LABEL"),
+                      Header: t(I18N_KEYS.COMPONENTS.CAMPAIGN_COUNT_LABEL),
                       accessor: "quantity",
                     },
                   ]}

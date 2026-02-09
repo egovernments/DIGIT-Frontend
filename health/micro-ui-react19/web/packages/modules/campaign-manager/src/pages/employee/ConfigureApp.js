@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { ConfigureAppConfig } from "../../configs/ConfigureAppConfig";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -112,14 +113,14 @@ const ConfigureApp = ({ hierarchyType }) => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         showFormInNav={true}
         // cardClassName="setup-campaign-card"
         // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
-        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t(I18N_KEYS.COMMON.HCM_SUBMIT) : t(I18N_KEYS.COMMON.HCM_NEXT)}
       />
       {showToast && (
         <Toast

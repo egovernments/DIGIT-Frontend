@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { deselectField, setShowPopupPreview } from "./redux/remoteConfigSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const SidePanelApp = ({ showPanelProperties }) => {
   const { t } = useTranslation();
@@ -29,8 +30,8 @@ const SidePanelApp = ({ showPanelProperties }) => {
 
   // Determine page type tag based on data.type
   const pageTypeTag = currentData?.type === "template"
-    ? { label: `${t("TEMPLATE_SCREEN")} ${t("PARTIALLY_CONFIGURABLE_PARENTHESES")}`, type: "warning" }
-    : { label: `${t("FORM_SCREEN")} ${t("FULLY_CONFIGURABLE_PARENTHESES")}`, type: "default" };
+    ? { label: `${t(I18N_KEYS.APP_CONFIGURATION.TEMPLATE_SCREEN)} ${t(I18N_KEYS.APP_CONFIGURATION.PARTIALLY_CONFIGURABLE_PARENTHESES)}`, type: "warning" }
+    : { label: `${t(I18N_KEYS.APP_CONFIGURATION.FORM_SCREEN)} ${t(I18N_KEYS.APP_CONFIGURATION.FULLY_CONFIGURABLE_PARENTHESES)}`, type: "default" };
 
   const labelStyles = {
     fontFamily: "Roboto",
@@ -57,16 +58,16 @@ const SidePanelApp = ({ showPanelProperties }) => {
             <Button
               className=""
               variation="secondary"
-              label={t("BACK_TO_PAGE_PROPERTIES")}
-              title={t("BACK_TO_PAGE_PROPERTIES")}
+              label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_PAGE_PROPERTIES)}
+              title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_PAGE_PROPERTIES)}
               icon="ArrowBack"
               size="small"
               onClick={handleBackClick}
             />
             <div className="app-config-drawer-subheader">
-              <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_PROPERTIES")}</div>
+              <div className={"app-config-drawer-subheader-text"}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PROPERTIES)}</div>
               <span className="icon-wrapper new">
-                <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
+                <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PROPERTIES)} />
               </span>
             </div>
             {tabs.length > 0 && (
@@ -78,7 +79,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div className="typography heading-m" style={{ color: "#0B4B66", marginLeft: "0px", paddingTop: "0px" }}>
-              {t("FIELD_CONFIGURATION")}
+              {t(I18N_KEYS.APP_CONFIGURATION.FIELD_CONFIGURATION)}
             </div>
             {/* PAGE TYPE TAG below header */}
             <Tag

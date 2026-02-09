@@ -2,6 +2,7 @@
  * This file contains all the validations for create campaign flow
  */
 import { VALIDATION_FUNCTIONS, allRulesMet } from "./campaignNameValidators";
+import { I18N_KEYS } from "./i18nKeyConstants";
 
  const  validateCycleData=(data,t)=> {
   const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
@@ -255,13 +256,13 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       const startDateObj = new Date(formData?.campaignDates?.startDate);
       const endDateObj = new Date(formData?.campaignDates?.endDate);
       if (!formData?.campaignDates?.startDate || !formData?.campaignDates?.endDate) {
-        setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_DATE_MISSING")}` });
+        setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING)}` });
         return false;
       } else if (endDateObj.getTime() === startDateObj.getTime()) {
-        setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE")}` });
+        setShowToast({ key: "error", label: `${t(I18N_KEYS.UTILS.HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE)}` });
         return false;
       } else if (endDateObj.getTime() < startDateObj) {
-        setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
+        setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE)}` });
         return false;
       } else {
         setShowToast(null);
@@ -272,7 +273,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData, hierarchyDefinition, lowestHierarchy);
         const missedType = recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy);
         if (!validateBoundary) {
-          setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY) });
           return false;
         } else if (recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy).length > 0) {
           setShowToast({
@@ -292,18 +293,18 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         // setRefetchGenerate(checkEqual === false ? true : false);
         return true;
       } else {
-        setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+        setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_SELECT_BOUNDARY)}` });
         return false;
       }
 
     case "uploadBoundary":
       if (formData?.uploadBoundary?.isValidation) {
-        setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+        setShowToast({ key: "info", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
         return false;
       } else if (formData?.uploadBoundary?.isError) {
         if (formData?.uploadBoundary?.apiError) {
           setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
-        } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+        } else setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION)}` });
         return false;
       } else {
         setShowToast(null);
@@ -312,12 +313,12 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
 
     case "uploadFacility":
       if (formData?.uploadFacility?.isValidation) {
-        setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+        setShowToast({ key: "info", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
         return false;
       } else if (formData?.uploadFacility?.isError) {
         if (formData?.uploadFacility?.apiError) {
           setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
-        } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+        } else setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION)}` });
         return false;
       } else {
         setShowToast(null);
@@ -325,12 +326,12 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       }
     case "uploadUser":
       if (formData?.uploadUser?.isValidation) {
-        setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
+        setShowToast({ key: "info", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION_PROGRESS)}`, transitionTime: 6000000000 });
         return false;
       } else if (formData?.uploadUser?.isError) {
         if (formData?.uploadUser?.apiError) {
           setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
-        } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+        } else setShowToast({ key: "error", label: `${t(I18N_KEYS.COMMON.HCM_FILE_VALIDATION)}` });
         return false;
       } else {
         setShowToast(null);
@@ -520,7 +521,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               target: [
                 {
                   name: `target`,
-                  error: t(`TARGET_FILE_MISSING`),
+                  error: t(I18N_KEYS.CAMPAIGN_CREATE.TARGET_FILE_MISSING),
                 },
               ],
             };
@@ -534,7 +535,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               facility: [
                 {
                   name: `facility`,
-                  error: t(`FACILITY_FILE_MISSING`),
+                  error: t(I18N_KEYS.CAMPAIGN_CREATE.FACILITY_FILE_MISSING),
                 },
               ],
             };
@@ -548,7 +549,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
               user: [
                 {
                   name: `user`,
-                  error: t(`USER_FILE_MISSING`),
+                  error: t(I18N_KEYS.CAMPAIGN_CREATE.USER_FILE_MISSING),
                 },
               ],
             };
