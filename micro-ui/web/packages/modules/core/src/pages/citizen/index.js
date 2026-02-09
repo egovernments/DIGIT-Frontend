@@ -14,61 +14,61 @@ import DynamicModuleLoader from "../../components/DynamicModuleLoader";
 const ErrorComponent = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-error-component" */ "../../components/ErrorComponent"),
   () => require("../../components/ErrorComponent").default,
-  { loaderText: "Loading Error Component..." }
+  { loaderText: "CORE_LOADING_ERROR_COMPONENT" }
 );
 
 const FAQsSection = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-faqs" */ "./FAQs/FAQs"),
   () => require("./FAQs/FAQs").default,
-  { loaderText: "Loading FAQs..." }
+  { loaderText: "CORE_LOADING_FAQS" }
 );
 
 const CitizenHome = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-home" */ "./Home"),
   () => require("./Home").default,
-  { loaderText: "Loading Home..." }
+  { loaderText: "CORE_LOADING_HOME" }
 );
 
 const LanguageSelection = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-language-selection" */ "./Home/LanguageSelection"),
   () => require("./Home/LanguageSelection").default,
-  { loaderText: "Loading Language Selection..." }
+  { loaderText: "CORE_LOADING_LANGUAGE_SELECTION" }
 );
 
 const LocationSelection = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-location-selection" */ "./Home/LocationSelection"),
   () => require("./Home/LocationSelection").default,
-  { loaderText: "Loading Location Selection..." }
+  { loaderText: "CORE_LOADING_LOCATION_SELECTION" }
 );
 
 const UserProfile = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-user-profile" */ "./Home/UserProfile"),
   () => require("./Home/UserProfile").default,
-  { loaderText: "Loading User Profile..." }
+  { loaderText: "CORE_LOADING_USER_PROFILE" }
 );
 
 const HowItWorks = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-how-it-works" */ "./HowItWorks/howItWorks"),
   () => require("./HowItWorks/howItWorks").default,
-  { loaderText: "Loading How It Works..." }
+  { loaderText: "CORE_LOADING_HOW_IT_WORKS" }
 );
 
 const Login = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-login" */ "./Login"),
   () => require("./Login").default,
-  { loaderText: "Loading Login..." }
+  { loaderText: "CORE_LOADING_LOGIN" }
 );
 
 const Search = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-search" */ "./SearchApp"),
   () => require("./SearchApp").default,
-  { loaderText: "Loading Search..." }
+  { loaderText: "CORE_LOADING_SEARCH" }
 );
 
 const StaticDynamicCard = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-static-dynamic-card" */ "./StaticDynamicComponent/StaticDynamicCard"),
   () => require("./StaticDynamicComponent/StaticDynamicCard").default,
-  { loaderText: "Loading Dynamic Content..." }
+  { loaderText: "CORE_LOADING_DYNAMIC_CONTENT" }
 );
 
 const sidebarHiddenFor = [
