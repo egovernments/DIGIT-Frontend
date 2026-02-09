@@ -270,7 +270,7 @@ const AppModule = () => {
     <div className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
-          {t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULES)}
+          {t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}
         </HeaderComponent>
         <TextBlock body="" caption={t(I18N_KEYS.CAMPAIGN_CREATE.CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN)} header="" captionClassName="camp-drawer-caption" subHeader="" />
       </div>

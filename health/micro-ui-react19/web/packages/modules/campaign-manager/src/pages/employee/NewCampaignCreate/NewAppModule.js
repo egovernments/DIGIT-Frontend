@@ -51,7 +51,7 @@ const NewAppModule = () => {
     <div className="app-modules-select-wrapper">
       <div>
         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
-          {t(`HCM_CHOOSE_MODULE`)}
+          {t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}
         </HeaderComponent>
       </div>
       <EqualHeightWrapper deps={[sortedMdmsData]}>
