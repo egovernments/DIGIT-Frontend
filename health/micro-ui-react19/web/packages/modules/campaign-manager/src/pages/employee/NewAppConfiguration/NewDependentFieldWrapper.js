@@ -1347,7 +1347,7 @@ function NewDependentFieldWrapper({ t }) {
                                   </p>
                                   <Dropdown
                                     showToolTip={true}
-                                    placeholder={"CHOOSE_A_PAGE"}
+                                    placeholder={t("CHOOSE_A_PAGE")}
                                     option={pageOptions}
                                     optionKey="displayName"
                                     optionCardStyles={{
@@ -1392,7 +1392,7 @@ function NewDependentFieldWrapper({ t }) {
                                   </p>
                                   <Dropdown
                                     showToolTip={true}
-                                    placeholder={"CHOOSE_A_FIELD"}
+                                    placeholder={t("CHOOSE_A_FIELD")}
                                     option={
                                       cond.leftPage ? leftFieldOptions : []
                                     }
@@ -1461,7 +1461,7 @@ function NewDependentFieldWrapper({ t }) {
                                 </p>
                                 <Dropdown
                                   showToolTip={true}
-                                  placeholder={"CHOOSE_AN_OPERATOR_FOR_COMPARISION"}
+                                  placeholder={t("CHOOSE_AN_OPERATOR_FOR_COMPARISION")}
                                   option={operatorOptions}
                                   optionKey="name"
                                   optionCardStyles={{
@@ -1575,7 +1575,7 @@ function NewDependentFieldWrapper({ t }) {
                                       showToolTip={true}
                                       option={pageOptions}
                                       optionKey="displayName"
-                                      placeholder={"CHOOSE_A_PAGE"}
+                                      placeholder={t("CHOOSE_A_PAGE")}
                                       name={`right-page-${idx}`}
                                       t={t}
                                       optionCardStyles={{
@@ -1612,7 +1612,7 @@ function NewDependentFieldWrapper({ t }) {
                                     </p>
                                     <Dropdown
                                       showToolTip={true}
-                                      placeholder={"CHOOSE_A_FIELD"}
+                                      placeholder={t("CHOOSE_A_FIELD")}
                                       option={
                                         cond.rightPage ? rightFieldOptions : []
                                       }
