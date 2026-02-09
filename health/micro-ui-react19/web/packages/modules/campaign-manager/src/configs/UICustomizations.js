@@ -110,6 +110,10 @@ export const UICustomizations = {
       const campaignId = searchParams.get("campaignId");
       const campaignNumber = searchParams.get("campaignNumber");
       switch (key) {
+        case "CHECKLIST_ROLE":
+          return t(row?.data?.role);
+        case "CHECKLIST_TYPE":
+          return t(row?.data?.checklistType);
         case "HCM_CHECKLIST_STATUS":
           const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
           const toggle = async () => {

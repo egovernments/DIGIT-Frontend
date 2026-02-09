@@ -103,7 +103,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
             reject(t(I18N_KEYS.COMPONENTS.HCM_FILE_VALIDATION_ERROR));
           }
         } catch (error) {
-          reject("HCM_FILE_UNAVAILABLE");
+          reject(t(I18N_KEYS.COMPONENTS.HCM_FILE_UNAVAILABLE));
         }
       };
 
