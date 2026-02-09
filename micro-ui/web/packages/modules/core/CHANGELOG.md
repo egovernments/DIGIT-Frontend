@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-11"] [09-Feb-2026]
+- Fixed arguments for individualUserProfile
+
 ## ["2.0.0-dev-09"] [30-JAN-2026]
 - Changes from react17 core merge which was done for studio
 
