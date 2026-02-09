@@ -1254,18 +1254,18 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             footerclassName={"popUpFooter"}
             heading={
               type === "boundary"
-                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER)
                 : type === "facilityWithBoundary"
-                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
-                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
+                ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER)
+                : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER)
             }
             children={[
               <div>
                 {type === "boundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT)
                   : type === "facilityWithBoundary"
-                  ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
-                  : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
+                  ? t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT)
+                  : t(I18N_KEYS.COMPONENTS.ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT)}
               </div>,
             ]}
             onOverlayClick={() => {
@@ -1276,8 +1276,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 type={"button"}
                 size={"large"}
                 variation={"secondary"}
-                label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
-                title={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+                label={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
+                title={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_UPLOAD_CANCEL)}
                 onClick={() => {
                   setShowPopUp(false);
                 }}
@@ -1288,7 +1288,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 variation={"primary"}
                 icon={"FileDownload"}
                 label={getDownloadLabel()}
-                title={getDownloadLabel() || t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+                title={getDownloadLabel() || t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DOWNLOAD_TEMPLATE)}
                 onClick={() => {
                   downloadTemplate(), setShowPopUp(false);
                 }}
