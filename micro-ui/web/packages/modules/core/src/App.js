@@ -7,43 +7,43 @@ import { lazyWithFallback } from "@egovernments/digit-ui-components";
 const CitizenApp = lazyWithFallback(
   () => import(/* webpackChunkName: "citizen-app" */ "./pages/citizen"),
   () => require("./pages/citizen").default,
-  { loaderText: "Loading Citizen App..." }
+  { loaderText: "CORE_LOADING_CITIZEN_APP" }
 );
 
 const EmployeeApp = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-app" */ "./pages/employee"),
   () => require("./pages/employee").default,
-  { loaderText: "Loading Employee App..." }
+  { loaderText: "CORE_LOADING_EMPLOYEE_APP" }
 );
 
 const SignUp = lazyWithFallback(
   () => import(/* webpackChunkName: "sign-up" */ "./pages/employee/SignUp"),
   () => require("./pages/employee/SignUp").default,
-  { loaderText: "Loading Sign Up..." }
+  { loaderText: "CORE_LOADING_SIGN_UP" }
 );
 
 const Otp = lazyWithFallback(
   () => import(/* webpackChunkName: "otp" */ "./pages/employee/Otp"),
   () => require("./pages/employee/Otp").default,
-  { loaderText: "Loading OTP..." }
+  { loaderText: "CORE_LOADING_OTP" }
 );
 
 const ViewUrl = lazyWithFallback(
   () => import(/* webpackChunkName: "view-url" */ "./pages/employee/ViewUrl"),
   () => require("./pages/employee/ViewUrl").default,
-  { loaderText: "Loading View URL..." }
+  { loaderText: "CORE_LOADING_VIEW_URL" }
 );
 
 const CustomErrorComponent = lazyWithFallback(
   () => import(/* webpackChunkName: "custom-error" */ "./components/CustomErrorComponent"),
   () => require("./components/CustomErrorComponent").default,
-  { loaderText: "Loading Error Component..." }
+  { loaderText: "CORE_LOADING_ERROR_COMPONENT" }
 );
 
 const DummyLoaderScreen = lazyWithFallback(
   () => import(/* webpackChunkName: "dummy-loader" */ "./components/DummyLoader"),
   () => require("./components/DummyLoader").default,
-  { loaderText: "Loading..." }
+  { loaderText: "CORE_LOADING" }
 );
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes = ["citizen", "employee"] }) => {

@@ -7,19 +7,19 @@ import DynamicModuleLoader from "./DynamicModuleLoader";
 const ChangePassword = lazyWithFallback(
   () => import(/* webpackChunkName: "app-change-password" */ "../pages/employee/ChangePassword/index"),
   () => require("../pages/employee/ChangePassword/index").default,
-  { loaderText: "Loading Change Password..." }
+  { loaderText: "CORE_LOADING_CHANGE_PASSWORD" }
 );
 
 const ForgotPassword = lazyWithFallback(
   () => import(/* webpackChunkName: "app-forgot-password" */ "../pages/employee/ForgotPassword/index"),
   () => require("../pages/employee/ForgotPassword/index").default,
-  { loaderText: "Loading Forgot Password..." }
+  { loaderText: "CORE_LOADING_FORGOT_PASSWORD" }
 );
 
 const AppHome = lazyWithFallback(
   () => import(/* webpackChunkName: "app-home" */ "./Home").then(module => ({ default: module.AppHome })),
   () => require("./Home").AppHome,
-  { loaderText: "Loading Home..." }
+  { loaderText: "CORE_LOADING_HOME" }
 );
 
 const getTenants = (codes, tenants) => {

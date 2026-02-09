@@ -13,43 +13,43 @@ import { lazyWithFallback } from "@egovernments/digit-ui-components";
 const ChangePassword = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-change-password" */ "./ChangePassword"),
   () => require("./ChangePassword").default,
-  { loaderText: "Loading Change Password..." }
+  { loaderText: "CORE_LOADING_CHANGE_PASSWORD" }
 );
 
 const ForgotPassword = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-forgot-password" */ "./ForgotPassword"),
   () => require("./ForgotPassword").default,
-  { loaderText: "Loading Forgot Password..." }
+  { loaderText: "CORE_LOADING_FORGOT_PASSWORD" }
 );
 
 const LanguageSelection = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-language-selection" */ "./LanguageSelection"),
   () => require("./LanguageSelection").default,
-  { loaderText: "Loading Language Selection..." }
+  { loaderText: "CORE_LOADING_LANGUAGE_SELECTION" }
 );
 
 const EmployeeLogin = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-login" */ "./Login"),
   () => require("./Login").default,
-  { loaderText: "Loading Login..." }
+  { loaderText: "CORE_LOADING_LOGIN" }
 );
 
 const Otp = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-otp" */ "./Otp"),
   () => require("./Otp").default,
-  { loaderText: "Loading OTP..." }
+  { loaderText: "CORE_LOADING_OTP" }
 );
 
 const UserProfile = lazyWithFallback(
   () => import(/* webpackChunkName: "user-profile" */ "../citizen/Home/UserProfile"),
   () => require("../citizen/Home/UserProfile").default,
-  { loaderText: "Loading User Profile..." }
+  { loaderText: "CORE_LOADING_USER_PROFILE" }
 );
 
 const ErrorComponent = lazyWithFallback(
   () => import(/* webpackChunkName: "error-component" */ "../../components/ErrorComponent"),
   () => require("../../components/ErrorComponent").default,
-  { loaderText: "Loading Error Component..." }
+  { loaderText: "CORE_LOADING_ERROR_COMPONENT" }
 );
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error", "user/productPage"];

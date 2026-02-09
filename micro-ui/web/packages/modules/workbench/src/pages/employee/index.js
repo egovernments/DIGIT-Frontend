@@ -11,128 +11,128 @@ import { PRIMARY_COLOR } from "../../utils";
 const LocalisationSearch = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-localisation-search" */ "./LocalisationSearch"),
   () => require("./LocalisationSearch").default,
-  { loaderText: "Loading Localisation Search..." }
+  { loaderText: "WBH_LOADING_LOCALISATION_SEARCH" }
 );
 
 const MDMSSearch = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-search" */ "./MDMSSearch"),
   () => require("./MDMSSearch").default,
-  { loaderText: "Loading MDMS Search..." }
+  { loaderText: "WBH_LOADING_MDMS_SEARCH" }
 );
 
 
 const MDMSAddV2 = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-add-v2" */ "./MDMSAddV2"),
   () => require("./MDMSAddV2").default,
-  { loaderText: "Loading MDMS Add V2..." }
+  { loaderText: "WBH_LOADING_MDMS_ADD" }
 );
 
 const MDMSAddV4 = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-add-v4" */ "./MDMSAddV4"),
   () => require("./MDMSAddV4").default,
-  { loaderText: "Loading MDMS Add V4..." }
+  { loaderText: "WBH_LOADING_MDMS_ADD" }
 );
 
 const MDMSEdit = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-edit" */ "./MDMSEdit"),
   () => require("./MDMSEdit").default,
-  { loaderText: "Loading MDMS Edit..." }
+  { loaderText: "WBH_LOADING_MDMS_EDIT" }
 );
 
 const MDMSView = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-view" */ "./MDMSView"),
   () => require("./MDMSView").default,
-  { loaderText: "Loading MDMS View..." }
+  { loaderText: "WBH_LOADING_MDMS_VIEW" }
 );
 
 const MDMSSearchv2 = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-search-v2" */ "./MDMSSearchv2"),
   () => require("./MDMSSearchv2").default,
-  { loaderText: "Loading MDMS Search V2..." }
+  { loaderText: "WBH_LOADING_MDMS_SEARCH" }
 );
 
 const MDMSManageMaster = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-manage-master" */ "./MDMSManageMaster"),
   () => require("./MDMSManageMaster").default,
-  { loaderText: "Loading MDMS Manage Master..." }
+  { loaderText: "WBH_LOADING_MANAGE_MASTER" }
 );
 
 const LocalisationAdd = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-localisation-add" */ "./LocalisationAdd"),
   () => require("./LocalisationAdd").default,
-  { loaderText: "Loading Localisation Add..." }
+  { loaderText: "WBH_LOADING_LOCALISATION_ADD" }
 );
 
 const BoundaryHierarchyTypeAdd = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-boundary-hierarchy-type-add" */ "./BoundaryHierarchyTypeAdd"),
   () => require("./BoundaryHierarchyTypeAdd").default,
-  { loaderText: "Loading Boundary Hierarchy Type Add..." }
+  { loaderText: "WBH_LOADING_BOUNDARY_HIERARCHY" }
 );
 
 const UploadBoundary = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-upload-boundary" */ "./UploadBoundary"),
   () => require("./UploadBoundary").default,
-  { loaderText: "Loading Upload Boundary..." }
+  { loaderText: "WBH_LOADING_UPLOAD_BOUNDARY" }
 );
 
 const UploadBoundaryPure = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-boundary-upload-pure" */ "./BoundaryUploadPure"),
   () => require("./BoundaryUploadPure").default,
-  { loaderText: "Loading Upload Boundary Pure..." }
+  { loaderText: "WBH_LOADING_UPLOAD_BOUNDARY" }
 );
 
 const SidebarSearch = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-sidebar-config" */ "./SidebarSearch"),
   () => require("./SidebarSearch").default,
-  { loaderText: "Loading Sidebar Config..." }
+  { loaderText: "WBH_LOADING_SIDEBAR_CONFIG" }
 );
 
 const SidebarView = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-sidebar-view" */ "./SidebarView"),
   () => require("./SidebarView").default,
-  { loaderText: "Loading Sidebar Items..." }
+  { loaderText: "WBH_LOADING_SIDEBAR_VIEW" }
 );
 
 const SidebarAdd = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-sidebar-add" */ "./SidebarAdd"),
   () => require("./SidebarAdd").default,
-  { loaderText: "Loading Sidebar Add..." }
+  { loaderText: "WBH_LOADING_SIDEBAR_ADD" }
 );
 
 const MDMSManager = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-manager" */ "../../components/MDMSData"),
   () => require("../../components/MDMSData").default,
-  { loaderText: "Loading MDMS Manager..." }
+  { loaderText: "WBH_LOADING_MDMS_MANAGER" }
 );
 
 const BoundaryHome = lazyWithFallback(
   () => import(/* webpackChunkName: "boundary-home" */ "./BoundaryHome"),
   () => require("./BoundaryHome").default,
-  { loaderText: "Loading Boundary Home..." }
+  { loaderText: "WBH_LOADING_BOUNDARY_HOME" }
 );
 
 const BoundaryRelationCreate = lazyWithFallback(
   () => import(/* webpackChunkName: "boundary-relation-create" */ "./BoundaryRelationCreate"),
   () => require("./BoundaryRelationCreate").default,
-  { loaderText: "Loading Boundary Relation Create..." }
+  { loaderText: "WBH_LOADING_BOUNDARY_RELATION" }
 );
 
 const ViewHierarchy = lazyWithFallback(
   () => import(/* webpackChunkName: "view-hierarchy" */ "./ViewHierarchy"),
   () => require("./ViewHierarchy").default,
-  { loaderText: "Loading View Hierarchy..." }
+  { loaderText: "WBH_LOADING_VIEW_HIERARCHY" }
 );
 
 const ViewBoundary = lazyWithFallback(
   () => import(/* webpackChunkName: "view-boundary" */ "./ViewBoundary"),
   () => require("./ViewBoundary").default,
-  {loaderText: "Loading View Boundary"}
-)
+  {loaderText: "WBH_LOADING_VIEW_BOUNDARY" }
+);
 
 const Response = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-response" */ "./Response"),
   () => require("./Response").default,
-  { loaderText: "Loading Response..." }
+  { loaderText: "WBH_LOADING_RESPONSE" }
 );
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
