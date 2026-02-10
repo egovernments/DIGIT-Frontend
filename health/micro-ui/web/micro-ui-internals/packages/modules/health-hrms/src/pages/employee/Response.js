@@ -16,10 +16,11 @@ const ResponseScreen = () => {
   return (
     <>
       <PanelCard
-        animationProps={{
-          loop: false,
-          noAutoplay: false,
-        }}
+        showAsSvg={true}
+        // animationProps={{
+        //   loop: false,
+        //   noAutoplay: false,
+        // }}
         children={[]}
         cardClassName=""
         cardStyles={{}}
@@ -27,7 +28,9 @@ const ResponseScreen = () => {
         customIcon=""
         description={t(state?.description)}
         footerChildren={
-          state.isCampaign == ReposeScreenType.EDIT_USER || state.isCampaign == ReposeScreenType.EDIT_USER_ERROR || state.isCampaign == ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR 
+          state.isCampaign == ReposeScreenType.EDIT_USER ||
+          state.isCampaign == ReposeScreenType.EDIT_USER_ERROR ||
+          state.isCampaign == ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR
             ? []
             : [
                 <Button
@@ -52,6 +55,7 @@ const ResponseScreen = () => {
         sortFooterButtons
         style={{}}
         type={state?.state}
+        i
       ></PanelCard>
       <ActionBar className="mc_back">
         <Button
