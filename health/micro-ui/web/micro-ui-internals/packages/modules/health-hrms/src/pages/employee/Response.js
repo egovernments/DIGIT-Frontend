@@ -17,10 +17,6 @@ const ResponseScreen = () => {
     <>
       <PanelCard
         showAsSvg={true}
-        // animationProps={{
-        //   loop: false,
-        //   noAutoplay: false,
-        // }}
         children={[]}
         cardClassName=""
         cardStyles={{}}
