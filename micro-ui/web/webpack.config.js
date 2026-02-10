@@ -20,10 +20,13 @@ module.exports = {
           }
         },
       },
-      {           
+      {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf|otf)$/i,
+        use: ["file-loader"],
       }
     ],
   },
