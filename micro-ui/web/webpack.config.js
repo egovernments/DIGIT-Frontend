@@ -22,8 +22,15 @@ module.exports = {
       },
       {           
         test: /\.css$/i,
+<<<<<<< HEAD
         use: ["style-loader", "css-loader"],
       
+=======
+        use: [
+          { loader: require.resolve("style-loader") },
+          { loader: require.resolve("css-loader") },
+        ],
+>>>>>>> 8b7f628498944658607fce66b4ff8f9c86515fa4
       }
     ],
   },
