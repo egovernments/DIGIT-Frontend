@@ -386,8 +386,7 @@
   }
 }
 .mobile-bezel-outerWrapper {
-  transform: scale(0.8);
-  margin-top: 0rem;
+  margin: 0.5rem 0;
 }
 
 .app-config-tag-page-fixed {
@@ -419,7 +418,7 @@
 }
 .appConfiglabelField {
   position: relative;
-  padding: 1rem;
+  padding: 0.75rem;
   background-color: #eee;
   border: 1px solid #d6d5d4;
   border-radius: 0.5rem;
@@ -569,6 +568,7 @@
 .app-config-radio {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 .create-campaign-card {
   gap: 0;

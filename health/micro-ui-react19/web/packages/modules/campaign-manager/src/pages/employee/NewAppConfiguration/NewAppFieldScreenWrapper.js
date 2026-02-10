@@ -231,7 +231,7 @@ function NewAppFieldScreenWrapper() {
       <Divider />
       <div className="app-config-drawer-subheader">
         <div> {currentCard?.type === "template" ? t("APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("APPCONFIG_SUBHEAD_FIELDS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t("TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t("TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
       {currentCard?.body?.map((section, index, card) => {
 
@@ -307,7 +307,7 @@ function NewAppFieldScreenWrapper() {
           <Divider className="app-config-drawer-action-divider" />
           <div className="app-config-drawer-subheader">
             <div>{t("NAVIGATION_LOGIC")}</div>
-            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
+            <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
           </div>
           <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages} />
         </>
@@ -326,7 +326,7 @@ function NewAppFieldScreenWrapper() {
       {currentCard?.footer?.length > 0 && (
         <div className="app-config-drawer-subheader">
           <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
-          <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+          <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
         </div>)}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
@@ -336,6 +336,7 @@ function NewAppFieldScreenWrapper() {
       <Divider />
       <div className="app-config-drawer-subheader">
         <div>{t("APPCONFIG_PRIVACY_CONTROLS")}</div>
+        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE")} />
       </div>
       <div className="app-config-privacy-controls-container">
         <div className="app-config-privacy-controls-container-text">{t("PREVENT_SCREEN_CAPTURE")}</div>

@@ -3,6 +3,7 @@ import { Notifications, ZoomIn, ZoomOut } from "@egovernments/digit-ui-svg-compo
 
 const MobileBezelFrame = ({ children }) => {
   const [zoomLevel, setZoomLevel] = useState(1); // default 1 (100%)
+  const [bezelZoom, setBezelZoom] = useState(1);
 
   const zoomIn = () => {
     setZoomLevel((prev) => Math.min(2, prev + 0.1)); // limit to 200%
@@ -15,6 +16,26 @@ const MobileBezelFrame = ({ children }) => {
 
   const scrollRef = useRef(null);
   let scrollTimeout = null;
+
+  // Dynamically calculate zoom so the phone always fits in the preview area
+  useEffect(() => {
+    const calculateBezelZoom = () => {
+      const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const viewportHeight = window.innerHeight;
+      // Preview area: top 12.375rem + bottom 4.5rem = 16.875rem offset
+      const previewAreaHeight = viewportHeight - (16.875 * remSize);
+      const phoneHeight = 45 * remSize; // device height (45rem)
+      const margin = 2 * remSize; // 1rem margin top + bottom
+      const targetHeight = previewAreaHeight - margin;
+      const zoom = Math.min(1, targetHeight / phoneHeight);
+      setBezelZoom(zoom);
+    };
+
+    calculateBezelZoom();
+    window.addEventListener("resize", calculateBezelZoom);
+    return () => window.removeEventListener("resize", calculateBezelZoom);
+  }, []);
+
   useEffect(() => {
     const scrollElement = scrollRef.current;
 
@@ -46,7 +67,7 @@ const MobileBezelFrame = ({ children }) => {
           <ZoomIn />
         </button>
       </div> */}
-      <div className="mobile-bezel-outerWrapper" style={styles.outerWrapper}>
+      <div className="mobile-bezel-outerWrapper" style={{ ...styles.outerWrapper, zoom: bezelZoom }}>
         <div className="mobile-bezel-deviceWrapper" style={styles.deviceWrapper}>
           <div className="mobile-bezel-camera" style={styles.camera}></div>
           <div className="mobile-bezel-screen" ref={scrollRef} style={styles.screen}>

@@ -31,7 +31,7 @@ const Tooltip = ({ content, position }) => {
   );
 };
 
-const ConsoleTooltip = ({ className = "", toolTipContent, placement = "right-end", iconFill = "#787878" }) => {
+const ConsoleTooltip = ({ className = "", toolTipContent, placement = "right-end", iconFill = "#787878",style }) => {
   const [tooltipPos, setTooltipPos] = useState(null);
   const iconRef = useRef(null);
 
@@ -46,12 +46,12 @@ const ConsoleTooltip = ({ className = "", toolTipContent, placement = "right-end
   };
 
   return (
-    <div className="app-config-drawer-subheader">
+    <div className="app-config-drawer-subheader-tooltip">
       <span
         ref={iconRef}
         onMouseEnter={showTooltip}
         onMouseLeave={hideTooltip}
-        style={{ cursor: "pointer", display: "inline-block", marginLeft: 8 }}
+        style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", marginLeft: 8,...style }}
         className={`icon-wrapper ${className}`}
       >
         <InfoOutline fill={iconFill} width={"20px"} height={"20px"} />

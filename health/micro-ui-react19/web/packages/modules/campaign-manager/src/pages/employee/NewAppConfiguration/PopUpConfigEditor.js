@@ -69,7 +69,7 @@ const PopupConfigEditor = ({ selectedField }) => {
       <div className="app-config-drawer-subheader">
         <div className={"app-config-drawer-subheader-text"}>{t("APPCONFIG_POPUP_PROPERTIES")}</div>
         <span className="icon-wrapper new">
-          <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_POPUP_PROPERTIES")} />
+          <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip new" toolTipContent={t("TIP_APPCONFIG_POPUP_PROPERTIES")} />
         </span>
       </div>
 

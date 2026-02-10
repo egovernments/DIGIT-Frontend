@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import AppConfigurationStore from "./AppConfigurationStore";
-import { Loader, Button, Toast, Tag } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
@@ -258,7 +258,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         />
         <div className="full-config-wrapper__flow-name-header">
           {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
-          <span style={{fontSize: "0.75rem", marginBottom: "0.375rem",marginTop: "0.375rem"}}> ({`${t("APPCONFIG_VERSION")} - ${version}`})</span>
+          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t("APPCONFIG_VERSION")} - ${version}`})</span>
         </div>
         <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
@@ -504,30 +504,31 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="full-config-wrapper__bottom-nav">
-          {/* <Button
-            variation="secondary"
-            label={t("BACK")}
-            icon="ArrowBack"
-            isSuffix={false}
-            onClick={() => {
-              // Handle back navigation - could go to module selection or previous screen
-              navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
-            }}
-          /> */}
-          <Button
-            variation="primary"
-            label={t("PROCEED_TO_PREVIEW")}
-            title={t("PROCEED_TO_PREVIEW")}
-            icon="CheckCircle"
-            isSuffix={false}
-            onClick={() => {
-              // Handle proceed to preview
-              saveToAppConfig();
-            }}
-            style={{marginLeft:"auto"}}
-          />
-        </div>
+        <Footer
+          actionFields={[
+            // <Button
+            //   icon="ArrowBack"
+            //   label={t("BACK")}
+            //   title={t("BACK")}
+            //   onClick={() => {
+            //     navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+            //   }}
+            //   type="button"
+            //   variation="secondary"
+            // />,
+            <Button
+              variation="primary"
+              label={t("PROCEED_TO_PREVIEW")}
+              title={t("PROCEED_TO_PREVIEW")}
+              icon="CheckCircle"
+              isSuffix={false}
+              onClick={() => {
+                saveToAppConfig();
+              }}
+            />
+          ]}
+          setactionFieldsToRight={true}
+        />
 
         {/* Toast Notification */}
         {showToast && (

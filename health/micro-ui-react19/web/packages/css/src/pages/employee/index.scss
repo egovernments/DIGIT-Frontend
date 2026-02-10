@@ -1041,8 +1041,8 @@ tbody {
 }
 .app-configuration-side-panel {
   position: fixed;
-  top: 8.75rem;
-  width: 24rem;
+  top: 8rem;
+  width: 18.75rem;
   z-index: 99;
   background-color: #ffffff;
   overflow: hidden;
@@ -1062,13 +1062,25 @@ tbody {
 .appConfigHeaderLabelField {
   flex-direction: column;
   gap: 0.5rem;
+
   .appConfigLabelField-label-container {
     width: 100%;
+
+    &.toggle {
+      width: 70%;
+
+      .appConfigLabelField-label {
+        &.toggle {
+          width: 100%;
+          min-width: unset !important;
+        }
+      }
+    }
   }
 }
 .appConfigLabelField {
   position: relative;
-  padding: 1rem;
+  padding: 0.75rem;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
@@ -1127,6 +1139,10 @@ tbody {
   font-weight: 700;
   &.desc {
     margin-bottom: 0 !important;
+  }
+  &.toggle {
+    width: 100%;
+    min-width: unset !important;
   }
 }
 .app-preview-action-button {
@@ -1288,7 +1304,7 @@ tbody {
     .drawer-toggle-conditional-field {
       display: flex;
       flex-direction: column;
-      gap: 0.1rem;
+      gap: 0.25rem;
       .digit-header-content.label {
         @include typography-body-s;
         color: var(--digitv2-lightTheme-text-color-secondary);
@@ -1301,17 +1317,35 @@ tbody {
   }
 }
 .app-config-drawer-subheader {
-  @include typography-caption-s;
-  font-style: normal;
   color: var(--digitv2-lightTheme-primary-2);
   display: flex;
   align-items: center;
+  gap: 0.25rem;
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: bold;
+  font-weight: var(--digitv2-fontWeight-bold);
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-heading-s-mobile);
+  }
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-heading-s-tablet);
+  }
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-heading-s-desktop);
+  }
 }
 
 .icon-wrapper.app-config-tooltip {
   margin-bottom: 0;
-  height: 2rem;
-  display: contents;
+  /*height: 2rem;
+  display: contents;*/
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+
   .tooltip-wrapper {
     .tooltip-content {
       width: max-content !important;
@@ -1325,6 +1359,10 @@ tbody {
     align-items: center;
     height: 2rem;
   }
+  .app-config-drawer-subheader-tooltip {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .icon-wrapper {
@@ -1332,6 +1370,8 @@ tbody {
     top: 0rem;
     margin-left: 0rem;
     .app-config-tooltip {
+      top: 0rem !important;
+      margin-left: 0rem !important;
       &.new {
         svg {
           margin-top: 0.375rem;
@@ -1695,5 +1735,22 @@ input{
       min-width: 350px;
       width: auto;
     }
+  }
+}
+
+.main{
+  &.digit-home-main{
+    width: 100%;
+    padding-left: 3rem;
+    padding-right: 1.5rem;
+    margin: 0rem;
+  }
+}
+.employee-app-wrapper{
+  &.digit-home-app-wrapper{
+    width: 100%;
+    margin: 0rem !important;
+    padding: 1.5rem;
+    padding-right: 0rem;
   }
 }

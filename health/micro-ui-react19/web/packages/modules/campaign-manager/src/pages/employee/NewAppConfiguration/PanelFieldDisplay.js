@@ -77,8 +77,8 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
       style={{}}
     >
       <LabelFieldPair className={`appConfigLabelField`}>
-        <div className="appConfigLabelField-label-container" style={hasToggle ? {width:"80%"} : {width:"100%"}}>
-          <div className="appConfigLabelField-label">
+        <div className={`appConfigLabelField-label-container ${hasToggle ? "toggle" : ""}`} style={hasToggle ? {width:"70%"} : {width:"100%"}}>
+          <div className={`appConfigLabelField-label ${hasToggle ? "toggle" : ""}`}>
             <span>{label}</span>
           </div>
           <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>

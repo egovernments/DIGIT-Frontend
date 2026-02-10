@@ -1495,7 +1495,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
     case "number":
     case "textarea":
       return (
-        <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
+        <div className="drawer-container-tooltip">
           <FieldV1
             type={isMobileNumberPrefix ? "text" : cField.type}
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
@@ -1803,7 +1803,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
             : t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)
         }
         header=""
-        captionClassName="camp-drawer-caption"
+        captionClassName="camp-drawer-caption main"
         subHeader=""
       />
 

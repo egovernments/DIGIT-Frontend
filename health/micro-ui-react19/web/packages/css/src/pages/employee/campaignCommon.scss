@@ -2,6 +2,30 @@
   font-size: 1rem !important;
   font-weight: 400 !important;
   padding-bottom: 1.5rem;
+
+  &.main {
+    padding-bottom: 0rem;
+    font-family: var(--digitv2-fontFamily-sans);
+    font-style: var(--digitv2-fontStyle-normal);
+    font-weight: var(--digitv2-fontWeight-regular) !important;
+    margin: 0rem !important;
+    padding: 0rem !important;
+    width: 100%;
+    line-height: normal;
+    
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: var(--digitv2-fontSize-body-xs-mobile);
+    }
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: var(--digitv2-fontSize-body-xs-tablet);
+    }
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: var(--digitv2-fontSize-body-xs-desktop);
+    }
+  }
 }
 
 .camp-app-help-tutorial-popup {
