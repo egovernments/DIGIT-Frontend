@@ -67,7 +67,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   // If useAnIndividual exists, use IndividualLogin component
   if (useAnIndividual && individualServicePath) {
-    return <IndividualUserProfile stateCode={stateCode} isUserRegistered={isUserRegistered} />;
+    return <IndividualUserProfile stateCode={stateCode} userType={userType} cityDetails={cityDetails} />;
   }
   
   const navigate = useNavigate();
