@@ -68,6 +68,7 @@ export const renderTemplateComponent = (
     borderRadius: "4px",
     padding: "4px",
     width: "100%",
+    boxSizing: "border-box",
     backgroundColor: isSelected ? "#C84C0E08" : "transparent",
     transition: "all 0.2s ease",
   };

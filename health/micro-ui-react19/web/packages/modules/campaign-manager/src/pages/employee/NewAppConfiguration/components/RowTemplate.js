@@ -25,6 +25,8 @@ const RowTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClic
       style={{
         display: "flex",
         flexDirection: "row",
+        width: "100%",
+        boxSizing: "border-box",
         gap: properties.gap || "8px",
         justifyContent:
           properties.mainAxisAlignment === "spaceBetween"

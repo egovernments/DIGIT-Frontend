@@ -49,17 +49,24 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          height: "90%",
+          height: "100%",
           backgroundColor: "#eee",
         }}
       >
         <Card
+          type="secondary"
           className="app-card template-layout-card"
           style={{
             flex: 1,
             boxShadow: "none",
-            backgroundColor: "#eee",
             overflow: "auto",
+            padding: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            position: "relative",
+            zIndex: 0,
+            isolation: "isolate",
           }}
         >
           {/* HEADER */}

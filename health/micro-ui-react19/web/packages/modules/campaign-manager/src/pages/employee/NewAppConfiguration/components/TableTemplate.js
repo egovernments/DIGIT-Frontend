@@ -102,7 +102,7 @@ const TableTemplate = ({ field, t, fieldTypeMasterData }) => {
   }, [columnsConfig]);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", boxSizing: "border-box" }}>
       {/* Preview Label */}
       <div style={{
         fontSize: "11px",
@@ -120,7 +120,9 @@ const TableTemplate = ({ field, t, fieldTypeMasterData }) => {
           width: "100%",
           overflowX: "auto",
           border: "1px solid #e0e0e0",
-          borderRadius: "4px"
+          borderRadius: "4px",
+          position: "relative",
+          zIndex: 0,
         }}
       >
         <ResultsDataTable

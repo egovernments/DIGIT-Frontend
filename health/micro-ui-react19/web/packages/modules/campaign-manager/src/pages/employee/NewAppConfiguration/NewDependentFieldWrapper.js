@@ -978,7 +978,7 @@ function NewDependentFieldWrapper({ t }) {
         const fieldOptions = getFieldOptions(pageCode);
         const field = fieldOptions.find(f => f.code === fieldCode || f.name === fieldCode);
         if (field?.label) {
-            return t(field.label) || field.code;
+            return useT(field.label) || field.code;
         }
         return fieldCode;
     }, [getFieldOptions, t]);

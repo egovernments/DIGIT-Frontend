@@ -20,6 +20,7 @@ const CardTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldCli
         padding: "4px",
         marginBottom: "4px",
         width: "100%",
+        boxSizing: "border-box",
       }}
     >
       {children.map((child, index) => {

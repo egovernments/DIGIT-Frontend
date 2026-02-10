@@ -32,6 +32,7 @@ const ListViewTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFiel
       style={{
         display: "flex",
         width: "100%",
+        boxSizing: "border-box",
         flexDirection: "column",
         gap: field.properties?.gap || "8px",
         padding: "8px",
