@@ -105,7 +105,7 @@
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;
-  z-index: 0;
+  z-index: 9;
 }
 
 .previous-button {
@@ -1209,7 +1209,7 @@ tbody {
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
-  padding: 0.5rem;
+  padding: 0rem;
   .digit-header-content.label {
     width: 100%;
     .label-container {
@@ -1251,6 +1251,7 @@ tbody {
   background-color: #c84c0e1a;
   border: 2px solid #c84c0e;
   border-radius: 0.5rem;
+  padding: 0.5rem;
   .digit-field {
     .digit-radio-options-wrap {
       flex-direction: column;

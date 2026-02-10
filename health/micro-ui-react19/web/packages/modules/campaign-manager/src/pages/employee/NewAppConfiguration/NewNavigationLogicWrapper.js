@@ -948,6 +948,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                     size={"medium"}
                     style={{ width: "100%" }}
                     className="navigation-logic-wrapper__add-button"
+                    id={"app-config-screen-add-navigation-logic-button"}
                 />
             </div>
 

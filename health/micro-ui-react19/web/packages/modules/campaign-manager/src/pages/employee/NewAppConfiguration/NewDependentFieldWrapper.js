@@ -1111,7 +1111,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onEdit(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} size={"medium"} />}
+                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" id={"app-config-screen-add-display-logic-button"} label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} size={"medium"} />}
                 </div>
 
                 <div

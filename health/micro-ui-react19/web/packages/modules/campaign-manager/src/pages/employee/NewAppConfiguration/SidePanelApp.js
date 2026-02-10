@@ -44,7 +44,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
     <SidePanel
       bgActive
       className="app-configuration-side-panel"
-      defaultOpenWidth={300}
+      defaultOpenWidth={370}
       closedContents={[]}
       closedFooter={[<en />]}
       closedHeader={[]}

@@ -110,7 +110,7 @@ const styles = {
     // minHeight: "100vh",
   },
   deviceWrapper: {
-    width: "29rem",
+    width: "25.3125rem",
     height: "45rem",
     backgroundColor: "#000",
     borderRadius: "40px",

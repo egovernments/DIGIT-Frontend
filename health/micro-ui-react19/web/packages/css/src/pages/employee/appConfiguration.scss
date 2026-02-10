@@ -306,7 +306,7 @@
     margin-right: 21rem;*/
     margin-right: 0rem;
     transition: all 0.3s ease-out;
-    max-width: calc(100% - 32.5rem);
+    max-width: calc(100% - 36.875rem);
   }
 
   &__flow-tag {
@@ -368,7 +368,7 @@
   &__preview-area {
     position: fixed !important;
     left: 267px !important;
-    right: 18.75rem !important;
+    right: 23.125rem !important;
     top: 12.375rem !important;
     bottom: 4.5rem !important;
     background-color: #fafafa;
