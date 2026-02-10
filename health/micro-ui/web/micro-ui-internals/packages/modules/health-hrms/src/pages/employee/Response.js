@@ -17,7 +17,6 @@ const ResponseScreen = () => {
     <>
       <PanelCard
         showAsSvg={true}
-        children={[]}
         cardClassName=""
         cardStyles={{}}
         className=""
