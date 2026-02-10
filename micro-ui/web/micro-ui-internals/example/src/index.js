@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
+import { PGRReducers } from "@egovernments/digit-ui-module-cms";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
@@ -9,7 +9,7 @@ import { initEngagementComponents } from "@egovernments/digit-ui-module-engageme
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initPGRComponents } from "@egovernments/digit-ui-module-cms";
 import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
 import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 
@@ -110,7 +110,7 @@ const initDigitUI = () => {
       stateCode={stateCode}
       enabledModules={enabledModules}
       defaultLanding="employee"
-      allowedUserTypes={["employee","citizen"]}
+      allowedUserTypes={["employee", "citizen"]}
       moduleReducers={moduleReducers}
     />,
     document.getElementById("root")

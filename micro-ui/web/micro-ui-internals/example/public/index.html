@@ -14,7 +14,9 @@
 
   <!-- <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css/dist/index.css"/> -->
   <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
-  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@0.2.0/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@0.2.0-beta.14/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@0.2.113/dist/index.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.8.37/dist/index.css" />
   <script src="%REACT_APP_GLOBAL%"></script>
   <!-- Matomo -->
   <script>
@@ -131,16 +133,37 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function () {
-      var u = window?.globalConfigs?.getConfig("MATOMO_URL") || "https://unified-demo.digit.org/matomo/";
+      function resolveMatomoUrl() {
+        // 1️⃣ Same-origin auto resolution (FIRST priority)
+        if (window?.location?.origin) {
+          return `${window.location.origin}/matomo/`;
+        }
+
+        // 2️⃣ Config override if present (FALLBACK)
+        try {
+          const cfg = window?.globalConfigs?.getConfig?.("MATOMO_URL");
+          if (cfg) return cfg.endsWith("/") ? cfg : cfg + "/";
+        } catch (e) { }
+
+        return null;
+      }
+
+      var u = resolveMatomoUrl();
+      if (!u) return;
+
       _paq.push(['setTrackerUrl', u + 'matomo.php']);
-      // For SANDBOX DASHBOARD IN MATOMO
       _paq.push(['setSiteId', '2']);
-      // FOR UNIFIED-DEMO DASHBOARD IN MATOMO(HAS BOTH UNIFIED-DEMO AND SANDBOX)
       _paq.push(['addTracker', u + 'matomo.php', 1]);
-      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-      g.async = true; g.src = u + 'matomo.js';
+
+      var d = document,
+        g = d.createElement('script'),
+        s = d.getElementsByTagName('script')[0];
+
+      g.async = true;
+      g.src = u + 'matomo.js';
       s.parentNode.insertBefore(g, s);
     })();
+
     (function () {
       let lastUrl = location.href;
       let lastPageTitle = getPageTitle(location.href);
@@ -242,7 +265,7 @@
       // Monitor access token changes (logout detection)
       let lastAccessToken = null;
       let isInitialCheck = true;
-      setInterval(function() {
+      setInterval(function () {
         try {
           const currentToken = window.Digit?.UserService?.getUser()?.access_token;
           // Skip initial check to set baseline
@@ -334,6 +357,13 @@
     left: 50%;
     margin-left: -6.5rem;
     border-radius: .375rem;
+  }
+
+  .sandbox-custom-otp-subheader,
+  .sandbox-custom-otp-header,
+  .sandbox-custom-otp-email {
+    text-align: center !important;
+    width: 100% !important;
   }
 </style>
 
