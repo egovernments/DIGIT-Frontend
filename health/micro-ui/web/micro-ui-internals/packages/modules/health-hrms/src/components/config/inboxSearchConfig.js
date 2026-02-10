@@ -23,11 +23,6 @@ const inboxSearchConfig = (tenantId) => {
           minReqFields: 1,
           defaultValues: {
             roles: [],
-
-            isActive: {
-              code: true,
-              name: "HR_ACTIVATE_HEAD",
-            },
           },
           fields: [
             {
