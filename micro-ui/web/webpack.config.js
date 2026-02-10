@@ -22,7 +22,10 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [
+          { loader: require.resolve("style-loader") },
+          { loader: require.resolve("css-loader") },
+        ],
       }
     ],
   },
