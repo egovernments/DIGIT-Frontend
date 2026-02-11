@@ -262,7 +262,8 @@ const CreateComplaintForm = ({
             "CS_COMMON_COMPLAINT_SUBMITTED",
             "CS_COMMON_TRACK_COMPLAINT_TEXT",
             "CS_PGR_COMPLAINT_NUMBER",
-            responseData?.ServiceWrappers?.[0]?.service?.serviceRequestId
+            responseData?.ServiceWrappers?.[0]?.service?.serviceRequestId,
+            `/${window.contextPath}/employee/pgr/inbox-v2`
           );
         }
       },
@@ -272,7 +273,7 @@ const CreateComplaintForm = ({
   /**
    * Navigates user to response page with status of complaint submission
    */
-  const sendDataToResponsePage = (message, description, info, responseId) => {
+  const sendDataToResponsePage = (message, description, info, responseId,backlink) => {
     history.push({
       pathname: `/${window?.contextPath}/employee/pgr/complaint-success`, // Redirect path
       state: {
@@ -280,6 +281,7 @@ const CreateComplaintForm = ({
         description,
         info,
         responseId,
+        backlink
       }
     });
   };
