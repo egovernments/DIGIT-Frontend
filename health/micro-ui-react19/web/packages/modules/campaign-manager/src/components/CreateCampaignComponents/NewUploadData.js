@@ -1322,6 +1322,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 type="button"
                 className="campaign-download-template-btn"
                 onClick={downloadTemplate}
+                id={"file-download-template"}
               />
             </div>
             <div className="campaign-bulk-upload">
@@ -1445,6 +1446,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 onClick={() => {
                   downloadTemplate(), setShowPopUp(false);
                 }}
+                id={"file-download-template-popup"}
               />,
             ]}
             sortFooterChildren={true}

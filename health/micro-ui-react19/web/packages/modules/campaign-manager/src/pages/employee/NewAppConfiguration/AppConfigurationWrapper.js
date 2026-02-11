@@ -1173,6 +1173,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 title={t("ADD")}
                 isDisabled={!newFieldType?.label || !newFieldType?.field}
                 onClick={handleAddNewField}
+                id={"save-add-field-popup"}
               />
             </div>
           </>

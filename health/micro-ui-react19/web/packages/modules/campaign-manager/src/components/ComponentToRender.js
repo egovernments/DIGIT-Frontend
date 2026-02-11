@@ -132,6 +132,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           options: options,
           optionsKey: optionsKey,
           showToolTip: true,
+          optionsCustomStyle:{maxHeight:"8vh"}
         }}
         withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}

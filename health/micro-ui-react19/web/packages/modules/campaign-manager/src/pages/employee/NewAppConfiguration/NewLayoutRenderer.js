@@ -49,7 +49,6 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          height: "100%",
           backgroundColor: "#eee",
         }}
       >
