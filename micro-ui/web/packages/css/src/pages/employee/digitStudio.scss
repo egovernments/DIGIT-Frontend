@@ -1533,3 +1533,10 @@ textarea.light-placeholder::placeholder {
     width: 100%;
     max-width: 37.5rem;
 }
+
+@media (max-width: 768px) {
+  .digit-submit-bar {
+    min-width: unset;
+    width: 50%;
+  }
+}
