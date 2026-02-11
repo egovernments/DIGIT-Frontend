@@ -637,19 +637,6 @@ tbody {
   }
 }
 
-.digit-toast-success {
-  max-width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  height: auto;
-
-  .toast-label {
-    line-height: 1.5;
-    word-break: break-word;
-    height: auto;
-    white-space: unset;
-  }
-}
 
 .digit-dropdown-select.error {
   border: 1px solid #d4351c;
@@ -1544,10 +1531,6 @@ tbody {
   }
 }
 
-.digit-toast-success {
-  z-index: 10000;
-}
-
 .digit-radio-options-wrap .digit-radio-btn-checkmark{ 
   border-width: 1px
 }
@@ -1753,5 +1736,13 @@ input{
     margin: 0rem !important;
     padding: 1.5rem;
     padding-right: 0rem;
+    margin-bottom: 1.5rem !important;
+    padding-bottom: 0rem;
   }
+}
+
+.employee-home-footer{
+  display: flex;
+  align-items: center;
+  padding: 0rem;
 }
