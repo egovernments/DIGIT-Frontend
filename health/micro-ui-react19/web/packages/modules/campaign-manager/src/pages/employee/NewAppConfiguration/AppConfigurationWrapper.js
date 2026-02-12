@@ -73,6 +73,20 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   // Get panel configuration for validation
   const panelConfig = panelProperties?.drawerPanelConfig || {};
 
+  // Close side panel when Add Field popup opens
+  useEffect(() => {
+    if (showAddFieldPopup) {
+      window.__appConfig_closeSidePanel?.();
+    }
+  }, [showAddFieldPopup]);
+
+  // Helper to close popup and re-open side panel
+  const closeAddFieldPopup = useCallback(() => {
+    dispatch(handleShowAddFieldPopup(null));
+    setNewFieldType(null);
+    window.__appConfig_openSidePanel?.("flows");
+  }, [dispatch]);
+
   // Validation function to check ALL fields for mandatory conditional field errors
   const checkAllFieldsValidation = useCallback(() => {
     const errors = [];
@@ -923,9 +937,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       })
     );
 
-    // Close the popup and reset state
-    dispatch(handleShowAddFieldPopup(null));
-    setNewFieldType(null);
+    // Close the popup, reset state, and re-open flow panel
+    closeAddFieldPopup();
   };
   useEffect(() => {
     const fetchPageConfig = async () => {
@@ -1082,14 +1095,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           className="app-config-add-field-popup"
           type={"default"}
           heading={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
-          onOverlayClick={() => {
-            dispatch(handleShowAddFieldPopup(null));
-            setNewFieldType(null);
-          }}
-          onClose={() => {
-            dispatch(handleShowAddFieldPopup(null));
-            setNewFieldType(null);
-          }}
+          onOverlayClick={closeAddFieldPopup}
+          onClose={closeAddFieldPopup}
           style={{
             height: "auto",
             width: "32rem",
@@ -1161,10 +1168,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 variation="secondary"
                 label={t(I18N_KEYS.COMMON.CANCEL)}
                 title={t(I18N_KEYS.COMMON.CANCEL)}
-                onClick={() => {
-                  dispatch(handleShowAddFieldPopup(null));
-                  setNewFieldType(null);
-                }}
+                onClick={closeAddFieldPopup}
               />
               <Button
                 type="button"

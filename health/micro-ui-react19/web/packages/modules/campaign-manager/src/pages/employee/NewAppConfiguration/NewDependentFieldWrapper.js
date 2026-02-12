@@ -1674,7 +1674,7 @@ function NewDependentFieldWrapper({ t }) {
                                         ).toLowerCase() === "true"
                                       }
                                       label={
-                                        t(selectedLeftFieldMeta?.label) ||
+                                        useT(selectedLeftFieldMeta?.label) ||
                                         selectedLeftFieldMeta?.label ||
                                         ""
                                       }
