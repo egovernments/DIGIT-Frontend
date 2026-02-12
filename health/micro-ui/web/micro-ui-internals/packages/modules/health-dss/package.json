@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-health-dss",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Dss Module UI",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
