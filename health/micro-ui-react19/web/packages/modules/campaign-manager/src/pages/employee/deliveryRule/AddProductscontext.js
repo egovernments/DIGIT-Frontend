@@ -244,6 +244,7 @@ const AddProducts = React.memo(({
                 projectType: projectConfig?.projectType || projectConfig?.code,
               },
             }}
+            id={"add-new-resource-popup"}
           >
             {t("ES_CAMPAIGN_ADD_PRODUCT_LINK")}
           </Link>

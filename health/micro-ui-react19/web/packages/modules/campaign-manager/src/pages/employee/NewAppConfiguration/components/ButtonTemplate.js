@@ -23,7 +23,7 @@ const ButtonTemplate = ({ field, t, fieldTypeMasterData, props }) => {
       onClick={() => {}}
       className="app-preview-action-button"
       style={variation === "tertiary" ? { color: "#c84c0e", height: "1.5rem", width: "fit-content" } : null}
-      textStyles={variation === "tertiary" ? { color: "#c84c0e", fontSize: "0.875rem" } : null}
+      textStyles={variation === "tertiary" ? { color: "#c84c0e", fontSize: "1rem" } : null}
       icon={iconName}
     />
   );

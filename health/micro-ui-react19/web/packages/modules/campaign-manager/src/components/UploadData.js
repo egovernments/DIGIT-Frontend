@@ -1177,6 +1177,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 type="button"
                 className="campaign-download-template-btn"
                 onClick={downloadTemplate}
+                id={"file-download-template"}
               />
             </div>
             <div className="campaign-bulk-upload">

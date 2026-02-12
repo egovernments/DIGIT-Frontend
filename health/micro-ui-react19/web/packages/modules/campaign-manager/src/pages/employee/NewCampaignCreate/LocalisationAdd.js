@@ -402,6 +402,7 @@ const LocalisationBulkUpload = () => {
             onClick={() => inputRef.current?.click()}
             isDisabled={!isTemplateReady}
             icon={"FileDownload"}
+            id={"file-download-template-localization"}
           />
         </div>
 

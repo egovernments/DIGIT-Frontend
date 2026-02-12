@@ -48,32 +48,41 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
       <div
         className="mobile-bezel-child-container"
         style={{
+          backgroundColor: "#eee",
           display: "flex",
           flexDirection: "column",
           height: "90%",
-          backgroundColor: "#eee",
         }}
       >
         <Card
-          className="app-card template-layout-card"
+          className="app-preview-card"
           style={{
-            flex: 1,
-            boxShadow: "none",
+            padding: "1rem",
             backgroundColor: "#eee",
+            boxShadow: "none",
+            flex: 1,
             overflow: "auto",
           }}
         >
-          {/* HEADER */}
-          {data?.heading && <CardHeader className="app-preview-card-header">{t(data.heading)}</CardHeader>}
-          {data?.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
+            {/* HEADER */}
+            {data?.heading && (
+              <CardHeader className="app-preview-card-header" styles={{fontSize: "2rem", fontWeight: 700 }}>
+                {t(data.heading)}
+              </CardHeader>
+            )}
+            {data?.description && (
+              <CardText className="app-preview-sub-heading">
+                {t(data.description)}
+              </CardText>
+            )}
 
-          {/* BODY */}
-          {data?.body &&
-            data?.body?.[0]?.fields &&
-            renderSection(data?.body?.[0]?.fields, "body", fieldTypeMasterData, selectedField, t, onFieldClick, data)}
+            {/* BODY */}
+            {data?.body &&
+              data?.body?.[0]?.fields &&
+              renderSection(data?.body?.[0]?.fields, "body", fieldTypeMasterData, selectedField, t, onFieldClick, data)}
         </Card>
 
-        {/* FOOTER */}
+        {/* FOOTER - sticky at bottom */}
         {data?.footer?.length > 0 && (
           <div
             style={{

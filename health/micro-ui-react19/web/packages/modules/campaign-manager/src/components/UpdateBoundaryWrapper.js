@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, Fragment } from "react";
-import { Card, HeaderComponent, AlertCard, PopUp, Button, Switch, CardText } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, AlertCard, PopUp, Button, Switch, CardText,TextBlock } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
@@ -266,12 +266,19 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
           />
         )}
       </Card>
-      <Card style={{ marginTop: "1.5rem", marginBottom: "2rem" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <HeaderComponent className="unified-upload-header">{t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION)}</HeaderComponent>
-            <p className="dates-description">{t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION_DESC)}</p>
-          </div>
+      <Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextBlock
+            subHeader={t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION)}
+            subHeaderClassName={"switch-unified-upload"}
+            body={t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION_DESC)}
+          ></TextBlock>
           <Switch
             isLabelFirst={true}
             label={t(I18N_KEYS.COMPONENTS.HCM_USE_UNIFIED_UPLOAD)}

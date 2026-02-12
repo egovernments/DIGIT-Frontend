@@ -541,10 +541,12 @@ const CreateChecklist = () => {
           state: {
             message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
             preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-            actionLabel: "CHECKLIST_SUCCESS_RESPONSE",
-            actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
-            secondaryActionLabel: "VIEW_DETAILS_CHECKLIST_RESPONSE",
-            secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+            actionLabel: "VIEW_DETAILS_CHECKLIST_RESPONSE",
+            actionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+            primaryActionIcon:"UndoIcon",
+            primaryActionVariation: "primary", 
+            secondaryActionLabel: "CHECKLIST_SUCCESS_RESPONSE",
+            secondaryActionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
           },
         });
       } else {

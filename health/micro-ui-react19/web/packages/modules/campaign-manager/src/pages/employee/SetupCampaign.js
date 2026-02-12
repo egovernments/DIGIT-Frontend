@@ -1167,7 +1167,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             ? null
             : isSubmit === true
             ? t(I18N_KEYS.COMMON.HCM_NEXT)
-            : filteredConfig?.[0]?.form?.[0]?.isLast === true
+            : filteredConfig?.[0]?.form?.[0]?.isLast === true || filteredConfig?.[0]?.form?.[0]?.isSubmitStep === true
             ? t(I18N_KEYS.COMMON.HCM_SUBMIT)
             : t(I18N_KEYS.COMMON.HCM_NEXT)
         }

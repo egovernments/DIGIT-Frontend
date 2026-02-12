@@ -149,24 +149,6 @@ header {
   }
 }
 
-.digit-toast-success {
-  transform: translateX(-50%);
-  left: 50%;
-  bottom: -100%;
-}
-
-@keyframes slideInFromBottom {
-  from {
-    bottom: -100%;
-  }
-  to {
-    bottom: 4.5rem;
-  }
-}
-
-.digit-toast-success.animate {
-  animation: slideInFromBottom 0.5s ease forwards;
-}
 .horizontal-nav {
   background-color: transparent !important;
 }
@@ -343,4 +325,34 @@ header {
 
 .digit-panelcard-wrap{
   border-radius: 12px !important;
+}
+
+.digit-toast-success {
+  margin-bottom: -1.25rem;
+}
+
+.digit-toast-success {
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+  position: fixed;
+  left: 50%;
+  bottom: 4.5rem;
+  transform: translate(-50%, 150%);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 10000;
+
+  .toast-label {
+    line-height: 1.5;
+    word-break: break-word;
+    height: auto;
+    white-space: unset;
+  }
+}
+
+.digit-toast-success.animate {
+  transform: translate(-50%, 0);
+  opacity: 1;
 }

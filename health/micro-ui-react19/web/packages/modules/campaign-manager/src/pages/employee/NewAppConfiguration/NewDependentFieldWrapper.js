@@ -966,7 +966,7 @@ function NewDependentFieldWrapper({ t }) {
         const fieldOptions = getFieldOptions(pageCode);
         const field = fieldOptions.find(f => f.code === fieldCode || f.name === fieldCode);
         if (field?.label) {
-            return t(field.label) || field.code;
+            return useT(field.label) || field.code;
         }
         return fieldCode;
     }, [getFieldOptions, t]);
@@ -1099,7 +1099,7 @@ function NewDependentFieldWrapper({ t }) {
                     onClick={() => onEdit(idx)}
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
-                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} size={"medium"} />}
+                    {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" id={"app-config-screen-add-display-logic-button"} label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} size={"medium"} />}
                 </div>
 
                 <div

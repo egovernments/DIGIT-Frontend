@@ -86,7 +86,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
       showAsSvg={true}
       cardClassName="panel-card-preview"
       footerStyles={{width: "100%"}}
-      style={{ marginBottom: "1rem" }}
+      style={{}}
     />
   );
 };

@@ -137,6 +137,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         {
           stepCount: "2",
           key: "6",
+          isSubmitStep: true,
           body: [
             {
               isMandatory: false,
@@ -215,6 +216,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         {
           stepCount: "3",
           key: "9",
+          isSubmitStep: true,
           body: [
             {
               isMandatory: false,

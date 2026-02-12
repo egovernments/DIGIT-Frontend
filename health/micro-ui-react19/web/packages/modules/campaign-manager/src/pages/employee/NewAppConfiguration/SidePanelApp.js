@@ -45,7 +45,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
     <SidePanel
       bgActive
       className="app-configuration-side-panel"
-      defaultOpenWidth={369}
+      defaultOpenWidth={370}
       closedContents={[]}
       closedFooter={[<en />]}
       closedHeader={[]}
@@ -67,7 +67,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
             <div className="app-config-drawer-subheader">
               <div className={"app-config-drawer-subheader-text"}>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PROPERTIES)}</div>
               <span className="icon-wrapper new">
-                <ConsoleTooltip className="app-config-tooltip new" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PROPERTIES)} />
+                <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PROPERTIES)} />
               </span>
             </div>
             {tabs.length > 0 && (
@@ -78,7 +78,7 @@ const SidePanelApp = ({ showPanelProperties }) => {
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div className="typography heading-m" style={{ color: "#0B4B66", marginLeft: "0px", paddingTop: "0px" }}>
+            <div className="app-config-page-properties typography caption-s" style={{ color: "#0B4B66", marginLeft: "0px", paddingTop: "0px" }}>
               {t(I18N_KEYS.APP_CONFIGURATION.FIELD_CONFIGURATION)}
             </div>
             {/* PAGE TYPE TAG below header */}
