@@ -526,7 +526,7 @@ const UpdateChecklist = () => {
             preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
             // actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
             actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
-            secondaryActionLabel: "MY_CAMPAIGN",
+            secondaryActionLabel: "GO_TO_MY_CAMPAIGN",
             secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
           },
         });
