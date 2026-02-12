@@ -954,11 +954,62 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setShowToast(null);
   };
 
-  const onFileDownload = (file) => {
+  const downloadGeneratedUnifiedFile = async () => {
+    try {
+      const response = await Digit.CustomService.getResponse({
+        url: "/excel-ingestion/v1/data/generate/_search",
+        body: {
+          GenerationSearchCriteria: {
+            tenantId: tenantId,
+            referenceIds: [id],
+            statuses: ["completed"],
+            limit: 5,
+            offset: 0,
+            locale:
+              Digit?.SessionStorage?.get("locale") ||
+              Digit?.SessionStorage.get("initData")?.selectedLanguage ||
+              Digit?.Utils?.getDefaultLanguage(),
+            referenceTypes: ["campaign"],
+          },
+        },
+      });
+      const generatedResource = response?.GenerationDetails?.[0];
+      if (!generatedResource?.fileStoreId && !generatedResource?.fileStoreid) {
+        setShowToast({
+          key: "info",
+          label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME"),
+        });
+        return;
+      }
+      const fileStoreId =
+        generatedResource?.fileStoreId || generatedResource?.fileStoreid;
+      const customFileName = `${campaignName}_${t(
+        "HCM_FILLED",
+      )}_Unified_Template`;
+      downloadExcelWithCustomName({
+        fileStoreId,
+        customName: customFileName,
+      });
+    } catch (error) {
+      setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+    }
+  };
+
+  const onFileDownload = async (file) => {
+    // If unified update flow → download generated file instead
+    if (type === "unified-console" && parentId) {
+      await downloadGeneratedUnifiedFile();
+      return;
+    }
+
+    // Normal behavior for other cases
     if (file && file?.url) {
       // Splitting filename before .xlsx or .xls
       const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
-      downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
+      downloadExcelWithCustomName({
+        fileStoreId: file?.filestoreId,
+        customName: fileNameWithoutExtension,
+      });
     }
   };
   useEffect(() => {
@@ -1297,6 +1348,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         return t("WBH_DOWNLOAD_CURRENT_TARGET");
       } else if (type === "facility") {
         return t("WBH_DOWNLOAD_CURRENT_FACILITY");
+      } else if (type === "unified-console") {
+        return t("WBH_DOWNLOAD_CURRENT_UNIFIED_DATA");
       } else {
         return t("WBH_DOWNLOAD_CURRENT_USER");
       }
