@@ -103,15 +103,6 @@ const TableTemplate = ({ field, t, fieldTypeMasterData }) => {
 
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
-      {/* Preview Label */}
-      <div style={{
-        fontSize: "11px",
-        color: "#666",
-        marginBottom: "8px",
-        fontStyle: "italic"
-      }}>
-        Table Preview (showing headers only)
-      </div>
 
       {/* Table */}
       <div

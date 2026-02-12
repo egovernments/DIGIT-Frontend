@@ -17,10 +17,10 @@ const CardTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldCli
       type={cardType || "primary"}
       className={`card-type-${cardType || "primary"}`}
       style={{
-        padding: "4px",
-        marginBottom: "4px",
+        padding: "16px",
         width: "100%",
         boxSizing: "border-box",
+        gap: "8px",
       }}
     >
       {children.map((child, index) => {

@@ -77,6 +77,10 @@ const MobileBezelFrame = ({ children }) => {
                 transform: `scaleY(${zoomLevel})`,
                 transformOrigin: "top",
                 transition: "transform 0.3s ease",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                minHeight: 0,
               }}
             >
               <div className="mobile-top-bar" style={{ flexDirection: "row", gap: "1rem" }}>
@@ -139,6 +143,9 @@ const styles = {
     flexGrow: 1,
     // padding: "16px",
     boxSizing: "border-box",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
   },
 };
 

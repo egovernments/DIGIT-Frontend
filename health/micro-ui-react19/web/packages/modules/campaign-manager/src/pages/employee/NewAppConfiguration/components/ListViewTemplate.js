@@ -29,16 +29,13 @@ const ListViewTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFiel
 
   return (
     <div
-      // style={{
-      //   display: "flex",
-      //   width: "100%",
-      //   boxSizing: "border-box",
-      //   flexDirection: "column",
-      //   gap: field.properties?.gap || "8px",
-      //   padding: "8px",
-      //   borderRadius: "4px",
-      //   backgroundColor: "#ffffffff",
-      // }}
+      style={{
+        display: "flex",
+        width: "100%",
+        boxSizing: "border-box",
+        flexDirection: "column",
+        gap: field.properties?.gap || "8px",
+      }}
     >
       {/* Render the child component */}
       {renderTemplateComponent(childWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, `listview-${field.id}`, 0)}

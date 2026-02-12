@@ -6,7 +6,7 @@ const LabelFieldPairTemplate = ({ field, t, props }) => {
   const { data = [] } = selectedField;
 
   return (
-    <div style={{padding:"4px"}}>
+    <div>
       {data.map((pair, index) => (
         <div key={index}>
           <SummaryCardFieldPair

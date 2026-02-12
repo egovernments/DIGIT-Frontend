@@ -1445,3 +1445,23 @@
 .app-config-page-properties {
   line-height: normal;
 }
+
+// ===============================================
+// Search Bar Template Styles (Mobile Preview)
+// ===============================================
+
+.search-bar-template {
+  width: 100%;
+
+  .digit-text-input-field {
+    border-radius: 8px !important;
+    border: 1px solid #e0e0e0 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    input {
+      border: none !important;
+      outline: none !important;
+    }
+  }
+}

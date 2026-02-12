@@ -61,17 +61,7 @@ export const renderTemplateComponent = (
     Component = Digit.ComponentRegistryService.getComponent(componentName);
   }
 
-  // Wrapper with selection highlighting and click handling
-  const wrapperStyle = {
-    cursor: "pointer",
-    border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
-    borderRadius: "4px",
-    padding: "4px",
-    width: "100%",
-    boxSizing: "border-box",
-    backgroundColor: isSelected ? "#C84C0E08" : "transparent",
-    transition: "all 0.2s ease",
-  };
+  const wrapperClassName = `template-field-wrapper${isSelected ? " selected" : ""}`;
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -81,7 +71,7 @@ export const renderTemplateComponent = (
   // If custom component found, render it
   if (Component) {
     return (
-      <div key={uniqueKey} onClick={editableComponent ? handleClick : null} style={wrapperStyle}>
+      <div key={uniqueKey} onClick={editableComponent ? handleClick : null} className={wrapperClassName}>
         <Component
           field={field}
           t={t}
@@ -102,15 +92,7 @@ export const renderTemplateComponent = (
     <div
       key={uniqueKey}
       onClick={handleClick}
-      style={{
-        ...wrapperStyle,
-        background: "#fafafa",
-        color: "#999",
-        fontStyle: "italic",
-        border: "1px dashed #ccc",
-        textAlign: "center",
-        padding: "8px",
-      }}
+      className="template-field-fallback"
     >
       {`${
         fieldType

@@ -37,31 +37,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const sidePanelRef = useRef(null);
   const sidebarRef = useRef(null);
 
-  // Click outside to close panel
-  useEffect(() => {
-    if (!activeSidePanel) return;
-
-    const handleClickOutside = (e) => {
-      // Check if click is outside both the panel and the sidebar menu
-      const isOutsidePanel = sidePanelRef.current && !sidePanelRef.current.contains(e.target);
-      const isOutsideSidebar = sidebarRef.current && !sidebarRef.current.contains(e.target);
-
-      if (isOutsidePanel && isOutsideSidebar) {
-        handleCloseSidePanel();
-      }
-    };
-
-    // Add listener on next tick to avoid catching the opening click
-    const timer = setTimeout(() => {
-      document.addEventListener("mousedown", handleClickOutside);
-    }, 0);
-
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [activeSidePanel]);
-
   const handleCloseSidePanel = () => {
     setIsClosing(true);
     setTimeout(() => {

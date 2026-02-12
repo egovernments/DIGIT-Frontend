@@ -343,6 +343,38 @@
   }
 }
 
+// ===============================================
+// Template Field Wrapper Styles (Mobile Preview)
+// ===============================================
+
+.template-field-wrapper {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  transition: all 0.2s ease;
+
+  &.selected {
+    border-color: #C84C0E;
+    background-color: #C84C0E08;
+  }
+}
+
+.template-field-fallback {
+  background: #fafafa;
+  color: #999;
+  font-style: italic;
+  border: 1px dashed #ccc;
+  text-align: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .app-card.template-layout-card {
   overflow-y: auto !important;
   overflow-y: overlay !important;

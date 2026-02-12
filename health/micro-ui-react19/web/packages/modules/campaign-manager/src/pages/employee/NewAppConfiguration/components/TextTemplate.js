@@ -10,9 +10,8 @@ const TextTemplate = ({ field, t, props }) => {
   return (
     <div
       style={{
-        fontSize: "14px",
+        fontSize: "0.875rem",
         color: "#333",
-        padding: "4px 0",
       }}
     >
       {translatedLabel ? `${translatedLabel} : ********` : "********"}
