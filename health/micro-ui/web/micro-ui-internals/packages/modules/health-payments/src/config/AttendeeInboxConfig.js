@@ -12,7 +12,7 @@ import React from "react";
 
 const inboxAttendeeSearchConfig = (boundarycode) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-
+  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
   return {
     type: "inbox", // Defines the type of configuration (search functionality)
     label: "Search Employee", // Label for the search functionality
@@ -26,12 +26,8 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
           //secondaryLabel: "HRMS_CLEAR_FILTER",
           formClassName: "filter",
           minReqFields: 0,
-          defaultValues: {
-
-          },
+          defaultValues: {},
           fields: [
-
-
             {
               //label: "HCM_AM_COMMON_TABLE_COL_FILTER",
               isMandatory: false,
@@ -42,13 +38,11 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
 
               populators: {
                 name: "AttendeeBoundaryComponent",
-
               },
             },
-
           ],
         },
-       // label: "ES_COMMON_FILTERS",
+        // label: "ES_COMMON_FILTERS",
         show: true,
       },
 
@@ -179,7 +173,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             //   additionalCustomization: true,
             // },
           ],
-          totalCountJsonPath:"TotalCount",
+          totalCountJsonPath: "TotalCount",
           rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
           tableClassName: "pqm-table", // Table styles
           resultsJsonPath: "Individual", // API response path for results
@@ -194,7 +188,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
       masterName: "commonUiConfig", // Master data module for UI config
       moduleName: "AttendeeSearchInboxConfig", // Configuration module name
       requestBody: {}, // Request body (empty for now)
-      serviceName: "/health-individual/v1/_search", // API endpoint for search
+      serviceName: `/${individualContextPath}/v1/_search`, // API endpoint for search
       requestParam: {
         // Default request parameters for API call
         // limit: 10,
