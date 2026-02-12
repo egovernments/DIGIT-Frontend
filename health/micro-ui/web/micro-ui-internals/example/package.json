@@ -19,7 +19,7 @@
     "@egovernments/digit-ui-module-campaign-manager": "0.4.2",
     "@egovernments/digit-ui-module-microplan": "0.2.0",
     "@egovernments/digit-ui-module-health-pgr": "0.0.2",
-    "@egovernments/digit-ui-module-health-dss": "0.0.1",
+    "@egovernments/digit-ui-module-health-dss": "0.0.2",
     "@egovernments/digit-ui-module-health-payments": "0.3.0",
     "@egovernments/digit-ui-module-health-hrms":"0.0.1",
     "http-proxy-middleware": "^1.0.5",
