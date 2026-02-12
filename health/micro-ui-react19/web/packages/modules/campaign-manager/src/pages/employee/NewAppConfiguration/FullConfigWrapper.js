@@ -369,7 +369,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Center Content - Page Tabs and Preview */}
         <div className="full-config-wrapper__center-content">
           {/* Page Tabs */}
-          <div className="full-config-wrapper__page-tabs">
+          <div className={`full-config-wrapper__page-tabs-${activeSidePanel === "flows" || activeSidePanel === "roles" ? "opened" : "closed"}`}>
             {activeFlow?.pages?.map((page, index) => (
               <div
                 key={index}
