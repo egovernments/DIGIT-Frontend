@@ -9,6 +9,7 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
 import NewNavigationLogicWrapper from "./NewNavigationLogicWrapper";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Wrapper for footer label to avoid hook-in-loop violation
 const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale, dispatch, t }) => {
@@ -81,7 +82,7 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
   return (
     <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button" removeMargin={true}>
       <div className="">
-        <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+        <span>{`${labelMap[footerButtonConfig?.properties?.type] || ""} ${t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ACTION_BUTTON_LABEL)}`}</span>
       </div>
       <TextInput
         name={`footerLabel-${index}`}
@@ -194,7 +195,7 @@ function NewAppFieldScreenWrapper() {
   if (!currentCard) {
     return (
       <div style={{ padding: "16px" }}>
-        <p>{t("APP_CONFIG_NO_CONFIGURATION_DATA_AVAILABLE")}</p>
+        <p>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_NO_CONFIGURATION_DATA_AVAILABLE)}</p>
       </div>
     );
   }
@@ -230,8 +231,8 @@ function NewAppFieldScreenWrapper() {
       />
       <Divider />
       <div className="app-config-drawer-subheader">
-        <div> {currentCard?.type === "template" ? t("APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("APPCONFIG_SUBHEAD_FIELDS")}</div>
-        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t("TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE") : t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+        <div> {currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_FIELDS)}</div>
+        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={currentCard?.type === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS_TEMPLATE) : t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_FIELDS)} />
       </div>
       {currentCard?.body?.map((section, index, card) => {
 
@@ -293,8 +294,8 @@ function NewAppFieldScreenWrapper() {
               size={"medium"}
               icon={"AddIcon"}
               variation="secondary"
-              label={t("ADD_FIELD")}
-              title={t("ADD_FIELD")}
+              label={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
+              title={t(I18N_KEYS.APP_CONFIGURATION.ADD_FIELD)}
               onClick={() => handleAddField(currentCard, card[index])}
               id={"app-config-screen-add-field-button"}
             />)}
@@ -306,8 +307,8 @@ function NewAppFieldScreenWrapper() {
         <>
           <Divider className="app-config-drawer-action-divider" />
           <div className="app-config-drawer-subheader">
-            <div>{t("NAVIGATION_LOGIC")}</div>
-            <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
+            <div>{t(I18N_KEYS.APP_CONFIGURATION.NAVIGATION_LOGIC)}</div>
+            <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_NAVIGATION_LOGIC)} />
           </div>
           <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages} />
         </>
@@ -318,15 +319,15 @@ function NewAppFieldScreenWrapper() {
           type={"button"}
           size={"large"}
           variation={"primary"}
-          label={t("ADD_SECTION")}
+          label={t(I18N_KEYS.APP_CONFIGURATION.ADD_SECTION)}
           onClick={handleAddSection}
         />
       )}
       {currentCard?.footer?.length > 0 && (<Divider className="app-config-drawer-action-divider" />)}
       {currentCard?.footer?.length > 0 && (
         <div className="app-config-drawer-subheader">
-          <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
-          <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+          <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_SUBHEAD_BUTTONS)}</div>
+          <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_SUBHEAD_BUTTONS)} />
         </div>)}
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
@@ -335,11 +336,11 @@ function NewAppFieldScreenWrapper() {
       ))}
       <Divider />
       <div className="app-config-drawer-subheader">
-        <div>{t("APPCONFIG_PRIVACY_CONTROLS")}</div>
+        <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PRIVACY_CONTROLS)}</div>
         <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE")} />
       </div>
       <div className="app-config-privacy-controls-container">
-        <div className="app-config-privacy-controls-container-text">{t("PREVENT_SCREEN_CAPTURE")}</div>
+        <div className="app-config-privacy-controls-container-text">{t(I18N_KEYS.APP_CONFIGURATION.PREVENT_SCREEN_CAPTURE)}</div>
         <Switch
           className={"app-config-drawer-subheader"}
           isLabelFirst={true}

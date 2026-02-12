@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
@@ -81,7 +82,7 @@ const AppConfigSaveLoader = () => {
           });
 
           // Show success message and redirect after 3 seconds
-          setLoaderText("APP_CONFIG_SUBMITTED_REDIRECTING");
+          setLoaderText(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_SUBMITTED_REDIRECTING);
           setTimeout(() => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
           }, 3000);

@@ -1,7 +1,8 @@
 import { EmployeeModuleCard, ModuleCardFullWidth, SVG } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-// TODO delete file and remove its dependecy @bhavya 
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
+// TODO delete file and remove its dependecy @bhavya
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
   propertytax: { key: "national-propertytax", stateKey: "propertytax", label: "NURT_PROPERTY_TAX", active: true, nActive: true },
@@ -48,8 +49,8 @@ const NDSSCard = () => {
 
   const propsForModuleCard = {
     headerStyle: { border: "none", height: "48px" },
-    moduleName: t("ACTION_TEST_NATDASHBOARD"),
-    subHeader: t("ACTION_TEST_NATDASHBOARD"),
+    moduleName: t(I18N_KEYS.COMPONENTS.ACTION_TEST_NATDASHBOARD),
+    subHeader: t(I18N_KEYS.COMPONENTS.ACTION_TEST_NATDASHBOARD),
     subHeaderLink: `/digit-ui/employee/dss/landing/NURT_DASHBOARD`,
     className: "employeeCard customEmployeeCard card-home full-width-card full-employee-card-height",
     links: [...links],
@@ -99,8 +100,8 @@ const DSSCard = () => {
 
   const propsForModuleCard = {
     headerStyle: { border: "none", height: "48px" },
-    moduleName: t("ES_TITLE_DSS"),
-    subHeader: t("ACTION_TEST_SURE_DASHBOARD"),
+    moduleName: t(I18N_KEYS.COMPONENTS.ES_TITLE_DSS),
+    subHeader: t(I18N_KEYS.COMPONENTS.ACTION_TEST_SURE_DASHBOARD),
     subHeaderLink: `/digit-ui/employee/dss/landing/home`,
     className: "employeeCard card-home customEmployeeCard full-width-card full-employee-card-height",
     links: [...links],
@@ -167,30 +168,30 @@ const DynamicDSSCard = () => {
 
   if (isNationalSupervisor) {
     links.push({
-      label: t("NATIONAL_DASHBOARD"),
+      label: t(I18N_KEYS.COMPONENTS.NATIONAL_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/national"
     });
     // TODO: To remove these hardcoded urls and generate all of this from mdms config
     links.push({
-      label: t("NDSS_DASHBOARD"),
+      label: t(I18N_KEYS.COMPONENTS.NDSS_DASHBOARD),
       link: "/digit-ui/employee/dss/landing/national-health-dashboard"
     })
   } else if (isProvincialSupervisor) {
     links.push({
-      label: t("PROVINCIAL_DASHBOARD"),
+      label: t(I18N_KEYS.COMPONENTS.PROVINCIAL_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/province?query=true"
     })
     links = [...links, ...generateLinks("province","PROVINCIAL_SUPERVISOR")]
   } else if (isDistrictSupervisor) {
     links.push({
-      label: t("DISTRICT_DASHBOARD"),
+      label: t(I18N_KEYS.COMPONENTS.DISTRICT_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/district?query=true"
     })
     links = [...links, ...generateLinks("district","DISTRICT_SUPERVISOR")]
   }
   else if(isHealthFacilitySupervisor){
     links.push({
-      label: t("REFERRAL_DASHBOARD"),
+      label: t(I18N_KEYS.COMPONENTS.REFERRAL_DASHBOARD),
       link: "/digit-ui/employee/utilities/iframe/elastic/hf?query=true"
     })
   }
@@ -211,7 +212,7 @@ const DynamicDSSCard = () => {
 
   const propsForModuleCard = {
     Icon: <SVG.Dashboard fill="#fff" />,
-    moduleName: t("DSS_CARD_HEADER_DASHBOARD"),
+    moduleName: t(I18N_KEYS.COMPONENTS.DSS_CARD_HEADER_DASHBOARD),
     links: [...links],
   };
 

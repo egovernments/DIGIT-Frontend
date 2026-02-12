@@ -15,6 +15,7 @@ import {
 } from "../../utils/setupCampaignHelpers";
 import { handleValidate } from "../../utils/setupCampaignValidators";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -990,7 +991,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (isSubmit) {
       setShouldUpdate(true);
       if (currentKey == 6 || currentKey == 9 || currentKey == 15) {
-        setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+        setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_DRAFT_SUCCESS) });
         if (isDraft === "true") {
           navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`);
         } else {
@@ -1127,7 +1128,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {loader || (isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />)}
+      {loader || (isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />)}
       {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
@@ -1159,16 +1160,16 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         primaryActionIcon={"ArrowForward"}
         label={
           isChangeDates === "true" && currentKey == 16
-            ? t("HCM_UPDATE_DATE")
+            ? t(I18N_KEYS.PAGES.HCM_UPDATE_DATE)
             : isChangeDates === "true"
             ? null
             : noAction === "false"
             ? null
             : isSubmit === true
-            ? t("HCM_NEXT")
+            ? t(I18N_KEYS.COMMON.HCM_NEXT)
             : filteredConfig?.[0]?.form?.[0]?.isLast === true || filteredConfig?.[0]?.form?.[0]?.isSubmitStep === true
-            ? t("HCM_SUBMIT")
-            : t("HCM_NEXT")
+            ? t(I18N_KEYS.COMMON.HCM_SUBMIT)
+            : t(I18N_KEYS.COMMON.HCM_NEXT)
         }
       />
       {actionBar === "true" && (
@@ -1177,8 +1178,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             <Button
               type={"button"}
               style={{ marginLeft: "2.5rem", width: "14rem" }}
-              label={t("HCM_BACK")}
-              title={t("HCM_BACK")}
+              label={t(I18N_KEYS.COMMON.HCM_BACK)}
+              title={t(I18N_KEYS.COMMON.HCM_BACK)}
               variation={"secondary"}
               t={t}
               onClick={() => {
@@ -1188,8 +1189,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             <Button
               type={"actionButton"}
               options={actionbarOptions}
-              label={t("ES_COMMON_TAKE_ACTION")}
-              title={t("ES_COMMON_TAKE_ACTION")}
+              label={t(I18N_KEYS.PAGES.ES_COMMON_TAKE_ACTION)}
+              title={t(I18N_KEYS.PAGES.ES_COMMON_TAKE_ACTION)}
               variation={"primary"}
               style={{ width: "14rem" }}
               optionsKey={"name"}

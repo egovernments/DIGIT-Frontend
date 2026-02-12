@@ -12,6 +12,7 @@ import NewAppModule from "./NewCampaignCreate/NewAppModule";
 import AppConfigInitializer from "./NewCampaignCreate/AppConfigInitializer";
 import LocalisationAdd from "./NewCampaignCreate/LocalisationAdd";
 import { PRIMARY_COLOR } from "../../utils";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -147,13 +148,13 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
-      content: t("CAMPAIGN_HOME"),
+      content: t(I18N_KEYS.PAGES.CAMPAIGN_HOME),
       show: true,
       icon:<SVG.Home fill={PRIMARY_COLOR}/>
     },
     {
       internalLink: pathVar.includes("campaign-home") ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
-      content: t("CREATE_CAMPAIGN_HOME"),
+      content: t(I18N_KEYS.PAGES.CREATE_CAMPAIGN_HOME),
       show: pathVar.includes("campaign-home") || pathVar.includes("create-campaign") || (pathVar.includes("campaign-templates") && url?.from === "home") || (pathVar.includes("my-campaign-new") && url?.from === "home") ? true : false,
     },
     {
@@ -163,12 +164,12 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink: "",
-      content: t("CREATE_CAMPAIGN"),
+      content: t(I18N_KEYS.PAGES.CREATE_CAMPAIGN),
       show: pathVar.includes("create-campaign") ? true : false,
     },
     {
       internalLink: pathVar.includes("view-details") ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
-      content: t("VIEW_DETAILS"),
+      content: t(I18N_KEYS.PAGES.VIEW_DETAILS),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
         pathVar.includes("view-details") ||
@@ -188,76 +189,76 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink: "",
-      content: t("UPDATE_DATE_CHANGE"),
+      content: t(I18N_KEYS.PAGES.UPDATE_DATE_CHANGE),
       show: pathVar.includes("update-dates-boundary") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/search") ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
-      content: t("SEARCH_CHECKLIST"),
+      content: t(I18N_KEYS.PAGES.SEARCH_CHECKLIST),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&name=${name}&campaignId=${campaignId}&projectType=${projectType}&role=${role}`,
       show:
         pathVar.includes("checklist/search") || pathVar.includes("checklist/create") || pathVar.includes("checklist/view") || pathVar.includes("checklist/update") ? true : false,
     },
     {
       internalLink: "",
-      content: t("CREATE_CHECKLIST"),
+      content: t(I18N_KEYS.PAGES.CREATE_CHECKLIST),
       show: pathVar.includes("checklist/create") ? true : false,
     },
     {
       internalLink: "",
-      content: t("ACTION_UPLOAD_SCREEN"),
+      content: t(I18N_KEYS.PAGES.ACTION_UPLOAD_SCREEN),
       show: pathVar.includes("upload-screen") && !pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
       internalLink: "",
-      content: t("ACTION_UPLOAD_SCREEN"),
+      content: t(I18N_KEYS.PAGES.ACTION_UPLOAD_SCREEN),
       show: pathVar.includes("unified-upload-screen") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,
-      content: t("VIEW_CHECKLIST"),
+      content: t(I18N_KEYS.PAGES.VIEW_CHECKLIST),
       query: `campaignName=${name}&role=${role}&checklistType=${url?.checklistType}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show: pathVar.includes("checklist/view") || pathVar.includes("checklist/update") ? true : false,
     },
     {
       internalLink: "",
-      content: t("UPDATE_CHECKLIST"),
+      content: t(I18N_KEYS.PAGES.UPDATE_CHECKLIST),
       show: pathVar.includes("checklist/update") ? true : false,
     },
     {
       internalLink: pathVar.includes("update-campaign") ? "" : `/${window?.contextPath}/employee/campaign/update-campaign`,
-      content: t("UPDATE_CAMPAIGN"),
+      content: t(I18N_KEYS.PAGES.UPDATE_CAMPAIGN),
       show: pathVar.includes("update-campaign") ? true : false,
     },
     {
       internalLink: pathVar.includes("setup-campaign") ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      content: t("CREATE_NEW_CAMPAIGN"),
+      content: t(I18N_KEYS.PAGES.CREATE_NEW_CAMPAIGN),
       show: pathVar.includes("setup-campaign") ? true : false,
     },
     {
       internalLink: pathVar.includes("app-modules") ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
-      content: t("APP_CONFIGURATION"),
+      content: t(I18N_KEYS.PAGES.APP_CONFIGURATION),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&projectType=${projectType}`,
       show: pathVar.includes("app-modules") || pathVar.includes("app-configuration-redesign") ? true : false,
     },
     {
       internalLink: "",
-      content: t("APP_FEATURES"),
+      content: t(I18N_KEYS.PAGES.APP_FEATURES),
       show: pathVar.includes("app-features") ? true : false,
     },
     {
       internalLink: "",
-      content: t("APP_CONFIGURATION_REDESIGN"),
+      content: t(I18N_KEYS.PAGES.APP_CONFIGURATION_REDESIGN),
       show: pathVar.includes("app-configuration-redesign") ? true : false,
     },
     {
       internalLink: "",
-      content: t("ADD_LOCALISATION_BREADCRUMB"),
+      content: t(I18N_KEYS.PAGES.ADD_LOCALISATION_BREADCRUMB),
       show: pathVar.includes("localization-add") ? true : false,
     },
     {
       internalLink: "",
-      content: t("CAMPAIGN_TEMPLATES"),
+      content: t(I18N_KEYS.PAGES.CAMPAIGN_TEMPLATES),
       show: pathVar.includes("campaign-templates") ? true : false,
     },
   ];

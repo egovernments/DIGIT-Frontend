@@ -16,18 +16,16 @@ const ResponseScreen = () => {
   return (
     <>
       <PanelCard
-        animationProps={{
-          loop: false,
-          noAutoplay: false,
-        }}
-        children={[]}
+        showAsSvg={true}
         cardClassName=""
         cardStyles={{}}
         className=""
         customIcon=""
         description={t(state?.description)}
         footerChildren={
-          state.isCampaign == ReposeScreenType.EDIT_USER || state.isCampaign == ReposeScreenType.EDIT_USER_ERROR || state.isCampaign == ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR 
+          state.isCampaign === ReposeScreenType.EDIT_USER ||
+          state.isCampaign === ReposeScreenType.EDIT_USER_ERROR ||
+          state.isCampaign === ReposeScreenType.EDIT_ASSIGNED_CAMPAIGN_ERROR
             ? []
             : [
                 <Button

@@ -3,6 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Card, Button, MultiSelectDropdown, TooltipWrapper, Tooltip , Dropdown } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const BoundaryFilter = ({t,filterOptions , onSelectBoundary}) => {
   const  [boundaryType , setBoundaryType] = useState(); 
@@ -27,8 +28,8 @@ const BoundaryFilter = ({t,filterOptions , onSelectBoundary}) => {
         type="actionButton"
         variation="secondary"
         icon="FilterAlt"
-        label={t("BUTTON_FILTER_BY_BOUNDARY")}
-        title={t("BUTTON_FILTER_BY_BOUNDARY")}
+        label={t(I18N_KEYS.COMPONENTS.BUTTON_FILTER_BY_BOUNDARY)}
+        title={t(I18N_KEYS.COMPONENTS.BUTTON_FILTER_BY_BOUNDARY)}
         options={convertFilterOptionsToArray(filterOptions)}
         optionsKey="name"
         showBottom={true}

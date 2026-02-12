@@ -76,15 +76,13 @@
 
               {
                 label: "CHECKLIST_ROLE",
-                prefix:"ACCESSCONTROL_ROLES_ROLES_",
                 jsonPath: "data.role",
-                translate:true
+                additionalCustomization: true
               },  
               {
                 label: "CHECKLIST_TYPE",
-                prefix:"HCM_CHECKLIST_TYPE_",
                 jsonPath: "data.checklistType",
-                translate:true
+                additionalCustomization: true
               },
               {
                 label: "HCM_CHECKLIST_STATUS",

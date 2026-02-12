@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
@@ -138,7 +139,7 @@ const SearchChecklist = () => {
           // className={"campaign-flow-stepper"}
         /> */}
         <TagComponent campaignName={campaignName} />
-        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1.5rem",color:"#0b4b66" }}>{t("CONFIGURE_CHECKLIST")}</div>
+        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1.5rem",color:"#0b4b66" }}>{t(I18N_KEYS.PAGES.CONFIGURE_CHECKLIST)}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
@@ -152,7 +153,7 @@ const SearchChecklist = () => {
             <PopUp
               className={"boundaries-pop-module"}
               type={"default"}
-              heading={t("CREATE_CHECKLIST")}
+              heading={t(I18N_KEYS.PAGES.CREATE_CHECKLIST)}
               children={[]}
               style={{
                 height: "30rem",
@@ -168,8 +169,8 @@ const SearchChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"secondary"}
-                  label={t("CLOSE")}
-                  title={t("CLOSE")}
+                  label={t(I18N_KEYS.COMMON.CLOSE)}
+                  title={t(I18N_KEYS.COMMON.CLOSE)}
                   onClick={() => {
                     setShowPopUp(false);
                   }}
@@ -178,8 +179,8 @@ const SearchChecklist = () => {
                   type={"button"}
                   size={"large"}
                   variation={"primary"}
-                  label={t("CREATE_CHECKLIST")}
-                  title={t("CREATE_CHECKLIST")}
+                  label={t(I18N_KEYS.PAGES.CREATE_CHECKLIST)}
+                  title={t(I18N_KEYS.PAGES.CREATE_CHECKLIST)}
                   onClick={() => {
                     createNewChecklist();
                   }}
@@ -189,7 +190,7 @@ const SearchChecklist = () => {
             >
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t("HCM_CHECKLIST_ROLE")}</span>
+                  <span>{t(I18N_KEYS.PAGES.HCM_CHECKLIST_ROLE)}</span>
                   <Dropdown
                     t={t}
                     style={{ width: "50%" }}
@@ -203,7 +204,7 @@ const SearchChecklist = () => {
                 </div>
                 <div style={{ height: "1rem" }}></div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t("SELECT_CHECKLIST_TYPE")}</span>
+                  <span>{t(I18N_KEYS.PAGES.SELECT_CHECKLIST_TYPE)}</span>
                   <Dropdown
                     t={t}
                     style={{ width: "50%" }}

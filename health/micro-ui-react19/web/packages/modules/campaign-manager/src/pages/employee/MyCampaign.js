@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useNavigate } from "react-router-dom";
 import { myCampaignConfig } from "../../configs/myCampaignConfig";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 /**
  * The `MyCampaign` function is a React component that displays a header with a campaign search title
@@ -84,7 +85,7 @@ const MyCampaign = () => {
 
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>{t("CAMPAIGN_SEARCH_TITLE")}</Header>
+      <Header styles={{ fontSize: "32px" }}>{t(I18N_KEYS.PAGES.CAMPAIGN_SEARCH_TITLE)}</Header>
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}

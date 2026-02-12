@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateLocalizationEntry } from "../pages/employee/NewAppConfiguration/redux/localizationSlice";
 import { updatePopupFieldProperty } from "../pages/employee/NewAppConfiguration/redux/remoteConfigSlice";
 import { useCustomT } from "../pages/employee/NewAppConfiguration/hooks/useCustomT";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * PopupFieldConfigurator - Component for configuring popup field properties
@@ -106,7 +107,7 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
       if (window.__appConfig_showToast && typeof window.__appConfig_showToast === "function") {
         window.__appConfig_showToast({
           key: "error",
-          label: t("AT_LEAST_ONE_ITEM_MUST_BE_ACTIVE"),
+          label: t(I18N_KEYS.COMPONENTS.AT_LEAST_ONE_ITEM_MUST_BE_ACTIVE),
         });
       }
       return;
@@ -140,10 +141,10 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
   };
 
   // Label prefix and placeholder based on item type
-  const labelPrefix = itemType === "column" ? t("COLUMN") : t("ADD_LOCALIZATION");
+  const labelPrefix = itemType === "column" ? t(I18N_KEYS.COMMON.COLUMN) : t(I18N_KEYS.COMMON.ADD_LOCALIZATION);
   const placeholder = itemType === "column"
-    ? (t("ADD_HEADER_LOCALIZATION") || "Add header localization")
-    : (t("ADD_LOCALIZATION") || "Add localization");
+    ? (t(I18N_KEYS.COMMON.ADD_HEADER_LOCALIZATION) || "Add header localization")
+    : (t(I18N_KEYS.COMMON.ADD_LOCALIZATION) || "Add localization");
 
   // Display label text - use translated fieldName instead of index
   const translatedFieldName = t(Digit.Utils.locale.getTransformedLocale(localizationCode)) ;

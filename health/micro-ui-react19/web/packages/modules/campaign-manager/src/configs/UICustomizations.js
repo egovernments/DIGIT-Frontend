@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import _ from "lodash";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -109,6 +110,10 @@ export const UICustomizations = {
       const campaignId = searchParams.get("campaignId");
       const campaignNumber = searchParams.get("campaignNumber");
       switch (key) {
+        case "CHECKLIST_ROLE":
+          return t(row?.data?.role);
+        case "CHECKLIST_TYPE":
+          return t(row?.data?.checklistType);
         case "HCM_CHECKLIST_STATUS":
           const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
           const toggle = async () => {
@@ -123,7 +128,7 @@ export const UICustomizations = {
           return row?.ServiceRequest?.[0] ? (
             <Switch isCheckedInitially={row?.ServiceRequest?.[0]?.isActive} label={switchText} onToggle={toggle} />
           ) : (
-            <>{t("CHECKLIST_TOBE_CONFIGURED")}</>
+            <>{t(I18N_KEYS.CONFIGS.CHECKLIST_TOBE_CONFIGURED)}</>
           );
         case "CHECKLIST_LAST_UPDATE":
           const lastModDate =
@@ -143,8 +148,8 @@ export const UICustomizations = {
                 style={{ width: "8rem" }}
                 // icon="View"
                 variation="secondary"
-                label={t("HCM_CHECKLIST_VIEW")}
-                title={t("HCM_CHECKLIST_VIEW")}
+                label={t(I18N_KEYS.CONFIGS.HCM_CHECKLIST_VIEW)}
+                title={t(I18N_KEYS.CONFIGS.HCM_CHECKLIST_VIEW)}
                 onClick={() => {
                   navigate(
                     `/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
@@ -160,8 +165,8 @@ export const UICustomizations = {
                 style={{ width: "8rem" }}
                 // icon="View"
                 variation="secondary"
-                label={t("HCM_CHECKLIST_CREATE")}
-                title={t("HCM_CHECKLIST_CREATE")}
+                label={t(I18N_KEYS.CONFIGS.HCM_CHECKLIST_CREATE)}
+                title={t(I18N_KEYS.CONFIGS.HCM_CHECKLIST_CREATE)}
                 onClick={() => {
                   navigate(
                     `/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
@@ -299,8 +304,8 @@ export const UICustomizations = {
                 size={"medium"}
                 icon={"DownloadIcon"}
                 variation={"secondary"}
-                label={t("DOWNLOAD")}
-                title={t("DOWNLOAD")}
+                label={t(I18N_KEYS.CONFIGS.DOWNLOAD)}
+                title={t(I18N_KEYS.CONFIGS.DOWNLOAD)}
                 onClick={() => {
                   downloadExcelTemplate();
                 }}
@@ -340,7 +345,7 @@ export const UICustomizations = {
           } else {
             return (
               <div>
-                <p>{t("NA")}</p>
+                <p>{t(I18N_KEYS.COMMON.NA)}</p>
               </div>
             );
           }
@@ -351,7 +356,7 @@ export const UICustomizations = {
           } else {
             return (
               <div>
-                <p>{t("NA")}</p>
+                <p>{t(I18N_KEYS.COMMON.NA)}</p>
               </div>
             );
           }
@@ -495,7 +500,7 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
               </Link>
             </span>
           );
@@ -516,13 +521,13 @@ export const UICustomizations = {
                 title={"Action"}
                 options={[
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_UPDATE_DATES) }]
                     : []),
-                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
-                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t(I18N_KEYS.COMMON.ACTION_LABEL_CONFIGURE_APP) },
+                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t(I18N_KEYS.CONFIGS.CREATE_COPY) },
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_UPDATE_BOUNDARY_DETAILS) }]
                     : []),
                 ]}
                 optionsKey="i18nKey"
@@ -533,7 +538,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
@@ -656,7 +661,7 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
               </Link>
             </span>
           );
@@ -676,8 +681,8 @@ export const UICustomizations = {
                 label={"Action"}
                 title={"Action"}
                 options={[
-                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 1, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 1, code: "CREATE_COPY", i18nKey: t(I18N_KEYS.CONFIGS.CREATE_COPY) },
                 ]}
                 optionsKey="i18nKey"
                 showBottom={true}
@@ -687,7 +692,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
@@ -854,7 +859,7 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
               </Link>
             </span>
           );
@@ -875,13 +880,13 @@ export const UICustomizations = {
                 title={"Action"}
                 options={[
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_UPDATE_DATES) }]
                     : []),
-                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
-                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
-                  { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t(I18N_KEYS.COMMON.ACTION_LABEL_CONFIGURE_APP) },
+                  { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_VIEW_TIMELINE) },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t(I18N_KEYS.CONFIGS.CREATE_COPY) },
                   ...(row?.status === "created"
-                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
+                    ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_UPDATE_BOUNDARY_DETAILS) }]
                     : []),
                 ]}
                 optionsKey="i18nKey"
@@ -892,7 +897,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
@@ -993,12 +998,12 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
               </Link>
             </span>
           );
         case "CM_DRAFT_TYPE":
-          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+          return value ? t(I18N_KEYS.CONFIGS.CM_UPDATE_REQUEST) : t(I18N_KEYS.CONFIGS.CM_CREATE_REQUEST);
         case "CAMPAIGN_LAST_UPDATE":
           return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
@@ -1093,12 +1098,12 @@ export const UICustomizations = {
                   row.tenantId
                 }&draft=${true}`}
               >
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
               </Link>
             </span>
           );
         case "CM_DRAFT_TYPE":
-          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+          return value ? t(I18N_KEYS.CONFIGS.CM_UPDATE_REQUEST) : t(I18N_KEYS.CONFIGS.CM_CREATE_REQUEST);
         case "CAMPAIGN_LAST_UPDATE":
           return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
@@ -1208,12 +1213,12 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link to={`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t(I18N_KEYS.CONFIGS.ES_COMMON_NA))}
               </Link>
             </span>
           );
         case "CM_DRAFT_TYPE":
-          return value ? t("CM_UPDATE_REQUEST") : t("CM_CREATE_REQUEST");
+          return value ? t(I18N_KEYS.CONFIGS.CM_UPDATE_REQUEST) : t(I18N_KEYS.CONFIGS.CM_CREATE_REQUEST);
         case "CAMPAIGN_LAST_UPDATE":
           return Digit.DateUtils.ConvertEpochToDate(row?.auditDetails?.lastModifiedTime);
         case "CAMPAIGN_START_DATE":
@@ -1230,7 +1235,7 @@ export const UICustomizations = {
                 label={"Action"}
                 title={"Action"}
                 options={[
-                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t(I18N_KEYS.CONFIGS.ACTION_LABEL_VIEW_TIMELINE) },
                   // { key: 2, code: "ACTION_LABEL_RETRY", i18nKey: t("ACTION_LABEL_RETRY") }, // disabling in UI Since it is just beta functionality
                 ].filter((obj) => Digit.Utils.didEmployeeHasAtleastOneRole(["SYSTEM_ADMINISTRATOR"] || obj?.key != 2))} //added retry for system adminstrator for failed campaign
                 optionsKey="i18nKey"
@@ -1241,7 +1246,7 @@ export const UICustomizations = {
               {timeLine && (
                 <PopUp
                   type={"default"}
-                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  heading={t(I18N_KEYS.COMMON.ES_CAMPAIGN_TIMELINE)}
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >

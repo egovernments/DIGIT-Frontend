@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { addProductConfig } from "../../configs/addProductConfig";
 import { Toast ,SVG} from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 function AddProduct() {
   const { t } = useTranslation();
@@ -188,7 +189,7 @@ function AddProduct() {
     <div>
       <FormComposerV2
         showMultipleCardsWithoutNavs={true}
-        label={t("ES_CAMPAIGN_ADD_PRODUCT_BUTTON")}
+        label={t(I18N_KEYS.PAGES.ES_CAMPAIGN_ADD_PRODUCT_BUTTON)}
         config={addProductConfig?.map((config) => {
           return {
             ...config,
@@ -201,7 +202,7 @@ function AddProduct() {
         onFormValueChange={onFormValueChange}
         actionClassName={"addProductActionClass setup-campaign-action-bar"}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         onSecondayActionClick={onSecondayActionClick}
         secondaryActionIcon={<SVG.ArrowBack />}
         primaryActionIconAsSuffix={true}

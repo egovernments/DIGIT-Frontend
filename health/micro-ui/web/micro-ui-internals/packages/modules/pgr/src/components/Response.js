@@ -50,7 +50,7 @@ const Response = () => {
         <Button
           className="pgr-response-btn back-btn"
           variation="primary"
-          label={t("PGR_BACK_TO_HOME")}
+          label={t("PGR_SEARCH_COMPLAINT")}
           icon={"ExitToApp"}
           onClick={() => {
             const backlink = state?.backlink || `/${window.contextPath}/employee/`;

@@ -13,6 +13,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { AppHelpContent } from "../../../components/HelpInfoCard";
 import { CopyAll } from "../../../components/icons/CopyAll";
 import { MobileLayout } from "../../../components/icons/MobileLayout";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const CampaignHome = () => {
   const { t } = useTranslation();
@@ -183,15 +184,15 @@ const CampaignHome = () => {
           </div>
           <div className="digit-campaign-home-text">
             <div className="digit-campaign-home-text-header">
-              {t("HCM_START_WITH_CAMPAIGN_TEMPLATE")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_START_WITH_CAMPAIGN_TEMPLATE)}
             </div>
             <div className="digit-campaign-home-text-description">
-              {t("HCM_START_WITH_CAMPAIGN_TEMPLATE_DES")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_START_WITH_CAMPAIGN_TEMPLATE_DES)}
             </div>
           </div>
           <div className="digit-campaign-home-card-count">
             <MobileLayout width="20" height="20" fill={"#0B4B66"} />
-            <div className="digit-campaign-home-card-count-text">{`${templatesDataLength} ${t("TEMPLATES_AVAILABLE")}`}</div>
+            <div className="digit-campaign-home-card-count-text">{`${templatesDataLength} ${t(I18N_KEYS.CAMPAIGN_CREATE.TEMPLATES_AVAILABLE)}`}</div>
           </div>
         </Card>
         <Card
@@ -210,10 +211,10 @@ const CampaignHome = () => {
           </div>
           <div className="digit-campaign-home-text">
             <div className="digit-campaign-home-text-header">
-              {t("HCM_IMPORT_EXISTING_CAMPAIGN")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_IMPORT_EXISTING_CAMPAIGN)}
             </div>
             <div className="digit-campaign-home-text-description">
-              {t("HCM_IMPORT_EXISTING_CAMPAIGN_DES")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_IMPORT_EXISTING_CAMPAIGN_DES)}
             </div>
           </div>
         </Card>
@@ -236,10 +237,10 @@ const CampaignHome = () => {
           </div>
           <div className="digit-campaign-home-text">
             <div className="digit-campaign-home-text-header">
-              {t("HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH)}
             </div>
             <div className="digit-campaign-home-text-description">
-              {t("HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH_DES")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_NEW_CAMPAIGN_FROM_SCRATCH_DES)}
             </div>
           </div>
         </Card>
@@ -248,7 +249,7 @@ const CampaignHome = () => {
         <PopUp
           className={"campaign-requirements-heading"}
           type={"default"}
-          heading={t("CAMPAIGN_REQUIREMENTS_HEADING")}
+          heading={t(I18N_KEYS.CAMPAIGN_CREATE.CAMPAIGN_REQUIREMENTS_HEADING)}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -263,8 +264,8 @@ const CampaignHome = () => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("HCM_CAMPAIGN_PROCEED")}
-              title={t("HCM_CAMPAIGN_PROCEED")}
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_PROCEED)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_PROCEED)}
               name="create-new-campaign-from-scratch"
               onClick={() => {
                 navigate(

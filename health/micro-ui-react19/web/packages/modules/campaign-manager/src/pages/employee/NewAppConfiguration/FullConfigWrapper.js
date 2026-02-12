@@ -11,6 +11,7 @@ import { deselectField } from "./redux/remoteConfigSlice";
 import { FlowFilled } from "../../../components/icons/FlowFilled";
 import { FlowUnfilled } from "../../../components/icons/FlowUnfilled";
 import AppHelpTutorial from "../../../components/AppHelpTutorial";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const FullConfigWrapper = ({ path, location: propsLocation }) => {
@@ -94,11 +95,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             setSelectedPageName(firstFlow.indexRoute || firstFlow.pages?.[0]?.name);
           }
         } else {
-          setError(t("APP_CONFIG_NO_FLOW_CONFIG_FOUND"));
+          setError(t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_NO_FLOW_CONFIG_FOUND));
         }
       } catch (err) {
         console.error("Error fetching flow config:", err);
-        setError(t("APP_CONFIG_FAILED_TO_FETCH_FLOW_CONFIG"));
+        setError(t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FAILED_TO_FETCH_FLOW_CONFIG));
       } finally {
         setIsLoading(false);
       }
@@ -203,8 +204,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   if (error || !flowConfig) {
     return (
       <div className="full-config-wrapper__error-container">
-        <h2>{t("APP_CONFIG_ERROR")}</h2>
-        <p>{error || t("APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG")}</p>
+        <h2>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ERROR)}</h2>
+        <p>{error || t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG)}</p>
       </div>
     );
   }
@@ -223,8 +224,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         <Button
           variation="secondary"
           icon="ArrowBack"
-          label={t("BACK_TO_MODULES")}
-          title={t("BACK_TO_MODULES")}
+          label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+          title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
           className="full-config-wrapper__back-button"
           onClick={() => {
             navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
@@ -233,7 +234,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         />
         <div className="full-config-wrapper__flow-name-header">
           {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flowModule}`))}
-          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t("APPCONFIG_VERSION")} - ${version}`})</span>
+          <span style={{fontSize: "0.75rem", marginTop: "0.375rem"}}> ({`${t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_VERSION)} - ${version}`})</span>
         </div>
         <AppHelpTutorial appPath={path} location={propsLocation} buttonLabel="CAMP_HELP_TEXT" />
       </div>
@@ -250,7 +251,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           >
             {/* <Earbuds fill="#0B4B66" /> */}
             {activeSidePanel === "flows" ? <FlowFilled/> : <FlowUnfilled/>}
-            <span>{t("APP_CONFIG_FLOWS")}</span>
+            <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FLOWS)}</span>
           </div>
           <div
             className={`full-config-wrapper__sidebar-menu-item roles-disabled${
@@ -260,7 +261,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           >
             {activeSidePanel === "roles" ? <SVG.Person fill="#B1B4B6" /> : <SVG.PersonOutline fill="#B1B4B6" />}
 
-            <span>{t("APP_CONFIG_ROLES")}</span>
+            <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ROLES)}</span>
           </div>
         </div>
 
@@ -278,7 +279,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
-                <div className="full-config-wrapper__slide-panel-title disabled">{t("APP_CONFIG_ROLES")}</div>
+                <div className="full-config-wrapper__slide-panel-title disabled">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_ROLES)}</div>
                 <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
                   <SVG.Close fill="#787878" />
                 </button>
@@ -291,7 +292,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                     </div>
                   ))
                 ) : (
-                  <div className="full-config-wrapper__no-roles">{t("APP_CONFIG_NO_ROLES_ASSIGNED")}</div>
+                  <div className="full-config-wrapper__no-roles">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_NO_ROLES_ASSIGNED)}</div>
                 )}
               </div>
             </div>
@@ -312,7 +313,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               }`}
             >
               <div className="full-config-wrapper__slide-panel-header">
-                <div className="full-config-wrapper__slide-panel-title">{t("APP_CONFIG_FLOWS")}</div>
+                <div className="full-config-wrapper__slide-panel-title">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FLOWS)}</div>
                 <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
                   <SVG.Close fill="#787878" />
                 </button>
@@ -493,8 +494,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             // />,
             <Button
               variation="primary"
-              label={t("PROCEED_TO_PREVIEW")}
-              title={t("PROCEED_TO_PREVIEW")}
+              label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
+              title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
               icon="CheckCircle"
               isSuffix={false}
               onClick={() => {
@@ -504,7 +505,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           ]}
           setactionFieldsToRight={true}
         />
-
         {/* Toast Notification */}
         {showToast && (
           <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
