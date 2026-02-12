@@ -9,7 +9,6 @@
   },
   "workspaces": [
     "micro-ui-internals/packages/modules/microplan",
-    "micro-ui-internals/packages/modules/campaign-manager",
     "micro-ui-internals/packages/modules/health-dss"
   ],
   "homepage": "/dashboard-ui",
@@ -20,7 +19,6 @@
     "@egovernments/digit-ui-module-utilities": "1.1.0",
     "@egovernments/digit-ui-components": "0.2.3",
     "@egovernments/digit-ui-module-health-dss":"0.0.1",
-    "@egovernments/digit-ui-module-campaign-manager": "0.4.2",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "4.0.0",
     "react": "17.0.2",
