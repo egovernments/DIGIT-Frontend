@@ -20,7 +20,6 @@
   "dependencies": {
     "@egovernments/digit-ui-react-components": "1.8.14",
     "@egovernments/digit-ui-components": "0.2.0-beta.42",
-    "@egovernments/digit-ui-module-campaign-manager": "0.4.2",
     "@egovernments/digit-ui-svg-components": "1.0.21",
     "@egovernments/digit-ui-module-utilities":"1.0.16",
     "react": "17.0.2",
