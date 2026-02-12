@@ -33,6 +33,7 @@
     "webpack-cli": "4.10.0",
     "style-loader": "2.0.0",
     "dom-to-image": "2.6.0",
+    "terser-brunch": "^4.1.0",
     "jspdf": "2.5.1"
   },
   "devDependencies": {
