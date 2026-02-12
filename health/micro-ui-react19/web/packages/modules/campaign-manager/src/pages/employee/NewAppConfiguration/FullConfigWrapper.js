@@ -41,7 +41,11 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   // Expose side panel controls to child components via window object
   useEffect(() => {
     window.__appConfig_closeSidePanel = () => {
-      handleCloseSidePanel();
+      setIsClosing(true);
+      setTimeout(() => {
+        setActiveSidePanel(null);
+        setIsClosing(false);
+      }, 300);
     };
     window.__appConfig_openSidePanel = (panel = "flows") => {
       setActiveSidePanel(panel);
