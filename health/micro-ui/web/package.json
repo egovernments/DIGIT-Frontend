@@ -75,21 +75,6 @@
     "webpack-cli": "4.10.0",
     "clean-webpack-plugin": "4.0.0"
   },
-  "resolutions": {
-    "**/babel-loader": "8.2.2",
-    "**/@babel/core": "7.14.0",
-    "**/@babel/traverse": "7.25.9",
-    "**/@babel/preset-env": "7.14.0",
-    "**/styled-components": "5.0.0",
-    "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
-    "**/@jridgewell/gen-mapping": "0.3.5",
-    "**/minimatch": "7.4.6",
-    "minimatch": "7.4.6",
-    "**/glob": "7.2.3",
-    "glob": "7.2.3",
-    "**/polished": "4.2.2",
-    "fast-uri": "2.1.0"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true react-scripts build",
