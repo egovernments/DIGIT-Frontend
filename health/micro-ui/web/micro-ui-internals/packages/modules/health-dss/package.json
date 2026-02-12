@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-health-dss",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Dss Module UI",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@egovernments/digit-ui-react-components": "1.8.14",
     "@egovernments/digit-ui-components": "0.2.0-beta.42",
+    "@egovernments/digit-ui-module-campaign-manager": "0.4.2",
     "@egovernments/digit-ui-svg-components": "1.0.21",
     "@egovernments/digit-ui-module-utilities":"1.0.16",
     "react": "17.0.2",
@@ -42,8 +43,7 @@
     "lodash": "4.17.21",
     "react-data-table-component": "7.6.2",
     "dom-to-image": "2.6.0",
-    "jspdf": "2.5.1",
-    "axios": "^1.6.8"
+    "jspdf": "2.5.1"
   },
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
   "license": "MIT"

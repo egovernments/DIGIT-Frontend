@@ -5,6 +5,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -30,6 +31,7 @@ const initDigitUI = () => {
   });
 
   initDSSComponents();
+  initCampaignComponents();
 
   window.Digit.Customizations = {
     PGR: {},
