@@ -73,6 +73,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   // Get panel configuration for validation
   const panelConfig = panelProperties?.drawerPanelConfig || {};
 
+  // Close side panel when Add Field popup opens, re-open when it closes
+  useEffect(() => {
+    if (showAddFieldPopup) {
+      window.__appConfig_closeSidePanel?.();
+    }
+  }, [showAddFieldPopup]);
+
   // Validation function to check ALL fields for mandatory conditional field errors
   const checkAllFieldsValidation = useCallback(() => {
     const errors = [];
@@ -926,6 +933,9 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     // Close the popup and reset state
     dispatch(handleShowAddFieldPopup(null));
     setNewFieldType(null);
+
+    // Re-open the flow panel after adding a field
+    window.__appConfig_openSidePanel?.("flows");
   };
   useEffect(() => {
     const fetchPageConfig = async () => {
@@ -1085,10 +1095,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           onOverlayClick={() => {
             dispatch(handleShowAddFieldPopup(null));
             setNewFieldType(null);
+            window.__appConfig_openSidePanel?.("flows");
           }}
           onClose={() => {
             dispatch(handleShowAddFieldPopup(null));
             setNewFieldType(null);
+            window.__appConfig_openSidePanel?.("flows");
           }}
           style={{
             height: "auto",
@@ -1164,6 +1176,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 onClick={() => {
                   dispatch(handleShowAddFieldPopup(null));
                   setNewFieldType(null);
+                  window.__appConfig_openSidePanel?.("flows");
                 }}
               />
               <Button
