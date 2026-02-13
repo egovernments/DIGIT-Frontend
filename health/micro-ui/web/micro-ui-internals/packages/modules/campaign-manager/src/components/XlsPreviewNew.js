@@ -1,5 +1,7 @@
 import React from "react";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+// Removed @cyntler/react-doc-viewer to fix CVE-2024-4367 (pdfjs-dist vulnerability).
+// Replaced with direct Office Online iframe which provides the same XLSX preview functionality.
+// import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
 
@@ -15,15 +17,15 @@ const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} })
 };
 function XlsPreviewNew({ file, ...props }) {
   const { t } = useTranslation();
-  const documents = file
-    ? [
-        {
-          fileType: "xlsx",
-          fileName: file?.filename,
-          uri: file?.url,
-        },
-      ]
-    : null;
+  // const documents = file
+  //   ? [
+  //       {
+  //         fileType: "xlsx",
+  //         fileName: file?.filename,
+  //         uri: file?.url,
+  //       },
+  //     ]
+  //   : null;
 
   return (
     <div>
@@ -45,22 +47,30 @@ function XlsPreviewNew({ file, ...props }) {
           onButtonClick={() => props?.onDownload()}
         />
       </div> */}
-      <div className="campaign-popup-module" 
+      <div className="campaign-popup-module"
       style={{ marginTop: "0.5rem" }}
       >
-        <DocViewer
-          style={{ height: "80vh", overflowY: "hidden" }}
-          theme={{
-            primary: PRIMARY_COLOR,
-            secondary: "#feefe7",
-            tertiary: "#feefe7",
-            textPrimary: "#0B0C0C",
-            textSecondary: "#505A5F",
-            textTertiary: "#00000099",
-            disableThemeScrollbar: true,
+        {/* Replaced DocViewer with direct Office Online iframe to fix CVE-2024-4367 */}
+        <div
+          id="header-bar"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            padding: "0 10px",
+            minHeight: "50px",
+            backgroundColor: PRIMARY_COLOR,
+            fontWeight:"700"
           }}
-          documents={documents}
-          pluginRenderers={DocViewerRenderers}
+        >
+          <span style={{ color: "#FFFFFF", fontSize: "14px", flex: 1, textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {file?.filename || ""}
+          </span>
+        </div>
+        <iframe
+          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(file?.url)}`}
+          style={{ width: "100%", height: "calc(80vh - 50px)", border: "none" }}
+          title="XLSX Preview"
         />
       </div>
     </div>

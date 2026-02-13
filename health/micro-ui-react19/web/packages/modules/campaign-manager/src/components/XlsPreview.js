@@ -1,6 +1,8 @@
 import { PopUp, SVG, DownloadIcon } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+// Removed @cyntler/react-doc-viewer to fix CVE-2024-4367 (pdfjs-dist vulnerability).
+// Replaced with direct Office Online iframe which provides the same XLSX preview functionality.
+// import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
@@ -17,15 +19,15 @@ const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} })
 };
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
-  const documents = file
-    ? [
-      {
-        fileType: "xlsx",
-        fileName: file?.filename,
-        uri: file?.url,
-      },
-    ]
-    : null;
+  // const documents = file
+  //   ? [
+  //     {
+  //       fileType: "xlsx",
+  //       fileName: file?.filename,
+  //       uri: file?.url,
+  //     },
+  //   ]
+  //   : null;
 
   return (
     <PopUp className="campaign-data-preview" style={{ flexDirection: "column" }}>
@@ -47,21 +49,28 @@ function XlsPreview({ file, ...props }) {
           icon="FileDownload"
         />
       </div>
-      <style>{`#react-doc-viewer #proxy-renderer { display: flex; flex: 1; overflow-y: auto; } #react-doc-viewer #msdoc-renderer { width: 100%; height: 100%; }`}</style>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
-        <DocViewer
-          style={{ height: "80vh", overflowY: "hidden" }}
-          theme={{
-            primary: PRIMARY_COLOR,
-            secondary: "#feefe7",
-            tertiary: "#feefe7",
-            textPrimary: "#FFFFFF",
-            textSecondary: "#505A5F",
-            textTertiary: "#00000099",
-            disableThemeScrollbar: true,
+        {/* Replaced DocViewer with direct Office Online iframe to fix CVE-2024-4367 */}
+        <div
+          id="header-bar"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            padding: "0 10px",
+            minHeight: "50px",
+            backgroundColor: PRIMARY_COLOR,
+            fontWeight:"700"
           }}
-          documents={documents}
-          pluginRenderers={DocViewerRenderers}
+        >
+          <span style={{ color: "#FFFFFF", fontSize: "14px", flex: 1, textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {file?.filename || ""}
+          </span>
+        </div>
+        <iframe
+          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(file?.url)}`}
+          style={{ width: "100%", height: "calc(80vh - 50px)", border: "none" }}
+          title="XLSX Preview"
         />
       </div>
     </PopUp>
