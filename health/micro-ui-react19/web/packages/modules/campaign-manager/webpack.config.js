@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const CompressionPlugin = require("compression-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 // const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // enable when needed
 
 // Environment-based configuration
@@ -34,6 +35,18 @@ module.exports = {
     sideEffects: false, // Enable tree-shaking
     concatenateModules: isProduction,
     minimize: isProduction,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          output: {
+            // Preserve webpackIgnore comments so downstream webpack builds
+            // honour them (e.g. @cyntler/react-doc-viewer's pdf.js Node polyfills)
+            comments: /^\**!|@preserve|@license|@cc_on|webpackIgnore/i,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
     runtimeChunk: false, // Keep runtime in main bundle for library compatibility
     splitChunks: {
       chunks: "async", // Only split async chunks (for lazy loading)
