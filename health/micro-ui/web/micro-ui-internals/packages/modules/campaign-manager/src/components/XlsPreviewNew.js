@@ -1,5 +1,7 @@
 import React from "react";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+// Removed @cyntler/react-doc-viewer to fix CVE-2024-4367 (pdfjs-dist vulnerability).
+// Replaced with direct Office Online iframe which provides the same XLSX preview functionality.
+// import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
 
@@ -15,15 +17,15 @@ const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} })
 };
 function XlsPreviewNew({ file, ...props }) {
   const { t } = useTranslation();
-  const documents = file
-    ? [
-        {
-          fileType: "xlsx",
-          fileName: file?.filename,
-          uri: file?.url,
-        },
-      ]
-    : null;
+  // const documents = file
+  //   ? [
+  //       {
+  //         fileType: "xlsx",
+  //         fileName: file?.filename,
+  //         uri: file?.url,
+  //       },
+  //     ]
+  //   : null;
 
   return (
     <div>
@@ -48,7 +50,8 @@ function XlsPreviewNew({ file, ...props }) {
       <div className="campaign-popup-module" 
       style={{ marginTop: "0.5rem" }}
       >
-        <DocViewer
+        {/* Replaced DocViewer with direct Office Online iframe to fix CVE-2024-4367 */}
+        {/* <DocViewer
           style={{ height: "80vh", overflowY: "hidden" }}
           theme={{
             primary: PRIMARY_COLOR,
@@ -61,6 +64,11 @@ function XlsPreviewNew({ file, ...props }) {
           }}
           documents={documents}
           pluginRenderers={DocViewerRenderers}
+        /> */}
+        <iframe
+          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(file?.url)}`}
+          style={{ width: "100%", height: "80vh", border: "none" }}
+          title="XLSX Preview"
         />
       </div>
     </div>

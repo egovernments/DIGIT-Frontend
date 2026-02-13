@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.3 - 2026-02-13
+
+#### Security Fix
+
+- **Removed `@cyntler/react-doc-viewer` to fix CVE-2024-4367 (pdfjs-dist vulnerability)**
+  The `@cyntler/react-doc-viewer` library had a transitive dependency on `pdfjs-dist@2.12.313` (via `react-pdf@5.7.2`), which is affected by CVE-2024-4367 — a high-severity vulnerability allowing arbitrary JavaScript execution when rendering a malicious PDF. Since upgrading the library requires Node >= 18 and React >= 18 (incompatible with this workspace), the `DocViewer` component was replaced with a direct Microsoft Office Online iframe (`https://view.officeapps.live.com/op/embed.aspx`) which provides the same XLSX preview functionality without the vulnerable dependency. The old code is commented out in `XlsPreview.js` and `XlsPreviewNew.js` for reference.
+
 ## 0.4.2 - 2025-10-31
 
 #### Admin console
