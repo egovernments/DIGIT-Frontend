@@ -21,13 +21,13 @@
     "react-dom": "19.0.0",
     "react-router-dom": "6.25.1",
     "react-i18next": "15.0.0",
-    "styled-components": "5.x",
+    "styled-components": "5.x || 6.x",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-09",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
     "@egovernments/digit-ui-components": "2.0.0-dev-32"
   },
   "dependencies": {
-    "@cyntler/react-doc-viewer": "1.10.3",
+    "@cyntler/react-doc-viewer": "1.17.1",
     "react-data-table-component": "7.7.0",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
