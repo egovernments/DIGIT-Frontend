@@ -23,7 +23,7 @@ export const useFetchAllBoundaryHierarchies = ({ tenantId, config = {} }) => {
     body: requestBody,
     config: {
       enabled: !!tenantId,
-      staleTime: config.staleTime || Infinity,
+      staleTime: config.staleTime || 5 * 60 * 1000,
       cacheTime: config.cacheTime || 15 * 60 * 1000,
       ...config,
     },
