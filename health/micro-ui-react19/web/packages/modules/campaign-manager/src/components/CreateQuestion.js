@@ -448,7 +448,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
           ?.map((field, index) => {
             const questionNumber = getQuestionNumber(index, level, parentNumber);
             return (
-              <div>
+              <div key={field.id}>
                 <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`} style={{ backgroundColor: level % 2 === 0 ? "#FAFAFA" : "#FFFFFF" }}>
                   <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                     <div className="question-label" style={{ height: "3.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
