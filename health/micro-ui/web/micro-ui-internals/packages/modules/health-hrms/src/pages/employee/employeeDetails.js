@@ -379,8 +379,8 @@ const EmployeeDetailScreen = () => {
                                         label: t("HR_ROLE_LABEL"),
                                         value: data?.Employees?.[0]?.user?.roles
                                           ?.filter((ele) => ele.tenantId == element?.tenantId)
-                                          .map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code))
-                                          .join(", "),
+                                          ?.map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code))
+                                          ?.join(", "),
                                       },
                                     ],
                                     header: "",
