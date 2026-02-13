@@ -47,6 +47,7 @@ function XlsPreview({ file, ...props }) {
           icon="FileDownload"
         />
       </div>
+      <style>{`#react-doc-viewer #proxy-renderer { display: flex; flex: 1; overflow-y: auto; } #react-doc-viewer #msdoc-renderer { width: 100%; height: 100%; }`}</style>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
         <DocViewer
           style={{ height: "80vh", overflowY: "hidden" }}

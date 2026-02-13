@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-microplan",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Microplan Module UI",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -29,7 +29,6 @@
     "react-router-dom": "5.3.0",
     "xlsx": "0.17.5",
     "react-drag-drop-files": "^2.3.10",
-    "@cyntler/react-doc-viewer": "1.10.3",
     "react-data-table-component": "7.6.2",
     "styled-components": "5.0.0",
     "leaflet": "^1.9.4",

@@ -69,7 +69,7 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/babel-preset-react-app": "10.0.0",
-    "**/styled-components": "5.0.0",
+    "**/styled-components": "6.1.11",
     "fast-uri": "2.1.0",
     "**/react": "19.0.0",
     "**/react-dom": "19.0.0",
