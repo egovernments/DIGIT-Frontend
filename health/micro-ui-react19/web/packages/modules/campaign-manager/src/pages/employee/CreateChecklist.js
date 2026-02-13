@@ -593,8 +593,8 @@ const CreateChecklist = () => {
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
                 variation="secondary"
-                label={t(I18N_KEYS.COMMON.HCM_CHECKLIST_CLEAR)}
-                title={t(I18N_KEYS.COMMON.HCM_CHECKLIST_CLEAR)}
+                label={t(I18N_KEYS.PAGES.HCM_CHECKLIST_CLEAR)}
+                title={t(I18N_KEYS.PAGES.HCM_CHECKLIST_CLEAR)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -604,8 +604,8 @@ const CreateChecklist = () => {
               <Button
                 icon="Preview"
                 variation="secondary"
-                label={t(I18N_KEYS.COMMON.HCM_PREVIEW_CHECKLIST)}
-                title={t(I18N_KEYS.COMMON.HCM_PREVIEW_CHECKLIST)}
+                label={t(I18N_KEYS.PAGES.PREVIEW_CHECKLIST)}
+                title={t(I18N_KEYS.PAGES.PREVIEW_CHECKLIST)}
                 className={"hover"}
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
@@ -614,8 +614,8 @@ const CreateChecklist = () => {
               {enabledModules && enabledModules.length > 1 && (
                 <Button
                   variation="secondary"
-                  label={t(I18N_KEYS.COMMON.HCM_ADD_TRANSLATIONS)}
-                  title={t(I18N_KEYS.COMMON.HCM_ADD_TRANSLATIONS)}
+                  label={t(I18N_KEYS.PAGES.ADD_TRANSLATIONS)}
+                  title={t(I18N_KEYS.PAGES.ADD_TRANSLATIONS)}
                   className={"hover"}
                   style={{ marginTop: "2rem", marginBottom: "2rem" }}
                   onClick={() => {
