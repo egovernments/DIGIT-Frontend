@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building an LLM-Powered Configuration Copilot</title>
+<style>
+  /* ── Reset ──────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Base ───────────────────────────────────────────── */
+  :root {
+    --bg:       #0f1117;
+    --surface:  #1a1d27;
+    --card:     #22263a;
+    --accent:   #3b82f6;
+    --accent2:  #8b5cf6;
+    --accent3:  #06b6d4;
+    --green:    #22c55e;
+    --orange:   #f59e0b;
+    --red:      #ef4444;
+    --text:     #e2e8f0;
+    --muted:    #94a3b8;
+    --border:   #2d3348;
+    --font:     'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --mono:     'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Slides container ──────────────────────────────── */
+  .slides { flex: 1; position: relative; overflow: hidden; }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 5rem;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .slide.prev {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  /* ── Typography ────────────────────────────────────── */
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  p, li {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .subtitle {
+    font-size: 1.5rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .highlight { color: var(--accent); }
+  .highlight2 { color: var(--accent2); }
+  .highlight3 { color: var(--accent3); }
+  .highlight-green { color: var(--green); }
+  .highlight-orange { color: var(--orange); }
+  .highlight-red { color: var(--red); }
+  .small { font-size: 1rem; color: var(--muted); }
+  .center { text-align: center; }
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.375rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0.15rem;
+  }
+  .tag-blue   { background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+  .tag-purple { background: rgba(139,92,246,0.15); color: var(--accent2); border: 1px solid rgba(139,92,246,0.3); }
+  .tag-cyan   { background: rgba(6,182,212,0.15); color: var(--accent3); border: 1px solid rgba(6,182,212,0.3); }
+  .tag-green  { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .tag-orange { background: rgba(245,158,11,0.15); color: var(--orange); border: 1px solid rgba(245,158,11,0.3); }
+  .tag-red    { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+
+  /* ── Layout helpers ────────────────────────────────── */
+  .content { max-width: 1100px; width: 100%; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 100%; max-width: 1100px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; width: 100%; max-width: 1100px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+  .card h3 { font-size: 1.2rem; margin-bottom: 0.75rem; }
+  .card li { font-size: 1.05rem; margin-bottom: 0.4rem; }
+  ul { padding-left: 1.5rem; }
+  ul li { margin-bottom: 0.5rem; }
+
+  /* ── Code blocks ───────────────────────────────────── */
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--muted);
+    text-align: left;
+    width: 100%;
+    max-width: 1100px;
+  }
+  .code-block .kw { color: var(--accent2); }
+  .code-block .str { color: var(--green); }
+  .code-block .cmt { color: #4a5568; font-style: italic; }
+  .code-block .fn { color: var(--accent); }
+  .code-block .num { color: var(--orange); }
+
+  /* ── Flow diagram ──────────────────────────────────── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+  .flow-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 120px;
+  }
+  .flow-arrow {
+    font-size: 1.5rem;
+    color: var(--muted);
+  }
+
+  /* ── Comparison table ──────────────────────────────── */
+  .compare-table {
+    width: 100%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    font-size: 1.05rem;
+  }
+  .compare-table th {
+    background: var(--card);
+    color: var(--accent);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-weight: 700;
+  }
+  .compare-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  /* ── Validation pipeline ───────────────────────────── */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 700px;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: var(--card);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--accent);
+    font-size: 1rem;
+  }
+  .pipeline-step .step-num {
+    background: var(--accent);
+    color: #fff;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .pipeline-step:nth-child(2) { border-left-color: var(--accent2); }
+  .pipeline-step:nth-child(2) .step-num { background: var(--accent2); }
+  .pipeline-step:nth-child(3) { border-left-color: var(--accent3); }
+  .pipeline-step:nth-child(3) .step-num { background: var(--accent3); }
+  .pipeline-step:nth-child(4) { border-left-color: var(--green); }
+  .pipeline-step:nth-child(4) .step-num { background: var(--green); }
+  .pipeline-step:nth-child(5) { border-left-color: var(--orange); }
+  .pipeline-step:nth-child(5) .step-num { background: var(--orange); }
+  .pipeline-step:nth-child(6) { border-left-color: var(--red); }
+  .pipeline-step:nth-child(6) .step-num { background: var(--red); }
+  .pipeline-step:nth-child(7) { border-left-color: #a78bfa; }
+  .pipeline-step:nth-child(7) .step-num { background: #a78bfa; }
+
+  /* ── Nav ────────────────────────────────────────────── */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 2rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: var(--font);
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: var(--border); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slide-counter { font-size: 0.9rem; color: var(--muted); }
+
+  /* ── Responsive ────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .slide { padding: 2rem 2rem; }
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.7rem; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="slides" id="slides">
+
+  <!-- ═══════════════════ SLIDE 1: Title ═══════════════════ -->
+  <div class="slide active" data-slide="0">
+    <p class="small" style="margin-bottom:1rem;">AI Meetup Presentation</p>
+    <h1>Building an <span class="highlight">LLM-Powered</span><br>Configuration <span class="highlight2">Copilot</span></h1>
+    <p class="subtitle">How we embedded a domain-specific AI assistant into a form builder<br>with structured actions, multi-layer validation, and human-in-the-loop control</p>
+    <div style="margin-top:1.5rem;">
+      <span class="tag tag-blue">React</span>
+      <span class="tag tag-purple">Redux</span>
+      <span class="tag tag-cyan">Claude / GPT</span>
+      <span class="tag tag-green">Provider-Agnostic</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 2: The Problem ═══════════════════ -->
+  <div class="slide" data-slide="1">
+    <h2>The <span class="highlight-red">Problem</span></h2>
+    <div class="content center">
+      <p style="font-size:1.4rem; margin-bottom:2rem;">Configuring mobile app forms is <strong>complex and error-prone</strong></p>
+      <div class="three-col">
+        <div class="card">
+          <h3 class="highlight-red">30+ Property Types</h3>
+          <p>Labels, help text, tooltips, validation ranges, regex patterns, MDMS bindings, dropdown options, localization codes...</p>
+        </div>
+        <div class="card">
+          <h3 class="highlight-red">Format-Specific Rules</h3>
+          <p>Each field format (text, radio, dropdown, date, scanner...) supports a different subset of properties</p>
+        </div>
+        <div class="card">
+          <h3 class="highlight-red">Localization Overhead</h3>
+          <p>Every label, help text, tooltip, and error message needs a separate localization entry with code + display text</p>
+        </div>
+      </div>
+      <p style="margin-top:2rem; color:var(--muted); font-size:1.15rem;">Users had to navigate multiple tabs, panels, and dropdowns to configure a single field</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 3: The Solution ═══════════════════ -->
+  <div class="slide" data-slide="2">
+    <h2>The <span class="highlight-green">Solution</span>: AI Configuration Copilot</h2>
+    <div class="content center">
+      <p style="font-size:1.3rem; margin-bottom:2rem;">Replace complex UI navigation with <strong>natural language commands</strong></p>
+      <div class="two-col" style="margin-bottom:2rem;">
+        <div class="card" style="border-left:3px solid var(--red);">
+          <h3 class="highlight-red">Before (Manual)</h3>
+          <ul>
+            <li>Click field in side panel</li>
+            <li>Open property drawer</li>
+            <li>Navigate to correct tab</li>
+            <li>Find the property toggle</li>
+            <li>Enter value</li>
+            <li>Separately add localization</li>
+            <li>Repeat for each property...</li>
+          </ul>
+          <p class="small" style="margin-top:0.75rem;">~2 minutes per field change</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--green);">
+          <h3 class="highlight-green">After (AI Copilot)</h3>
+          <ul>
+            <li style="font-size:1.15rem;">"Add a phone number field with help text 'Enter 10-digit number' and make it required"</li>
+          </ul>
+          <p style="margin-top:1rem; font-size:1.05rem;">Copilot generates:</p>
+          <ul>
+            <li>ADD_FIELD action</li>
+            <li>Label localization</li>
+            <li>Help text localization</li>
+            <li>Required validation</li>
+          </ul>
+          <p class="small" style="margin-top:0.75rem;">~10 seconds, all in one command</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 4: Why "Copilot" ═══════════════════ -->
+  <div class="slide" data-slide="3">
+    <h2>Agent vs Assistant vs <span class="highlight">Copilot</span></h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>AI Agent</th>
+          <th>AI Assistant</th>
+          <th style="color:var(--green);">AI Copilot (Ours)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Autonomy</strong></td>
+          <td>Acts independently</td>
+          <td>Answers questions</td>
+          <td>Proposes, human decides</td>
+        </tr>
+        <tr>
+          <td><strong>Domain</strong></td>
+          <td>General purpose</td>
+          <td>General purpose</td>
+          <td>Domain-specific</td>
+        </tr>
+        <tr>
+          <td><strong>Output</strong></td>
+          <td>Free-form actions</td>
+          <td>Free-form text</td>
+          <td>Structured JSON actions</td>
+        </tr>
+        <tr>
+          <td><strong>Validation</strong></td>
+          <td>Self-validates</td>
+          <td>None</td>
+          <td>Multi-layer server-side</td>
+        </tr>
+        <tr>
+          <td><strong>Integration</strong></td>
+          <td>Standalone</td>
+          <td>Standalone</td>
+          <td>Embedded in app UI</td>
+        </tr>
+        <tr>
+          <td><strong>Safety</strong></td>
+          <td>Guardrails needed</td>
+          <td>Low risk (text only)</td>
+          <td>Human approval + validation</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small center" style="margin-top:1.5rem;">A Copilot combines the <span class="highlight">intelligence of an LLM</span> with <span class="highlight2">domain constraints</span> and <span class="highlight-green">human oversight</span></p>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 5: Architecture ═══════════════════ -->
+  <div class="slide" data-slide="4">
+    <h2>Architecture: <span class="highlight">6 Files</span>, Zero Backend</h2>
+    <div class="three-col">
+      <div class="card">
+        <h3 class="highlight">System Prompt</h3>
+        <p><code>systemPrompt.js</code></p>
+        <ul>
+          <li>Builds dynamic prompt from <strong>live Redux state</strong></li>
+          <li>Current page config</li>
+          <li>Available field types</li>
+          <li>Property reference table</li>
+          <li>Page type rules</li>
+          <li>Business rules</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="highlight2">AI Service</h3>
+        <p><code>aiService.js</code></p>
+        <ul>
+          <li>Provider-agnostic LLM calls</li>
+          <li>Anthropic Messages API</li>
+          <li>OpenAI Chat Completions</li>
+          <li>Any OpenAI-compatible endpoint</li>
+          <li>JSON response parsing</li>
+          <li>Error handling per provider</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="highlight3">Action Executor</h3>
+        <p><code>actionExecutor.js</code></p>
+        <ul>
+          <li>8 action types</li>
+          <li>7-layer validation pipeline</li>
+          <li>Format-property compatibility</li>
+          <li>Localization enforcement</li>
+          <li>Same Redux path as manual UI</li>
+        </ul>
+      </div>
+    </div>
+    <div class="three-col" style="margin-top:1.5rem;">
+      <div class="card">
+        <h3 class="highlight-green">Redux Slice</h3>
+        <p><code>aiAssistantSlice.js</code></p>
+        <ul>
+          <li>Chat state management</li>
+          <li>Provider config + localStorage</li>
+          <li>Page context tracking</li>
+          <li>Auto-clear on navigation</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="highlight-orange">Chat UI</h3>
+        <p><code>AIAssistantChat.js</code></p>
+        <ul>
+          <li>Embedded panel component</li>
+          <li>Field preview cards</li>
+          <li>Action cards with Apply/Dismiss</li>
+          <li>Settings panel</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--muted)">Styles</h3>
+        <p><code>aiAssistantStyles.js</code></p>
+        <ul>
+          <li>Scoped CSS-in-JS</li>
+          <li>370px embedded panel</li>
+          <li>Color-coded action cards</li>
+          <li>Responsive layout</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 6: Data Flow ═══════════════════ -->
+  <div class="slide" data-slide="5">
+    <h2>Data Flow: <span class="highlight3">Request Lifecycle</span></h2>
+    <div class="flow">
+      <div class="flow-box" style="border:1px solid var(--accent);">
+        <span class="small">User types</span><br>
+        <strong>"Add a phone field"</strong>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-box" style="border:1px solid var(--accent2);">
+        <span class="small">systemPrompt.js</span><br>
+        <strong>Build Context</strong>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-box" style="border:1px solid var(--accent3);">
+        <span class="small">aiService.js</span><br>
+        <strong>Call LLM</strong>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-box" style="border:1px solid var(--green);">
+        <span class="small">Parse response</span><br>
+        <strong>JSON Actions</strong>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-box" style="border:1px solid var(--green);">
+        <span class="small">AIAssistantChat.js</span><br>
+        <strong>Show Action Cards</strong>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-box" style="border:1px solid var(--orange);">
+        <span class="small">User clicks</span><br>
+        <strong>Apply</strong>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-box" style="border:1px solid var(--red);">
+        <span class="small">actionExecutor.js</span><br>
+        <strong>Validate</strong>
+      </div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-box" style="border:1px solid var(--accent2);">
+        <span class="small">Redux dispatch</span><br>
+        <strong>Execute</strong>
+      </div>
+    </div>
+    <p class="center small" style="margin-top:1.5rem;">The user <strong>always</strong> sees what will happen before it happens &mdash; and has the power to dismiss</p>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 7: Dynamic Context ═══════════════════ -->
+  <div class="slide" data-slide="6">
+    <h2>Key Pattern: <span class="highlight">Dynamic Context Injection</span></h2>
+    <div class="two-col">
+      <div>
+        <h3>The system prompt is rebuilt on every message</h3>
+        <p style="margin-bottom:1.5rem;">The LLM always sees the <strong>current state of the application</strong>, not a static schema.</p>
+        <ul>
+          <li><span class="highlight">Current fields</span> &mdash; names, types, formats, hidden status</li>
+          <li><span class="highlight2">Localization data</span> &mdash; existing codes and translations</li>
+          <li><span class="highlight3">Property reference</span> &mdash; which properties work for which format</li>
+          <li><span class="highlight-green">Page type rules</span> &mdash; template vs form restrictions</li>
+          <li><span class="highlight-orange">Action schema</span> &mdash; exact JSON structure required</li>
+        </ul>
+        <p style="margin-top:1.5rem;" class="small">This eliminates hallucination about non-existent fields and invalid property combinations</p>
+      </div>
+      <div>
+        <div class="code-block"><span class="kw">function</span> <span class="fn">buildSystemPrompt</span>(
+  currentData,     <span class="cmt">// live page config</span>
+  fieldTypeMaster, <span class="cmt">// available types</span>
+  localizationData,<span class="cmt">// i18n entries</span>
+  pageType,        <span class="cmt">// "template"|"form"</span>
+  panelConfig      <span class="cmt">// property schema</span>
+) {
+  <span class="kw">return</span> <span class="str">`You are an AI assistant
+for a form configuration tool.
+
+## Current Page Configuration
+${<span class="fn">summarizeCurrentConfig</span>(...)}
+
+## Properties Reference
+${<span class="fn">buildPropertiesReference</span>(...)}
+
+## Available Actions
+{ "type": "ADD_FIELD",
+  "payload": { ... } }
+
+## Business Rules
+...`</span>;
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 8: Validation ═══════════════════ -->
+  <div class="slide" data-slide="7">
+    <h2>Multi-Layer <span class="highlight-orange">Validation Pipeline</span></h2>
+    <div class="two-col">
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <span class="step-num">1</span>
+          <span><strong>Page Type Enforcement</strong> &mdash; Template screens block structural changes</span>
+        </div>
+        <div class="pipeline-step">
+          <span class="step-num">2</span>
+          <span><strong>Display Logic Blocking</strong> &mdash; visibilityCondition redirected to Logic Tab</span>
+        </div>
+        <div class="pipeline-step">
+          <span class="step-num">3</span>
+          <span><strong>Format-Property Check</strong> &mdash; helpText not on radio, tooltip not on checkbox</span>
+        </div>
+        <div class="pipeline-step">
+          <span class="step-num">4</span>
+          <span><strong>Localization Completeness</strong> &mdash; every localisable value needs display text</span>
+        </div>
+        <div class="pipeline-step">
+          <span class="step-num">5</span>
+          <span><strong>isMdms Format Check</strong> &mdash; only dropdown/radio/select support MDMS</span>
+        </div>
+        <div class="pipeline-step">
+          <span class="step-num">6</span>
+          <span><strong>Range Constraints</strong> &mdash; min &le; max, prefix/suffix &le; 5 chars</span>
+        </div>
+        <div class="pipeline-step">
+          <span class="step-num">7</span>
+          <span><strong>Dropdown Options</strong> &mdash; non-empty array, valid name codes</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--green);">Data-Driven, Not Hardcoded</h3>
+        <p style="margin-bottom:1rem;">Format-property rules are <strong>derived from the panelConfig at runtime</strong>:</p>
+        <div class="code-block"><span class="fn">buildPropertyConfigFromPanel</span>(panelConfig)
+  &rarr; {
+    <span class="str">formatMap</span>: {
+      <span class="str">"helpText"</span>: Set([<span class="str">"text"</span>, <span class="str">"textarea"</span>,
+        <span class="str">"numeric"</span>, <span class="str">"date"</span>, <span class="str">"dropdown"</span>...]),
+      <span class="str">"tooltip"</span>:  Set([<span class="str">"text"</span>, <span class="str">"textarea"</span>,
+        <span class="str">"date"</span>, <span class="str">"dropdown"</span>...]),
+    },
+    <span class="str">localisableProps</span>: Set([
+      <span class="str">"label"</span>, <span class="str">"helpText"</span>, <span class="str">"tooltip"</span>,
+      <span class="str">"innerLabel"</span>, <span class="str">"required.message"</span>,
+      <span class="str">"range.errorMessage"</span>, ...
+    ])
+  }</div>
+        <p class="small" style="margin-top:1rem;">If the panelConfig is updated with new properties, validation automatically adapts</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 9: Same-Path Execution ═══════════════════ -->
+  <div class="slide" data-slide="8">
+    <h2>Key Pattern: <span class="highlight2">Same-Path Execution</span></h2>
+    <div class="content center">
+      <p style="font-size:1.3rem; margin-bottom:2rem;">AI actions follow the <strong>exact same Redux dispatch path</strong> as manual UI editing</p>
+      <div class="two-col">
+        <div class="card" style="border-left:3px solid var(--accent);">
+          <h3 class="highlight">Manual UI Path</h3>
+          <div class="code-block"><span class="cmt">// User clicks field in drawer</span>
+<span class="fn">dispatch</span>(<span class="fn">selectField</span>({ field, cardIndex }))
+
+<span class="cmt">// User changes property in panel</span>
+<span class="fn">dispatch</span>(<span class="fn">updateSelectedField</span>(updates))
+
+<span class="cmt">// User closes drawer</span>
+<span class="fn">dispatch</span>(<span class="fn">deselectField</span>())</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent2);">
+          <h3 class="highlight2">AI Copilot Path</h3>
+          <div class="code-block"><span class="cmt">// Action executor after validation</span>
+<span class="fn">dispatch</span>(<span class="fn">selectField</span>({ field, cardIndex }))
+
+<span class="cmt">// Apply validated properties</span>
+<span class="fn">dispatch</span>(<span class="fn">updateSelectedField</span>(updates))
+
+<span class="cmt">// Complete the edit</span>
+<span class="fn">dispatch</span>(<span class="fn">deselectField</span>())</div>
+        </div>
+      </div>
+      <p style="margin-top:2rem; font-size:1.15rem;">No special code paths. No state divergence.<br>The resulting state is <span class="highlight-green">identical</span> regardless of how it was edited.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 10: Provider Agnostic ═══════════════════ -->
+  <div class="slide" data-slide="9">
+    <h2><span class="highlight3">Provider-Agnostic</span> AI Service</h2>
+    <div class="content center">
+      <p style="font-size:1.3rem; margin-bottom:2rem;">Switch LLM providers from the UI &mdash; no code changes needed</p>
+      <div class="three-col">
+        <div class="card" style="border-left:3px solid var(--accent);">
+          <h3 class="highlight">Anthropic</h3>
+          <ul>
+            <li>Messages API format</li>
+            <li><code>x-api-key</code> header</li>
+            <li><code>system</code> field in body</li>
+            <li><code>content[].text</code> response</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:3px solid var(--green);">
+          <h3 class="highlight-green">OpenAI</h3>
+          <ul>
+            <li>Chat Completions format</li>
+            <li><code>Bearer</code> auth header</li>
+            <li>System role message</li>
+            <li><code>choices[0].message</code></li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent2);">
+          <h3 class="highlight2">Custom</h3>
+          <ul>
+            <li>Any OpenAI-compatible</li>
+            <li>Ollama, Azure, Together</li>
+            <li>Custom base URL</li>
+            <li>Same response format</li>
+          </ul>
+        </div>
+      </div>
+      <div class="code-block" style="margin-top:1.5rem; text-align:center; max-width:700px; margin-left:auto; margin-right:auto;">
+<span class="fn">callAI</span>(config, conversationHistory, systemPrompt)
+  &rarr; provider === <span class="str">"anthropic"</span> ? <span class="fn">callAnthropic</span>(...)
+  &rarr; <span class="fn">callOpenAICompatible</span>(...)  <span class="cmt">// OpenAI + custom</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 11: Challenges & Learnings ═══════════════════ -->
+  <div class="slide" data-slide="10">
+    <h2>Challenges & <span class="highlight-orange">Learnings</span></h2>
+    <div class="two-col">
+      <div class="card">
+        <h3 class="highlight-red">Challenge: Stale State in Action Batches</h3>
+        <p>When ADD_FIELD + UPDATE_FIELD_PROPERTY were in the same batch, the second action couldn't find the newly added field.</p>
+        <p style="margin-top:0.75rem;"><strong>Root cause:</strong> <code>getState()</code> was built from React selector closures (stale during batch execution).</p>
+        <p style="margin-top:0.75rem;"><span class="highlight-green"><strong>Fix:</strong></span> Use <code>useStore().getState()</code> for real-time Redux state access.</p>
+      </div>
+      <div class="card">
+        <h3 class="highlight-red">Challenge: LLM Forgets Localization</h3>
+        <p>The LLM would set <code>helpText</code> but forget the matching <code>UPDATE_LOCALIZATION</code> action.</p>
+        <p style="margin-top:0.75rem;"><strong>Root cause:</strong> Localization was only mentioned in rules, not enforced.</p>
+        <p style="margin-top:0.75rem;"><span class="highlight-green"><strong>Fix:</strong></span> Data-driven validation that <strong>rejects</strong> the batch if localization is missing. The error message teaches the LLM the correct pattern.</p>
+      </div>
+      <div class="card">
+        <h3 class="highlight-red">Challenge: Format-Blind Property Setting</h3>
+        <p>LLM tried to set <code>helpText</code> on a radio field (not supported).</p>
+        <p style="margin-top:0.75rem;"><span class="highlight-green"><strong>Fix:</strong></span> Build format&rarr;property compatibility map from panelConfig at runtime. Reject invalid combinations with clear error messages.</p>
+      </div>
+      <div class="card">
+        <h3 class="highlight-red">Challenge: Template vs Form Screens</h3>
+        <p>Template screens have nested component trees. The AI couldn't see fields inside listView/table wrappers.</p>
+        <p style="margin-top:0.75rem;"><span class="highlight-green"><strong>Fix:</strong></span> Recursive <code>extractTemplateFields()</code> that walks <code>child</code>, <code>children</code>, <code>primaryAction</code>, <code>secondaryAction</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 12: Key Takeaways ═══════════════════ -->
+  <div class="slide" data-slide="11">
+    <h2>Key <span class="highlight-green">Takeaways</span></h2>
+    <div class="content">
+      <div class="card" style="margin-bottom:1.5rem;">
+        <h3><span style="color:var(--accent);">1.</span> Ground the LLM in Reality</h3>
+        <p>Inject <strong>live application state</strong> into the system prompt. The LLM should never guess &mdash; it should know exactly what exists, what's possible, and what's not.</p>
+      </div>
+      <div class="card" style="margin-bottom:1.5rem;">
+        <h3><span style="color:var(--accent2);">2.</span> Don't Trust the LLM &mdash; Validate Everything</h3>
+        <p>System prompt rules are <strong>suggestions</strong>. Server-side validation is <strong>enforcement</strong>. The validation pipeline catches what the LLM misses and the error messages become training signals for the next attempt.</p>
+      </div>
+      <div class="card" style="margin-bottom:1.5rem;">
+        <h3><span style="color:var(--accent3);">3.</span> Same-Path Execution Eliminates Bugs</h3>
+        <p>When AI actions follow the exact same code path as manual UI editing, there are <strong>zero state divergence bugs</strong>. The AI is just a faster way to do what the UI already does.</p>
+      </div>
+      <div class="card" style="margin-bottom:1.5rem;">
+        <h3><span style="color:var(--green);">4.</span> Human-in-the-Loop is a Feature, Not a Limitation</h3>
+        <p>The Propose &rarr; Review &rarr; Apply pattern gives users <strong>confidence and control</strong>. It turns the AI from a scary black box into a helpful collaborator.</p>
+      </div>
+      <div class="card">
+        <h3><span style="color:var(--orange);">5.</span> Make Validation Data-Driven</h3>
+        <p>Derive rules from configuration, not hardcoded logic. When the schema evolves, the validation <strong>automatically adapts</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 13: Impact ═══════════════════ -->
+  <div class="slide" data-slide="12">
+    <h2><span class="highlight">Impact</span></h2>
+    <div class="content center">
+      <div class="three-col" style="margin-bottom:2rem;">
+        <div class="card center">
+          <h3 style="font-size:2.5rem; color:var(--green); margin-bottom:0.5rem;">~12x</h3>
+          <p>Faster field configuration<br><span class="small">2 min manual &rarr; 10 sec with AI</span></p>
+        </div>
+        <div class="card center">
+          <h3 style="font-size:2.5rem; color:var(--accent); margin-bottom:0.5rem;">6</h3>
+          <p>Files, ~1500 lines total<br><span class="small">Zero backend needed</span></p>
+        </div>
+        <div class="card center">
+          <h3 style="font-size:2.5rem; color:var(--accent2); margin-bottom:0.5rem;">7</h3>
+          <p>Validation layers<br><span class="small">All data-driven from config</span></p>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card center">
+          <h3 style="font-size:2rem; color:var(--accent3); margin-bottom:0.5rem;">3</h3>
+          <p>LLM providers supported<br><span class="small">Anthropic, OpenAI, any OpenAI-compatible</span></p>
+        </div>
+        <div class="card center">
+          <h3 style="font-size:2rem; color:var(--orange); margin-bottom:0.5rem;">0</h3>
+          <p>State divergence bugs<br><span class="small">Same-path execution guarantees consistency</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 14: Thank You ═══════════════════ -->
+  <div class="slide" data-slide="13">
+    <h1>Thank <span class="highlight">You</span></h1>
+    <p class="subtitle">Questions?</p>
+    <div style="margin-top:2rem;">
+      <span class="tag tag-blue">Dynamic Context Injection</span>
+      <span class="tag tag-purple">Structured Action Schema</span>
+      <span class="tag tag-cyan">Provider-Agnostic</span>
+      <span class="tag tag-green">Human-in-the-Loop</span>
+      <span class="tag tag-orange">Data-Driven Validation</span>
+      <span class="tag tag-red">Same-Path Execution</span>
+    </div>
+    <p class="small" style="margin-top:3rem;">Built with React + Redux Toolkit + Claude / GPT</p>
+  </div>
+
+</div>
+
+<!-- ── Navigation ──────────────────────────────────────────── -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>&larr; Previous</button>
+  <span class="slide-counter" id="counter">1 / 14</span>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next &rarr;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next < 0 || next >= total) return;
+    slides[current].classList.remove('active', 'prev');
+    if (dir > 0) slides[current].classList.add('prev');
+    current = next;
+    slides[current].classList.remove('prev');
+    slides[current].classList.add('active');
+    document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); navigate(-1); }
+    if (e.key === 'Home') { e.preventDefault(); while (current > 0) navigate(-1); }
+    if (e.key === 'End') { e.preventDefault(); while (current < total - 1) navigate(1); }
+  });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
+  });
+</script>
+
+</body>
+</html>

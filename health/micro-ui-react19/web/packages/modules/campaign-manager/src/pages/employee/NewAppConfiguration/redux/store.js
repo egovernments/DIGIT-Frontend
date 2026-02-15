@@ -6,6 +6,7 @@ import localizationReducer from "./localizationSlice";
 import flowPagesReducer from "./flowPagesSlice";
 import pageFieldsReducer from "./pageFieldsSlice";
 import labelFieldPairReducer from "./labelFieldPairSlice";
+import aiAssistantReducer from "../AIAssistant/aiAssistantSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     flowPages: flowPagesReducer,
     pageFields: pageFieldsReducer,
     labelFieldPair: labelFieldPairReducer ,
+    aiAssistant: aiAssistantReducer,
   },
 });
 

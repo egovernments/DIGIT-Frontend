@@ -26,16 +26,29 @@ const MenuCardTemplate = ({ field, t, fieldTypeMasterData }) => {
   const { styles, className: customClassName, ...otherProps } = properties;
 
   return (
-    <MenuCard
-      icon={field?.icon || field?.properties?.icon || "ShippingTruck"}
-      menuName={t(field?.heading) || t(field.label)} 
-      description={t(field?.description)} // MenuCard uses description prop
-      onClick={() => {}}
-      className={`menu-card-template ${fieldName || ""} ${customClassName || ""} ${disabled ? "disabled" : ""}`}
-      styles={styles}
-      // Note: MenuCard component handles translation internally,
-      // so we pass the keys directly without t() wrapper
-    />
+    <div className="menu-card-template-wrapper">
+      <style>{`
+        .menu-card-template-wrapper .icon-menu-header {
+          padding: 0;
+          margin: 0;
+        }
+        .menu-card-template-wrapper .digit-menucard-description {
+          padding: 0;
+          margin: 0;
+        }
+        .menu-card-template-wrapper .digit-menucard-icon {
+          flex-shrink: 0;
+        }
+      `}</style>
+      <MenuCard
+        icon={field?.icon || field?.properties?.icon || "ShippingTruck"}
+        menuName={t(field?.heading) || t(field.label)}
+        description={t(field?.description)}
+        onClick={() => {}}
+        className={`menu-card-template ${fieldName || ""} ${customClassName || ""} ${disabled ? "disabled" : ""}`}
+        styles={styles}
+      />
+    </div>
   );
 };
 

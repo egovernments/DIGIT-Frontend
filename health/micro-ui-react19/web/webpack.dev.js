@@ -84,10 +84,11 @@ module.exports = merge(common, {
           "/fsm-calculator",
           "/product",
           "/health-service-request",
+          "/service-request",
           "/excel-ingestion",
           "/boundary-management"
         ],
-        target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
+        target: process.env.REACT_APP_PROXY_URL || "https://unified-uat.digit.org",
         changeOrigin: true,
         secure: false,
       },
@@ -98,6 +99,7 @@ module.exports = merge(common, {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
+      "process.env.REACT_APP_ANTHROPIC_API_KEY": JSON.stringify(process.env.REACT_APP_ANTHROPIC_API_KEY || "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"),
     }),
   ],
 
