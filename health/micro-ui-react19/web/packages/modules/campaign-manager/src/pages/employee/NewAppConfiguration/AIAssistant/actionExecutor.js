@@ -371,34 +371,78 @@ function handleAddSection(dispatch) {
 }
 
 /**
+ * Literal dot-key properties — these are stored as flat keys in the MDMS data
+ * (e.g. field["required.message"]) and should NOT be expanded into nested objects.
+ * Grouped validator properties (range.*, lengthRange.*, etc.) ARE nested and SHOULD expand.
+ */
+const LITERAL_DOT_KEYS = new Set([
+  "required.message",
+  "pattern.message",
+  "scanLimit.message",
+  "minSearchChars.message",
+  "min.message",
+  "max.message",
+  "minLength.message",
+  "maxLength.message",
+]);
+
+/**
  * Expands dot-notation flat properties into a nested object.
  * e.g. { "range.min": 5, "range.max": 100 } → { range: { min: 5, max: 100 } }
  * Preserves existing sibling values from the field.
+ *
+ * IMPORTANT: Some dot-key properties are literal flat keys in the MDMS format
+ * (e.g. "required.message", "pattern.message") — these are kept as-is, NOT expanded.
+ * Only grouped validator properties (range.*, lengthRange.*, dateRange.*, ageRange.*)
+ * are truly nested and get expanded.
  */
 function expandDotNotation(flatProps, existingField) {
-  const result = {};
+  const rootPrimitives = {};  // root → primitive value
+  const rootDotKeys = {};     // root → [{ rest, value }]
+  const literalDotEntries = {}; // literal dot-key → value (kept as-is)
 
   for (const [key, value] of Object.entries(flatProps)) {
+    // Check if this is a literal dot-key (should NOT be expanded)
+    if (LITERAL_DOT_KEYS.has(key)) {
+      literalDotEntries[key] = value;
+      continue;
+    }
+
     const parts = key.split(".");
     if (parts.length === 1) {
-      // Simple top-level property
-      result[key] = value;
+      rootPrimitives[key] = value;
     } else {
-      // Nested property - expand dot notation
       const root = parts[0];
-      const rest = parts.slice(1).join(".");
+      if (!rootDotKeys[root]) rootDotKeys[root] = [];
+      rootDotKeys[root].push({ rest: parts.slice(1).join("."), value });
+    }
+  }
 
-      if (!result[root]) {
-        // Preserve existing values from the field for this root key
-        const existingValue = existingField?.[root];
-        if (existingValue && typeof existingValue === "object" && !Array.isArray(existingValue)) {
-          result[root] = { ...existingValue };
-        } else {
-          result[root] = {};
-        }
+  const result = {};
+
+  // Process simple top-level properties
+  for (const [key, value] of Object.entries(rootPrimitives)) {
+    result[key] = value;
+  }
+
+  // Add literal dot-key properties as-is (flat keys with dots in the name)
+  for (const [key, value] of Object.entries(literalDotEntries)) {
+    result[key] = value;
+  }
+
+  // Process truly nested dot-notation properties (range.*, lengthRange.*, etc.)
+  for (const [root, entries] of Object.entries(rootDotKeys)) {
+    if (!result[root] || typeof result[root] !== "object") {
+      // Seed from existing field value if it's an object, otherwise start fresh
+      const existingValue = existingField?.[root];
+      if (existingValue && typeof existingValue === "object" && !Array.isArray(existingValue)) {
+        result[root] = { ...existingValue };
+      } else {
+        result[root] = {};
       }
+    }
 
-      // Set the nested value
+    for (const { rest, value } of entries) {
       setNestedValue(result[root], rest, value);
     }
   }

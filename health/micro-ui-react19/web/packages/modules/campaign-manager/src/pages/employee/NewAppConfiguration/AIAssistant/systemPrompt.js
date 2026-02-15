@@ -83,32 +83,46 @@ The "preview" field is optional. Include it when adding or updating a field so t
 
 8. **UPDATE_FIELD_PROPERTY** - Set drawer/panel properties on a field (content & validation)
    \`\`\`
-   { "type": "UPDATE_FIELD_PROPERTY", "payload": { "fieldName": "existingFieldName", "properties": { "required": true, "required.message": "This field is required", "range.min": 5, "range.max": 100, "range.errorMessage": "Must be between 5 and 100" } } }
+   { "type": "UPDATE_FIELD_PROPERTY", "payload": { "fieldName": "existingFieldName", "properties": { "required": true, "required.message": "ERR_REQUIRED_CODE", "range.min": 5, "range.max": 100, "range.errorMessage": "ERR_RANGE_CODE" } } }
    \`\`\`
    - \`fieldName\`: The unique fieldName of the field
-   - \`properties\`: Flat dot-notation keys that map to nested field properties. Examples:
-     - \`"required": true\` → sets the required toggle
-     - \`"required.message": "Error text"\` → sets the required error message
-     - \`"helpText": "Some help"\` → sets help text
+   - \`properties\`: Property keys to set on the field. Examples:
+     - \`"required": true, "required.message": "ERR_CODE"\` → makes field required with custom error message (localisable)
+     - \`"helpText": "HELP_CODE"\` → sets help text (localisable)
      - \`"readOnly": true\` → makes field read-only
-     - \`"pattern": "^[0-9]+$"\` → sets regex validation pattern
-     - \`"pattern.message": "Numbers only"\` → sets pattern error message
+     - \`"pattern": "^[0-9]+$", "pattern.message": "ERR_CODE"\` → sets regex pattern with error message (localisable)
      - \`"range.min": 0, "range.max": 999\` → sets number range
-     - \`"range.errorMessage": "Out of range"\` → sets range error message
+     - \`"range.errorMessage": "ERR_CODE"\` → sets range error message (localisable)
      - \`"lengthRange.minLength": 5, "lengthRange.maxLength": 15\` → sets text length range
-     - \`"lengthRange.errorMessage": "Invalid length"\` → sets length range error message
-     - \`"tooltip": "Helpful tip"\` → sets tooltip text
-     - \`"prefixText": "+91"\` → sets prefix text
-     - \`"suffixText": "kg"\` → sets suffix text
-     - \`"innerLabel": "Enter value"\` → sets placeholder/inner label
+     - \`"lengthRange.errorMessage": "ERR_CODE"\` → sets length range error message (localisable)
+     - \`"tooltip": "TOOLTIP_CODE"\` → sets tooltip text (localisable)
+     - \`"prefixText": "+91"\` → sets prefix text (NOT localisable, max 5 chars)
+     - \`"suffixText": "kg"\` → sets suffix text (NOT localisable, max 5 chars)
+     - \`"innerLabel": "INNER_CODE"\` → sets placeholder/inner label (localisable)
      - \`"isMultiSelect": true\` → enables multi-select for dropdowns
      - \`"isMdms": true, "schemaCode": "common-masters.GenderType"\` → links to MDMS data source. **Only for: dropdown, idPopulator, select, radio, searchableDropdown**. When isMdms=true, schemaCode is required. When isMdms=false, field uses manual dropDownOptions instead.
      - \`"systemDate": true\` → uses system date for date fields
      - \`"isGS1": true\` → enables GS1 barcode for scanner fields
-     - \`"scanLimit": 5, "scanLimit.message": "Max 5 scans"\` → sets scan limit
+     - \`"scanLimit": 5, "scanLimit.message": "ERR_CODE"\` → sets scan limit with error message (localisable)
      - \`"dateRange.startDate": "2024-01-01", "dateRange.endDate": "2025-12-31"\` → sets date range
      - \`"ageRange.minAge": 0, "ageRange.maxAge": 120"\` → sets age range for DOB fields
-     - \`"visibilityCondition.expression": "..."\` → sets display logic expression
+
+   **IMPORTANT — Property key format rules**:
+     There are two types of dot-notation keys:
+
+     **Flat dot-keys** (the dot is part of the property name, NOT nesting):
+     - \`"required.message"\`, \`"pattern.message"\`, \`"scanLimit.message"\`, \`"min.message"\`, \`"max.message"\`, \`"minLength.message"\`, \`"maxLength.message"\`, \`"minSearchChars.message"\`
+     - These are stored as literal flat keys on the field (e.g. \`field["required.message"]\`)
+     - Send them alongside their parent: \`"required": true, "required.message": "ERR_CODE"\` — both are needed
+     - Example: \`{ "required": true, "required.message": "ERR_REQUIRED_CODE" }\` sets required=true AND the error message
+     - Example: \`{ "pattern": "^[0-9]+$", "pattern.message": "ERR_PATTERN_CODE" }\` sets regex pattern AND its error message
+
+     **Nested dot-keys** (truly nested object properties):
+     - \`"range.min"\`, \`"range.max"\`, \`"range.errorMessage"\`
+     - \`"lengthRange.minLength"\`, \`"lengthRange.maxLength"\`, \`"lengthRange.errorMessage"\`
+     - \`"dateRange.startDate"\`, \`"dateRange.endDate"\`, \`"dateRange.errorMessage"\`
+     - \`"ageRange.minAge"\`, \`"ageRange.maxAge"\`, \`"ageRange.errorMessage"\`
+     - These are expanded into nested objects (e.g. \`field.range = { min: 5, max: 100 }\`)
 
    **Important**: Only set properties that are supported for the field's format. See the Properties Reference above.
 
