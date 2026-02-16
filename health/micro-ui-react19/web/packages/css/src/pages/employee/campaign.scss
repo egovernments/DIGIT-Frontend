@@ -355,6 +355,7 @@
   box-sizing: border-box;
   background-color: transparent;
   transition: all 0.2s ease;
+  display: flex;
 
   &.selected {
     border-color: #C84C0E;

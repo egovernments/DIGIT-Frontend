@@ -21,6 +21,7 @@ const InfoCardTemplate = ({ field, t, fieldTypeMasterData }) => {
       className="cmn-help-info-card"
       label={infoLabel}
       text={infoText}
+      style={{margin:"0rem"}}
     />
   );
 };
