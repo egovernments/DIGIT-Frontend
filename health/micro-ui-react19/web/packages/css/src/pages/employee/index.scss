@@ -404,7 +404,6 @@ tbody {
 .campaign-summary-container {
   overflow: auto;
 
-  &.delivery-summary,
   &.boundary-summary,
   &.data-upload-summary {
     display: flex;
@@ -419,6 +418,19 @@ tbody {
     }
   }
 
+  &.delivery-summary{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .view-composer-header-section {
+      .employee-card-sub-header,
+      .card-sub-header{
+        margin-bottom: 1rem !important;
+        color: #0b4b66;
+      }
+    }
+  }
   &.campaign-update-summary {
     .digit-card-component {
       margin-bottom: 1.5rem;
@@ -1671,6 +1683,7 @@ tbody {
 
 .digit-popup-children-wrap{
   .selection-card-container{
+    width: 100%;
     .selection-card{
       flex-direction: column;
       width: 100% !important;

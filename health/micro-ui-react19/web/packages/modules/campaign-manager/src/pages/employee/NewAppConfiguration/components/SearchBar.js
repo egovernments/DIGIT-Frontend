@@ -11,6 +11,7 @@ const SearchBar = ({ field, t }) => (
       populators={{
         fieldPairClassName: "app-preview-field-pair",
       }}
+      withoutLabel={true}
     />
   </div>
 );
