@@ -1,4 +1,8 @@
-# Changelog 
+# Changelog
+
+## [1.9.11]  [16-FEB-2026]
+- **Enhancement**: Added `logoUrlWhite` prop support to TopBarSideBar component for secondary logo display
+- **Code Quality**: Fixed code formatting and indentation in citizen home page OBPS Info label component
 
 ## [1.9.10]  [02-JAN-2026]
 -userProfile has been changed according to the new api /health-individual/v1
