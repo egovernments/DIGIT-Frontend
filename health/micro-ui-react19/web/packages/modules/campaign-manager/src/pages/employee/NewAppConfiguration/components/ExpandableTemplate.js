@@ -40,7 +40,7 @@ const ExpandableTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFi
   const buttonIcon = isExpanded ? "ArrowUpward" : "ArrowDownward";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" ,width:"100%"}}>
       {/* Toggle Button */}
       <Button
         label={buttonLabel}
@@ -63,7 +63,7 @@ const ExpandableTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFi
 
       {/* Children - Only render when expanded */}
       {isExpanded && (
-        <div style={{ display: "flex", flexDirection: "column", gap: properties.gap || "1rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: properties.gap || "1rem" ,width:"100%"}}>
           {children.map((child, index) => {
             // Ensure child has proper id
             const childWithId = {

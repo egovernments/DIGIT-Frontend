@@ -10,7 +10,7 @@ const QRView = ({ field, t, fieldTypeMasterData, props }) => {
 
   return (
     <div style={{ maxHeight: "200px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <IconComponent width="100%" height="100%" style={{ maxHeight: "200px" }} />
+      <IconComponent width="100%" height="100%" style={{ maxHeight: "200px" }} fill={"black"}/>
     </div>
   );
 };
