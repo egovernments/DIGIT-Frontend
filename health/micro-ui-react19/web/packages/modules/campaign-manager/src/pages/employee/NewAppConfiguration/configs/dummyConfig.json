@@ -1283,7 +1283,7 @@
                                 "fieldName": "filterPopUp",
                                 "properties": {
                                     "icon": "FilterAlt",
-                                    "size": "medium",
+                                     "size": "medium",
                                     "type": "tertiary",
                                     "suffixIcon": "FilterAlt",
                                     "popupConfig": {
@@ -1445,7 +1445,7 @@
                                                                 "properties": {
                                                                     "data": [
                                                                         {
-                                                                            "key": "projectId",
+                                                                           "key": "projectId",
                                                                             "root": "referral",
                                                                             "value": "{{singleton.selectedProject.id}}",
                                                                             "operation": "equals"

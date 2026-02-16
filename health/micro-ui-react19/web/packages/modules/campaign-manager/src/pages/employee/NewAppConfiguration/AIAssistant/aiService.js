@@ -6,7 +6,7 @@
 const PROVIDER_DEFAULTS = {
   anthropic: {
     baseUrl: "https://api.anthropic.com/v1/messages",
-    model: "claude-sonnet-4-20250514",
+    model: "claude-opus-4-6",
     envKey: "REACT_APP_ANTHROPIC_API_KEY",
   },
   openai: {
@@ -32,14 +32,16 @@ export async function callAI(config, conversationHistory, systemPrompt) {
   const { provider } = config;
 
   const resolvedApiKey = config.apiKey || getEnvKey(provider);
-  if (!resolvedApiKey) {
+
+  // API key is required for Anthropic and OpenAI, but optional for custom/local providers
+  if (!resolvedApiKey && provider !== "custom") {
     const envName = PROVIDER_DEFAULTS[provider]?.envKey || "";
     throw new Error(
       `No API key configured. Set it in AI settings${envName ? ` or via ${envName} env variable` : ""}.`
     );
   }
 
-  const resolvedConfig = { ...config, apiKey: resolvedApiKey };
+  const resolvedConfig = { ...config, apiKey: resolvedApiKey || "" };
 
   if (provider === "anthropic") {
     return callAnthropic(resolvedConfig, conversationHistory, systemPrompt);
@@ -112,12 +114,14 @@ async function callOpenAICompatible(config, conversationHistory, systemPrompt) {
     })),
   ];
 
+  const headers = { "Content-Type": "application/json" };
+  if (config.apiKey) {
+    headers["Authorization"] = `Bearer ${config.apiKey}`;
+  }
+
   const response = await fetch(baseUrl, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${config.apiKey}`,
-    },
+    headers,
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,

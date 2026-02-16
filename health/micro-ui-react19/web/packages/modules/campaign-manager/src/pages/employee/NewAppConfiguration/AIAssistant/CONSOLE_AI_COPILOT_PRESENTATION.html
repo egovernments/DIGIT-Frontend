@@ -291,7 +291,7 @@
     <div style="margin-top:1.5rem;">
       <span class="tag tag-blue">React</span>
       <span class="tag tag-purple">Redux</span>
-      <span class="tag tag-cyan">Claude / GPT</span>
+      <span class="tag tag-cyan">Claude</span>
       <span class="tag tag-green">Provider-Agnostic</span>
     </div>
   </div>
@@ -793,8 +793,123 @@ ${<span class="fn">buildPropertiesReference</span>(...)}
     </div>
   </div>
 
-  <!-- ═══════════════════ SLIDE 14: Thank You ═══════════════════ -->
+  <!-- ═══════════════════ SLIDE 14: Capabilities Assessment ═══════════════════ -->
   <div class="slide" data-slide="13">
+    <h2>How Good Is It <span class="highlight-green">Today</span>?</h2>
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:1.5rem; border-left:3px solid var(--green);">
+          <h3 class="highlight-green">What It Handles Well</h3>
+          <ul>
+            <li>Add/delete/reorder form fields via natural language</li>
+            <li>Set 30+ field properties in a single command</li>
+            <li>Auto-generates localization entries for all labels, tooltips, help text, error messages</li>
+            <li>Dropdown/radio options with full localization</li>
+            <li>Complex multi-action batches (e.g. "Add a required phone field with help text and pattern validation")</li>
+            <li>Template screen field visibility toggling</li>
+            <li>Real-time field preview before applying changes</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent);">
+          <h3 class="highlight">Reliability</h3>
+          <ul>
+            <li>7-layer validation catches LLM mistakes <strong>before</strong> they reach Redux</li>
+            <li>Errors are <strong>self-correcting</strong> &mdash; validation messages teach the LLM the right pattern</li>
+            <li>Zero state corruption &mdash; same-path execution prevents divergence</li>
+            <li>Stale state eliminated via real-time <code>store.getState()</code></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:1.5rem; border-left:3px solid var(--accent2);">
+          <h3 class="highlight2">Intelligent Guardrails</h3>
+          <ul>
+            <li>Format-aware &mdash; rejects <code>helpText</code> on radio, <code>tooltip</code> on checkbox</li>
+            <li>MDMS-aware &mdash; only allows <code>isMdms</code>/<code>schemaCode</code> on supported formats</li>
+            <li>Localization-enforced &mdash; blocks actions missing <code>UPDATE_LOCALIZATION</code></li>
+            <li>Page-type-aware &mdash; blocks structural edits on template screens</li>
+            <li>Display logic &mdash; redirects to Logic Tab (complex UI-only configuration)</li>
+          </ul>
+        </div>
+        <div class="card" style="border-left:3px solid var(--orange);">
+          <h3 class="highlight-orange">Current Boundaries</h3>
+          <ul>
+            <li>Field-level configuration only (not page-level yet)</li>
+            <li>No navigation/routing logic configuration</li>
+            <li>Display logic requires manual Logic Tab</li>
+            <li>No page heading/description editing</li>
+            <li>Requires API key (no built-in LLM)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 15: Future Roadmap ═══════════════════ -->
+  <div class="slide" data-slide="14">
+    <h2>Future <span class="highlight2">Roadmap</span></h2>
+    <div class="content">
+      <div class="two-col" style="margin-bottom:1.5rem;">
+        <div class="card" style="border-left:3px solid var(--accent);">
+          <h3 class="highlight">Page-Level Configuration</h3>
+          <p style="margin-bottom:0.75rem;">Configure page properties through natural language:</p>
+          <ul>
+            <li><strong>Page heading</strong> &mdash; Set/update the page title with localization</li>
+            <li><strong>Page description</strong> &mdash; Add/modify descriptive text below the heading</li>
+            <li><strong>Restrict screenshot</strong> &mdash; Enable/disable screenshot prevention per page</li>
+          </ul>
+          <p class="small" style="margin-top:0.75rem;">"Set the page heading to 'Household Registration' and add a description 'Enter household details below'"</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent2);">
+          <h3 class="highlight2">Navigation Logic</h3>
+          <p style="margin-bottom:0.75rem;">Define page flow and routing through commands:</p>
+          <ul>
+            <li><strong>Conditional navigation</strong> &mdash; Route to different pages based on field values</li>
+            <li><strong>Target page selection</strong> &mdash; Set which page/flow to navigate to after submission</li>
+            <li><strong>Navigation conditions</strong> &mdash; Configure expressions that determine the next screen</li>
+          </ul>
+          <p class="small" style="margin-top:0.75rem;">"If gender is 'Male', go to the male health screen; otherwise go to the general screen"</p>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card" style="border-left:3px solid var(--green);">
+          <h3 class="highlight-green">Dependent Fields / Display Logic</h3>
+          <p style="margin-bottom:0.75rem;">Configure field visibility conditions via AI:</p>
+          <ul>
+            <li><strong>Show/hide based on another field's value</strong> &mdash; "Show 'pregnancyWeeks' only when gender is Female"</li>
+            <li><strong>Multi-condition logic</strong> &mdash; AND/OR conditions across multiple fields</li>
+            <li><strong>Expression builder</strong> &mdash; Generate visibility expressions from plain English</li>
+          </ul>
+          <p class="small" style="margin-top:0.75rem;">Currently handled via Logic Tab in the property drawer &mdash; AI support will make this significantly faster</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent3);">
+          <h3 class="highlight3">Multilingual Interaction</h3>
+          <p style="margin-bottom:0.75rem;">Users interact with the Copilot in <strong>their own language</strong>:</p>
+          <ul>
+            <li><strong>French, Portuguese, Spanish, Hindi...</strong> &mdash; Give commands in any language the LLM supports</li>
+            <li><strong>Cross-language execution</strong> &mdash; Commands in French still produce correct English localization codes and structured actions</li>
+            <li><strong>Localized responses</strong> &mdash; AI replies in the user's language while actions remain system-compatible</li>
+          </ul>
+          <p class="small" style="margin-top:0.75rem;">"Ajouter un champ t&eacute;l&eacute;phone obligatoire avec le texte d'aide 'Entrez un num&eacute;ro &agrave; 10 chiffres'"</p>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem; max-width:1100px; width:100%;">
+        <div class="card center" style="border-left:3px solid var(--muted);">
+          <h3 style="color:var(--muted); font-size:1.1rem; margin-bottom:0.5rem;">And More...</h3>
+          <p style="font-size:1.05rem;">
+            <span class="tag tag-blue">Bulk Operations</span>
+            <span class="tag tag-purple">Template Cloning</span>
+            <span class="tag tag-green">Validation Suggestions</span>
+            <span class="tag tag-orange">Multi-locale in One Command</span>
+            <span class="tag tag-cyan">Undo / Redo</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SLIDE 16: Thank You ═══════════════════ -->
+  <div class="slide" data-slide="15">
     <h1>Thank <span class="highlight">You</span></h1>
     <p class="subtitle">Questions?</p>
     <div style="margin-top:2rem;">
@@ -805,7 +920,7 @@ ${<span class="fn">buildPropertiesReference</span>(...)}
       <span class="tag tag-orange">Data-Driven Validation</span>
       <span class="tag tag-red">Same-Path Execution</span>
     </div>
-    <p class="small" style="margin-top:3rem;">Built with React + Redux Toolkit + Claude / GPT</p>
+    <p class="small" style="margin-top:3rem;">Built with React + Redux Toolkit + Claude</p>
   </div>
 
 </div>
@@ -813,7 +928,7 @@ ${<span class="fn">buildPropertiesReference</span>(...)}
 <!-- ── Navigation ──────────────────────────────────────────── -->
 <div class="nav">
   <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>&larr; Previous</button>
-  <span class="slide-counter" id="counter">1 / 14</span>
+  <span class="slide-counter" id="counter">1 / 16</span>
   <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next &rarr;</button>
 </div>
 

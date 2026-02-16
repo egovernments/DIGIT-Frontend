@@ -107,6 +107,34 @@ export const AI_ASSISTANT_STYLES = `
   border-bottom-left-radius: 0.2rem;
 }
 
+/* Markdown rendering in messages */
+.ai-msg strong {
+  font-weight: 600;
+}
+.ai-msg em {
+  font-style: italic;
+}
+.ai-msg .ai-msg-code {
+  background: #f0f0f0;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.2rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+.ai-msg--user .ai-msg-code {
+  background: rgba(255, 255, 255, 0.2);
+}
+.ai-msg .ai-msg-list {
+  margin: 0.25rem 0;
+  padding-left: 1.25rem;
+  list-style: disc;
+  white-space: normal;
+}
+.ai-msg .ai-msg-list li {
+  margin-bottom: 0.125rem;
+  line-height: 1.4;
+}
+
 /* Pending actions preview */
 .ai-assistant-actions-preview {
   padding: 0.5rem 0.75rem;
@@ -276,30 +304,40 @@ export const AI_ASSISTANT_STYLES = `
 
 /* Field preview card */
 .ai-field-preview {
-  background: #f8f9fb;
-  border: 1px solid #e0e0e0;
+  background: #fff;
+  border: 1px solid #e8eaed;
   border-radius: 0.5rem;
-  padding: 0.5rem 0.625rem;
+  padding: 0;
   margin-top: 0.375rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.ai-field-preview-title-bar {
+  background: #f1f3f5;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #e8eaed;
 }
 .ai-field-preview-header {
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  padding: 0.5rem 0.625rem 0.25rem;
 }
 .ai-field-preview-badge {
   display: inline-block;
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
+  padding: 0.125rem 0.4375rem;
+  border-radius: 0.75rem;
   font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  background: #e3f2fd;
-  color: #1565c0;
   flex-shrink: 0;
 }
 .ai-field-preview-label {
@@ -316,16 +354,17 @@ export const AI_ASSISTANT_STYLES = `
   font-size: 0.8125rem;
 }
 .ai-field-preview-input {
-  border: 1px solid #ccc;
+  border: 1px solid #d0d5dd;
   border-radius: 0.375rem;
-  padding: 0.375rem 0.5rem;
+  padding: 0.4375rem 0.5rem;
   font-size: 0.6875rem;
   color: #999;
-  background: #fff;
+  background: #fafbfc;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 1.5rem;
+  min-height: 1.75rem;
+  margin: 0 0.625rem;
 }
 .ai-field-preview-input svg {
   width: 0.875rem;
@@ -337,14 +376,13 @@ export const AI_ASSISTANT_STYLES = `
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
-  margin-top: 0.125rem;
+  padding: 0.375rem 0.625rem 0.5rem;
 }
 .ai-field-preview-prop {
   font-size: 0.625rem;
-  padding: 0.0625rem 0.3125rem;
-  background: #f0f0f0;
-  border-radius: 0.1875rem;
-  color: #555;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
 }
 
 /* Action card for UPDATE_FIELD_PROPERTY */

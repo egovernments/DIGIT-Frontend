@@ -19,6 +19,109 @@ import { AI_ASSISTANT_STYLES } from "./aiAssistantStyles";
 import { useCustomTranslate } from "../hooks/useCustomT";
 
 /**
+ * Converts a subset of markdown (bold, italic, bullets) to safe HTML.
+ * Only parses known patterns — no arbitrary HTML injection.
+ */
+function renderMarkdown(text) {
+  if (!text) return "";
+  // Escape HTML entities first
+  let html = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Bold: **text**
+  html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  // Italic: *text* (but not inside bold tags)
+  html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "<em>$1</em>");
+  // Inline code: `text`
+  html = html.replace(/`([^`]+?)`/g, '<code class="ai-msg-code">$1</code>');
+
+  // Process line by line for bullet lists
+  const lines = html.split("\n");
+  const result = [];
+  let inList = false;
+
+  for (const line of lines) {
+    const bulletMatch = line.match(/^(\s*)-\s+(.+)/);
+    if (bulletMatch) {
+      if (!inList) {
+        result.push('<ul class="ai-msg-list">');
+        inList = true;
+      }
+      result.push(`<li>${bulletMatch[2]}</li>`);
+    } else {
+      if (inList) {
+        result.push("</ul>");
+        inList = false;
+      }
+      result.push(line);
+    }
+  }
+  if (inList) result.push("</ul>");
+
+  return result.join("\n");
+}
+
+/**
+ * Format badge color mapping for field types.
+ */
+const FORMAT_BADGE_COLORS = {
+  text: { bg: "#e8f5e9", color: "#2e7d32" },
+  textarea: { bg: "#e8f5e9", color: "#2e7d32" },
+  number: { bg: "#fff3e0", color: "#e65100" },
+  numeric: { bg: "#fff3e0", color: "#e65100" },
+  mobileNumber: { bg: "#fff3e0", color: "#e65100" },
+  dropdown: { bg: "#e3f2fd", color: "#1565c0" },
+  select: { bg: "#e3f2fd", color: "#1565c0" },
+  searchableDropdown: { bg: "#e3f2fd", color: "#1565c0" },
+  radio: { bg: "#f3e5f5", color: "#7b1fa2" },
+  checkbox: { bg: "#f3e5f5", color: "#7b1fa2" },
+  date: { bg: "#fce4ec", color: "#c62828" },
+  dob: { bg: "#fce4ec", color: "#c62828" },
+  scanner: { bg: "#e0f2f1", color: "#00695c" },
+  qrScanner: { bg: "#e0f2f1", color: "#00695c" },
+  idPopulator: { bg: "#efebe9", color: "#4e342e" },
+};
+
+/** Human-readable format display names */
+const FORMAT_DISPLAY_NAMES = {
+  text: "Text",
+  textarea: "Text Area",
+  number: "Number",
+  numeric: "Numeric",
+  mobileNumber: "Phone",
+  dropdown: "Dropdown",
+  select: "Select",
+  searchableDropdown: "Search Dropdown",
+  radio: "Radio",
+  checkbox: "Checkbox",
+  date: "Date Picker",
+  dob: "Date of Birth",
+  scanner: "Barcode Scanner",
+  qrScanner: "QR Scanner",
+  idPopulator: "ID Populator",
+};
+
+/** Property tag category colors */
+const PROP_TAG_COLORS = {
+  validation: { bg: "#fce4ec", color: "#c62828" },
+  content: { bg: "#e3f2fd", color: "#1565c0" },
+  data: { bg: "#e8f5e9", color: "#2e7d32" },
+  display: { bg: "#f3e5f5", color: "#7b1fa2" },
+};
+
+function getPropTagCategory(tag) {
+  const validationTags = ["required", "pattern", "range", "lengthRange", "scanLimit"];
+  const dataTags = ["MDMS", "GS1", "multiSelect"];
+  const displayTags = ["readOnly", "systemDate"];
+  if (validationTags.includes(tag)) return "validation";
+  if (dataTags.includes(tag)) return "data";
+  if (displayTags.includes(tag)) return "display";
+  return "content";
+}
+
+/**
  * Lightweight inline field preview card.
  * Shows format badge, label, required asterisk, and a mini visual mock of the field type.
  */
@@ -103,10 +206,19 @@ const FieldPreviewCard = ({ fieldName, format, label, required, properties }) =>
     if (properties.suffixText) propTags.push(`suffix: ${properties.suffixText}`);
   }
 
+  const badgeColor = FORMAT_BADGE_COLORS[format] || { bg: "#e3f2fd", color: "#1565c0" };
+  const displayFormat = FORMAT_DISPLAY_NAMES[format] || format || "Text";
+
   return (
     <div className="ai-field-preview">
+      <div className="ai-field-preview-title-bar">Field Preview</div>
       <div className="ai-field-preview-header">
-        <span className="ai-field-preview-badge">{format || "text"}</span>
+        <span
+          className="ai-field-preview-badge"
+          style={{ background: badgeColor.bg, color: badgeColor.color }}
+        >
+          {displayFormat}
+        </span>
         <span className="ai-field-preview-label">
           {label || fieldName}
           {required && <span className="ai-field-preview-required"> *</span>}
@@ -115,9 +227,19 @@ const FieldPreviewCard = ({ fieldName, format, label, required, properties }) =>
       {getFieldMock()}
       {propTags.length > 0 && (
         <div className="ai-field-preview-props">
-          {propTags.map((tag, i) => (
-            <span key={i} className="ai-field-preview-prop">{tag}</span>
-          ))}
+          {propTags.map((tag, i) => {
+            const category = getPropTagCategory(tag.split(":")[0].trim());
+            const tagColor = PROP_TAG_COLORS[category];
+            return (
+              <span
+                key={i}
+                className="ai-field-preview-prop"
+                style={{ background: tagColor.bg, color: tagColor.color }}
+              >
+                {tag}
+              </span>
+            );
+          })}
         </div>
       )}
     </div>
@@ -443,7 +565,7 @@ const AIAssistantChat = () => {
         )}
         {messages.map((msg, idx) => (
           <div key={idx} className={`ai-msg ai-msg--${msg.role}`}>
-            {msg.content}
+            <span dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
           </div>
         ))}
         {/* Inline preview from AI response */}

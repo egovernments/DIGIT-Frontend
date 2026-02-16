@@ -12,7 +12,7 @@ function loadSavedConfig() {
 
 const defaultConfig = {
   provider: "anthropic",       // "anthropic" | "openai" | "custom"
-  model: "claude-sonnet-4-20250514",
+  model: "claude-opus-4-6",
   apiKey: "",
   baseUrl: "",                 // only for "custom" provider
   maxTokens: 2048,

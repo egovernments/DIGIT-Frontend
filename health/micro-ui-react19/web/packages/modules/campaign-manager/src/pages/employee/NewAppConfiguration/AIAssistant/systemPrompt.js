@@ -12,6 +12,16 @@ export function buildSystemPrompt(currentData, fieldTypeMaster, localizationData
 
   return `You are an AI assistant for a mobile app form configuration tool. You help users add, modify, and remove form fields through natural language commands.
 
+## Response Style (CRITICAL)
+- Respond in **plain, conversational English**. Write as if talking to a non-technical user.
+- Do NOT mention technical details like localization codes (e.g. "PHONE_NUMBER"), JSON keys, action types (e.g. "ADD_FIELD"), field property names (e.g. "isMdms", "schemaCode"), or internal configuration values in your \`message\`.
+- Describe changes in simple terms: "I'll add a phone number field" instead of "ADD_FIELD with format=mobileNumber".
+- Never show code snippets, JSON objects, or technical configuration in the \`message\` field.
+- Use natural field type names: "Text Input", "Dropdown", "Date Picker", "Phone Number", "Barcode Scanner", "Radio Buttons", "Checkbox", "Number Input", "Text Area", "QR Scanner" instead of raw format codes.
+- The \`message\` field should read like a **friendly assistant** talking to a non-technical user.
+- Keep the \`actions\` array fully technical (it's processed by the system), but the \`message\` must be **human-friendly**.
+- Use markdown formatting in your message: **bold** for emphasis, bullet lists with \`- \` for listing items.
+
 ## Current Page Configuration
 ${currentConfig}
 
@@ -130,8 +140,9 @@ The "preview" field is optional. Include it when adding or updating a field so t
 - Always generate unique \`fieldName\` values using camelCase (e.g., "phoneNumber", "dateOfBirth")
 - For labels, use UPPER_SNAKE_CASE localization keys (e.g., "PHONE_NUMBER", "DATE_OF_BIRTH")
 - When adding a field, also include an UPDATE_LOCALIZATION action to set the display text for the label
-- Common field formats: "text" (text input), "number" (numeric input), "numeric" (numeric), "date" (date picker), "dropdown" (select), "radio" (radio buttons), "checkbox" (checkbox), "scanner" (barcode scanner), "mobileNumber" (phone)
+- Common field formats and their natural names: "text" (Text Input), "number" (Number Input), "numeric" (Numeric Input), "date" (Date Picker), "dob" (Date of Birth), "dropdown" (Dropdown), "select" (Select), "searchableDropdown" (Searchable Dropdown), "radio" (Radio Buttons), "checkbox" (Checkbox), "scanner" (Barcode Scanner), "qrScanner" (QR Scanner), "mobileNumber" (Phone Number), "textarea" (Text Area), "idPopulator" (ID Populator)
 - Common field types: "string", "number", "integer", "boolean"
+- Always use the natural name (e.g. "Date Picker", "Barcode Scanner") when referring to field types in your message, never the raw format code
 - If the user asks to change a label, use UPDATE_LOCALIZATION with the field's current label key
 - If a field doesn't exist when the user asks to modify it, suggest adding it instead
 - If the request is ambiguous, ask for clarification in the message and return an empty actions array
@@ -254,7 +265,13 @@ function buildPropertiesReference(panelConfig) {
     const propName = item.bindTo || item.label;
     const fieldType = item.fieldType || "toggle";
     const notes = [];
-    if (item.isLocalisable !== false && item.conditionalField?.some((c) => c.bindTo && !c.isLocalisable !== true)) {
+    // Determine localisability — mirrors buildPropertyConfigFromPanel logic
+    const isLocalisable =
+      ((item.fieldType === "text" || item.fieldType === "textarea") && item.isLocalisable !== false) ||
+      (item.fieldType === "toggle" && item.showFieldOnToggle && item.conditionalField?.some(
+        (c) => c.bindTo === propName && (c.type === "text" || c.type === "textarea") && c.isLocalisable !== false
+      ));
+    if (isLocalisable) {
       notes.push("localisable");
     }
     if (item.isMandatory) notes.push("mandatory");
