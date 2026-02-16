@@ -1,23 +1,23 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, NoResultsFound, Loader, Toast } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
+import { set } from "lodash";
 
-const MyBills = () => {
+const MyBills = (props) => {
+
   const { t } = useTranslation();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
 
-  // context path variables
-  const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+    // context path variables
+    const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+    const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
   // State Variables
   const [periodType, setPeriodType] = useState(null);
@@ -32,6 +32,7 @@ const MyBills = () => {
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [totalCount, setTotalCount] = useState(0);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+  const [selectedCount, setSelectedCount] = useState(0);
 
   const project = Digit?.SessionStorage.get("staffProjects");
   // TODO: need to send the periodIDs here
@@ -43,11 +44,12 @@ const MyBills = () => {
     body: {
       billCriteria: {
         tenantId: tenantId,
-        referenceIds: [project?.[0]?.id],
+        referenceIds: project?.map(p => p?.id) || [],
+//        referenceIds: [project?.[0]?.id],
         ...(billID ? { billNumbers: [billID] } : {}),
-        // ...(dateRange.startDate && dateRange.endDate
-        //   ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() }
-        //   : {}),
+         ...(dateRange.startDate && dateRange.endDate
+           ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() }
+           : {}),
         pagination: {
           limit: limitAndOffset.limit,
           offset: limitAndOffset.offset,
@@ -70,8 +72,6 @@ const MyBills = () => {
               // isAggregate: periodType != null ? true : false,
               billingType: periodType?.code,
             }
-          : {}),
-      },
     },
     config: {
       enabled: project ? true : false,
@@ -83,10 +83,40 @@ const MyBills = () => {
 
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
-  const handlePageChange = (page, totalRows) => {
-    setCurrentPage(page);
-    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
+    const reqMdmsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            "moduleName": "HCM",
+            "masterDetails": [
+              {
+                "name": "WORKER_RATES"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    config: {
+      enabled: BillData?.bills?.length > 0 ? true : false,
+      select: (mdmsData) => {
+        const referenceCampaignId = BillData?.bills?.[0]?.referenceId?.split(".")?.[0];
+        return mdmsData?.MdmsRes?.HCM?.WORKER_RATES?.find(
+    (item) => item.campaignId === referenceCampaignId);
+      },
+    }
   };
+    const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+    console.log("workerRatesData", workerRatesData);
+    Digit.SessionStorage.set("workerRatesData", workerRatesData);
+
+    const handlePageChange = (page, totalRows) => {
+        setCurrentPage(page);
+        setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
+    };
 
   const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
     setRowsPerPage(currentRowsPerPage);
@@ -147,14 +177,26 @@ const MyBills = () => {
     }
   }, [fetchBillingPeriods]);
 
-  useEffect(() => {
-    if (BillData) {
-      setTableData(BillData.bills);
-      setTotalCount(BillData?.pagination?.totalCount);
+    const getTotalAmount = (selectedBills) => {
+        if (!selectedBills || selectedBills.length === 0) return 0;
+        return selectedBills.reduce((total, bill) => total + (bill?.totalAmount || 0), 0);
     }
-  }, [BillData]);
 
-  useEffect(() => {
+    useEffect(() => {
+        if (BillData) {
+            if (props?.isSelectableRows) {
+                const filteredBills = BillData.bills.filter((bill) => bill.businessService === "PAYMENTS.BILL");
+                setTableData(filteredBills);
+                setTotalCount(filteredBills?.length);
+            } else {
+                setTableData(BillData.bills);
+                setTotalCount(BillData?.pagination?.totalCount);
+            }
+        }
+    }, [BillData]);
+
+    // Only fetch on filter change
+   useEffect(() => {
     refetchBill();
   }, [billID, dateRange, limitAndOffset, periodType]);
 
@@ -189,37 +231,57 @@ const MyBills = () => {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
-  return (
-    <React.Fragment>
-      {
-        <Header styles={{ fontSize: "32px" }}>
-          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MY_BILLS")}</span>
-        </Header>
-      }
+    if (isBillLoading || isFetching1 || isLoading1) {
+        return <LoaderScreen />
+    }
+    const totalAmount = getTotalAmount(props?.selectedBills);
+    return (
+        <React.Fragment>
+            {
+                    <Header styles={{ fontSize: "32px" }}>
+                      <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MY_BILLS")}</span>
+                    </Header>
+                  }
 
-      <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
-      {
-        <Card>
-          {isFetching ? (
-            <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
-          ) : tableData.length === 0 ? (
-            <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
-          ) : (
-            <MyBillsTable
-              data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
-              totalCount={totalCount}
-              rowsPerPage={rowsPerPage}
-              currentPage={currentPage}
-              handlePageChange={handlePageChange}
-              handlePerRowsChange={handlePerRowsChange}
-            />
-          )}
-        </Card>
-      }
-      {showToast && <Toast style={{ zIndex: 10001 }} label={showToast.label} type={showToast.key} onClose={() => setShowToast(null)} />}
-    </React.Fragment>
-  );
+            <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
+
+            <Card>
+                {isFetching ? (    const totalAmount = getTotalAmount(props?.selectedBills);
+) : tableData.length === 0 ? (<NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />)
+                    :
+                    (
+                        <React.Fragment>
+                            {selectedCount > 0 && (
+                                <div style={{ margin: '1rem 0', fontWeight: 'bold', color: '#0B4B66' }}>
+                                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS")} {totalAmount} {workerRatesData?.currency}
+                                </div>
+                            )}
+                            <MyBillsTable
+                                data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
+                                totalCount={totalCount}
+                                onSelectionChange={props?.onSelectionChange}
+                                onSelectedCountChange={setSelectedCount}
+                                isSelectableRows={props?.isSelectableRows}
+                                rowsPerPage={rowsPerPage}
+                                currentPage={currentPage}
+                                handlePageChange={handlePageChange}
+                                handlePerRowsChange={handlePerRowsChange} />
+                        </React.Fragment>
+                    )}
+            </Card>
+            {showToast && (
+                <Toast
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
+
+        </React.Fragment>
+    );
 };
 
 export default MyBills;

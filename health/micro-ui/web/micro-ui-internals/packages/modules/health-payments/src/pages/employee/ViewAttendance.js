@@ -38,6 +38,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
   const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
   // State variables
   const { registerNumber, boundaryCode, periodDurationInDays } = Digit.Hooks.useQueryParams();
@@ -179,7 +180,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
           }
         } else {
           setTriggerCreate(true);
-          // TODO: commenting the muster roll trigger call to create muster roll temporarily
           triggerMusterRollCreate();
         }
       }
@@ -207,7 +207,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   }, [data]);
 
-  
+
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${musterRollContextPath}/v1/_create`,
   });
@@ -303,6 +303,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const triggerMusterRollCreate = async () => {
+
     try {
       await mutation.mutateAsync(
         {
@@ -388,6 +389,34 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
 
+  const reqMdmsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            "moduleName": "HCM",
+            "masterDetails": [
+              {
+                "name": "WORKER_RATES"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    config: {
+      enabled: selectedProject ? true : false,
+      select: (mdmsData) => {
+        const referenceCampaignId = selectedProject?.id;
+        return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
+      },
+    }
+  };
+  const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+  console.log("workerRatesData", workerRatesData);
+
   function getUserAttendanceSummary(data, individualsData, t) {
     const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
       const individualId = individualEntry.individualId;
@@ -395,12 +424,25 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
       if (matchingIndividual) {
         const userName = matchingIndividual.name?.givenName || t("NA");
+        const uniqueId = matchingIndividual?.name?.familyName || t("NA");
         const userId = matchingIndividual?.userDetails?.username || t("NA");
-        const userRole = t(matchingIndividual.skills?.[0]?.type) || t("NA");
+        const matchedSkill = matchingIndividual?.skills?.find((skill) =>
+          !skill?.isDeleted && workerRatesData?.rates?.some(
+            (rate) => rate?.skillCode === skill?.type
+          )
+        );
+        const userRole = matchedSkill ? t(matchedSkill.type) : t("NA");
+        // const userRole =
+        //   t(matchingIndividual.skills?.[0]?.type) || t("NA");
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
-
-        return [id, userName, userId, userRole, noOfDaysWorked];
+        const gender = matchingIndividual?.gender;
+        const dob = matchingIndividual?.dateOfBirth;
+        const mobileNumber = matchingIndividual?.mobileNumber;
+        const userType = matchingIndividual?.additionalFields?.fields?.find(
+          (detail) => detail.key === "userType"
+      )?.value || "N/A";
+        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType];
       } else {
         // Handle cases where no match is found in individualsData
         return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
@@ -450,7 +492,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const closeActionBarPopUp = () => {
     setOpenEditAlertPopUp(false);
   };
-
   const handleCommentLogClick = () => {
     setShowCommentLogPopup(true);
   };

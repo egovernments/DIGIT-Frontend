@@ -124,7 +124,6 @@ const initializePaymentsModule = async ({ tenantId }) => {
         boundaryType: nationalLevelProject?.address?.boundaryType,
       }
     });
-
     if (!fetchBoundaryData) {
       throw new Error("Couldn't fetch boundary data");
     }
