@@ -213,6 +213,16 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             : [];
     }, [currentData]);
 
+    // Separate custom conditions (type === "custom") — not editable here
+    const existingCustomConditions = useMemo(() => {
+        return existingConditional.filter((r) => r?.type === "custom");
+    }, [existingConditional]);
+
+    // Only non-custom conditions are editable
+    const existingEditableConditions = useMemo(() => {
+        return existingConditional.filter((r) => r?.type !== "custom");
+    }, [existingConditional]);
+
     // ---- date helpers ----
     const isDobLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
@@ -583,7 +593,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
 
     // ----- seed & syncing -----
     const makeRulesFromExisting = () => {
-        const existing = existingConditional;
+        const existing = existingEditableConditions;
         if (!existing.length) return [];
         const seeded = existing.map((r) => {
             const expr = (r?.condition || "").trim();
@@ -765,7 +775,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
 
     const syncParent = (nextRules) => {
         const payload = buildPayload(nextRules);
-        dispatch(updatePageConditionalNav({ data: payload }));
+        dispatch(updatePageConditionalNav({ data: [...payload, ...existingCustomConditions] }));
     };
 
     const submitAndClose = () => {
@@ -776,7 +786,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             return;
         }
         const next = buildPayload(rules);
-        dispatch(updatePageConditionalNav({ data: next }));
+        dispatch(updatePageConditionalNav({ data: [...next, ...existingCustomConditions] }));
         setGlobalFormError("");
         setValidationStarted(false);
         setEditorIndex(null);
