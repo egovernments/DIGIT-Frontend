@@ -409,28 +409,28 @@ const CampaignDetails = () => {
             type: "COMPONENT",
             component: "ViewDetailComponent",
             noCardStyle: true,
-            props: {
-              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_HEADING),
-              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_DESC),
-              buttonLabel: isFormConfigured ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_MOBILE_APP_BUTTON) : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_BUTTON),
-              buttonId: isFormConfigured ? `campaign-details-page-button-edit-mobile-app` : `campaign-details-page-button-setup-mobile-app`,
-              type: isFormConfigured ? "secondary" : "primary",
-              navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
-              icon: (
-                <AdUnits
-                  fill={
-                    campaignData?.status === "created" &&
-                    campaignData?.startDate < Date.now()
-                      ? "#c5c5c5"
-                      : "#C84C0E"
-                  }
-                />
-              ),
-              disabled:
-                (campaignData?.status === "created" ||
-                  campaignData?.parentId) &&
-                campaignData?.startDate < Date.now(),
-            },
+            props: (() => {
+              const isOngoingCampaign =
+                (campaignData?.status === "created" || campaignData?.parentId) &&
+                campaignData?.startDate < Date.now();
+              return {
+                headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_HEADING),
+                desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_DESC),
+                buttonLabel: isOngoingCampaign
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_MOBILE_APP_BUTTON)
+                  : isFormConfigured
+                  ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_MOBILE_APP_BUTTON)
+                  : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MOBILE_APP_BUTTON),
+                buttonId: isOngoingCampaign
+                  ? `campaign-details-page-button-view-mobile-app`
+                  : isFormConfigured
+                  ? `campaign-details-page-button-edit-mobile-app`
+                  : `campaign-details-page-button-setup-mobile-app`,
+                type: isFormConfigured ? "secondary" : "primary",
+                navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}${isOngoingCampaign ? "&viewMode=true" : ""}`,
+                icon: <AdUnits fill="#C84C0E" />,
+              };
+            })(),
           },
         ],
       },

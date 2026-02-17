@@ -7,7 +7,7 @@ import SidePanelApp from "./SidePanelApp";
 // import LayoutRenderer from "./LayoutRenderer";
 import NewLayoutRenderer from "./NewLayoutRenderer";
 
-function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp }) {
+function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp, viewMode }) {
   const dispatch = useDispatch();
   const { currentData, selectedField, isFieldSelected, pageType } = useSelector((state) => state.remoteConfig);
   const t = useCustomTranslate();
@@ -31,9 +31,10 @@ function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp }) {
 
   const handleFieldClick = useCallback(
     (field, screen, card, cardIndex, fieldIndex) => {
+      if (viewMode) return; // No-op in view mode - prevent side panel from opening
       dispatch(selectField({ field, screen, card, cardIndex, fieldIndex }));
     },
-    [dispatch]
+    [dispatch, viewMode]
   );
 
   // Determine which preview to render based on pageType

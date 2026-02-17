@@ -43,7 +43,7 @@ const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
   return isEmpty;
 };
 
-const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
+const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber, viewMode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const customTranslate = useCustomTranslate();
@@ -1089,8 +1089,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   };
   return (
     <React.Fragment>
-      <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} pageType={currentData?.type} />
-      {showAddFieldPopup && (
+      <IntermediateWrapper onNext={viewMode ? null : handleUpdateMDMS} isUpdating={isUpdating} pageType={currentData?.type} viewMode={viewMode} />
+      {showAddFieldPopup && !viewMode && (
         <PopUp
           className="app-config-add-field-popup"
           type={"default"}

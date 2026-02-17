@@ -14,6 +14,7 @@ const AppConfigInitializer = () => {
   const version = searchParams.get("version");
   const flow = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
+  const viewMode = searchParams.get("viewMode") === "true";
 
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
@@ -58,7 +59,7 @@ const AppConfigInitializer = () => {
           // If data already exists, directly navigate
           if (searchResponse?.mdms && searchResponse.mdms.length > 0) {
             navigate(
-              `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}&version=${version}`
+              `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}&version=${version}${viewMode ? "&viewMode=true" : ""}`
             );
             return;
           }
@@ -110,7 +111,7 @@ const AppConfigInitializer = () => {
 
           // Redirect to new-app-configuration after successful API calls
           navigate(
-            `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}&version=${version}`
+            `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}&version=${version}${viewMode ? "&viewMode=true" : ""}`
           );
         } catch (error) {
           console.error("Error processing MDMS data:", error);

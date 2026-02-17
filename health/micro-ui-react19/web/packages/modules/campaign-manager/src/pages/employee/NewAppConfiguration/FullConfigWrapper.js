@@ -23,6 +23,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const version = searchParams.get("version");
   const flowModule = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
+  const viewMode = searchParams.get("viewMode") === "true";
 
   const [selectedFlow, setSelectedFlow] = useState(null);
   const [selectedPageName, setSelectedPageName] = useState(null);
@@ -155,14 +156,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   }, [selectedPageName]);
 
   const handleFlowClick = async (flow) => {
-    // Check for validation errors before switching
-    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
-      return;
-    }
+    if (!viewMode) {
+      // Check for validation errors before switching
+      if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+        return;
+      }
 
-    // Call MDMS update for current screen before switching
-    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-      await window.__appConfig_onNext();
+      // Call MDMS update for current screen before switching
+      if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+        await window.__appConfig_onNext();
+      }
     }
 
     // Reset selected field when switching flows
@@ -177,14 +180,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   };
 
   const handlePageClick = async (page) => {
-    // Check for validation errors before switching
-    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
-      return;
-    }
+    if (!viewMode) {
+      // Check for validation errors before switching
+      if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+        return;
+      }
 
-    // Call MDMS update for current screen before switching page
-    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-      await window.__appConfig_onNext();
+      // Call MDMS update for current screen before switching page
+      if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+        await window.__appConfig_onNext();
+      }
     }
 
     // Reset selected field when switching pages
@@ -246,7 +251,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
           className="full-config-wrapper__back-button"
           onClick={() => {
-            navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+            navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}${viewMode ? "&viewMode=true" : ""}`);
           }}
           size={"medium"}
         />
@@ -464,6 +469,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 onPageChange={setSelectedPageName}
                 nextRoute={nextRoute}
                 previousRoute={previousRoute}
+                viewMode={viewMode}
               />
             </div>
 
@@ -474,14 +480,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               }`}
               onClick={async () => {
                 if (nextRoute) {
-                  // Check for validation errors before navigating
-                  if (checkValidationErrorsAndShowToast(setShowToast, t)) {
-                    return;
-                  }
+                  if (!viewMode) {
+                    // Check for validation errors before navigating
+                    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+                      return;
+                    }
 
-                  // Call MDMS update if available
-                  if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-                    await window.__appConfig_onNext();
+                    // Call MDMS update if available
+                    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+                      await window.__appConfig_onNext();
+                    }
                   }
 
                   // Reset selected field when navigating forward
@@ -500,26 +508,28 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Bottom Navigation */}
         <Footer
           actionFields={[
-            // <Button
-            //   icon="ArrowBack"
-            //   label={t("BACK")}
-            //   title={t("BACK")}
-            //   onClick={() => {
-            //     navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
-            //   }}
-            //   type="button"
-            //   variation="secondary"
-            // />,
-            <Button
-              variation="primary"
-              label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
-              title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
-              icon="CheckCircle"
-              isSuffix={false}
-              onClick={() => {
-                saveToAppConfig();
-              }}
-            />
+            viewMode ? (
+              <Button
+                variation="secondary"
+                icon="ArrowBack"
+                label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+                title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+                onClick={() => {
+                  navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}&viewMode=true`);
+                }}
+              />
+            ) : (
+              <Button
+                variation="primary"
+                label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
+                title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
+                icon="CheckCircle"
+                isSuffix={false}
+                onClick={() => {
+                  saveToAppConfig();
+                }}
+              />
+            ),
           ]}
           setactionFieldsToRight={true}
         />
