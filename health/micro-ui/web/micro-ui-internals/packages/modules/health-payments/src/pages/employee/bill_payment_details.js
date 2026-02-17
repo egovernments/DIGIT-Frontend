@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, use, Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, InfoCard, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { Loader, Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
@@ -770,7 +770,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading) {
     console.log("Loading bill data or individual data...");
-    return <LoaderScreen />
+    return <Loader />
   }
 
   console.log("Rendering buttons for:", activeLink?.code);
@@ -1213,9 +1213,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       {/* {showGenerateBillAction && BillData?.bills?.length === 0 && */}
       {activeLink?.code !== "PAYMENT_GENERATED" && (
         <ActionBar
-          actionFields={
-            !editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
-              [                
+          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+        >
+          {!editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
+              [
                 <Button
                   className="custom-class"
                   iconFill=""
@@ -1258,26 +1259,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     // variation="secondary"
                     variation="primary"
                     isDisabled={
-                      // billData?.status === "PENDING_VERIFICATION" || 
+                      // billData?.status === "PENDING_VERIFICATION" ||
                       selectedRows.length === 0}
                   />
-                  // ,
-                  //     <Button
-                  //   className="custom-class"
-                  //   iconFill=""
-                  //   label={t(`HCM_AM_VERIFY`)}
-                  //   menuStyles={{
-                  //     bottom: "40px",
-                  //   }}             
-                  //   optionsKey="name"
-                  //   size=""
-                  //   style={{ minWidth: "14rem" }}
-                  //   title=""
-                  //   type="button"
-                  //   variation="primary"
-                  //   isDisabled={selectedRows.length === 0}
-
-                  // />
                 ] :
                 editBillDetails && activeLink?.code === 'PENDING_FOR_EDIT' ?
                   [
@@ -1336,7 +1320,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     title=""
                     type="button"
                     variation="secondary"
-                    
+
                     isDisabled={selectedRows.length === 0}
                   />,
                     <Button
@@ -1352,14 +1336,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
                     />
                   ]
-                    : []
+                    : null
           }
-          className=""
-          maxActionFieldsAllowed={5}
-          setactionFieldsToRight
-          sortActionFields
-          style={{}}
-        />
+        </ActionBar>
       )}
       {/* /* Alert Pop-Up for approve */}
       {openVerifyAlertPopUp && <AlertPopUp

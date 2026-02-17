@@ -1,8 +1,8 @@
-import { EmployeeModuleCard, SVG } from "@egovernments/digit-ui-react-components";
+import { ActionBar } from "@egovernments/digit-ui-react-components";
 import React, { useEffect,useState, } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button, ActionBar, Dropdown, Toast,PopUp } from "@egovernments/digit-ui-components";
+import { Card, Header, Button, Dropdown, Toast,PopUp } from "@egovernments/digit-ui-components";
 import MyBills from "./my_bills";
 import FetchBills from "./fetch_bills";
 import { CloudDownload } from "./svg_components/CloudDownload";
@@ -60,7 +60,7 @@ const UploadAndFetchBillsCard = () => {
           <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginTop: "1rem" }}>
             <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <Card
-  className="upload-card hover-highlight"S
+  className="upload-card hover-highlight"
   style={{
     display: "flex",
     flexDirection: "column",
@@ -153,8 +153,7 @@ const UploadAndFetchBillsCard = () => {
           </PopUp>
         )}
       </div>
-      <ActionBar
-        actionFields={[
+      <ActionBar style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Button
             icon="ArrowBack"
             label={t("HCM_AM_BACK_LABEL")}
@@ -162,18 +161,17 @@ const UploadAndFetchBillsCard = () => {
             style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
             type="button"
             variation="secondary"
-          />,
-          <Button  
+          />
+          <Button
           onClick={openPopUp}
             icon="ArrowForward"
             isSuffix
             label={t("HCM_AM_NEXT_LABEL")}
-            style={{ minWidth: "14rem" }}
+            style={{ marginRight: "2.5rem", minWidth: "14rem" }}
             type="button"
             variation="primary"
-          />,
-        ]}
-      />
+          />
+      </ActionBar>
     </React.Fragment>
   );
 }

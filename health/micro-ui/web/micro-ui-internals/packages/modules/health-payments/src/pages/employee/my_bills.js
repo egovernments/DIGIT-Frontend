@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import MyBillsSearch from "../../components/MyBillsSearch";
@@ -6,7 +7,11 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { set } from "lodash";
+import { Card, NoResultsFound, Loader, Toast } from "@egovernments/digit-ui-components";
+import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+
+
+import _ from "lodash";
 
 const MyBills = (props) => {
 
@@ -45,34 +50,50 @@ const MyBills = (props) => {
       billCriteria: {
         tenantId: tenantId,
         referenceIds: project?.map(p => p?.id) || [],
-//        referenceIds: [project?.[0]?.id],
+        // referenceIds: [project?.[0]?.id],
+  
         ...(billID ? { billNumbers: [billID] } : {}),
-         ...(dateRange.startDate && dateRange.endDate
-           ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() }
-           : {}),
+  
+        ...(dateRange.startDate && dateRange.endDate
+          ? {
+              fromDate: new Date(dateRange.startDate).getTime(),
+              toDate: new Date(dateRange.endDate).getTime(),
+            }
+          : {}),
+  
         pagination: {
           limit: limitAndOffset.limit,
           offset: limitAndOffset.offset,
         },
+  
         billingPeriodIds:
-          periodType && periodType?.code == "FINAL_AGGREGATE"
+          periodType && periodType?.code === "FINAL_AGGREGATE"
             ? []
-            : periodType && periodType?.code == "INTERMEDIATE" && dateRange.startDate == "" && dateRange.endDate == ""
-            ? projectPeriods.map((x) => x?.id)
-            : dateRange.startDate == "" && dateRange.endDate == ""
+            : periodType &&
+              periodType?.code === "INTERMEDIATE" &&
+              dateRange.startDate === "" &&
+              dateRange.endDate === ""
+            ? (projectPeriods || []).map((x) => x?.id)
+            : dateRange.startDate === "" && dateRange.endDate === ""
             ? []
             : findAllOverlappingPeriods(
-                dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
-                dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+                dateRange?.startDate && dateRange.startDate !== ""
+                  ? dateRange.startDate
+                  : new Date().getTime(),
+                dateRange?.endDate && dateRange.endDate !== ""
+                  ? dateRange.endDate
+                  : new Date().getTime()
               ).map((x) => x?.id),
-        // TODO: need to add here
-
-        ...(periodType && periodType?.code == "FINAL_AGGREGATE"
+  
+        ...(periodType && periodType?.code === "FINAL_AGGREGATE"
           ? {
               // isAggregate: periodType != null ? true : false,
               billingType: periodType?.code,
             }
+          : {}),
+      },
     },
+  
     config: {
       enabled: project ? true : false,
       select: (data) => {
@@ -80,7 +101,7 @@ const MyBills = (props) => {
       },
     },
   };
-
+  
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
     const reqMdmsCriteria = {
@@ -181,6 +202,7 @@ const MyBills = (props) => {
         if (!selectedBills || selectedBills.length === 0) return 0;
         return selectedBills.reduce((total, bill) => total + (bill?.totalAmount || 0), 0);
     }
+    console.log("totalAmt",getTotalAmount(props?.selectedBills));
 
     useEffect(() => {
         if (BillData) {
@@ -232,7 +254,7 @@ const MyBills = (props) => {
   }
 
     if (isBillLoading || isFetching1 || isLoading1) {
-        return <LoaderScreen />
+        return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
     }
     const totalAmount = getTotalAmount(props?.selectedBills);
     return (
@@ -247,7 +269,7 @@ const MyBills = (props) => {
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {isFetching ? (    const totalAmount = getTotalAmount(props?.selectedBills);
+                {isFetching ? ( <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
 ) : tableData.length === 0 ? (<NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />)
                     :
                     (

@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Loader as LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-components";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";

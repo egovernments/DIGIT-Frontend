@@ -1,11 +1,15 @@
+import React, { useEffect, useState, useRef } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
+import { Button, Card, AlertCard as InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
+import { LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
+import { renderProjectPeriod } from "../../utils/time_conversion";
 
 /**
  * @returns {React.ReactElement} BillInboxComponent
@@ -254,7 +258,7 @@ const BillInboxComponent = () => {
 
         setSelectedBoundaryCode(boundaryCode);
         Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
-    };
+    
 
     if (period) {
       setSelectedPeriod(period);
