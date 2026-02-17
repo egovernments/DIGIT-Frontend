@@ -215,8 +215,8 @@ const Home = ({
       <div className="citizen-home-footer" style={window.location.href.includes("citizen/obps") ? { zIndex: "-1" } : {}}>
         <ImageComponent
           alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
           style={{ height: "1.2em", cursor: "pointer" }}
+          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
           }}
