@@ -1364,12 +1364,17 @@ textarea.light-placeholder::placeholder {
 .popupwrap .digit-header-wrap .heading-m{
     font-size: 25px;
 }
+.popup-wrap .popup-module {
+    position: relative;
+}
 .popup-wrap .digit-header-wrap .icon-bg-secondary{
     position: absolute;
-    top: 1rem;
-    right: 1.5rem;
+    top: 0.5rem;
+    right: 0.5rem;
     width: 2rem;
     height: 2rem;
+    background-color: #FFFFFF;
+    border-radius: 50%;
 }
 
 .employee-app-wrapper .digit-label-field-pair .digit-card-label{
@@ -1491,6 +1496,10 @@ textarea.light-placeholder::placeholder {
   color: #0B4B66
 }
 
+.works-header-view {
+  color: #0B4B66 !important;
+}
+
 .digit-popup-heading{
   color: #0B4B66 !important;
 }
@@ -1540,3 +1549,56 @@ textarea.light-placeholder::placeholder {
     width: 50%;
   }
 }
+
+
+@media (min-width: 780px) {
+  .citizen-form-wrapper.citizen-form-center {
+    width: 100% !important;
+  }
+
+  .citizen-home-container > div:first-child {
+    position: fixed;
+    top: 58px;
+    height: calc(100vh - 58px);
+    z-index: 1000;
+  }
+
+  .citizen-home-container > div:first-child + * {
+    margin-left: 3rem;
+  }
+
+  .citizen-home-container > div:first-child + .citizen-user-profile-wrapper {
+    width: 50%;
+    margin: 1rem auto 0;
+  }
+
+  /* Fix search icon inside sidebar search bar */
+  .citizen-home-container .digit-sidebar-search-container {
+    .digit-text-input-field {
+      position: relative;
+
+      .input-container {
+        position: relative;
+
+        .digit-cursor-pointer {
+          position: absolute;
+          right: 0.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        input {
+          padding-right: 2rem;
+        }
+      }
+    }
+  }
+
+  /* Make divider after logout extend full width of sidenav */
+  .citizen-home-container .digit-sidebar-bottom hr.divider {
+    width: calc(100% + 2rem);
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+}
+
