@@ -13,7 +13,7 @@
     "@egovernments/digit-ui-module-workbench": "1.1.2",
     "@egovernments/digit-ui-module-pgr": "1.9.0",
     "@egovernments/digit-ui-module-dss": "1.9.0",
-    "@egovernments/digit-ui-module-core": "1.9.11",
+    "@egovernments/digit-ui-module-core": "1.9.12",
     "@egovernments/digit-ui-module-common": "1.9.0",
     "@egovernments/digit-ui-module-hrms": "1.9.4",
     "@egovernments/digit-ui-module-utilities": "1.1.0",
