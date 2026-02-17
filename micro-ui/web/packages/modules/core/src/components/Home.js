@@ -4,7 +4,7 @@ import {
   Loader,
 } from "@egovernments/digit-ui-react-components";
 
-import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
+import { BackLink, CustomSVG, SVG, LandingPageWrapper, Card, Divider } from "@egovernments/digit-ui-components";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -86,6 +86,7 @@ import { useNavigate } from "react-router-dom";
 const CitizenHome = ({ getCitizenMenu, fetchedCitizen, isLoading }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isMobile = window.Digit.Utils.browser.isMobile();
 
   if (isLoading || !fetchedCitizen || !getCitizenMenu) {
     return <Loader />;
@@ -98,6 +99,88 @@ const CitizenHome = ({ getCitizenMenu, fetchedCitizen, isLoading }) => {
     navigate(link);
   };
 
+  
+
+  const handleNavigate = (link) => {
+    if (!link) return;
+    link?.includes(`${window?.contextPath}/`) ? navigate(link) : (window.location.href = link);
+  };
+  console.log(SVG.AddExpense, "SVG.AddExpense");
+
+  const renderApplyIcon = () => (
+    <SVG.AddExpense fill="#C84C0E" width="1.25rem" height="1.25rem" className="digit-button-customIcon medium teritiary" />
+  );
+
+  const renderMyAppIcon = () => (
+    <SVG.ListAlt fill="#C84C0E" width="1.25rem" height="1.25rem" className="digit-button-customIcon medium teritiary" />
+  );
+
+  const isApplyLink = (link) => {
+    const name = (link.name || link.displayName || "").toLowerCase();
+    return name.includes("apply") || name.includes("_apply");
+  };
+  
+
+  // Desktop: LandingPageWrapper + custom cards with icons (same grid as employee)
+  if (!isMobile) {
+    const children = parentModules.map((code) => {
+      const mdmsDataObj = processLinkData(getCitizenMenu, code, t);
+
+      if (!mdmsDataObj?.links?.length) return null;
+
+      const seenLinks = new Set();
+      const dedupedLinks = mdmsDataObj.links
+        ?.filter((ele) => ele?.link)
+        ?.sort((x, y) => x?.orderNumber - y?.orderNumber)
+        .filter((link) => {
+          const key = link.link;
+          if (seenLinks.has(key)) return false;
+          seenLinks.add(key);
+          return true;
+        });
+
+      return (
+        <Card key={code} className="digit-landing-page-card" style={{ borderRadius: "1rem" }}>
+          <div className="icon-module-header">
+            <div className="digit-landingpagecard-icon">
+              <CustomSVG.Devices fill="#C84C0E" width="1rem" height="1rem" />
+            </div>
+            <div className="ladingcard-moduleName" role="heading" aria-level="2">
+              {t(mdmsDataObj?.header)}
+            </div>
+          </div>
+          <Divider className="digit-landingpage-divider" variant="small" />
+          {dedupedLinks.map((link, i) => {
+            const LinkIcon = link.leftIcon && link.leftIcon !== "TLIcon" && CustomSVG[link.leftIcon] ? CustomSVG[link.leftIcon] : null;
+            return (
+              <button
+                key={i}
+                className="digit-button-teritiary medium"
+                type="button"
+                style={{ padding: "0px" }}
+                onClick={() => handleNavigate(link.link)}
+              >
+                <div className="icon-label-container teritiary medium">
+                  {LinkIcon ? <LinkIcon fill="#C84C0E" width="1.25rem" height="1.25rem" className="digit-button-customIcon medium teritiary" /> : (isApplyLink(link) ? renderApplyIcon() : renderMyAppIcon())}
+                  <h2 className="digit-button-label">{link.i18nKey}</h2>
+                </div>
+              </button>
+            );
+          })}
+        </Card>
+      );
+    }).filter(Boolean);
+
+    return (
+      <div className="citizen-all-services-wrapper">
+        <div className="employee-app-container digit-home-employee-app">
+          <LandingPageWrapper>{children}</LandingPageWrapper>
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile: Original vertical card layout
   return (
     <div className="citizen-all-services-wrapper">
       {location.pathname.includes(
@@ -122,8 +205,8 @@ const CitizenHome = ({ getCitizenMenu, fetchedCitizen, isLoading }) => {
                     ?.sort((x, y) => x?.orderNumber - y?.orderNumber)
                     .map((link, i) => (
                       <div className="linksWrapper" key={i}>
-                        <a 
-                          href={link.link} 
+                        <a
+                          href={link.link}
                           onClick={(e) => handleLinkClick(e, link.link)}
                         >
                           {link.i18nKey}

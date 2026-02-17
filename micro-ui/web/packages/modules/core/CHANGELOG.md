@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-17"] [09-Feb-2026]
+- Added conditional screens for web view of citizen
+
 ## ["2.0.0-dev-11"] [09-Feb-2026]
 - Fixed arguments for individualUserProfile
 
