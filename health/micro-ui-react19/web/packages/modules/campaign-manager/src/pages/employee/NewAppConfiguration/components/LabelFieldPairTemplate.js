@@ -14,7 +14,7 @@ const LabelFieldPairTemplate = ({ field, t, props }) => {
               overflowX: "hidden",
               display: "flex",
               alignItems: "center",
-              paddingBottom: "1rem",
+              ...(index < data.length - 1 && { paddingBottom: "1rem" }),
             }}
             key={index}
             inline={true}
