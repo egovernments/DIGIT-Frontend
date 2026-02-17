@@ -105,7 +105,6 @@ const CitizenHome = ({ getCitizenMenu, fetchedCitizen, isLoading }) => {
     if (!link) return;
     link?.includes(`${window?.contextPath}/`) ? navigate(link) : (window.location.href = link);
   };
-  console.log(SVG.AddExpense, "SVG.AddExpense");
 
   const renderApplyIcon = () => (
     <SVG.AddExpense fill="#C84C0E" width="1.25rem" height="1.25rem" className="digit-button-customIcon medium teritiary" />
