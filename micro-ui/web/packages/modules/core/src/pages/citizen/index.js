@@ -227,7 +227,7 @@ const Home = ({
           <Route path="select-language" element={<LanguageSelection />} />
 
           <Route path="select-location" element={
-            <div style={!mobileView ? { display: 'flex', justifyContent: 'center', width: '100%', marginTop: '1rem', padding: '0 16px' } : {}}>
+            <div className="citizen-location-selection-wrapper">
               <LocationSelection />
             </div>
           } />
@@ -256,7 +256,7 @@ const Home = ({
           <Route path="register/*" element={<Login stateCode={stateCode} isUserRegistered={false} />} />
 
           <Route path="user/profile" element={
-            <div className={!window.Digit.Utils.browser.isMobile() ? "citizen-user-profile-wrapper" : ""}>
+            <div className="citizen-user-profile-wrapper">
               <UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />
             </div>
           } />

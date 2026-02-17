@@ -263,10 +263,8 @@ const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
     }
   };
 
-  const isCitizenDesktop = window.location.href.includes("citizen") && !window.Digit.Utils.browser.isMobile();
-
   return (
-    <div className={`citizen-form-wrapper${isCitizenDesktop ? ' citizen-form-center' : ''}`}>
+    <div className="citizen-form-wrapper citizen-form-center">
       <AppContainer>
         {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()} />}
         <Routes>
