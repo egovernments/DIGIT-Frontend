@@ -52,6 +52,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+  const [showMapPopup, setShowMapPopup] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
   const selectedProject = Digit?.SessionStorage.get("selectedProject");
@@ -383,7 +384,31 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
   const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
   console.log("workerRatesData", workerRatesData);
-  
+
+  const attendeeUsernames = AllIndividualsData?.Individual?.map((ind) => ind?.userDetails?.username).filter(Boolean) || [];
+
+  const buildMapLink = () => {
+    //TODO configure and fetch base link for maps from mdms
+    const baseUrl =
+      "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards#/view/260a9fb0-074e-11f1-9fbf-5fda27227d86";
+    const anonymousAuth = "auth_provider_hint=anonymous1";
+    const globalState = "_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))";
+
+    if (attendeeUsernames.length === 0) {
+      return `${baseUrl}?${anonymousAuth}&${globalState}`;
+    }
+
+    const field = "Data.userName.keyword";
+    const params = attendeeUsernames.map((u) => `'${u}'`).join(",");
+    const shouldClauses = attendeeUsernames.map((u) => `(match_phrase:(${field}:'${u}'))`).join(",");
+    const filter = `('$state':(store:appState),meta:(alias:!n,disabled:!f,field:${field},key:${field},negate:!f,params:!(${params}),type:phrases),query:(bool:(minimum_should_match:1,should:!(${shouldClauses}))))`;
+    const appState = `_a=(filters:!(${filter}),query:(language:kuery,query:''))`;
+
+    return `${baseUrl}?${anonymousAuth}&${globalState}&${appState}`;
+  };
+
+  const mapLink = buildMapLink();
+
   function getUserAttendanceSummary(data, individualsData, t) {
     const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
       const individualId = individualEntry.individualId;
@@ -491,9 +516,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
-        <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
-        </Header>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+          <Header className="pop-inbox-header" styles={{ marginBottom: "0" }}>
+            {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
+          </Header>
+          <Button
+            icon="LocationOn"
+            label={t(`HCM_AM_VIEW_MAPS`)}
+            onClick={() => setShowMapPopup(true)}
+            title={t(`HCM_AM_VIEW_MAPS`)}
+            variation="secondary"
+          />
+        </div>
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
           {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(selectedProject?.name || 'NA'))}
@@ -533,6 +567,32 @@ const ViewAttendance = ({ editAttendance = false }) => {
             onClose={onCommentLogClose}
             businessId={data?.[0]?.musterRollNumber}
             heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
+          />
+        )}
+        {showMapPopup && (
+          <PopUp
+            onClose={() => setShowMapPopup(false)}
+            heading={t("HCM_AM_VIEW_MAPS")}
+            children={[
+              <iframe
+                key="map-iframe"
+                src={mapLink}
+                style={{ width: "100%", height: "70vh", border: "none" }}
+                title={t("HCM_AM_VIEW_MAPS")}
+                allowFullScreen
+              />
+            ]}
+            onOverlayClick={() => setShowMapPopup(false)}
+            footerChildren={[
+              <Button
+                key="close-btn"
+                label={t("HCM_AM_CLOSE")}
+                onClick={() => setShowMapPopup(false)}
+                variation="secondary"
+              />
+            ]}
+            className="map-popup"
+            style={{ width: "90vw", maxWidth: "90vw" }}
           />
         )}
       </div>
