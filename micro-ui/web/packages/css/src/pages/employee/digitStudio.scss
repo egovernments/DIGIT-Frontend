@@ -1594,6 +1594,15 @@ textarea.light-placeholder::placeholder {
     }
   }
 
+ .citizen-home-container > div:first-child + .citizen-location-selection-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0 16px;
+  }
+
+
   /* Make divider after logout extend full width of sidenav */
   .citizen-home-container .digit-sidebar-bottom hr.divider {
     width: calc(100% + 2rem);
