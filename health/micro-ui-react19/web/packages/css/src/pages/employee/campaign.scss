@@ -361,6 +361,12 @@
     border-color: #C84C0E;
     background-color: #C84C0E08;
   }
+
+  .app-config-summary-card-fieldpair{
+    .digit-viewcard-label{
+      width: 100% !important;
+    }
+  }
 }
 
 .template-field-fallback {
