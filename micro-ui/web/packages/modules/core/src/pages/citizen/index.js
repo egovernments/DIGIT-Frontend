@@ -5,7 +5,7 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import { AppHome, processLinkData } from "../../components/Home";
 import TopBarSideBar from "../../components/TopBarSideBar";
-import StaticCitizenSideBar from "../../components/TopBarSideBar/SideBar/StaticCitizenSideBar";
+import CitizenSideNav from "../../components/TopBarSideBar/SideBar/CitizenSideNav";
 import ImageComponent from "../../components/ImageComponent";
 import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import DynamicModuleLoader from "../../components/DynamicModuleLoader";
@@ -216,8 +216,8 @@ const Home = ({
 
       <div className={`main center-container citizen-home-container mb-25`}>
         {hideSidebar ? null : (
-          <div className="SideBarStatic">
-            <StaticCitizenSideBar linkData={linkData} islinkDataLoading={islinkDataLoading} />
+          <div>
+            <CitizenSideNav linkData={linkData} islinkDataLoading={islinkDataLoading} />
           </div>
         )}
 
@@ -226,7 +226,11 @@ const Home = ({
 
           <Route path="select-language" element={<LanguageSelection />} />
 
-          <Route path="select-location" element={<LocationSelection />} />
+          <Route path="select-location" element={
+            <div className="citizen-location-selection-wrapper">
+              <LocationSelection />
+            </div>
+          } />
 
           <Route path="error" element={
             <ErrorComponent
@@ -251,7 +255,11 @@ const Home = ({
 
           <Route path="register/*" element={<Login stateCode={stateCode} isUserRegistered={false} />} />
 
-          <Route path="user/profile" element={<UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />} />
+          <Route path="user/profile" element={
+            <div className="citizen-user-profile-wrapper">
+              <UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />
+            </div>
+          } />
 
           <Route path="Audit" element={<Search />} />
 

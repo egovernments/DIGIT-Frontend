@@ -64,7 +64,7 @@ const { data: cities, isLoading } = Digit.Hooks.useTenants();
   return isLoading ? (
     <loader />
   ) : (
-    <div className="selection-card-wrapper">
+    <div>
       <BackLink onClick={() => window.history.back()}/>
       <PageBasedInput texts={texts} onSubmit={onSubmit} className="location-selection-container">
         <CardHeader>{t("CS_COMMON_CHOOSE_LOCATION")}</CardHeader>

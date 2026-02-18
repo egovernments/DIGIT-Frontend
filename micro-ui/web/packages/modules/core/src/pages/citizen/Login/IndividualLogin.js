@@ -264,7 +264,7 @@ const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
   };
 
   return (
-    <div className="citizen-form-wrapper">
+    <div className="citizen-form-wrapper citizen-form-center">
       <AppContainer>
         {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()} />}
         <Routes>

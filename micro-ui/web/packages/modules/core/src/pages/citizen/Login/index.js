@@ -246,8 +246,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     }
   };
 
+  const isCitizenDesktop = window.location.href.includes("citizen") && !window.Digit.Utils.browser.isMobile();
+
   return (
-    <div className="citizen-form-wrapper">
+    <div className={`citizen-form-wrapper${isCitizenDesktop ? ' citizen-form-center' : ''}`}>
       <AppContainer>
         {/* BackLink now uses navigate(-1) for going back */}
         {location.pathname.includes("login") ? null : <BackLink onClick={() => navigate(-1)} />}
