@@ -42,7 +42,7 @@
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-08",
-    "@egovernments/digit-ui-module-core": "2.0.0-dev-11",
+    "@egovernments/digit-ui-module-core": "2.0.0-dev-12",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-05",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
     "@egovernments/digit-ui-components": "2.0.0-dev-34",
