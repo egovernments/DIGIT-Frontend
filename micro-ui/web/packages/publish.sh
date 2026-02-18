@@ -16,8 +16,8 @@ cd "$BASEDIR/css" && rm -rf dist && yarn && yarn build && npm publish --tag cons
 
 
 msg "Building and publishing core"
-cd "$BASEDIR/modules/core" &&   rm -rf dist && yarn&& yarn build &&   npm publish --tag console-0.5
+cd "$BASEDIR/modules/core" && rm -rf dist && yarn && yarn build && npm publish --tag console-0.5
 
 msg "Building and publishing workbench"
-cd "$BASEDIR/modules/workbench" &&   rm -rf dist && yarn&& yarn build && npm publish --tag console-0.5
+cd "$BASEDIR/modules/workbench" && rm -rf dist && yarn && yarn build && npm publish --tag console-0.5
 
