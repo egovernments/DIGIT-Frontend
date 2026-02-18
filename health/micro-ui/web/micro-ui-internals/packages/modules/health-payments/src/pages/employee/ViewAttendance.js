@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
+import { Divider, Button, PopUp, Card, ActionBar, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -389,13 +389,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const buildMapLink = () => {
     //TODO configure and fetch base link for maps from mdms
-    const baseUrl =
-      "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards#/view/260a9fb0-074e-11f1-9fbf-5fda27227d86";
-    const anonymousAuth = "auth_provider_hint=anonymous1";
-    const globalState = "_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))";
+    // const baseUrl =
+    //   "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards#/view/260a9fb0-074e-11f1-9fbf-5fda27227d86";
+    // const anonymousAuth = "auth_provider_hint=anonymous1";
+    // const globalState = "_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))";
+    const baseUrl = "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards?auth_provider_hint=anonymous1#/view/260a9fb0-074e-11f1-9fbf-5fda27227d86?embed=true&_g=(refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&hide-filter-bar=true"
 
     if (attendeeUsernames.length === 0) {
-      return `${baseUrl}?${anonymousAuth}&${globalState}`;
+      return `${baseUrl}`;
     }
 
     const field = "Data.userName.keyword";
@@ -404,7 +405,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     const filter = `('$state':(store:appState),meta:(alias:!n,disabled:!f,field:${field},key:${field},negate:!f,params:!(${params}),type:phrases),query:(bool:(minimum_should_match:1,should:!(${shouldClauses}))))`;
     const appState = `_a=(filters:!(${filter}),query:(language:kuery,query:''))`;
 
-    return `${baseUrl}?${anonymousAuth}&${globalState}&${appState}`;
+    return `${baseUrl}?${appState}`;
   };
 
   const mapLink = buildMapLink();
@@ -520,13 +521,26 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <Header className="pop-inbox-header" styles={{ marginBottom: "0" }}>
             {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
           </Header>
-          <Button
-            icon="LocationOn"
-            label={t(`HCM_AM_VIEW_MAPS`)}
-            onClick={() => setShowMapPopup(true)}
-            title={t(`HCM_AM_VIEW_MAPS`)}
-            variation="secondary"
-          />
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Button
+              icon="Map"
+              label={t("HCM_AM_VIEW_MAPS")}
+              onClick={() => setShowMapPopup(true)}
+              variation="secondary"
+            />
+            <Button
+              icon="FileDownload"
+              label={t("HCM_AM_DOWNLOAD")}
+              onOptionSelect={() => {}}
+              options={[
+                { code: "PDF", name: "PDF" },
+                { code: "EXCEL", name: "Excel" },
+              ]}
+              optionsKey="name"
+              type="actionButton"
+              variation="secondary"
+            />
+          </div>
         </div>
         <Card type="primary" className="bottom-gap-card-payment">
           {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
@@ -577,7 +591,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               <iframe
                 key="map-iframe"
                 src={mapLink}
-                style={{ width: "100%", height: "70vh", border: "none" }}
+                style={{ width: "100%", height: "85vh", border: "none" }}
                 title={t("HCM_AM_VIEW_MAPS")}
                 allowFullScreen
               />
@@ -592,7 +606,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               />
             ]}
             className="map-popup"
-            style={{ width: "90vw", maxWidth: "90vw" }}
+            style={{ width: "95vw", maxWidth: "95vw", height: "95vh", padding: "0.5rem" }}
           />
         )}
       </div>
