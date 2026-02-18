@@ -96,7 +96,7 @@ To create your own globalConfig, copy and refer the below file.
 
 ## Documentation
 
-[Documentation](https://https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
+[Documentation](https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
 
 ## Support
