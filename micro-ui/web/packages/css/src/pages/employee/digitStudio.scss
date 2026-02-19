@@ -1554,6 +1554,10 @@ textarea.light-placeholder::placeholder {
 @media (min-width: 780px) {
   .citizen-form-wrapper.citizen-form-center {
     width: 100% !important;
+    .digit-app-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
   }
 
   .citizen-home-container > div:first-child {
