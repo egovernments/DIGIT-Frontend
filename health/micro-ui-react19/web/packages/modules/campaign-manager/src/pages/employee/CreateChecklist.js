@@ -588,7 +588,7 @@ const CreateChecklist = () => {
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t(I18N_KEYS.COMMON.HCM_CREATE_CHECKLIST)}</h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed",color:"#0b4b66" }}>{t(I18N_KEYS.PAGES.CHECKLIST)}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
