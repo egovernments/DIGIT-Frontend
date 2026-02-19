@@ -6,9 +6,9 @@ const LabelFieldPairTemplate = ({ field, t, props }) => {
   const { data = [] } = selectedField;
 
   return (
-    <div>
+    <div style={{width:"100%"}}>
       {data.map((pair, index) => (
-        <div key={index}>
+        <div key={index} style={{width:"100%"}}>
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
@@ -20,6 +20,7 @@ const LabelFieldPairTemplate = ({ field, t, props }) => {
             inline={true}
             label={(field ? t : props?.t)(pair.key)}
             value="*****"
+            className={"app-config-summary-card-fieldpair"}
           />
         </div>
       ))}
