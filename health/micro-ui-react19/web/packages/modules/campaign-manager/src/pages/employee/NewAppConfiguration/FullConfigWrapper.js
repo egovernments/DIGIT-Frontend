@@ -37,8 +37,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [activeSidePanel, setActiveSidePanel] = useState("flows"); // 'roles' or 'flows' or null - defaults to 'flows' to keep flow panel open
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
-  const [flowSearchQuery, setFlowSearchQuery] = useState("");
-  const [collapsedCategories, setCollapsedCategories] = useState({});
   const [formElementSearch, setFormElementSearch] = useState("");
   const [fieldTypeMaster, setFieldTypeMaster] = useState(appConfigStore.getState().fieldTypeMaster?.byName);
 
