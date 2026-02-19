@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import appConfigStore from "./redux/store";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import AppConfigurationStore from "./AppConfigurationStore";
-import { Loader, Button, Toast, Tag, Footer, FieldV1 } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
@@ -37,6 +37,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [activeSidePanel, setActiveSidePanel] = useState("flows"); // 'roles' or 'flows' or null - defaults to 'flows' to keep flow panel open
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
+  const [flowSearchQuery, setFlowSearchQuery] = useState("");
+  const [collapsedCategories, setCollapsedCategories] = useState({});
   const [formElementSearch, setFormElementSearch] = useState("");
   const [fieldTypeMaster, setFieldTypeMaster] = useState(appConfigStore.getState().fieldTypeMaster?.byName);
 
@@ -635,13 +637,15 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">
                 <div className="full-config-wrapper__flow-search">
-                  <FieldV1
-                    type="text"
-                    onChange={(e) => setFlowSearchQuery(e?.target?.value ?? e ?? "")}
-                    placeholder={t("SEARCH_FLOW")}
-                    value={flowSearchQuery}
-                    withoutLabel={true}
-                  />
+                  <div className="full-config-wrapper__flow-search-container">
+                    <SVG.Search fill="#787878" />
+                    <input
+                      className="full-config-wrapper__flow-search-input"
+                      placeholder={t("SEARCH_FLOW")}
+                      value={flowSearchQuery}
+                      onChange={(e) => setFlowSearchQuery(e.target.value)}
+                    />
+                  </div>
                 </div>
                 {groupedFlows.map((group) => {
                   const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
@@ -676,10 +680,10 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                         </span>
                         <span
                           className={`full-config-wrapper__category-chevron ${
-                            isExpanded ? "full-config-wrapper__category-chevron--expanded" : ""
+                            !isExpanded ? "full-config-wrapper__category-chevron--collapsed" : ""
                           }`}
                         >
-                          <SVG.ArrowForward fill="#0B4B66" width="20" height="20" />
+                          <SVG.ArrowDropDown fill="#0B4B66" width="20" height="20" />
                         </span>
                       </div>
                       {isExpanded && (
