@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import appConfigStore from "./redux/store";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import AppConfigurationStore from "./AppConfigurationStore";
-import { Loader, Button, Toast, Tag, Footer } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, Tag, Footer, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
 import { SVG } from "@egovernments/digit-ui-components";
@@ -37,6 +37,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [activeSidePanel, setActiveSidePanel] = useState("flows"); // 'roles' or 'flows' or null - defaults to 'flows' to keep flow panel open
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
+  const [flowSearchQuery, setFlowSearchQuery] = useState("");
+  const [collapsedCategories, setCollapsedCategories] = useState({});
   const [formElementSearch, setFormElementSearch] = useState("");
   const [fieldTypeMaster, setFieldTypeMaster] = useState(appConfigStore.getState().fieldTypeMaster?.byName);
 
@@ -119,10 +121,213 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         });
 
         if (response?.mdms && response.mdms.length > 0) {
+          console.log("Response App Flow: ", response.mdms);
           const configData = response.mdms[0].data;
           setFlowConfig(configData);
 
           // Set initial flow and page
+            console.log("Config App Flow: ", configData);
+            //OUTPUT:
+            /*[
+    {
+        "id": "searchBeneficiary",
+        "name": "searchBeneficiary",
+        "type": "template",
+        "order": 1,
+        "pages": [
+            {
+                "name": "searchBeneficiary",
+                "order": 1,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "REGISTRATION",
+        "indexRoute": "searchBeneficiary"
+    },
+    {
+        "id": "HOUSEHOLD",
+        "name": "HOUSEHOLD",
+        "type": "form",
+        "order": 2,
+        "pages": [
+            {
+                "name": "HOUSEHOLD.beneficiaryLocation",
+                "order": 1,
+                "nextRoute": "HOUSEHOLD.householdDetails",
+                "previousRoute": null
+            },
+            {
+                "name": "HOUSEHOLD.householdDetails",
+                "order": 3,
+                "nextRoute": "HOUSEHOLD.beneficiaryDetails",
+                "previousRoute": "HOUSEHOLD.beneficiaryLocation"
+            },
+            {
+                "name": "HOUSEHOLD.beneficiaryDetails",
+                "order": 4,
+                "nextRoute": null,
+                "previousRoute": "HOUSEHOLD.householdDetails"
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "REGISTRATION",
+        "indexRoute": "HOUSEHOLD.beneficiaryLocation"
+    },
+    {
+        "id": "householdOverview",
+        "name": "householdOverview",
+        "type": "template",
+        "order": 3,
+        "pages": [
+            {
+                "name": "householdOverview",
+                "order": 3,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "REGISTRATION",
+        "indexRoute": "householdOverview"
+    },
+    {
+        "id": "ADD_MEMBER",
+        "name": "ADD_MEMBER",
+        "type": "form",
+        "order": 4,
+        "pages": [
+            {
+                "name": "ADD_MEMBER.beneficiaryDetails",
+                "order": 4,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "REGISTRATION",
+        "indexRoute": "ADD_MEMBER.beneficiaryDetails"
+    },
+    {
+        "id": "CHECKLIST",
+        "name": "CHECKLIST",
+        "type": "form",
+        "order": 5,
+        "pages": [
+            {
+                "name": "CHECKLIST.eligibilityChecklist",
+                "order": 1,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "DELIVERY",
+        "indexRoute": "CHECKLIST.eligibilityChecklist"
+    },
+    {
+        "id": "REFER_BENEFICIARY",
+        "name": "REFER_BENEFICIARY",
+        "type": "form",
+        "order": 6,
+        "pages": [
+            {
+                "name": "REFER_BENEFICIARY.referBeneficiary",
+                "order": 1,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "REFERRAL",
+        "indexRoute": "REFER_BENEFICIARY.referBeneficiary"
+    },
+    {
+        "id": "referralSuccess",
+        "name": "referralSuccess",
+        "type": "template",
+        "order": 7,
+        "pages": [
+            {
+                "name": "referralSuccess",
+                "order": 7,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "REFERRAL",
+        "indexRoute": "referralSuccess"
+    },
+    {
+        "id": "beneficiaryDetails",
+        "name": "beneficiaryDetails",
+        "type": "template",
+        "order": 8,
+        "pages": [
+            {
+                "name": "beneficiaryDetails",
+                "order": 8,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "DELIVERY",
+        "indexRoute": "beneficiaryDetails"
+    },
+    {
+        "id": "DELIVERY",
+        "name": "DELIVERY",
+        "type": "form",
+        "order": 9,
+        "pages": [
+            {
+                "name": "DELIVERY.DeliveryDetails",
+                "order": 1,
+                "nextRoute": "DELIVERY.DeliveryChecklist",
+                "previousRoute": null
+            },
+            {
+                "name": "DELIVERY.DeliveryChecklist",
+                "order": 2,
+                "nextRoute": null,
+                "previousRoute": "DELIVERY.DeliveryDetails"
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "DELIVERY",
+        "indexRoute": "DELIVERY.DeliveryDetails"
+    },
+    {
+        "id": "deliverySuccess",
+        "name": "deliverySuccess",
+        "type": "template",
+        "order": 10,
+        "pages": [
+            {
+                "name": "deliverySuccess",
+                "order": 10,
+                "nextRoute": null,
+                "previousRoute": null
+            }
+        ],
+        "roles": [],
+        "project": "CMP-2026-02-19-007480",
+        "category": "DELIVERY",
+        "indexRoute": "deliverySuccess"
+    }
+]*/ 
           if (configData.flows && configData.flows.length > 0) {
             const firstFlow = configData.flows[0];
             setSelectedFlow(firstFlow.id);
@@ -229,6 +434,71 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
       `/${window?.contextPath}/employee/campaign/app-config-save?campaignNumber=${campaignNumber}&flow=${flowModule}&tenantId=${tenantId}`
     );
   };
+
+  const toggleCategory = (category) => {
+    setCollapsedCategories((prev) => ({
+      ...prev,
+      [category]: !prev[category],
+    }));
+  };
+
+  // Initialize collapsed state: only the first category expanded
+  useEffect(() => {
+    if (!flowConfig?.flows) return;
+
+    const sorted = flowConfig.flows.slice().sort((a, b) => (a?.order ?? Infinity) - (b?.order ?? Infinity));
+    const seen = new Set();
+    const cats = [];
+    sorted.forEach((flow) => {
+      const cat = flow.category || "UNCATEGORIZED";
+      if (!seen.has(cat)) {
+        seen.add(cat);
+        cats.push(cat);
+      }
+    });
+
+    const collapsed = {};
+    cats.forEach((cat, i) => {
+      if (i > 0) collapsed[cat] = true;
+    });
+    setCollapsedCategories(collapsed);
+  }, [flowConfig]);
+
+  const groupedFlows = useMemo(() => {
+    if (!flowConfig?.flows) return [];
+
+    const sorted = flowConfig.flows.slice().sort((a, b) => {
+      const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
+      const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    });
+
+    const query = flowSearchQuery.trim().toLowerCase();
+    const filtered = query
+      ? sorted.filter((flow) => {
+          const flowLabel = t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`));
+          return flowLabel.toLowerCase().includes(query);
+        })
+      : sorted;
+
+    const categoryOrder = [];
+    const categoryMap = {};
+
+    filtered.forEach((flow) => {
+      const cat = flow.category || "UNCATEGORIZED";
+      if (!categoryMap[cat]) {
+        categoryMap[cat] = [];
+        categoryOrder.push(cat);
+      }
+      categoryMap[cat].push(flow);
+    });
+
+    return categoryOrder.map((cat) => ({
+      category: cat,
+      flows: categoryMap[cat],
+    }));
+  }, [flowConfig, flowSearchQuery, t]);
+
   // Show loader while fetching data
   if (isLoading) {
     return (
@@ -366,24 +636,72 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">
-                {flowConfig.flows
-                  ?.slice()
-                  .sort((a, b) => {
-                    const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
-                    const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
-                    return orderA - orderB;
-                  })
-                  ?.map((flow, index) => (
-                    <div
-                      key={index}
-                      className={`full-config-wrapper__flow-item ${selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
-                        }`}
-                      onClick={() => handleFlowClick(flow)}
-                    >
-                      {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
-                      <div className="full-config-wrapper__flow-item-border" />
+                <div className="full-config-wrapper__flow-search">
+                  <FieldV1
+                    type="text"
+                    onChange={(e) => setFlowSearchQuery(e?.target?.value ?? e ?? "")}
+                    placeholder={t("SEARCH_FLOW")}
+                    value={flowSearchQuery}
+                    withoutLabel={true}
+                  />
+                </div>
+                {groupedFlows.map((group) => {
+                  const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
+                  const isSingleFlow = group.flows.length === 1;
+
+                  // Single-flow category: render as flat flow item without category header
+                  if (isSingleFlow) {
+                    const flow = group.flows[0];
+                    return (
+                      <div key={group.category} className="full-config-wrapper__category-group">
+                        <div
+                          className={`full-config-wrapper__flow-item ${
+                            selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                          }`}
+                          onClick={() => handleFlowClick(flow)}
+                        >
+                          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Multi-flow category: render with collapsible header
+                  return (
+                    <div key={group.category} className="full-config-wrapper__category-group">
+                      <div
+                        className="full-config-wrapper__category-header"
+                        onClick={() => !flowSearchQuery && toggleCategory(group.category)}
+                      >
+                        <span className="full-config-wrapper__category-title">
+                          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_CATEGORY_${group.category}`))}
+                        </span>
+                        <span
+                          className={`full-config-wrapper__category-chevron ${
+                            isExpanded ? "full-config-wrapper__category-chevron--expanded" : ""
+                          }`}
+                        >
+                          <SVG.ArrowForward fill="#0B4B66" width="20" height="20" />
+                        </span>
+                      </div>
+                      {isExpanded && (
+                        <div className="full-config-wrapper__category-flows">
+                          {group.flows.map((flow) => (
+                            <div
+                              key={flow.id}
+                              className={`full-config-wrapper__flow-item ${
+                                selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                              }`}
+                              onClick={() => handleFlowClick(flow)}
+                            >
+                              {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  );
+                })}
               </div>
             </div>
           </div>
