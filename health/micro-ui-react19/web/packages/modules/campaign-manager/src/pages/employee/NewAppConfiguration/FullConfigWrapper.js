@@ -7,7 +7,7 @@ import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button, Toast, Tag, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
-import { SVG } from "@egovernments/digit-ui-components";
+import { SVG ,CustomSVG} from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
 import { deselectField } from "./redux/remoteConfigSlice";
 import { FlowFilled } from "../../../components/icons/FlowFilled";
@@ -121,7 +121,6 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         });
 
         if (response?.mdms && response.mdms.length > 0) {
-          console.log("Response App Flow: ", response.mdms);
           const configData = response.mdms[0].data;
           setFlowConfig(configData);
 
@@ -745,22 +744,22 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 {(() => {
                   const FIELD_TYPE_ICON_MAP = {
                     // Basic
-                    checkbox: "CheckBox",
-                    date: "CalendarMonth",
-                    dob: "CalendarMonth",
-                    dropdown: "ArrowDropDown",
+                    checkbox: "CheckboxSVG",
+                    date: "Calendar",
+                    dob: "Calendar",
+                    dropdown: "EventList",
                     mobileNumber: "Call",
-                    number: "Numeric",
-                    numeric: "Numeric",
+                    number: "Numeric123",
+                    numeric: "Numeric123",
                     radio: "RadioButtonChecked",
-                    text: "TextFields",
-                    textarea: "Notes",
+                    text: "FontDownload",
+                    textarea: "TextAd",
                     // Advanced
                     idPopulator: "Badge",
                     latLng: "GpsFixed",
                     locality: "LocationCity",
                     qrScanner: "QrCodeScanner",
-                    selectionTag: "ArrowDropDown",
+                    selectionTag: "Dashboard",
                   };
 
                   // Same filter as the "Add Field" popup in AppConfigurationWrapper
@@ -812,9 +811,9 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                       <div className="form-elements__items-grid">
                         {group.options.map((item) => {
                           const iconName = FIELD_TYPE_ICON_MAP[item.type];
-                          const IconComponent = iconName && SVG[iconName];
+                          const IconComponent = iconName ? (SVG[iconName] || CustomSVG[iconName]) : null;
                           return (
-                            <div key={item.type} className="form-elements__type-card">
+                            <div key={item.type} className="form-elements__type-card" onClick={() => window.__appConfig_openAddFieldPopup?.(item)}>
                               <div className="form-elements__type-card-icon">
                                 {IconComponent ? (
                                   <IconComponent fill="#0B4B66" />

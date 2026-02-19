@@ -1677,9 +1677,13 @@
     align-items: center;
     gap: 0.25rem;
     padding: 0rem;
-    cursor: default;
+    cursor: pointer;
     background: transparent;
     transition: background-color 0.2s, border-color 0.2s;
+
+    &:hover .form-elements__type-card-icon {
+      background-color: #E6EDF0;
+    }
   }
 
   &__type-card-icon {
@@ -1690,7 +1694,7 @@
     align-items: center;
     justify-content: center;
     background: #F6FBFE;
-
+    transition: background-color 0.2s;
     &:hover{
       background-color: #E6EDF0;
 
