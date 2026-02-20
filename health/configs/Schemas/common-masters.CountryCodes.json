@@ -1,0 +1,38 @@
+{
+  "id": "10faba19-879d-4eeb-8776-9eedde6e9c30",
+  "tenantId": "dev",
+  "code": "common-masters.CountryCodes",
+  "description": "Country codes with dial codes for mobile number dropdown",
+  "definition": {
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": ["code", "name", "dialCode"],
+    "x-unique": ["code"],
+    "properties": {
+      "code": {
+        "type": "string",
+        "description": "ISO 3166-1 alpha-2 country code"
+      },
+      "name": {
+        "type": "string",
+        "description": "Country name"
+      },
+      "active": {
+        "type": "boolean",
+        "default": true
+      },
+      "dialCode": {
+        "type": "string",
+        "description": "International dial code with + prefix"
+      }
+    },
+    "additionalProperties": false
+  },
+  "isActive": true,
+  "auditDetails": {
+    "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+    "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+    "createdTime": 1771571241635,
+    "lastModifiedTime": 1771571241635
+  }
+}
