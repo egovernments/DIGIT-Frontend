@@ -520,6 +520,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }
           }
 
+          // Special handling for showCountryCode toggle
+          if (bindTo === "showCountryCodeDropdown") {
+            // Clear prefixText in both directions — ON uses country code dropdown, OFF starts fresh for custom prefix
+            updatedField.prefixText = "";
+          }
+
           // isGS1 and scanner regex pattern are mutually exclusive
           if (newToggleValue) {
             const resolvedBindTo = bindTo.replace("toArray.", "");
@@ -1510,10 +1516,10 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, vie
             onChange={(event) => {
               let newValue = event.target.value;
 
-              // For mobile number prefix, only allow numbers and limit length
+              // For mobile number prefix, only allow + and numbers and limit length
               if (isMobileNumberPrefix) {
-                // Remove any non-numeric characters
-                newValue = newValue.replace(/[^0-9]/g, "");
+                // Remove any characters that are not digits or +
+                newValue = newValue.replace(/[^0-9+]/g, "");
                 // Limit the length
                 if (newValue.length > maxPrefixSuffixLength) {
                   newValue = newValue.slice(0, maxPrefixSuffixLength);

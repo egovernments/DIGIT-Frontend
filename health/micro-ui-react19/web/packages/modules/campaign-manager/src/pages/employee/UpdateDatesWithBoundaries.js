@@ -183,7 +183,7 @@ function UpdateDatesWithBoundaries() {
           title={t(I18N_KEYS.PAGES.HCM_VIEW_DELIVERY_DETAILS)}
           onClick={() => {
             navigate(
-              `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&key=9`
+              `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&key=9&campaignNumber=${campaignNumber}`
             );
           }}
         />
