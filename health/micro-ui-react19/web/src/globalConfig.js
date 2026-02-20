@@ -253,3 +253,5 @@ var footerLogoURL =
     getConfig
   };
 }());
+
+window.globalConfigs = globalConfigs;
