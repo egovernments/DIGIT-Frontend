@@ -566,7 +566,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             }`}
             onClick={() => handleToggleSidePanel("formelements")}
           >
-            {activeSidePanel === "formelements" ? <FlowFilled/> : <FlowUnfilled fill={currentPageType === "template" ? "#B1B4B6" : undefined}/>}
+            {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#B1B4B6" : "#0B4B66"} width={"24px"} height={"24px"}/>}
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</span>
           </div>
           <div
@@ -816,7 +816,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                             <div key={item.type} className="form-elements__type-card" onClick={() => window.__appConfig_openAddFieldPopup?.(item)}>
                               <div className="form-elements__type-card-icon">
                                 {IconComponent ? (
-                                  <IconComponent fill="#0B4B66" />
+                                  <IconComponent fill="#0B4B66" width={"24px"} height={"24px"} />
                                 ) : (
                                   <span className="form-elements__type-card-fallback">
                                     {item.type?.[0]?.toUpperCase() || "?"}
@@ -982,28 +982,31 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Bottom Navigation */}
         <Footer
           actionFields={[
-            viewMode ? (
-              <Button
-                variation="secondary"
-                icon="ArrowBack"
-                label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
-                title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
-                onClick={() => {
-                  navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}&viewMode=true`);
-                }}
-              />
-            ) : (
-              <Button
+            // viewMode ? (
+            //   <Button
+            //     variation="primary"
+            //     icon="ArrowBack"
+            //     label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+            //     title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+            //     onClick={() => {
+            //       navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}&viewMode=true`);
+            //     }}
+            //   />
+            // ) 
+            // :
+            //  (
+            <Button
                 variation="primary"
                 label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
                 title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
                 icon="CheckCircle"
                 isSuffix={false}
+                isDisabled={viewMode ? true : false}
                 onClick={() => {
                   saveToAppConfig();
                 }}
               />
-            ),
+            // ),
           ]}
           setactionFieldsToRight={true}
         />
