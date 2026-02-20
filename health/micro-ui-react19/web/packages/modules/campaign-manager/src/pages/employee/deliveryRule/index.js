@@ -296,6 +296,25 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     };
   }, [resetData]);
 
+  // Scroll to top after initialization to counteract Dropdown components'
+  // built-in scrollIntoView({behavior:"smooth"}) that fires on mount when below viewport.
+  // Need to wait for the smooth scroll animation to be cancellable, then force instant scroll.
+  useEffect(() => {
+    if (initialized) {
+      const raf = requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      });
+      // Also schedule a delayed scroll in case the smooth scroll animation hasn't started yet
+      const timer = setTimeout(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }, 400);
+      return () => {
+        cancelAnimationFrame(raf);
+        clearTimeout(timer);
+      };
+    }
+  }, [initialized]);
+
   if (dataLoading || storeLoading || !initialized) {
     return <Loader page={true} variant="PageLoader" />;
   }
