@@ -9,7 +9,8 @@
   },
   "workspaces": [
     "packages/css",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/modules/health-payments"
   ],
   "homepage": "/workbench-ui/",
   "husky": {},
@@ -46,6 +47,7 @@
     "@egovernments/digit-ui-components": "2.0.0-dev-32",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-08",
     "@egovernments/digit-ui-module-campaign-manager": "1.0.0",
+    "@egovernments/digit-ui-module-health-payments": "0.3.0",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
     "cross-env": "^7.0.3",
@@ -88,7 +90,7 @@
     "build": "npm run build:packages && webpack --config webpack.prod.js",
     "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
     "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
-    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build",
+    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build && cd ../health-payments && npm run build",
     "clean": "rm -rf node_modules build dist && find packages -name node_modules -type d -exec rm -rf {} + 2>/dev/null || true",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },

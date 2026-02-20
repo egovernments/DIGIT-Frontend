@@ -1,0 +1,62 @@
+{
+  "name": "@egovernments/digit-ui-module-health-payments",
+  "version": "0.3.0",
+  "description": "Payments Module UI",
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "source": "src/Module.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js",
+    "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.62.16",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "react-i18next": "15.0.0",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-09",
+    "@egovernments/digit-ui-components": "2.0.0-dev-32"
+  },
+  "dependencies": {
+    "react-date-range": "^1.4.0",
+    "react-hook-form": "6.15.8",
+    "react-data-table-component": "7.6.2"
+  },
+  "sideEffects": false,
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": "Ramkrishna <ramkrishna.sahoo@egovernments.org>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@tanstack/react-query": "^5.62.16",
+    "babel-loader": "^9.1.3",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "core-js": "^3.33.0",
+    "cross-env": "7.0.3",
+    "css-loader": "^6.8.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

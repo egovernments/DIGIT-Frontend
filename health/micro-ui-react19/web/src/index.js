@@ -10,7 +10,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign", "payments"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -61,8 +61,10 @@ const MainApp = ({ stateCode, enabledModules }) => {
       try {
         const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+        const { initPaymentComponents } = await import("@egovernments/digit-ui-module-health-payments")
         initCampaignComponents();
         initWorkbenchComponents();
+        initPaymentComponents();
       } catch (error) {
         console.log("Error loading modules:", error);
         // Continue without modules if they fail to load

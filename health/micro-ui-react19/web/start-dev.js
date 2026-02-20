@@ -21,9 +21,10 @@ function log(message, color = colors.reset) {
 
 function checkDistFiles() {
   const campaignDist = path.join(__dirname, 'packages/modules/campaign-manager/dist/main.js');
+  const paymentsDist = path.join(__dirname, 'packages/modules/health-payments/dist/main.js');
   const cssDist = path.join(__dirname, 'packages/css/dist/index.css');
-  
-  return fs.existsSync(campaignDist) && fs.existsSync(cssDist);
+
+  return fs.existsSync(campaignDist) && fs.existsSync(paymentsDist) && fs.existsSync(cssDist);
 }
 
 async function buildPackages() {
@@ -61,10 +62,11 @@ async function startDevelopment() {
     // Start the concurrent processes
     const devProcess = spawn('npx', [
       'concurrently',
-      '--names', 'CSS,Campaign,Webpack',
-      '--prefix-colors', 'yellow,magenta,cyan',
+      '--names', 'CSS,Campaign,Payments,Webpack',
+      '--prefix-colors', 'yellow,magenta,green,cyan',
       '"cd packages/css && npm run start"',
       '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
+      '"cd packages/modules/health-payments && npm run build:dev -- --watch"',
       '"webpack serve --config webpack.dev.js --port 3000"'
     ], {
       stdio: 'inherit',

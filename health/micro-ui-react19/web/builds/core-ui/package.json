@@ -9,7 +9,8 @@
   },
   "workspaces": [
     "packages/css",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/modules/health-payments"
   ],
   "homepage": "/core-ui/",
   "husky": {},
