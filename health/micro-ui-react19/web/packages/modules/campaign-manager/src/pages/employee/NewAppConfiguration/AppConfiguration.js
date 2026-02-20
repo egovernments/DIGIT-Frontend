@@ -31,10 +31,9 @@ function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp, viewMode
 
   const handleFieldClick = useCallback(
     (field, screen, card, cardIndex, fieldIndex) => {
-      if (viewMode) return; // No-op in view mode - prevent side panel from opening
       dispatch(selectField({ field, screen, card, cardIndex, fieldIndex }));
     },
-    [dispatch, viewMode]
+    [dispatch]
   );
 
   // Determine which preview to render based on pageType
@@ -47,7 +46,7 @@ function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp, viewMode
       ) : (
         <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
       )}
-      <SidePanelApp showPanelProperties={isFieldSelected && selectedField} />
+      <SidePanelApp showPanelProperties={isFieldSelected && selectedField} viewMode={viewMode}/>
     </div>
   );
 }

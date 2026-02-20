@@ -6,7 +6,7 @@ import { LabelFieldPair, TextInput, TextArea } from "@egovernments/digit-ui-comp
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { updateHeaderField, updateHeaderProperty } from "./redux/remoteConfigSlice";
 
-const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey }) => {
+const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentLocale = useSelector((state) => state.localization.currentLocale);
@@ -91,6 +91,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}
+            disabled={viewMode}
           />
         ) : (
           <TextInput
@@ -99,6 +100,7 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
             value={localValue}
             onChange={handleChange}
             onBlur={handleBlur}
+            disabled={viewMode}
           />
         )}
       </div>

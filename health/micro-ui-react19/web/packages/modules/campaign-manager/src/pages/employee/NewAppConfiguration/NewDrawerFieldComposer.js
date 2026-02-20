@@ -37,7 +37,7 @@ const isValueEmpty = (value) => {
   return false;
 };
 
-const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
+const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -455,7 +455,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "toggle": {
         const bindTo = panelItem.bindTo;
         const isMandatory = selectedField?.mandatory === true;
-        const isDisabled = panelItem?.disableForRequired && isMandatory;
+        const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
 
         const handleToggleChange = (value) => {
           const newToggleValue = Boolean(value);
@@ -540,7 +540,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 onToggle={handleToggleChange}
                 isCheckedInitially={localToggle}
                 shapeOnOff
-                disabled={isDisabled}
+                disable={isDisabled}
                 isLabelFirst={true}
                 className={"digit-sidepanel-switch-wrap sidepanel"}
               />
@@ -552,6 +552,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 cField={cField}
                 selectedField={selectedField}
                 onFieldChange={onFieldChange}
+                viewMode={viewMode}
               />
             ))}
           </>
@@ -560,7 +561,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       case "text": {
         const isMandatory = selectedField?.mandatory === true;
-        const isDisabled = panelItem?.disableForRequired && isMandatory;
+        const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
         return (
           <FieldV1
             type="text"
@@ -588,7 +589,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       case "number": {
         const isMandatory = selectedField?.mandatory === true;
-        const isDisabled = panelItem?.disableForRequired && isMandatory;
+        const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
         // Check if this is a length-related field (should not allow negative values)
         const isLengthField = panelItem.bindTo?.toLowerCase()?.includes("length");
         const isRangeField = panelItem.label?.toLowerCase()?.includes("minimum") || panelItem.label?.toLowerCase()?.includes("maximum");
@@ -659,7 +660,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
       case "date": {
         const isMandatory = selectedField?.mandatory === true;
-        const isDisabled = panelItem?.disableForRequired && isMandatory;
+        const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory);
 
         // Check if systemDate is enabled, and if so, disable this date field
         const isSystemDateEnabled = selectedField?.systemDate === true;
@@ -772,6 +773,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   onFieldChange={onFieldChange}
                   fieldType={fieldType}
                   isGroupChild={true}
+                  viewMode={viewMode}
                 />
               ))}
             </div>
@@ -810,7 +812,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const isTemplate = metadataType === "template";
         const isDynamic = metadataType === "dynamic";
         const isMandatory = selectedField?.mandatory === true;
-        const isDisabled = (panelItem?.disableForRequired && isMandatory) || isTemplate || isDynamic;
+        const isDisabled = viewMode || (panelItem?.disableForRequired && isMandatory) || isTemplate || isDynamic;
 
         return (
           <div
@@ -992,7 +994,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 variant="nestedmultiselect"
                 selectAllLabel={t(I18N_KEYS.COMMON.SELECT_ALL)}
                 clearLabel={t(I18N_KEYS.COMMON.CLEAR_ALL)}
-                config={{ isDropdownWithChip: true }}
+                config={{ isDropdownWithChip: viewMode? false : true }}
                 selected={selectedOptions} // Pass actual option objects directly
                 onSelect={(selectedArray) => {
                   // selectedArray = [[null, option], [null, option]]
@@ -1021,7 +1023,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   // }
                 }}
 
-                onChipClose={(value) => {
+                onChipClose={viewMode ? null : (value) => {
                   // Filter out the removed item from selectedData
                   const updatedData = selectedData.filter((item) => item.name !== value.name);
 
@@ -1065,7 +1067,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                     data: mappedData,
                   });
                 }}
-                disabled={false}
+                disabled={viewMode || false}
                 disableClearAll={true}
                 t={t}
               />
@@ -1095,6 +1097,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         currentLocale={currentLocale}
                         dispatch={dispatch}
                         t={t}
+                        viewMode={viewMode}
                       />
                     );
                   })}
@@ -1133,6 +1136,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                         columnIndex={index}
                         onColumnToggle={handleColumnVisibilityToggle}
                         isLastVisible={isLastVisible}
+                        viewMode={viewMode}
                       />
                     );
                   })}
@@ -1167,6 +1171,7 @@ const LocalizationInput = React.memo(
     columnIndex = null,
     onColumnToggle = null,
     isLastVisible = false,
+    viewMode = false,
   }) => {
     // Get the localized value - don't fallback to code, empty string is valid
     const localizedValue = useCustomT(code);
@@ -1217,7 +1222,7 @@ const LocalizationInput = React.memo(
               <Switch
                 label=""
                 onToggle={handleToggle}
-                disable={isLastVisible}
+                disable={viewMode || isLastVisible}
                 isCheckedInitially={toggleState}
                 key={`toggle-${columnIndex}`}
                 shapeOnOff
@@ -1248,7 +1253,7 @@ const LocalizationInput = React.memo(
             populators={{
               fieldPairClassName: "drawer-toggle-conditional-field",
             }}
-            disabled={isColumnHidden}
+            disabled={viewMode || isColumnHidden}
           />
         </div>
       </div>
@@ -1257,7 +1262,7 @@ const LocalizationInput = React.memo(
 );
 
 // Separate component for option items to avoid hooks violations
-const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onDelete }) => {
+const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onDelete, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -1306,8 +1311,8 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
 
   return (
     <div style={{ display: "flex", gap: "1rem" }}>
-      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)} onChange={handleChange} />
-      <div
+      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t(I18N_KEYS.APP_CONFIGURATION.OPTION_PLACEHOLDER)} onChange={handleChange} disabled={viewMode} />
+      {!viewMode && (<div
         onClick={onDelete}
         style={{
           cursor: "pointer",
@@ -1322,13 +1327,13 @@ const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onD
         }}
       >
         <DustbinIcon />
-      </div>
+      </div>)}
     </div>
   );
 });
 
 // Separate component for conditional fields to avoid hooks violations
-const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) => {
+const ConditionalField = React.memo(({ cField, selectedField, onFieldChange, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -1501,6 +1506,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             type={isMobileNumberPrefix ? "text" : cField.type}
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
             value={conditionalLocalValue}
+            disabled={viewMode}
             onChange={(event) => {
               let newValue = event.target.value;
 
@@ -1551,6 +1557,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
               cField={cField}
               selectedField={selectedField}
               onFieldChange={onFieldChange}
+              viewMode={viewMode}
               onDelete={() => {
                 const filtered = (selectedField[cField.bindTo] || []).filter((i) => i.code !== item.code);
                 onFieldChange({ ...selectedField, [cField.bindTo]: filtered });
@@ -1558,7 +1565,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             />
           ))}
 
-          <Button
+          {!viewMode && (<Button
             type="button"
             icon="AddIcon"
             size="small"
@@ -1573,7 +1580,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
               const updated = selectedField[cField.bindTo] ? [...selectedField[cField.bindTo], newOption] : [newOption];
               onFieldChange({ ...selectedField, [cField.bindTo]: updated });
             }}
-          />
+          />)}
         </div>
       );
 
@@ -1588,6 +1595,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             value={cField.options?.find((i) => i[dropdownOptionKey] === bindValue) || null}
             onChange={(value) => onFieldChange({ ...selectedField, [cField.bindTo]: value?.[dropdownOptionKey] })}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
+            disabled={viewMode}
             populators={{
               options: cField.options || [],
               optionsKey: dropdownOptionKey,
@@ -1600,7 +1608,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       );
 
     case "dependencyFieldWrapper":
-      return selectedField?.type !== "template" ? <NewDependentFieldWrapper t={t} /> : <></>;
+      return selectedField?.type !== "template" ? <NewDependentFieldWrapper t={t} viewMode={viewMode} /> : <></>;
 
     case "radioOptions":
       return (
@@ -1612,6 +1620,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             onFieldChange({ ...selectedField, [cField?.bindTo]: value?.pattern });
           }}
           optionsKey="code"
+          disabled={viewMode}
         />
       );
 
@@ -1635,7 +1644,7 @@ export const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   );
 });
 
-function NewDrawerFieldComposer({ activeTab, onTabChange }) {
+function NewDrawerFieldComposer({ activeTab, onTabChange, viewMode }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   // Get data from Redux
@@ -1832,7 +1841,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
           );
           return shouldShowToggle ? (
             <div key={panelItem.id} className="drawer-toggle-field-container">
-              <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
+              <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} viewMode={viewMode} />
             </div>
           ) : null;
         })}
@@ -1846,7 +1855,7 @@ function NewDrawerFieldComposer({ activeTab, onTabChange }) {
       </div>
       {/* Popup Properties Section - Only for actionPopup field type */}
       {fieldType === "actionPopup" && activeTab === "content" && (
-        <PopupConfigEditor selectedField={selectedField} />
+        <PopupConfigEditor selectedField={selectedField} viewMode={viewMode} />
       )}
     </Fragment>
   );

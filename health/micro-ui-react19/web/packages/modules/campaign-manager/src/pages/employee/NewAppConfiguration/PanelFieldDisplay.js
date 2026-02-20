@@ -16,11 +16,14 @@ const ToggleVisibilityControl = ({ config, onToggle }) => {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        onToggle();
+        if(onToggle != null)
+        {
+          onToggle();
+        }
       }}
       className="appConfigLabelField-toggleVisibility"
     >
-      <Switch label="" isCheckedInitially={config?.hidden !== true} />
+      <Switch label="" isCheckedInitially={config?.hidden !== true} disable={onToggle == null}/>
     </div>
   );
 };
@@ -33,7 +36,10 @@ const DeleteFieldControl = ({ isDelete, onDelete }) => {
     <div
       onClick={(e) => {
         e.stopPropagation();
-        onDelete();
+        if(onDelete != null)
+        {
+          onDelete();}
+          
       }}
       style={{
         cursor: "pointer",
@@ -103,10 +109,10 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
         </div>
 
         {/* Control to show/hide the field */}
-        <ToggleVisibilityControl config={config} onToggle={onToggle} />
+        <ToggleVisibilityControl config={config} onToggle={onToggle != null ? onToggle : null} />
 
         {/* Control to delete the field */}
-        <DeleteFieldControl isDelete={isDelete} onDelete={onDelete} config={config} />
+        <DeleteFieldControl isDelete={isDelete} onDelete={onDelete != null ? onDelete : null} config={config} />
       </LabelFieldPair>
     </div>
   );

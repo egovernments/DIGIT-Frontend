@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
-const SidePanelApp = ({ showPanelProperties }) => {
+const SidePanelApp = ({ showPanelProperties, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentData } = useSelector((state) => state.remoteConfig);
@@ -105,10 +105,10 @@ const SidePanelApp = ({ showPanelProperties }) => {
       type="static"
     >
       {showPanelProperties ? (
-        <NewDrawerFieldComposer activeTab={activeTab} onTabChange={setActiveTab} />
+        <NewDrawerFieldComposer activeTab={activeTab} onTabChange={setActiveTab} viewMode={viewMode} />
       ) : (
         <DndProvider backend={HTML5Backend}>
-          <NewAppFieldScreenWrapper />
+          <NewAppFieldScreenWrapper viewMode={viewMode}/>
         </DndProvider>
       )}
     </SidePanel>
