@@ -132,7 +132,11 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           options: options,
           optionsKey: optionsKey,
           showToolTip: true,
-          optionsCustomStyle:{maxHeight:"8vh"}
+          optionsCustomStyle:{maxHeight:"8vh"},
+          showCountryCodeDropdown: field?.showCountryCodeDropdown || false,
+          countryCodeConfig: field?.showCountryCodeDropdown
+            ? { moduleName: "common-masters", masterName: "CountryCodes", defaultCountryCode: "+91" }
+            : null
         }}
         withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}

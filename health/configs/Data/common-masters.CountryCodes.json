@@ -1,0 +1,192 @@
+[
+  {
+    "id": "cb53d8d5-983b-4502-9812-e484586b1523",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "ET",
+    "data": {
+      "code": "ET",
+      "name": "Ethiopia",
+      "active": true,
+      "dialCode": "+251"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571680432,
+      "lastModifiedTime": 1771571680432
+    }
+  },
+  {
+    "id": "254efce5-08d4-4e1d-9ad1-2b390456b4b8",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "PK",
+    "data": {
+      "code": "PK",
+      "name": "Pakistan",
+      "active": true,
+      "dialCode": "+92"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571673497,
+      "lastModifiedTime": 1771571673497
+    }
+  },
+  {
+    "id": "1656fe37-4e87-426b-bf72-9253d337de45",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "NP",
+    "data": {
+      "code": "NP",
+      "name": "Nepal",
+      "active": true,
+      "dialCode": "+977"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571666989,
+      "lastModifiedTime": 1771571666989
+    }
+  },
+  {
+    "id": "d3d0956e-881a-47ac-8a01-1da21770266f",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "LK",
+    "data": {
+      "code": "LK",
+      "name": "Sri Lanka",
+      "active": true,
+      "dialCode": "+94"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571659113,
+      "lastModifiedTime": 1771571659113
+    }
+  },
+  {
+    "id": "55535036-9c14-4c36-9b55-4fcb9c70f90c",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "BD",
+    "data": {
+      "code": "BD",
+      "name": "Bangladesh",
+      "active": true,
+      "dialCode": "+880"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571652293,
+      "lastModifiedTime": 1771571652293
+    }
+  },
+  {
+    "id": "562377a9-2d94-47fd-ab39-c8f01831632f",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "SA",
+    "data": {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "active": true,
+      "dialCode": "+966"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571643309,
+      "lastModifiedTime": 1771571643309
+    }
+  },
+  {
+    "id": "8553ce5e-52bf-46ea-855c-b234f60a7e36",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "AE",
+    "data": {
+      "code": "AE",
+      "name": "UAE",
+      "active": true,
+      "dialCode": "+971"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571635672,
+      "lastModifiedTime": 1771571635672
+    }
+  },
+  {
+    "id": "56757fa4-79ee-4cf5-a436-6e17029d2e89",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "SG",
+    "data": {
+      "code": "SG",
+      "name": "Singapore",
+      "active": true,
+      "dialCode": "+65"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571626013,
+      "lastModifiedTime": 1771571626013
+    }
+  },
+  {
+    "id": "2a1661cb-8164-4321-bfa5-300d8ab81ab9",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "JP",
+    "data": {
+      "code": "JP",
+      "name": "Japan",
+      "active": true,
+      "dialCode": "+81"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571617037,
+      "lastModifiedTime": 1771571617037
+    }
+  },
+  {
+    "id": "92f34d73-e428-42b4-aff0-57a455ddf6a5",
+    "tenantId": "dev",
+    "schemaCode": "common-masters.CountryCodes",
+    "uniqueIdentifier": "FR",
+    "data": {
+      "code": "FR",
+      "name": "France",
+      "active": true,
+      "dialCode": "+33"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "lastModifiedBy": "f8145d0e-6a9f-4651-a7fc-afab1ffdbc41",
+      "createdTime": 1771571608483,
+      "lastModifiedTime": 1771571608483
+    }
+  }
+]

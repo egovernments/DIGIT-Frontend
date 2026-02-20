@@ -12,7 +12,7 @@ import NewNavigationLogicWrapper from "./NewNavigationLogicWrapper";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 // Wrapper for footer label to avoid hook-in-loop violation
-const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale, dispatch, t }) => {
+const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale, dispatch, t, viewMode }) => {
   const localizedLabel = useCustomT(footerButtonConfig?.label);
   const [localValue, setLocalValue] = useState(localizedLabel || "");
   const debounceTimerRef = useRef(null);
@@ -89,12 +89,13 @@ const FooterLabelField = React.memo(({ footerButtonConfig, index, currentLocale,
         value={localValue}
         onChange={(event) => handleChange(event.target.value)}
         onBlur={handleBlur}
+        disabled={viewMode}
       />
     </LabelFieldPair>
   );
 });
 
-function NewAppFieldScreenWrapper() {
+function NewAppFieldScreenWrapper({viewMode}) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentData } = useSelector((state) => state.remoteConfig);
@@ -217,6 +218,7 @@ function NewAppFieldScreenWrapper() {
         index={0}
         cardIndex={0}
         fieldKey="heading"
+        viewMode={viewMode}
       />
       {/* Description Field */}
       <HeaderFieldWrapper
@@ -228,6 +230,7 @@ function NewAppFieldScreenWrapper() {
         index={1}
         cardIndex={0}
         fieldKey="description"
+        viewMode={viewMode}
       />
       <Divider />
       <div className="app-config-drawer-subheader">
@@ -271,8 +274,8 @@ function NewAppFieldScreenWrapper() {
                   active={active}
                   required={required}
                   isDelete={deleteFlag === true ? true : false}
-                  onDelete={() => handleDeleteField(actualFieldIndex, actualCardIndex)}
-                  onHide={() => handleHideField(fieldName, actualCardIndex)}
+                  onDelete={viewMode ? null : () => handleDeleteField(actualFieldIndex, actualCardIndex)}
+                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex)}
                   onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}
@@ -281,14 +284,14 @@ function NewAppFieldScreenWrapper() {
                   fieldIndex={actualFieldIndex}
                   cardIndex={actualCardIndex}
                   indexOfCard={index}
-                  moveField={type !== "template" ? moveField : null}
+                  moveField={viewMode ? null : type !== "template" ? moveField : null}
                   fields={c}
                   isTemplate={currentCard?.type === "template"}
                 // isFooterField={isFooterField}
                 />
               );
             })}
-            {currentCard?.type !== "template" && (<Button
+            {currentCard?.type !== "template" && !viewMode && (<Button
               className={"app-config-drawer-button add-field"}
               type={"button"}
               size={"medium"}
@@ -310,10 +313,10 @@ function NewAppFieldScreenWrapper() {
             <div>{t(I18N_KEYS.APP_CONFIGURATION.NAVIGATION_LOGIC)}</div>
             <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_NAVIGATION_LOGIC)} />
           </div>
-          <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages} />
+          <NewNavigationLogicWrapper t={t} targetPages={currentCard?.conditionalNavigationProperties?.targetPages} viewMode={viewMode} />
         </>
       )}
-      {currentCard?.type !== "template" && currentCard?.config?.enableSectionAddition && (
+      {currentCard?.type !== "template" && currentCard?.config?.enableSectionAddition && !viewMode && (
         <Button
           className={"app-config-add-section"}
           type={"button"}
@@ -332,7 +335,7 @@ function NewAppFieldScreenWrapper() {
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
         currentCard?.footer?.map((footerButtonConfig, index) => (
-          <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} />
+          <FooterLabelField key={`footer-${index}`} footerButtonConfig={footerButtonConfig} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} viewMode={viewMode} />
       ))}
       <Divider />
       <div className="app-config-drawer-subheader">
@@ -346,6 +349,7 @@ function NewAppFieldScreenWrapper() {
           isLabelFirst={true}
           isCheckedInitially={currentCard?.preventScreenCapture || false}
           onToggle={handleTogglePreventScreenCapture}
+          disable={viewMode}
         />
       </div>
     </React.Fragment>

@@ -12,6 +12,7 @@ const NewAppModule = () => {
   const campaignNumber = searchParams.get("campaignNumber");
   const projectType = searchParams.get("projectType");
   const tenantId = searchParams.get("tenantId");
+  const viewMode = searchParams.get("viewMode") === "true";
 
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
@@ -39,7 +40,7 @@ const NewAppModule = () => {
 
   const handleCardClick = (moduleName, version) => {
     navigate(
-      `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=${moduleName}&version=${version}`
+      `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=${moduleName}&version=${version}${viewMode ? "&viewMode=true" : ""}`
     );
   };
 
@@ -91,10 +92,10 @@ const NewAppModule = () => {
                   type="button"
                   size="medium"
                   variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
-                  icon={isVisited ? "Edit" : null}
+                  icon={isVisited && !viewMode ? "Edit" : null}
                   className={`campaign-module-button ${isVisited || isActive ? "primaryButton" : "secondButton"}`}
-                  label={isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
-                  title={isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
+                  label={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
+                  title={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent card click
                     if (isActive) {

@@ -8,7 +8,7 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import PopupFieldConfigurator from "../../../components/PopupFieldConfigurator";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
-const PopupConfigEditor = ({ selectedField }) => {
+const PopupConfigEditor = ({ selectedField, viewMode }) => {
   const { t } = useTranslation();
   const customTranslate = useCustomTranslate();
 
@@ -83,6 +83,7 @@ const PopupConfigEditor = ({ selectedField }) => {
             path="title"
             value={popupConfig.title}
             selectedField={selectedField}
+            viewMode={viewMode}
           />
           <Divider/>
           </>
@@ -124,6 +125,7 @@ const PopupConfigEditor = ({ selectedField }) => {
                       path={`body.${index}.label`}
                       value={bodyItem.label}
                       selectedField={selectedField}
+                      viewMode={viewMode}
                     />
                   )}
 
@@ -138,7 +140,7 @@ const PopupConfigEditor = ({ selectedField }) => {
                       <PopupFieldConfigurator
                         field={bodyItem}
                         t={t}
-                        disabled={false}
+                        disabled={viewMode || false}
                       />
                     </div>
                   )}
@@ -171,6 +173,7 @@ const PopupConfigEditor = ({ selectedField }) => {
                     path={`footerActions.${index}.label`}
                     value={footerAction.label}
                     selectedField={selectedField}
+                    viewMode={viewMode}
                   />
                 );
               }
@@ -191,7 +194,7 @@ const PopupConfigEditor = ({ selectedField }) => {
 };
 
 // Individual label field component with localization (same pattern as LocalizationInput)
-const PopupLabelField = ({ label, path, value, selectedField }) => {
+const PopupLabelField = ({ label, path, value, selectedField, viewMode }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -213,6 +216,7 @@ const PopupLabelField = ({ label, path, value, selectedField }) => {
         type="text"
         placeholder={t(I18N_KEYS.APP_CONFIGURATION.ENTER_LABEL_TEXT) || ""}
         withoutLabel={true}
+        disabled={viewMode}
         onChange={(e) => {
           const val = e.target.value;
           // Update localization for the code

@@ -617,6 +617,7 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
         name: flow.name,
         order: flow.order !== undefined ? flow.order : flowIndex + 1,
         pages: flowPages,
+        category: flow.category,
         roles: flow.roles || [],
         project: project,
         type: flow.screenType?.toLowerCase() || "form",

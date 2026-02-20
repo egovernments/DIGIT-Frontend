@@ -26,7 +26,7 @@ function BodyPortal({ children }) {
     return ReactDOM.createPortal(children, document.body);
 }
 
-function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
+function MdmsValueDropdown({ schemaCode, value, onChange, t, disabled: disabledProp }) {
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
     const [module = "", master = ""] = (schemaCode || "").split(".");
 
@@ -74,7 +74,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
             optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
             t={t}
             select={(e) => onChange(e.code)}
-            disabled={isLoading || !module || !master}
+            disabled={disabledProp || isLoading || !module || !master}
             selected={selectedOption}
             showToolTip={true}
             isSearchable={true}
@@ -82,7 +82,7 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
     );
 }
 
-function NewNavigationLogicWrapper({ t, targetPages = [] }) {
+function NewNavigationLogicWrapper({ t, targetPages = [], viewMode }) {
     const customT = useCustomTranslate();
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
@@ -911,7 +911,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                 </div>
 
                 {/* Show delete icon for all rules, but only when more than 1 rule exists */}
-                {rules.length > 1 && (<div
+                {rules.length > 1 && !viewMode && (<div
                     role="button"
                     title={deleteRuleLabel}
                     aria-label={deleteRuleLabel}
@@ -949,7 +949,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
             </div>
 
             {/* Add Logic button */}
-            <div className="navigation-logic-wrapper__add-button-container">
+            {!viewMode && (<div className="navigation-logic-wrapper__add-button-container">
                 <Button
                     variation="secondary"
                     label={addRuleLabel}
@@ -961,7 +961,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                     className="navigation-logic-wrapper__add-button"
                     id={"app-config-screen-add-navigation-logic-button"}
                 />
-            </div>
+            </div>)}
 
             {/* Single-rule editor popup */}
             {showPopUp && editorIndex !== null && rules[editorIndex] && (
@@ -1057,6 +1057,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                             : cond.selectedField
                                                                                     }
                                                                                     showToolTip={true}
+                                                                                    disabled={viewMode}
                                                                                 />
                                                                             </div>
                                                                         </LabelFieldPair>
@@ -1074,7 +1075,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                     optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                     t={t}
                                                                                     select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
-                                                                                    // disabled={!cond?.selectedField?.code}
+                                                                                    disabled={viewMode}
                                                                                     selected={selectedOperator}
                                                                                     showToolTip={true}
                                                                                 />
@@ -1101,7 +1102,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                 value={boolVal}
                                                                                                 label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
                                                                                                 isLabelFirst={false}
-                                                                                                disabled={!cond?.selectedField?.code}
+                                                                                                disabled={viewMode || !cond?.selectedField?.code}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1118,7 +1119,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                         fieldValue: sanitizeIntegerInput(event.target.value),
                                                                                                     })
                                                                                                 }
-                                                                                                disabled={!cond?.selectedField?.code}
+                                                                                                disabled={viewMode || !cond?.selectedField?.code}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1141,6 +1142,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                     })
                                                                                                 }
                                                                                                 }
+                                                                                                disabled={viewMode}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1171,7 +1173,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                     t={customT}
                                                                                                     optionCardStyles={{ maxHeight: "15vh", overflow: "auto", zIndex: 10000 }}
                                                                                                     select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
-                                                                                                    disabled={!cond?.selectedField?.code}
+                                                                                                    disabled={viewMode || !cond?.selectedField?.code}
                                                                                                     selected={selectedEnum}
                                                                                                     showToolTip={true}
                                                                                                     isSearchable={true}
@@ -1186,6 +1188,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                     value={cond.fieldValue}
                                                                                                     onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
                                                                                                     t={t}
+                                                                                                    disabled={viewMode}
                                                                                                 />
                                                                                             );
                                                                                         }
@@ -1197,7 +1200,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                 placeholder={enterValueLabel}
                                                                                                 value={cond.fieldValue}
                                                                                                 onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
-                                                                                                disabled={!cond?.selectedField?.code}
+                                                                                                disabled={viewMode || !cond?.selectedField?.code}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1214,7 +1217,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                                         fieldValue: sanitizeIntegerInput(event.target.value),
                                                                                                     })
                                                                                                 }
-                                                                                                disabled={!cond?.selectedField?.code}
+                                                                                                disabled={viewMode || !cond?.selectedField?.code}
                                                                                             />
                                                                                         );
                                                                                     }
@@ -1226,7 +1229,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                                             placeholder={enterValueLabel}
                                                                                             value={cond.fieldValue}
                                                                                             onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
-                                                                                            disabled={!cond?.selectedField?.code}
+                                                                                            disabled={viewMode || !cond?.selectedField?.code}
                                                                                         />
                                                                                     );
                                                                                 })()}
@@ -1235,7 +1238,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                     </div>
 
                                                                     {/* Remove condition - only show when more than 1 condition exists */}
-                                                                    {rule.conds.length > 1 && (
+                                                                    {rule.conds.length > 1 && !viewMode && (
                                                                         <div
                                                                             className="navigation-logic-popup__delete-condition"
                                                                             onClick={() => removeCondition(editorIndex, idx)}
@@ -1274,7 +1277,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                 })}
 
                                                 {/* Add condition */}
-                                                <div className="navigation-logic-popup__add-condition-wrapper">
+                                                {!viewMode && (<div className="navigation-logic-popup__add-condition-wrapper">
                                                     <Button
                                                         variation="secondary"
                                                         label={addConditionLabel}
@@ -1284,7 +1287,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                         style={{ minWidth: "auto" }}
                                                         size={"medium"}
                                                     />
-                                                </div>
+                                                </div>)}
 
                                                 {/* Target page */}
                                                 <div className="navigation-logic-popup__target-page">
@@ -1305,6 +1308,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                                                         : rules[editorIndex].targetPage
                                                                 }
                                                                 showToolTip={true}
+                                                                disabled={viewMode}
                                                             />
                                                         </div>
                                                     </LabelFieldPair>
@@ -1376,7 +1380,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                     title={closeLabel}
                                     onClick={discardAndCloseEditor}
                                 />,
-                                <Button
+                                ...(!viewMode ? [<Button
                                     key="submit"
                                     type={"button"}
                                     size={"large"}
@@ -1384,7 +1388,7 @@ function NewNavigationLogicWrapper({ t, targetPages = [] }) {
                                     label={submitLabel}
                                     title={submitLabel}
                                     onClick={submitAndClose}
-                                />,
+                                />] : []),
                             ]}
                             style={{ maxWidth: "60%" }}
                         />

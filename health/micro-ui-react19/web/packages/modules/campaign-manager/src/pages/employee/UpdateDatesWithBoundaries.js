@@ -175,6 +175,19 @@ function UpdateDatesWithBoundaries() {
   return (
     <div>
       <TagComponent campaignName={campaignName} />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
+        <Button
+          type={"button"}
+          variation={"primary"}
+          label={t(I18N_KEYS.PAGES.HCM_VIEW_DELIVERY_DETAILS)}
+          title={t(I18N_KEYS.PAGES.HCM_VIEW_DELIVERY_DETAILS)}
+          onClick={() => {
+            navigate(
+              `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&key=9&campaignNumber=${campaignNumber}`
+            );
+          }}
+        />
+      </div>
       <FormComposerV2
         label={t(I18N_KEYS.PAGES.CAMPAIGN_UPDATE_DATE_SUBMIT)}
         config={

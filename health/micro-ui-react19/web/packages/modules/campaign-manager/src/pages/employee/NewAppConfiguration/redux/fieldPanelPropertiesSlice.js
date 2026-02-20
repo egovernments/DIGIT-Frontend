@@ -84,7 +84,26 @@ const dummyPanelConfig = {
       ],
       defaultValue: "",
       showFieldOnToggle: true,
-      visibilityEnabledFor: ["numeric", "mobileNumber", "number", "text", "latLng", "dropdown", "administrativeArea"],
+      visibilityEnabledFor: ["numeric", "number", "text", "latLng", "dropdown", "administrativeArea"],
+    },
+    {
+      id: "showCountryCode",
+      label: "showCountryCode",
+      order: 5,
+      bindTo: "showCountryCodeDropdown",
+      fieldType: "toggle",
+      defaultValue: false,
+      conditionalField: [
+        {
+          type: "text",
+          label: "APPCONFIG_CUSTOM_PREFIX",
+          bindTo: "prefixText",
+          isLocalisable: false,
+          condition: false,
+        },
+      ],
+      showFieldOnToggle: true,
+      visibilityEnabledFor: ["mobileNumber"],
     },
     {
       id: "suffixText",

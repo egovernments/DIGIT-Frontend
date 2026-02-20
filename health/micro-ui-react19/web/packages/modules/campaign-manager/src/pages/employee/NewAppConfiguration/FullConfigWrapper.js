@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import appConfigStore from "./redux/store";
+import { getFieldMaster } from "./redux/fieldMasterSlice";
 import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button, Toast, Tag, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { checkValidationErrorsAndShowToast } from "./utils/configUtils";
-import { SVG } from "@egovernments/digit-ui-components";
+import { SVG ,CustomSVG} from "@egovernments/digit-ui-components";
 import { ConversionPath, Earbuds } from "./svg/Flows";
 import { deselectField } from "./redux/remoteConfigSlice";
 import { FlowFilled } from "../../../components/icons/FlowFilled";
@@ -23,6 +25,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const version = searchParams.get("version");
   const flowModule = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
+  const viewMode = searchParams.get("viewMode") === "true";
 
   const [selectedFlow, setSelectedFlow] = useState(null);
   const [selectedPageName, setSelectedPageName] = useState(null);
@@ -34,6 +37,21 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   const [activeSidePanel, setActiveSidePanel] = useState("flows"); // 'roles' or 'flows' or null - defaults to 'flows' to keep flow panel open
   const [isClosing, setIsClosing] = useState(false);
   const [currentPageType, setCurrentPageType] = useState(null);
+  const [flowSearchQuery, setFlowSearchQuery] = useState("");
+  const [collapsedCategories, setCollapsedCategories] = useState({});
+  const [formElementSearch, setFormElementSearch] = useState("");
+  const [fieldTypeMaster, setFieldTypeMaster] = useState(appConfigStore.getState().fieldTypeMaster?.byName);
+
+  useEffect(() => {
+    const mdmsCtx = window?.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
+    appConfigStore.dispatch(
+      getFieldMaster({ tenantId, moduleName: "HCM-ADMIN-CONSOLE", name: "FieldTypeMappingConfig", mdmsContext: mdmsCtx, limit: 10000 })
+    );
+    const unsubscribe = appConfigStore.subscribe(() => {
+      setFieldTypeMaster(appConfigStore.getState().fieldTypeMaster?.byName);
+    });
+    return unsubscribe;
+  }, [tenantId]);
 
   const sidePanelRef = useRef(null);
   const sidebarRef = useRef(null);
@@ -155,14 +173,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   }, [selectedPageName]);
 
   const handleFlowClick = async (flow) => {
-    // Check for validation errors before switching
-    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
-      return;
-    }
+    if (!viewMode) {
+      // Check for validation errors before switching
+      if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+        return;
+      }
 
-    // Call MDMS update for current screen before switching
-    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-      await window.__appConfig_onNext();
+      // Call MDMS update for current screen before switching
+      if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+        await window.__appConfig_onNext();
+      }
     }
 
     // Reset selected field when switching flows
@@ -177,14 +197,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
   };
 
   const handlePageClick = async (page) => {
-    // Check for validation errors before switching
-    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
-      return;
-    }
+    if (!viewMode) {
+      // Check for validation errors before switching
+      if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+        return;
+      }
 
-    // Call MDMS update for current screen before switching page
-    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-      await window.__appConfig_onNext();
+      // Call MDMS update for current screen before switching page
+      if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+        await window.__appConfig_onNext();
+      }
     }
 
     // Reset selected field when switching pages
@@ -209,6 +231,71 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
       `/${window?.contextPath}/employee/campaign/app-config-save?campaignNumber=${campaignNumber}&flow=${flowModule}&tenantId=${tenantId}`
     );
   };
+
+  const toggleCategory = (category) => {
+    setCollapsedCategories((prev) => ({
+      ...prev,
+      [category]: !prev[category],
+    }));
+  };
+
+  // Initialize collapsed state: only the first category expanded
+  useEffect(() => {
+    if (!flowConfig?.flows) return;
+
+    const sorted = flowConfig.flows.slice().sort((a, b) => (a?.order ?? Infinity) - (b?.order ?? Infinity));
+    const seen = new Set();
+    const cats = [];
+    sorted.forEach((flow) => {
+      const cat = flow.category || "UNCATEGORIZED";
+      if (!seen.has(cat)) {
+        seen.add(cat);
+        cats.push(cat);
+      }
+    });
+
+    const collapsed = {};
+    cats.forEach((cat, i) => {
+      if (i > 0) collapsed[cat] = true;
+    });
+    setCollapsedCategories(collapsed);
+  }, [flowConfig]);
+
+  const groupedFlows = useMemo(() => {
+    if (!flowConfig?.flows) return [];
+
+    const sorted = flowConfig.flows.slice().sort((a, b) => {
+      const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
+      const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    });
+
+    const query = flowSearchQuery.trim().toLowerCase();
+    const filtered = query
+      ? sorted.filter((flow) => {
+          const flowLabel = t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`));
+          return flowLabel.toLowerCase().includes(query);
+        })
+      : sorted;
+
+    const categoryOrder = [];
+    const categoryMap = {};
+
+    filtered.forEach((flow) => {
+      const cat = flow.category || "UNCATEGORIZED";
+      if (!categoryMap[cat]) {
+        categoryMap[cat] = [];
+        categoryOrder.push(cat);
+      }
+      categoryMap[cat].push(flow);
+    });
+
+    return categoryOrder.map((cat) => ({
+      category: cat,
+      flows: categoryMap[cat],
+    }));
+  }, [flowConfig, flowSearchQuery, t]);
+
   // Show loader while fetching data
   if (isLoading) {
     return (
@@ -246,7 +333,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
           className="full-config-wrapper__back-button"
           onClick={() => {
-            navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+            navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}${viewMode ? "&viewMode=true" : ""}`);
           }}
           size={"medium"}
         />
@@ -272,10 +359,21 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FLOWS)}</span>
           </div>
           <div
-            className={`full-config-wrapper__sidebar-menu-item roles-disabled${
+            className={`full-config-wrapper__sidebar-menu-item ${currentPageType === "template" || viewMode ? "roles-disabled" : ""} ${
+              activeSidePanel === "formelements" ? "full-config-wrapper__sidebar-menu-item--active" : ""
+            }`}
+            onClick={() => {
+              if (currentPageType === "template" || viewMode) return;
+              handleToggleSidePanel("formelements");
+            }}
+          >
+            {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#B1B4B6" : "#0B4B66"} width={"24px"} height={"24px"}/>}
+            <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</span>
+          </div>
+          <div
+            className={`full-config-wrapper__sidebar-menu-item roles-disabled ${
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
-            onClick={() => handleToggleSidePanel("roles")}
           >
             {activeSidePanel === "roles" ? <SVG.Person fill="#B1B4B6" /> : <SVG.PersonOutline fill="#B1B4B6" />}
 
@@ -337,24 +435,205 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 </button>
               </div>
               <div className="full-config-wrapper__slide-panel-items-wrapper">
-                {flowConfig.flows
-                  ?.slice()
-                  .sort((a, b) => {
-                    const orderA = a?.order ?? Number.MAX_SAFE_INTEGER;
-                    const orderB = b?.order ?? Number.MAX_SAFE_INTEGER;
-                    return orderA - orderB;
-                  })
-                  ?.map((flow, index) => (
-                    <div
-                      key={index}
-                      className={`full-config-wrapper__flow-item ${selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
-                        }`}
-                      onClick={() => handleFlowClick(flow)}
-                    >
-                      {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
-                      <div className="full-config-wrapper__flow-item-border" />
+                <div className="full-config-wrapper__flow-search">
+                  <div className="full-config-wrapper__flow-search-container">
+                    <SVG.Search fill="#787878" />
+                    <input
+                      className="full-config-wrapper__flow-search-input"
+                      placeholder={t("SEARCH_FLOW")}
+                      value={flowSearchQuery}
+                      onChange={(e) => setFlowSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+                {groupedFlows.map((group) => {
+                  const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
+                  const isSingleFlow = group.flows.length === 1;
+
+                  // Single-flow category: render as flat flow item without category header
+                  if (isSingleFlow) {
+                    const flow = group.flows[0];
+                    return (
+                      <div key={group.category} className="full-config-wrapper__category-group">
+                        <div
+                          className={`full-config-wrapper__flow-item ${
+                            selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                          }`}
+                          onClick={() => handleFlowClick(flow)}
+                        >
+                          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Multi-flow category: render with collapsible header
+                  return (
+                    <div key={group.category} className="full-config-wrapper__category-group">
+                      <div
+                        className="full-config-wrapper__category-header"
+                        onClick={() => !flowSearchQuery && toggleCategory(group.category)}
+                      >
+                        <span className="full-config-wrapper__category-title">
+                          {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_CATEGORY_${group.category}`))}
+                        </span>
+                        <span
+                          className={`full-config-wrapper__category-chevron ${
+                            !isExpanded ? "full-config-wrapper__category-chevron--collapsed" : ""
+                          }`}
+                        >
+                          <SVG.ArrowDropDown fill="#0B4B66" width="20" height="20" />
+                        </span>
+                      </div>
+                      {isExpanded && (
+                        <div className="full-config-wrapper__category-flows">
+                          {group.flows.map((flow) => (
+                            <div
+                              key={flow.id}
+                              className={`full-config-wrapper__flow-item ${
+                                selectedFlow === flow.id ? "full-config-wrapper__flow-item--active" : "full-config-wrapper__flow-item--inactive"
+                              }`}
+                              onClick={() => handleFlowClick(flow)}
+                            >
+                              {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Slide-out Panel for FormElements */}
+        {activeSidePanel === "formelements" && (
+          <div
+            ref={sidePanelRef}
+            className={`full-config-wrapper__side-panel-wrapper ${
+              activeSidePanel === "formelements" && !isClosing ? "full-config-wrapper__side-panel-wrapper--open" : ""
+            }`}
+          >
+            <div
+              className={`full-config-wrapper__side-panel-slide ${
+                isClosing ? "full-config-wrapper__side-panel-slide--slide-out" : "full-config-wrapper__side-panel-slide--slide-in"
+              }`}
+            >
+              <div className="full-config-wrapper__slide-panel-header">
+                <div className="full-config-wrapper__slide-panel-title">{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</div>
+                <button className="full-config-wrapper__close-button" onClick={handleCloseSidePanel}>
+                  <SVG.Close fill="#787878" />
+                </button>
+              </div>
+              <div className="full-config-wrapper__slide-panel-items-wrapper">
+                {/* Search box */}
+                <div className="form-elements__search-wrapper">
+                  <div className="form-elements__search-input-container">
+                    <SVG.Search fill="#787878" />
+                    <input
+                      className="form-elements__search-input"
+                      placeholder={t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_SEARCH_FORM_FIELDS)}
+                      value={formElementSearch}
+                      onChange={(e) => setFormElementSearch(e.target.value)}
+                    />
+                  </div>
+                </div>
+                {/* Field type groups from master data */}
+                {(() => {
+                  const FIELD_TYPE_ICON_MAP = {
+                    // Basic
+                    checkbox: "CheckboxSVG",
+                    date: "Calendar",
+                    dob: "Calendar",
+                    dropdown: "EventList",
+                    mobileNumber: "Call",
+                    number: "Numeric123",
+                    numeric: "Numeric123",
+                    radio: "RadioButtonChecked",
+                    text: "FontDownload",
+                    textarea: "TextAd",
+                    // Advanced
+                    idPopulator: "Badge",
+                    latLng: "GpsFixed",
+                    locality: "LocationCity",
+                    qrScanner: "QrCodeScanner",
+                    selectionTag: "Dashboard",
+                  };
+
+                  // Same filter as the "Add Field" popup in AppConfigurationWrapper
+                  const allItems = (fieldTypeMaster?.fieldTypeMappingConfig || []).filter((item) => {
+                    if (item?.metadata?.type === "dynamic") return false;
+                    if (currentPageType === "object" && item?.metadata?.type === "template") return false;
+                    return true;
+                  });
+                  const searchLower = formElementSearch.toLowerCase();
+                  const filtered = formElementSearch
+                    ? allItems.filter(
+                        (item) =>
+                          item.type?.toLowerCase().includes(searchLower) ||
+                          t(`${item.category}.${item.type}`)?.toLowerCase().includes(searchLower)
+                      )
+                    : allItems;
+                  const categoryOrder = ["basic", "advanced"];
+                  const categories = [...new Set(filtered.map((item) => item.category))].sort((a, b) => {
+                    const oa = categoryOrder.indexOf(a);
+                    const ob = categoryOrder.indexOf(b);
+                    return (oa === -1 ? 999 : oa) - (ob === -1 ? 999 : ob);
+                  });
+                  const groups = categories
+                    .map((cat) => ({
+                      code: cat,
+                      name:
+                        cat === "basic"
+                          ? t(I18N_KEYS.APP_CONFIGURATION.FIELD_CATEGORY_BASIC)
+                          : cat === "advanced"
+                          ? t(I18N_KEYS.APP_CONFIGURATION.FIELD_CATEGORY_ADVANCED)
+                          : t(cat),
+                      options: filtered.filter((item) => item.category === cat),
+                    }))
+                    .filter((g) => g.options.length > 0);
+
+                  if (groups.length === 0) {
+                    return (
+                      <div className="form-elements__no-results">
+                        {t("NO_RESULTS_FOUND")}
+                      </div>
+                    );
+                  }
+
+                  return groups.map((group) => (
+                    <div key={group.code} className="form-elements__category-section">
+                      <div className="form-elements__category-title app-config-group-heading">
+                        {group.name}
+                      </div>
+                      <div className="form-elements__items-grid">
+                        {group.options.map((item) => {
+                          const iconName = FIELD_TYPE_ICON_MAP[item.type];
+                          const IconComponent = iconName ? (SVG[iconName] || CustomSVG[iconName]) : null;
+                          return (
+                            <div key={item.type} className="form-elements__type-card" onClick={() => window.__appConfig_openAddFieldPopup?.(item)}>
+                              <div className="form-elements__type-card-icon">
+                                {IconComponent ? (
+                                  <IconComponent fill="#0B4B66" width={"24px"} height={"24px"} />
+                                ) : (
+                                  <span className="form-elements__type-card-fallback">
+                                    {item.type?.[0]?.toUpperCase() || "?"}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="form-elements__type-card-label">
+                                {t(`${item.category}.${item.type}`)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <hr style={{border: "1px solid #DBE7EC",width:"100%",marginBottom:"1rem"}}></hr>
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
           </div>
@@ -464,6 +743,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 onPageChange={setSelectedPageName}
                 nextRoute={nextRoute}
                 previousRoute={previousRoute}
+                viewMode={viewMode}
               />
             </div>
 
@@ -474,14 +754,16 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
               }`}
               onClick={async () => {
                 if (nextRoute) {
-                  // Check for validation errors before navigating
-                  if (checkValidationErrorsAndShowToast(setShowToast, t)) {
-                    return;
-                  }
+                  if (!viewMode) {
+                    // Check for validation errors before navigating
+                    if (checkValidationErrorsAndShowToast(setShowToast, t)) {
+                      return;
+                    }
 
-                  // Call MDMS update if available
-                  if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
-                    await window.__appConfig_onNext();
+                    // Call MDMS update if available
+                    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+                      await window.__appConfig_onNext();
+                    }
                   }
 
                   // Reset selected field when navigating forward
@@ -500,26 +782,31 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Bottom Navigation */}
         <Footer
           actionFields={[
-            // <Button
-            //   icon="ArrowBack"
-            //   label={t("BACK")}
-            //   title={t("BACK")}
-            //   onClick={() => {
-            //     navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
-            //   }}
-            //   type="button"
-            //   variation="secondary"
-            // />,
+            // viewMode ? (
+            //   <Button
+            //     variation="primary"
+            //     icon="ArrowBack"
+            //     label={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+            //     title={t(I18N_KEYS.APP_CONFIGURATION.BACK_TO_MODULES)}
+            //     onClick={() => {
+            //       navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}&viewMode=true`);
+            //     }}
+            //   />
+            // ) 
+            // :
+            //  (
             <Button
-              variation="primary"
-              label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
-              title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
-              icon="CheckCircle"
-              isSuffix={false}
-              onClick={() => {
-                saveToAppConfig();
-              }}
-            />
+                variation="primary"
+                label={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
+                title={t(I18N_KEYS.APP_CONFIGURATION.PROCEED_TO_PREVIEW)}
+                icon="CheckCircle"
+                isSuffix={false}
+                isDisabled={viewMode ? true : false}
+                onClick={() => {
+                  saveToAppConfig();
+                }}
+              />
+            // ),
           ]}
           setactionFieldsToRight={true}
         />

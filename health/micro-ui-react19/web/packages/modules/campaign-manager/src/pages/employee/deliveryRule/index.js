@@ -296,6 +296,44 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     };
   }, [resetData]);
 
+  // Counteract Dropdown components' built-in scrollIntoView({behavior:"smooth"})
+  // that fires on mount when the element is below the viewport.
+  // The RAF handles the common case where the smooth-scroll is already in-flight.
+  // The fallback timeout covers the case where Dropdown internally defers its
+  // scrollIntoView behind its own ~300ms animation/render delay (observed in
+  // @egovernments/digit-ui-components Dropdown). We cancel the fallback if the
+  // user scrolls manually to avoid overriding intentional navigation.
+  useEffect(() => {
+    if (!initialized) return;
+
+    // Dropdown's deferred scrollIntoView fires within ~300ms of mount;
+    // 400ms provides a safe margin to catch and override it.
+    const DROPDOWN_SCROLL_OVERRIDE_DELAY_MS = 400;
+    let userScrolled = false;
+
+    const onUserScroll = () => {
+      userScrolled = true;
+    };
+
+    window.addEventListener("scroll", onUserScroll, { passive: true });
+
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    });
+
+    const timer = setTimeout(() => {
+      if (!userScrolled && window.scrollY !== 0) {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      }
+    }, DROPDOWN_SCROLL_OVERRIDE_DELAY_MS);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+      window.removeEventListener("scroll", onUserScroll);
+    };
+  }, [initialized]);
+
   if (dataLoading || storeLoading || !initialized) {
     return <Loader page={true} variant="PageLoader" />;
   }

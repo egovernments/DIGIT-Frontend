@@ -43,7 +43,7 @@ const isLocalizedValueEmpty = (code, localizationData, currentLocale) => {
   return isEmpty;
 };
 
-const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
+const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber, viewMode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const customTranslate = useCustomTranslate();
@@ -80,12 +80,34 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     }
   }, [showAddFieldPopup]);
 
-  // Helper to close popup and re-open side panel
+  // Helper to close popup and re-open the panel that was active before the popup opened
   const closeAddFieldPopup = useCallback(() => {
     dispatch(handleShowAddFieldPopup(null));
     setNewFieldType(null);
-    window.__appConfig_openSidePanel?.("flows");
+    const restorePanel = window.__appConfig_prevPanel || "flows";
+    window.__appConfig_prevPanel = null;
+    window.__appConfig_openSidePanel?.(restorePanel);
   }, [dispatch]);
+
+  // Allow FullConfigWrapper's Form Elements panel to open this popup with a pre-selected field type
+  useEffect(() => {
+    window.__appConfig_openAddFieldPopup = (fieldTypeMasterItem) => {
+      window.__appConfig_prevPanel = "formelements";
+      dispatch(handleShowAddFieldPopup({ fromFormElements: true }));
+      if (fieldTypeMasterItem) {
+        setNewFieldType({
+          field: {
+            ...fieldTypeMasterItem,
+            name: fieldTypeMasterItem.type,
+            code: t(`${fieldTypeMasterItem.category}.${fieldTypeMasterItem.type}`),
+          },
+        });
+      }
+    };
+    return () => {
+      delete window.__appConfig_openAddFieldPopup;
+    };
+  }, [dispatch, t]);
 
   // Validation function to check ALL fields for mandatory conditional field errors
   const checkAllFieldsValidation = useCallback(() => {
@@ -1089,8 +1111,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   };
   return (
     <React.Fragment>
-      <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} pageType={currentData?.type} />
-      {showAddFieldPopup && (
+      <IntermediateWrapper onNext={viewMode ? null : handleUpdateMDMS} isUpdating={isUpdating} pageType={currentData?.type} viewMode={viewMode} />
+      {showAddFieldPopup && !viewMode && (
         <PopUp
           className="app-config-add-field-popup"
           type={"default"}

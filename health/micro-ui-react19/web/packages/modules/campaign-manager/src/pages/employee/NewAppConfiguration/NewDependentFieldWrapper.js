@@ -28,7 +28,7 @@ function BodyPortal({ children }) {
 }
 
 /** MDMS Dropdown */
-function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
+function MdmsValueDropdown({ schemaCode, value, onChange, t, disabled: disabledProp }) {
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
     const [module = "", master = ""] = (schemaCode || "").split(".");
 
@@ -79,11 +79,12 @@ function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
             selected={selectedOption}
             showToolTip={true}
             isSearchable={true}
+            disabled={disabledProp}
         />
     );
 }
 
-function NewDependentFieldWrapper({ t }) {
+function NewDependentFieldWrapper({ t, viewMode }) {
     const useT = useCustomTranslate();
     const dispatch = useDispatch();
     const tenantId = Digit?.ULBService?.getCurrentTenantId?.() || "mz";
@@ -1102,7 +1103,7 @@ function NewDependentFieldWrapper({ t }) {
                     {SVG?.Edit ? <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" id={"app-config-screen-add-display-logic-button"} label={addDisplayLogicLabel} title={addDisplayLogicLabel} onClick={() => onEdit(idx)} size={"medium"} />}
                 </div>
 
-                <div
+                {!viewMode && (<div
                     role="button"
                     title={deleteRuleLabel}
                     aria-label={deleteRuleLabel}
@@ -1110,7 +1111,7 @@ function NewDependentFieldWrapper({ t }) {
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
                     {SVG?.Delete ? <SVG.DeleteForever fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} /> : <Button variation="secondary" label={deleteRuleLabel} title={deleteRuleLabel} onClick={() => onDelete(idx)} />}
-                </div>
+                </div>)}
             </div>
         </div>
     );
@@ -1195,7 +1196,7 @@ function NewDependentFieldWrapper({ t }) {
           )}
         </div>
 
-        <div>
+        {!viewMode && (<div>
           <Button
             variation="secondary"
             label={addDisplayLogicLabel}
@@ -1205,7 +1206,7 @@ function NewDependentFieldWrapper({ t }) {
             style={{ width: "100%" }}
             size={"medium"}
           />
-        </div>
+        </div>)}
 
         {/* Editor popup */}
         {showPopUp && draftRule && (
@@ -1311,7 +1312,7 @@ function NewDependentFieldWrapper({ t }) {
                                 <span className="dependent-field-popup__condition-header-label">
                                   {ifLabel}
                                 </span>
-                                {draftRule.conds.length > 1 && (
+                                {draftRule.conds.length > 1 && !viewMode && (
                                   <Button
                                     variation="teritiary"
                                     icon={"Delete"}
@@ -1367,6 +1368,7 @@ function NewDependentFieldWrapper({ t }) {
                                           }
                                         : { code: cond.leftPage }
                                     }
+                                    disabled={viewMode}
                                   />
                                 </LabelFieldPair>
 
@@ -1434,7 +1436,7 @@ function NewDependentFieldWrapper({ t }) {
                                             label: selectPageFirstLabel,
                                           }
                                     }
-                                    disabled={!cond.leftPage}
+                                    disabled={viewMode || !cond.leftPage}
                                   />
                                 </LabelFieldPair>
                               </div>
@@ -1463,7 +1465,7 @@ function NewDependentFieldWrapper({ t }) {
                                     updateSubCond(idx, { comparisonType: e })
                                   }
                                   selected={selectedOperator}
-                                  disabled={!cond.leftField}
+                                  disabled={viewMode || !cond.leftField}
                                 />
                               </LabelFieldPair>
 
@@ -1477,12 +1479,12 @@ function NewDependentFieldWrapper({ t }) {
                                         ? " dependent-field-popup__radio-card--selected"
                                         : ""
                                     }${
-                                      !cond.leftField
+                                      !cond.leftField || viewMode
                                         ? " dependent-field-popup__radio-card--disabled"
                                         : ""
                                     }`}
                                     onClick={() => {
-                                      if (cond.leftField) {
+                                      if (cond.leftField && !viewMode) {
                                         updateSubCond(idx, {
                                           isFieldComparison: false,
                                           rightPage: null,
@@ -1514,12 +1516,12 @@ function NewDependentFieldWrapper({ t }) {
                                         ? " dependent-field-popup__radio-card--selected"
                                         : ""
                                     }${
-                                      !cond.leftField
+                                      !cond.leftField || viewMode
                                         ? " dependent-field-popup__radio-card--disabled"
                                         : ""
                                     }`}
                                     onClick={() => {
-                                      if (cond.leftField) {
+                                      if (cond.leftField && !viewMode) {
                                         updateSubCond(idx, {
                                           isFieldComparison: true,
                                           fieldValue: "",
@@ -1588,7 +1590,7 @@ function NewDependentFieldWrapper({ t }) {
                                             }
                                           : {}
                                       }
-                                      disabled={!cond.leftField}
+                                      disabled={viewMode || !cond.leftField}
                                     />
                                   </LabelFieldPair>
                                   <LabelFieldPair vertical removeMargin>
@@ -1630,7 +1632,7 @@ function NewDependentFieldWrapper({ t }) {
                                               label: selectPageFirstLabel,
                                             }
                                       }
-                                      disabled={!cond.rightPage}
+                                      disabled={viewMode || !cond.rightPage}
                                     />
                                   </LabelFieldPair>
                                 </div>
@@ -1650,6 +1652,7 @@ function NewDependentFieldWrapper({ t }) {
                                         })
                                       }
                                       t={t}
+                                      disabled={viewMode}
                                     />
                                   ) : isCheckbox ? (
                                     <CheckBox
@@ -1679,7 +1682,7 @@ function NewDependentFieldWrapper({ t }) {
                                         ""
                                       }
                                       isLabelFirst={false}
-                                      disabled={!cond.leftField}
+                                      disabled={viewMode || !cond.leftField}
                                     />
                                   ) : isDob ? (
                                     <TextInput
@@ -1701,6 +1704,7 @@ function NewDependentFieldWrapper({ t }) {
                                           ),
                                         })
                                       }
+                                      disabled={viewMode}
                                     />
                                   ) : isDate ? (
                                     (() => {
@@ -1725,7 +1729,7 @@ function NewDependentFieldWrapper({ t }) {
                                               isDate: true,
                                             });
                                           }}
-                                          disabled={!cond.leftField}
+                                          disabled={viewMode || !cond.leftField}
                                         />
                                       );
                                     })()
@@ -1760,7 +1764,7 @@ function NewDependentFieldWrapper({ t }) {
                                             })
                                           }
                                           selected={selectedEnum}
-                                          disabled={!cond.leftField}
+                                          disabled={viewMode || !cond.leftField}
                                         />
                                       );
                                     })()
@@ -1790,7 +1794,7 @@ function NewDependentFieldWrapper({ t }) {
                                             })
                                           }
                                           selected={selectedProductVariant}
-                                          disabled={!cond.leftField}
+                                          disabled={viewMode || !cond.leftField}
                                         />
                                       );
                                     })()
@@ -1813,7 +1817,7 @@ function NewDependentFieldWrapper({ t }) {
                                             : v,
                                         });
                                       }}
-                                      disabled={!cond.leftField}
+                                      disabled={viewMode || !cond.leftField}
                                     />
                                   )}
                                 </>
@@ -1824,7 +1828,7 @@ function NewDependentFieldWrapper({ t }) {
                       })}
 
                       {/* Add Condition button after the last condition */}
-                      <div className="dependent-field-wrapper__add-condition-wrapper">
+                      {!viewMode && (<div className="dependent-field-wrapper__add-condition-wrapper">
                         <Button
                           variation="secondary"
                           icon={"Add"}
@@ -1833,7 +1837,7 @@ function NewDependentFieldWrapper({ t }) {
                           title={addConditionLabel}
                           onClick={addSubCondition}
                         />
-                      </div>
+                      </div>)}
 
                       {/* Divider before Rule Summary */}
                       {generateConditionSummary(draftRule?.conds) && (
@@ -1893,7 +1897,7 @@ function NewDependentFieldWrapper({ t }) {
                       title={closeLabel}
                       onClick={discardAndCloseEditor}
                     />,
-                    <Button
+                    ...(!viewMode ? [<Button
                       key="submit"
                       type={"button"}
                       size={"large"}
@@ -1902,7 +1906,7 @@ function NewDependentFieldWrapper({ t }) {
                       title={submitLabel}
                       onClick={submitAndClose}
                       disabled={!isRuleComplete(draftRule)}
-                    />,
+                    />] : []),
                   ]
                   // <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", width: "100%" }}>
                   //     <Button variation="tertiary" label={closeLabel} onClick={discardAndCloseEditor} />

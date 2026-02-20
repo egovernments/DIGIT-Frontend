@@ -7,7 +7,7 @@ import SidePanelApp from "./SidePanelApp";
 // import LayoutRenderer from "./LayoutRenderer";
 import NewLayoutRenderer from "./NewLayoutRenderer";
 
-function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp }) {
+function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp, viewMode }) {
   const dispatch = useDispatch();
   const { currentData, selectedField, isFieldSelected, pageType } = useSelector((state) => state.remoteConfig);
   const t = useCustomTranslate();
@@ -46,7 +46,7 @@ function AppConfiguration({ onNext, isUpdating, pageType: pageTypeProp }) {
       ) : (
         <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
       )}
-      <SidePanelApp showPanelProperties={isFieldSelected && selectedField} />
+      <SidePanelApp showPanelProperties={isFieldSelected && selectedField} viewMode={viewMode}/>
     </div>
   );
 }

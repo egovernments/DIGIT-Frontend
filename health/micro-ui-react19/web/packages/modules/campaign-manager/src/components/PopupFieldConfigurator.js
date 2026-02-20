@@ -201,7 +201,7 @@ const ItemLocalizationInput = React.memo(({ item, itemIndex, itemType, field, pr
           populators={{
             fieldPairClassName: "drawer-toggle-conditional-field",
           }}
-          disabled={!toggleState}
+          disabled={disabled || !toggleState}
         />
       </div>
     </div>
