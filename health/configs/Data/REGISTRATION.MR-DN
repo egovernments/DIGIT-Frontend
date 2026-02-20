@@ -7,6 +7,7 @@
                 "name": "REGISTRATION",
                 "flows": [
                     {
+                        "category": "REGISTRATION",
                         "body": [
                             {
                                 "type": "template",
@@ -597,6 +598,7 @@
                         }
                     },
                     {
+                         "category": "REGISTRATION",
                         "name": "HOUSEHOLD",
                         "order": 2,
                         "pages": [
@@ -1405,6 +1407,7 @@
                         }
                     },
                     {
+                         "category": "REGISTRATION",
                         "body": [
                             {
                                 "type": "template",
@@ -1863,6 +1866,7 @@
                         }
                     },
                     {
+                         "category": "REGISTRATION",
                         "name": "ADD_MEMBER",
                         "order": 4,
                         "pages": [
@@ -2280,6 +2284,7 @@
                         }
                     },
                     {
+                         "category": "DELIVERY",
                         "name": "CHECKLIST",
                         "order": 5,
                         "pages": [
@@ -2680,6 +2685,7 @@
                         "screenType": "FORM"
                     },
                     {
+                         "category": "REFERRAL",
                         "name": "REFER_BENEFICIARY",
                         "order": 6,
                         "pages": [
@@ -2892,6 +2898,7 @@
                         "screenType": "FORM"
                     },
                     {
+                         "category": "REFERRAL",
                         "body": [
                             {
                                 "type": "template",
@@ -2987,6 +2994,7 @@
                         "description": ""
                     },
                     {
+                         "category": "DELIVERY",
                         "body": [
                             {
                                 "type": "template",
@@ -3494,6 +3502,7 @@
                         }
                     },
                     {
+                        "category": "DELIVERY",
                         "name": "DELIVERY",
                         "order": 9,
                         "pages": [
@@ -3764,6 +3773,7 @@
                         "screenType": "FORM"
                     },
                     {
+                        "category": "DELIVERY",
                         "body": [
                             {
                                 "type": "template",
