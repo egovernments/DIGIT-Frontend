@@ -362,16 +362,18 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             className={`full-config-wrapper__sidebar-menu-item ${currentPageType === "template" || viewMode ? "roles-disabled" : ""} ${
               activeSidePanel === "formelements" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
-            onClick={() => handleToggleSidePanel("formelements")}
+            onClick={() => {
+              if (currentPageType === "template" || viewMode) return;
+              handleToggleSidePanel("formelements");
+            }}
           >
             {activeSidePanel === "formelements" ? <CustomSVG.VariableAddFilled fill={"#0B4B66"} width={"24px"} height={"24px"} /> : <CustomSVG.VariableAdd fill={currentPageType === "template" || viewMode ? "#B1B4B6" : "#0B4B66"} width={"24px"} height={"24px"}/>}
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FORMELEMENTS)}</span>
           </div>
           <div
-            className={`full-config-wrapper__sidebar-menu-item roles-disabled${
+            className={`full-config-wrapper__sidebar-menu-item roles-disabled ${
               activeSidePanel === "roles" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
-            onClick={() => handleToggleSidePanel("roles")}
           >
             {activeSidePanel === "roles" ? <SVG.Person fill="#B1B4B6" /> : <SVG.PersonOutline fill="#B1B4B6" />}
 
