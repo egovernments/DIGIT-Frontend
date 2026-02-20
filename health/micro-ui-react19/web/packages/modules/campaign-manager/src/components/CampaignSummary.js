@@ -149,7 +149,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -180,7 +180,7 @@ const CampaignSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
+    navigate(newUrl);
   };
 
   function updateUrlParams(params) {
@@ -379,12 +379,9 @@ const CampaignSummary = (props) => {
             resourceIdArr.push(i?.createResourceId);
           }
         });
-        setStartDate(data?.[0]?.startDate);
-        setEndDate(data?.[0]?.endDate);
         let processid;
-        setprojectId(data?.[0]?.projectId);
-        setCards(data?.cards);
 
+        const isUnifiedCampaign = data?.[0]?.additionalDetails?.isUnifiedCampaign === true;
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries);
         const delivery = Array.isArray(data?.deliveryRules) ? data?.deliveryRules : [];
@@ -451,13 +448,11 @@ const CampaignSummary = (props) => {
                     },
                     {
                       key: "CAMPAIGN_START_DATE",
-                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
-                      value: Digit.Utils.date.convertEpochToDate(startDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
+                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.startDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_END_DATE",
-                      // value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
-                      value: Digit.Utils.date.convertEpochToDate(endDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
+                      value: Digit.Utils.date.convertEpochToDate(data?.[0]?.endDate) || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
@@ -547,66 +542,91 @@ const CampaignSummary = (props) => {
                 ],
               };
             }),
-            {
-              navigationKey: "card4",
-              sections: [
-                {
-                  name: "facility",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
+            ...(isUnifiedCampaign
+              ? [
+                  {
+                    navigationKey: "card4",
+                    sections: [
+                      {
+                        name: "unified-resources",
+                        type: "COMPONENT",
+                        component: "CampaignDocumentsPreview",
+                        props: {
+                          documents: data?.[0]?.resources?.filter((i) => i.type === "unified-console-resources"),
+                        },
+                        cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                        cardSecondaryAction: noAction !== "false" && (
+                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                            <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
+                            <EditIcon />
+                          </div>
+                        ),
+                      },
+                    ],
                   },
-                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
-                      <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            {
-              navigationKey: "card4",
-              sections: [
-                {
-                  name: "user",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
+                ]
+              : [
+                  {
+                    navigationKey: "card4",
+                    sections: [
+                      {
+                        name: "facility",
+                        type: "COMPONENT",
+                        component: "CampaignDocumentsPreview",
+                        props: {
+                          documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
+                        },
+                        cardHeader: { value: t(I18N_KEYS.COMPONENTS.FACILITY_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                        cardSecondaryAction: noAction !== "false" && (
+                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                            <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
+                            <EditIcon />
+                          </div>
+                        ),
+                      },
+                    ],
                   },
-                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
-                      <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            {
-              navigationKey: "card4",
-              sections: [
-                {
-                  name: "target",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
+                  {
+                    navigationKey: "card4",
+                    sections: [
+                      {
+                        name: "user",
+                        type: "COMPONENT",
+                        component: "CampaignDocumentsPreview",
+                        props: {
+                          documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
+                        },
+                        cardHeader: { value: t(I18N_KEYS.COMPONENTS.USER_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                        cardSecondaryAction: noAction !== "false" && (
+                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                            <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
+                            <EditIcon />
+                          </div>
+                        ),
+                      },
+                    ],
                   },
-                  cardHeader: { value: t(I18N_KEYS.COMPONENTS.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
-                      <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
+                  {
+                    navigationKey: "card4",
+                    sections: [
+                      {
+                        name: "target",
+                        type: "COMPONENT",
+                        component: "CampaignDocumentsPreview",
+                        props: {
+                          documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
+                        },
+                        cardHeader: { value: t(I18N_KEYS.COMPONENTS.TARGET_DETAILS), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                        cardSecondaryAction: noAction !== "false" && (
+                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
+                            <span>{t(I18N_KEYS.COMPONENTS.CAMPAIGN_EDIT)}</span>
+                            <EditIcon />
+                          </div>
+                        ),
+                      },
+                    ],
+                  },
+                ]),
             resourceIdArr?.length > 0
               ? {
                   navigationKey: "card4",
@@ -674,6 +694,15 @@ const CampaignSummary = (props) => {
       cacheTime: 0,
     },
   });
+
+  // Sync state from query data (moved out of select to avoid infinite re-renders in React 19)
+  useEffect(() => {
+    if (data?.data) {
+      setStartDate(data.data.startDate);
+      setEndDate(data.data.endDate);
+      setprojectId(data.data.projectId);
+    }
+  }, [data?.data]);
 
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -765,7 +794,7 @@ const CampaignSummary = (props) => {
           </PopUp>
         )}
       </div>
-      <div className="campaign-summary-container">
+      <div className="campaign-summary-container new-campaign-summary">
         <ViewComposer data={updatedObject} cardErrors={summaryErrors} />
         {showToast && (
           <Toast

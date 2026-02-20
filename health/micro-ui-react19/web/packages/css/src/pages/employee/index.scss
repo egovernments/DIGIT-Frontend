@@ -442,6 +442,15 @@ tbody {
       }
     }
   }
+  &.new-campaign-summary{
+    .digit-card-component{
+      margin-bottom: 1.5rem;
+
+      .employee-card-sub-header {
+          margin: 0rem;
+      }
+    }
+  }
 }
 
   .setup-campaign-card {
@@ -493,6 +502,7 @@ tbody {
   .employee-card-sub-header {
     @include typography-text-heading-m;
     margin-bottom: 1.5rem;
+    color: #0b4b66;
   }
 
   .employee-card-sub-header.error {

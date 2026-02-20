@@ -561,7 +561,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
             <span>{t(I18N_KEYS.APP_CONFIGURATION.APP_CONFIG_FLOWS)}</span>
           </div>
           <div
-            className={`full-config-wrapper__sidebar-menu-item ${currentPageType === "template" ? "roles-disabled" : ""} ${
+            className={`full-config-wrapper__sidebar-menu-item ${currentPageType === "template" || viewMode ? "roles-disabled" : ""} ${
               activeSidePanel === "formelements" ? "full-config-wrapper__sidebar-menu-item--active" : ""
             }`}
             onClick={() => handleToggleSidePanel("formelements")}
