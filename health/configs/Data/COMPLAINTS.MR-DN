@@ -15,6 +15,7 @@
                                         "type": "template",
                                         "label": "COMPLAINT_INBOX_SEARCH_LABEL",
                                         "format": "actionPopup",
+                                        "fieldName": "searchComplaints",
                                         "properties": {
                                             "icon": "Search",
                                             "size": "medium",
@@ -43,17 +44,28 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SEARCH_SECONDARY_ACTION_LABEL",
                                                         "format": "button",
-                                                        "fieldName": "cancel",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLEAR_STATE",
-                                                                "properties": {}
+                                                                "properties": {
+                                                                    "name": "pgrService",
+                                                                    "filterKeys": [
+                                                                        "serviceRequestId",
+                                                                        "mobileNumber"
+                                                                    ],
+                                                                    "widgetKeys": [
+                                                                        "complaintNumber",
+                                                                        "mobileNumber"
+                                                                    ],
+                                                                    "triggerSearch": true
+                                                                }
                                                             },
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
                                                                 "properties": {}
                                                             }
                                                         ],
+                                                        "fieldName": "cancel",
                                                         "properties": {
                                                             "size": "large",
                                                             "type": "secondary",
@@ -64,11 +76,22 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SEARCH_PRIMARY_ACTION_LABEL",
                                                         "format": "button",
-                                                        "fieldName": "search",
                                                         "onAction": [
+                                                           {
+                                                                "actionType": "CLEAR_STATE",
+                                                                "properties": {
+                                                                    "name": "pgrService",
+                                                                    "filterKeys": [
+                                                                        "serviceRequestId",
+                                                                        "mobileNumber"
+                                                                    ]
+                                                                }
+                                                            },
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
-                                                                "properties": {}
+                                                                "properties": {
+                                                                    "parentScreenKey": "complaintInbox"
+                                                                }
                                                             },
                                                             {
                                                                 "actionType": "SEARCH_EVENT",
@@ -76,19 +99,22 @@
                                                                     "data": [
                                                                         {
                                                                             "key": "serviceRequestId",
-                                                                            "value": "{{ widgetData.complaintNumber }}",
-                                                                            "operation": "in"
+                                                                            "root": "pgrService",
+                                                                            "value": "{{complaintNumber}}",
+                                                                            "operation": "contains"
                                                                         },
                                                                         {
-                                                                            "key": "serviceRequestId",
-                                                                            "value": "{{ widgetData.mobileNumber }}",
-                                                                            "operation": "in"
+                                                                            "key": "mobileNumber",
+                                                                            "root": "pgrComplainant",
+                                                                            "value": "{{mobileNumber}}",
+                                                                            "operation": "contains"
                                                                         }
                                                                     ],
-                                                                    "name": "PgrServiceModel"
+                                                                    "name": "pgrService"
                                                                 }
                                                             }
                                                         ],
+                                                        "fieldName": "search",
                                                         "properties": {
                                                             "size": "large",
                                                             "type": "primary",
@@ -108,6 +134,7 @@
                                         "type": "template",
                                         "label": "COMPLAINT_INBOX_FILTER_LABEL",
                                         "format": "actionPopup",
+                                        "fieldName": "complaintsFilter",
                                         "properties": {
                                             "icon": "FilterAlt",
                                             "size": "medium",
@@ -131,16 +158,18 @@
                                                     },
                                                     {
                                                         "type": "template",
-                                                        "enums": "{{fn:getUniqueComplaintTypes()}}",
+                                                        "enums": "{{fn:getUniqueComplaintTypes(contextData)}}",
                                                         "label": "COMPLAINT_INBOX_FILTER_COMPLAINT_TYPE_LABEL",
                                                         "format": "dropdownTemplate",
+                                                        "valueKey": "code",
                                                         "fieldName": "complaintType"
                                                     },
                                                     {
                                                         "type": "template",
-                                                        "enums": "{{fn:getUniqueLocalities()}}",
+                                                        "enums": "{{fn:getUniqueLocalities(contextData)}}",
                                                         "label": "COMPLAINT_INBOX_FILTER_LOCALITY_TYPE_LABEL",
                                                         "format": "dropdownTemplate",
+                                                        "valueKey": "code",
                                                         "fieldName": "locality"
                                                     }
                                                 ],
@@ -152,17 +181,30 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_FILTER_SECONDARY_ACTION_LABEL",
                                                         "format": "button",
-                                                        "fieldName": "cancel",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLEAR_STATE",
-                                                                "properties": {}
+                                                                "properties": {
+                                                                    "name": "pgrService",
+                                                                    "filterKeys": [
+                                                                        "name",
+                                                                        "serviceCode",
+                                                                        "localityBoundaryCode"
+                                                                    ],
+                                                                    "widgetKeys": [
+                                                                        "assignTo",
+                                                                        "complaintType",
+                                                                        "locality"
+                                                                    ],
+                                                                    "triggerSearch": true
+                                                                }
                                                             },
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
                                                                 "properties": {}
                                                             }
                                                         ],
+                                                        "fieldName": "cancel",
                                                         "properties": {
                                                             "size": "large",
                                                             "type": "secondary",
@@ -173,8 +215,18 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_FILTER_PRIMARY_ACTION_LABEL",
                                                         "format": "button",
-                                                        "fieldName": "filter",
                                                         "onAction": [
+                                                          {
+                                                                "actionType": "CLEAR_STATE",
+                                                                "properties": {
+                                                                    "name": "pgrService",
+                                                                    "filterKeys": [
+                                                                        "name",
+                                                                        "serviceCode",
+                                                                        "localityBoundaryCode"
+                                                                    ]
+                                                                }
+                                                            },
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
                                                                 "properties": {}
@@ -186,28 +238,29 @@
                                                                         {
                                                                             "key": "name",
                                                                             "root": "pgrComplainant",
-                                                                            "value": "{{singleton.loggedInUserName}}",
-                                                                            "applyIf": "{{ widgetData.assignTo == 'ASSIGN_TO_ME' }}",
+                                                                            "value": "{{singleton.loggedInUser.name}}",
+                                                                            "applyIf": "{{ assignTo }} == ASSIGN_TO_ME",
                                                                             "operation": "equals"
                                                                         },
                                                                         {
                                                                             "key": "serviceCode",
-                                                                            "value": "{{ widgetData.complaintType }}",
-                                                                            "applyIf": "{{ widgetData.complaintType.isNotEmpty }}",
+                                                                            "value": "{{complaintType }}",
+                                                                            "applyIf": "{{complaintType }} !=null && {{complaintType }} !=null",
                                                                             "operation": "equals"
                                                                         },
                                                                         {
-                                                                            "key": "locality.code",
+                                                                            "key": "localityBoundaryCode",
                                                                             "root": "address",
-                                                                            "value": "{{ widgetData.locality }}",
-                                                                            "applyIf": "{{ widgetData.locality.isNotEmpty }}",
+                                                                            "value": "{{ locality }}",
+                                                                            "applyIf": "{{locality }} !=null && {{locality }} !=null",
                                                                             "operation": "equals"
                                                                         }
                                                                     ],
-                                                                    "defaultRoot": "pgrService"
+                                                                    "name": "pgrService"
                                                                 }
                                                             }
                                                         ],
+                                                        "fieldName": "filter",
                                                         "properties": {
                                                             "size": "large",
                                                             "type": "primary",
@@ -226,6 +279,7 @@
                                         "type": "template",
                                         "label": "COMPLAINT_INBOX_SORT_LABEL",
                                         "format": "actionPopup",
+                                        "fieldName": "sortComplaints",
                                         "properties": {
                                             "icon": "SortSvg",
                                             "size": "medium",
@@ -245,7 +299,7 @@
                                                         ],
                                                         "type": "template",
                                                         "format": "radioList",
-                                                        "fieldName": "sotyBy"
+                                                        "fieldName": "sortBy"
                                                     }
                                                 ],
                                                 "type": "default",
@@ -256,17 +310,23 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SORT_SECONDARY_ACTION_LABEL",
                                                         "format": "button",
-                                                        "fieldName": "cancel",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLEAR_STATE",
-                                                                "properties": {}
+                                                                "properties": {
+                                                                    "name": "pgrService",
+                                                                    "widgetKeys": [
+                                                                        "sortBy"
+                                                                    ],
+                                                                    "triggerSearch": true
+                                                                }
                                                             },
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
                                                                 "properties": {}
                                                             }
                                                         ],
+                                                        "fieldName": "cancel",
                                                         "properties": {
                                                             "size": "large",
                                                             "type": "secondary",
@@ -277,7 +337,6 @@
                                                         "type": "template",
                                                         "label": "COMPLAINT_INBOX_SORT_PRIMARY_ACTION_LABEL",
                                                         "format": "button",
-                                                        "fieldName": "sort",
                                                         "onAction": [
                                                             {
                                                                 "actionType": "CLOSE_POPUP",
@@ -288,15 +347,20 @@
                                                                 "properties": {
                                                                     "data": [
                                                                         {
-                                                                            "key": "status",
-                                                                            "value": "{{ widgetData.selectedStatus }}",
-                                                                            "operation": "in"
+                                                                            "key": "tenantId",
+                                                                            "value": "{{singleton.selectedProject.tenantId}}",
+                                                                            "operation": "equals"
                                                                         }
                                                                     ],
-                                                                    "name": "IndividualModel"
+                                                                    "name": "pgrService",
+                                                                    "orderBy": {
+                                                                        "field": "auditCreatedTime",
+                                                                        "order": "{{ sortBy }} == LATEST_FIRST ? desc : asc"
+                                                                    }
                                                                 }
                                                             }
                                                         ],
+                                                        "fieldName": "sort",
                                                         "properties": {
                                                             "size": "large",
                                                             "type": "primary",
@@ -1118,8 +1182,8 @@
             "isActive": true,
             "auditDetails": {
                 "createdBy": "b43b260c-f620-45d3-a43f-f53148f87f15",
-                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
                 "createdTime": 1766043263734,
-                "lastModifiedTime": 1766397270697
+                "lastModifiedTime": 1767094638083
             }
         }
