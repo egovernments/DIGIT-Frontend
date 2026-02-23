@@ -516,7 +516,7 @@ const IndividualUserProfile = ({ stateCode, userType, cityDetails }) => {
     <div className={`user-profile ${userType === "citizen" ? "citizen" : "employee"}`}>
       <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "0px" }}>
         {userType === "citizen" || isMobile ? (
-          <BackLink onClick={() => navigate("/")} />
+          <BackLink onClick={() => navigate(-1)} />
         ) : (
           <BreadCrumb
             style={{ marginTop: "0rem", marginBottom: "1.5rem" }}
