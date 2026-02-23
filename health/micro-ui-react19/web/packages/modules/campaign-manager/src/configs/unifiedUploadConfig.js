@@ -20,7 +20,7 @@ export const unifiedUploadConfig = ({ totalFormData, campaignData }) => {
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "unified-console",
+                screenType: "unified-console",
               },
               populators: {
                 name: "uploadUnified",

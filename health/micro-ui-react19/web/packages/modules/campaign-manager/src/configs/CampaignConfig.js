@@ -257,7 +257,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                type: "facilityWithBoundary",
+                screenType: "facilityWithBoundary",
               },
               populators: {
                 name: "uploadFacility",
@@ -310,7 +310,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                type: "userWithBoundary",
+                screenType: "userWithBoundary",
               },
               populators: {
                 name: "uploadUser",
@@ -363,7 +363,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                type: "boundary",
+                screenType: "boundary",
               },
               populators: {
                 name: "uploadBoundary",

@@ -25,7 +25,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const [downloadId, setDownloadId] = useState({});
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
-  const type = props?.props?.type;
+  const type = props?.props?.screenType;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);

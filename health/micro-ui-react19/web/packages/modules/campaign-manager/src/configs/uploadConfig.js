@@ -19,7 +19,7 @@ export const uploadConfig = ({ totalFormData, campaignData, summaryErrors }) => 
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "facility",
+                screenType: "facility",
               },
               populators: {
                 name: "uploadFacility",
@@ -77,7 +77,7 @@ export const uploadConfig = ({ totalFormData, campaignData, summaryErrors }) => 
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "user",
+                screenType: "user",
               },
               populators: {
                 name: "uploadUser",
@@ -134,7 +134,7 @@ export const uploadConfig = ({ totalFormData, campaignData, summaryErrors }) => 
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "boundary",
+                screenType: "boundary",
               },
               populators: {
                 name: "uploadBoundary",
