@@ -420,24 +420,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   const attendeeUsernames = AllIndividualsData?.Individual?.map((ind) => ind?.userDetails?.username).filter(Boolean) || [];
 
-  // const buildMapLink = () => {
-  //   const baseUrl = "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards?auth_provider_hint=anonymous1#/view/260a9fb0-074e-11f1-9fbf-5fda27227d86?embed=true&_g=(refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&hide-filter-bar=true";
+  const kibanaMapConfig = Digit.SessionStorage.get("kibanaMapConfig");
 
-  //   if (attendeeUsernames.length === 0) {
-  //     return `${baseUrl}`;
-  //   }
-
-  //   const field = "Data.userName.keyword";
-  //   const params = attendeeUsernames.map((u) => `'${u}'`).join(",");
-  //   const shouldClauses = attendeeUsernames.map((u) => `(match_phrase:(${field}:'${u}'))`).join(",");
-  //   const filter = `('$state':(store:appState),meta:(alias:!n,disabled:!f,field:${field},key:${field},negate:!f,params:!(${params}),type:phrases),query:(bool:(minimum_should_match:1,should:!(${shouldClauses}))))`;
-  //   const appState = `_a=(filters:!(${filter}),query:(language:kuery,query:''))`;
-
-  //   return `${baseUrl}&${appState}`;
-  // };
   const buildMapLink = () => {
-    const dashboardId = "260a9fb0-074e-11f1-9fbf-5fda27227d86";
-    const baseUrl = "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards?auth_provider_hint=anonymous1";
+    if (!kibanaMapConfig?.routePath) return null;
+
+    // isOrigin: true means prefix with current origin, otherwise use routePath as-is
+    const baseUrl = kibanaMapConfig.isOrigin
+      ? `${window.location.origin}${kibanaMapConfig.routePath}`
+      : kibanaMapConfig.routePath;
 
     const usernames = (attendeeUsernames || []).filter(Boolean);
 
@@ -449,7 +440,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     const filters = termsFilter ? `filters:!(${termsFilter}),` : "";
     const gState = `(${filters}refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))`;
 
-    return `${baseUrl}#/view/${dashboardId}?embed=true&_g=${gState}&hide-filter-bar=true`;
+    return `${baseUrl}&_g=${gState}&hide-filter-bar=true`;
   };
   const mapLink = buildMapLink();
   console.log("mapLink", mapLink);
@@ -604,7 +595,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               label={t("HCM_AM_VIEW_MAPS")}
               title={t("HCM_AM_VIEW_MAPS")}
               variation="secondary"
-              icon="Maps"
+              icon="Map"
               onClick={() => setShowMapPopup(true)}
             />
             <Button
