@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-14"] [23-Feb-2026]
+- Backlink bugfix for citizen in edit profile screen
+
 ## ["2.0.0-dev-13"] [09-Feb-2026]
 - Incremented the version for core publish fix
 
