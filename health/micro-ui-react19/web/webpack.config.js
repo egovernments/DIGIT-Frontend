@@ -117,6 +117,14 @@ module.exports = {
           maxSize: 100000,
           enforce: true,
         },
+        payments: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-health-payments[\\/]/,
+          name: 'payments-module',
+          chunks: 'async',
+          priority: 15,
+          maxSize: 100000,
+          enforce: true,
+        },
         workbench: {
           test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
           name: 'workbench-module',
@@ -281,7 +289,12 @@ module.exports = {
           "/product",
           "/health-service-request",
           "/excel-ingestion",
-          "/boundary-management"
+          "/boundary-management",
+          "/health-attendance",
+          "/health-project",
+          "/health-individual",
+          "/health-expense-calculator",
+          "/health-hrms"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,

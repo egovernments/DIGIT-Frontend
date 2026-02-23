@@ -10,7 +10,7 @@ module.exports = merge(common, {
   output: {
     filename: "[name].bundle.js",
     chunkFilename: "[name].chunk.js",
-    publicPath: "/workbench-ui/",
+    publicPath: "/payments-ui/",
   },
 
   devServer: {
@@ -18,7 +18,7 @@ module.exports = merge(common, {
       directory: path.join(__dirname, "public"),
     },
     historyApiFallback: {
-      index: "/workbench-ui/index.html",
+      index: "/payments-ui/index.html",
     },
     compress: true,
     port: process.env.PORT || 3000,
@@ -85,7 +85,10 @@ module.exports = merge(common, {
           "/product",
           "/health-service-request",
           "/excel-ingestion",
-          "/boundary-management"
+          "/boundary-management",
+          "/health-attendance",
+          "/health-individual",
+          "/health-expense-calculator"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
         changeOrigin: true,

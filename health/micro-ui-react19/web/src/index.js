@@ -10,7 +10,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign", "Payments"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -59,13 +59,26 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initLibraries().then(async () => {
       try {
-        const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
-        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+        const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager");
         initCampaignComponents();
+      } catch (error) {
+        console.log("Error loading campaign-manager module:", error);
+      }
+      try {
+        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");
         initWorkbenchComponents();
       } catch (error) {
-        console.log("Error loading modules:", error);
-        // Continue without modules if they fail to load
+        console.log("Error loading workbench module:", error);
+      }
+      try {
+        const { initPaymentComponents } = await import("@egovernments/digit-ui-module-health-payments");
+        console.log("Before init - PaymentsCard:", !!Digit?.ComponentRegistryService?.getComponent("PaymentsCard"));
+        initPaymentComponents();
+        console.log("After init - PaymentsCard:", !!Digit?.ComponentRegistryService?.getComponent("PaymentsCard"));
+        console.log("After init - CampaignCard:", !!Digit?.ComponentRegistryService?.getComponent("CampaignCard"));
+        console.log("Registry object:", Digit?.ComponentRegistryService);
+      } catch (error) {
+        console.log("Error loading health-payments module:", error);
       }
       setIsReady(true);
     });
@@ -76,9 +89,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
     setLoaded(true);
   }, [stateCode, isReady]);
 
-  if (!loaded) {
+  if (!loaded || !isReady) {
     return <div>Loading...</div>;
   }
+
+  // Debug: check component registry and MDMS modules
+  console.log("enabledModules:", enabledModules);
+  console.log("PaymentsCard registered:", !!Digit?.ComponentRegistryService?.getComponent("PaymentsCard"));
+  console.log("CampaignCard registered:", !!Digit?.ComponentRegistryService?.getComponent("CampaignCard"));
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

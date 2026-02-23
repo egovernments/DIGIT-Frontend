@@ -9,9 +9,10 @@
   },
   "workspaces": [
     "packages/css",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/modules/health-payments"
   ],
-  "homepage": "/workbench-ui/",
+  "homepage": "/payments-ui/",
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"
@@ -46,6 +47,7 @@
     "@egovernments/digit-ui-components": "2.0.0-dev-32",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-08",
     "@egovernments/digit-ui-module-campaign-manager": "1.0.0",
+    "@egovernments/digit-ui-module-health-payments": "1.0.0",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
     "cross-env": "^7.0.3",
@@ -82,13 +84,14 @@
     "start": "node start-dev.js",
     "start:dev": "node start-dev.js",
     "start:webpack-only": "webpack serve --config webpack.dev.js --port 3000",
-    "dev:packages": "concurrently \"npm run dev:css\" \"npm run dev:campaign\"",
+    "dev:packages": "concurrently \"npm run dev:css\" \"npm run dev:campaign\" \"npm run dev:payments\"",
     "dev:css": "cd packages/css && npm run start",
     "dev:campaign": "cd packages/modules/campaign-manager && npm run build:dev -- --watch",
+    "dev:payments": "cd packages/modules/health-payments && npm run build:dev -- --watch",
     "build": "npm run build:packages && webpack --config webpack.prod.js",
     "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
     "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
-    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build",
+    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build && cd ../health-payments && npm run build",
     "clean": "rm -rf node_modules build dist && find packages -name node_modules -type d -exec rm -rf {} + 2>/dev/null || true",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },

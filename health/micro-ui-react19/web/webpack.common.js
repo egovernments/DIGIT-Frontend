@@ -76,6 +76,7 @@ module.exports = {
       "react-query": require.resolve("@tanstack/react-query"),
       // Add aliases for local packages to ensure proper resolution
       "@egovernments/digit-ui-module-campaign-manager": path.resolve(__dirname, "packages/modules/campaign-manager/dist/main.js"),
+      "@egovernments/digit-ui-module-health-payments": path.resolve(__dirname, "packages/modules/health-payments/dist/main.js"),
       "@egovernments/digit-ui-health-css": path.resolve(__dirname, "packages/css/dist/index.css"),
     },
     fallback: {
