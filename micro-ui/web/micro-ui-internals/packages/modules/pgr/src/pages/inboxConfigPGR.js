@@ -109,7 +109,7 @@ const inboxConfigPGR = () => {
                   links: [
                 {
                   text: "ES_PGR_NEW_COMPLAINT",
-                  url: "/employee/pgr/complaint/create",
+                  url: "/employee/pgr/create-complaint",
                   roles: ["SUPERUSER"],
                 },
                   ],
