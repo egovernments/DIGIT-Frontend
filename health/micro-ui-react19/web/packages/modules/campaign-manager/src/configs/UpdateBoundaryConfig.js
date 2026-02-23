@@ -18,7 +18,7 @@ export const UpdateBoundaryConfig = ({ totalFormData, hierarchyType, projectType
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "unified-console",
+                screenType: "unified-console",
               },
               populators: {
                 name: "uploadUnified",
@@ -49,7 +49,7 @@ export const UpdateBoundaryConfig = ({ totalFormData, hierarchyType, projectType
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "facility",
+                screenType: "facility",
                 projectType: projectType,
               },
               populators: {
@@ -76,7 +76,7 @@ export const UpdateBoundaryConfig = ({ totalFormData, hierarchyType, projectType
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "user",
+                screenType: "user",
                 projectType: projectType,
               },
               populators: {
@@ -103,7 +103,7 @@ export const UpdateBoundaryConfig = ({ totalFormData, hierarchyType, projectType
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "boundary",
+                screenType: "boundary",
                 projectType: projectType,
               },
               populators: {

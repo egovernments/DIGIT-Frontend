@@ -169,7 +169,7 @@ const NewUploadScreen = () => {
   const onSubmit = async (formData) => {
     const step = latestConfig?.form?.[0];
     const name = step?.name; // HCM_CAMPAIGN_UPLOAD_*_DATA | DataUploadSummary
-    const type = step?.body?.[0]?.customProps?.type; // "facility" | "user" | "boundary"
+    const type = step?.body?.[0]?.customProps?.screenType; // "facility" | "user" | "boundary"
     const key = Object.keys(formData || {})?.[0];
 
     // ----- Summary validation (only nested keys considered) -----
