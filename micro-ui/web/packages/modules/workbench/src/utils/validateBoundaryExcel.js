@@ -1,7 +1,6 @@
 import * as XLSX from "xlsx";
-import { useTranslation } from "react-i18next";
 
-const validateBoundaryExcelContent = async (file, t) => {
+const validateBoundaryExcelContent = async (file, t, hierarchyColumnsCount) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -26,9 +25,10 @@ const validateBoundaryExcelContent = async (file, t) => {
         resolve({ success: false, error: t("BOUNDARY_NO_VALID_ROWS") });
         return;
       }
-      // Find the index of "Service Boundary Code" to exclude validations
-      const excludeStartIndex = headers.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
-      const validateColumnsCount = excludeStartIndex === -1 ? headers.length : excludeStartIndex;
+      // Only validate hierarchy columns; skip metadata columns (Service Boundary Code, Boundary translations, etc.)
+      // hierarchyColumnsCount is derived from the boundary hierarchy definition, so it adapts
+      // automatically to any hierarchy structure and is independent of locale/translations
+      const validateColumnsCount = hierarchyColumnsCount || headers.length;
       // Perform validations
       const errors = [];
       const referenceCountry = rows[0]?.[0]?.trim(); // Reference country from the first column, first row

@@ -1,5 +1,29 @@
 # Changelog 
 
+## ["2.0.0-dev-10"] [23-Feb-2026]
+### Bug Fix: Boundary Excel Upload Validation Failure
+
+## Issue: 
+Uploading a boundary Excel file via the UI was failing with errors like: BOUNDARY_ROW 2: BOUNDARY_COLUMN "Service Boundary Code" BOUNDARY_FILLED "Community" BOUNDARY_EMPTY
+
+## Root Cause:
+The client-side validation in validateBoundaryExcel.js used t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE") to find the "Service Boundary Code" column header and exclude metadata columns from hierarchical validation. 
+
+## Fix:
+
+## File Changes : 
+
+validateBoundaryExcel.js	: Added hierarchyColumnsCount parameter to determine how many columns to validate. Removed dependency on t() for column identification. Removed unused useTranslation import.
+
+ViewHierarchy.js	: Both call sites now pass hierData?.length (from the boundary hierarchy definition API) as the hierarchy column count.
+
+## Why this approach:
+
+Works in all locales (en, fr, pt) — no translation matching
+Works if localization values change — no hardcoded strings
+Works if hierarchy levels change — count comes from the API dynamically
+Fails safely — falls back to headers.length if hierData is unavailable
+
 ## ["2.0.0-dev-03"] [16-Dec-2025]
 -Added boundary management screens
 
