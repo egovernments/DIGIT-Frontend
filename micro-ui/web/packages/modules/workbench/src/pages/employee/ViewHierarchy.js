@@ -158,7 +158,7 @@ const ViewHierarchy = () => {
       }
       try {
         // Parse the file and validate its content
-        const isValid = await validateBoundaryExcelContent(file, t);
+        const isValid = await validateBoundaryExcelContent(file, t, hierData?.length);
         if (!isValid.success) {
           // setShowToast({ label: isValid.error, isError: "error" });
           setUiValError(true);
@@ -400,7 +400,7 @@ const ViewHierarchy = () => {
 
     try {
       // Validate file content
-      const isValid = await validateBoundaryExcelContent(file, t);
+      const isValid = await validateBoundaryExcelContent(file, t, hierData?.length);
       if (!isValid.success) {
         setUiValError(true);
         setUiErrorMsg(isValid.error);
