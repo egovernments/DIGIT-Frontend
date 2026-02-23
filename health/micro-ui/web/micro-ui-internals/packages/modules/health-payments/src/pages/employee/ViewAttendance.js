@@ -18,7 +18,7 @@ import AttendanceManagementTable from "../../components/attendanceManagementTabl
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
-import { formatTimestampToDate } from "../../utils";
+import { formatTimestampToDate, downloadFileWithName } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 
 import EditAttendeePopUp from "../../components/editAttendeesPopUp";
@@ -64,6 +64,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+  const [showMapPopup, setShowMapPopup] = useState(false);
 
   const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
 
@@ -407,15 +408,35 @@ const ViewAttendance = ({ editAttendance = false }) => {
       }
     },
     config: {
-      enabled: selectedProject ? true : false,
+      // enabled: selectedProject ? true : false, //todo: check
       select: (mdmsData) => {
-        const referenceCampaignId = selectedProject?.id;
+        const referenceCampaignId = project[0]?.id;
         return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
       },
     }
   };
   const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
   console.log("workerRatesData", workerRatesData);
+
+  const attendeeUsernames = AllIndividualsData?.Individual?.map((ind) => ind?.userDetails?.username).filter(Boolean) || [];
+
+  const buildMapLink = () => {
+    const baseUrl = "https://mc-nigeria-uat.digit.org/kibana-upgrade/s/bauchi-dashboard/app/dashboards?auth_provider_hint=anonymous1#/view/260a9fb0-074e-11f1-9fbf-5fda27227d86?embed=true&_g=(refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&hide-filter-bar=true";
+
+    if (attendeeUsernames.length === 0) {
+      return `${baseUrl}`;
+    }
+
+    const field = "Data.userName.keyword";
+    const params = attendeeUsernames.map((u) => `'${u}'`).join(",");
+    const shouldClauses = attendeeUsernames.map((u) => `(match_phrase:(${field}:'${u}'))`).join(",");
+    const filter = `('$state':(store:appState),meta:(alias:!n,disabled:!f,field:${field},key:${field},negate:!f,params:!(${params}),type:phrases),query:(bool:(minimum_should_match:1,should:!(${shouldClauses}))))`;
+    const appState = `_a=(filters:!(${filter}),query:(language:kuery,query:''))`;
+
+    return `${baseUrl}&${appState}`;
+  };
+
+  const mapLink = buildMapLink();
 
   function getUserAttendanceSummary(data, individualsData, t) {
     const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
@@ -540,7 +561,57 @@ const ViewAttendance = ({ editAttendance = false }) => {
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
           <span style={{ color: "#0B4B66" }}>{editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}</span>
         </Header>
+
+        {/* Metrics Summary Card */}
         <Card type="primary" className="bottom-gap-card-payment">
+          <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", padding: "1rem 0" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>85%</div>
+              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_TARGET_ACHIEVED")}</div>
+            </div>
+            <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>1,250</div>
+              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_ACTUAL_INTERVENTIONS")}</div>
+            </div>
+            <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>3</div>
+              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_DAYS_ATTENDANCE_NOT_MARKED")}</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card type="primary" className="bottom-gap-card-payment">
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginBottom: "1rem" }}>
+            <Button
+              label={t("HCM_AM_VIEW_MAPS")}
+              title={t("HCM_AM_VIEW_MAPS")}
+              variation="secondary"
+              icon="Maps"
+              onClick={() => setShowMapPopup(true)}
+            />
+            <Button
+              label={t("HCM_AM_DOWNLOAD_REPORT")}
+              title={t("HCM_AM_DOWNLOAD_REPORT")}
+              variation="secondary"
+              icon="FileDownload"
+              onClick={() => {
+                const report = data?.[0]?.reports?.find(
+                  (r) => r.reportType === "ATTENDANCE_REPORT" && r.reportFormat === "EXCEL" && r.reportStatus === "COMPLETED"
+                );
+                if (report?.fileStoreId) {
+                  downloadFileWithName({
+                    fileStoreId: report.fileStoreId,
+                    customName: `Attendance_Report_${registerNumber}_${formatTimestampToDate(report.generatedAt)}`,
+                    type: "excel",
+                  });
+                } else {
+                  setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 3000 });
+                }
+              }}
+            />
+          </div>
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
           {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(project?.[0]?.name || "NA"))}
           {renderLabelPair("HCM_AM_PROJECT_TYPE", t(project?.[0]?.projectType || "NA"))}
@@ -612,6 +683,25 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
         {showCommentLogPopup && (
           <CommentPopUp onClose={onCommentLogClose} businessId={data?.[0]?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
+        )}
+
+        {showMapPopup && (
+          <PopUp
+            onClose={() => setShowMapPopup(false)}
+            heading={t("HCM_AM_VIEW_MAPS")}
+            onOverlayClick={() => setShowMapPopup(false)}
+            className="view-map-popup"
+            style={{ width: "90vw", maxWidth: "90vw", height: "85vh" }}
+          >
+            <div style={{ width: "100%", height: "calc(85vh - 4rem)", display: "flex", flexDirection: "column" }}>
+              <iframe
+                src={mapLink}
+                title={t("HCM_AM_VIEW_MAPS")}
+                style={{ width: "100%", flex: 1, border: "none", borderRadius: "4px" }}
+                allowFullScreen
+              />
+            </div>
+          </PopUp>
         )}
 
         {/* To DeEnroll Attendee*/}
