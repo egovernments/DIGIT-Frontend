@@ -425,9 +425,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const buildMapLink = () => {
     if (!kibanaMapConfig?.routePath) return null;
 
-    // isOrigin: true means prefix with current origin, otherwise use routePath as-is
     const baseUrl = kibanaMapConfig.isOrigin
-      ? `${window.location.origin}${kibanaMapConfig.routePath}`
+      ? `https://mc-nigeria-uat.digit.org${kibanaMapConfig.routePath}`
       : kibanaMapConfig.routePath;
 
     const usernames = (attendeeUsernames || []).filter(Boolean);
