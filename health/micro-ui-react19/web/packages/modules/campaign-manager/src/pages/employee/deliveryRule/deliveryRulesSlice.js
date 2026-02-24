@@ -384,20 +384,25 @@ function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig
 // Helper function to parse condition string like "memberCount>=1andmaxCount<=3"
 function parseConditionString(conditionString) {
   if (!conditionString) return [];
-  
+
   // Split by 'and' to get individual conditions
   const conditions = conditionString.split(/and/i);
   const parsedAttributes = [];
-  
-  conditions.forEach((condition, index) => {
-    // Check for range conditions first (e.g., 60<=age<180)
+  const processedIndices = new Set();
+
+  for (let i = 0; i < conditions.length; i++) {
+    if (processedIndices.has(i)) continue;
+    const condition = conditions[i].trim();
+    if (!condition) continue;
+
+    // Check for single-expression range: "60<=age<=180" or "60<=age<180"
     const rangeMatch = condition.match(/(\d+(?:\.\d+)?)\s*<=?\s*(\w+)\s*<?=?\s*(\d+(?:\.\d+)?)/);
-    
+
     if (rangeMatch) {
       const [, fromValue, attrValue, toValue] = rangeMatch;
-      
+
       parsedAttributes.push({
-        key: index + 1,
+        key: parsedAttributes.length + 1,
         label: "Custom",
         attrType: attrValue,
         attrValue: attrValue,
@@ -405,55 +410,78 @@ function parseConditionString(conditionString) {
         fromValue: parseFloat(fromValue),
         toValue: parseFloat(toValue)
       });
-    } else {
-      // Handle single comparisons
-      const match = condition.match(/(\w+)(==|>=|<=|>|<|=)(.+)/);
-      
-      if (match) {
-        let [, attrValue, operator, value] = match;
-        value = value.trim();
-        
-        // Map operators
-        let operatorValue = '';
-        switch (operator) {
-          case '==':
-          case '=':
-            operatorValue = 'EQUAL_TO';
-            break;
-          case '>=':
-            operatorValue = 'GREATER_THAN_EQUAL_TO';
-            break;
-          case '<=':
-            operatorValue = 'LESS_THAN_EQUAL_TO';
-            break;
-          case '>':
-            operatorValue = 'GREATER_THAN';
-            break;
-          case '<':
-            operatorValue = 'LESS_THAN';
-            break;
-          default:
-            operatorValue = 'EQUAL_TO';
-        }
-        
-        // Convert boolean strings to proper case for matching
-        if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
-          value = value.toLowerCase();
-        }
-        
+      continue;
+    }
+
+    // Check consecutive pair IN_BETWEEN: "3<=age" + "age<=11"
+    if (i + 1 < conditions.length) {
+      const nextCondition = conditions[i + 1].trim();
+      const lowerMatch = condition.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(.+)$/);
+      const upperMatch = nextCondition.match(/^(.+?)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
+
+      if (lowerMatch && upperMatch && lowerMatch[3].trim().toLowerCase() === upperMatch[1].trim().toLowerCase()) {
+        const attrValue = lowerMatch[3].trim();
         parsedAttributes.push({
-          key: index + 1,
+          key: parsedAttributes.length + 1,
           label: "Custom",
           attrType: attrValue,
           attrValue: attrValue,
-          operatorValue: operatorValue,
-          value: value, // Keep the value as-is for dropdown matching
-          fromValue: !isNaN(parseFloat(value)) ? parseFloat(value) : undefined
+          operatorValue: 'IN_BETWEEN',
+          fromValue: parseFloat(lowerMatch[1]),
+          toValue: parseFloat(upperMatch[3])
         });
+        processedIndices.add(i + 1);
+        continue;
       }
     }
-  });
-  
+
+    // Handle single comparisons
+    const match = condition.match(/(\w+)(==|>=|<=|>|<|=)(.+)/);
+
+    if (match) {
+      let [, attrValue, operator, value] = match;
+      value = value.trim();
+
+      // Map operators
+      let operatorValue = '';
+      switch (operator) {
+        case '==':
+        case '=':
+          operatorValue = 'EQUAL_TO';
+          break;
+        case '>=':
+          operatorValue = 'GREATER_THAN_EQUAL_TO';
+          break;
+        case '<=':
+          operatorValue = 'LESS_THAN_EQUAL_TO';
+          break;
+        case '>':
+          operatorValue = 'GREATER_THAN';
+          break;
+        case '<':
+          operatorValue = 'LESS_THAN';
+          break;
+        default:
+          operatorValue = 'EQUAL_TO';
+      }
+
+      // Convert boolean strings to proper case for matching
+      if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+        value = value.toLowerCase();
+      }
+
+      parsedAttributes.push({
+        key: parsedAttributes.length + 1,
+        label: "Custom",
+        attrType: attrValue,
+        attrValue: attrValue,
+        operatorValue: operatorValue,
+        value: value, // Keep the value as-is for dropdown matching
+        fromValue: !isNaN(parseFloat(value)) ? parseFloat(value) : undefined
+      });
+    }
+  }
+
   return parsedAttributes;
 }
 

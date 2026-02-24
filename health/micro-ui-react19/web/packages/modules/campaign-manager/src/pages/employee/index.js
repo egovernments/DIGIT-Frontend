@@ -183,6 +183,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
         pathVar.includes("update-dates-boundary") ||
+        pathVar.includes("delivery-details-preview") ||
         pathVar.includes("localization-add")
           ? true
           : false,
@@ -191,6 +192,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.UPDATE_DATE_CHANGE),
       show: pathVar.includes("update-dates-boundary") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t("HCM_DELIVERY_DETAILS_PREVIEW"),
+      show: pathVar.includes("delivery-details-preview") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/search") ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
@@ -288,6 +294,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
+  const DeliveryDetailsSummary = Digit?.ComponentRegistryService?.getComponent("DeliveryDetailsSummary");
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
   useEffect(() => {
@@ -354,6 +361,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`add-product`} element={<AddProduct />} />
           <Route path={`configure-app`} element={<ConfigureApp />} />
           <Route path={`update-dates-boundary`} element={<UpdateDatesWithBoundaries />} />
+          <Route path={`delivery-details-preview`} element={<DeliveryDetailsSummary />} />
           <Route path={`checklist/create`} element={<CreateChecklist />} />
           <Route path={`checklist/search`} element={<SearchChecklist />} />
           <Route path={`checklist/view`} element={<ViewChecklist />} />

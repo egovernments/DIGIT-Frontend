@@ -105,37 +105,64 @@ function reverseDeliveryRemap(data, t) {
   };
   const parseConditionAndCreateRules = (condition, ruleKey, products) => {
     const conditionParts = condition.split("and").map((part) => part.trim());
-    let attributes = [];
+    const attributes = [];
+    const processedIndices = new Set();
 
-    conditionParts.forEach((part) => {
-      const parts = part.split(" ").filter(Boolean);
+    for (let i = 0; i < conditionParts.length; i++) {
+      if (processedIndices.has(i)) continue;
+      const part = conditionParts[i];
 
-      // Handle "IN_BETWEEN" operator
-      if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-        const fromValue = parts[0];
-        const toValue = parts[4];
-        attributes.push({
-          key: attributes.length + 1,
-          operator: { code: operatorMapping["IN_BETWEEN"] },
-          attribute: { code: parts[2] },
-          fromValue,
-          toValue,
-        });
-      } else {
-        const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-        if (match) {
-          const attributeCode = match[1].trim();
-          const operatorSymbol = match[2].trim();
-          const value = match[3].trim();
+      // Check for single-expression IN_BETWEEN: "3<=age<=11" or "3 <= age <= 11"
+      const operatorPattern = /(<=|<)/g;
+      const operators = part.match(operatorPattern);
+      if (operators && operators.length === 2) {
+        const splitParts = part.split(/<=|</).map((p) => p.trim());
+        if (splitParts.length === 3 && /^\d+(\.\d+)?$/.test(splitParts[0]) && /^\d+(\.\d+)?$/.test(splitParts[2]) && !/^\d+(\.\d+)?$/.test(splitParts[1])) {
           attributes.push({
             key: attributes.length + 1,
-            value,
-            operator: { code: operatorMapping[operatorSymbol] },
-            attribute: { code: attributeCode },
+            operator: { code: operatorMapping["IN_BETWEEN"] },
+            attribute: { code: splitParts[1] },
+            fromValue: splitParts[0],
+            toValue: splitParts[2],
           });
+          continue;
         }
       }
-    });
+
+      // Check consecutive pair IN_BETWEEN: "3<=age" + "age<=11"
+      if (i + 1 < conditionParts.length) {
+        const nextPart = conditionParts[i + 1];
+        const lowerBoundMatch = part.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(.+)$/);
+        const upperBoundMatch = nextPart.match(/^(.+?)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
+
+        if (lowerBoundMatch && upperBoundMatch && lowerBoundMatch[3].trim().toLowerCase() === upperBoundMatch[1].trim().toLowerCase()) {
+          attributes.push({
+            key: attributes.length + 1,
+            operator: { code: operatorMapping["IN_BETWEEN"] },
+            attribute: { code: lowerBoundMatch[3].trim() },
+            fromValue: lowerBoundMatch[1],
+            toValue: upperBoundMatch[3],
+          });
+          processedIndices.add(i + 1);
+          continue;
+        }
+      }
+
+      // Regular condition: "attribute <= value" or "attribute >= value" etc.
+      const match = part.match(/^(.+?)\s*(<=|>=|<|>|==|!=)\s*(.+)$/);
+      if (match) {
+        const attributeCode = match[1].trim();
+        const operatorSymbol = match[2].trim();
+        const value = match[3].trim();
+        attributes.push({
+          key: attributes.length + 1,
+          value,
+          operator: { code: operatorMapping[operatorSymbol] },
+          attribute: { code: attributeCode },
+        });
+      }
+    }
+
     return [
       {
         ruleKey: ruleKey + 1,
@@ -254,14 +281,14 @@ const DeliveryDetailsSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
+                        || target?.[0]?.cycles?.length
+                        || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        : t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
+                        || target?.[0]?.cycles?.[0]?.deliveries?.length
+                        || t(I18N_KEYS.COMPONENTS.CAMPAIGN_SUMMARY_NA),
                     },
                   ],
                 },
