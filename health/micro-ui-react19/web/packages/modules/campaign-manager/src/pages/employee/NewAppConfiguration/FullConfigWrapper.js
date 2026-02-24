@@ -642,7 +642,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
         {/* Center Content - Page Tabs and Preview */}
         <div className="full-config-wrapper__center-content">
           {/* Page Tabs */}
-          <div className={`full-config-wrapper__page-tabs-${activeSidePanel === "flows" || activeSidePanel === "roles" ? "opened" : "closed"}`}>
+          <div className={`full-config-wrapper__page-tabs-${activeSidePanel === "flows" || activeSidePanel === "roles" || activeSidePanel === "formelements" ? "opened" : "closed"}`}>
             {activeFlow?.pages?.map((page, index) => (
               <div
                 key={index}
@@ -655,7 +655,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
           </div>
 
           {/* Preview Area with Navigation Arrows */}
-          <div className={`full-config-wrapper__preview-area ${activeSidePanel === "flows" || activeSidePanel === "roles" ? "opened" : ""}`}>
+          <div className={`full-config-wrapper__preview-area ${activeSidePanel === "flows" || activeSidePanel === "roles" || activeSidePanel === "formelements" ? "opened" : ""}`}>
             {/* Flow Tag */}
             <div className="full-config-wrapper__flow-tag">
               {/* <ConversionPath fill="#0057BD" /> */}
