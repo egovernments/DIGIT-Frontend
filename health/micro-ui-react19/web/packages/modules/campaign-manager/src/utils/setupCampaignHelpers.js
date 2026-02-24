@@ -249,16 +249,10 @@ export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
     }
 
     if (attr?.operator?.code === "IN_BETWEEN") {
-      // Round toValue and fromValue to the nearest integer
       const roundedToValue = attr.toValue;
       const roundedFromValue = attr.fromValue;
 
-      // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
-      if (type === "create") {
-        return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<=${roundedToValue}`;
-      } else {
-        return `${roundedFromValue} <= ${attr.attribute.code} <= ${roundedToValue}`;
-      }
+      return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<=${roundedToValue}`;
     } else {
 
       if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {

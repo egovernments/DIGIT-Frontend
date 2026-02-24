@@ -68,30 +68,62 @@ const generateConfig = (data) => {
 
       const conditions = normalizedCondition.split(' and ').filter(c => c.trim());
 
-      const attributeConfigs = conditions.map(condition => {
-        // Use the parseCondition function to extract operatorValue and value
-        const { operatorValue, value } = parseCondition(condition);
-        let fromValue = null;
-            let toValue = null;
-            if (operatorValue === "IN_BETWEEN") {
-              fromValue = Number(value.minValue);
-              toValue = Number(value.maxValue);
-            } else {
-              fromValue = Number(value.comparisonValue);
-              toValue = null;
-            }
+      const attributeConfigs = [];
+      const processedIndices = new Set();
 
-            return {
+      for (let ci = 0; ci < conditions.length; ci++) {
+        if (processedIndices.has(ci)) continue;
+        const condition = conditions[ci].trim();
+
+        // Check for single-expression IN_BETWEEN: "3<=age<=11"
+        const { operatorValue, value } = parseCondition(condition);
+        if (operatorValue === "IN_BETWEEN") {
+          attributeConfigs.push({
+            key: index + 1,
+            label: "Custom",
+            attrType: value?.variable,
+            attrValue: value?.variable,
+            operatorValue: "IN_BETWEEN",
+            fromValue: Number(value.minValue),
+            toValue: Number(value.maxValue),
+          });
+          continue;
+        }
+
+        // Check consecutive pair IN_BETWEEN: "3<=age" + "age<=11"
+        if (ci + 1 < conditions.length) {
+          const nextCondition = conditions[ci + 1].trim();
+          const lowerMatch = condition.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(.+)$/);
+          const upperMatch = nextCondition.match(/^(.+?)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
+
+          if (lowerMatch && upperMatch && lowerMatch[3].trim().toLowerCase() === upperMatch[1].trim().toLowerCase()) {
+            attributeConfigs.push({
               key: index + 1,
               label: "Custom",
-              attrType: value?.variable,
-              attrValue: value?.variable,
-              operatorValue: operatorValue,
-              value: value?.comparisonValue,
-              ...(fromValue !== null && { fromValue }),
-              ...(toValue !== null && { toValue }),
-            };
-      });
+              attrType: lowerMatch[3].trim(),
+              attrValue: lowerMatch[3].trim(),
+              operatorValue: "IN_BETWEEN",
+              fromValue: Number(lowerMatch[1]),
+              toValue: Number(upperMatch[3]),
+            });
+            processedIndices.add(ci + 1);
+            continue;
+          }
+        }
+
+        // Regular condition
+        if (operatorValue && operatorValue !== "UNKNOWN") {
+          attributeConfigs.push({
+            key: index + 1,
+            label: "Custom",
+            attrType: value?.variable,
+            attrValue: value?.variable,
+            operatorValue: operatorValue,
+            value: value?.comparisonValue,
+            ...(value?.comparisonValue !== undefined && !isNaN(Number(value.comparisonValue)) && { fromValue: Number(value.comparisonValue) }),
+          });
+        }
+      }
 
       return {
         deliveryType: delivery.deliveryStrategy,

@@ -450,8 +450,8 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   const isExpanded = flowSearchQuery ? true : !collapsedCategories[group.category];
                   const isSingleFlow = group.flows.length === 1;
 
-                  // Single-flow category: render as flat flow item without category header
-                  if (isSingleFlow) {
+                  // Single-flow category: render as flat flow item without category header (only when not searching)
+                  if (isSingleFlow && !flowSearchQuery) {
                     const flow = group.flows[0];
                     return (
                       <div key={group.category} className="full-config-wrapper__category-group">

@@ -223,99 +223,65 @@ const CampaignSummary = (props) => {
     };
 
     const parseConditionAndCreateRules = (condition, ruleKey, products) => {
-      let attributes = [];
-      if (isPreview) {
-        const parts = [];
-        let remainingCondition = condition;
+      const conditionParts = condition.split("and").map((part) => part.trim());
+      const attributes = [];
+      const processedIndices = new Set();
 
-        // Process IN_BETWEEN patterns first
-        while (remainingCondition) {
-          const inBetweenMatch = remainingCondition.match(/(\d+)(<=|<|>=|>)(\w+)and\3(<=|<|>=|>)(\d+)/);
+      for (let i = 0; i < conditionParts.length; i++) {
+        if (processedIndices.has(i)) continue;
+        const part = conditionParts[i];
 
-          if (inBetweenMatch) {
-            // Get the full matched text
-            const fullMatch = inBetweenMatch[0];
-            const toValue = inBetweenMatch[1];
-            const fromValue = inBetweenMatch[5];
-            const attributeCode = inBetweenMatch[3];
-
-            // Add IN_BETWEEN condition
+        // Check for single-expression IN_BETWEEN: "3<=age<=11" or "3 <= age <= 11"
+        const operatorPattern = /(<=|<)/g;
+        const operators = part.match(operatorPattern);
+        if (operators && operators.length === 2) {
+          const splitParts = part.split(/<=|</).map((p) => p.trim());
+          if (splitParts.length === 3 && /^\d+(\.\d+)?$/.test(splitParts[0]) && /^\d+(\.\d+)?$/.test(splitParts[2]) && !/^\d+(\.\d+)?$/.test(splitParts[1])) {
             attributes.push({
               key: attributes.length + 1,
               operator: { code: "IN_BETWEEN" },
-              attribute: { code: attributeCode },
-              fromValue,
-              toValue,
+              attribute: { code: splitParts[1] },
+              fromValue: splitParts[0],
+              toValue: splitParts[2],
             });
-
-            // Remove the processed part and the following 'and' if it exists
-            const matchIndex = remainingCondition.indexOf(fullMatch);
-            remainingCondition = remainingCondition.slice(matchIndex + fullMatch.length);
-            if (remainingCondition.startsWith("and")) {
-              remainingCondition = remainingCondition.slice(3);
-            }
-          } else {
-            // Process the next regular condition
-            const nextAndIndex = remainingCondition.indexOf("and");
-            if (nextAndIndex === -1) {
-              if (remainingCondition.trim()) {
-                parts.push(remainingCondition.trim());
-              }
-              break;
-            } else {
-              parts.push(remainingCondition.slice(0, nextAndIndex).trim());
-              remainingCondition = remainingCondition.slice(nextAndIndex + 3);
-            }
+            continue;
           }
         }
 
-        // Process remaining regular conditions
-        parts.forEach((part) => {
-          const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-          if (match) {
-            const attributeCode = match[1].trim();
-            const operatorSymbol = match[2].trim();
-            const value = match[3].trim();
-            attributes.push({
-              key: attributes.length + 1,
-              value,
-              operator: { code: operatorMapping[operatorSymbol] },
-              attribute: { code: attributeCode },
-            });
-          }
-        });
-      } else {
-        const conditionParts = condition.split("and").map((part) => part.trim());
-        conditionParts.forEach((part) => {
-          const parts = part.split(" ").filter(Boolean);
+        // Check consecutive pair IN_BETWEEN: "3<=age" + "age<=11"
+        if (i + 1 < conditionParts.length) {
+          const nextPart = conditionParts[i + 1];
+          const lowerBoundMatch = part.match(/^(\d+(?:\.\d+)?)\s*(<=|<)\s*(.+)$/);
+          const upperBoundMatch = nextPart.match(/^(.+?)\s*(<=|<)\s*(\d+(?:\.\d+)?)$/);
 
-          // Handle "IN_BETWEEN" operator
-          if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
-            const toValue = parts[0];
-            const fromValue = parts[4];
+          if (lowerBoundMatch && upperBoundMatch && lowerBoundMatch[3].trim().toLowerCase() === upperBoundMatch[1].trim().toLowerCase()) {
             attributes.push({
               key: attributes.length + 1,
-              operator: { code: operatorMapping["IN_BETWEEN"] },
-              attribute: { code: parts[2] },
-              fromValue,
-              toValue,
+              operator: { code: "IN_BETWEEN" },
+              attribute: { code: lowerBoundMatch[3].trim() },
+              fromValue: lowerBoundMatch[1],
+              toValue: upperBoundMatch[3],
             });
-          } else {
-            const match = part.match(/(.*?)\s*(<=|>=|<|>|==|!=)\s*(.*)/);
-            if (match) {
-              const attributeCode = match[1].trim();
-              const operatorSymbol = match[2].trim();
-              const value = match[3].trim();
-              attributes.push({
-                key: attributes.length + 1,
-                value,
-                operator: { code: operatorMapping[operatorSymbol] },
-                attribute: { code: attributeCode },
-              });
-            }
+            processedIndices.add(i + 1);
+            continue;
           }
-        });
+        }
+
+        // Regular condition: "attribute <= value" or "attribute >= value" etc.
+        const match = part.match(/^(.+?)\s*(<=|>=|<|>|==|!=)\s*(.+)$/);
+        if (match) {
+          const attributeCode = match[1].trim();
+          const operatorSymbol = match[2].trim();
+          const value = match[3].trim();
+          attributes.push({
+            key: attributes.length + 1,
+            value,
+            operator: { code: operatorMapping[operatorSymbol] },
+            attribute: { code: attributeCode },
+          });
+        }
       }
+
       return [
         {
           ruleKey: ruleKey + 1,
