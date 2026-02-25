@@ -25,11 +25,22 @@ export const transformUpdateCreateData = ({ campaignData }) => {
         },
       ];
 
-      for (const { regex, format } of patterns) {
-        condition = condition.replace(regex, format);
+      // Split by "and" first to process each sub-condition individually.
+      // This prevents the regex from capturing "and" (the separator) as part of a
+      // variable name (e.g. "ageandage" instead of "age"), which would cause
+      // duplication like "3<=ageandageandageandage<=11".
+      const parts = condition.split("and");
+      const normalizedParts = [];
+
+      for (const part of parts) {
+        let normalized = part;
+        for (const { regex, format } of patterns) {
+          normalized = normalized.replace(regex, format);
+        }
+        normalizedParts.push(normalized);
       }
 
-      return condition;
+      return normalizedParts.join("and");
     };
 
     return cycleData.map((cycle) => ({
