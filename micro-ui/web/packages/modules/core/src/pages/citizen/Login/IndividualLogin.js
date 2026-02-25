@@ -33,7 +33,7 @@ const getFromLocation = (state, searchParams) => {
   return state?.from || searchParams?.from || DEFAULT_REDIRECT_URL;
 };
 
-const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
+const IndividualLogin = ({ stateCode, isUserRegistered = false }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,8 +93,8 @@ const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
         }
         return { ...step, texts };
       },
-      [loginSteps]
-    )
+      
+    ), [loginSteps]
   );
 
   const getUserType = () => "citizen" || Digit.UserService.getType();
@@ -122,9 +122,7 @@ const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
       userType: getUserType(),
     };
 
-    if (isUserRegistered) {
-      // LOGIN FLOW: Send OTP
-      const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
+    const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
       if (!err) {
         setCanSubmitNo(true);
         navigate(`otp`, { 
@@ -136,11 +134,6 @@ const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
         return;
       } else {
         setCanSubmitNo(true);
-        setError(t("USER_NOT_REGISTERED") || "User not registered.");
-      }
-    } else {
-      // REGISTER FLOW: Go directly to name screen (no OTP needed yet)
-      setCanSubmitNo(true);
       navigate(`name`, {
         state: {
           from: getFromLocation(location.state, searchParams),
@@ -148,7 +141,7 @@ const IndividualLogin = ({ stateCode, isUserRegistered = true }) => {
         },
         replace: true
       });
-    }
+      }
   };
 
   const selectName = async (name) => {

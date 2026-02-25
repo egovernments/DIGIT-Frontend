@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-15"] [25-Feb-2026]
+- Removed unneccessary isUserRegistered check and directly handing the logic based on sendOtp network call success or failure status
+
 ## ["2.0.0-dev-14"] [23-Feb-2026]
 - Backlink bugfix for citizen in edit profile screen
 
