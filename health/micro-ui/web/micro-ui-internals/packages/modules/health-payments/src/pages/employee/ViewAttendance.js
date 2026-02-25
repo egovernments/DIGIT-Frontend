@@ -65,6 +65,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
   const [showMapPopup, setShowMapPopup] = useState(false);
+  const [hasMusterRoll, setHasMusterRoll] = useState(false);
+
+  useEffect(() => {
+    console.log("ViewAttendance params:", { registerNumber, boundaryCode, periodDurationInDays, fromCampaignSupervisor });
+  }, []);
 
   const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
 
@@ -88,6 +93,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         return data;
       },
     },
+    changeQueryName: `attendance_${registerNumber}_${pId}`
   };
 
   const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
@@ -155,6 +161,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         return data;
       },
     },
+    changeQueryName: `musterRoll_${registerNumber}_${pId}`,
   };
 
   const { isLoading: isMusterRollLoading, isrefetching, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(
@@ -190,8 +197,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
     if (MusterRollData?.count > 0) {
       setData(MusterRollData?.musterRolls);
+      setHasMusterRoll(true);
     } else if (estimateMusterRollData) {
       setData(estimateMusterRollData?.musterRolls);
+      setHasMusterRoll(false);
     }
   }, [estimateMusterRollData, MusterRollData]);
 
@@ -359,7 +368,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         return data;
       },
     },
-    changeQueryName: "allIndividuals",
+    changeQueryName: `allIndividuals_${registerNumber}`,
   };
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
@@ -589,34 +598,53 @@ const ViewAttendance = ({ editAttendance = false }) => {
         </Card>
 
         <Card type="primary" className="bottom-gap-card-payment">
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginBottom: "1rem" }}>
-            <Button
-              label={t("HCM_AM_VIEW_MAPS")}
-              title={t("HCM_AM_VIEW_MAPS")}
-              variation="secondary"
-              icon="Map"
-              onClick={() => setShowMapPopup(true)}
-            />
-            <Button
-              label={t("HCM_AM_DOWNLOAD_REPORT")}
-              title={t("HCM_AM_DOWNLOAD_REPORT")}
-              variation="secondary"
-              icon="FileDownload"
-              onClick={() => {
-                const report = data?.[0]?.reports?.find(
-                  (r) => r.reportType === "ATTENDANCE_REPORT" && r.reportFormat === "EXCEL" && r.reportStatus === "COMPLETED"
-                );
-                if (report?.fileStoreId) {
-                  downloadFileWithName({
-                    fileStoreId: report.fileStoreId,
-                    customName: `Attendance_Report_${registerNumber}_${formatTimestampToDate(report.generatedAt)}`,
-                    type: "excel",
-                  });
-                } else {
-                  setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 3000 });
-                }
-              }}
-            />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
+            <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "#0B4B66" }}>{t("HCM_AM_REGISTER_DETAILS")}</span>
+            {hasMusterRoll && (
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Button
+                  label={t("HCM_AM_VIEW_MAPS")}
+                  title={t("HCM_AM_VIEW_MAPS")}
+                  variation="secondary"
+                  icon="Map"
+                  onClick={() => setShowMapPopup(true)}
+                />
+                <Button
+                  label={t("HCM_AM_DOWNLOAD_REPORT")}
+                  title={t("HCM_AM_DOWNLOAD_REPORT")}
+                  variation="secondary"
+                  icon="FileDownload"
+                  onClick={() => {
+                    const reports = data?.[0]?.reports?.filter(
+                      (r) => r.reportType === "ATTENDANCE_REPORT" && r.reportFormat === "EXCEL"
+                    ) || [];
+
+                    if (reports.length === 0) {
+                      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 3000 });
+                      return;
+                    }
+
+                    const completedReport = reports.find((r) => r.reportStatus === "COMPLETED");
+                    const initiatedReport = reports.find((r) => r.reportStatus === "INITIATED");
+                    const failedReport = reports.find((r) => r.reportStatus === "FAILED");
+
+                    if (completedReport?.fileStoreId) {
+                      downloadFileWithName({
+                        fileStoreId: completedReport.fileStoreId,
+                        customName: `Attendance_Report_${registerNumber}_${formatTimestampToDate(completedReport.generatedAt)}`,
+                        type: "excel",
+                      });
+                    } else if (initiatedReport) {
+                      setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+                    } else if (failedReport) {
+                      setShowToast({ key: "error", label: t("HCM_AM_REPORT_GENERATION_FAILED"), transitionTime: 5000 });
+                    } else {
+                      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 5000 });
+                    }
+                  }}
+                />
+              </div>
+            )}
           </div>
           {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
           {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(project?.[0]?.name || "NA"))}
@@ -694,12 +722,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {showMapPopup && (
           <PopUp
             onClose={() => setShowMapPopup(false)}
-            heading={t("HCM_AM_VIEW_MAPS")}
             onOverlayClick={() => setShowMapPopup(false)}
             className="view-map-popup"
-            style={{ width: "90vw", maxWidth: "90vw", height: "85vh" }}
+            style={{ width: "98vw", maxWidth: "98vw", height: "99vh", padding: "0.15rem 0.5rem" }}
           >
-            <div style={{ width: "100%", height: "calc(85vh - 4rem)", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.15rem" }}>
+              <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>{t("HCM_AM_VIEW_MAPS")}</span>
+            </div>
+            <div style={{ width: "100%", height: "calc(99vh - 2rem)", display: "flex", flexDirection: "column" }}>
               <iframe
                 src={mapLink}
                 title={t("HCM_AM_VIEW_MAPS")}

@@ -90,15 +90,15 @@ const CustomInboxTable = ({
 
               if (endDate) {
                 const currentDate = Date.now();
-                // if (!(currentDate <= endDate)) { //todo : uncomment
+                if (!(currentDate <= endDate)) {
                   history.push(
                     `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
                   );
-                // } else {//todo : uncomment
-                //   history.push(
-                //     `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
-                //   );
-                // }
+                } else {
+                  history.push(
+                    `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+                  );
+                }
               } else {
                 console.warn("No endDate found in session storage");
                 history.push(
@@ -170,15 +170,15 @@ const CustomInboxTable = ({
 
     if (endDate) {
       const currentDate = Date.now();
-      // if (!(currentDate <= endDate)) {//todo : uncomment
+      if (!(currentDate <= endDate)) {
         history.push(
           `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
         );
-      // } else {//todo : uncomment
-      //   history.push(
-      //     `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
-      //   );
-      // }
+      } else {
+        history.push(
+          `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+        );
+      }
     } else {
       console.warn("No endDate found in session storage");
       history.push(
