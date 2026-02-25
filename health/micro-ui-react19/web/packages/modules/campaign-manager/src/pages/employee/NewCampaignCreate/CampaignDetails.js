@@ -538,6 +538,31 @@ const CampaignDetails = () => {
           },
         ],
       },
+
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: {
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_STOCK),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_STOCK_DESC),
+              buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_STOCK_DATA_BUTTON),
+              buttonId: `campaign-details-page-button-stock-upload`,
+              type: "primary",
+              navLink: `bulk-stock-upload?campaignNumber=${campaignData?.campaignNumber}&campaignName=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}`,
+              icon: (
+                <UploadCloud
+                  fill={campaignData?.boundaries?.length <= 0 ? "#c5c5c5" : "#C84C0E"}
+                />
+              ),
+              disabled: campaignData?.boundaries?.length <= 0,
+            },
+          },
+        ],
+      },
     ],
   };
 

@@ -123,6 +123,12 @@ const CampaignTemplates = lazyWithFallback(
   { loaderText: "Loading Campaign Templates..." }
 );
 
+const BulkStockUpload = lazyWithFallback(
+  () => import(/* webpackChunkName: "bulk-stock-upload" */ "./NewCampaignCreate/BulkStockUpload"),
+  () => require("./NewCampaignCreate/BulkStockUpload").default,
+  { loaderText: "Loading Bulk Stock Upload..." }
+);
+
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -183,7 +189,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
         pathVar.includes("update-dates-boundary") ||
-        pathVar.includes("localization-add")
+        pathVar.includes("localization-add") ||
+        pathVar.includes("bulk-stock-upload")
           ? true
           : false,
     },
@@ -255,6 +262,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.ADD_LOCALISATION_BREADCRUMB),
       show: pathVar.includes("localization-add") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.BULK_STOCK_UPLOAD),
+      show: pathVar.includes("bulk-stock-upload") ? true : false,
     },
     {
       internalLink: "",
@@ -375,6 +387,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`unified-upload-screen`} element={<UnifiedUploadScreen />} />
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
+          <Route path={`bulk-stock-upload`} element={<BulkStockUpload />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>

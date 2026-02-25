@@ -85,9 +85,10 @@ module.exports = merge(common, {
           "/product",
           "/health-service-request",
           "/excel-ingestion",
-          "/boundary-management"
+          "/boundary-management",
+          "/stock"
         ],
-        target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
+        target: process.env.REACT_APP_PROXY_URL || "https://unified-uat.digit.org",
         changeOrigin: true,
         secure: false,
       },

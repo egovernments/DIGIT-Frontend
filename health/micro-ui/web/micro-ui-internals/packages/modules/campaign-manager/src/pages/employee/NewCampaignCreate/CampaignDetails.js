@@ -391,24 +391,26 @@ const CampaignDetails = () => {
           },
         ],
       },
-      {
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            component: "ViewDetailComponent",
-            noCardStyle: true,
-            props: {
-              headingName: t("HCM_CHECKLIST_HEADING"),
-              desc: t("HCM_CHECKLIST_DESC"),
-              buttonLabel: t("HCM_CHECKLIST_BUTTON"),
-              navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
-              icon: <ListAltCheck />,
-              isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
-            },
-          },
-        ],
-      },
+
+      
+      // {
+      //   noCardStyle: true,
+      //   sections: [
+      //     {
+      //       type: "COMPONENT",
+      //       component: "ViewDetailComponent",
+      //       noCardStyle: true,
+      //       props: {
+      //         headingName: t("HCM_CHECKLIST_HEADING"),
+      //         desc: t("HCM_CHECKLIST_DESC"),
+      //         buttonLabel: t("HCM_CHECKLIST_BUTTON"),
+      //         navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
+      //         icon: <ListAltCheck />,
+      //         isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
+      //       },
+      //     },
+      //   ],
+      // },
     ],
   };
 
