@@ -189,9 +189,10 @@ const AttendanceManagementTable = ({ ...props }) => {
         </div>
       ),
       selector: (row) => {
+        const value = row?.[12] != null ? String(row[12]) : t("ES_COMMON_NA");
         return (
-          <div className="ellipsis-cell" title={t("ES_COMMON_NA")}>
-            {t("ES_COMMON_NA")}
+          <div className="ellipsis-cell" title={value}>
+            {value}
           </div>
         );
       },

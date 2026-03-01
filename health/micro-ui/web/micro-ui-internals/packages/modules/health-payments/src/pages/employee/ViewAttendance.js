@@ -485,7 +485,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
       )?.value || "N/A";
         const enrollmentDate = matchingAttendee?.enrollmentDate || null;
         const denrollmentDate = matchingAttendee?.denrollmentDate || null;
-        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType, enrollmentDate, denrollmentDate];
+        const totalInterventions = individualEntry?.totalInterventions != null ? individualEntry.totalInterventions : null;
+        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType, enrollmentDate, denrollmentDate, totalInterventions];
       } else {
         // Handle cases where no match is found in individualsData
         return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
@@ -593,10 +594,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
             </div>
             <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>{t("ES_COMMON_NA")}</div>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>
+                {attendanceSummary.reduce((sum, row) => sum + (row[12] != null ? row[12] : 0), 0)}
+              </div>
               <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_ACTUAL_INTERVENTIONS")}</div>
             </div>
-            
+
           </div>
         </Card>
 
