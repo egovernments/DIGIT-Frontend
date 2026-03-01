@@ -22,6 +22,7 @@ import { formatTimestampToDate, downloadFileWithName } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 
 import EditAttendeePopUp from "../../components/editAttendeesPopUp";
+import AttendeeDetailsPopUp from "../../components/attendeeDetailsPopUp";
 
 /**
  * @function ViewAttendance
@@ -60,12 +61,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [individualIds, setIndividualIds] = useState([]);
   const [triggerEstimate, setTriggerEstimate] = useState(false);
   const [comment, setComment] = useState(null);
+  const [supportDocFile, setSupportDocFile] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
   const [showMapPopup, setShowMapPopup] = useState(false);
   const [hasMusterRoll, setHasMusterRoll] = useState(false);
+  const [selectedAttendee, setSelectedAttendee] = useState(null);
 
   useEffect(() => {
     console.log("ViewAttendance params:", { registerNumber, boundaryCode, periodDurationInDays, fromCampaignSupervisor });
@@ -454,9 +457,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
   console.log("mapLink", mapLink);
 
   function getUserAttendanceSummary(data, individualsData, t) {
+    const attendees = AttendanceData?.attendanceRegister?.[0]?.attendees || [];
     const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
       const individualId = individualEntry.individualId;
       const matchingIndividual = individualsData?.Individual?.find((individual) => individual.id === individualId);
+      const matchingAttendee = attendees.find((att) => att.individualId === individualId);
 
       if (matchingIndividual) {
         const userName = matchingIndividual.name?.givenName || t("NA");
@@ -467,9 +472,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
             (rate) => rate?.skillCode === skill?.type
           )
         );
-        const userRole = matchedSkill ? t(matchedSkill.type) : t("NA");
-        // const userRole =
-        //   t(matchingIndividual.skills?.[0]?.type) || t("NA");
+        // const userRole = matchedSkill ? t(matchedSkill.type) : t("NA"); //todo uncomment
+        const userRole =
+          t(matchingIndividual.skills?.[0]?.type) || t("NA"); //todo remove
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
         const gender = matchingIndividual?.gender;
@@ -478,7 +483,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
         const userType = matchingIndividual?.additionalFields?.fields?.find(
           (detail) => detail.key === "userType"
       )?.value || "N/A";
-        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType];
+        const enrollmentDate = matchingAttendee?.enrollmentDate || null;
+        const denrollmentDate = matchingAttendee?.denrollmentDate || null;
+        return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType, enrollmentDate, denrollmentDate];
       } else {
         // Handle cases where no match is found in individualsData
         return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
@@ -581,19 +588,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
         <Card type="primary" className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", padding: "1rem 0" }}>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>85%</div>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>{t("ES_COMMON_NA")}</div>
               <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_TARGET_ACHIEVED")}</div>
             </div>
             <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>1,250</div>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>{t("ES_COMMON_NA")}</div>
               <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_ACTUAL_INTERVENTIONS")}</div>
             </div>
-            <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>3</div>
-              <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_DAYS_ATTENDANCE_NOT_MARKED")}</div>
-            </div>
+            
           </div>
         </Card>
 
@@ -692,6 +695,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             setAttendanceSummary={setAttendanceSummary}
             duration={parseInt(periodDurationInDays ? periodDurationInDays : "0", 10) || 0}
             editAttendance={editAttendance}
+            onAttendeeClick={(row) => setSelectedAttendee(row)}
           />
         </Card>
         {showLogs && (
@@ -738,6 +742,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
               />
             </div>
           </PopUp>
+        )}
+
+        {/* Attendee Details Pop-Up */}
+        {selectedAttendee && (
+          <AttendeeDetailsPopUp
+            attendee={selectedAttendee}
+            onClose={() => setSelectedAttendee(null)}
+          />
         )}
 
         {/* To DeEnroll Attendee*/}
