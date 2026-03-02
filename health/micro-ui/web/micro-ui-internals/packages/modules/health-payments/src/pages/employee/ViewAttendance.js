@@ -73,7 +73,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   useEffect(() => {
     console.log("ViewAttendance params:", { registerNumber, boundaryCode, periodDurationInDays, fromCampaignSupervisor });
   }, []);
-
+  const [supportingDocs, setSupportingDocs] = useState([]);
   const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
 
   const pId = selectedPeriod?.id;
@@ -238,7 +238,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
       await approveMutation.mutateAsync(
         {
           body: {
-            musterRoll: { ...data?.[0], billingPeriodId: selectedPeriod.id },
+            // musterRoll: { ...data?.[0], billingPeriodId: selectedPeriod.id },
+            musterRoll: {
+              ...data?.[0],
+              billingPeriodId: selectedPeriod.id,
+              additionalDetails: {
+                ...data?.[0]?.additionalDetails,
+                attendanceSupportingDocuments: supportingDocs
+              }
+            },
             workflow: {
               action: "APPROVE",
               comments: comment,
@@ -533,6 +541,43 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   }, [attendanceSummary]);
 
+  const handleDownloadSupportingDoc = (fileStoreId, fileName) => {
+    const ext = fileName?.split(".").pop()?.toLowerCase();
+    const extToType = { xlsx: "excel", xls: "xls", csv: "csv", pdf: "pdf", png: "png", jpg: "jpg", jpeg: "jpeg" };
+    const type = extToType[ext] || "pdf";
+    const customName = ext ? fileName.slice(0, -(ext.length + 1)) : fileName;
+    downloadFileWithName({ fileStoreId, customName, type });
+  };
+
+  const handleDownloadReport = () => {
+    const reports = data?.[0]?.reports?.filter(
+      (r) => r.reportType === "ATTENDANCE_REPORT" && r.reportFormat === "EXCEL"
+    ) || [];
+
+    if (reports.length === 0) {
+      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 3000 });
+      return;
+    }
+
+    const completedReport = reports.find((r) => r.reportStatus === "COMPLETED");
+    const initiatedReport = reports.find((r) => r.reportStatus === "INITIATED");
+    const failedReport = reports.find((r) => r.reportStatus === "FAILED");
+
+    if (completedReport?.fileStoreId) {
+      downloadFileWithName({
+        fileStoreId: completedReport.fileStoreId,
+        customName: `Attendance_Report_${registerNumber}_${formatTimestampToDate(completedReport.generatedAt)}`,
+        type: "excel",
+      });
+    } else if (initiatedReport) {
+      setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+    } else if (failedReport) {
+      setShowToast({ key: "error", label: t("HCM_AM_REPORT_GENERATION_FAILED"), transitionTime: 5000 });
+    } else {
+      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 5000 });
+    }
+  };
+
   const closeActionBarPopUp = () => {
     setOpenEditAlertPopUp(false);
   };
@@ -620,34 +665,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   title={t("HCM_AM_DOWNLOAD_REPORT")}
                   variation="secondary"
                   icon="FileDownload"
-                  onClick={() => {
-                    const reports = data?.[0]?.reports?.filter(
-                      (r) => r.reportType === "ATTENDANCE_REPORT" && r.reportFormat === "EXCEL"
-                    ) || [];
-
-                    if (reports.length === 0) {
-                      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 3000 });
-                      return;
-                    }
-
-                    const completedReport = reports.find((r) => r.reportStatus === "COMPLETED");
-                    const initiatedReport = reports.find((r) => r.reportStatus === "INITIATED");
-                    const failedReport = reports.find((r) => r.reportStatus === "FAILED");
-
-                    if (completedReport?.fileStoreId) {
-                      downloadFileWithName({
-                        fileStoreId: completedReport.fileStoreId,
-                        customName: `Attendance_Report_${registerNumber}_${formatTimestampToDate(completedReport.generatedAt)}`,
-                        type: "excel",
-                      });
-                    } else if (initiatedReport) {
-                      setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
-                    } else if (failedReport) {
-                      setShowToast({ key: "error", label: t("HCM_AM_REPORT_GENERATION_FAILED"), transitionTime: 5000 });
-                    } else {
-                      setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_REPORT_NOT_AVAILABLE"), transitionTime: 5000 });
-                    }
-                  }}
+                  onClick={handleDownloadReport}
                 />
               </div>
             )}
@@ -705,20 +723,42 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <Card>
             <div className="card-heading">
               <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
-              <Button
-                className="custom-class"
-                icon="Visibility"
-                iconFill=""
-                label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
-                onClick={handleCommentLogClick}
-                options={[]}
-                optionsKey=""
-                size=""
-                style={{}}
-                title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
-                variation="secondary"
-              />
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Button
+                  className="custom-class"
+                  icon="Visibility"
+                  iconFill=""
+                  label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+                  onClick={handleCommentLogClick}
+                  options={[]}
+                  optionsKey=""
+                  size=""
+                  style={{}}
+                  title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+                  variation="secondary"
+                />
+              </div>
             </div>
+            {data?.[0]?.additionalDetails?.attendanceSupportingDocuments?.length > 0 && (
+              <div style={{ marginTop: "1rem" }}>
+                <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>{t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}</span>
+                <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {data[0].additionalDetails.attendanceSupportingDocuments.map((doc, index) => (
+                    <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "0.875rem" }}>{doc.fileName}</span>
+                      <Button
+                        icon="FileDownload"
+                        label={t("WBH_DOWNLOAD")}
+                        variation="secondary"
+                        size="small"
+                        isDisabled={!doc.fileStoreId}
+                        onClick={() => handleDownloadSupportingDoc(doc.fileStoreId, doc.fileName)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </Card>
         )}
 
@@ -803,8 +843,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
           onClose={() => {
             setOpenApproveCommentPopUp(false);
           }}
-          onSubmit={(comment) => {
+          // onSubmit={(comment) => {
+          //   setComment(comment);
+          //   setOpenApproveCommentPopUp(false);
+          //   setOpenApproveAlertPopUp(true);
+          // }}
+          onSubmit={({ comment, supportingDocs }) => {
             setComment(comment);
+            setSupportingDocs(supportingDocs);
             setOpenApproveCommentPopUp(false);
             setOpenApproveAlertPopUp(true);
           }}
