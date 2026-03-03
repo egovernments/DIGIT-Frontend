@@ -11,11 +11,15 @@ ENV GIT_TOKEN=${GIT_TOKEN}
 # ARG CACHEBUST=1 
 # --------------------------
 
+ARG CACHEBUST=1
+
 COPY ${WORK_DIR} .
 RUN ls -lah
 
 # Set working directory
 WORKDIR /app/web
+
+RUN echo "Cache bust: ${CACHEBUST}"
 
 RUN chmod +x ./install-deps.sh
 
