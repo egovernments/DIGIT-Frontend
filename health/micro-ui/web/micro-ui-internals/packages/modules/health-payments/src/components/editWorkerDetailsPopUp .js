@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
-import SupportingDocumentUpload from "./attendance_file_upload/SupportingDocumentUpload";
+
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
  * The component shows a text area to enter the comment and a button to save the comment.
@@ -11,38 +11,52 @@ import SupportingDocumentUpload from "./attendance_file_upload/SupportingDocumen
  * @param {function} onSubmit - Function to call when the comment is valid and should be submitted.
  * @returns {JSX.Element} - The pop-up component.
  */
-const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
+const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, initialValue }) => {
 
     const { t } = useTranslation();
 
     // state variables
     const [comment, setComment] = useState(null);
     const [showToast, setShowToast] = useState(null);
-    const [supportingDocs, setSupportingDocs] = useState([]);
+    const [inputValue, setInputValue] = useState(initialValue || "");
 
-    const handleTextAreaChange = (e) => {
-        const inputValue = e.target.value;
-        setComment(inputValue);
-    };
+
 
     const handleSave = () => {
-        if (!comment || comment.trim() === "") {
-            // Show toast if comment is empty
-            setShowToast({
-                key: "error",
-                label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
-                transitionTime: 3000
-            });
-            return;
+        const trimmedInput = inputValue?.trim();
+        // Mobile number validation
+        if (fieldKey === "mobileNumber") {
+            const mobileRegex = /^[0-9]{8}$/;
+
+            if (!trimmedInput) {
+                setShowToast({
+                    key: "error",
+                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
+                    transitionTime: 3000
+                });
+                return;
+            }
+            else if (!mobileRegex.test(trimmedInput)) {
+                setShowToast({
+                    key: "error",
+                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
+                    transitionTime: 3000
+                });
+                return;
+            }
         }
-        // remove the toast if comment is valid
+        else if (fieldKey === "givenName") {
+            if (!trimmedInput) {
+                setShowToast({
+                    key: "error",
+                    label: t("HCM_AM_INVALID_NAME_ERROR_TOAST_MESSAGE") || "Please enter a valid name.",
+                    transitionTime: 3000
+                });
+                return;
+            }
+        }
         setShowToast(null);
-        // Call the onSubmit function with the valid comment
-        // onSubmit(comment);
-        onSubmit({
-            comment,
-            supportingDocs
-          });
+        onSubmit(fieldKey, trimmedInput); // send back key and value
     };
 
     const handleKeyPress = (e) => {
@@ -53,32 +67,23 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
 
     return (
         <>
+            {/*TODO: ADD LOGIC TO CLEAR SAVED FIELDS NAMES */}
             <PopUp
                 style={{ width: "700px" }}
                 onClose={onClose}
-                heading={t(`HCM_AM_APPROVE_LABEL`)}
+                heading={t(`HCM_AM_EDIT_WORKER_DETAILS_LABEL`)}
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
-                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
+                            {editFieldName}<span className="required"> *</span>
                         </div>
                         <TextArea
                             style={{ maxWidth: "100%" }}
-                            value={comment}
-                            onChange={handleTextAreaChange}
-                            onKeyPress={handleKeyPress}
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+
                         />
-                    </div>,
-                    <div key="supporting-doc" style={{ marginTop: "1rem" }}>
-                    <div className="comment-label">
-                      {t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}
                     </div>
-                
-                    <SupportingDocumentUpload
-                      multiple={false}
-                      onUpload={(files) => setSupportingDocs(files)}
-                    />
-                  </div>
                 ]}
                 onOverlayClick={onClose}
                 equalWidthButtons={true}
@@ -120,4 +125,4 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
     );
 };
 
-export default ApproveCommentPopUp;
+export default EditWorkerDetailsPopUp;

@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
-import SupportingDocumentUpload from "./attendance_file_upload/SupportingDocumentUpload";
+import { Dropdown } from "@egovernments/digit-ui-react-components";
+
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
  * The component shows a text area to enter the comment and a button to save the comment.
@@ -11,14 +12,15 @@ import SupportingDocumentUpload from "./attendance_file_upload/SupportingDocumen
  * @param {function} onSubmit - Function to call when the comment is valid and should be submitted.
  * @returns {JSX.Element} - The pop-up component.
  */
-const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
-
+const SendForEditPopUp = ({ ...props }) => {
+    console.log("props", props.isEditTrue);
     const { t } = useTranslation();
 
     // state variables
     const [comment, setComment] = useState(null);
     const [showToast, setShowToast] = useState(null);
-    const [supportingDocs, setSupportingDocs] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+
 
     const handleTextAreaChange = (e) => {
         const inputValue = e.target.value;
@@ -26,6 +28,17 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
     };
 
     const handleSave = () => {
+
+        if (!selectedUser) {
+            setShowToast({
+                key: "error",
+                label: t("HCM_AM_SELECT_USER_REQUIRED"),
+                transitionTime: 3000
+            });
+            return;
+        }
+        setShowToast(null);
+
         if (!comment || comment.trim() === "") {
             // Show toast if comment is empty
             setShowToast({
@@ -37,12 +50,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
         }
         // remove the toast if comment is valid
         setShowToast(null);
-        // Call the onSubmit function with the valid comment
-        // onSubmit(comment);
-        onSubmit({
-            comment,
-            supportingDocs
-          });
+        props?.onSubmit(comment, selectedUser);
     };
 
     const handleKeyPress = (e) => {
@@ -55,32 +63,9 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
         <>
             <PopUp
                 style={{ width: "700px" }}
-                onClose={onClose}
-                heading={t(`HCM_AM_APPROVE_LABEL`)}
-                children={[
-                    <div key="comment-section">
-                        <div className="comment-label">
-                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
-                        </div>
-                        <TextArea
-                            style={{ maxWidth: "100%" }}
-                            value={comment}
-                            onChange={handleTextAreaChange}
-                            onKeyPress={handleKeyPress}
-                        />
-                    </div>,
-                    <div key="supporting-doc" style={{ marginTop: "1rem" }}>
-                    <div className="comment-label">
-                      {t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}
-                    </div>
-                
-                    <SupportingDocumentUpload
-                      multiple={false}
-                      onUpload={(files) => setSupportingDocs(files)}
-                    />
-                  </div>
-                ]}
-                onOverlayClick={onClose}
+                onClose={props?.onClose}
+                heading={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND_FOR_EDIT`)}
+                onOverlayClick={props?.onClose}
                 equalWidthButtons={true}
                 footerChildren={[
                     <Button
@@ -90,9 +75,9 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                         size="large"
                         style={{ minWidth: "270px" }}
                         variation="secondary"
-                        label={t(`HCM_AM_CLOSE`)}
-                        title={t(`HCM_AM_CLOSE`)}
-                        onClick={onClose}
+                        label={t(`HCM_AM_CANCEL`)}
+                        title={t(`HCM_AM_CANCEL`)}
+                        onClick={props?.onClose}
                     />,
                     <Button
                         key="submit-button"
@@ -101,12 +86,36 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                         size="large"
                         variation="primary"
                         style={{ minWidth: "270px" }}
-                        label={t(`HCM_AM_APPROVE`)}
-                        title={t(`HCM_AM_APPROVE`)}
+                        label={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
+                        title={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
                         onClick={() => handleSave()}
                     />,
                 ]}
-            />
+            >
+                <div key="comment-section">
+                    <div className="comment-label">
+                        {props?.isEditTrue ? t(`HCM_AM_FORWARD_TO`) : t(`HCM_AM_SEND_FOR_EDIT`)}<span className="required"> *</span>
+                    </div>
+                    <Dropdown
+                        option={props?.dropdownOptions}
+                        optionKey="title"
+                        selected={selectedUser}
+                        select={(option) => setSelectedUser(option)}
+                        placeholder={t("HCM_AM_SELECT_EDITOR")}
+                    />
+                </div>
+                <div key="comment-section">
+                    <div className="comment-label">
+                        {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
+                    </div>
+                    <TextArea
+                        style={{ maxWidth: "100%" }}
+                        value={comment}
+                        onChange={handleTextAreaChange}
+                        onKeyPress={handleKeyPress}
+                    />
+                </div>
+            </PopUp>
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}
@@ -120,4 +129,4 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
     );
 };
 
-export default ApproveCommentPopUp;
+export default SendForEditPopUp;

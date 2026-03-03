@@ -6,6 +6,7 @@ import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
+import {parse, format} from "date-fns";
 import { getCustomPaginationOptions } from "../utils";
 
 /**
@@ -48,9 +49,18 @@ const AttendanceManagementTable = ({ ...props }) => {
         </div>
       ),
       selector: (row) => {
-        return (
+        const name = String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"));
+        return props.onAttendeeClick ? (
+          <span
+            className="ellipsis-cell"
+            style={{ color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => props.onAttendeeClick(row)}
+          >
+            {name}
+          </span>
+        ) : (
           <span className="ellipsis-cell">
-            {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
+            {name}
           </span>
         );
       },
@@ -64,12 +74,83 @@ const AttendanceManagementTable = ({ ...props }) => {
       ),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.[2] || t("NA")}>
-            {row?.[2] || t("NA")}
+          <div  className="ellipsis-cell" title={row?.[2] || t("NA")}>
+            {row?.[2] || t("ES_COMMON_NA")}
           </div>
         );
       },
     },
+    // {
+    //   name: (
+    //     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+    //       {t(`HCM_AM_UNIQUE_ID`)}
+    //     </div>
+    //   ),
+    //   selector: (row) => {
+    //     return (
+    //       <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+    //         {String(row?.[8] ? row?.[8] : t("ES_COMMON_NA"))}
+    //       </span>
+    //     );
+    //   },
+    // },
+    // INFO:: Gender, DOB, Mobile Number moved to AttendeeDetailsPopUp
+    // {
+    //   name: (
+    //     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+    //       {t(`HCM_AM_GENDER`)}
+    //     </div>
+    //   ),
+    //   selector: (row) => {
+    //     return (
+    //       <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+    //         {String(row?.[5] ? row?.[5] : t("ES_COMMON_NA"))}
+    //       </span>
+    //     );
+    //   },
+    // },
+    // {
+    //   name: (
+    //     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+    //       {t(`HCM_AM_DOB`)}
+    //     </div>
+    //   ),
+    //   selector: (row) => {
+    //     const rowData = row?.[6];
+    //     let formattedDate = t("ES_COMMON_NA");
+    //     if(rowData){
+    //       try {
+    //         const parseData = parse(rowData, "dd/MM/yyyy", new Date());
+    //         formattedDate = format(parseData, "MMM dd, yyyy");
+    //       }
+    //       catch (error) {
+    //         console.error("Date parsing error:", error);
+    //       }
+    //     }
+    //     return (
+    //       <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+    //         {formattedDate}
+    //       </span>
+    //     );
+    //   },
+    // },
+    // {
+    //   name: (
+    //     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+    //       {t(`HCM_AM_MOBILE_NUMBER`)}
+    //     </div>
+    //   ),
+    //   selector: (row) => {
+    //     return (
+    //       <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+    //         {String(row?.[7] ? row?.[7] : t("ES_COMMON_NA"))}
+    //       </span>
+    //     );
+    //   },
+    //   style: {
+    //     justifyContent: "flex-end",
+    //   },
+    // },
     {
       name: (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
@@ -77,14 +158,48 @@ const AttendanceManagementTable = ({ ...props }) => {
         </div>
       ),
       selector: (row) => {
+        const roleText = row?.[3] ? t(row?.[3]) : t("ES_COMMON_NA");
+
         return (
-          <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
-            {t(row?.[3]) || t("NA")}
+          <div className="ellipsis-cell" title={roleText}>
+            {roleText}
           </div>
         );
       },
     },
+    // {
+    //   name: (
+    //     <div style={{ borderRight: "2px solid #787878", width: "50%", textAlign: "start" }}>
+    //       {t(`HCM_AM_USERTYPE`)}
+    //     </div>
+    //   ),
+    //   selector: (row) => {
+    //     return (
+    //       <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+    //         {String(row?.[9] ? row?.[9] : t("ES_COMMON_NA"))}
+    //       </span>
+    //     );
+    //   },
+    // },
 
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start", whiteSpace: "normal", wordBreak: "break-word" }}>
+          {t("HCM_AM_PERFORMANCE_METRIC")}
+        </div>
+      ),
+      selector: (row) => {
+        const value = row?.[12] != null ? String(row[12]) : t("ES_COMMON_NA");
+        return (
+          <div className="ellipsis-cell" title={value}>
+            {value}
+          </div>
+        );
+      },
+      style: {
+        justifyContent: "flex-end",
+      },
+    },
     {
       name: t("HCM_AM_NO_OF_DAYS_WORKED"),
       selector: (row) => {
@@ -146,7 +261,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     // Update the data directly using the parent's setState
     const updatedData = props.data.map((worker) => {
       if (worker[2] === workerId) {
-        return [worker[0], worker[1], worker[2], worker[3], value || 0]; // Update the daysWorked value
+        return [worker[0], worker[1], worker[2], worker[3], value || 0, worker[5], worker[6], worker[7], worker[8]]; // Update the daysWorked value
       }
       return worker; // Keep other rows unchanged
     });
@@ -156,7 +271,7 @@ const AttendanceManagementTable = ({ ...props }) => {
   return (
     <>
       <DataTable
-        className="search-component-table"
+      className="search-component-table"
         columns={columns}
         data={paginatedData}
         progressPending={false}

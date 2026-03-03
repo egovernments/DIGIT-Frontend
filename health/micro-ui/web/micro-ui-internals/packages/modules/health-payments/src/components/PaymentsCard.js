@@ -6,11 +6,10 @@ const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
   BILLS: ["CAMPAIGN_SUPERVISOR"],
   PAYMENT_SETUP: ["CAMPAIGN_MANAGER"],
+  EDIT_BILLS: ["PAYMENT_EDITOR"],
 };
 
 const PaymentsCard = () => {
-
- 
   // Reset session storage
   useEffect(() => {
     Digit.SessionStorage.del("paymentInbox");
@@ -41,6 +40,8 @@ const PaymentsCard = () => {
     generateLink("ATTENDANCE_REGISTERS", "project-selection"),
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
+    generateLink("CS_TITLE_VERIFY_AND_GENERATE_PAYMENTS", "verify-bills", ROLES.BILLS),
+    generateLink("CS_TITLE_EDIT_BILLS", "edit-bills", ROLES.EDIT_BILLS),
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;
