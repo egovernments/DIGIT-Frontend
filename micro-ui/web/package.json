@@ -11,7 +11,8 @@
     "packages/css",
     "packages/modules/open-payment",
     "packages/modules/PublicServices",
-    "packages/modules/ServiceDesigner"
+    "packages/modules/ServiceDesigner",
+    "packages/modules/core"
   ],
   "homepage": "/digit-studio/",
   "husky": {},
