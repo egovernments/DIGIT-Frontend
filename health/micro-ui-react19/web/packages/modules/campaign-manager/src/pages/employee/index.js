@@ -123,6 +123,18 @@ const CampaignTemplates = lazyWithFallback(
   { loaderText: "Loading Campaign Templates..." }
 );
 
+const CommodityDashboard = lazyWithFallback(
+  () => import(/* webpackChunkName: "commodity-dashboard" */ "../../components/CommodityManagement/CommodityDashboard"),
+  () => require("../../components/CommodityManagement/CommodityDashboard").default,
+  { loaderText: "Loading Commodity Dashboard..." }
+);
+
+const BulkStockUpload = lazyWithFallback(
+  () => import(/* webpackChunkName: "bulk-stock-upload" */ "../../components/CommodityManagement/BulkStockUpload"),
+  () => require("../../components/CommodityManagement/BulkStockUpload").default,
+  { loaderText: "Loading Bulk Stock Upload..." }
+);
+
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -142,6 +154,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const projectType = url?.projectType;
   const name = url?.campaignName;
   const role = url?.role;
+  const projectId = url?.projectId;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
 
@@ -267,6 +280,22 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t(I18N_KEYS.PAGES.CAMPAIGN_TEMPLATES),
       show: pathVar.includes("campaign-templates") ? true : false,
     },
+    {
+      internalLink: pathVar.includes("my-campaign-new") ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      content: t("MY_CAMPAIGN"),
+      show: pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("commodity-dashboard") ? "" : `/${window?.contextPath}/employee/campaign/commodity-dashboard`,
+      content: t("HCM_COMMODITY_DASHBOARD"),
+      query: `campaignNumber=${campaignNumber}&campaignId=${campaignId}&tenantId=${tenantId}&projectId=${projectId}`,
+      show: pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t("HCM_BULK_STOCK_UPLOAD"),
+      show: pathVar.includes("bulk-stock-upload") ? true : false,
+    },
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} />;
@@ -384,6 +413,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
+          <Route path={`commodity-dashboard`} element={<CommodityDashboard />} />
+          <Route path={`bulk-stock-upload`} element={<BulkStockUpload />} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>
       </AppContainer>

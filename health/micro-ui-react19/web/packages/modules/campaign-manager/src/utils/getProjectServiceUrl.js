@@ -7,4 +7,26 @@ const getProjectServiceUrl = () => {
 
 // Export the function to be used in other parts of the application.
 
+export const getGeoJsonUrl = (boundaryType="ward") => {
+  let urls = window.globalConfigs?.getConfig("GEOJSONURLS") || {};
+  return urls?.[boundaryType];
+};
+
+const defaultKibanaDetails = {
+  kibanaPath:"kibana",
+  username:"anonymous",
+  password:"anonymous1",
+  projectTaskIndex:"project-task-index-v1",
+  projectStaffIndex:"od-project-staff-index-v1",
+  projectStockIndex:"od-stock-index-v1",
+  token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
+  key:"name",
+  value:"projectName"
+};
+
+export const getKibanaDetails = (key="username") => {
+  let details = window.globalConfigs?.getConfig("KIBANA") && {...defaultKibanaDetails, ...window.globalConfigs?.getConfig("KIBANA")} || defaultKibanaDetails;
+  return details?.[key];
+};
+
 export default getProjectServiceUrl;

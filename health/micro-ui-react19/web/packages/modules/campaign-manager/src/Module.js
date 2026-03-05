@@ -88,6 +88,16 @@ import RadioListTemplate from "./pages/employee/NewAppConfiguration/components/R
 import ExpandableTemplate from "./pages/employee/NewAppConfiguration/components/ExpandableTemplate";
 import QRView from "./pages/employee/NewAppConfiguration/components/QRView";
 
+//Commodity Manamgement 
+import BulkStockUpload from "./components/CommodityManagement/BulkStockUpload";
+import StockComponent from "./components/CommodityManagement/StockComponent";
+import CommodityDashboard from "./components/CommodityManagement/CommodityDashboard";
+import DataSyncCard from "./components/CommodityManagement/DataSyncCard";
+import SummaryCard from "./components/CommodityManagement/SummaryCard";
+import TransactionSummaryTab from "./components/CommodityManagement/TransactionSummaryTab";
+import StockSummaryTab from "./components/CommodityManagement/StockSummaryTab";
+import GenericChart from "./components/CommodityManagement/GenericChart";
+
 /**
  * MDMS Module name
  */
@@ -289,6 +299,16 @@ const componentsToRegister = {
   RadioListTemplate,
   ExpandableTemplate,
   QRView,
+
+  //CommodityManagement
+  BulkStockUpload,
+  StockComponent,
+  CommodityDashboard,
+  DataSyncCard,
+  SummaryCard,
+  TransactionSummaryTab,
+  StockSummaryTab,
+  GenericChart
 };
 
 const overrideHooks = () => {
