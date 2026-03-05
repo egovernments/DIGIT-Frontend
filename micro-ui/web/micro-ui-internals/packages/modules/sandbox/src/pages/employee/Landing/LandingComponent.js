@@ -40,11 +40,11 @@ const LandingComponent = ({ config = {} }) => {
 
 
 
-  // Destructure key config fields with fallback defaults
+  // Destructure key config fields with fallback defaults from sandboxConfig
   const {
-    heading = "Sandbox",
-    url = "https://app.supademo.com/embed/cmdphco8t0001y90ikoa6o142?embed_v=2&utm_source=embed",
-    subsections = [],
+    heading = sandboxConfig.heading,
+    url = sandboxConfig.url,
+    subsections = sandboxConfig.subsections,
   } = config;
 
   // Define the redirect path for button click - will upate after the product page is ready
