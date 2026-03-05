@@ -4,7 +4,8 @@
   "main": "index.js",
   "workspaces": [
     "packages/modules/microplan",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/modules/hcm-microplanning"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -25,7 +26,7 @@
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
-    "buildD:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
+    "build:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
     "build:microplan": "cd packages/modules/microplan && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
