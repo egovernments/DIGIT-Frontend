@@ -28,9 +28,8 @@ const CommodityDashboard = () => {
   );
 
   // Stock data source: true = Kibana/ES first (with stock API fallback), false = stock API only
-  // const useKibana = true;
-
-  const useKibana = false;
+  const useKibana = true;
+  
 
   const [activeTab, setActiveTab] = useState("transaction");
   // Default to cumulative: campaign start date → today

@@ -2,10 +2,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { simpleElasticsearchWorkerString } from "../workers/simpleElasticsearchWorkerString";
 import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 
-const user = getKibanaDetails("BasicUsername");
-const pass = getKibanaDetails("BasicPassword");
-const auth = user && pass ? btoa(`${user}:${pass}`) : null;
-const basicAuth = auth ? `Basic ${auth}` : null;
+const buildAuthKey = () => {
+  const user = getKibanaDetails("username");
+  const pass = getKibanaDetails("password");
+  if (user && pass) return `Basic ${btoa(`${user}:${pass}`)}`;
+  const token = getKibanaDetails("token");
+  if (token) return `Basic ${token}`;
+  return null;
+};
+const defaultAuthKey = buildAuthKey();
 
 const useSimpleElasticsearch = (config) => {
   const {
@@ -16,7 +21,7 @@ const useSimpleElasticsearch = (config) => {
     maxBatchSize = 10000,
     parallelBatches = 4,
     kibanaPath = getKibanaDetails("kibanaPath") || "kibana",
-    authKey = basicAuth,
+    authKey = defaultAuthKey,
     enabled = true,
     autoFetch = true,
   } = config;

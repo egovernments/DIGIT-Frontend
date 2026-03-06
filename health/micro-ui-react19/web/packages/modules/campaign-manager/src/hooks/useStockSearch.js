@@ -16,7 +16,7 @@ const useStockSearch = ({ tenantId, dateRange, transformFn, referenceId, enabled
       body: {
         Stock: {
           ...dateFilter,
-          // referenceId,
+          referenceId,
         },
       },
       config: {

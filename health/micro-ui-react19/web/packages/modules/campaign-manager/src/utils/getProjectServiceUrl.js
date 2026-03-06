@@ -12,17 +12,33 @@ export const getGeoJsonUrl = (boundaryType="ward") => {
   return urls?.[boundaryType];
 };
 
+//uat
 const defaultKibanaDetails = {
-  kibanaPath:"kibana-upgrade",
-  username:"anonymous_service_account",
-  password:"anonymous_service_account_password",
-  projectTaskIndex:"ba-project-task-index-v1",
-  projectStaffIndex:"ba-project-staff-index-v1",
-  projectStockIndex:"ba-stock-index-v1",
-  // token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
+  kibanaPath:"kibana",
+  username:"elastic",
+  password:"mGmmzUOEBYAcJO6DbkEfmuvE",
+  projectTaskIndex:"project-task-index-v1",
+  projectStaffIndex:"project-staff-index-v1",
+  projectStockIndex:"stock-index-v1",
+  token:"ZWxhc3RpYzptR21telVPRUJZQWNKTzZEYmtFZm11dkU=",
   key:"name",
   value:"projectName"
 };
+
+
+//bauchi
+
+// const defaultKibanaDetails = {
+//   kibanaPath:"kibana-upgrade",
+//   username:"anonymous_service_account",
+//   password:"anonymous_service_account_password",
+//   projectTaskIndex:"ba-project-task-index-v1",
+//   projectStaffIndex:"ba-project-staff-index-v1",
+//   projectStockIndex:"ba-stock-index-v1",
+//   // token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
+//   key:"name",
+//   value:"projectName"
+// };
 
 export const getKibanaDetails = (key="username") => {
   let details = window.globalConfigs?.getConfig("KIBANA") && {...defaultKibanaDetails, ...window.globalConfigs?.getConfig("KIBANA")} || defaultKibanaDetails;
