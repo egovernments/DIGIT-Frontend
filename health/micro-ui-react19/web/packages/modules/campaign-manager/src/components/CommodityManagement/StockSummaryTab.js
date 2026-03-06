@@ -5,32 +5,17 @@ import DataSyncCard from "./DataSyncCard";
 import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
-import useStockData from "../../hooks/useStockData";
 import GenericChart from "./GenericChart";
 import NewShipmentPopup from "./NewShipmentPopup";
-import { dummyRawStocks } from "./dummyRawStocks";
 
-const StockSummaryTab = ({ dateRange, tenantId, campaignId, campaignNumber, projectId, useKibana }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
 
-  const { data: stockData, isLoading } = useStockData({
-    tenantId,
-    dateRange,
-    referenceId: projectId,
-    useKibana,
-  });
-
-  const finalStockData = useMemo(() => {
-    if (stockData && stockData.length > 0) {
-      return stockData;
-    }
-
-    // return dummyRawStocks;
-  }, [stockData]);
+  const finalStockData = rawStockData?.length ? rawStockData : undefined;
 
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
@@ -119,153 +104,15 @@ const StockSummaryTab = ({ dateRange, tenantId, campaignId, campaignNumber, proj
     return map;
   }, [productVariants, products]);
 
-  // const commoditySummaries = useMemo(() => {
-  //   if (!stockData?.length) return [];
+  // Use pre-computed summary from stockSummary (computed in CommodityDashboard)
+  const { commoditySummaries = [], dataSyncStats: syncStats } = stockSummary || {};
+  const dataSyncStats = {
+    total: syncStats?.totalFacilities || 0,
+    synced: syncStats?.syncedFacilities || 0,
+    syncRate: syncStats?.syncRate || 0,
+  };
 
-  //   const commodityMap = {};
-  //   stockData.forEach((stock) => {
-  //     const productName =
-  //       stock?.additionalFields?.fields?.find((f) => f.key === "productName")
-  //         ?.value || "Unknown";
-
-  //     if (!commodityMap[productName]) {
-  //       commodityMap[productName] = {
-  //         name: productName,
-  //         totalReceived: 0,
-  //         totalIssued: 0,
-  //         totalReturned: 0,
-  //       };
-  //     }
-
-  //     const qty = stock.quantity || 0;
-  //     switch (stock.transactionType) {
-  //       case "RECEIVED":
-  //         commodityMap[productName].totalReceived += qty;
-  //         break;
-  //       case "DISPATCHED":
-  //       case "ISSUE":
-  //         commodityMap[productName].totalIssued += qty;
-  //         break;
-  //       case "RETURNED":
-  //         commodityMap[productName].totalReturned += qty;
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   });
-
-  //   return Object.values(commodityMap).map((c) => ({
-  //     ...c,
-  //     balance: c.totalReceived - c.totalIssued + c.totalReturned,
-  //   }));
-  // }, [stockData]);
-
-  // const warehouseData = useMemo(() => {
-  //   if (!stockData?.length) return [];
-
-  //   const warehouseMap = {};
-  //   stockData.forEach((stock) => {
-  //     const productName =
-  //       stock?.additionalFields?.fields?.find((f) => f.key === "productName")
-  //         ?.value || "Unknown";
-
-  //     const facilityId =
-  //       stock.transactionType === "RECEIVED"
-  //         ? stock.receiverId
-  //         : stock.senderId;
-  //     const key = `${facilityId}-${productName}`;
-
-  //     if (!warehouseMap[key]) {
-  //       warehouseMap[key] = {
-  //         warehouseName: facilityId || "N/A",
-  //         type:
-  //           stock.senderType === "WAREHOUSE" ||
-  //           stock.receiverType === "WAREHOUSE"
-  //             ? "Warehouse"
-  //             : "Facility",
-  //         boundary: "N/A",
-  //         commodity: productName,
-  //         currentStock: 0,
-  //         facilityId,
-  //       };
-  //     }
-
-  //     const qty = stock.quantity || 0;
-  //     if (stock.transactionType === "RECEIVED") {
-  //       warehouseMap[key].currentStock += qty;
-  //     } else if (
-  //       stock.transactionType === "DISPATCHED" ||
-  //       stock.transactionType === "ISSUE"
-  //     ) {
-  //       warehouseMap[key].currentStock -= qty;
-  //     } else if (stock.transactionType === "RETURNED") {
-  //       warehouseMap[key].currentStock += qty;
-  //     }
-  //   });
-
-  //   return Object.values(warehouseMap);
-  // }, [stockData]);
-
-  // const filteredData = useMemo(() => {
-  //   if (!warehouseData?.length) return [];
-  //   return applyGenericFilters(warehouseData, { searchText: searchQuery });
-  // }, [warehouseData, searchQuery]);
-
-  // const dataSyncStats = useMemo(() => {
-  //   if (!stockData?.length) return { total: 0, synced: 0, syncRate: 0 };
-  //   const uniqueWarehouses = new Set();
-  //   stockData.forEach((stock) => {
-  //     if (stock.senderId) uniqueWarehouses.add(stock.senderId);
-  //     if (stock.receiverId) uniqueWarehouses.add(stock.receiverId);
-  //   });
-  //   const total = uniqueWarehouses.size;
-  //   const synced = total;
-  //   const syncRate = total > 0 ? 75 : 0;
-  //   return { total, synced, syncRate };
-  // }, [stockData]);
-
-  const commoditySummaries = useMemo(() => {
-    if (!finalStockData?.length) return [];
-
-    const commodityMap = {};
-    finalStockData.forEach((stock) => {
-      const productName =
-        productNameMap[stock?.productVariantId] ||
-        stock?.additionalFields?.fields?.find((f) => f.key === "productName")
-          ?.value || "Unknown";
-
-      if (!commodityMap[productName]) {
-        commodityMap[productName] = {
-          name: productName,
-          totalReceived: 0,
-          totalIssued: 0,
-          totalReturned: 0,
-        };
-      }
-
-      const qty = stock.quantity || 0;
-      switch (stock.transactionType) {
-        case "RECEIVED":
-          commodityMap[productName].totalReceived += qty;
-          break;
-        case "DISPATCHED":
-        case "ISSUE":
-          commodityMap[productName].totalIssued += qty;
-          break;
-        case "RETURNED":
-          commodityMap[productName].totalReturned += qty;
-          break;
-        default:
-          break;
-      }
-    });
-
-    return Object.values(commodityMap).map((c) => ({
-      ...c,
-      balance: c.totalReceived - c.totalIssued + c.totalReturned,
-    }));
-  }, [finalStockData, productNameMap]);
-
+  // Warehouse table data still needs raw hits + facility/product name resolution
   const warehouseData = useMemo(() => {
     if (!finalStockData?.length) return [];
 
@@ -317,19 +164,6 @@ const StockSummaryTab = ({ dateRange, tenantId, campaignId, campaignNumber, proj
     if (!warehouseData?.length) return [];
     return applyGenericFilters(warehouseData, { searchText: searchQuery });
   }, [warehouseData, searchQuery]);
-
-  const dataSyncStats = useMemo(() => {
-    if (!finalStockData?.length) return { total: 0, synced: 0, syncRate: 0 };
-    const uniqueWarehouses = new Set();
-    finalStockData.forEach((stock) => {
-      if (stock.senderId) uniqueWarehouses.add(stock.senderId);
-      if (stock.receiverId) uniqueWarehouses.add(stock.receiverId);
-    });
-    const total = uniqueWarehouses.size;
-    const synced = total;
-    const syncRate = total > 0 ? 75 : 0;
-    return { total, synced, syncRate };
-  }, [finalStockData]);
 
   const columns = [
     {
@@ -524,7 +358,7 @@ const StockSummaryTab = ({ dateRange, tenantId, campaignId, campaignNumber, proj
     setSearchQuery(value);
   };
 
-  const allLoading = isLoading || facilitiesLoading || variantsLoading || productsLoading;
+  const allLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading;
 
   if (allLoading) {
     return <Loader page={true} variant={"PageLoader"} />;

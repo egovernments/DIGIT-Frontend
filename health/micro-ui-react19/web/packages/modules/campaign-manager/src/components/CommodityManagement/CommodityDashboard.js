@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Toggle, HeaderComponent,LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Toggle, HeaderComponent, LabelFieldPair } from "@egovernments/digit-ui-components";
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
 import DateRangePicker from "./DateRangePicker";
 import { useLocation } from "react-router-dom";
+import useStockData from "../../hooks/useStockData";
+import { computeStockSummary } from "../../utils/stockDataProcessor";
 
 
 const CommodityDashboard = () => {
@@ -28,8 +30,7 @@ const CommodityDashboard = () => {
   );
 
   // Stock data source: true = Kibana/ES first (with stock API fallback), false = stock API only
-  const useKibana = true;
-  
+  const useKibanaFlag = true;
 
   const [activeTab, setActiveTab] = useState("transaction");
   // Default to cumulative: campaign start date → today
@@ -53,6 +54,20 @@ const CommodityDashboard = () => {
       startDate: dateRange.startDate || campaignStartDate,
     };
   }, [dateRange, campaignStartDate]);
+
+  // Centralized stock data fetch (single call for both tabs)
+  const { data: rawStockData, isLoading: stockLoading, metadata, source } = useStockData({
+    tenantId,
+    dateRange: effectiveDateRange,
+    referenceId: projectId,
+    useKibana: useKibanaFlag,
+  });
+
+  // Compute summary stats from either ES aggregations or raw data
+  const stockSummary = useMemo(
+    () => computeStockSummary({ source, metadata, data: rawStockData }),
+    [source, metadata, rawStockData]
+  );
 
   const handleDateRangeSelect = (name, { startDate, endDate }) => {
     setDateRange({
@@ -146,9 +161,24 @@ const CommodityDashboard = () => {
       </div>
 
       {activeTab === "transaction" ? (
-        <TransactionSummaryTab dateRange={effectiveDateRange} tenantId={tenantId} campaignId={campaignId} projectId={projectId} useKibana={useKibana}/>
+        <TransactionSummaryTab
+          rawStockData={rawStockData}
+          stockLoading={stockLoading}
+          stockSummary={stockSummary}
+          tenantId={tenantId}
+          campaignId={campaignId}
+          projectId={projectId}
+        />
       ) : (
-        <StockSummaryTab dateRange={effectiveDateRange} tenantId={tenantId} campaignId={campaignId} campaignNumber={campaignNumber} projectId={projectId} useKibana={useKibana}/>
+        <StockSummaryTab
+          rawStockData={rawStockData}
+          stockLoading={stockLoading}
+          stockSummary={stockSummary}
+          tenantId={tenantId}
+          campaignId={campaignId}
+          campaignNumber={campaignNumber}
+          projectId={projectId}
+        />
       )}
     </div>
   );

@@ -47,6 +47,7 @@ const useStockData = ({ tenantId, dateRange, referenceId, useKibana = true, tran
       data: kibanaResult.data,
       isLoading: kibanaResult.isLoading,
       error: kibanaResult.error,
+      metadata: kibanaResult.metadata,
       source: "kibana",
     };
   }
@@ -55,6 +56,7 @@ const useStockData = ({ tenantId, dateRange, referenceId, useKibana = true, tran
     data: apiResult.data,
     isLoading: apiResult.isLoading,
     error: apiResult.error,
+    metadata: null,
     source: "stockApi",
   };
 };

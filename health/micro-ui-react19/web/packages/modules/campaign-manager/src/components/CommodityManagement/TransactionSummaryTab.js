@@ -6,9 +6,7 @@ import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
-import useStockData from "../../hooks/useStockData";
 import GenericChart from "./GenericChart";
-import { dummyRawStocks } from "./dummyRawStocks";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const getFieldValue = (fieldKey) => {
@@ -80,19 +78,11 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   };
 };
 
-const TransactionSummaryTab = ({ dateRange, tenantId, campaignId, projectId, useKibana }) => {
+const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
-
-  // Fetch raw stock transactions (Kibana-first with stock API fallback)
-  const { data: rawStockData, isLoading: stockLoading } = useStockData({
-    tenantId,
-    dateRange,
-    referenceId: projectId,
-    useKibana,
-  });
 
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
@@ -183,90 +173,18 @@ const TransactionSummaryTab = ({ dateRange, tenantId, campaignId, projectId, use
 
   const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading;
 
-  const fallbackData = useMemo(() => {
-    if (tableData && tableData.length > 0) {
-      return tableData;
-    }
-  }, [tableData]);
+  // Use pre-computed summary from stockSummary (computed in CommodityDashboard)
+  const { transactionSummary: summaryStats = { total: 0, completed: 0, pending: 0, rejected: 0 }, dataSyncStats: syncStats } = stockSummary || {};
+  const dataSyncStats = {
+    totalManagers: syncStats?.totalFacilities || 0,
+    syncedManagers: syncStats?.syncedFacilities || 0,
+    syncRate: syncStats?.syncRate || 0,
+  };
 
-
-  // Filter by search using genericFilterUtils
-  // const filteredData = useMemo(() => {
-  //   if (!tableData?.length) return [];
-  //   return applyGenericFilters(tableData, { searchText: searchQuery });
-  // }, [tableData, searchQuery]);
-
-  // Compute summary stats
-  // const summaryStats = useMemo(() => {
-  //   if (!tableData?.length)
-  //     return { total: 0, completed: 0, pending: 0, rejected: 0 };
-  //   const total = tableData.length;
-  //   const completed = tableData.filter(
-  //     (r) => r.status === "Completed" || r.status === "Complete",
-  //   ).length;
-  //   const pending = tableData.filter(
-  //     (r) => r.status === "In-Transit" || r.status === "In-transit",
-  //   ).length;
-  //   const rejected = tableData.filter(
-  //     (r) => r.status === "Rejected" || r.status === "Cancelled",
-  //   ).length;
-  //   return { total, completed, pending, rejected };
-  // }, [tableData]);
-
-  // // Compute data sync stats
-  // const dataSyncStats = useMemo(() => {
-  //   if (!tableData?.length)
-  //     return { totalManagers: 0, syncedManagers: 0, syncRate: 0 };
-  //   const senderIds = new Set(
-  //     tableData.map((r) => r.sentFrom).filter((v) => v !== "N/A"),
-  //   );
-  //   const receiverIds = new Set(
-  //     tableData.map((r) => r.sentTo).filter((v) => v !== "N/A"),
-  //   );
-  //   const allFacilities = new Set([...senderIds, ...receiverIds]);
-  //   const totalManagers = allFacilities.size;
-  //   const syncedManagers = totalManagers;
-  //   const syncRate = totalManagers > 0 ? 75 : 0;
-  //   return { totalManagers, syncedManagers, syncRate };
-  // }, [tableData]);
-
-      const filteredData = useMemo(() => {
-    if (!fallbackData?.length) return [];
-    return applyGenericFilters(fallbackData, { searchText: searchQuery });
-  }, [fallbackData, searchQuery]);
-
-    const summaryStats = useMemo(() => {
-    if (!fallbackData?.length)
-      return { total: 0, completed: 0, pending: 0, rejected: 0 };
-    const total = fallbackData.length;
-    const completed = fallbackData.filter(
-      (r) => r.status === "Completed" || r.status === "Complete",
-    ).length;
-    const pending = fallbackData.filter(
-      (r) => r.status === "In-Transit" || r.status === "In-transit",
-    ).length;
-    const rejected = fallbackData.filter(
-      (r) => r.status === "Rejected" || r.status === "Cancelled",
-    ).length;
-    return { total, completed, pending, rejected };
-  }, [fallbackData]);
-
-  // Compute data sync stats
-  const dataSyncStats = useMemo(() => {
-    if (!fallbackData?.length)
-      return { totalManagers: 0, syncedManagers: 0, syncRate: 0 };
-    const senderIds = new Set(
-      fallbackData.map((r) => r.sentFrom).filter((v) => v !== "N/A"),
-    );
-    const receiverIds = new Set(
-      fallbackData.map((r) => r.sentTo).filter((v) => v !== "N/A"),
-    );
-    const allFacilities = new Set([...senderIds, ...receiverIds]);
-    const totalManagers = allFacilities.size;
-    const syncedManagers = totalManagers;
-    const syncRate = totalManagers > 0 ? 75 : 0;
-    return { totalManagers, syncedManagers, syncRate };
-  }, [fallbackData]);
+  const filteredData = useMemo(() => {
+    if (!tableData?.length) return [];
+    return applyGenericFilters(tableData, { searchText: searchQuery });
+  }, [tableData, searchQuery]);
 
   // Download table data as Excel
   const handleExcelDownload = useCallback(() => {

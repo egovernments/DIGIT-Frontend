@@ -17,9 +17,8 @@ const useSimpleElasticsearch = (config) => {
     indexName,
     query,
     sourceFields,
-    maxRecordLimit = 100000,
-    maxBatchSize = 10000,
-    parallelBatches = 4,
+    aggs,
+    maxRecordLimit = 10000,
     kibanaPath = getKibanaDetails("kibanaPath") || "kibana",
     authKey = defaultAuthKey,
     enabled = true,
@@ -79,6 +78,7 @@ const useSimpleElasticsearch = (config) => {
               totalRecords: payload.totalRecords,
               totalAvailable: payload.totalAvailable,
               batchesProcessed: payload.batchesProcessed,
+              aggregations: payload.aggregations,
               config: payload.config,
             });
             setLoading(false);
@@ -156,16 +156,15 @@ const useSimpleElasticsearch = (config) => {
         indexName,
         query,
         sourceFields,
+        aggs,
         maxRecordLimit,
-        maxBatchSize,
-        parallelBatches,
         kibanaPath,
         authKey,
         origin: window.location.origin,
         requestId: requestIdRef.current,
       },
     });
-  }, [indexName, query, sourceFields, maxRecordLimit, maxBatchSize, parallelBatches, kibanaPath, authKey]);
+  }, [indexName, query, sourceFields, aggs, maxRecordLimit, kibanaPath, authKey]);
 
   const cancelFetch = useCallback(() => {
     if (workerRef.current && requestIdRef.current) {
@@ -182,7 +181,7 @@ const useSimpleElasticsearch = (config) => {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, autoFetch, indexName, JSON.stringify(query), JSON.stringify(sourceFields), authKey]);
+  }, [enabled, autoFetch, indexName, JSON.stringify(query), JSON.stringify(sourceFields), JSON.stringify(aggs), authKey]);
 
   return {
     data,
