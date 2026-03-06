@@ -358,6 +358,68 @@
     border-radius: .375rem;
   }
 
+  .digit-label-field-pair.boundary-filter-label-left-align {
+  display: block !important;
+
+  .digit-header-content.label {
+    display: none !important;
+  }
+
+  .digit-field {
+    width: 100% !important;
+
+    .selecting-boundary-div {
+      .boundary-item {
+        margin-bottom: 24px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: unquote("clamp(1rem, 2.5vw, 2rem)") !important;
+
+        h2.boundary-selection-label {
+          margin: 0 !important;
+          width: 32.33% !important;
+          padding: 0 !important;
+          font-weight: normal !important;
+          font-size: 1rem !important;
+          color: #0b0c0c !important;
+          line-height: 19px !important;
+          margin-bottom: 0px !important;
+          overflow: hidden !important;
+          white-space: nowrap !important;
+          text-overflow: ellipsis !important;
+        }
+
+        .digit-field-full {
+          width: auto !important;
+          flex: 1 !important;
+          min-width: 0 !important;
+
+          .padding-dropdown {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: flex-start !important;
+
+            .digit-dropdown-employee-select-wrap {
+              width: 100% !important;
+
+              @media (min-aspect-ratio: 3/4) {
+                max-width: 37.5rem;
+              }
+
+              .digit-dropdown-select {
+                width: 100% !important;
+                max-width: 37.5rem !important;
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  } 
+
   .sandbox-custom-otp-subheader,
   .sandbox-custom-otp-header,
   .sandbox-custom-otp-email {
