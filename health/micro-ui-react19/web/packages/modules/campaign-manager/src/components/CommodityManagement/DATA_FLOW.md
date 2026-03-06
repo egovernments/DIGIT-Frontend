@@ -5,16 +5,19 @@
 ```
 CommodityDashboard.js                    <-- Entry point (route: /commodity-dashboard)
   |-- DateRangePicker.js                 <-- Date range selector (react-date-range)
-  |-- TransactionSummaryTab.js           <-- Tab 1: Transaction list view
-  |     |-- DataSyncCard.js              <-- Sync stats bar (total managers, synced, rate)
-  |     |-- SummaryCard.js               <-- Summary card (total/completed/pending/rejected)
+  |-- useStockData()                     <-- SINGLE centralized stock data fetch
+  |-- computeStockSummary()              <-- Unified summary processor (ES aggs or client-side)
+  |
+  |-- TransactionSummaryTab.js           <-- Tab 1: Transaction list view (receives data as props)
+  |     |-- DataSyncCard.js              <-- Sync stats bar (from stockSummary.dataSyncStats)
+  |     |-- SummaryCard.js               <-- Summary card (from stockSummary.transactionSummary)
   |     |-- GenericChart.js              <-- Wrapper with header, search, download/share menu
   |     |     +-- ReusableTableWrapper.js <-- DataTable with pagination, sorting, Excel export
   |     +-- UserDetails.js               <-- Clickable UUID that shows user tooltip on click
   |
-  +-- StockSummaryTab.js                 <-- Tab 2: Stock/warehouse view
-        |-- DataSyncCard.js              <-- Sync stats bar (total warehouses, synced, rate)
-        |-- SummaryCard.js               <-- One card PER unique product variant
+  +-- StockSummaryTab.js                 <-- Tab 2: Stock/warehouse view (receives data as props)
+        |-- DataSyncCard.js              <-- Sync stats bar (from stockSummary.dataSyncStats)
+        |-- SummaryCard.js               <-- One card PER commodity (from stockSummary.commoditySummaries)
         |-- GenericChart.js              <-- Wrapper with header, search, download/share menu
         |     +-- ReusableTableWrapper.js
         +-- NewShipmentPopup.js          <-- Popup for creating stock shipments
@@ -29,11 +32,11 @@ BulkStockUpload.js                       <-- Separate page (route: /bulk-stock-u
 
 ---
 
-## 1. CommodityDashboard.js
+## 1. CommodityDashboard.js (Centralized Data Owner)
 
 **Route:** `/{contextPath}/employee/campaign/commodity-dashboard?campaignNumber=X&campaignId=Y&tenantId=Z`
 
-**Purpose:** Entry point container. Reads URL params + navigation state, manages tab switching and date range state.
+**Purpose:** Entry point container. Reads URL params + navigation state, manages tab switching, date range state, AND centralized stock data fetching. Both tabs receive processed data as props — no duplicate API calls.
 
 **URL Params Read:**
 | Param | Usage |
@@ -44,7 +47,7 @@ BulkStockUpload.js                       <-- Separate page (route: /bulk-stock-u
 **Navigation State (from `location.state`, passed by HCMMyCampaignRowCard):**
 | Key | Type | Usage |
 |-----|------|-------|
-| `projectId` | `string` | Passed to child tabs as `referenceId` for stock search filtering |
+| `projectId` | `string` | Used as `referenceId` for stock search filtering |
 | `campaignStartDate` | `number` (epoch ms) | Used as start date for "Cumulative" preset and default for "Custom" range |
 
 **State:**
@@ -53,28 +56,138 @@ BulkStockUpload.js                       <-- Separate page (route: /bulk-stock-u
 | `activeTab` | `"transaction"` | Which tab is shown |
 | `dateRange` | `{ startDate: null, endDate: now, preset: "cumulative" }` | Raw date range state (internal) |
 
-**Derived State:**
-| Variable | Purpose |
-|----------|---------|
-| `campaignStartDate` | `new Date(campaignStartEpoch)` from navigation state |
-| `effectiveDateRange` | Resolved date range passed to DateRangePicker and child tabs. For "cumulative" preset, resolves `startDate` to `campaignStartDate` and `endDate` to today. For other presets, fills in `startDate` fallback from `campaignStartDate` |
-
-**Date Presets:**
-- **Custom** — User picks start/end dates via DateRangePicker. Defaults to campaign start date → today when switching
-- **Today** — Sets range to midnight-to-midnight of current day
-- **Cumulative** — Campaign start date → today (fetches all data from campaign start to now)
+**Centralized Data Fetching:**
+```
+useStockData({ tenantId, dateRange: effectiveDateRange, referenceId: projectId, useKibana })
+    |
+    +---> returns { data: rawStockData, isLoading: stockLoading, metadata, source }
+              |
+              +---> computeStockSummary({ source, metadata, data: rawStockData })
+                        |
+                        +---> stockSummary: { transactionSummary, commoditySummaries, dataSyncStats }
+```
 
 **Props passed to tabs:**
 ```
-TransactionSummaryTab: { dateRange: effectiveDateRange, tenantId, campaignId, projectId }
-StockSummaryTab:       { dateRange: effectiveDateRange, tenantId, campaignId, campaignNumber, projectId }
+TransactionSummaryTab: { rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId }
+StockSummaryTab:       { rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId }
 ```
+
+**Date Presets:**
+- **Custom** — User picks start/end dates via DateRangePicker. Defaults to campaign start date -> today when switching
+- **Today** — Sets range to midnight-to-midnight of current day
+- **Cumulative** — Campaign start date -> today (fetches all data from campaign start to now)
+
+**Configuration:**
+| Config | Default | Purpose |
+|--------|---------|---------|
+| `useKibanaFlag` | `true` | When `true`, fetches stock data via Kibana/Elasticsearch first, falling back to `/stock/v1/_search` on error. When `false`, uses stock API directly. |
 
 ---
 
-## 2. useStockSearch.js (Shared Hook)
+## 2. useStockData.js (Unified Hook — Kibana-first with Fallback)
 
-**Used by:** TransactionSummaryTab, StockSummaryTab
+**Used by:** CommodityDashboard (single call, shared by both tabs)
+
+**Purpose:** Unified hook that tries Kibana/Elasticsearch first, then falls back to the stock REST API if Kibana fails. Both underlying hooks are always called (React hook rules) but only one is `enabled` at a time.
+
+**Params:**
+| Param | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `tenantId` | `string` | — | Tenant ID |
+| `dateRange` | `{ startDate, endDate }` | — | Date range (Date objects) |
+| `referenceId` | `string` | — | Project ID for filtering |
+| `useKibana` | `boolean` | `true` | Whether to try Kibana first |
+| `transformFn` | `Function` | — | Optional transform (stock API fallback only) |
+
+**Flow:**
+1. If `useKibana=true` and no prior Kibana failure -> enables `useKibanaStockSearch`, disables `useStockSearch`
+2. If Kibana errors -> sets `kibanaFailed=true`, disables Kibana, enables stock API
+3. If `useKibana=false` -> stock API only
+
+**Returns:** `{ data: Stock[], isLoading, error, metadata, source: "kibana" | "stockApi" }`
+
+- `metadata` contains ES `aggregations` when source is "kibana", `null` when source is "stockApi"
+
+---
+
+## 2a. useKibanaStockSearch.js (Elasticsearch via Kibana Proxy)
+
+**Purpose:** Queries the `stock-index-v1` Elasticsearch index via Kibana's console proxy. Returns both raw hits (normalized to stock API shape) AND aggregation results for summary stats.
+
+**Index:** `stock-index-v1` (from `getKibanaDetails("projectStockIndex")`)
+
+**Auth:** Basic auth from `getKibanaDetails("username")` / `getKibanaDetails("password")`, or `getKibanaDetails("token")` as fallback.
+
+**ES Query Construction:**
+```json
+{
+  "size": 10000,
+  "_source": ["Data.*"],
+  "query": {
+    "bool": {
+      "must": [
+        { "term": { "Data.projectId.keyword": "<projectId>" } },
+        { "range": { "Data.dateOfEntry": { "gte": "<fromDate>", "lte": "<toDate>" } } }
+      ]
+    }
+  },
+  "aggs": {
+    "by_event_type": {
+      "terms": { "field": "Data.eventType.keyword", "size": 20 },
+      "aggs": { "total_quantity": { "sum": { "field": "Data.physicalCount" } } }
+    },
+    "by_product": {
+      "terms": { "field": "Data.productName.keyword", "size": 100 },
+      "aggs": {
+        "by_event_type": {
+          "terms": { "field": "Data.eventType.keyword", "size": 20 },
+          "aggs": { "total_quantity": { "sum": { "field": "Data.physicalCount" } } }
+        },
+        "total_quantity": { "sum": { "field": "Data.physicalCount" } }
+      }
+    },
+    "unique_facilities": { "cardinality": { "field": "Data.facilityId.keyword" } },
+    "by_facility": {
+      "terms": { "field": "Data.facilityId.keyword", "size": 500 },
+      "aggs": {
+        "facility_name": { "terms": { "field": "Data.facilityName.keyword", "size": 1 } },
+        "by_event_type": {
+          "terms": { "field": "Data.eventType.keyword", "size": 20 },
+          "aggs": { "total_quantity": { "sum": { "field": "Data.physicalCount" } } }
+        }
+      }
+    },
+    "total_quantity": { "sum": { "field": "Data.physicalCount" } }
+  }
+}
+```
+
+**ES Field Mappings (ES -> normalized stock shape):**
+| ES Field (`Data.*`) | Normalized Field |
+|---------------------|-----------------|
+| `id` | `id` |
+| `clientReferenceId` | `clientReferenceId` |
+| `productVariant` | `productVariantId` |
+| `transactingFacilityId` | `senderId` |
+| `facilityId` | `receiverId` |
+| `transactingFacilityType` | `senderType` |
+| `facilityType` | `receiverType` |
+| `eventType` | `transactionType` |
+| `physicalCount` | `quantity` |
+| `projectId` | `referenceId` |
+| `dateOfEntry` / `createdTime` | `auditDetails.createdTime` |
+| `productName` | `additionalFields.fields[key="productName"]` |
+
+**Architecture:** Uses `useSimpleElasticsearch` hook -> Web Worker (`simpleElasticsearchWorkerString.js`) -> Kibana proxy (`/{kibanaPath}/api/console/proxy`) -> Elasticsearch. Single `_search` call (no `_count` step).
+
+**Returns:** `{ data: normalizedStock[], isLoading, error, progress, metadata: { aggregations, ... }, source: "kibana" }`
+
+---
+
+## 2b. useStockSearch.js (Stock REST API — Fallback)
+
+**Used by:** useStockData (as fallback when Kibana is disabled or fails)
 
 **API:** `POST /stock/v1/_search`
 
@@ -86,9 +199,7 @@ StockSummaryTab:       { dateRange: effectiveDateRange, tenantId, campaignId, ca
 }
 ```
 
-**Date filtering:** `fromDate`/`toDate` are included when the date range has non-null values. Since `effectiveDateRange` always resolves dates (Cumulative = campaign start → today), date filters are always sent in practice.
-
-**useMemo dependency array:** `[tenantId, dateRange, transformFn, referenceId]` — ensures the query recalculates when any of these change.
+**Date filtering:** `fromDate`/`toDate` are included when the date range has non-null values. Since `effectiveDateRange` always resolves dates (Cumulative = campaign start -> today), date filters are always sent in practice.
 
 **Response path:** `data.Stock[]` — array of stock transaction records.
 
@@ -123,161 +234,203 @@ StockSummaryTab:       { dateRange: effectiveDateRange, tenantId, campaignId, ca
 
 ---
 
-## 3. TransactionSummaryTab.js
+## 3. stockDataProcessor.js (Unified Summary Computation)
+
+**Purpose:** Pure utility that produces the same summary shape regardless of data source. Called in `CommodityDashboard` once, results shared with both tabs.
+
+**Entry point:** `computeStockSummary({ source, metadata, data, productNameMap })`
+
+**Strategy selection:**
+- `source === "kibana"` AND `metadata.aggregations` exists -> reads pre-computed stats from ES aggregations (server-side, fast)
+- Otherwise -> computes same stats client-side from raw hits (stock API fallback)
+
+**Output shape (identical for both strategies):**
+```js
+{
+  transactionSummary: {
+    total: number,      // Total transaction count
+    completed: number,  // RECEIVED + RETURNED
+    pending: number,    // DISPATCHED
+    rejected: number,   // DAMAGED + LOST
+  },
+  commoditySummaries: [
+    {
+      name: string,           // Product name (e.g. "IRS - Delt")
+      totalReceived: number,  // SUM quantity for RECEIVED events
+      totalIssued: number,    // SUM quantity for DISPATCHED/ISSUE events
+      totalReturned: number,  // SUM quantity for RETURNED events
+      balance: number,        // totalReceived - totalIssued + totalReturned
+    }
+  ],
+  dataSyncStats: {
+    totalFacilities: number,    // Unique facility count
+    syncedFacilities: number,   // Same as total (placeholder)
+    syncRate: number,           // Hardcoded 75% if any facilities exist
+  }
+}
+```
+
+**From ES aggregations (Kibana path):**
+| Summary field | ES aggregation source |
+|---------------|----------------------|
+| `transactionSummary.total` | `SUM(by_event_type.buckets[].doc_count)` |
+| `transactionSummary.completed` | `by_event_type.buckets` where key is RECEIVED or RETURNED |
+| `transactionSummary.pending` | `by_event_type.buckets` where key is DISPATCHED |
+| `transactionSummary.rejected` | `by_event_type.buckets` where key is DAMAGED or LOST |
+| `commoditySummaries` | `by_product.buckets[]` with nested `by_event_type.buckets[].total_quantity.value` |
+| `dataSyncStats.totalFacilities` | `unique_facilities.value` (cardinality aggregation) |
+
+**From raw data (Stock API path):**
+| Summary field | Client-side computation |
+|---------------|------------------------|
+| `transactionSummary.total` | `stockData.length` |
+| `transactionSummary.completed` | Count where `transactionType` is RECEIVED or RETURNED |
+| `commoditySummaries` | Group by product name, sum `quantity` per event type |
+| `dataSyncStats.totalFacilities` | Count unique `senderId` + `receiverId` |
+
+---
+
+## 4. TransactionSummaryTab.js
 
 **Purpose:** Shows all individual stock transactions as a flat list table.
 
-### API Call Chain
+**Props received from CommodityDashboard:**
+| Prop | Type | Purpose |
+|------|------|---------|
+| `rawStockData` | `Stock[]` | Raw hits for table rows |
+| `stockLoading` | `boolean` | Loading state |
+| `stockSummary` | `object` | Pre-computed summary (see stockDataProcessor output shape) |
+| `tenantId` | `string` | For facility/product API calls |
 
+**Data flow:**
 ```
-/stock/v1/_search (referenceId: projectId)
-       |
-       |--- Extract unique facilityIds (senderId + receiverId from all stocks)
-       |         |
-       |         +---> /facility/v1/_search  { Facility: { id: facilityIds } }
-       |                    |
-       |                    +---> facilityNameMap: facility.id -> facility.name
-       |                          (duplicate names get short ID suffix appended)
-       |
-       +--- Extract unique productVariantIds
-                 |
-                 +---> /product/variant/v1/_search  { ProductVariant: { id: productVariantIds } }
-                            |
-                            +---> Extract productIds from variant.productId
-                                      |
-                                      +---> /product/v1/_search  { Product: { id: productIds } }
-                                                 |
-                                                 +---> productNameMap: variant.id -> "product.name - variant.variation"
+rawStockData (from props)
+    |
+    +--- Extract unique facilityIds + productVariantIds
+    |         |
+    |         +---> /facility/v1/_search  -> facilityNameMap
+    |         +---> /product/variant/v1/_search -> /product/v1/_search -> productNameMap
+    |
+    +--- transformStock() -> tableData (for table rows)
+
+stockSummary (from props, pre-computed in CommodityDashboard)
+    |
+    +--- stockSummary.transactionSummary -> SummaryCard (total/completed/pending/rejected)
+    +--- stockSummary.dataSyncStats -> DataSyncCard (totalManagers/synced/syncRate)
 ```
 
 ### Data Sync Card (DataSyncCard)
 
-| Metric | Calculation |
-|--------|-------------|
-| **HCM_TOTAL_WAREHOUSE_MANAGERS** | Count of unique facility names across all sentFrom + sentTo values (excluding "N/A") |
-| **HCM_TOTAL_WH_MANAGERS_SYNCED** | Same as total (currently assumes all are synced) |
-| **HCM_SYNC_RATE** | Hardcoded `75%` if any managers exist, else `0%` |
+| Metric | Source |
+|--------|--------|
+| **HCM_TOTAL_WAREHOUSE_MANAGERS** | `stockSummary.dataSyncStats.totalFacilities` |
+| **HCM_TOTAL_WH_MANAGERS_SYNCED** | `stockSummary.dataSyncStats.syncedFacilities` |
+| **HCM_SYNC_RATE** | `stockSummary.dataSyncStats.syncRate` (hardcoded 75%) |
 
 ### Transaction Summary Card (SummaryCard)
 
-Single card showing aggregate transaction counts from `fallbackData`:
-
-| Metric | Calculation |
-|--------|-------------|
-| **HCM_TOTAL_TRANSACTIONS** | `fallbackData.length` — total number of stock records |
-| **HCM_TOTAL_COMPLETED** | Count where `status === "Completed"` or `"Complete"` |
-| **HCM_TOTAL_PENDING** | Count where `status === "In-Transit"` or `"In-transit"` |
-| **HCM_TOTAL_REJECTED** | Count where `status === "Rejected"` or `"Cancelled"` |
+| Metric | Source |
+|--------|--------|
+| **HCM_TOTAL_TRANSACTIONS** | `stockSummary.transactionSummary.total` |
+| **HCM_TOTAL_COMPLETED** | `stockSummary.transactionSummary.completed` |
+| **HCM_TOTAL_PENDING** | `stockSummary.transactionSummary.pending` |
+| **HCM_TOTAL_REJECTED** | `stockSummary.transactionSummary.rejected` |
 
 ### Table Columns (HCM_TRANSACTION_LIST)
 
 | Column | Key | Value | Source |
 |--------|-----|-------|--------|
 | **HCM_TRN** | `trn` | 5-char uppercase ID (e.g. "42E46") | `(stock.clientReferenceId \|\| stock.id).substring(0, 5).toUpperCase()` |
-| **HCM_CREATION_DATE** | `creationDate` | Formatted date (e.g. "May 30, 2024 at 05:20:33 PM") | `stock.auditDetails.createdTime` → `new Date().toLocaleString("en-US", ...)` |
-| **HCM_SENT_FROM** | `sentFrom` | Facility name (e.g. "Community Medical Store") | `facilityNameMap[stock.senderId]` from `/facility/v1/_search` → `Facilities[].name`. Falls back to raw `stock.senderId`. Duplicate names get suffix like "(001261)" |
-| **HCM_SENT_TO** | `sentTo` | Facility name | `facilityNameMap[stock.receiverId]` (same as above) |
-| **HCM_CREATED_BY** | `createdBy` | Masked UUID with info icon | `stock.auditDetails.createdBy` → rendered via `UserDetails` component. Clicking shows tooltip with user name, mobile, email, roles |
-| **HCM_STATUS** | `status` | Status badge | `stock.transactionType` mapped: RECEIVED→"Completed", DISPATCHED→"In-Transit", RETURNED→"Complete", DAMAGED→"Rejected", LOST→"Cancelled" |
-| **HCM_COMMODITY** | `commodity` | Product + variation (e.g. "SP - 500mg") | `productNameMap[stock.productVariantId]` built from chained calls. Fallback: `stock.additionalFields.fields[key="productName"].value` |
-| **HCM_TRANSACTION_TYPE** | `transactionType` | "Logistics" or "Reverse - Logistics" | `stock.transactionType === "RETURNED"` → "Reverse - Logistics", else "Logistics" |
-
-### Search & Filtering
-
-Uses `applyGenericFilters(fallbackData, { searchText })` from `genericFilterUtils.js` to filter across all text fields.
+| **HCM_CREATION_DATE** | `creationDate` | Formatted date | `stock.auditDetails.createdTime` -> `new Date().toLocaleString("en-US", ...)` |
+| **HCM_SENT_FROM** | `sentFrom` | Facility name | `facilityNameMap[stock.senderId]` |
+| **HCM_SENT_TO** | `sentTo` | Facility name | `facilityNameMap[stock.receiverId]` |
+| **HCM_CREATED_BY** | `createdBy` | Masked UUID with info icon | `stock.auditDetails.createdBy` via `UserDetails` component |
+| **HCM_STATUS** | `status` | Status badge | RECEIVED->"Completed", DISPATCHED->"In-Transit", RETURNED->"Complete", DAMAGED->"Rejected", LOST->"Cancelled" |
+| **HCM_COMMODITY** | `commodity` | Product + variation | `productNameMap[stock.productVariantId]` |
+| **HCM_TRANSACTION_TYPE** | `transactionType` | "Logistics" or "Reverse - Logistics" | RETURNED -> "Reverse - Logistics", else "Logistics" |
 
 ---
 
-## 4. StockSummaryTab.js
+## 5. StockSummaryTab.js
 
 **Purpose:** Shows per-warehouse stock levels and per-commodity summaries. Allows creating new shipments.
 
-### API Call Chain
+**Props received from CommodityDashboard:**
+| Prop | Type | Purpose |
+|------|------|---------|
+| `rawStockData` | `Stock[]` | Raw hits for warehouse table |
+| `stockLoading` | `boolean` | Loading state |
+| `stockSummary` | `object` | Pre-computed summary |
+| `tenantId` | `string` | For facility/product API calls |
+| `campaignNumber` | `string` | For NewShipmentPopup |
 
-Same as TransactionSummaryTab, plus the facility search also extracts boundary:
-
+**Data flow:**
 ```
-/facility/v1/_search  { Facility: { id: facilityIds } }
-       |
-       |---> facilityNameMap:     facility.id -> facility.name (+ duplicate suffix)
-       +---> facilityBoundaryMap: facility.id -> facility.address.locality.code
+rawStockData (from props)
+    |
+    +--- Extract unique facilityIds + productVariantIds
+    |         |
+    |         +---> /facility/v1/_search  -> facilityNameMap + facilityBoundaryMap
+    |         +---> /product/variant/v1/_search -> /product/v1/_search -> productNameMap
+    |
+    +--- warehouseData (grouped by facilityId + productName -> currentStock)
+
+stockSummary (from props, pre-computed in CommodityDashboard)
+    |
+    +--- stockSummary.commoditySummaries -> SummaryCard x N (one per product)
+    +--- stockSummary.dataSyncStats -> DataSyncCard (total/synced/syncRate)
 ```
 
 ### Data Sync Card (DataSyncCard)
 
-| Metric | Calculation |
-|--------|-------------|
-| **HCM_TOTAL_WAREHOUSES** | Count of unique facility IDs across all senderId + receiverId in stock data |
-| **HCM_TOTAL_WH_MANAGERS_SYNCED** | Same as total (assumes all synced) |
-| **HCM_SYNC_RATE** | Hardcoded `75%` if any warehouses exist, else `0%` |
+| Metric | Source |
+|--------|--------|
+| **HCM_TOTAL_WAREHOUSES** | `stockSummary.dataSyncStats.totalFacilities` |
+| **HCM_TOTAL_WH_MANAGERS_SYNCED** | `stockSummary.dataSyncStats.syncedFacilities` |
+| **HCM_SYNC_RATE** | `stockSummary.dataSyncStats.syncRate` |
 
-### Summary Cards (one SummaryCard per unique product variant)
+### Summary Cards (one SummaryCard per commodity)
 
-Stock records are grouped by resolved product name (from `productNameMap`). Each unique product gets its own card. Each card aggregates quantities across ALL facilities.
+From `stockSummary.commoditySummaries[]`:
 
-| Metric | Calculation | Example |
-|--------|-------------|---------|
-| **HCM_TOTAL_RECEIVED** | `SUM(stock.quantity)` where `transactionType === "RECEIVED"` | 17,418 |
-| **HCM_TOTAL_ISSUED** | `SUM(stock.quantity)` where `transactionType === "DISPATCHED"` or `"ISSUE"` | 3,261 |
-| **HCM_TOTAL_RETURNED** | `SUM(stock.quantity)` where `transactionType === "RETURNED"` | 0 |
-| **HCM_BALANCE** | `totalReceived - totalIssued + totalReturned` | 14,157 |
+| Metric | Source |
+|--------|--------|
+| **HCM_TOTAL_RECEIVED** | `commodity.totalReceived` |
+| **HCM_TOTAL_ISSUED** | `commodity.totalIssued` |
+| **HCM_TOTAL_RETURNED** | `commodity.totalReturned` |
+| **HCM_BALANCE** | `commodity.balance` (= received - issued + returned) |
 
 ### Table Columns (HCM_TRANSACTION_LIST)
 
-Table rows are grouped by `facilityId + productName` key. Multiple stock records for the same facility+product are aggregated into one row.
-
-**How facilityId is determined per stock record:**
-- If `transactionType === "RECEIVED"` → `facilityId = stock.receiverId` (the facility that received)
-- Otherwise → `facilityId = stock.senderId` (the facility that sent)
+Table rows are grouped by `facilityId + productName` key. Multiple stock records for the same facility+product are aggregated into one row. This is still computed from raw hits (not from aggregations) because it needs facility name resolution.
 
 | Column | Key | Value | Source |
 |--------|-----|-------|--------|
-| **HCM_WAREHOUSE_NAME** | `warehouseName` | Facility name (e.g. "CANHONGO") | `facilityNameMap[facilityId]` from `/facility/v1/_search` → `Facilities[].name`. Falls back to raw facilityId. Duplicate names get suffix |
-| **HCM_TYPE** | `type` | "Warehouse" or "Facility" | If `stock.senderType === "WAREHOUSE"` or `stock.receiverType === "WAREHOUSE"` → "Warehouse", else "Facility" |
-| **HCM_BOUNDARY** | `boundary` | Translated boundary name | `facilityBoundaryMap[facilityId]` → raw code from `Facilities[].address.locality.code` → passed through `t()` for i18n translation |
-| **HCM_COMMODITY** | `commodity` | Product + variation | Same as Transaction tab: `productNameMap[stock.productVariantId]` |
-| **HCM_CURRENT_STOCK** | `currentStock` | Net stock number for this facility+product | See calculation below |
-| **HCM_ACTION** | `action` | "+" button | Static button (placeholder for future action) |
-
-### HCM_CURRENT_STOCK — Detailed Calculation
-
-Unlike summary card totals (across ALL facilities), `currentStock` is **per facility per commodity**.
-
-```
-currentStock starts at 0
-
-For each stock record matching this facilityId + productName:
-  + stock.quantity  when transactionType === "RECEIVED"
-  - stock.quantity  when transactionType === "DISPATCHED" or "ISSUE"
-  + stock.quantity  when transactionType === "RETURNED"
-```
-
-**Example:** Warehouse "CANHONGO" with commodity "SP - 500mg":
-```
-Received 500  -> currentStock = 500
-Dispatched 100 -> currentStock = 400
-Received 200  -> currentStock = 600
-Returned 50   -> currentStock = 650
-Final display: 650
-```
+| **HCM_WAREHOUSE_NAME** | `warehouseName` | Facility name | `facilityNameMap[facilityId]` |
+| **HCM_TYPE** | `type` | "Warehouse" or "Facility" | senderType/receiverType check |
+| **HCM_BOUNDARY** | `boundary` | Translated boundary name | `facilityBoundaryMap[facilityId]` -> `t()` |
+| **HCM_COMMODITY** | `commodity` | Product + variation | `productNameMap[stock.productVariantId]` |
+| **HCM_CURRENT_STOCK** | `currentStock` | Net stock per facility+product | RECEIVED: +qty, DISPATCHED/ISSUE: -qty, RETURNED: +qty |
+| **HCM_ACTION** | `action` | "+" button | Static button (placeholder) |
 
 ### Summary Card Balance vs Table CurrentStock
 
 | | Summary Card (HCM_BALANCE) | Table (HCM_CURRENT_STOCK) |
 |---|---|---|
+| **Source** | `stockSummary.commoditySummaries` (from ES aggs or client-side) | Computed from raw hits in the tab |
 | **Scope** | ALL facilities combined | Single facility only |
 | **Grouped by** | Product name only | Facility + Product |
 | **Represents** | Total net stock for that commodity across the entire campaign | Stock level at one specific warehouse for one commodity |
 
 ---
 
-## 5. NewShipmentPopup.js
+## 6. NewShipmentPopup.js
 
 **Purpose:** Popup within StockSummaryTab for creating individual stock shipments. Provides hierarchy-based facility selection and Excel template download.
 
 **Props:** `{ campaignNumber, campaignId, tenantId, onClose, onSuccess }`
 
-**View States:** `"form"` → `"success"` → `"error"`
+**View States:** `"form"` -> `"success"` -> `"error"`
 
 ### API Chain
 
@@ -311,55 +464,21 @@ Final display: 650
       Body: { Stock: { senderId, receiverId, productVariantId, quantity, ... } }
 ```
 
-### Hierarchy Filtering Logic
-
-1. User selects **"From" boundary level** (cascading dropdowns: Country → State → LGA → Ward)
-2. Project IDs are filtered to those matching the selected boundary level
-3. ProjectFacility search returns facilities for those projects
-4. User selects a **"From" facility** (radio button, single select)
-5. **"To" hierarchy** shows ONLY levels BELOW the "From" level
-6. User selects "To" boundary filters and checks destination facilities (checkboxes, multi-select)
-
-### Product Variants
-
-Extracted from `campaignData.deliveryRules[].resources[]` — each resource has `productVariantId` and `name`.
-
-### Excel Template Download
-
-Generates Excel with:
-- Sheet 1: "Stock Data" — Headers: boundary columns + Project Id, From/To Facility Code/Name, Product Variant Id/Name, Quantity
-- Sheet 2: "ReadMe" — Instructions
-- Pre-fills rows for each selected To-facility x product-variant combination
-
-### Stock Creation (Submit)
-
-Parses uploaded Excel, creates one `/stock/v1/_create` call PER row sequentially. Each stock record:
-```json
-{
-  "transactionType": "RECEIVED",
-  "senderType": "WAREHOUSE",
-  "receiverType": "WAREHOUSE",
-  "referenceIdType": "PROJECT"
-}
-```
-
 ---
 
-## 6. BulkStockUpload.js
+## 7. BulkStockUpload.js
 
 **Route:** `/{contextPath}/employee/campaign/bulk-stock-upload?campaignNumber=X&campaignName=Y&campaignId=Z&projectType=T`
 
 **Purpose:** Standalone page for bulk stock upload. Nearly identical hierarchy filtering logic as NewShipmentPopup, plus a StockComponent table showing existing stock.
 
-**Key difference from NewShipmentPopup:** This is a full page (not a popup), and it embeds `StockComponent` to show existing raw stock data.
-
 ### API Chain
 
-Same as NewShipmentPopup (MDMS → boundary hierarchy → boundary relationships → campaign search → project search → project facility search). Plus uses `StockComponent` for viewing existing stock.
+Same as NewShipmentPopup (MDMS -> boundary hierarchy -> boundary relationships -> campaign search -> project search -> project facility search). Plus uses `StockComponent` for viewing existing stock.
 
 ---
 
-## 7. StockComponent.js
+## 8. StockComponent.js
 
 **Purpose:** Raw stock data table for admin/debug view. Shows ALL stock fields with minimal transformation. Used inside BulkStockUpload.
 
@@ -374,7 +493,7 @@ stocks.filter(stock => allProjectIdSet.has(stock.referenceId))
 
 ---
 
-## 8. Shared UI Components
+## 9. Shared UI Components
 
 ### DataSyncCard.js
 
@@ -432,6 +551,7 @@ Displays a masked UUID (e.g. "0a2d...0b17") with an info icon. On click:
 
 | API Endpoint | Used By | Body Filter | Response Path |
 |-------------|---------|-------------|---------------|
+| ES: `POST stock-index-v1/_search` (via Kibana proxy) | useKibanaStockSearch | `{ query: { term: { "Data.projectId.keyword": ... } }, aggs: { ... } }` | `hits.hits[]` + `aggregations` |
 | `POST /stock/v1/_search` | useStockSearch, StockComponent | `{ Stock: { referenceId } }` | `data.Stock[]` |
 | `POST /facility/v1/_search` | TransactionSummaryTab, StockSummaryTab | `{ Facility: { id: [...] } }` | `data.Facilities[]` |
 | `POST /product/variant/v1/_search` | TransactionSummaryTab, StockSummaryTab | `{ ProductVariant: { id: [...] } }` | `data.ProductVariant[]` |
