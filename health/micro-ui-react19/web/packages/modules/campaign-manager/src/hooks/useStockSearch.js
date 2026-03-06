@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-const useStockSearch = ({ tenantId, dateRange, transformFn, referenceId }) => {
+const useStockSearch = ({ tenantId, dateRange, transformFn, referenceId, enabled = true }) => {
   const stockSearchCriteria = useMemo(() => {
     const dateFilter = {};
     if (dateRange?.startDate) {
@@ -16,11 +16,11 @@ const useStockSearch = ({ tenantId, dateRange, transformFn, referenceId }) => {
       body: {
         Stock: {
           ...dateFilter,
-          referenceId,
+          // referenceId,
         },
       },
       config: {
-        enabled: !!tenantId,
+        enabled: enabled && !!tenantId,
         select: (data) => {
           const stocks = data?.Stock || [];
           return transformFn ? transformFn(stocks) : stocks;

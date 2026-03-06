@@ -6,7 +6,7 @@ import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
-import useStockSearch from "../../hooks/useStockSearch";
+import useStockData from "../../hooks/useStockData";
 import GenericChart from "./GenericChart";
 import { dummyRawStocks } from "./dummyRawStocks";
 
@@ -80,17 +80,18 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   };
 };
 
-const TransactionSummaryTab = ({ dateRange, tenantId, campaignId,projectId }) => {
+const TransactionSummaryTab = ({ dateRange, tenantId, campaignId, projectId, useKibana }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
 
-  // Fetch raw stock transactions
-  const { data: rawStockData, isLoading: stockLoading } = useStockSearch({
+  // Fetch raw stock transactions (Kibana-first with stock API fallback)
+  const { data: rawStockData, isLoading: stockLoading } = useStockData({
     tenantId,
     dateRange,
-    referenceId: projectId
+    referenceId: projectId,
+    useKibana,
   });
 
   // Extract unique facility IDs and product variant IDs from stock data

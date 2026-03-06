@@ -27,6 +27,11 @@ const CommodityDashboard = () => {
     [campaignEndEpoch]
   );
 
+  // Stock data source: true = Kibana/ES first (with stock API fallback), false = stock API only
+  // const useKibana = true;
+
+  const useKibana = false;
+
   const [activeTab, setActiveTab] = useState("transaction");
   // Default to cumulative: campaign start date → today
   const [dateRange, setDateRange] = useState({
@@ -142,9 +147,9 @@ const CommodityDashboard = () => {
       </div>
 
       {activeTab === "transaction" ? (
-        <TransactionSummaryTab dateRange={effectiveDateRange} tenantId={tenantId} campaignId={campaignId} projectId={projectId}/>
+        <TransactionSummaryTab dateRange={effectiveDateRange} tenantId={tenantId} campaignId={campaignId} projectId={projectId} useKibana={useKibana}/>
       ) : (
-        <StockSummaryTab dateRange={effectiveDateRange} tenantId={tenantId} campaignId={campaignId} campaignNumber={campaignNumber} projectId={projectId}/>
+        <StockSummaryTab dateRange={effectiveDateRange} tenantId={tenantId} campaignId={campaignId} campaignNumber={campaignNumber} projectId={projectId} useKibana={useKibana}/>
       )}
     </div>
   );

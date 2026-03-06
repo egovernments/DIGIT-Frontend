@@ -13,13 +13,13 @@ export const getGeoJsonUrl = (boundaryType="ward") => {
 };
 
 const defaultKibanaDetails = {
-  kibanaPath:"kibana",
-  username:"anonymous",
-  password:"anonymous1",
-  projectTaskIndex:"project-task-index-v1",
-  projectStaffIndex:"od-project-staff-index-v1",
-  projectStockIndex:"od-stock-index-v1",
-  token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
+  kibanaPath:"kibana-upgrade",
+  username:"anonymous_service_account",
+  password:"anonymous_service_account_password",
+  projectTaskIndex:"ba-project-task-index-v1",
+  projectStaffIndex:"ba-project-staff-index-v1",
+  projectStockIndex:"ba-stock-index-v1",
+  // token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
   key:"name",
   value:"projectName"
 };

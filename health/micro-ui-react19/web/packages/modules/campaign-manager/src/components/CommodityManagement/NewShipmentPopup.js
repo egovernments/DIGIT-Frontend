@@ -7,6 +7,8 @@ import {
   Toast,
   PopUp,
   Panels,
+  CheckBox,
+  RadioButtons,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
@@ -1040,7 +1042,7 @@ const NewShipmentPopup = ({
                         padding: "0.5rem 0.75rem",
                         border: "1px solid #D6D5D4",
                         borderRadius: "0.25rem",
-                        marginBottom: "0.5rem",
+                        marginBottom: "1rem",
                         fontSize: "1rem",
                         outline: "none",
                       }}
@@ -1051,59 +1053,31 @@ const NewShipmentPopup = ({
                         overflowY: "auto",
                         border: "1px solid #D6D5D4",
                         borderRadius: "0.25rem",
-                        padding: "0.25rem 0",
+                        padding: "0.75rem",
                       }}
                     >
-                      {filteredFromFacilities.map((f) => (
-                        <div
-                          key={f.id}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                            padding: "0.5rem 0.75rem",
-                            cursor: "pointer",
-                            backgroundColor:
-                              fromFacilityId === f.id
-                                ? "#FFF3E8"
-                                : "transparent",
-                          }}
-                          onClick={() => setFromFacilityId(f.id)}
-                        >
-                          <input
-                            type="radio"
-                            name="fromFacility"
-                            checked={fromFacilityId === f.id}
-                            readOnly
-                            style={{
-                              cursor: "pointer",
-                              width: "1rem",
-                              height: "1rem",
-                              flexShrink: 0,
-                            }}
-                          />
-                          <div>
-                            <span>
-                              {f.name !== f.id ? `${f.name} (${f.id})` : f.id}
-                            </span>
-                            {f.boundaryType && (
-                              <span
-                                style={{
-                                  marginLeft: "0.5rem",
-                                  fontSize: "0.75rem",
-                                  color: "#787878",
-                                  backgroundColor: "#F0F0F0",
-                                  padding: "0.125rem 0.375rem",
-                                  borderRadius: "0.25rem",
-                                }}
-                              >
-                                {t(f.boundaryType)}
-                                {f.boundary ? `: ${f.boundary}` : ""}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                      <RadioButtons
+                        options={filteredFromFacilities.map((f) => ({
+                          code: f.id,
+                          name: f.boundaryType
+                            ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
+                            : f.name !== f.id ? `${f.name} (${f.id})` : f.id,
+                        }))}
+                        optionsKey="name"
+                        selectedOption={
+                          fromFacilityId
+                            ? filteredFromFacilities
+                                .map((f) => ({
+                                  code: f.id,
+                                  name: f.boundaryType
+                                    ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
+                                    : f.name !== f.id ? `${f.name} (${f.id})` : f.id,
+                                }))
+                                .find((f) => f.code === fromFacilityId)
+                            : undefined
+                        }
+                        onSelect={(selected) => setFromFacilityId(selected.code)}
+                      />
                     </div>
                     {fromFacility && (
                       <p
@@ -1211,38 +1185,21 @@ const NewShipmentPopup = ({
                             padding: "0.5rem 0.75rem",
                             border: "1px solid #D6D5D4",
                             borderRadius: "0.25rem",
-                            marginBottom: "0.5rem",
+                            marginBottom: "1rem",
                             fontSize: "1rem",
                             outline: "none",
                           }}
                         />
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                            marginBottom: "0.5rem",
-                            cursor: "pointer",
-                          }}
-                          onClick={toggleSelectAll}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={allVisibleSelected}
-                            readOnly
-                            style={{
-                              cursor: "pointer",
-                              width: "1rem",
-                              height: "1rem",
-                            }}
-                          />
-                          <span style={{ fontWeight: "600" }}>
-                            {allVisibleSelected
+                        <CheckBox
+                          checked={allVisibleSelected}
+                          onChange={toggleSelectAll}
+                          label={`${
+                            allVisibleSelected
                               ? t("HCM_DESELECT_ALL")
-                              : t("HCM_SELECT_ALL")}{" "}
-                            ({filteredFacilities.length})
-                          </span>
-                        </div>
+                              : t("HCM_SELECT_ALL")
+                          } (${filteredFacilities.length})`}
+                          style={{ marginBottom: "0.5rem" }}
+                        />
                         <div
                           style={{
                             maxHeight: "300px",
@@ -1256,50 +1213,21 @@ const NewShipmentPopup = ({
                             <div
                               key={f.id}
                               style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.5rem",
                                 padding: "0.5rem 0.75rem",
-                                cursor: "pointer",
                                 backgroundColor: selectedFacilityIds.has(f.id)
                                   ? "#FFF3E8"
                                   : "transparent",
                               }}
-                              onClick={() => toggleFacility(f.id)}
                             >
-                              <input
-                                type="checkbox"
+                              <CheckBox
                                 checked={selectedFacilityIds.has(f.id)}
-                                readOnly
-                                style={{
-                                  cursor: "pointer",
-                                  width: "1rem",
-                                  height: "1rem",
-                                  flexShrink: 0,
-                                }}
+                                onChange={() => toggleFacility(f.id)}
+                                label={
+                                  f.boundaryType
+                                    ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
+                                    : f.name !== f.id ? `${f.name} (${f.id})` : f.id
+                                }
                               />
-                              <div>
-                                <span>
-                                  {f.name !== f.id
-                                    ? `${f.name} (${f.id})`
-                                    : f.id}
-                                </span>
-                                {f.boundaryType && (
-                                  <span
-                                    style={{
-                                      marginLeft: "0.5rem",
-                                      fontSize: "0.75rem",
-                                      color: "#787878",
-                                      backgroundColor: "#F0F0F0",
-                                      padding: "0.125rem 0.375rem",
-                                      borderRadius: "0.25rem",
-                                    }}
-                                  >
-                                    {t(f.boundaryType)}
-                                    {f.boundary ? `: ${f.boundary}` : ""}
-                                  </span>
-                                )}
-                              </div>
                             </div>
                           ))}
                         </div>

@@ -5,22 +5,23 @@ import DataSyncCard from "./DataSyncCard";
 import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
-import useStockSearch from "../../hooks/useStockSearch";
+import useStockData from "../../hooks/useStockData";
 import GenericChart from "./GenericChart";
 import NewShipmentPopup from "./NewShipmentPopup";
 import { dummyRawStocks } from "./dummyRawStocks";
 
-const StockSummaryTab = ({ dateRange, tenantId, campaignId, campaignNumber,projectId }) => {
+const StockSummaryTab = ({ dateRange, tenantId, campaignId, campaignNumber, projectId, useKibana }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
 
-  const { data: stockData, isLoading } = useStockSearch({
+  const { data: stockData, isLoading } = useStockData({
     tenantId,
     dateRange,
-    referenceId: projectId
+    referenceId: projectId,
+    useKibana,
   });
 
   const finalStockData = useMemo(() => {
