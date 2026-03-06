@@ -9,6 +9,7 @@ import {
   Panels,
   CheckBox,
   RadioButtons,
+  Dropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
@@ -862,15 +863,6 @@ const NewShipmentPopup = ({
     filteredFacilities.length > 0 &&
     filteredFacilities.every((f) => selectedFacilityIds.has(f.id));
 
-  const selectStyle = {
-    width: "100%",
-    padding: "0.5rem",
-    border: "1px solid #D6D5D4",
-    borderRadius: "0.25rem",
-    fontSize: "1rem",
-    backgroundColor: "#fff",
-  };
-
   return (
     <>
       <PopUp
@@ -1005,23 +997,16 @@ const NewShipmentPopup = ({
                           >
                             {t(h.boundaryType)}
                           </label>
-                          <select
-                            value={fromHierarchyFilters[h.boundaryType] || ""}
-                            onChange={(e) =>
-                              handleFromHierarchyChange(
-                                h.boundaryType,
-                                e.target.value,
-                              )
-                            }
-                            style={selectStyle}
-                          >
-                            <option value="">{t("ES_COMMON_ALL")}</option>
-                            {availableOptions.map((code) => (
-                              <option key={code} value={code}>
-                                {t(code)}
-                              </option>
-                            ))}
-                          </select>
+                          <Dropdown
+                            t={t}
+                            option={[{ code: "", name: t("ES_COMMON_ALL") }, ...availableOptions.map((code) => ({ code, name: t(code) }))]}
+                            optionKey="name"
+                            selected={fromHierarchyFilters[h.boundaryType]
+                              ? { code: fromHierarchyFilters[h.boundaryType], name: t(fromHierarchyFilters[h.boundaryType]) }
+                              : { code: "", name: t("ES_COMMON_ALL") }}
+                            select={(value) => handleFromHierarchyChange(h.boundaryType, value.code)}
+                            style={{ width: "100%" }}
+                          />
                         </div>
                       );
                     })}
@@ -1148,23 +1133,16 @@ const NewShipmentPopup = ({
                               >
                                 {t(h.boundaryType)}
                               </label>
-                              <select
-                                value={toHierarchyFilters[h.boundaryType] || ""}
-                                onChange={(e) =>
-                                  handleToHierarchyChange(
-                                    h.boundaryType,
-                                    e.target.value,
-                                  )
-                                }
-                                style={selectStyle}
-                              >
-                                <option value="">{t("ES_COMMON_ALL")}</option>
-                                {availableOptions.map((code) => (
-                                  <option key={code} value={code}>
-                                    {code}
-                                  </option>
-                                ))}
-                              </select>
+                              <Dropdown
+                                t={t}
+                                option={[{ code: "", name: t("ES_COMMON_ALL") }, ...availableOptions.map((code) => ({ code, name: t(code) }))]}
+                                optionKey="name"
+                                selected={toHierarchyFilters[h.boundaryType]
+                                  ? { code: toHierarchyFilters[h.boundaryType], name: t(toHierarchyFilters[h.boundaryType]) }
+                                  : { code: "", name: t("ES_COMMON_ALL") }}
+                                select={(value) => handleToHierarchyChange(h.boundaryType, value.code)}
+                                style={{ width: "100%" }}
+                              />
                             </div>
                           );
                         })}
@@ -1206,7 +1184,6 @@ const NewShipmentPopup = ({
                             overflowY: "auto",
                             border: "1px solid #D6D5D4",
                             borderRadius: "0.25rem",
-                            padding: "0.25rem 0",
                           }}
                         >
                           {filteredFacilities.map((f) => (
