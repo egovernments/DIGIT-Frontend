@@ -7,9 +7,9 @@ import TopBarSideBar from "../../components/TopBarSideBar";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import ImageComponent from "../../components/ImageComponent";
 import withAutoFocusMain from "../../hoc/withAutoFocusMain";
-import { lazyWithFallback } from "@egovernments/digit-ui-components";
+import { lazyWithFallback, PopUp, Button } from "@egovernments/digit-ui-components";
+import WelcomePopup from "../../components/WelcomePopup";
 
-// Create lazy components with fallbacks using the utility
 const ChangePassword = lazyWithFallback(
   () => import(/* webpackChunkName: "employee-change-password" */ "./ChangePassword"),
   () => require("./ChangePassword").default,
@@ -67,7 +67,7 @@ const EmployeeApp = ({
   modules,
   appTenants,
   sourceUrl,
-  pathname, // This prop seems unused, consider removing
+  pathname,
   initData,
   noTopBar = false,
 }) => {
@@ -76,109 +76,134 @@ const EmployeeApp = ({
   const location = useLocation();
   const showLanguageChange = location?.pathname?.includes("language-selection");
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const isHomePage =
+      location.pathname === `/${window?.contextPath}/employee` ||
+      location.pathname === `/${window?.contextPath}/employee/`;
+
+    if (isHomePage && location.state?.justLoggedIn) {
+      setShowPopup(true);
+      window.history.replaceState({}, "");
+    }
+  }, [location]);
 
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);
 
-  const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
+  const additionalComponent = initData?.modules
+    ?.filter((i) => i?.additionalComponent)
+    ?.map((i) => i?.additionalComponent);
 
   return (
     <div className="employee">
       <Routes>
-        <Route path="user/*" element={
-          <>
-            {isUserProfile && (
-              <TopBarSideBar
-                t={t}
-                stateInfo={stateInfo}
-                userDetails={userDetails}
-                CITIZEN={CITIZEN}
-                cityDetails={cityDetails}
-                mobileView={mobileView}
-                handleUserDropdownSelection={handleUserDropdownSelection}
-                logoUrl={logoUrl}
-                logoUrlWhite={logoUrlWhite}
-                showSidebar={isUserProfile ? true : false}
-                showLanguageChange={!showLanguageChange}
-              />
-            )}
-            <div
-              className={isUserProfile ? "grounded-container" : "loginContainer"}
-              style={
-                isUserProfile
-                  ? { padding: 0, paddingTop: "0", marginLeft: mobileView ? "0" : "0" }
-                  : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
-              }
-            >
-              <Routes>
-                <Route path="login" element={<EmployeeLogin stateCode={stateCode} />} />
-                <Route path="login/otp" element={<Otp isLogin={true} />} />
-                <Route path="forgot-password" element={<ForgotPassword stateCode={stateCode} />} />
-                <Route path="change-password" element={<ChangePassword />} />
-                <Route
-                  path="profile"
-                  element={ <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />}
+        <Route
+          path="user/*"
+          element={
+            <>
+              {isUserProfile && (
+                <TopBarSideBar
+                  t={t}
+                  stateInfo={stateInfo}
+                  userDetails={userDetails}
+                  CITIZEN={CITIZEN}
+                  cityDetails={cityDetails}
+                  mobileView={mobileView}
+                  handleUserDropdownSelection={handleUserDropdownSelection}
+                  logoUrl={logoUrl}
+                  logoUrlWhite={logoUrlWhite}
+                  showSidebar={isUserProfile ? true : false}
+                  showLanguageChange={!showLanguageChange}
                 />
-                <Route
-                  path="error"
-                  element={
-                    <ErrorComponent
-                      initData={initData}
-                      goToHome={() => {
-                        navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
-                      }}
-                    />
-                  }
-                />
-                <Route path="language-selection" element={<LanguageSelection />} />
-                <Route path="*" element={<Navigate to="language-selection" replace />} />
-              </Routes>
-            </div>
-          </>}
+              )}
+              <div
+                className={isUserProfile ? "grounded-container" : "loginContainer"}
+                style={
+                  isUserProfile
+                    ? { padding: 0, paddingTop: "0", marginLeft: mobileView ? "0" : "0" }
+                    : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
+                }
+              >
+                <Routes>
+                  <Route path="login" element={<EmployeeLogin stateCode={stateCode} />} />
+                  <Route path="login/otp" element={<Otp isLogin={true} />} />
+                  <Route path="forgot-password" element={<ForgotPassword stateCode={stateCode} />} />
+                  <Route path="change-password" element={<ChangePassword />} />
+                  <Route
+                    path="profile"
+                    element={
+                      <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
+                    }
+                  />
+                  <Route
+                    path="error"
+                    element={
+                      <ErrorComponent
+                        initData={initData}
+                        goToHome={() => {
+                          navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
+                        }}
+                      />
+                    }
+                  />
+                  <Route path="language-selection" element={<LanguageSelection />} />
+                  <Route path="*" element={<Navigate to="language-selection" replace />} />
+                </Routes>
+              </div>
+            </>
+          }
         />
 
-        <Route path="*" element={
-          <>
-            {!noTopBar && (
-              <TopBarSideBar
-                t={t}
-                stateInfo={stateInfo}
-                userDetails={userDetails}
-                CITIZEN={CITIZEN}
-                cityDetails={cityDetails}
-                mobileView={mobileView}
-                handleUserDropdownSelection={handleUserDropdownSelection}
-                logoUrl={logoUrl}
-                logoUrlWhite={logoUrlWhite}
-                modules={modules}
-              />
-            )}
-            <div className={!noTopBar ? `main digit-home-main` : ""}>
-              <div className="employee-app-wrapper digit-home-app-wrapper">
-                <ErrorBoundary initData={initData}>
-                  <AppModules
-                    stateCode={stateCode}
-                    userType="employee"
-                    modules={modules}
-                    appTenants={appTenants}
-                    additionalComponent={additionalComponent}
-                  />
-                </ErrorBoundary>
-              </div>
-              <div className="employee-home-footer">
-                <ImageComponent
-                  alt="Powered by DIGIT"
-                  src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
-                  style={{ height: "1.1em", cursor: "pointer" }}
-                  onClick={() => {
-                    window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-                  }}
+        <Route
+          path="*"
+          element={
+            <>
+              {!noTopBar && (
+                <TopBarSideBar
+                  t={t}
+                  stateInfo={stateInfo}
+                  userDetails={userDetails}
+                  CITIZEN={CITIZEN}
+                  cityDetails={cityDetails}
+                  mobileView={mobileView}
+                  handleUserDropdownSelection={handleUserDropdownSelection}
+                  logoUrl={logoUrl}
+                  logoUrlWhite={logoUrlWhite}
+                  modules={modules}
                 />
+              )}
+              <div className={!noTopBar ? `main digit-home-main` : ""}>
+                <div className="employee-app-wrapper digit-home-app-wrapper">
+                  <ErrorBoundary initData={initData}>
+                    <AppModules
+                      stateCode={stateCode}
+                      userType="employee"
+                      modules={modules}
+                      appTenants={appTenants}
+                      additionalComponent={additionalComponent}
+                    />
+                  </ErrorBoundary>
+                </div>
+                <div className="employee-home-footer">
+                  <ImageComponent
+                    alt={t("DIGIT_POWERED_BY_ALT")}
+                    src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
+                    style={{ height: "1.1em", cursor: "pointer" }}
+                    onClick={() => {
+                      window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          </>
-        }/>
+
+              {/* Welcome popup — only renders when GET_STARTED_ENABLED is set in globalConfig */}
+              {showPopup && <WelcomePopup onClose={() => setShowPopup(false)} />}
+            </>
+          }
+        />
 
         <Route path="*" element={<Navigate to={`user/language-selection`} replace />} />
       </Routes>
