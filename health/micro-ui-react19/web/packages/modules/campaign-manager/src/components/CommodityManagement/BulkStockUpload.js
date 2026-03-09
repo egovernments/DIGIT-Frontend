@@ -518,11 +518,15 @@ const BulkStockUpload = () => {
     });
   }, [filteredFacilities]);
 
-  // Build template headers
+  // Build template headers — one column per product variant for quantity
   const getTemplateHeaders = useCallback(() => {
     const boundaryHeaders = sortedHierarchy.map((item) => item.boundaryType);
-    return { boundaryHeaders, stockHeaders: [...boundaryHeaders, "Project Id", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)", "Product Variant Id", "Product Variant Name", "Quantity"] };
-  }, [sortedHierarchy]);
+    const productHeaders = productVariants.map((pv) => pv.name || pv.productVariantId);
+    return {
+      boundaryHeaders,
+      stockHeaders: [...boundaryHeaders, "Project Id", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)", ...productHeaders],
+    };
+  }, [sortedHierarchy, productVariants]);
 
   // Handle template download with selected facilities pre-filled
   const handleDownloadTemplate = useCallback(() => {
@@ -533,24 +537,32 @@ const BulkStockUpload = () => {
 
       const dataRows = [];
       facilitiesToInclude.forEach((facility) => {
-        productVariants.forEach((pv) => {
-          const row = [];
-          boundaryHeaders.forEach(() => row.push(""));
-          row.push(facility?.projectId || ""); // Project Id
-          row.push(fromFacility?.id || ""); // From (Facility Code)
-          row.push(fromFacility?.name || ""); // From (Facility Name)
-          row.push(facility?.id || ""); // To (Facility Code)
-          row.push(facility?.name || facility?.id || ""); // To (Facility Name)
-          row.push(pv.productVariantId);
-          row.push(pv.name || pv.productVariantId);
-          row.push(""); // Quantity - user fills this
-          dataRows.push(row);
-        });
+        const row = [];
+        boundaryHeaders.forEach(() => row.push(""));
+        row.push(facility?.projectId || ""); // Project Id
+        row.push(fromFacility?.id || ""); // From (Facility Code)
+        row.push(fromFacility?.name || ""); // From (Facility Name)
+        row.push(facility?.id || ""); // To (Facility Code)
+        row.push(facility?.name || facility?.id || ""); // To (Facility Name)
+        productVariants.forEach(() => row.push("")); // Quantity columns - user fills these
+        dataRows.push(row);
       });
 
-      const wsData = [stockHeaders, ...dataRows];
+      // Hidden row with product variant IDs (row 2) for upload parsing
+      const variantIdRow = [];
+      boundaryHeaders.forEach(() => variantIdRow.push(""));
+      variantIdRow.push(""); // Project Id
+      variantIdRow.push(""); // From (Facility Code)
+      variantIdRow.push(""); // From (Facility Name)
+      variantIdRow.push(""); // To (Facility Code)
+      variantIdRow.push(""); // To (Facility Name)
+      productVariants.forEach((pv) => variantIdRow.push(pv.productVariantId));
+
+      const wsData = [stockHeaders, variantIdRow, ...dataRows];
       const ws = XLSX.utils.aoa_to_sheet(wsData);
       ws["!cols"] = stockHeaders.map(() => ({ wch: 30 }));
+      // Hide the variant ID row (row index 1, 0-based)
+      ws["!rows"] = [null, { hidden: true }];
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
@@ -563,10 +575,12 @@ const BulkStockUpload = () => {
           ? ["2. From and To facilities have been pre-filled based on your selection"]
           : ["2. Fill in the From and To facility codes for each row"],
         ["3. From and To must be different facilities"],
-        ["4. Each row represents one stock transaction (one facility + one product variant)"],
-        ["5. Enter the Quantity for each row"],
-        ["6. Delete rows you do not need"],
-        ["7. Save the file and upload it back on the stock upload screen"],
+        ["4. Each row represents one shipment between a facility pair"],
+        ["5. Enter the Quantity for each product column"],
+        ["6. Leave a product quantity empty or 0 to skip it"],
+        ["7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs"],
+        ["8. Delete facility rows you do not need"],
+        ["9. Save the file and upload it back on the stock upload screen"],
       ];
       const readmeWs = XLSX.utils.aoa_to_sheet(readmeData);
       readmeWs["!cols"] = [{ wch: 80 }];
@@ -637,9 +651,45 @@ const BulkStockUpload = () => {
       const data = await file.arrayBuffer();
       const workbook = XLSX.read(data, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet);
+      // Parse all rows including the hidden variant ID row (row 2)
+      const allRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-      if (!rows?.length) {
+      if (!allRows || allRows.length < 3) {
+        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setIsSubmitting(false);
+        return;
+      }
+
+      const headers = allRows[0]; // Header row
+      const variantIdRow = allRows[1]; // Hidden row with product variant IDs (fallback)
+      const dataRows = allRows.slice(2); // Actual data rows
+
+      // Find the indices of fixed columns
+      const fromCodeIdx = headers.indexOf("From (Facility Code)");
+      const toCodeIdx = headers.indexOf("To (Facility Code)");
+      const projectIdIdx = headers.indexOf("Project Id");
+
+      // Build a name→variantId lookup from known product variants
+      const variantByName = {};
+      productVariants.forEach((pv) => {
+        variantByName[pv.name || pv.productVariantId] = pv.productVariantId;
+      });
+
+      // Build product column mapping: match header names against known product variants,
+      // falling back to hidden row 2 for variant IDs
+      const productColumns = [];
+      const fixedHeaders = new Set(["Project Id", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
+      const boundaryHeaders = sortedHierarchy.map((item) => item.boundaryType);
+      const skipHeaders = new Set([...fixedHeaders, ...boundaryHeaders]);
+      headers.forEach((header, idx) => {
+        if (skipHeaders.has(header)) return;
+        const variantId = variantByName[header] || (variantIdRow && variantIdRow[idx]) || "";
+        if (variantId) {
+          productColumns.push({ idx, productVariantId: variantId, name: header });
+        }
+      });
+
+      if (!dataRows.length || !productColumns.length) {
         setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
         setIsSubmitting(false);
         return;
@@ -649,42 +699,45 @@ const BulkStockUpload = () => {
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
 
-      rows.forEach((row) => {
-        const rowProjectId = row["Project Id"] || "";
-        const senderId = row["From (Facility Code)"] || row["Sender Facility Code"] || "";
-        const receiverId = row["To (Facility Code)"] || row["Receiver Facility Code"] || "";
-        const productVariantId = row["Product Variant Id"] || "";
-        const quantity = parseInt(row["Quantity"], 10);
+      dataRows.forEach((row) => {
+        const rowProjectId = (projectIdIdx >= 0 ? row[projectIdIdx] : "") || "";
+        const senderId = (fromCodeIdx >= 0 ? row[fromCodeIdx] : "") || fromFacility?.id || "";
+        const receiverId = (toCodeIdx >= 0 ? row[toCodeIdx] : "") || "";
 
         if (!senderId || !receiverId || senderId === receiverId) return;
-        if (!productVariantId || !quantity || quantity <= 0) return;
 
-        stockPayload.push({
-          tenantId: tenantId,
-          clientReferenceId: crypto.randomUUID(),
-          productVariantId: productVariantId,
-          quantity: quantity,
-          referenceId: rowProjectId || campaignData?.projectId || campaignId,
-          referenceIdType: "PROJECT",
-          transactionType: "RECEIVED",
-          senderType: "WAREHOUSE",
-          senderId: senderId,
-          receiverType: "WAREHOUSE",
-          receiverId: receiverId,
-          dateOfEntry: timestamp,
-          isDeleted: false,
-          rowVersion: 1,
-          auditDetails: {
-            createdBy: userInfo?.uuid,
-            lastModifiedBy: userInfo?.uuid,
-            createdTime: timestamp,
-            lastModifiedTime: timestamp,
-          },
-          clientAuditDetails: {
-            createdBy: userInfo?.uuid,
-            createdTime: timestamp,
-            lastModifiedTime: timestamp,
-          },
+        // Create one stock entry per product column that has a valid quantity
+        productColumns.forEach(({ idx, productVariantId }) => {
+          const quantity = parseInt(row[idx], 10);
+          if (!quantity || quantity <= 0) return;
+
+          stockPayload.push({
+            tenantId: tenantId,
+            clientReferenceId: crypto.randomUUID(),
+            productVariantId: productVariantId,
+            quantity: quantity,
+            referenceId: rowProjectId || campaignData?.projectId || campaignId,
+            referenceIdType: "PROJECT",
+            transactionType: "RECEIVED",
+            senderType: "WAREHOUSE",
+            senderId: senderId,
+            receiverType: "WAREHOUSE",
+            receiverId: receiverId,
+            dateOfEntry: timestamp,
+            isDeleted: false,
+            rowVersion: 1,
+            auditDetails: {
+              createdBy: userInfo?.uuid,
+              lastModifiedBy: userInfo?.uuid,
+              createdTime: timestamp,
+              lastModifiedTime: timestamp,
+            },
+            clientAuditDetails: {
+              createdBy: userInfo?.uuid,
+              createdTime: timestamp,
+              lastModifiedTime: timestamp,
+            },
+          });
         });
       });
 
