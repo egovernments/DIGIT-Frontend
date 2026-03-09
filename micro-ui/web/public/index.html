@@ -360,6 +360,7 @@
 
   .digit-label-field-pair.boundary-filter-label-left-align {
   display: block !important;
+  margin-bottom: 0 !important;
 
   .digit-header-content.label {
     display: none !important;
@@ -367,8 +368,13 @@
 
   .digit-field {
     width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
 
     .selecting-boundary-div {
+      padding: 0 !important;
+      margin: 0 !important;
+
       .boundary-item {
         margin-bottom: 24px !important;
         display: flex !important;
@@ -399,6 +405,7 @@
             width: 100% !important;
             display: flex !important;
             justify-content: flex-start !important;
+            padding: 0 !important;
 
             .digit-dropdown-employee-select-wrap {
               width: 100% !important;
@@ -411,6 +418,13 @@
                 width: 100% !important;
                 max-width: 37.5rem !important;
 
+                /* Align dropdown input with standard text input above */
+                input.digit-dropdown-employee-select-wrap--elipses {
+                  height: 2.5rem !important;
+                  padding: 0.5rem !important;
+                  border: 1px solid #d6d5d5 !important;
+                  border-radius: 0 !important;
+                }
               }
             }
           }
