@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
-import {InfoIcon} from "@egovernments/digit-ui-components"; 
+import {InfoIcon} from "@egovernments/digit-ui-components";
 
 const UserDetails = ({
   uuid,
@@ -129,30 +130,42 @@ const UserDetails = ({
     return `${uuid.substring(0, 4)}...${uuid.substring(uuid.length - 4)}`;
   };
 
-  const getTooltipPosition = () => {
+  // Calculate tooltip position in viewport coordinates (for portal rendering)
+  const getTooltipStyle = () => {
     const baseStyles = {
-      position: "absolute",
-      zIndex: 1000,
+      position: "fixed",
+      zIndex: 99999,
       backgroundColor: "#333",
       color: "white",
       padding: "8px 12px",
       borderRadius: "4px",
       fontSize: "12px",
-      whiteSpace: "nowrap",
+      whiteSpace: "normal",
       boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-      maxWidth: "200px",
-      wordWrap: "break-word"
+      maxWidth: "280px",
+      wordWrap: "break-word",
+      pointerEvents: "auto",
     };
 
-    switch (tooltipPosition) {
+    if (!buttonRef.current) return baseStyles;
+
+    const rect = buttonRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const spaceAbove = rect.top;
+
+    // If not enough space above (< 80px), show below instead
+    const showBelow = tooltipPosition === "top" && spaceAbove < 80;
+    const effectivePosition = showBelow ? "bottom" : tooltipPosition;
+
+    switch (effectivePosition) {
       case "top":
-        return { ...baseStyles, bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: "8px" };
+        return { ...baseStyles, bottom: `${window.innerHeight - rect.top + 8}px`, left: `${centerX}px`, transform: "translateX(-50%)" };
       case "bottom":
-        return { ...baseStyles, top: "100%", left: "50%", transform: "translateX(-50%)", marginTop: "8px" };
+        return { ...baseStyles, top: `${rect.bottom + 8}px`, left: `${centerX}px`, transform: "translateX(-50%)" };
       case "left":
-        return { ...baseStyles, right: "100%", top: "50%", transform: "translateY(-50%)", marginRight: "8px" };
+        return { ...baseStyles, top: `${rect.top + rect.height / 2}px`, right: `${window.innerWidth - rect.left + 8}px`, transform: "translateY(-50%)" };
       case "right":
-        return { ...baseStyles, left: "100%", top: "50%", transform: "translateY(-50%)", marginLeft: "8px" };
+        return { ...baseStyles, top: `${rect.top + rect.height / 2}px`, left: `${rect.right + 8}px`, transform: "translateY(-50%)" };
       default:
         return baseStyles;
     }
@@ -204,8 +217,8 @@ const UserDetails = ({
         )}
       </button>
 
-      {showTooltip && (userResponse || error) && (
-        <div ref={tooltipRef} style={getTooltipPosition()}>
+      {showTooltip && (userResponse || error) && ReactDOM.createPortal(
+        <div ref={tooltipRef} style={getTooltipStyle()}>
           {error ? (
             <div style={{ color: "#ff6b6b" }}>{error}</div>
           ) : userResponse ? (
@@ -230,7 +243,8 @@ const UserDetails = ({
               )}
             </div>
           ) : null}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
