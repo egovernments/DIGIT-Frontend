@@ -19,6 +19,7 @@ const useWarehouseManagerSync = ({ enabled = true }) => {
     bool: {
       must: [
         { term: { "Data.role.keyword": "WAREHOUSE_MANAGER" } },
+        { "exists": { "field": "Data.boundaryHierarchy.country.keyword" } },
       ],
     },
   }), []);
