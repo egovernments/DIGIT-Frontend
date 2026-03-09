@@ -1,6 +1,118 @@
 import { Card, TextInput, Button, HeaderComponent, TooltipWrapper, SVG } from "@egovernments/digit-ui-components";
 import React, { useRef, Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import html2canvas from "html2canvas";
+
+// React 19 removed ReactDOM.findDOMNode, so Digit.Download.Image/PDF break.
+// All helpers use chart.current (already a DOM element) directly via html2canvas.
+
+const captureAsCanvas = (element) =>
+  html2canvas(element, {
+    scrollY: -window.scrollY,
+    scrollX: 0,
+    useCORS: true,
+    scale: 1.5,
+  });
+
+const saveLink = (href, filename) => {
+  const link = document.createElement("a");
+  link.href = href;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+// Builds a minimal valid PDF file containing a single JPEG image (no external dependencies)
+const buildPdfFromCanvas = (canvas) => {
+  const imgData = canvas.toDataURL("image/jpeg", 1);
+  const imgBytes = atob(imgData.split(",")[1]);
+  const imgW = canvas.width;
+  const imgH = canvas.height;
+  const imgLen = imgBytes.length;
+
+  const objs = [];
+  objs.push("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj");
+  objs.push("2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj");
+  objs.push(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${imgW} ${imgH}] /Contents 5 0 R /Resources << /XObject << /Img 4 0 R >> >> >>\nendobj`);
+  objs.push(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${imgW} /Height ${imgH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imgLen} >>\nstream\n`);
+  const contentStream = `q ${imgW} 0 0 ${imgH} 0 0 cm /Img Do Q`;
+  objs.push(`5 0 obj\n<< /Length ${contentStream.length} >>\nstream\n${contentStream}\nendstream\nendobj`);
+
+  const header = "%PDF-1.4\n";
+  const parts = [header];
+  const offsets = [];
+
+  for (let i = 0; i < 3; i++) {
+    offsets.push(parts.reduce((s, p) => s + (typeof p === "string" ? p.length : p.byteLength), 0));
+    parts.push(objs[i] + "\n");
+  }
+
+  offsets.push(parts.reduce((s, p) => s + (typeof p === "string" ? p.length : p.byteLength), 0));
+  parts.push(objs[3]);
+  const imgBinary = new Uint8Array(imgLen);
+  for (let i = 0; i < imgLen; i++) imgBinary[i] = imgBytes.charCodeAt(i);
+  parts.push(imgBinary);
+  parts.push("\nendstream\nendobj\n");
+
+  offsets.push(parts.reduce((s, p) => s + (typeof p === "string" ? p.length : p.byteLength), 0));
+  parts.push(objs[4] + "\n");
+
+  const xrefOffset = parts.reduce((s, p) => s + (typeof p === "string" ? p.length : p.byteLength), 0);
+  let xref = "xref\n0 6\n0000000000 65535 f \n";
+  for (const off of offsets) xref += `${String(off).padStart(10, "0")} 00000 n \n`;
+  parts.push(xref);
+  parts.push(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
+
+  const encoder = new TextEncoder();
+  const encoded = parts.map((p) => (typeof p === "string" ? encoder.encode(p) : p));
+  const totalLen = encoded.reduce((s, a) => s + a.byteLength, 0);
+  const result = new Uint8Array(totalLen);
+  let pos = 0;
+  for (const chunk of encoded) { result.set(chunk, pos); pos += chunk.byteLength; }
+  return new Blob([result], { type: "application/pdf" });
+};
+
+const downloadChartAsImage = (element, fileName) => {
+  if (!element) return;
+  captureAsCanvas(element).then((canvas) => {
+    saveLink(canvas.toDataURL("image/jpeg", 1), `${fileName}.jpeg`);
+  });
+};
+
+const downloadChartAsPdf = (element, fileName) => {
+  if (!element) return;
+  captureAsCanvas(element).then((canvas) => {
+    saveLink(URL.createObjectURL(buildPdfFromCanvas(canvas)), `${fileName}.pdf`);
+  });
+};
+
+const shareFile = (blob, fileName, mimeType, target) => {
+  const file = new File([blob], fileName, { type: mimeType });
+  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+    navigator.share({ files: [file], title: fileName }).catch(() => {});
+  } else if (target === "mail") {
+    const url = URL.createObjectURL(blob);
+    window.open(`mailto:?subject=${encodeURIComponent(fileName)}&body=${encodeURIComponent(url)}`);
+  } else if (target === "whatsapp") {
+    const url = URL.createObjectURL(blob);
+    window.open(`https://wa.me/?text=${encodeURIComponent(fileName + " " + url)}`);
+  }
+};
+
+const shareChartAsImage = (element, fileName, target) => {
+  if (!element) return;
+  captureAsCanvas(element).then((canvas) => {
+    canvas.toBlob((blob) => shareFile(blob, `${fileName}.jpeg`, "image/jpeg", target), "image/jpeg", 1);
+  });
+};
+
+const shareChartAsPdf = (element, fileName, target) => {
+  if (!element) return;
+  captureAsCanvas(element).then((canvas) => {
+    shareFile(buildPdfFromCanvas(canvas), `${fileName}.pdf`, "application/pdf", target);
+  });
+};
 
 const GenericChart = ({
   header,
@@ -18,16 +130,33 @@ const GenericChart = ({
   setDownloadChartsId = null,
 }) => {
   const { t } = useTranslation();
-  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [chartData, setChartData] = useState(null);
   const [chartDenomination, setChartDenomination] = useState(null);
   const [dropdownStatus, setDropdownStatus] = useState(false);
   const chart = useRef();
+  const downloadInProgress = useRef(false);
   const menuItems = [
     {
       code: "image",
       i18nKey: t("ES_COMMON_DOWNLOAD_IMAGE"),
       icon: "FileDownload",
+    },
+    {
+      code: "pdf",
+      i18nKey: t("ES_COMMON_DOWNLOAD_PDF"),
+      icon: "FileDownload",
+    },
+    {
+      code: "sharePdf",
+      i18nKey: t("ES_DSS_SHARE_PDF"),
+      target: "mail",
+      icon: "Email",
+    },
+    {
+      code: "sharePdf",
+      i18nKey: t("ES_DSS_SHARE_PDF"),
+      target: "whatsapp",
+      icon: "Whatsapp",
     },
     {
       code: "shareImage",
@@ -62,32 +191,40 @@ const GenericChart = ({
   }, [dropdownStatus]);
 
   function download(data) {
+    if (downloadInProgress.current) return;
+    downloadInProgress.current = true;
+
     let chartIdToDownload = children?.props?.data?.id || children?.props?.chartId || null;
     if (setDownloadChartsId !== null) {
       setDownloadChartsId(chartIdToDownload);
     }
 
     setTimeout(() => {
+      const element = chart.current;
+      const fileName = t(header);
       switch (data.code) {
         case "pdf":
-          return Digit.Download.PDF(chart, t(header));
+          downloadChartAsPdf(element, fileName);
+          break;
         case "image":
-          return Digit.Download.Image(chart, t(header));
+          downloadChartAsImage(element, fileName);
+          break;
         case "sharePdf":
-          return Digit.ShareFiles.PDF(tenantId, chart, t(header), data.target);
+          shareChartAsPdf(element, fileName, data.target);
+          break;
         case "shareImage":
-          return Digit.ShareFiles.Image(tenantId, chart, t(header), data.target);
+          shareChartAsImage(element, fileName, data.target);
+          break;
         default:
-          return null;
+          break;
       }
     }, 1000);
     setTimeout(() => {
-      {
-        if (setDownloadChartsId !== null) {
-          setDownloadChartsId(null);
-        }
+      if (setDownloadChartsId !== null) {
+        setDownloadChartsId(null);
       }
-    }, 1500);
+      downloadInProgress.current = false;
+    }, 3000);
   }
 
   const handleExcelDownload = () => {
