@@ -13,7 +13,7 @@ import useStockSearch from "./useStockSearch";
  * @param {Function} params.transformFn - Optional transform for stock API fallback
  * @returns {{ data: Array, isLoading: boolean, error: any, source: string }}
  */
-const useStockData = ({ tenantId, dateRange, referenceId, useKibana = true, transformFn }) => {
+const useStockData = ({ tenantId, dateRange, referenceId, campaignId,useKibana = true, transformFn }) => {
   const [kibanaFailed, setKibanaFailed] = useState(false);
   const useKibanaActive = useKibana && !kibanaFailed;
 
@@ -22,6 +22,7 @@ const useStockData = ({ tenantId, dateRange, referenceId, useKibana = true, tran
     tenantId,
     dateRange,
     referenceId,
+    campaignId,
     enabled: useKibanaActive,
   });
 

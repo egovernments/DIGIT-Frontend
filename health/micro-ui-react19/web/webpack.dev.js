@@ -85,7 +85,10 @@ module.exports = merge(common, {
           "/product",
           "/health-service-request",
           "/excel-ingestion",
-          "/boundary-management"
+          "/boundary-management",
+          "/stock/v1",
+          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
+          "/kibana"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
         changeOrigin: true,

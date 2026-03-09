@@ -48,6 +48,10 @@ const STOCK_AGGS = {
       },
     },
   },
+  // Per-project breakdown
+  by_projectId: {
+    terms: { field: "Data.projectId.keyword", size: 20 },
+  },
   // Total record count
   total_quantity: { sum: { field: "Data.physicalCount" } },
 };
@@ -92,7 +96,7 @@ const transformHitToStock = (hit) => {
   };
 };
 
-const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, enabled = true }) => {
+const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId,enabled = true }) => {
   const indexName = getKibanaDetails("projectStockIndex") || "od-stock-index-v1";
 
   // Build the ES query from the same filters used by the stock API
@@ -102,7 +106,8 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, enabled = true
     // Filter by referenceId (projectId)
     if (referenceId) {
       mustClauses.push({
-        term: { "Data.projectId.keyword": referenceId },
+        // term: { "Data.projectId.keyword": referenceId },
+        term: { "Data.campaignId.keyword": campaignId },
       });
     }
 

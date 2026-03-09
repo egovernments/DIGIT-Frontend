@@ -61,7 +61,7 @@ const computeFromAggregations = (aggregations) => {
   const dataSyncStats = {
     totalFacilities: uniqueFacilities,
     syncedFacilities: uniqueFacilities,
-    syncRate: uniqueFacilities > 0 ? 75 : 0, // placeholder until real sync logic
+    syncRate: 0, // overridden by useWarehouseManagerSync with real ES data
   };
 
   return { transactionSummary, commoditySummaries, dataSyncStats };
@@ -154,7 +154,7 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
   const dataSyncStats = {
     totalFacilities,
     syncedFacilities: totalFacilities,
-    syncRate: totalFacilities > 0 ? 75 : 0,
+    syncRate: 0, // overridden by useWarehouseManagerSync with real ES data
   };
 
   return { transactionSummary, commoditySummaries, dataSyncStats };

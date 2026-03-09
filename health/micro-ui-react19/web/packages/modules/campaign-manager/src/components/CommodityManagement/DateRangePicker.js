@@ -15,13 +15,21 @@ const DateRangePicker = ({ t, config, onSelect, userType, formData, props, minDa
     key: "selection",
   });
 
+  // Use primitive timestamps as dependencies so React reliably detects date changes
+  const propStartTime = formData.dateRange.startDate instanceof Date
+    ? formData.dateRange.startDate.getTime()
+    : (formData.dateRange.startDate || null);
+  const propEndTime = formData.dateRange.endDate instanceof Date
+    ? formData.dateRange.endDate.getTime()
+    : (formData.dateRange.endDate || null);
+
   useEffect(() => {
     setRange({
-      startDate: formData.dateRange.startDate && isValid(new Date(formData.dateRange.startDate)) ? new Date(formData.dateRange.startDate) : undefined,
-      endDate: formData.dateRange.endDate && isValid(new Date(formData.dateRange.endDate)) ? new Date(formData.dateRange.endDate) : undefined,
+      startDate: propStartTime && isValid(new Date(propStartTime)) ? new Date(propStartTime) : undefined,
+      endDate: propEndTime && isValid(new Date(propEndTime)) ? new Date(propEndTime) : undefined,
       key: "selection",
     });
-  }, [formData.dateRange]);
+  }, [propStartTime, propEndTime]);
 
   const handleSelect = (ranges) => {
     const selectedRange = ranges.selection;

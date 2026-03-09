@@ -7,6 +7,7 @@ import DateRangePicker from "./DateRangePicker";
 import { useLocation } from "react-router-dom";
 import useStockData from "../../hooks/useStockData";
 import { computeStockSummary } from "../../utils/stockDataProcessor";
+import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
 
 
 const CommodityDashboard = () => {
@@ -20,6 +21,7 @@ const CommodityDashboard = () => {
 
   // Read campaign data from navigation state (passed from HCMMyCampaignRowCard)
   const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch } = location.state || {};
+
   const campaignStartDate = useMemo(
     () => (campaignStartEpoch ? new Date(campaignStartEpoch) : null),
     [campaignStartEpoch]
@@ -42,16 +44,24 @@ const CommodityDashboard = () => {
 
   // Compute effective date range, resolving cumulative/null start dates to campaign start
   const effectiveDateRange = useMemo(() => {
+    const now = new Date();
+    // Fallback start: campaignStartDate, or 90 days ago if campaign start is unavailable
+    const fallbackStart = campaignStartDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+
     if (dateRange.preset === "cumulative") {
       return {
-        startDate: campaignStartDate || dateRange.startDate,
-        endDate: new Date(),
+        startDate: fallbackStart,
+        endDate: now,
         preset: "cumulative",
       };
     }
+    if (dateRange.preset === "today") {
+      return { ...dateRange };
+    }
     return {
       ...dateRange,
-      startDate: dateRange.startDate || campaignStartDate,
+      startDate: dateRange.startDate || fallbackStart,
+      endDate: dateRange.endDate || now,
     };
   }, [dateRange, campaignStartDate]);
 
@@ -60,6 +70,7 @@ const CommodityDashboard = () => {
     tenantId,
     dateRange: effectiveDateRange,
     referenceId: projectId,
+    campaignId,
     useKibana: useKibanaFlag,
   });
 
@@ -68,6 +79,22 @@ const CommodityDashboard = () => {
     () => computeStockSummary({ source, metadata, data: rawStockData }),
     [source, metadata, rawStockData]
   );
+
+  // Warehouse manager sync stats from project-staff + user-sync ES indexes
+  const { totalManagers, syncedManagers, syncRate, isLoading: syncLoading } = useWarehouseManagerSync({
+    enabled: useKibanaFlag,
+  });
+
+  // Override stockSummary.dataSyncStats with real ES data when available
+  const enrichedStockSummary = useMemo(() => {
+    if (!syncLoading && (totalManagers > 0 || syncedManagers > 0)) {
+      return {
+        ...stockSummary,
+        dataSyncStats: { totalFacilities: totalManagers, syncedFacilities: syncedManagers, syncRate },
+      };
+    }
+    return stockSummary;
+  }, [stockSummary, syncLoading, totalManagers, syncedManagers, syncRate]);
 
   const handleDateRangeSelect = (name, { startDate, endDate }) => {
     setDateRange({
@@ -85,20 +112,22 @@ const CommodityDashboard = () => {
   ];
 
   const handlePresetSelect = (code) => {
+    const now = new Date();
+    const fallbackStart = campaignStartDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+
     if (code === "today") {
-      const today = new Date();
-      const startOfDay = new Date(today);
+      const startOfDay = new Date(now);
       startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(today);
+      const endOfDay = new Date(now);
       endOfDay.setHours(23, 59, 59, 999);
       setDateRange({ startDate: startOfDay, endDate: endOfDay, preset: "today" });
     } else if (code === "cumulative") {
-      setDateRange({ startDate: null, endDate: null, preset: "cumulative" });
+      setDateRange({ startDate: fallbackStart, endDate: now, preset: "cumulative" });
     } else {
-      // When switching to custom, default to campaign start date → today
+      // Custom: inherit current effective dates so the picker doesn't reset
       setDateRange((prev) => ({
-        startDate: prev.startDate || campaignStartDate || new Date(),
-        endDate: prev.endDate || new Date(),
+        startDate: prev.startDate || fallbackStart,
+        endDate: prev.endDate || now,
         preset: "custom",
       }));
     }
@@ -164,7 +193,7 @@ const CommodityDashboard = () => {
         <TransactionSummaryTab
           rawStockData={rawStockData}
           stockLoading={stockLoading}
-          stockSummary={stockSummary}
+          stockSummary={enrichedStockSummary}
           tenantId={tenantId}
           campaignId={campaignId}
           projectId={projectId}
@@ -173,7 +202,7 @@ const CommodityDashboard = () => {
         <StockSummaryTab
           rawStockData={rawStockData}
           stockLoading={stockLoading}
-          stockSummary={stockSummary}
+          stockSummary={enrichedStockSummary}
           tenantId={tenantId}
           campaignId={campaignId}
           campaignNumber={campaignNumber}

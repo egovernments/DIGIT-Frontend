@@ -20,6 +20,7 @@ const defaultKibanaDetails = {
   projectTaskIndex:"project-task-index-v1",
   projectStaffIndex:"project-staff-index-v1",
   projectStockIndex:"stock-index-v1",
+  userSyncIndex:"user-sync-index-v1",
   token:"ZWxhc3RpYzptR21telVPRUJZQWNKTzZEYmtFZm11dkU=",
   key:"name",
   value:"projectName"
@@ -35,6 +36,7 @@ const defaultKibanaDetails = {
 //   projectTaskIndex:"ba-project-task-index-v1",
 //   projectStaffIndex:"ba-project-staff-index-v1",
 //   projectStockIndex:"ba-stock-index-v1",
+//   userSyncIndex:"ba-user-sync-index-v1",
 //   // token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
 //   key:"name",
 //   value:"projectName"
