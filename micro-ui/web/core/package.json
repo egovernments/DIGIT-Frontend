@@ -22,7 +22,7 @@
     "@egovernments/digit-ui-module-utilities": "1.0.15",
     "@egovernments/digit-ui-module-open-payment": "0.0.2",
     "@egovernments/digit-ui-module-hrms": "1.8.11",
-    "@egovernments/digit-ui-module-cms": "1.0.7",
+    "@egovernments/digit-ui-module-cms": "1.0.8",
     "@egovernments/digit-ui-react-components": "1.8.22",
     "babel-loader": "8.1.0",
     "react": "17.0.2",
