@@ -4,8 +4,22 @@ import React from "react";
 // Replaced with Office Online iframe for XLSX preview.
 import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+
+const sanitizeUri = (value) => {
+  if (!value) return null;
+  if (typeof value === "string" && value.startsWith("blob:")) return value;
+  try {
+    const parsed = new URL(value, window.location.origin);
+    if (!["http:", "https:", "blob:"].includes(parsed.protocol)) return null;
+    return parsed.href;
+  } catch (e) {
+    return null;
+  }
+};
+
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
+  const safeUrl = sanitizeUri(file?.url);
 
   return (
     <PopUp className="campaign-data-preview" style={{ flexDirection: "column" }}>
@@ -26,11 +40,15 @@ function XlsPreview({ file, ...props }) {
         />
       </div>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
-        <iframe
-          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(file?.url)}`}
-          style={{ width: "100%", height: "80vh", border: "none" }}
-          title="XLSX Preview"
-        />
+        {safeUrl ? (
+          <iframe
+            src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(safeUrl)}`}
+            style={{ width: "100%", height: "80vh", border: "none" }}
+            title="XLSX Preview"
+          />
+        ) : (
+          <span>Unable to preview this file.</span>
+        )}
       </div>
     </PopUp>
   );
