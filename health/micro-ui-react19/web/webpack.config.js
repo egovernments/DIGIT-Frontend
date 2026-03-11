@@ -284,7 +284,8 @@ module.exports = {
           "/boundary-management",
           "/stock/v1",
           "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
-          "/kibana"
+          "/kibana",
+          "/kibana-upgrade"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,

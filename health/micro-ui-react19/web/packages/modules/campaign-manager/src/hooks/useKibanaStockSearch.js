@@ -65,14 +65,18 @@ const transformHitToStock = (hit) => {
   if (source.productName) fields.push({ key: "productName", value: source.productName });
   if (source.waybillNumber) fields.push({ key: "waybillNumber", value: source.waybillNumber });
 
+  // In ES, facilityId is the "primary" facility that performed the action.
+  // For RECEIVED/RETURNED: facilityId = receiver, transactingFacilityId = sender
+  // For DISPATCHED/DAMAGED/LOSS: facilityId = sender, transactingFacilityId = receiver
+  const isInbound = source.eventType === "RECEIVED" || source.eventType === "RETURNED";
   return {
     id: source.id,
     clientReferenceId: source.clientReferenceId,
     productVariantId: source.productVariant,
-    senderId: source.transactingFacilityId,
-    receiverId: source.facilityId,
-    senderType: source.transactingFacilityType,
-    receiverType: source.facilityType,
+    senderId: isInbound ? source.transactingFacilityId : source.facilityId,
+    receiverId: isInbound ? source.facilityId : source.transactingFacilityId,
+    senderType: isInbound ? source.transactingFacilityType : source.facilityType,
+    receiverType: isInbound ? source.facilityType : source.transactingFacilityType,
     transactionType: source.eventType,
     quantity: source.physicalCount,
     referenceId: source.projectId,
@@ -97,7 +101,7 @@ const transformHitToStock = (hit) => {
 };
 
 const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId,enabled = true }) => {
-  const indexName = getKibanaDetails("projectStockIndex") || "od-stock-index-v1";
+  const indexName = getKibanaDetails("projectStockIndex") || "ba-stock-index-v1";
 
   // Build the ES query from the same filters used by the stock API
   const query = useMemo(() => {
@@ -112,22 +116,27 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId,ena
     }
 
     // Date range filter on dateOfEntry (epoch ms)
-    if (dateRange?.startDate || dateRange?.endDate) {
-      const rangeFilter = {};
-      if (dateRange.startDate) {
-        rangeFilter.gte = dateRange.startDate instanceof Date
-          ? dateRange.startDate.getTime()
-          : dateRange.startDate;
-      }
-      if (dateRange.endDate) {
-        rangeFilter.lte = dateRange.endDate instanceof Date
-          ? dateRange.endDate.getTime()
-          : dateRange.endDate;
-      }
-      mustClauses.push({
-        range: { "Data.dateOfEntry": rangeFilter },
-      });
-    }
+    // Normalize to UTC so filters match regardless of browser timezone
+    // if (dateRange?.startDate || dateRange?.endDate) {
+    //   const toUtcStartOfDay = (d) => {
+    //     if (!(d instanceof Date)) return d;
+    //     return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+    //   };
+    //   const toUtcEndOfDay = (d) => {
+    //     if (!(d instanceof Date)) return d;
+    //     return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+    //   };
+    //   const rangeFilter = {};
+    //   if (dateRange.startDate) {
+    //     rangeFilter.gte = toUtcStartOfDay(dateRange.startDate);
+    //   }
+    //   if (dateRange.endDate) {
+    //     rangeFilter.lte = toUtcEndOfDay(dateRange.endDate);
+    //   }
+    //   mustClauses.push({
+    //     range: { "Data.dateOfEntry": rangeFilter },
+    //   });
+    // }
 
     // If no filters, match all
     if (mustClauses.length === 0) {

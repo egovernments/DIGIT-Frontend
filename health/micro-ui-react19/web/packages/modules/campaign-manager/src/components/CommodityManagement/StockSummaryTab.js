@@ -7,11 +7,13 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import NewShipmentPopup from "./NewShipmentPopup";
+import CommodityShipmentPopup from "./CommodityShipmentPopup";
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
+  const [shipmentFacility, setShipmentFacility] = useState(null); // { id, name } for CommodityShipmentPopup
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
 
@@ -160,6 +162,34 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return Object.values(warehouseMap);
   }, [finalStockData, facilityNameMap, facilityBoundaryMap, productNameMap]);
 
+  // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
+  const facilityStockMap = useMemo(() => {
+    if (!finalStockData?.length) return {};
+    const map = {};
+    finalStockData.forEach((stock) => {
+      const facilityId = stock.transactionType === "RECEIVED" ? stock.receiverId : stock.senderId;
+      const pvId = stock.productVariantId;
+      if (!facilityId || !pvId) return;
+      if (!map[facilityId]) map[facilityId] = {};
+      if (!map[facilityId][pvId]) map[facilityId][pvId] = 0;
+      const qty = stock.quantity || 0;
+      if (stock.transactionType === "RECEIVED" || stock.transactionType === "RETURNED") {
+        map[facilityId][pvId] += qty;
+      } else if (stock.transactionType === "DISPATCHED" || stock.transactionType === "ISSUE") {
+        map[facilityId][pvId] -= qty;
+      }
+    });
+    return map;
+  }, [finalStockData]);
+
+  // Build product variant list for the commodity dropdown
+  const productVariantList = useMemo(() => {
+    return productVariants.map((v) => ({
+      productVariantId: v.id,
+      name: productNameMap[v.id] || v.sku || v.id,
+    }));
+  }, [productVariants, productNameMap]);
+
   const filteredData = useMemo(() => {
     if (!warehouseData?.length) return [];
     return applyGenericFilters(warehouseData, { searchText: searchQuery });
@@ -204,8 +234,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       label: t("HCM_ACTION"),
       key: "action",
-      grow: 0.4,
-      minWidth: "80px",
+      grow: 1,
+      minWidth: "200px",
       sortable: false,
     },
   ];
@@ -350,7 +380,24 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         {row.currentStock?.toLocaleString()}
       </span>
     ),
-    action: () => <button className="cm-action-btn">+</button>,
+    action: (row) => (
+      // <button
+      //   className="cm-action-btn"
+      //   onClick={() => setShipmentFacility({ id: row.facilityId, name: row.warehouseName })}
+      //   title={t("HCM_SHIP_COMMODITY")}
+      // >
+      //   +
+      // </button>
+      <Button
+        onClick={() =>
+          setShipmentFacility({ id: row.facilityId, name: row.warehouseName })
+        }
+        title={t("HCM_SHIP_COMMODITY")}
+        icon={"Add"}
+        label={t("HCM_SHIP_COMMODITY")}
+        variation={"secondary"}
+      />
+    ),
   };
 
   const handleSearch = (e) => {
@@ -507,6 +554,25 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           tenantId={tenantId}
           onClose={() => setShowNewShipmentPopup(false)}
           onSuccess={() => setShowNewShipmentPopup(false)}
+        />
+      )}
+
+      {shipmentFacility && (
+        <CommodityShipmentPopup
+          tenantId={tenantId}
+          campaignId={campaignId}
+          campaignNumber={campaignNumber}
+          fromFacility={shipmentFacility}
+          productVariants={productVariantList}
+          warehouseStock={facilityStockMap[shipmentFacility.id] || {}}
+          onClose={() => setShipmentFacility(null)}
+          onSuccess={() => {
+            setShipmentFacility(null);
+            // Refetch stock data after a short delay to allow ES indexing
+            if (refetchStockData) {
+              setTimeout(() => refetchStockData(), 2000);
+            }
+          }}
         />
       )}
 

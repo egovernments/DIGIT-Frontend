@@ -66,7 +66,7 @@ const CommodityDashboard = () => {
   }, [dateRange, campaignStartDate]);
 
   // Centralized stock data fetch (single call for both tabs)
-  const { data: rawStockData, isLoading: stockLoading, metadata, source } = useStockData({
+  const { data: rawStockData, isLoading: stockLoading, metadata, source, refetch: refetchStockData } = useStockData({
     tenantId,
     dateRange: effectiveDateRange,
     referenceId: projectId,
@@ -207,6 +207,7 @@ const CommodityDashboard = () => {
           campaignId={campaignId}
           campaignNumber={campaignNumber}
           projectId={projectId}
+          refetchStockData={refetchStockData}
         />
       )}
     </div>

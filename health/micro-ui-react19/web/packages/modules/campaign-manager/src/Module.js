@@ -92,6 +92,7 @@ import QRView from "./pages/employee/NewAppConfiguration/components/QRView";
 import BulkStockUpload from "./components/CommodityManagement/BulkStockUpload";
 import StockComponent from "./components/CommodityManagement/StockComponent";
 import CommodityDashboard from "./components/CommodityManagement/CommodityDashboard";
+import CommodityShipmentPopup from "./components/CommodityManagement/CommodityShipmentPopup";
 import DataSyncCard from "./components/CommodityManagement/DataSyncCard";
 import SummaryCard from "./components/CommodityManagement/SummaryCard";
 import TransactionSummaryTab from "./components/CommodityManagement/TransactionSummaryTab";
@@ -304,6 +305,7 @@ const componentsToRegister = {
   BulkStockUpload,
   StockComponent,
   CommodityDashboard,
+  CommodityShipmentPopup,
   DataSyncCard,
   SummaryCard,
   TransactionSummaryTab,

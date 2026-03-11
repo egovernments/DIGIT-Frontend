@@ -145,7 +145,7 @@ const NewShipmentPopup = ({
 
   const projectSearchCriteria = useMemo(
     () => ({
-      url: `/health-project/v1/_search`,
+      url: `/project/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0, includeDescendants: true },
       body: { Projects: [{ id: projectId, tenantId }] },
       config: {
@@ -187,7 +187,7 @@ const NewShipmentPopup = ({
   // Which projects have facilities
   const allFacilityReqCriteria = useMemo(
     () => ({
-      url: `/health-project/facility/v1/_search`,
+      url: `/project/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
       body: { ProjectFacility: { projectId: allProjectIds } },
       config: {
@@ -372,7 +372,7 @@ const NewShipmentPopup = ({
 
   const fromFacilityReqCriteria = useMemo(
     () => ({
-      url: `/health-project/facility/v1/_search`,
+      url: `/project/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
       body: { ProjectFacility: { projectId: fromFilteredProjectIds } },
       config: {
@@ -416,7 +416,7 @@ const NewShipmentPopup = ({
 
   const toFacilityReqCriteria = useMemo(
     () => ({
-      url: `/health-project/facility/v1/_search`,
+      url: `/project/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
       body: { ProjectFacility: { projectId: toFilteredProjectIds } },
       config: {
@@ -529,7 +529,7 @@ const NewShipmentPopup = ({
   );
 
   const stockMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/stock/v1/_create`,
+    url: `/stock/v1/bulk/_create`,
     params: {},
     body: {},
     config: { enabled: false },
@@ -841,7 +841,7 @@ const NewShipmentPopup = ({
       }
 
       let failedCount = 0;
-      for (let i = 0; i < stockPayload.length; i++) {
+      /*for (let i = 0; i < stockPayload.length; i++) {
         try {
           await stockMutation.mutateAsync({
             url: `/stock/v1/_create`,
@@ -856,7 +856,21 @@ const NewShipmentPopup = ({
           console.error(`Stock create error for row ${i}:`, error);
           failedCount++;
         }
-      }
+      }*/
+           try {
+  await stockMutation.mutateAsync({
+    url: `/stock/v1/bulk/_create`,
+    body: {
+      RequestInfo: {
+        authToken: Digit.UserService.getUser()?.access_token,
+      },
+      Stock: stockPayload,
+    },
+  });
+} catch (error) {
+  console.error("Bulk stock create error:", error);
+  failedCount = stockPayload.length;
+}
 
       if (failedCount > 0 && failedCount === stockPayload.length) {
         throw new Error("All stock transactions failed");

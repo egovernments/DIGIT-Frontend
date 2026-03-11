@@ -38,7 +38,7 @@ async function fetchElasticsearchData(config) {
     sourceFields,
     aggs,
     maxRecordLimit = 10000,
-    kibanaPath = 'kibana',
+    kibanaPath = 'kibana/api/console/proxy',
     origin = self.location.origin,
     authKey,
     requestId = Date.now().toString()
@@ -71,8 +71,11 @@ async function fetchElasticsearchData(config) {
       searchBody.aggs = aggs;
     }
 
+    // kibanaPath should contain the full proxy path (e.g. "kibana-upgrade/s/bauchi-dashboard/api/console/proxy")
+    var proxyBase = kibanaPath;
+    while (proxyBase.charAt(0) === '/') proxyBase = proxyBase.substring(1);
     const response = await fetch(
-      origin + '/' + kibanaPath + '/api/console/proxy?path=%2F' + indexName + '%2F_search&method=POST',
+      origin + '/' + proxyBase + '?path=%2F' + indexName + '%2F_search&method=POST',
       {
         method: 'POST',
         headers,

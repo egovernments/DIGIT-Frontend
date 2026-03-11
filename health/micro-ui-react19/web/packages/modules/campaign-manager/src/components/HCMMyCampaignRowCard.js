@@ -182,7 +182,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
   }
 
   // Show "View Stock Dashboard" for completed campaigns if user has the right roles
-  if (currentTab === "CAMPAIGN_COMPLETED" && Digit.Utils.didEmployeeHasAtleastOneRole(STOCK_DASHBOARD_ROLES)) {
+  if ((currentTab === "CAMPAIGN_COMPLETED") && Digit.Utils.didEmployeeHasAtleastOneRole(STOCK_DASHBOARD_ROLES)) {
     actions.viewStockDashboard = {
       label: "HCM_VIEW_STOCK_DASHBOARD",
       title: "HCM_VIEW_STOCK_DASHBOARD",

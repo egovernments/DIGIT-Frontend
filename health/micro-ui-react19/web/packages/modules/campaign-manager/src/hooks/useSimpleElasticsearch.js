@@ -19,7 +19,7 @@ const useSimpleElasticsearch = (config) => {
     sourceFields,
     aggs,
     maxRecordLimit = 10000,
-    kibanaPath = getKibanaDetails("kibanaPath") || "kibana",
+    kibanaPath = getKibanaDetails("kibanaPath") || "kibana/api/console/proxy",
     authKey = defaultAuthKey,
     enabled = true,
     autoFetch = true,

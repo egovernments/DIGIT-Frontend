@@ -42,6 +42,16 @@ module.exports = merge(common, {
     proxy: [
       {
         context: [
+          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
+          "/kibana",
+          "/kibana-upgrade"
+        ],
+        target: "https://mc-nigeria-uat.digit.org",
+        changeOrigin: true,
+        secure: false,
+      },
+      {
+        context: [
           "/egov-mdms-service",
           "/access/v1/actions/mdms",
           "/tenant-management",
@@ -87,10 +97,8 @@ module.exports = merge(common, {
           "/excel-ingestion",
           "/boundary-management",
           "/stock/v1",
-          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
-          "/kibana"
         ],
-        target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
+        target: process.env.REACT_APP_PROXY_URL || "https://bauchi-hcm-uat.digit.org" || "https://unified-uat.digit.org",
         changeOrigin: true,
         secure: false,
       },

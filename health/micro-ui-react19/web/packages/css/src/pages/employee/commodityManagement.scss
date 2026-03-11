@@ -370,6 +370,118 @@
 }
 }
 
+/* --- Commodity Shipment Popup --- */
+.cm-shipment-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24PX;
+}
+
+.cm-shipment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cm-shipment-label {
+  color: #0B0C0C;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+}
+
+.cm-shipment-commodity-row-heading{
+  font-family: "Roboto";
+font-weight: 700;
+font-style: Bold;
+font-size: 20px;
+color:#0B4B66;
+
+}
+
+.cm-shipment-error {
+  font-size: 12px;
+  color: #d4351c;
+}
+
+.cm-shipment-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .digit-checkbox-container {
+    margin: 0;
+  }
+}
+
+.cm-shipment-hint {
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+}
+
+// Ensure toast renders above the popup overlay
+.cm-shipment-toast-wrapper {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10001;
+}
+
+.cm-shipment-commodity-section {
+  background: #fafafa;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.cm-shipment-commodity-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.cm-shipment-items-list {
+  margin-top: 0px;
+}
+
+.cm-shipment-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border: 1px solid #d6d5d4;
+
+  th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #D6D5D4;
+    color: #0B4B66;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-right: 1px solid #D6D5D4;
+  }
+
+  td {
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    border-right: 1px solid #D6D5D4;
+  }
+}
+
+.cm-shipment-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.cm-shipment-comment {
+  width: 100%;
+}
+
 .digit-generic-chart-search-field{
   &.commodity-management{
     .digit-cursor-pointer{

@@ -49,6 +49,7 @@ const useStockData = ({ tenantId, dateRange, referenceId, campaignId,useKibana =
       isLoading: kibanaResult.isLoading,
       error: kibanaResult.error,
       metadata: kibanaResult.metadata,
+      refetch: kibanaResult.refetch,
       source: "kibana",
     };
   }
@@ -58,6 +59,7 @@ const useStockData = ({ tenantId, dateRange, referenceId, campaignId,useKibana =
     isLoading: apiResult.isLoading,
     error: apiResult.error,
     metadata: null,
+    refetch: apiResult.refetch,
     source: "stockApi",
   };
 };

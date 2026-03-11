@@ -132,7 +132,7 @@ const BulkStockUpload = () => {
   const projectId = campaignData?.projectId;
 
   const projectSearchCriteria = useMemo(() => ({
-    url: `/health-project/v1/_search`,
+    url: `/project/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0, includeDescendants: true },
     body: {
       Projects: [
@@ -177,7 +177,7 @@ const BulkStockUpload = () => {
 
   // Fetch ALL project facilities to know which projects have facilities
   const allFacilityReqCriteria = useMemo(() => ({
-    url: `/health-project/facility/v1/_search`,
+    url: `/project/facility/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
     body: {
       ProjectFacility: {
@@ -317,7 +317,7 @@ const BulkStockUpload = () => {
 
   // Fetch "From" facilities
   const fromFacilityReqCriteria = useMemo(() => ({
-    url: `/health-project/facility/v1/_search`,
+    url: `/project/facility/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
     body: {
       ProjectFacility: {
@@ -354,7 +354,7 @@ const BulkStockUpload = () => {
 
   // Fetch "To" facilities
   const toFacilityReqCriteria = useMemo(() => ({
-    url: `/health-project/facility/v1/_search`,
+    url: `/project/facility/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
     body: {
       ProjectFacility: {
@@ -442,7 +442,7 @@ const BulkStockUpload = () => {
 
   // Stock mutation hook
   const stockMutationReq = {
-    url: `/stock/v1/_create`,
+    url: `/stock/v1/bulk/_create`,
     params: {},
     body: {},
     config: {
@@ -706,26 +706,47 @@ const BulkStockUpload = () => {
 
         if (!senderId || !receiverId || senderId === receiverId) return;
 
+        // Resolve administrativeArea from receiver's project boundary
+        const resolvedRefId = rowProjectId || campaignData?.projectId || campaignId;
+        const recvProjectBoundary = projectBoundaryMap[rowProjectId];
+        const administrativeArea = recvProjectBoundary?.boundary || "";
+        const mrnNumber = `${Math.random().toString(16).slice(2, 6).toUpperCase()}-${Math.random().toString(16).slice(2, 6).toUpperCase()}-${Math.random().toString(16).slice(2, 6).toUpperCase()}`;
+
         // Create one stock entry per product column that has a valid quantity
-        productColumns.forEach(({ idx, productVariantId }) => {
+        productColumns.forEach(({ idx, productVariantId, name: productName }) => {
           const quantity = parseInt(row[idx], 10);
           if (!quantity || quantity <= 0) return;
 
           stockPayload.push({
             tenantId: tenantId,
             clientReferenceId: crypto.randomUUID(),
+            facilityId: receiverId,
             productVariantId: productVariantId,
             quantity: quantity,
-            referenceId: rowProjectId || campaignData?.projectId || campaignId,
+            referenceId: resolvedRefId,
             referenceIdType: "PROJECT",
             transactionType: "RECEIVED",
+            transactionReason: "RECEIVED",
             senderType: "WAREHOUSE",
             senderId: senderId,
             receiverType: "WAREHOUSE",
             receiverId: receiverId,
             dateOfEntry: timestamp,
+            nonRecoverableError: false,
             isDeleted: false,
-            rowVersion: 1,
+            additionalFields: {
+              schema: "Stock",
+              version: 1,
+              fields: [
+                { key: "sku", value: productName || "" },
+                { key: "stockEntryType", value: "RECEIPT" },
+                { key: "primaryRole", value: "RECEIVER" },
+                { key: "secondaryRole", value: "SENDER" },
+                { key: "administrativeArea", value: administrativeArea },
+                { key: "stockInHand", value: "0.0" },
+                { key: "mrnNumber", value: mrnNumber },
+              ],
+            },
             auditDetails: {
               createdBy: userInfo?.uuid,
               lastModifiedBy: userInfo?.uuid,
@@ -734,6 +755,7 @@ const BulkStockUpload = () => {
             },
             clientAuditDetails: {
               createdBy: userInfo?.uuid,
+              lastModifiedBy: userInfo?.uuid,
               createdTime: timestamp,
               lastModifiedTime: timestamp,
             },
@@ -748,7 +770,7 @@ const BulkStockUpload = () => {
       }
 
       let failedCount = 0;
-      for (let i = 0; i < stockPayload.length; i++) {
+      /*for (let i = 0; i < stockPayload.length; i++) {
         try {
           await stockMutation.mutateAsync({
             url: `/stock/v1/_create`,
@@ -763,7 +785,29 @@ const BulkStockUpload = () => {
           console.error(`Stock create error for row ${i}:`, error);
           failedCount++;
         }
-      }
+      }*/
+
+        try {
+  await stockMutation.mutateAsync({
+    url: `/stock/v1/bulk/_create`,
+    body: {
+      RequestInfo: {
+        apiId: "hcm",
+        ver: ".01",
+        ts: timestamp,
+        action: "_create",
+        did: "1",
+        key: "1",
+        authToken: Digit.UserService.getUser()?.access_token,
+        tenantId: tenantId,
+      },
+      Stock: stockPayload,
+    },
+  });
+} catch (error) {
+  console.error("Bulk stock create error:", error);
+  failedCount = stockPayload.length;
+}
 
       if (failedCount > 0 && failedCount === stockPayload.length) {
         throw new Error("All stock transactions failed");
