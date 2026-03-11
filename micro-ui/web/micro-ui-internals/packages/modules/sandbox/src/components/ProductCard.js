@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button } from "@egovernments/digit-ui-components";
+import { Button, CustomSVG } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import * as Components from "@egovernments/digit-ui-svg-components";
 
 const ProductCard = ({ product }) => {
   const { t } = useTranslation();
@@ -153,7 +154,7 @@ const ProductCard = ({ product }) => {
       {/* Row 1: Icon + Heading */}
       <div className="card-header-section" style={headerSectionStyle}>
         <div className="card-icon-wrapper" style={iconWrapperStyle}>
-          {Digit.Utils.iconRender(product.icon, "#c84c0e", "32", "32")}
+          {Digit.Utils.iconRender({iconName: product.icon, iconFill: "#c84c0e", width: "28", height: "28", CustomSVG, Components})}
         </div>
         <h3 className="card-title" title={t(product.heading)} style={titleStyle}>
           {t(product.heading)}

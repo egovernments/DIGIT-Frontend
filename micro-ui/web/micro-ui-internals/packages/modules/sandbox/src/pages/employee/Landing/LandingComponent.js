@@ -59,22 +59,39 @@ const LandingComponent = ({ config = {} }) => {
     history.push(redirectPathOtpLogin);
   };
 
- // Logic to split stepsSection.title into two parts (last 2 words as highlight)
+ // Logic to split stepsSection.title - find "DIGIT" or "Sandbox" and split from there
  const splitStepsTitle = () => {
   const title = t(stepsSection.title)?.trim();
   if (!title) return { firstPart: "", lastPart: "" };
 
-  const words = title.split(" ").filter(Boolean);
+  // Find the index where "DIGIT" or "Sandbox" appears (case-insensitive)
+  const digitIndex = title.toLowerCase().indexOf("digit");
+  const sandboxIndex = title.toLowerCase().indexOf("sandbox");
 
-  if (words.length <= 2) {
-    // If title has only 1–2 words, keep them as is
-    return { firstPart: words.slice(0, -1).join(" "), lastPart: words.slice(-1).join(" ") };
+  // Use whichever comes first (or exists)
+  let splitIndex = -1;
+  if (digitIndex !== -1 && sandboxIndex !== -1) {
+    splitIndex = Math.min(digitIndex, sandboxIndex);
+  } else if (digitIndex !== -1) {
+    splitIndex = digitIndex;
+  } else if (sandboxIndex !== -1) {
+    splitIndex = sandboxIndex;
   }
 
-  // Get last two words as the highlighted part
+  // If brand name found, split from there
+  if (splitIndex !== -1) {
+    const firstPart = title.substring(0, splitIndex).trim();
+    const lastPart = title.substring(splitIndex).trim();
+    return { firstPart, lastPart };
+  }
+
+  // Fallback: split by last 2 words if no brand name found
+  const words = title.split(" ").filter(Boolean);
+  if (words.length <= 2) {
+    return { firstPart: words.slice(0, -1).join(" "), lastPart: words.slice(-1).join(" ") };
+  }
   const lastPart = words.slice(-2).join(" ");
   const firstPart = words.slice(0, -2).join(" ");
-
 
   return { firstPart, lastPart };
 };
@@ -126,7 +143,7 @@ const LandingComponent = ({ config = {} }) => {
           <div className="middle-left-column">
             <div className="custom-landing-header-grey middle-center-text">
               <div>{firstPart}</div>
-              <span style={{ color: "#C84C0E", fontFamily: 'Roboto Condensed', fontWeight: 700, fontSize: '40px' }}>{lastPart}</span>
+              <div style={{ color: "#C84C0E", fontFamily: 'Roboto Condensed', fontWeight: 700, fontSize: '40px', display: 'block' }}>{lastPart}</div>
             </div>
           </div>
 

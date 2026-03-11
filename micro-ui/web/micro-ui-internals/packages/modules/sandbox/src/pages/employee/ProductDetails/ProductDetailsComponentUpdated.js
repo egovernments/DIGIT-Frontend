@@ -168,16 +168,16 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => {
         if (roleLower.includes('stakeholder')) return 'stakeholder';
         return 'employee'; // default fallback
     };
-    
+
     const userType = getUserType(role);
-    
+
     return (
     <div className="cs-left">
         <h2 className="cs-title">{role}</h2>
         {cards.map(({ icon, text }, idx) => {
             const IconComponent = iconMap[icon];
             const isOBPSStakeholderFeature2 = module === 'OBPS' && text === t('OBPS_STAKEHOLDER_FEATURE2');
-            
+
             return (
                 <div key={idx} className="cs-card" style={{
                     display: 'flex',
