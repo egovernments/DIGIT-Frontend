@@ -1,31 +1,25 @@
-import { PopUp, SVG, DownloadIcon } from "@egovernments/digit-ui-react-components";
+import { PopUp } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+// Removed @cyntler/react-doc-viewer to fix CVE-2024-4367 (pdfjs-dist vulnerability).
+// Replaced with Office Online iframe for XLSX preview.
 import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { PRIMARY_COLOR } from "../utils";
 
-const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} }) => {
-  return (
-    <svg className={className} style={styles} width={width} height={height} viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M14.1663 6.16658H4.02467L8.68301 1.50825L7.49967 0.333252L0.833008 6.99992L7.49967 13.6666L8.67467 12.4916L4.02467 7.83325H14.1663V6.16658Z"
-        fill={PRIMARY_COLOR}
-      />
-    </svg>
-  );
+const sanitizeUri = (value) => {
+  if (!value) return null;
+  if (typeof value === "string" && value.startsWith("blob:")) return value;
+  try {
+    const parsed = new URL(value, window.location.origin);
+    if (!["http:", "https:", "blob:"].includes(parsed.protocol)) return null;
+    return parsed.href;
+  } catch (e) {
+    return null;
+  }
 };
+
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
-  const documents = file
-    ? [
-      {
-        fileType: "xlsx",
-        fileName: file?.filename,
-        uri: file?.url,
-      },
-    ]
-    : null;
+  const safeUrl = sanitizeUri(file?.url);
 
   return (
     <PopUp className="campaign-data-preview" style={{ flexDirection: "column" }}>
@@ -46,20 +40,15 @@ function XlsPreview({ file, ...props }) {
         />
       </div>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
-        <DocViewer
-          style={{ height: "80vh", overflowY: "hidden" }}
-          theme={{
-            primary: PRIMARY_COLOR,
-            secondary: "#feefe7",
-            tertiary: "#feefe7",
-            textPrimary: "#FFFFFF",
-            textSecondary: "#505A5F",
-            textTertiary: "#00000099",
-            disableThemeScrollbar: true,
-          }}
-          documents={documents}
-          pluginRenderers={DocViewerRenderers}
-        />
+        {safeUrl ? (
+          <iframe
+            src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(safeUrl)}`}
+            style={{ width: "100%", height: "80vh", border: "none" }}
+            title="XLSX Preview"
+          />
+        ) : (
+          <span>Unable to preview this file.</span>
+        )}
       </div>
     </PopUp>
   );
