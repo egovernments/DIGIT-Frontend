@@ -1,0 +1,101 @@
+import { FormComposerV2, Toast } from "@egovernments/digit-ui-components";
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createRegistersConfig } from "../../../configs/createRegistersConfig";
+
+const CreateRegistersScreen = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [totalFormData, setTotalFormData] = useState({});
+  const [showToast, setShowToast] = useState(false);
+  const searchParams = new URLSearchParams(location.search);
+  const campaignNumber = searchParams.get("campaignNumber");
+  const campaignName = searchParams.get("campaignName");
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_CREATE_REGISTERS_DATA", {});
+
+  const reqCriteria = {
+    url: `/project-factory/v1/project-type/search`,
+    body: { CampaignDetails: { tenantId, campaignNumber } },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => data?.CampaignDetails?.[0],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  useEffect(() => setTotalFormData(params), [params]);
+
+  const [config, setConfig] = useState(createRegistersConfig({ totalFormData, campaignData }));
+
+  useEffect(() => {
+    setConfig(createRegistersConfig({ totalFormData, campaignData }));
+  }, [campaignData, totalFormData]);
+
+  const showErrorToast = (messageKey) => {
+    setShowToast({ key: "error", label: messageKey });
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  const onSubmit = async (formData) => {
+    const uploadedData = formData?.HCM_CAMPAIGN_CREATE_REGISTERS?.uploadRegisters || formData?.uploadRegisters;
+
+    if (!uploadedData?.uploadedFile?.length) {
+      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+    }
+
+    setParams({
+      HCM_CAMPAIGN_CREATE_REGISTERS: {
+        uploadRegisters: uploadedData,
+      },
+    });
+
+    setShowToast({ key: "success", label: t("HCM_CREATE_REGISTERS_UPLOAD_SUCCESS") });
+    setTimeout(() => {
+      navigate(
+        `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
+      );
+    }, 1000);
+  };
+
+  const onSecondayActionClick = () => {
+    navigate(
+      `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
+    );
+  };
+
+  const closeToast = () => setShowToast(null);
+
+  return (
+    <>
+      <FormComposerV2
+        config={config?.[0]?.form.map((cfg) => ({ ...cfg, body: cfg?.body.filter((a) => !a.hideInEmployee) }))}
+        onSubmit={onSubmit}
+        defaultValues={params}
+        showSecondaryLabel={true}
+        secondaryLabel={t("HCM_BACK")}
+        actionClassName={"actionBarClass"}
+        noCardStyle={true}
+        onSecondayActionClick={onSecondayActionClick}
+        label={t("HCM_SUBMIT")}
+        secondaryActionIcon={"ArrowBack"}
+      />
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          type={
+            showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"
+          }
+          label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
+          onClose={closeToast}
+        />
+      )}
+    </>
+  );
+};
+
+export default CreateRegistersScreen;

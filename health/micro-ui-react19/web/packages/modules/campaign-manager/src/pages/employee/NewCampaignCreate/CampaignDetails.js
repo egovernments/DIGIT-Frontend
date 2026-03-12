@@ -505,6 +505,26 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_DESC),
+              buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_BUTTON),
+              buttonId: "campaign-details-page-button-setup-attendance",
+              navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
+              type: "primary",
+              icon: <Groups fill={"#C84C0E"} />,
+              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+            },
+          },
+        ],
+      },
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: {
               headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATION_DATA_HEADING),
               desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATION_DATA_DESC),
               buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON),
