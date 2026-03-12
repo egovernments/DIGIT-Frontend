@@ -261,7 +261,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     // Update the data directly using the parent's setState
     const updatedData = props.data.map((worker) => {
       if (worker[2] === workerId) {
-        return [worker[0], worker[1], worker[2], worker[3], value || 0, worker[5], worker[6], worker[7], worker[8]]; // Update the daysWorked value
+        const updated = [...worker]; updated[4] = value || 0; return updated; // Update the daysWorked value
       }
       return worker; // Keep other rows unchanged
     });
