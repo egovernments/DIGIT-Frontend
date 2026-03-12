@@ -73,6 +73,11 @@ import useDocUpdate from "./engagement/useUpdate";
 import useEventDetails from "./events/useEventDetails";
 import useEventInbox from "./events/useEventInbox";
 
+import useUserPreferenceUpsert from "./userPreferences/useUpsert";
+import useUserPreferenceSearch from "./userPreferences/useSearch";
+
+import useConfigServiceSearch from "./configService/useSearch";
+
 import useSurveyCreate from "./surveys/useCreate";
 import useSurveyDelete from "./surveys/useDelete";
 import useSurveySearch from "./surveys/useSearch";
@@ -147,6 +152,15 @@ const engagement = {
   useDocUpdate,
 };
 
+const userPreferences = {
+  useUpsert: useUserPreferenceUpsert,
+  useSearch: useUserPreferenceSearch,
+};
+
+const configService = {
+  useSearch: useConfigServiceSearch,
+};
+
 const survey = {
   useCreate: useSurveyCreate,
   useUpdate: useSurveyUpdate,
@@ -198,6 +212,8 @@ const Hooks = {
   events,
   engagement,
   survey,
+  userPreferences,
+  configService,
   useGenderMDMS,
   useRouteSubscription,
   useCustomAPIHook,
