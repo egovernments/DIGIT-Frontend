@@ -31,7 +31,7 @@
     "build:hrms": "cd packages/modules/health-hrms && yarn build"
   },
   "resolutions": {
-    "**/@babel/runtime": "7.20.1",
+    "**/@babel/runtime": "^7.22.5",
     "**/@babel/traverse":"7.25.9",
     "**/babel-preset-react-app": "10.0.0",
     "**/@jridgewell/gen-mapping": "0.3.5",
@@ -51,7 +51,7 @@
   "dependencies": {
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
-    "@egovernments/digit-ui-react-components": "1.9.0",
+    "@egovernments/digit-ui-react-components": "1.9.2",
     "@egovernments/digit-ui-svg-components": "1.1.0",
     "@egovernments/digit-ui-components":  "0.2.3",
     "react": "17.0.2",
