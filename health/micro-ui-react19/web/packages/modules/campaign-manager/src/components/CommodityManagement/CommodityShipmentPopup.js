@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useEffect,useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   PopUp,
@@ -37,6 +37,7 @@ const CommodityShipmentPopup = ({
   campaignNumber,
   fromFacility,
   productVariants = [],
+  selectedCommodity: defaultCommodityId,
   warehouseStock = {},
   onClose,
   onSuccess,
@@ -360,6 +361,16 @@ const CommodityShipmentPopup = ({
   const handleRemoveItem = useCallback((index) => {
     setShipmentItems((prev) => prev.filter((_, i) => i !== index));
   }, []);
+  useEffect(() => {
+  if (defaultCommodityId && productVariants.length) {
+    const found = productVariants.find(
+      (p) => p.productVariantId === defaultCommodityId
+    );
+    if (found) {
+      setSelectedCommodity(found);
+    }
+  }
+}, [defaultCommodityId, productVariants]);
 
   // Validate and submit shipment
   const handleShip = useCallback(async () => {

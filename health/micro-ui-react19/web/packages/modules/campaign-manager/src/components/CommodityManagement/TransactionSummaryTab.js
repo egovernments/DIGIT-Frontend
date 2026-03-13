@@ -352,16 +352,25 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     sentFrom: (row) => <span className="cm-cell-link">{row.sentFrom}</span>,
     sentTo: (row) => <span className="cm-cell-link">{row.sentTo}</span>,
     createdBy: (row) => {
+     const userName = row?.userName ;
+
       const userId = row?.createdBy;
-      if (!userId || userId === "N/A") return "N/A";
-      return (
+      if(userName) return userName;
+      if (userId || userId !== "N/A"){
+return (
         <UserDetails
           uuid={userId}
           style={{ fontSize: "inherit" }}
           iconSize="14px"
           tooltipPosition="top"
+      showIcon={false}   // ← hides the info icon
         />
       );
+      }
+      
+      else{
+        return "N/A"
+      }
     },
     transactionType: (row) => (
       <span
