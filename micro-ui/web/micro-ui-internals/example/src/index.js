@@ -87,12 +87,6 @@ const initDigitUI = () => {
   };
   initEngagementComponents();
 
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    ...overrideComponents,
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
   initCoreComponents();
   initDSSComponents();
   initHRMSComponents();
@@ -101,6 +95,11 @@ const initDigitUI = () => {
   initPGRComponents();
   initOpenPaymentComponents();
   initSandboxComponents();
+
+  // Register override components AFTER module init so they take precedence
+  window?.Digit.ComponentRegistryService.setupRegistry({
+    ...overrideComponents,
+  });
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),

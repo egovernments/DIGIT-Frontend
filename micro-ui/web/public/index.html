@@ -372,7 +372,7 @@
     display: none !important;
   }
 
-  .digit-field {
+  .digit-field:has(.selecting-boundary-div) {
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -424,7 +424,6 @@
                 width: 100% !important;
                 max-width: 37.5rem !important;
 
-                /* Align dropdown input with standard text input above */
                 input.digit-dropdown-employee-select-wrap--elipses {
                   height: 2.5rem !important;
                   padding: 0.5rem !important;
@@ -438,7 +437,7 @@
       }
     }
   }
-  } 
+  }
 
   .sandbox-custom-otp-subheader,
   .sandbox-custom-otp-header,

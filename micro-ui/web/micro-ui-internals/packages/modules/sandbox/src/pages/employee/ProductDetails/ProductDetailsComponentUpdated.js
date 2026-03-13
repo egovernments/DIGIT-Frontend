@@ -22,9 +22,10 @@ const iconMap = {
 
 import { useHistory } from "react-router-dom";
 const Breadcrumb = ({ path }) => {
+    const { t } = useTranslation();
     const history = useHistory();
     const redirectPath = `/${window?.contextPath}/employee/sandbox/productPage`;
-  
+
     const handleContinue = (e) => {
       e.preventDefault();
       history.push(redirectPath); // client-side navigate
@@ -33,7 +34,7 @@ const Breadcrumb = ({ path }) => {
     return (
       <div style={{ width: "100%", backgroundColor: "#e4edf1", padding: "2rem 2rem 2rem 4rem" }}>
         <nav className="nav-breadcrumb">
-          <a href={redirectPath} onClick={handleContinue}>Products</a>
+          <a href={redirectPath} onClick={handleContinue}>{t("SANDBOX_PRODUCTS")}</a>
           <span className="separator">/</span>
           <span className="current">{path}</span>
         </nav>

@@ -1,5 +1,5 @@
 import { Button, Card, SubmitBar, Loader } from "@egovernments/digit-ui-components";
-import { CustomButton } from "@egovernments/digit-ui-react-components";
+
 import React, { useState,useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -96,14 +96,18 @@ const LanguageSelection = () => {
         <div className="bannerHeader">
           <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit Banner Image" />
         </div>
-        <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
+        <div className="language-selector" style={{ justifyContent: "center", flexWrap: "wrap", gap: "12px", marginBottom: "24px", padding: "0 5%" }}>
           {defaultLanguages.map((language, index) => (
-            <div className="language-button-container" key={index}>
-              <CustomButton
-                selected={language.value === selected}
-                text={t(language.label)}
+            <div className="language-button-container" key={index} style={{ margin: 0 }}>
+              <button
+                tabIndex="0"
+                type="button"
+                className={language.value === selected ? "customBtn-selected" : "customBtn"}
                 onClick={() => handleChangeLanguage(language)}
-              ></CustomButton>
+                style={{ width: "6.2rem", height: "2.5rem", padding: "0.25rem 0.5rem", fontSize: "0.75rem", lineHeight: "1.1", textAlign: "center", overflow: "hidden", wordBreak: "break-word" }}
+              >
+                {t(language.label)}
+              </button>
             </div>
           ))}
         </div>
