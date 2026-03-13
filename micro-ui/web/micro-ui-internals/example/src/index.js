@@ -48,10 +48,15 @@ const initTokens = (stateCode) => {
   window.Digit.SessionStorage.set("user_type", userTypeInfo);
   window.Digit.SessionStorage.set("userType", userTypeInfo);
 
-  if (userType !== "CITIZEN") {
-    window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
-  } else {
-    // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  // On localhost, skip overwriting if a valid user already exists in sessionStorage
+  const existingUser = isLocalhost ? window.Digit.SessionStorage.get("User") : null;
+  if (!isLocalhost || !existingUser || !existingUser.access_token || !existingUser.info) {
+    if (userType !== "CITIZEN") {
+      window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
+    } else {
+      // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
+    }
   }
 
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);

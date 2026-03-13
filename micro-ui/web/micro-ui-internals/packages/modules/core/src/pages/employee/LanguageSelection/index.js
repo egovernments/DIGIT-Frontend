@@ -27,55 +27,62 @@ const LanguageSelection = () => {
     return contextPath.split("/")[0];
   }
 
-  const handleSubmit = (event) => {    
+  const handleSubmit = (event) => {
     history.push(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
   };
 
 
   // Clear old data and refresh localization when accessing login page
   useEffect(() => {
-    // Clear expired/stale data but preserve essential config
-    const preserveKeys = ['Employee.tenantId', 'Citizen.tenantId', 'CONTEXT_PATH'];
-    const sessionData = {};
-    const localData = {};
-    
-    // Backup preserved keys from both storages
-    preserveKeys.forEach(key => {
-      const sessionValue = window.Digit.SessionStorage.get(key);
-      const localValue = window.Digit.LocalStorage?.get(key) || localStorage.getItem(key);
-      
-      if (sessionValue) sessionData[key] = sessionValue;
-      if (localValue) localData[key] = localValue;
-    });
+    // Check if user is already authenticated - if so, skip storage clearing
+    const existingUser = window.Digit?.SessionStorage?.get('User');
+    const isAuthenticated = existingUser && existingUser.access_token && existingUser.info;
 
-    // Clear both session and local storage
-    window.sessionStorage.clear();
-    window.localStorage.clear();
-    
-    // Restore preserved keys
-    Object.keys(sessionData).forEach(key => {
-      window.Digit.SessionStorage.set(key, sessionData[key]);
-    });
-    
-    Object.keys(localData).forEach(key => {
-      if (window.Digit.LocalStorage?.set) {
-        window.Digit.LocalStorage.set(key, localData[key]);
-      } else {
-        localStorage.setItem(key, localData[key]);
+    // Only clear storage if user is NOT authenticated (fresh login/logout scenario)
+    if (!isAuthenticated) {
+      // Clear expired/stale data but preserve essential config
+      const preserveKeys = ['Employee.tenantId', 'Citizen.tenantId', 'CONTEXT_PATH'];
+      const sessionData = {};
+      const localData = {};
+
+      // Backup preserved keys from both storages
+      preserveKeys.forEach(key => {
+        const sessionValue = window.Digit.SessionStorage.get(key);
+        const localValue = window.Digit.LocalStorage?.get(key) || localStorage.getItem(key);
+
+        if (sessionValue) sessionData[key] = sessionValue;
+        if (localValue) localData[key] = localValue;
+      });
+
+      // Clear both session and local storage
+      window.sessionStorage.clear();
+      window.localStorage.clear();
+
+      // Restore preserved keys
+      Object.keys(sessionData).forEach(key => {
+        window.Digit.SessionStorage.set(key, sessionData[key]);
+      });
+
+      Object.keys(localData).forEach(key => {
+        if (window.Digit.LocalStorage?.set) {
+          window.Digit.LocalStorage.set(key, localData[key]);
+        } else {
+          localStorage.setItem(key, localData[key]);
+        }
+      });
+
+      // Clear React Query cache for fresh data
+      if (window.Digit?.QueryClient) {
+        window.Digit.QueryClient.clear();
       }
-    });
 
-    // Clear React Query cache for fresh data
-    if (window.Digit?.QueryClient) {
-      window.Digit.QueryClient.clear();
+      // Clear API cache service
+      if (window.Digit?.ApiCacheService) {
+        window.Digit.ApiCacheService.clearAllCache();
+      }
     }
 
-    // Clear API cache service
-    if (window.Digit?.ApiCacheService) {
-      window.Digit.ApiCacheService.clearAllCache();
-    }
-
-    // Trigger fresh localization loading
+    // Always trigger fresh localization loading
     if (window.Digit?.Localization) {
       window.Digit.Localization.invalidateLocalizationCache();
     }

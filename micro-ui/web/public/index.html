@@ -131,6 +131,12 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function () {
+      // Skip matomo on localhost for local testing
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('[Matomo] Skipped on localhost');
+        return;
+      }
+
       function resolveMatomoUrl() {
         // 1️⃣ Same-origin auto resolution (FIRST priority)
         if (window?.location?.origin) {
