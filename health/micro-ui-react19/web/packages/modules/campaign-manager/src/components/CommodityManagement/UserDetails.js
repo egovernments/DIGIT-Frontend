@@ -67,7 +67,7 @@ const UserDetails = ({
       if (res?.user?.[0]) {
         const user = res.user[0];
         const userData = {
-          name: user.name || "Unknown User",
+          name: user.userName || "Unknown User",
           mobileNumber: user.mobileNumber || "NA",
           emailId: user.emailId || "NA",
           roles: user?.roles.map(ele => ele?.name).join(", ") || "NA"
@@ -201,8 +201,11 @@ const UserDetails = ({
           e.target.style.backgroundColor = "transparent";
         }}
       >
-        <span style={{ fontFamily: "monospace" }}>
+        {/* <span style={{ fontFamily: "monospace" }}>
           {maskUUID(uuid)}
+        </span> */}
+         <span style={{ fontFamily: "monospace" }}>
+          {userResponse.name || maskUUID(uuid)}
         </span>
         {showIcon && uuid && (
           // <span style={{ marginLeft: "4px", fontSize: "12px" }}>eye-icon</span>
