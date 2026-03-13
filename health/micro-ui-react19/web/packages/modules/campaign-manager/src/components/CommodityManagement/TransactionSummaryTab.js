@@ -352,6 +352,17 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     sentFrom: (row) => <span className="cm-cell-link">{row.sentFrom}</span>,
     sentTo: (row) => <span className="cm-cell-link">{row.sentTo}</span>,
     createdBy: (row) => {
+      // const userId = row?.createdBy;
+      // if (!userId || userId === "N/A") return "N/A";
+      // return (
+      //   <UserDetails
+      //     uuid={userId}
+      //     style={{ fontSize: "inherit" }}
+      //     iconSize="14px"
+      //     tooltipPosition="top"
+      //   />
+      // );
+
       const userId = row?.createdBy;
       if (!userId || userId === "N/A") return "N/A";
       return (
@@ -360,7 +371,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           style={{ fontSize: "inherit" }}
           iconSize="14px"
           tooltipPosition="top"
-          showIcon={false}   
+      // showIcon={false}   // ← hides the info icon
         />
       );
     },
