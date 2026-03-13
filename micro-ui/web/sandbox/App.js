@@ -11,6 +11,7 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
   PGRReducers,
 } from "@egovernments/digit-ui-module-cms";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+import { overrideComponents } from "./pgr";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -42,6 +43,11 @@ const initDigitUI = () => {
   initWorkbenchComponents();
   initSandboxComponents();
   initDSSComponents();
+
+  // Register override components AFTER module init so they take precedence
+  window.Digit.ComponentRegistryService.setupRegistry({
+    ...overrideComponents,
+  });
 };
 
 initLibraries().then(() => {
