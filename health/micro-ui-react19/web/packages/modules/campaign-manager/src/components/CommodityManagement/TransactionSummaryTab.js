@@ -360,6 +360,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           style={{ fontSize: "inherit" }}
           iconSize="14px"
           tooltipPosition="top"
+          showIcon={false}   
         />
       );
     },
