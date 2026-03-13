@@ -532,9 +532,11 @@
                   // Reset click count after successful completion
                   clickCountBeforeCompletion = 0;
                 } else if (isError) {
-                  // Failure event - include message in Event Name for drill-down
+                  // Original per-service error event (unchanged)
                   var eventName = context + (toastMessage ? ' | ' + toastMessage : '');
                   window.MatomoTracker.trackEvent(feature.category, feature.action + '_Failure', eventName);
+                  // Aggregated error event — cumulative count per error type across all services                                                                                           
+                  window.MatomoTracker.trackEvent('Error', feature.action, toastMessage || 'Unknown Error'); 
                   logDebug('Toast tracked:', { category: feature.category, action: feature.action + '_Failure', message: toastMessage });
                 }
 
@@ -628,7 +630,10 @@
               window.MatomoTracker.trackEvent(feature.category, uniqueAction + '_Success', context, duration);
               logDebug('API Success:', { category: feature.category, action: uniqueAction + '_Success', context: context });
             } else {
+              // Original per-service API error event (unchanged) 
               window.MatomoTracker.trackEvent(feature.category, uniqueAction + '_Failure', context + ' (HTTP ' + response.status + ')');
+              // Aggregated API error event — cumulative count per HTTP error type across all services
+              window.MatomoTracker.trackEvent('API_Error', uniqueAction, 'HTTP ' + response.status);
               logDebug('API Failure:', { category: feature.category, action: uniqueAction + '_Failure', status: response.status });
             }
           }
