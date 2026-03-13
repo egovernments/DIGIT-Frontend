@@ -143,6 +143,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           commodity: productName,
           currentStock: 0,
           facilityId,
+          productVariantId: stock.productVariantId,
         };
       }
 
@@ -381,16 +382,10 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       </span>
     ),
     action: (row) => (
-      // <button
-      //   className="cm-action-btn"
-      //   onClick={() => setShipmentFacility({ id: row.facilityId, name: row.warehouseName })}
-      //   title={t("HCM_SHIP_COMMODITY")}
-      // >
-      //   +
-      // </button>
+     
       <Button
         onClick={() =>
-          setShipmentFacility({ id: row.facilityId, name: row.warehouseName })
+          setShipmentFacility({ id: row.facilityId, name: row.warehouseName,productVariantId: row.productVariantId })
         }
         title={t("HCM_SHIP_COMMODITY")}
         icon={"Add"}
@@ -563,6 +558,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           campaignId={campaignId}
           campaignNumber={campaignNumber}
           fromFacility={shipmentFacility}
+          selectedCommodity={shipmentFacility.productVariantId}
           productVariants={productVariantList}
           warehouseStock={facilityStockMap[shipmentFacility.id] || {}}
           onClose={() => setShipmentFacility(null)}
