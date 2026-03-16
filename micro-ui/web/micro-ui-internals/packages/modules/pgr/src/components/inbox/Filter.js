@@ -93,7 +93,7 @@ const Filter = (props) => {
     props.onClose();
   }
   function complaintType(_type) {
-    const type = { i18nKey: t("SERVICEDEFS." + _type.serviceCode.toUpperCase()), code: _type.serviceCode };
+    const type = { i18nKey: t("SERVICEDEFS_" + _type.serviceCode.toUpperCase()), code: _type.serviceCode };
     if (!ifExists(pgrfilters.serviceCode, type)) {
       setPgrFilters({ ...pgrfilters, serviceCode: [...pgrfilters.serviceCode, type] });
     }

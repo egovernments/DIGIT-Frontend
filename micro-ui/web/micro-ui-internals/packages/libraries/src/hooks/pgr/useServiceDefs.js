@@ -12,7 +12,7 @@ const useServiceDefs = (tenantId, moduleCode) => {
       const serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, moduleCode);
       SessionStorage.set("serviceDefs", serviceDefs);
 
-      const serviceDefsWithKeys = serviceDefs.map((def) => ({ ...def, i18nKey: t("SERVICEDEFS." + def.serviceCode.toUpperCase()) }));
+      const serviceDefsWithKeys = serviceDefs.map((def) => ({ ...def, i18nKey: t("SERVICEDEFS_" + def.serviceCode.toUpperCase()) }));
       setLocalMenu(serviceDefsWithKeys);
     })();
   }, [t, tenantId, moduleCode]);

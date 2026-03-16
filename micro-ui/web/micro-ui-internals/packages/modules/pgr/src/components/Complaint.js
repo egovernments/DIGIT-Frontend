@@ -22,7 +22,7 @@ const Complaint = ({ data, path }) => {
   return (
     <React.Fragment>
       <Card onClick={handleClick}>
-        <CardSubHeader>{t(`SERVICEDEFS.${serviceCode.toUpperCase()}`)}</CardSubHeader>
+        <CardSubHeader>{t(`SERVICEDEFS_${serviceCode.toUpperCase()}`)}</CardSubHeader>
 
         <DateWrap date={Digit.DateUtils.ConvertTimestampToDate(data.auditDetails.createdTime)} />
 
