@@ -1,4 +1,4 @@
-FROM node:14-alpine3.17 AS build
+FROM node:14-alpine3.14 AS build
 RUN apk update && apk add --no-cache git>2.30.0 python2 make g++ && ln -sf /usr/bin/python2 /usr/bin/python
 
 ARG WORK_DIR
@@ -20,7 +20,7 @@ WORKDIR /app/web
 RUN yarn config set network-timeout 600000
 
 # Install dependencies (using the modified package.json from sandbox)
-RUN yarn install
+RUN yarn install --ignore-engines
 
 # Build the project
 RUN yarn build:webpack
