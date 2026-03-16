@@ -1,4 +1,4 @@
-FROM node:14-alpine3.14 AS build
+FROM node:14-alpine3.17 AS build
 RUN apk update && apk add --no-cache git>2.30.0 python2 make g++ && ln -sf /usr/bin/python2 /usr/bin/python
 
 ARG WORK_DIR
