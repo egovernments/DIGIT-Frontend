@@ -1,4 +1,4 @@
-import { FormComposerV2, Toast } from "@egovernments/digit-ui-components";
+import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,10 +9,11 @@ const AttendanceUploadScreen = () => {
   const navigate = useNavigate();
   const [totalFormData, setTotalFormData] = useState({});
   const [showToast, setShowToast] = useState(false);
+  const [loader, setLoader] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ATTENDANCE_UPLOAD_DATA", {});
+  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ATTENDANCE_REGISTER_DATA", {});
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
@@ -25,6 +26,14 @@ const AttendanceUploadScreen = () => {
     },
   };
   const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const reqUpdate = {
+    url: `/project-factory/v1/project-type/add-resources`,
+    params: {},
+    body: {},
+    config: { enabled: false },
+  };
+  const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   useEffect(() => setTotalFormData(params), [params]);
 
@@ -40,25 +49,59 @@ const AttendanceUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
-    const uploadedData = formData?.HCM_CAMPAIGN_UPLOAD_ATTENDANCE_DATA?.uploadAttendance || formData?.uploadAttendance;
+    const uploadedData =
+      formData?.HCM_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_DATA?.uploadAttendanceRegister ||
+      formData?.uploadAttendanceRegister;
 
     if (!uploadedData?.uploadedFile?.length) {
       return showErrorToast(t("PLEASE_UPLOAD_FILE"));
     }
 
-    // Mock submit - just save to session storage and navigate back
-    setParams({
-      HCM_CAMPAIGN_UPLOAD_ATTENDANCE_DATA: {
-        uploadAttendance: uploadedData,
-      },
-    });
+    if (uploadedData?.isError || uploadedData?.apiError) {
+      return showErrorToast(t("ENTER_VALID_FILE"));
+    }
 
-    setShowToast({ key: "success", label: t("HCM_ATTENDANCE_UPLOAD_SUCCESS") });
-    setTimeout(() => {
-      navigate(
-        `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
-      );
-    }, 1000);
+    const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;
+
+    if (!filestoreId) {
+      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+    }
+
+    const newResource = {
+      type: "attendanceRegister",
+      filename: uploadedData?.uploadedFile?.[0]?.filename,
+      filestoreId: filestoreId,
+    };
+
+    // Preserve existing resources, only replace the attendanceRegister type
+    // const existingResources = campaignData?.resources?.filter((r) => r.type !== "attendanceRegister") || [];
+    // const resources = [...existingResources, newResource];
+
+    setLoader(true);
+    await mutationUpdate.mutate(
+      {
+        url: `/project-factory/v1/project-type/add-resources`,
+        body: { CampaignDetails: { id: campaignData?.id, tenantId: campaignData?.tenantId, resources: [newResource] } },
+        config: { enable: true },
+      },
+      {
+        onSuccess: () => {
+          setLoader(false);
+          setParams({
+            HCM_ATTENDANCE_REGISTER_DATA: {
+              uploadAttendanceRegister: uploadedData,
+            },
+          });
+          navigate(
+            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
+          );
+        },
+        onError: (error) => {
+          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_IN_CAMPAIGN_CREATION"));
+          setLoader(false);
+        },
+      }
+    );
   };
 
   const onSecondayActionClick = () => {
@@ -66,6 +109,8 @@ const AttendanceUploadScreen = () => {
       `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
     );
   };
+
+  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />;
 
   const closeToast = () => setShowToast(null);
 

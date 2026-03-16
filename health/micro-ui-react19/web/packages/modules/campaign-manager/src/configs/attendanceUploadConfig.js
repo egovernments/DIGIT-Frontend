@@ -5,14 +5,14 @@ export const attendanceUploadConfig = ({ totalFormData, campaignData }) => {
         {
           stepCount: "1",
           key: "1",
-          name: "HCM_CAMPAIGN_UPLOAD_ATTENDANCE_DATA",
+          name: "HCM_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_DATA",
           last: true,
           body: [
             {
               isMandatory: false,
-              key: "uploadAttendance",
+              key: "uploadAttendanceRegister",
               type: "component",
-              component: "AttendanceUploadData",
+              component: "DataUploadWrapper",
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
@@ -20,10 +20,10 @@ export const attendanceUploadConfig = ({ totalFormData, campaignData }) => {
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "attendance",
+                type: "attendanceRegister",
               },
               populators: {
-                name: "uploadAttendance",
+                name: "uploadAttendanceRegister",
                 required: true,
                 customStyle: {
                   background: "none",

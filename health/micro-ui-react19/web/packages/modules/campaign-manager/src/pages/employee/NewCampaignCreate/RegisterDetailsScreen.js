@@ -1,18 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card, Button } from "@egovernments/digit-ui-components";
+import { Card, Button, Loader } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
-
-// Mock users — replace with API call when backend is ready
-const MOCK_USERS = [
-  { id: "USR-001", workerName: "Alice Brown",   role: "Supervisor",    boundary: "Ward 1",  teamCode: "TEAM-A", status: "Active" },
-  { id: "USR-002", workerName: "Bob Smith",     role: "Health Worker", boundary: "Ward 2",  teamCode: "TEAM-B", status: "Active" },
-  { id: "USR-003", workerName: "Carol Davis",   role: "Health Worker", boundary: "Ward 1",  teamCode: "TEAM-A", status: "Inactive" },
-  { id: "USR-004", workerName: "David Lee",     role: "Supervisor",    boundary: "Ward 3",  teamCode: "TEAM-C", status: "Active" },
-  { id: "USR-005", workerName: "Eva Martinez",  role: "Health Worker", boundary: "Ward 3",  teamCode: "TEAM-C", status: "Active" },
-];
 
 const BLUE = "#0B4B66";
 
@@ -59,14 +50,74 @@ const RegisterDetailsScreen = () => {
   const campaignNumber = searchParams.get("campaignNumber");
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const registerId = searchParams.get("registerId");
-  const attendanceOfficer = searchParams.get("attendanceOfficer");
-  const noOfUsers = searchParams.get("noOfUsers");
+  const registerNumber = searchParams.get("registerNumber");
+  const registerName = searchParams.get("registerName");
+  const boundaryCode = searchParams.get("boundaryCode");
 
-  const [users, setUsers] = useState(MOCK_USERS);
+  // Fetch register details using registerNumber
+  const attendanceReqCriteria = {
+    url: `/attendance/v1/_search`,
+    params: { tenantId, registerNumber },
+    body: {},
+    config: {
+      enabled: !!registerNumber,
+      select: (data) => data?.attendanceRegister?.[0],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: registerData, isLoading } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
 
-  const handleDeleteUser = (user) => {
+  const attendees = registerData?.attendees || [];
+  const staff = registerData?.staff || [];
+
+  // Extract individualIds from attendees to fetch worker details
+  const individualIds = useMemo(() => attendees.map((a) => a.individualId).filter(Boolean), [attendees]);
+
+  // Fetch individual details (name, username, role, etc.)
+  const individualReqCriteria = {
+    url: `/individual/v1/_search`,
+    params: { tenantId, limit: individualIds.length + 1, offset: 0 },
+    body: { Individual: { id: individualIds } },
+    config: {
+      enabled: individualIds.length > 0,
+      select: (data) => data?.Individual || [],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+    changeQueryName: `individuals_${registerNumber}`,
+  };
+  const { data: individuals = [], isLoading: isIndividualsLoading } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
+
+  // Build a map of individualId -> Individual for quick lookup
+  const individualMap = useMemo(() => {
+    const map = {};
+    individuals.forEach((ind) => { map[ind.id] = ind; });
+    return map;
+  }, [individuals]);
+
+  // Merge attendee data with individual details for the table
+  const NA = t(I18N_KEYS.COMMON.NA);
+
+  const tableData = useMemo(() => attendees.map((attendee) => {
+    const ind = individualMap[attendee.individualId] || {};
+    return {
+      ...attendee,
+      workerName: ind.name?.givenName || NA,
+      username: ind.userDetails?.username || NA,
+      role: ind.skills?.[0]?.type || NA,
+      team: attendee.tag || NA,
+      status: attendee.denrollmentDate ? "Inactive" : "Active",
+    };
+  }), [attendees, individualMap, NA]);
+
+  const getOwnerName = () => {
+    const owner = staff.find((s) => s.staffType === "OWNER");
+    return owner?.additionalDetails?.staffName || owner?.additionalDetails?.ownerName || NA;
+  };
+
+  const handleDeleteUser = (_user) => {
     // TODO: Call delete API for this user
-    setUsers((prev) => prev.filter((u) => u.id !== user.id));
   };
 
   const handleBack = () => {
@@ -79,7 +130,10 @@ const RegisterDetailsScreen = () => {
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_WORKER_NAME_COLUMN),
       selector: (row) => row.workerName,
-      cell: (row) => <span>{row.workerName}</span>,
+    },
+    {
+      name: t("HCM_USERNAME"),
+      selector: (row) => row.username,
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ROLE_COLUMN),
@@ -87,11 +141,11 @@ const RegisterDetailsScreen = () => {
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_BOUNDARY_COLUMN),
-      selector: (row) => row.boundary,
+      selector: () => boundaryCode || registerData?.localityCode || NA,
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_TEAM_CODE_COLUMN),
-      selector: (row) => row.teamCode,
+      selector: (row) => row.team,
     },
     {
       name: t(I18N_KEYS.COMPONENTS.STATUS),
@@ -123,6 +177,8 @@ const RegisterDetailsScreen = () => {
     },
   ];
 
+  if (isLoading || isIndividualsLoading) return <Loader page={true} />;
+
   return (
     <div>
       {/* ── Register Details Card ── */}
@@ -141,21 +197,29 @@ const RegisterDetailsScreen = () => {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)} :</div>
-            <div style={detailValueStyle}>{registerId || "—"}</div>
+            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN)} :</div>
+            <div style={detailValueStyle}>{registerData?.registerNumber || registerNumber || NA}</div>
+          </div>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
+            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NAME_COLUMN)} :</div>
+            <div style={detailValueStyle}>{registerData?.name || registerName || NA}</div>
           </div>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)} :</div>
-            <div style={detailValueStyle}>{attendanceOfficer || "—"}</div>
+            <div style={detailValueStyle}>{getOwnerName()}</div>
           </div>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN)} :</div>
-            <div style={detailValueStyle}>{noOfUsers || users.length}</div>
+            <div style={detailValueStyle}>{attendees.length}</div>
+          </div>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
+            <div style={detailLabelStyle}>{t(I18N_KEYS.COMPONENTS.STATUS)} :</div>
+            <div style={detailValueStyle}>{registerData?.status || NA}</div>
           </div>
         </div>
       </Card>
 
-      {/* ── Users Table Card ── */}
+      {/* ── Attendees Table Card ── */}
       <Card style={{ padding: "1.25rem", overflow: "hidden" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
           <div style={{ fontWeight: "700", fontSize: "1rem", color: BLUE }}>
@@ -180,7 +244,7 @@ const RegisterDetailsScreen = () => {
         </div>
         <DataTable
           columns={columns}
-          data={users}
+          data={tableData}
           customStyles={tableCustomStyle}
           noDataComponent={
             <div style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}>

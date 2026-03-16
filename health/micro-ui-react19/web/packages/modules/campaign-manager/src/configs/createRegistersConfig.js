@@ -5,14 +5,14 @@ export const createRegistersConfig = ({ totalFormData, campaignData }) => {
         {
           stepCount: "1",
           key: "1",
-          name: "HCM_CAMPAIGN_CREATE_REGISTERS",
+          name: "HCM_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_DATA",
           last: true,
           body: [
             {
               isMandatory: false,
-              key: "uploadRegisters",
+              key: "uploadAttendanceRegister",
               type: "component",
-              component: "CreateRegistersData",
+              component: "DataUploadWrapper",
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
@@ -20,10 +20,10 @@ export const createRegistersConfig = ({ totalFormData, campaignData }) => {
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "registers",
+                type: "attendanceRegister",
               },
               populators: {
-                name: "uploadRegisters",
+                name: "uploadAttendanceRegister",
                 required: true,
                 customStyle: {
                   background: "none",

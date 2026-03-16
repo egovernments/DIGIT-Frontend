@@ -53,7 +53,6 @@ import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
 import DateSelection from "./components/CreateCampaignComponents/DateSelection";
 import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
-import CreateRegistersData from "./components/CreateCampaignComponents/CreateRegistersData";
 //App config import
 import AppPreview from "./components/AppPreview";
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
@@ -251,7 +250,6 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  CreateRegistersData,
   AppPreview,
   DateSelection,
   ViewDetailComponent,

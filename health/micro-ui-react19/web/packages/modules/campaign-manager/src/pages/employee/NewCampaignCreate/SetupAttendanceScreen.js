@@ -43,7 +43,9 @@ const SetupAttendanceScreen = () => {
       heading: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_REGISTERS_HEADING),
       description: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_REGISTERS_DESC),
       onClick: () => {
-        // TODO: Navigate to view registers screen
+        navigate(
+          `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
+        );
       },
     },
   ];
