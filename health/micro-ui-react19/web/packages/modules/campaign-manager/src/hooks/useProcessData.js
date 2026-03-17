@@ -20,12 +20,19 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
             additionalDetails: additionalDetails,
         };
 
-        if (useExcelIngestion) {
-            resourceDetails.referenceId = id;
+        if (useExcelIngestion) { //TODO CHECK
             resourceDetails.locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
-            resourceDetails.referenceType = "campaign";
-            if (isAttendanceRegister) {
+            if (type === "attendanceRegisterAttendee-validation") {
+                resourceDetails.type = "attendanceRegisterAttendee-validation";
+                resourceDetails.referenceId = additionalDetails?.registerId || id;
+                resourceDetails.referenceType = "attendanceRegister";
+            } else if (type === "attendanceRegister-validation") {
                 resourceDetails.type = "attendanceRegister-validation";
+                resourceDetails.referenceId = id;
+                resourceDetails.referenceType = "campaign";
+            } else {
+                resourceDetails.referenceId = id;
+                resourceDetails.referenceType = "campaign";
             }
         } else {
             resourceDetails.campaignId = id;

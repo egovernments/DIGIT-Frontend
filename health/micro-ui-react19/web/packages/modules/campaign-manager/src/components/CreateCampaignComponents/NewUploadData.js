@@ -38,6 +38,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const parentId = searchParams.get("parentId");
+  const registerId = searchParams.get("registerId");
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const [uploadLoader, setUploadLoader] = useState(false);
@@ -49,6 +50,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   {},
   //   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   // );
+  console.log("regsterId123", registerId);
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -1012,8 +1014,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
             validationType,
             tenantId,
-            id,
-            baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
+            type === "attendanceRegisterAttendee" ? registerId : id, //TODO CHECK
+            baseTimeOut?.[CONSOLE_MDMS_MODULENAME],
+            type === "attendanceRegisterAttendee" ? { registerId } : {}
           );
           if (temp?.isError) {
             setLoader(false);
@@ -1228,13 +1231,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           body: {
             GenerationSearchCriteria: {
               tenantId: tenantId,
-              referenceIds: [id],
+              referenceIds: [type === "attendanceRegisterAttendee" ? registerId : id],
               statuses: ["completed", "failed", "pending", "inprogress"],
               limit: 5,
               offset: 0,
               locale: locale,
               types: [type],
-              referenceTypes: ["campaign"],
+              referenceTypes: [type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign"],
             },
           },
         });
@@ -1263,11 +1266,12 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               tenantId: tenantId,
               type: type,
               hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
-              referenceId: id,
-              referenceType: "campaign",
+              referenceId: type === "attendanceRegisterAttendee" ? registerId : id,
+              referenceType: type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign",
               locale: locale,
               additionalDetails: {
                 campaignName: campaignName,
+                campaignId: id
               },
             },
           },
