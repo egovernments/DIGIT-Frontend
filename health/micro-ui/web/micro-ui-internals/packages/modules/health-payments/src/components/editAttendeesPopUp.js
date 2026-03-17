@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
  * Component: EditAttendeePopUp
  * --------------------------------------
  * This component renders a popup to view and edit attendees in an attendance register.
- * It fetches attendance data and individual user data using Digit’s custom hooks,
+ * It fetches attendance data and individual user data using Digit's custom hooks,
  * then displays the data in a table with search functionality.
  */
 const EditAttendeePopUp = ({

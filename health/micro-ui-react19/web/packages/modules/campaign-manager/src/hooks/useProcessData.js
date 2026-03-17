@@ -10,7 +10,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     try {
         // For unified-console-validation and attendanceRegisterValidation, use different API and referenceId instead of campaignId
         const isUnifiedConsole = type === "unified-console-validation";
-        const isAttendanceRegister = type === "attendanceRegister-validation";
+        const isAttendanceRegister = type === "attendanceRegister-validation" || type === "attendanceRegisterAttendee-validation";
         const useExcelIngestion = isUnifiedConsole || isAttendanceRegister;
         const resourceDetails = {
             type,
@@ -67,7 +67,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
 
     // For unified-console and attendanceRegister, use different search API and response structure
     const isUnifiedConsole = type === "unified-console-validation";
-    const isAttendanceRegister = type === "attendanceRegister-validation";
+    const isAttendanceRegister = type === "attendanceRegister-validation" || type === "attendanceRegisterAttendee-validation";
     const useExcelIngestion = isUnifiedConsole || isAttendanceRegister;
     const searchUrl = useExcelIngestion
         ? "/excel-ingestion/v1/data/process/_search"

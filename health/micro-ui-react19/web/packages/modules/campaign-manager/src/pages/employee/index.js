@@ -140,6 +140,11 @@ const RegisterDetailsScreen = lazyWithFallback(
   () => require("./NewCampaignCreate/RegisterDetailsScreen").default,
   { loaderText: "Loading Register Details..." }
 );
+const MapAttendeesScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "map-attendees-screen" */ "./NewCampaignCreate/MapAttendeesScreen"),
+  () => require("./NewCampaignCreate/MapAttendeesScreen").default,
+  { loaderText: "Loading Map Attendees..." }
+);
 
 const CampaignTemplates = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
@@ -430,6 +435,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`create-registers-screen`} element={<CreateRegistersScreen />} />
           <Route path={`map-users-to-registers`} element={<MapUsersToRegistersScreen />} />
           <Route path={`register-details`} element={<RegisterDetailsScreen />} />
+          <Route path={`map-attendees-screen`} element={<MapAttendeesScreen />} />
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />

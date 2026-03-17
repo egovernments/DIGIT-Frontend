@@ -177,7 +177,12 @@ const RegisterDetailsScreen = () => {
     },
   ];
 
-  if (isLoading || isIndividualsLoading) return <Loader page={true} />;
+  if (isLoading || isIndividualsLoading)
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
+        <Loader page={true} />
+      </div>
+    );
 
   return (
     <div>
@@ -231,15 +236,11 @@ const RegisterDetailsScreen = () => {
               variation="secondary"
               size="small"
               icon="FileUpload"
-              onClick={() => {/* TODO: Map users via excel sheet */}}
+              onClick={() => navigate(
+                `/${window.contextPath}/employee/campaign/map-attendees-screen?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`
+              )}
             />
-            <Button
-              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTER_BUTTON)}
-              variation="secondary"
-              size="small"
-              icon="Person"
-              onClick={() => {/* TODO: Map users to register */}}
-            />
+            
           </div>
         </div>
         <DataTable

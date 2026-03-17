@@ -126,6 +126,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       onSelect("uploadUnified", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else if (type === "attendanceRegister") {
       onSelect("uploadAttendanceRegister", { uploadedFile, isError, isValidation, apiError, isSuccess });
+    } else if (type === "attendanceRegisterAttendee") {
+      onSelect("uploadAttendanceRegisterAttendee", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else {
       onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
     }
@@ -425,6 +427,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       }
       case "attendanceRegister": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
+        setUploadedFile(uploadedFile);
+        setIsSuccess(isSuccess);
+        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        break;
+      }
+      case "attendanceRegisterAttendee": {
+        const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
         setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
@@ -995,7 +1004,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         setIsError(true);
         setLoader(true);
         // For unified-console and attendanceRegister, use hyphenated validation type; for others use camelCase
-        const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : `${type}Validation`;
+        const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : type === "attendanceRegisterAttendee" ? "attendanceRegisterAttendee-validation" : `${type}Validation`;
 
         try {
           const temp = await Digit.Hooks.campaign.useProcessData(
@@ -1030,7 +1039,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             // For unified-console and attendanceRegister, check validationStatus/totalErrors; for others, check sheetErrors
-            const isExcelIngestionType = type === "unified-console" || type === "attendanceRegister";
+            const isExcelIngestionType = type === "unified-console" || type === "attendanceRegister" || type === "attendanceRegisterAttendee";
             const isExcelIngestionInvalid =
               isExcelIngestionType &&
               (temp?.additionalDetails?.validationStatus === "invalid" || temp?.additionalDetails?.totalErrors > 0);
@@ -1137,6 +1146,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     user: false,
     "unified-console": false,
     attendanceRegister: false,
+    attendanceRegisterAttendee: false,
   });
 
   const downloadTemplate = async () => {
@@ -1205,8 +1215,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       return;
     }
 
-    // For attendanceRegister type, use generation search API with polling and generate fallback
-    if (type === "attendanceRegister") {
+    // For attendanceRegister / attendanceRegisterAttendee type, use generation search API with polling and generate fallback
+    if (type === "attendanceRegister" || type === "attendanceRegisterAttendee") {
       const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
       const pollRetryInterval = 2000;
       const maxPollTime = 60000;
@@ -1223,7 +1233,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               limit: 5,
               offset: 0,
               locale: locale,
-              types: ["attendanceRegister"],
+              types: [type],
               referenceTypes: ["campaign"],
             },
           },
@@ -1251,7 +1261,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           body: {
             GenerateResource: {
               tenantId: tenantId,
-              type: "attendanceRegister",
+              type: type,
               hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
               referenceId: id,
               referenceType: "campaign",
@@ -1273,7 +1283,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           return;
         }
         setDownloadError(false);
-        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_Attendance_Register_Template` : `${campaignName}_Attendance_Register_Template`;
+        const templateLabel = type === "attendanceRegisterAttendee" ? "Attendee_Template" : "Attendance_Register_Template";
+        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
         downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
         setDownloadedTemplates((prev) => ({
           ...prev,

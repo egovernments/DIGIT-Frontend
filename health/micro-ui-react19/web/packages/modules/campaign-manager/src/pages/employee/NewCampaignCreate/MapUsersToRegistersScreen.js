@@ -240,7 +240,12 @@ const MapUsersToRegistersScreen = () => {
     },
   ];
 
-  if (isCampaignLoading || isCampaignFetching || isLoading || isFetching) return <Loader page={true} />;
+  if (isCampaignLoading || isCampaignFetching || isLoading || isFetching)
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
+        <Loader page={true} />
+      </div>
+    );
 
   return (
     <div>
