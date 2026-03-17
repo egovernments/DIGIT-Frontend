@@ -181,8 +181,9 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
     };
   }
 
-  // Show "View Stock Dashboard" for completed campaigns if user has the right roles
-  if ((currentTab === "CAMPAIGN_COMPLETED") && Digit.Utils.didEmployeeHasAtleastOneRole(STOCK_DASHBOARD_ROLES)) {
+  // Show "View Stock Dashboard" for ongoing, upcoming, and completed campaigns if user has the right roles
+  if ((currentTab === "CAMPAIGN_COMPLETED" || currentTab === "CAMPAIGN_ONGOING" || currentTab === "CAMPAIGN_UPCOMING") && Digit.Utils.didEmployeeHasAtleastOneRole(STOCK_DASHBOARD_ROLES)) {
+    const isCompleted = currentTab === "CAMPAIGN_COMPLETED";
     actions.viewStockDashboard = {
       label: "HCM_VIEW_STOCK_DASHBOARD",
       title: "HCM_VIEW_STOCK_DASHBOARD",
@@ -197,6 +198,7 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
               projectId: rowData?.projectId,
               campaignStartDate: rowData?.startDate,
               campaignEndDate: rowData?.endDate,
+              isCompleted,
             },
           }
         ),

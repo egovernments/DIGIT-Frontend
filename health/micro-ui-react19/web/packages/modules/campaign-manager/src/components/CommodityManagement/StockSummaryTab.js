@@ -9,7 +9,7 @@ import GenericChart from "./GenericChart";
 import NewShipmentPopup from "./NewShipmentPopup";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
@@ -232,13 +232,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       minWidth: "130px",
       sortable: true,
     },
-    {
+    ...(!isCompleted ? [{
       label: t("HCM_ACTION"),
       key: "action",
       grow: 1,
       minWidth: "200px",
       sortable: false,
-    },
+    }] : []),
   ];
 
   // Download table data as Excel
@@ -408,27 +408,17 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   return (
     <div ref={fullPageRef}>
-      <div className="cm-stock-actions">
-        {/* <Button
-          type="button"
-          variation="secondary"
-          label={t("HCM_DOWNLOAD_BULK_SHIPMENT_TEMPLATE")}
-          icon="DownloadIcon"
-        />
-        <Button
-          type="button"
-          variation="secondary"
-          label={t("HCM_UPLOAD_BULK_SHIPMENT_TEMPLATE")}
-          icon="FileUpload"
-        /> */}
-        <Button
-          type="button"
-          variation="primary"
-          label={t("HCM_NEW_SHIPMENT")}
-          icon="AddIcon"
-          onClick={() => setShowNewShipmentPopup(true)}
-        />
-      </div>
+      {!isCompleted && (
+        <div className="cm-stock-actions">
+          <Button
+            type="button"
+            variation="primary"
+            label={t("HCM_NEW_SHIPMENT")}
+            icon="AddIcon"
+            onClick={() => setShowNewShipmentPopup(true)}
+          />
+        </div>
+      )}
 
       <DataSyncCard
         items={[

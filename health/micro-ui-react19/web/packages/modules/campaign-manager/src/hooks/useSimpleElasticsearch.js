@@ -150,6 +150,10 @@ const useSimpleElasticsearch = (config) => {
 
     requestIdRef.current = Date.now().toString();
 
+    // Use configured kibanaBaseUrl for deployed environments; fall back to window.location.origin (dev proxy)
+    const kibanaBaseUrl = getKibanaDetails("kibanaBaseUrl");
+    const resolvedOrigin = kibanaBaseUrl || window.location.origin;
+
     workerRef.current.postMessage({
       type: "FETCH_DATA",
       payload: {
@@ -160,7 +164,7 @@ const useSimpleElasticsearch = (config) => {
         maxRecordLimit,
         kibanaPath,
         authKey,
-        origin: window.location.origin,
+        origin: resolvedOrigin,
         requestId: requestIdRef.current,
       },
     });

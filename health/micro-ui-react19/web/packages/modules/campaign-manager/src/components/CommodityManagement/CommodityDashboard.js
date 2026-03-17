@@ -20,7 +20,7 @@ const CommodityDashboard = () => {
   const campaignNumber = searchParams.get("campaignNumber");
 
   // Read campaign data from navigation state (passed from HCMMyCampaignRowCard)
-  const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch } = location.state || {};
+  const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, isCompleted } = location.state || {};
 
   const campaignStartDate = useMemo(
     () => (campaignStartEpoch ? new Date(campaignStartEpoch) : null),
@@ -208,6 +208,7 @@ const CommodityDashboard = () => {
           campaignNumber={campaignNumber}
           projectId={projectId}
           refetchStockData={refetchStockData}
+          isCompleted={isCompleted}
         />
       )}
     </div>

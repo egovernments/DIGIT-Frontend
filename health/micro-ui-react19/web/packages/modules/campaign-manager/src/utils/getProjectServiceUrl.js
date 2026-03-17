@@ -30,6 +30,7 @@ export const getGeoJsonUrl = (boundaryType="ward") => {
 //nigeria-uat
 const defaultKibanaDetails = {
   kibanaPath:"/kibana-upgrade/s/bauchi-dashboard/api/console/proxy",
+  kibanaBaseUrl:"https://mc-nigeria-uat.digit.org",
   username:"elastic",
   password:"oVEHNUM2ub5TBjDhRvlAT0rU",
   projectTaskIndex:"ba-project-task-index-v1",
