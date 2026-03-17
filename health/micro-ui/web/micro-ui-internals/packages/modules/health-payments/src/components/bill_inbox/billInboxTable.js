@@ -99,7 +99,7 @@ const BillInboxTable = ({ ...props }) => {
                     )
             }
             title={t(`${row.id}`)}
-            variation="link"
+            variation="teritiary"
             size={"medium"}
             style={{ minWidth: "unset" }}
           />
@@ -182,7 +182,7 @@ const BillInboxTable = ({ ...props }) => {
   return (
     <React.Fragment>
       {props.isFetching || props.tableData.length === 0 ? (
-        <div style={{ height: props.infoDescription ? "36.8vh" : "52vh" }}>
+        <div style={{ height: props.infoDescription ? "36.8vh" : "51vh" }}>
           {" "}
           {props.isFetching ? (
             <Loader className={"digit-center-loader"} />

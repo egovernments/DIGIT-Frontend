@@ -359,7 +359,7 @@ const BillInboxComponent = () => {
               <Card style={{ height: infoDescription ? "60vh" : "74vh" }}>
                 <div className="summary-sub-heading" style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
                   {renderProjectPeriod(t, selectedProject, selectedPeriod)?.[0]}
-                  <div style={{ fontSize: "14px" }}>{(renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1]) || ""}</div>
+                  <div style={{ fontSize: "14px" }}>{renderProjectPeriod(t, selectedProject, selectedPeriod)?.[1] || ""}</div>
                 </div>
                 <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name || "")}</div>
                 <SearchResultsPlaceholder placeholderText={t("HCM_AM_BILL_INBOX_PLACEHOLDER_IMAGE_TEXT")} />
@@ -420,7 +420,7 @@ const BillInboxComponent = () => {
                           handlePageChange={handlePageChange}
                           handlePerRowsChange={handlePerRowsChange}
                           totalCount={totalCount}
-                          status={activeLink.code}
+                          status={selectedPeriod?.id === "AGGREGATE" ? "PENDING" : activeLink.code}
                           infoDescription={infoDescription}
                           selectedPeriod={selectedPeriod}
                         />

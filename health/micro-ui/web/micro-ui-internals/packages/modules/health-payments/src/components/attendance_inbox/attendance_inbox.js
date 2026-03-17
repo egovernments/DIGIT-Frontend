@@ -125,20 +125,54 @@ const AttendanceInboxComponent = () => {
   };
 
   // Trigger initial data fetch when the component is mounted
+  // useEffect(() => {
+  //   const data = Digit.SessionStorage.get("paymentInbox");
+  //   const selectedArea = Digit.SessionStorage.get("selectedValues");
+
+  //   const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
+  //
+  //   if (data && selectedPeriod) {
+  //
+  //     triggerAttendanceSearch(data);
+  //   } else if (selectedArea) {
+  //     const pp = Object.values(selectedArea).find((v) => v !== null);
+  //     if (pp && selectedPeriod) {
+  //
+  //       triggerAttendanceSearch(pp?.code);
+  //     }
+  //   }
+  // }, []);
+
   useEffect(() => {
-    const data = Digit.SessionStorage.get("paymentInbox");
-    const selectedArea = Digit.SessionStorage.get("selectedValues");
+    let intervalId = null;
 
-    const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
+    const tryFetch = () => {
+      const data = Digit.SessionStorage.get("paymentInbox");
+      const selectedArea = Digit.SessionStorage.get("selectedValues");
+      const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
 
-    if (data && selectedPeriod) {
-      triggerAttendanceSearch(data);
-    } else if (selectedArea) {
-      const pp = Object.values(selectedArea).find((v) => v !== null);
-      if (pp && selectedPeriod) {
-        triggerAttendanceSearch(pp?.code);
+      if (selectedPeriod && (data || selectedArea)) {
+        if (data) {
+          triggerAttendanceSearch(data);
+        } else if (selectedArea) {
+          const pp = Object.values(selectedArea).find((v) => v !== null);
+          if (pp) {
+            triggerAttendanceSearch(pp);
+          }
+        }
+
+        //  Stop polling once data is available
+        clearInterval(intervalId);
       }
-    }
+    };
+
+    // Try immediately
+    tryFetch();
+
+    // Retry every 300ms until value arrives
+    intervalId = setInterval(tryFetch, 300);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   /// Update filter criteria and fetch new data.
