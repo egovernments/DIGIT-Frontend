@@ -124,7 +124,6 @@ const initializePaymentsModule = async ({ tenantId }) => {
         boundaryType: nationalLevelProject?.address?.boundaryType,
       }
     });
-
     if (!fetchBoundaryData) {
       throw new Error("Couldn't fetch boundary data");
     }
@@ -160,6 +159,28 @@ const initializePaymentsModule = async ({ tenantId }) => {
     Digit.SessionStorage.set("staffProjects", projects);
     Digit.SessionStorage.set("UserIndividual", individual);
 
+    // Fetch Kibana map config from MDMS and store in session
+    try {
+      const mdmsContextPath = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+      const kibanaResponse = await Digit.CustomService.getResponse({
+        url: `/${mdmsContextPath}/v2/_search`,
+        useCache: false,
+        method: "POST",
+        userService: true,
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            uniqueIdentifiers: ["common-masters.uiCommonConstantsMaps.kibana"],
+          },
+        },
+      });
+      const kibanaMapConfig = kibanaResponse?.mdms?.[0]?.data?.kibana?.["iframe-routes"]?.["attendance-maps"];
+      if (kibanaMapConfig) {
+        Digit.SessionStorage.set("kibanaMapConfig", kibanaMapConfig);
+      }
+    } catch (e) {
+      console.warn("Failed to fetch Kibana map config from MDMS", e);
+    }
 
   } catch (error) {
     if (error?.response?.data?.Errors) {
