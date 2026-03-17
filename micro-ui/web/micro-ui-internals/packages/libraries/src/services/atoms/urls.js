@@ -221,14 +221,6 @@ const Urls = {
   bills:{
     cancelBill:"/billing-service/bill/v2/_cancelbill"
   },
-  userPreference: {
-    upsert: "/user-preference/v1/_upsert",
-    search: "/user-preference/v1/_search",
-  },
-  configService: {
-    search: "/config-service/config/v1/_search",
-  },
-
   access_control: "/access/v1/actions/mdms/_get",
   billgenie: "/egov-searcher",
 };

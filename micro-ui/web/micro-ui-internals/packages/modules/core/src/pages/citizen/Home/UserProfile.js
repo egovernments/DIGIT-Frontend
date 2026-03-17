@@ -140,23 +140,27 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     { schemaCode: "commonUiConfig.UserPreferencesConfig" }
   );
 
-  const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.userPreferences.useSearch(
-    {
+  const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
+    url: "/user-preference/v1/_search",
+    body: {
       criteria: {
         userId: userInfo?.uuid,
         tenantId: tenant,
         preferenceCode: PREFERENCE_CODE,
       },
     },
-    {
+    changeQueryName: "user_preference_search",
+    config: {
       enabled: !!userInfo?.uuid && userType === "citizen" && !!enableUserPreferences,
       select: (data) => data?.preferences?.[0],
       cacheTime: 0,
       staleTime: 0,
-    }
-  );
+    },
+  });
 
-  const preferenceUpsertMutation = Digit.Hooks.userPreferences.useUpsert();
+  const preferenceUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/user-preference/v1/_upsert",
+  });
 
   useEffect(() => {
     if (preferenceData?.payload) {
@@ -173,14 +177,16 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   }, [preferenceData]);
 
   // Fetch enabled notification channels from config-service
-  const { data: channelConfigData } = Digit.Hooks.configService.useSearch(
-    {
+  const { data: channelConfigData } = Digit.Hooks.useCustomAPIHook({
+    url: "/config-service/config/v1/_search",
+    body: {
       criteria: {
         schemaCode: "NotificationChannel",
         tenantId: tenant,
       },
     },
-    {
+    changeQueryName: "config_service_search",
+    config: {
       enabled: !!enableUserPreferences && !!tenant,
       select: (data) => {
         const channels = {};
@@ -189,8 +195,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         });
         return channels;
       },
-    }
-  );
+    },
+  });
 
   const handleConsentToggle = (channel) => {
     setNotificationConsent((prev) => ({
@@ -202,18 +208,27 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     }));
   };
 
-  const saveWhatsappPreference = async () => {
-    await preferenceUpsertMutation.mutateAsync({
-      preference: {
-        userId: userInfo?.uuid,
-        tenantId: tenant,
-        preferenceCode: PREFERENCE_CODE,
-        payload: {
-          consent: notificationConsent,
-          preferredLanguage: preferredLanguage,
+  const saveUserPreferences = async () => {
+    try {
+      await preferenceUpsertMutation.mutateAsync({
+        body: {
+          preference: {
+            userId: userInfo?.uuid,
+            tenantId: tenant,
+            preferenceCode: PREFERENCE_CODE,
+            payload: {
+              consent: notificationConsent,
+              preferredLanguage: preferredLanguage,
+            },
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw JSON.stringify({
+        type: "error",
+        message: error?.response?.data?.Errors?.[0]?.description || "CORE_COMMON_PROFILE_PREFERENCE_UPDATE_ERROR",
+      });
+    }
   };
 
   const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
@@ -594,7 +609,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
       } else if (responseInfo?.status && responseInfo.status === "200") {
         if (userType === "citizen" && enableUserPreferences) {
-          await saveWhatsappPreference();
+          await saveUserPreferences();
         }
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
       }
@@ -866,7 +881,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                       <div style={{ display: "flex", alignItems: "flex-end", gap: "10px" }}>
                         <ToggleSwitch
                           value={notificationConsent[channel.key].status === "GRANTED"}
-                          onChange={() => isChannelEnabled && handleConsentToggle(channel.key)}
+                          onChange={() => handleConsentToggle(channel.key)}
+                          disabled={!isChannelEnabled}
                           name={`notification-${channel.key}`}
                           style={{ margin: "0px", opacity: isChannelEnabled ? 1 : 0.4 }}
                         />
