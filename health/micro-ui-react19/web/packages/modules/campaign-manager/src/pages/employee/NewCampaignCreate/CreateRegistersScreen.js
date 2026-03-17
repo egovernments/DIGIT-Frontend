@@ -29,7 +29,7 @@ const CreateRegistersScreen = () => {
   const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const reqUpdate = {
-    url: `/project-factory/v1/project-type/add-resources`,
+    url: `/project-factory/v1/resource-details/_create`,
     params: {},
     body: {},
     config: { enabled: false },
@@ -68,17 +68,19 @@ const CreateRegistersScreen = () => {
       return showErrorToast(t("PLEASE_UPLOAD_FILE"));
     }
 
-    const newResource = {
+    const resourceDetails = {
+      tenantId: campaignData?.tenantId,
+      campaignId: campaignData?.id,
       type: "attendanceRegister",
+      fileStoreId: filestoreId,
       filename: uploadedData?.uploadedFile?.[0]?.filename,
-      filestoreId: filestoreId,
     };
 
     setLoader(true);
     await mutationUpdate.mutate(
       {
-        url: `/project-factory/v1/project-type/add-resources`,
-        body: { CampaignDetails: { id: campaignData?.id, tenantId: campaignData?.tenantId, resources: [newResource] } },
+        url: `/project-factory/v1/resource-details/_create`,
+        body: { ResourceDetails: resourceDetails },
         config: { enable: true },
       },
       {
