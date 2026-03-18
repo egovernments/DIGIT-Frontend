@@ -153,7 +153,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     },
     changeQueryName: "user_preference_search",
     config: {
-      enabled: !!userInfo?.uuid && userType === "citizen" && !!enableUserPreferences,
+      enabled: !!userInfo?.uuid && (userType === "citizen" || isMultiRootTenant) && !!enableUserPreferences,
       select: (data) => data?.preferences?.[0],
       cacheTime: 0,
       staleTime: 0,
