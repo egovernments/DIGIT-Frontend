@@ -13,6 +13,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -23,6 +24,7 @@ const NewShipmentPopup = ({
   onClose,
   onSuccess,
 }) => {
+  console.log("NewShipmentPopup props")
   const { t } = useTranslation();
   const moduleName = Digit.Utils.campaign.getModuleName();
 
@@ -80,36 +82,36 @@ const NewShipmentPopup = ({
     isLoading: hierarchyLoading,
   } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
 
-  const boundaryRelationshipCriteria = useMemo(
-    () => ({
-      url: `/boundary-service/boundary-relationships/_search`,
-      params: {
-        tenantId,
-        hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-        includeChildren: true,
-      },
-      body: {},
-      config: { enabled: !!BOUNDARY_HIERARCHY_TYPE, cacheTime: 1000000 },
-    }),
-    [tenantId, BOUNDARY_HIERARCHY_TYPE],
-  );
+  // Fetch boundary relationships (full tree) for cascading boundary dropdowns
+  const boundaryRelationshipCriteria = useMemo(() => ({
+    url: `/boundary-service/boundary-relationships/_search`,
+    params: {
+      tenantId,
+      hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      includeChildren: true,
+    },
+    body: {},
+    config: {
+      enabled: !!BOUNDARY_HIERARCHY_TYPE,
+      cacheTime: 1000000,
+    },
+  }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
-  const {
-    data: boundaryRelationships,
-    isLoading: boundaryRelLoading,
-  } = Digit.Hooks.useCustomAPIHook(boundaryRelationshipCriteria);
+  const { data: boundaryRelationships, isLoading: boundaryRelLoading } = Digit.Hooks.useCustomAPIHook(boundaryRelationshipCriteria);
 
+  // Build boundary code -> ancestor path map
   const boundaryAncestorMap = useMemo(() => {
-    const boundaries =
-      boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
+    const boundaries = boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
     const map = {};
     const traverse = (node, ancestors) => {
       const currentPath = { ...ancestors };
-      if (node?.boundaryType && node?.code)
+      if (node?.boundaryType && node?.code) {
         currentPath[node.boundaryType] = node.code;
+      }
       map[node?.code] = currentPath;
-      if (node?.children)
+      if (node?.children) {
         node.children.forEach((child) => traverse(child, currentPath));
+      }
     };
     boundaries.forEach((root) => traverse(root, {}));
     return map;
@@ -184,31 +186,6 @@ const NewShipmentPopup = ({
   const allProjectIds = projectData?.ids || [];
   const projectBoundaryMap = projectData?.boundaryMap || {};
 
-  // Which projects have facilities
-  const allFacilityReqCriteria = useMemo(
-    () => ({
-      url: `/project/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
-      body: { ProjectFacility: { projectId: allProjectIds } },
-      config: {
-        enabled: !!allProjectIds?.length,
-        select: (data) => {
-          const projectIdsWithFacilities = new Set();
-          (data?.ProjectFacilities || []).forEach((pf) => {
-            if (pf.projectId) projectIdsWithFacilities.add(pf.projectId);
-          });
-          return projectIdsWithFacilities;
-        },
-      },
-    }),
-    [tenantId, allProjectIds],
-  );
-
-  const {
-    data: projectIdsWithFacilities,
-    isLoading: allFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(allFacilityReqCriteria);
-
   const sortedHierarchy = useMemo(() => {
     const boundaryHierarchy =
       hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
@@ -226,50 +203,39 @@ const NewShipmentPopup = ({
     return sorted;
   }, [hierarchyDefinition]);
 
+  // Build hierarchy filter options from boundary tree
   const hierarchyFilterOptions = useMemo(() => {
-    if (!projectIdsWithFacilities?.size || !sortedHierarchy?.length) return {};
+    const boundaries = boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
     const options = {};
-    sortedHierarchy.forEach((h) => {
-      const values = new Set();
-      Object.entries(projectBoundaryMap).forEach(([pid, bInfo]) => {
-        if (!projectIdsWithFacilities.has(pid)) return;
-        const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-        const val = ancestors[h.boundaryType];
-        if (val) values.add(val);
-      });
-      if (values.size > 0) options[h.boundaryType] = Array.from(values).sort();
-    });
+    const traverse = (node) => {
+      if (node?.boundaryType && node?.code) {
+        if (!options[node.boundaryType]) options[node.boundaryType] = [];
+        if (!options[node.boundaryType].includes(node.code)) {
+          options[node.boundaryType].push(node.code);
+        }
+      }
+      (node?.children || []).forEach(traverse);
+    };
+    boundaries.forEach(traverse);
     return options;
-  }, [
-    projectIdsWithFacilities,
-    projectBoundaryMap,
-    sortedHierarchy,
-    boundaryAncestorMap,
-  ]);
+  }, [boundaryRelationships]);
 
-  const getAvailableOptions = useCallback(
-    (boundaryType, filters) => {
-      const allOptions = hierarchyFilterOptions[boundaryType] || [];
-      return allOptions.filter((code) =>
-        Object.entries(projectBoundaryMap).some(([pid, bInfo]) => {
-          if (!projectIdsWithFacilities?.has(pid)) return false;
-          const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-          if (ancestors[boundaryType] !== code) return false;
-          return Object.entries(filters).every(([type, value]) => {
-            if (!value || type === boundaryType) return true;
-            return ancestors[type] === value;
-          });
-        }),
-      );
-    },
-    [
-      hierarchyFilterOptions,
-      projectBoundaryMap,
-      projectIdsWithFacilities,
-      boundaryAncestorMap,
-    ],
-  );
+  // Get cascading options: filter by parent selections (only levels above current)
+  const getAvailableOptions = useCallback((boundaryType, filters) => {
+    const allOptions = hierarchyFilterOptions[boundaryType] || [];
+    const currentLevelIdx = sortedHierarchy.findIndex((h) => h.boundaryType === boundaryType);
+    return allOptions.filter((code) => {
+      const ancestors = boundaryAncestorMap[code] || {};
+      return Object.entries(filters).every(([type, value]) => {
+        if (!value || type === boundaryType) return true;
+        const filterLevelIdx = sortedHierarchy.findIndex((h) => h.boundaryType === type);
+        if (filterLevelIdx >= currentLevelIdx) return true; // skip same-level and lower-level filters
+        return ancestors[type] === value;
+      });
+    });
+  }, [hierarchyFilterOptions, boundaryAncestorMap, sortedHierarchy]);
 
+  // Determine the deepest "From" hierarchy level with a selection
   const fromSelectedLevel = useMemo(() => {
     let level = -1;
     sortedHierarchy.forEach((h, idx) => {
@@ -278,11 +244,43 @@ const NewShipmentPopup = ({
     return level;
   }, [fromHierarchyFilters, sortedHierarchy]);
 
+  // "To" hierarchy levels: below the "From" selected level
   const toHierarchyLevels = useMemo(() => {
     if (fromSelectedLevel < 0) return [];
     return sortedHierarchy.slice(fromSelectedLevel + 1);
   }, [sortedHierarchy, fromSelectedLevel]);
 
+  // Determine the deepest "To" hierarchy level with a selection
+  const toSelectedLevel = useMemo(() => {
+    let level = -1;
+    toHierarchyLevels.forEach((h) => {
+      if (toHierarchyFilters[h.boundaryType]) {
+        const idx = sortedHierarchy.findIndex((s) => s.boundaryType === h.boundaryType);
+        if (idx > level) level = idx;
+      }
+    });
+    return level;
+  }, [toHierarchyFilters, toHierarchyLevels, sortedHierarchy]);
+
+  // Visible "From" levels: show up to one level beyond the deepest selection
+  const fromVisibleLevels = useMemo(() => {
+    if (!sortedHierarchy.length) return [];
+    if (fromSelectedLevel < 0) return sortedHierarchy.slice(0, 1);
+    return sortedHierarchy.slice(0, Math.min(fromSelectedLevel + 2, sortedHierarchy.length));
+  }, [sortedHierarchy, fromSelectedLevel]);
+
+  // Visible "To" levels: show up to one level beyond the deepest To selection
+  const toVisibleLevels = useMemo(() => {
+    if (!toHierarchyLevels.length) return [];
+    let deepestRelIdx = -1;
+    toHierarchyLevels.forEach((h, idx) => {
+      if (toHierarchyFilters[h.boundaryType]) deepestRelIdx = idx;
+    });
+    if (deepestRelIdx < 0) return toHierarchyLevels.slice(0, 1);
+    return toHierarchyLevels.slice(0, Math.min(deepestRelIdx + 2, toHierarchyLevels.length));
+  }, [toHierarchyLevels, toHierarchyFilters]);
+
+  // Filter project IDs for "From" — projects matching all From filters at the selected level
   const fromFilteredProjectIds = useMemo(() => {
     if (!allProjectIds.length || fromSelectedLevel < 0) return [];
     const targetBoundaryType = sortedHierarchy[fromSelectedLevel]?.boundaryType;
@@ -292,61 +290,21 @@ const NewShipmentPopup = ({
       if (!bInfo?.boundary) return false;
       if (bInfo.boundaryType !== targetBoundaryType) return false;
       const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-      return Object.entries(fromHierarchyFilters).every(
-        ([type, value]) => !value || ancestors[type] === value,
-      );
+      return Object.entries(fromHierarchyFilters).every(([type, value]) => {
+        if (!value) return true;
+        return ancestors[type] === value;
+      });
     });
-  }, [
-    allProjectIds,
-    fromHierarchyFilters,
-    fromSelectedLevel,
-    sortedHierarchy,
-    projectBoundaryMap,
-    boundaryAncestorMap,
-  ]);
+  }, [allProjectIds, fromHierarchyFilters, fromSelectedLevel, sortedHierarchy, projectBoundaryMap, boundaryAncestorMap]);
 
-  const toSelectedLevel = useMemo(() => {
-    let level = -1;
-    toHierarchyLevels.forEach((h) => {
-      if (toHierarchyFilters[h.boundaryType]) {
-        const idx = sortedHierarchy.findIndex(
-          (s) => s.boundaryType === h.boundaryType,
-        );
-        if (idx > level) level = idx;
-      }
-    });
-    return level;
-  }, [toHierarchyFilters, toHierarchyLevels, sortedHierarchy]);
-
+  // Filter project IDs for "To" — projects matching all combined filters at the selected To level
   const toFilteredProjectIds = useMemo(() => {
     if (!allProjectIds.length) return [];
-
-    // When From is at the deepest hierarchy level (no sub-levels exist),
-    // show same-level sibling facilities scoped by the parent hierarchy context.
-    if (toHierarchyLevels.length === 0 && fromSelectedLevel >= 0) {
-      const targetBoundaryType =
-        sortedHierarchy[fromSelectedLevel]?.boundaryType;
-      if (!targetBoundaryType) return [];
-      // Drop the deepest From filter so siblings at the same level are included
-      const parentFilters = { ...fromHierarchyFilters };
-      delete parentFilters[targetBoundaryType];
-      return allProjectIds.filter((pid) => {
-        const bInfo = projectBoundaryMap[pid];
-        if (!bInfo?.boundary) return false;
-        if (bInfo.boundaryType !== targetBoundaryType) return false;
-        const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-        return Object.entries(parentFilters).every(
-          ([type, value]) => !value || ancestors[type] === value,
-        );
-      });
-    }
-
     const hasToFilters = Object.values(toHierarchyFilters).some((v) => !!v);
     if (!hasToFilters) return [];
-    const targetBoundaryType =
-      toSelectedLevel >= 0
-        ? sortedHierarchy[toSelectedLevel]?.boundaryType
-        : null;
+    const targetBoundaryType = toSelectedLevel >= 0
+      ? sortedHierarchy[toSelectedLevel]?.boundaryType
+      : null;
     if (!targetBoundaryType) return [];
     const combinedFilters = { ...fromHierarchyFilters, ...toHierarchyFilters };
     return allProjectIds.filter((pid) => {
@@ -354,22 +312,14 @@ const NewShipmentPopup = ({
       if (!bInfo?.boundary) return false;
       if (bInfo.boundaryType !== targetBoundaryType) return false;
       const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-      return Object.entries(combinedFilters).every(
-        ([type, value]) => !value || ancestors[type] === value,
-      );
+      return Object.entries(combinedFilters).every(([type, value]) => {
+        if (!value) return true;
+        return ancestors[type] === value;
+      });
     });
-  }, [
-    allProjectIds,
-    fromHierarchyFilters,
-    toHierarchyFilters,
-    toSelectedLevel,
-    toHierarchyLevels,
-    fromSelectedLevel,
-    sortedHierarchy,
-    projectBoundaryMap,
-    boundaryAncestorMap,
-  ]);
+  }, [allProjectIds, fromHierarchyFilters, toHierarchyFilters, toSelectedLevel, sortedHierarchy, projectBoundaryMap, boundaryAncestorMap]);
 
+  // Fetch "From" facilities using filtered project IDs
   const fromFacilityReqCriteria = useMemo(
     () => ({
       url: `/project/facility/v1/_search`,
@@ -378,16 +328,13 @@ const NewShipmentPopup = ({
       config: {
         enabled: !!fromFilteredProjectIds?.length,
         select: (data) => {
+          const projectFacilities = data?.ProjectFacilities || [];
           const seen = new Set();
           const unique = [];
-          (data?.ProjectFacilities || []).forEach((pf) => {
+          projectFacilities.forEach((pf) => {
             if (!seen.has(pf.facilityId)) {
               seen.add(pf.facilityId);
-              unique.push({
-                id: pf.facilityId,
-                name: pf.facilityId,
-                projectId: pf.projectId,
-              });
+              unique.push({ id: pf.facilityId, name: pf.facilityId, projectId: pf.projectId });
             }
           });
           return unique;
@@ -398,22 +345,11 @@ const NewShipmentPopup = ({
   );
 
   const {
-    data: rawFromFacilityList,
+    data: fromFacilityList,
     isLoading: fromFacilitiesLoading,
   } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
 
-  const fromFacilityList = useMemo(() => {
-    if (!rawFromFacilityList?.length) return rawFromFacilityList;
-    return rawFromFacilityList.map((f) => {
-      const bInfo = projectBoundaryMap[f.projectId];
-      return {
-        ...f,
-        boundaryType: bInfo?.boundaryType || "",
-        boundary: bInfo?.boundary || "",
-      };
-    });
-  }, [rawFromFacilityList, projectBoundaryMap]);
-
+  // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
     () => ({
       url: `/project/facility/v1/_search`,
@@ -422,16 +358,13 @@ const NewShipmentPopup = ({
       config: {
         enabled: !!toFilteredProjectIds?.length,
         select: (data) => {
+          const projectFacilities = data?.ProjectFacilities || [];
           const seen = new Set();
           const unique = [];
-          (data?.ProjectFacilities || []).forEach((pf) => {
+          projectFacilities.forEach((pf) => {
             if (!seen.has(pf.facilityId)) {
               seen.add(pf.facilityId);
-              unique.push({
-                id: pf.facilityId,
-                name: pf.facilityId,
-                projectId: pf.projectId,
-              });
+              unique.push({ id: pf.facilityId, name: pf.facilityId, projectId: pf.projectId });
             }
           });
           return unique;
@@ -442,21 +375,9 @@ const NewShipmentPopup = ({
   );
 
   const {
-    data: rawToFacilityList,
+    data: toFacilityList,
     isLoading: toFacilitiesLoading,
   } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
-
-  const toFacilityList = useMemo(() => {
-    if (!rawToFacilityList?.length) return rawToFacilityList;
-    return rawToFacilityList.map((f) => {
-      const bInfo = projectBoundaryMap[f.projectId];
-      return {
-        ...f,
-        boundaryType: bInfo?.boundaryType || "",
-        boundary: bInfo?.boundary || "",
-      };
-    });
-  }, [rawToFacilityList, projectBoundaryMap]);
 
   const productVariants = useMemo(() => {
     if (!campaignData?.deliveryRules) return [];
@@ -483,8 +404,7 @@ const NewShipmentPopup = ({
     return fromFacilityList.filter(
       (f) =>
         (f.id && f.id.toLowerCase().includes(q)) ||
-        (f.name && f.name.toLowerCase().includes(q)) ||
-        (f.boundary && f.boundary.toLowerCase().includes(q)),
+        (f.name && f.name.toLowerCase().includes(q)),
     );
   }, [fromFacilityList, fromSearchQuery]);
 
@@ -504,21 +424,9 @@ const NewShipmentPopup = ({
     return available.filter(
       (f) =>
         (f.id && f.id.toLowerCase().includes(q)) ||
-        (f.name && f.name.toLowerCase().includes(q)) ||
-        (f.boundary && f.boundary.toLowerCase().includes(q)),
+        (f.name && f.name.toLowerCase().includes(q)),
     );
   }, [toFacilityList, searchQuery, fromFacilityId]);
-  // const filteredFacilities = useMemo(() => {
-  //   if (!toFacilityList?.length) return [];
-  //   if (!searchQuery?.trim()) return toFacilityList;
-  //   const q = searchQuery.toLowerCase();
-  //   return toFacilityList.filter(
-  //     (f) =>
-  //       (f.id && f.id.toLowerCase().includes(q)) ||
-  //       (f.name && f.name.toLowerCase().includes(q)) ||
-  //       (f.boundary && f.boundary.toLowerCase().includes(q)),
-  //   );
-  // }, [toFacilityList, searchQuery]);
 
   const selectedFacilities = useMemo(
     () =>
@@ -535,47 +443,43 @@ const NewShipmentPopup = ({
     config: { enabled: false },
   });
 
-  const handleFromHierarchyChange = useCallback(
-    (boundaryType, value) => {
-      setFromHierarchyFilters((prev) => {
-        const next = { ...prev };
-        next[boundaryType] = value;
-        let foundCurrent = false;
-        sortedHierarchy.forEach((h) => {
-          if (h.boundaryType === boundaryType) {
-            foundCurrent = true;
-          } else if (foundCurrent) {
-            delete next[h.boundaryType];
-          }
-        });
-        return next;
+  // Handle "From" hierarchy filter change (cascading + clear To filters)
+  const handleFromHierarchyChange = useCallback((boundaryType, value) => {
+    setFromHierarchyFilters((prev) => {
+      const next = { ...prev };
+      next[boundaryType] = value;
+      let foundCurrent = false;
+      sortedHierarchy.forEach((h) => {
+        if (h.boundaryType === boundaryType) {
+          foundCurrent = true;
+        } else if (foundCurrent) {
+          delete next[h.boundaryType];
+        }
       });
-      setToHierarchyFilters({});
-      setSelectedFacilityIds(new Set());
-      setFromFacilityId("");
-    },
-    [sortedHierarchy],
-  );
+      return next;
+    });
+    setToHierarchyFilters({});
+    setSelectedFacilityIds(new Set());
+    setFromFacilityId("");
+  }, [sortedHierarchy]);
 
-  const handleToHierarchyChange = useCallback(
-    (boundaryType, value) => {
-      setToHierarchyFilters((prev) => {
-        const next = { ...prev };
-        next[boundaryType] = value;
-        let foundCurrent = false;
-        toHierarchyLevels.forEach((h) => {
-          if (h.boundaryType === boundaryType) {
-            foundCurrent = true;
-          } else if (foundCurrent) {
-            delete next[h.boundaryType];
-          }
-        });
-        return next;
+  // Handle "To" hierarchy filter change (cascading)
+  const handleToHierarchyChange = useCallback((boundaryType, value) => {
+    setToHierarchyFilters((prev) => {
+      const next = { ...prev };
+      next[boundaryType] = value;
+      let foundCurrent = false;
+      toHierarchyLevels.forEach((h) => {
+        if (h.boundaryType === boundaryType) {
+          foundCurrent = true;
+        } else if (foundCurrent) {
+          delete next[h.boundaryType];
+        }
       });
-      setSelectedFacilityIds(new Set());
-    },
-    [toHierarchyLevels],
-  );
+      return next;
+    });
+    setSelectedFacilityIds(new Set());
+  }, [toHierarchyLevels]);
 
   const toggleFacility = useCallback((facilityId) => {
     setSelectedFacilityIds((prev) => {
@@ -604,7 +508,7 @@ const NewShipmentPopup = ({
       boundaryHeaders,
       stockHeaders: [
         ...boundaryHeaders,
-        "Project Id",
+        "Project Name",
         "From (Facility Code)",
         "From (Facility Name)",
         "To (Facility Code)",
@@ -614,69 +518,187 @@ const NewShipmentPopup = ({
     };
   }, [sortedHierarchy, productVariants]);
 
-  const handleDownloadTemplate = useCallback(() => {
+  const handleDownloadTemplate = useCallback(async () => {
     setIsDownloading(true);
     try {
       const { boundaryHeaders, stockHeaders } = getTemplateHeaders();
-      const dataRows = [];
-      selectedFacilities.forEach((facility) => {
-        const row = [];
-        const facilityAncestors =
-          boundaryAncestorMap[facility.boundary] || {};
-        boundaryHeaders.forEach((boundaryType) =>
-          row.push(facilityAncestors[boundaryType] || ""),
-        );
-        row.push(facility?.projectId || "");
-        row.push(fromFacility?.id || "");
-        row.push(fromFacility?.name || "");
-        row.push(facility?.id || "");
-        row.push(facility?.name || facility?.id || "");
-        productVariants.forEach(() => row.push("")); // Quantity columns - user fills these
-        dataRows.push(row);
-      });
+      const projectName = campaignData?.campaignName || campaignNumber || "";
 
-      // Hidden row with product variant IDs (row 2) for upload parsing
+      // Collect facility IDs for Options sheet
+      const fromFacIds = (fromFacilityList || []).map((f) => f.id);
+      const toFacIds = (toFacilityList || []).map((f) => f.id);
+
+      // Helper: convert column index (1-based) to Excel column letter
+      const colLetter = (idx) => {
+        let letter = "";
+        let n = idx;
+        while (n > 0) {
+          const rem = (n - 1) % 26;
+          letter = String.fromCharCode(65 + rem) + letter;
+          n = Math.floor((n - 1) / 26);
+        }
+        return letter;
+      };
+
+      const wb = new ExcelJS.Workbook();
+
+      // --- Stock Data sheet ---
+      const ws = wb.addWorksheet("Stock Data");
+      ws.addRow(stockHeaders); // Row 1: headers
+      // Row 2: hidden variant ID row
       const variantIdRow = [];
       boundaryHeaders.forEach(() => variantIdRow.push(""));
-      variantIdRow.push(""); // Project Id
+      variantIdRow.push(""); // Project Name
       variantIdRow.push(""); // From (Facility Code)
       variantIdRow.push(""); // From (Facility Name)
       variantIdRow.push(""); // To (Facility Code)
       variantIdRow.push(""); // To (Facility Name)
       productVariants.forEach((pv) => variantIdRow.push(pv.productVariantId));
+      ws.addRow(variantIdRow);
+      ws.getRow(2).hidden = true;
 
-      const wsData = [stockHeaders, variantIdRow, ...dataRows];
-      const ws = XLSX.utils.aoa_to_sheet(wsData);
-      ws["!cols"] = stockHeaders.map(() => ({ wch: 30 }));
-      // Hide the variant ID row (row index 1, 0-based)
-      ws["!rows"] = [null, { hidden: true }];
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
+      // Data rows (row 3+)
+      selectedFacilities.forEach((facility) => {
+        const row = [];
+        boundaryHeaders.forEach((bType) => {
+          const code = fromHierarchyFilters[bType] || toHierarchyFilters[bType] || "";
+          row.push(code ? t(code) : "");
+        });
+        row.push(projectName);
+        row.push(fromFacility?.id || "");
+        row.push(fromFacility?.name || "");
+        row.push(facility?.id || "");
+        row.push(facility?.name || facility?.id || "");
+        productVariants.forEach(() => row.push(""));
+        ws.addRow(row);
+      });
 
-      const readmeData = [
-        ["Instructions"],
-        [""],
-        [
-          "1. 'From' is the source warehouse and 'To' is the destination facility",
-        ],
+      // Set column widths
+      ws.columns = stockHeaders.map(() => ({ width: 30 }));
+      // Bold header row
+      ws.getRow(1).font = { bold: true };
+
+      // --- Options sheet (hidden) ---
+      const optionsWs = wb.addWorksheet("Options", { state: "hidden" });
+      const optionsCols = ["From Facilities", "To Facilities"];
+      const optionsColData = [fromFacIds, toFacIds];
+      optionsWs.addRow(optionsCols);
+      const maxOptionsRows = Math.max(1, ...optionsColData.map((col) => col.length));
+      for (let r = 0; r < maxOptionsRows; r++) {
+        optionsWs.addRow(optionsColData.map((col) => (r < col.length ? col[r] : "")));
+      }
+      optionsWs.columns = optionsCols.map(() => ({ width: 25 }));
+
+      // --- Data validations on Stock Data sheet ---
+      const dataRowCount = Math.max(selectedFacilities.length, 100);
+
+      // From Facility Code validation (Options column A)
+      const fromCodeColIdx = stockHeaders.indexOf("From (Facility Code)");
+      if (fromCodeColIdx >= 0 && fromFacIds.length > 0) {
+        const mainCol = colLetter(fromCodeColIdx + 1);
+        for (let r = 3; r <= dataRowCount + 2; r++) {
+          ws.getCell(`${mainCol}${r}`).dataValidation = {
+            type: "list",
+            allowBlank: true,
+            formulae: [`Options!$A$2:$A$${fromFacIds.length + 1}`],
+            showErrorMessage: true,
+            errorTitle: "Invalid facility",
+            error: "Please select a valid From Facility",
+          };
+        }
+      }
+
+      // To Facility Code validation (Options column B)
+      const toCodeColIdx = stockHeaders.indexOf("To (Facility Code)");
+      if (toCodeColIdx >= 0 && toFacIds.length > 0) {
+        const mainCol = colLetter(toCodeColIdx + 1);
+        for (let r = 3; r <= dataRowCount + 2; r++) {
+          ws.getCell(`${mainCol}${r}`).dataValidation = {
+            type: "list",
+            allowBlank: true,
+            formulae: [`Options!$B$2:$B$${toFacIds.length + 1}`],
+            showErrorMessage: true,
+            errorTitle: "Invalid facility",
+            error: "Please select a valid To Facility",
+          };
+        }
+      }
+
+      // --- Lock cells & protect sheet ---
+      // Unlock only product quantity cells
+      const firstProductCol = boundaryHeaders.length + 5 + 1; // 1-based col index
+      const lastProductCol = firstProductCol + productVariants.length - 1;
+
+      for (let r = 3; r <= dataRowCount + 2; r++) {
+        for (let c = firstProductCol; c <= lastProductCol; c++) {
+          ws.getCell(r, c).protection = { locked: false };
+        }
+      }
+
+      // Protect the sheet
+      await ws.protect('', {
+        selectLockedCells: true,
+        selectUnlockedCells: true,
+        formatCells: false,
+        formatColumns: false,
+        formatRows: false,
+        insertColumns: false,
+        insertRows: false,
+        insertHyperlinks: false,
+        deleteColumns: false,
+        deleteRows: false,
+        sort: false,
+        autoFilter: false,
+      });
+
+      // --- Quantity validation on product cells ---
+      for (let r = 3; r <= dataRowCount + 2; r++) {
+        for (let c = firstProductCol; c <= lastProductCol; c++) {
+          const cell = ws.getCell(r, c);
+          cell.dataValidation = {
+            type: 'whole',
+            operator: 'greaterThanOrEqual',
+            formulae: [0],
+            allowBlank: true,
+            showErrorMessage: true,
+            errorTitle: 'Invalid quantity',
+            error: 'Please enter a whole number (0 or greater)',
+          };
+        }
+      }
+
+      // --- ReadMe sheet ---
+      const readmeWs = wb.addWorksheet("ReadMe");
+      const readmeLines = [
+        "Instructions",
+        "",
+        "1. 'From' is the source warehouse and 'To' is the destination facility",
         selectedFacilities.length > 0
-          ? [
-              "2. From and To facilities have been pre-filled based on your selection",
-            ]
-          : ["2. Fill in the From and To facility codes for each row"],
-        ["3. From and To must be different facilities"],
-        ["4. Each row represents one shipment between a facility pair"],
-        ["5. Enter the Quantity for each product column"],
-        ["6. Leave a product quantity empty or 0 to skip it"],
-        ["7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs"],
-        ["8. Delete facility rows you do not need"],
-        ["9. Save the file and upload it back on the stock upload screen"],
+          ? "2. From and To facilities have been pre-filled based on your selection"
+          : "2. Fill in the From and To facility codes for each row",
+        "3. From and To must be different facilities",
+        "4. Each row represents one shipment between a facility pair",
+        "5. Enter the Quantity for each product column",
+        "6. Leave a product quantity empty or 0 to skip it",
+        "7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs",
+        "8. Delete facility rows you do not need",
+        "9. Save the file and upload it back on the stock upload screen",
       ];
-      const readmeWs = XLSX.utils.aoa_to_sheet(readmeData);
-      readmeWs["!cols"] = [{ wch: 80 }];
-      XLSX.utils.book_append_sheet(wb, readmeWs, "ReadMe");
+      readmeLines.forEach((line) => readmeWs.addRow([line]));
+      readmeWs.getColumn(1).width = 80;
 
-      XLSX.writeFile(wb, `Stock_Template_${campaignNumber || "campaign"}.xlsx`);
+      // Write and download
+      const buffer = await wb.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Stock_Template_${campaignNumber || "campaign"}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+
       setShowToast({ key: "success", label: t("HCM_DOWNLOAD_STOCK_TEMPLATE") });
     } catch (error) {
       console.error("Error downloading template:", error);
@@ -689,7 +711,11 @@ const NewShipmentPopup = ({
     fromFacility,
     getTemplateHeaders,
     productVariants,
-    boundaryAncestorMap,
+    fromFacilityList,
+    toFacilityList,
+    fromHierarchyFilters,
+    toHierarchyFilters,
+    campaignData,
     campaignNumber,
     t,
   ]);
@@ -760,7 +786,6 @@ const NewShipmentPopup = ({
       // Find the indices of fixed columns
       const fromCodeIdx = headers.indexOf("From (Facility Code)");
       const toCodeIdx = headers.indexOf("To (Facility Code)");
-      const projectIdIdx = headers.indexOf("Project Id");
 
       // Build a name→variantId lookup from known product variants
       const variantByName = {};
@@ -771,7 +796,7 @@ const NewShipmentPopup = ({
       // Build product column mapping: match header names against known product variants,
       // falling back to hidden row 2 for variant IDs
       const productColumns = [];
-      const fixedHeaders = new Set(["Project Id", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
+      const fixedHeaders = new Set(["Project Name", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
       const boundaryHeaders = sortedHierarchy.map((item) => item.boundaryType);
       const skipHeaders = new Set([...fixedHeaders, ...boundaryHeaders]);
       headers.forEach((header, idx) => {
@@ -788,12 +813,59 @@ const NewShipmentPopup = ({
         return;
       }
 
+      // --- Upload validations ---
+      const errors = [];
+      const validFromIds = new Set((fromFacilityList || []).map((f) => f.id));
+      const validToIds = new Set((toFacilityList || []).map((f) => f.id));
+
+      dataRows.forEach((row, rowIdx) => {
+        const rowNum = rowIdx + 3; // Excel row number
+        const senderId = fromCodeIdx >= 0 ? String(row[fromCodeIdx] || "").trim() : "";
+        const receiverId = toCodeIdx >= 0 ? String(row[toCodeIdx] || "").trim() : "";
+
+        if (!senderId) {
+          errors.push(`Row ${rowNum}: Missing From Facility Code`);
+        } else if (validFromIds.size > 0 && !validFromIds.has(senderId)) {
+          errors.push(`Row ${rowNum}: Invalid From Facility "${senderId}"`);
+        }
+
+        if (!receiverId) {
+          errors.push(`Row ${rowNum}: Missing To Facility Code`);
+        } else if (validToIds.size > 0 && !validToIds.has(receiverId)) {
+          errors.push(`Row ${rowNum}: Invalid To Facility "${receiverId}"`);
+        }
+
+        if (senderId && receiverId && senderId === receiverId) {
+          errors.push(`Row ${rowNum}: From and To facility cannot be the same`);
+        }
+
+        // Validate quantities
+        productColumns.forEach(({ idx, name }) => {
+          const val = row[idx];
+          if (val !== undefined && val !== null && val !== "") {
+            const num = Number(val);
+            if (!Number.isFinite(num) || num < 0 || !Number.isInteger(num)) {
+              errors.push(`Row ${rowNum}: "${name}" must be a whole number >= 0`);
+            }
+          }
+        });
+      });
+
+      if (errors.length > 0) {
+        setShowToast({
+          key: "error",
+          label: `${errors.length} validation error(s): ${errors.slice(0, 3).join("; ")}${errors.length > 3 ? "..." : ""}`,
+          transitionTime: 10000,
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
       const stockPayload = [];
 
       dataRows.forEach((row) => {
-        const rowProjectId = (projectIdIdx >= 0 ? row[projectIdIdx] : "") || "";
         const senderId = (fromCodeIdx >= 0 ? row[fromCodeIdx] : "") || fromFacility?.id || "";
         const receiverId = (toCodeIdx >= 0 ? row[toCodeIdx] : "") || "";
 
@@ -809,7 +881,7 @@ const NewShipmentPopup = ({
             clientReferenceId: crypto.randomUUID(),
             productVariantId,
             quantity,
-            referenceId: rowProjectId || campaignData?.projectId || campaignId,
+            referenceId: campaignData?.projectId || projectId || campaignId,
             referenceIdType: "PROJECT",
             transactionType: "RECEIVED",
             senderType: "WAREHOUSE",
@@ -908,6 +980,10 @@ const NewShipmentPopup = ({
     tenantId,
     campaignData,
     campaignId,
+    projectId,
+    fromFacility,
+    fromFacilityList,
+    toFacilityList,
     stockMutation,
     onSuccess,
     t,
@@ -916,10 +992,9 @@ const NewShipmentPopup = ({
   const isLoadingInitialData =
     hierarchyTypeLoading ||
     hierarchyLoading ||
-    campaignLoading ||
-    projectsLoading ||
     boundaryRelLoading ||
-    allFacilitiesLoading;
+    campaignLoading ||
+    projectsLoading;
   const allVisibleSelected =
     filteredFacilities.length > 0 &&
     filteredFacilities.every((f) => selectedFacilityIds.has(f.id));
@@ -1033,16 +1108,14 @@ const NewShipmentPopup = ({
                   {t("HCM_FROM_FACILITY_DESC")}
                 </p>
 
-                {Object.keys(hierarchyFilterOptions).length > 0 && (
+                {fromVisibleLevels.length > 0 && (
                   <div
                     style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
                   >
-                    {sortedHierarchy.map((h) => {
-                      if (!hierarchyFilterOptions[h.boundaryType]) return null;
-                      const availableOptions = getAvailableOptions(
-                        h.boundaryType,
-                        fromHierarchyFilters,
-                      );
+                    {fromVisibleLevels.map((h) => {
+                      const options = hierarchyFilterOptions[h.boundaryType];
+                      if (!options) return null;
+                      const availableOptions = getAvailableOptions(h.boundaryType, fromHierarchyFilters);
                       return (
                         <div
                           key={h.boundaryType}
@@ -1060,12 +1133,15 @@ const NewShipmentPopup = ({
                           </label>
                           <Dropdown
                             t={t}
-                            option={[{ code: "", name: t("ES_COMMON_ALL") }, ...availableOptions.map((code) => ({ code, name: t(code) }))]}
+                            option={availableOptions.map((code) => ({ code, name: t(code) }))}
                             optionKey="name"
-                            selected={fromHierarchyFilters[h.boundaryType]
-                              ? { code: fromHierarchyFilters[h.boundaryType], name: t(fromHierarchyFilters[h.boundaryType]) }
-                              : { code: "", name: t("ES_COMMON_ALL") }}
-                            select={(value) => handleFromHierarchyChange(h.boundaryType, value.code)}
+                            selected={
+                              fromHierarchyFilters[h.boundaryType]
+                                ? { code: fromHierarchyFilters[h.boundaryType], name: t(fromHierarchyFilters[h.boundaryType]) }
+                                : undefined
+                            }
+                            select={(selected) => handleFromHierarchyChange(h.boundaryType, selected.code)}
+                            placeholder={t("ES_COMMON_SELECT")}
                             style={{ width: "100%" }}
                           />
                         </div>
@@ -1105,9 +1181,7 @@ const NewShipmentPopup = ({
                       <RadioButtons
                         options={filteredFromFacilities.map((f) => ({
                           code: f.id,
-                          name: f.boundaryType
-                            ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
-                            : f.name !== f.id ? `${f.name} (${f.id})` : f.id,
+                          name: f.name !== f.id ? `${f.name} (${f.id})` : f.id,
                         }))}
                         optionsKey="name"
                         selectedOption={
@@ -1115,9 +1189,7 @@ const NewShipmentPopup = ({
                             ? filteredFromFacilities
                                 .map((f) => ({
                                   code: f.id,
-                                  name: f.boundaryType
-                                    ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
-                                    : f.name !== f.id ? `${f.name} (${f.id})` : f.id,
+                                  name: f.name !== f.id ? `${f.name} (${f.id})` : f.id,
                                 }))
                                 .find((f) => f.code === fromFacilityId)
                             : undefined
@@ -1138,7 +1210,7 @@ const NewShipmentPopup = ({
                       </p>
                     )}
                   </div>
-                ) : fromFilteredProjectIds?.length > 0 ? (
+                ) : fromSelectedLevel >= 0 ? (
                   <p style={{ color: "#505A5F", marginBottom: "0rem" }}>
                     {t("HCM_FACILITY_API_FAILED_DESC")}
                   </p>
@@ -1163,7 +1235,7 @@ const NewShipmentPopup = ({
                       {t("HCM_TO_FACILITIES_DESC")}
                     </p>
 
-                    {toHierarchyLevels.length > 0 && (
+                    {toVisibleLevels.length > 0 && (
                       <div
                         style={{
                           display: "flex",
@@ -1172,13 +1244,10 @@ const NewShipmentPopup = ({
                           marginBottom: "1rem",
                         }}
                       >
-                        {toHierarchyLevels.map((h) => {
-                          if (!hierarchyFilterOptions[h.boundaryType])
-                            return null;
-                          const availableOptions = getAvailableOptions(
-                            h.boundaryType,
-                            { ...fromHierarchyFilters, ...toHierarchyFilters },
-                          );
+                        {toVisibleLevels.map((h) => {
+                          const options = hierarchyFilterOptions[h.boundaryType];
+                          if (!options) return null;
+                          const availableOptions = getAvailableOptions(h.boundaryType, { ...fromHierarchyFilters, ...toHierarchyFilters });
                           return (
                             <div
                               key={h.boundaryType}
@@ -1196,12 +1265,15 @@ const NewShipmentPopup = ({
                               </label>
                               <Dropdown
                                 t={t}
-                                option={[{ code: "", name: t("ES_COMMON_ALL") }, ...availableOptions.map((code) => ({ code, name: t(code) }))]}
+                                option={availableOptions.map((code) => ({ code, name: t(code) }))}
                                 optionKey="name"
-                                selected={toHierarchyFilters[h.boundaryType]
-                                  ? { code: toHierarchyFilters[h.boundaryType], name: t(toHierarchyFilters[h.boundaryType]) }
-                                  : { code: "", name: t("ES_COMMON_ALL") }}
-                                select={(value) => handleToHierarchyChange(h.boundaryType, value.code)}
+                                selected={
+                                  toHierarchyFilters[h.boundaryType]
+                                    ? { code: toHierarchyFilters[h.boundaryType], name: t(toHierarchyFilters[h.boundaryType]) }
+                                    : undefined
+                                }
+                                select={(selected) => handleToHierarchyChange(h.boundaryType, selected.code)}
+                                placeholder={t("ES_COMMON_SELECT")}
                                 style={{ width: "100%" }}
                               />
                             </div>
@@ -1260,11 +1332,7 @@ const NewShipmentPopup = ({
                               <CheckBox
                                 checked={selectedFacilityIds.has(f.id)}
                                 onChange={() => toggleFacility(f.id)}
-                                label={
-                                  f.boundaryType
-                                    ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
-                                    : f.name !== f.id ? `${f.name} (${f.id})` : f.id
-                                }
+                                label={f.name !== f.id ? `${f.name} (${f.id})` : f.id}
                               />
                             </div>
                           ))}
@@ -1275,7 +1343,7 @@ const NewShipmentPopup = ({
                           </p>
                         )}
                       </div>
-                    ) : toFilteredProjectIds?.length > 0 ? (
+                    ) : toSelectedLevel >= 0 ? (
                       <p style={{ color: "#505A5F", marginBottom: "1rem" }}>
                         {t("HCM_FACILITY_API_FAILED_DESC")}
                       </p>
@@ -1297,7 +1365,7 @@ const NewShipmentPopup = ({
                   type="button"
                   icon="DownloadIcon"
                   onClick={handleDownloadTemplate}
-                  isDisabled={isDownloading}
+                  isDisabled={isDownloading || fromSelectedLevel < 0 || toSelectedLevel < 0}
                 />
               </Card>
 

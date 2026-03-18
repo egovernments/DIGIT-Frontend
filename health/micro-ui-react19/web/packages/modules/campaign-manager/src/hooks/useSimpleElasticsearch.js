@@ -150,8 +150,10 @@ const useSimpleElasticsearch = (config) => {
 
     requestIdRef.current = Date.now().toString();
 
-    // Use configured kibanaBaseUrl for deployed environments; fall back to window.location.origin (dev proxy)
-    const kibanaBaseUrl = getKibanaDetails("kibanaBaseUrl");
+    // In development, always use window.location.origin so requests go through the webpack dev proxy.
+    // In production/deployed environments, use the configured kibanaBaseUrl.
+    const isDev = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const kibanaBaseUrl = isDev ? null : getKibanaDetails("kibanaBaseUrl");
     const resolvedOrigin = kibanaBaseUrl || window.location.origin;
 
     workerRef.current.postMessage({
