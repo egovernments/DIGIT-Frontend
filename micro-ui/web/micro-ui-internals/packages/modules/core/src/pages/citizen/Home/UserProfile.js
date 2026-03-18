@@ -610,7 +610,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           });
         }
       } else if (responseInfo?.status && responseInfo.status === "200") {
-        if (userType === "citizen" && enableUserPreferences) {
+        if ((userType === "citizen" || Digit.Utils.getMultiRootTenant()) && enableUserPreferences) {
           await saveUserPreferences();
         }
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
