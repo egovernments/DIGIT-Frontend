@@ -42,11 +42,11 @@ module.exports = merge(common, {
     proxy: [
       {
         context: [
-          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
+          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana"),
           "/kibana",
           "/kibana-upgrade"
         ],
-        target: "https://mc-nigeria-uat.digit.org",
+        target: process.env.REACT_APP_KIBANA_URL || "https://bauchi-hcm-uat.digit.org",
         changeOrigin: true,
         secure: false,
       },
