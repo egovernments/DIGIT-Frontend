@@ -126,7 +126,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
-  const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const stateLvlTenantId = Digit.Utils.getMultiRootTenant()
+    ? Digit.ULBService.getCurrentTenantId()
+    : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
   const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
 
   // User Preferences - fetch enable flag from MDMS v2
@@ -151,7 +153,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     },
     changeQueryName: "user_preference_search",
     config: {
-      enabled: !!userInfo?.uuid && userType === "citizen" && !!enableUserPreferences,
+      enabled: !!userInfo?.uuid && (userType === "citizen" || isMultiRootTenant) && !!enableUserPreferences,
       select: (data) => data?.preferences?.[0],
       cacheTime: 0,
       staleTime: 0,
@@ -608,7 +610,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           });
         }
       } else if (responseInfo?.status && responseInfo.status === "200") {
-        if (userType === "citizen" && enableUserPreferences) {
+        if ((userType === "citizen" || Digit.Utils.getMultiRootTenant()) && enableUserPreferences) {
           await saveUserPreferences();
         }
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
