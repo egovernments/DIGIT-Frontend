@@ -13,6 +13,8 @@ import {
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -599,7 +601,9 @@ const NewShipmentPopup = ({
 
   const getTemplateHeaders = useCallback(() => {
     const boundaryHeaders = sortedHierarchy.map((item) => item.boundaryType);
-    const productHeaders = productVariants.map((pv) => pv.name || pv.productVariantId);
+    const productHeaders = productVariants.map(
+      (pv) => pv.name || pv.productVariantId,
+    );
     return {
       boundaryHeaders,
       stockHeaders: [
@@ -614,85 +618,254 @@ const NewShipmentPopup = ({
     };
   }, [sortedHierarchy, productVariants]);
 
-  const handleDownloadTemplate = useCallback(() => {
+  const handleDownloadTemplate = async ({
+    selectedFacilities,
+    boundaryAncestorMap,
+    hierarchyFilterOptions,
+    productVariants,
+    fromFacility,
+    allToFacilities,
+    fromFacilityList,
+  }) => {
     setIsDownloading(true);
     try {
+      const safeFacilities = Array.isArray(selectedFacilities)
+        ? selectedFacilities.filter((f) => f && f.name)
+        : [];
+
+      if (!safeFacilities.length) {
+        alert("No valid facilities selected");
+        return;
+      }
+
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Stock Data");
       const { boundaryHeaders, stockHeaders } = getTemplateHeaders();
-      const dataRows = [];
-      selectedFacilities.forEach((facility) => {
+      const MAX_ROW = 1000;
+
+      // ─── HELPERS ────────────────────────────────────────────────
+      function getExcelCol(col) {
+        let temp = "";
+        while (col > 0) {
+          let rem = (col - 1) % 26;
+          temp = String.fromCharCode(65 + rem) + temp;
+          col = Math.floor((col - 1) / 26);
+        }
+        return temp;
+      }
+      const getColIndex = (name) =>
+        stockHeaders.findIndex(
+          (h) => h?.trim()?.toLowerCase() === name?.trim()?.toLowerCase(),
+        ) + 1;
+
+      // ─── ✅ STEP 1: FREEZE HEADER ROW ────────────────────────────
+      // Must be set before adding rows
+      sheet.views = [
+        { state: "frozen", ySplit: 1, topLeftCell: "A2", activeCell: "A2" },
+      ];
+
+      // ─── STEP 2: HEADER ROW ──────────────────────────────────────
+      const headerRow = sheet.addRow(stockHeaders);
+      headerRow.font = { bold: true, color: { argb: "FFFFFFFF" } };
+      headerRow.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FF1F4E79" },
+      };
+      headerRow.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true,
+      };
+      headerRow.height = 30;
+
+      // ─── ✅ STEP 3: LOCK HEADER ROW CELLS ────────────────────────
+      // Lock every cell in row 1 so protection blocks editing them
+      headerRow.eachCell((cell) => {
+        cell.protection = { locked: true };
+      });
+
+      // ─── STEP 4: DATA ROWS ───────────────────────────────────────
+      safeFacilities.forEach((facility) => {
         const row = [];
-        const facilityAncestors =
-          boundaryAncestorMap[facility.boundary] || {};
-        boundaryHeaders.forEach((boundaryType) =>
-          row.push(facilityAncestors[boundaryType] || ""),
-        );
+        const ancestors =
+          (boundaryAncestorMap && facility?.boundary
+            ? boundaryAncestorMap[facility.boundary]
+            : null) || {};
+        boundaryHeaders.forEach((bh) => row.push(ancestors[bh] || ""));
         row.push(facility?.projectId || "");
         row.push(fromFacility?.id || "");
         row.push(fromFacility?.name || "");
         row.push(facility?.id || "");
-        row.push(facility?.name || facility?.id || "");
-        productVariants.forEach(() => row.push("")); // Quantity columns - user fills these
-        dataRows.push(row);
+        row.push(facility?.name || "");
+        (productVariants || []).forEach(() => row.push(""));
+        sheet.addRow(row);
       });
 
-      // Hidden row with product variant IDs (row 2) for upload parsing
-      const variantIdRow = [];
-      boundaryHeaders.forEach(() => variantIdRow.push(""));
-      variantIdRow.push(""); // Project Id
-      variantIdRow.push(""); // From (Facility Code)
-      variantIdRow.push(""); // From (Facility Name)
-      variantIdRow.push(""); // To (Facility Code)
-      variantIdRow.push(""); // To (Facility Name)
-      productVariants.forEach((pv) => variantIdRow.push(pv.productVariantId));
+      // ─── ✅ STEP 5: UNLOCK ALL DATA CELLS ────────────────────────
+      // Must happen AFTER rows are added so cells exist
+      // Without this, sheet protection would lock everything
+      for (let r = 2; r <= sheet.rowCount; r++) {
+        sheet.getRow(r).eachCell({ includeEmpty: true }, (cell) => {
+          cell.protection = { locked: false };
+        });
+      }
 
-      const wsData = [stockHeaders, variantIdRow, ...dataRows];
-      const ws = XLSX.utils.aoa_to_sheet(wsData);
-      ws["!cols"] = stockHeaders.map(() => ({ wch: 30 }));
-      // Hide the variant ID row (row index 1, 0-based)
-      ws["!rows"] = [null, { hidden: true }];
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
+      // ─── STEP 6: HIERARCHY HIDDEN SHEET ─────────────────────────
+      const hierarchySheet = workbook.addWorksheet("hierarchy");
+      const headerToColumnMap = {};
+      let colIndex = 1;
 
-      const readmeData = [
-        ["Instructions"],
-        [""],
-        [
-          "1. 'From' is the source warehouse and 'To' is the destination facility",
-        ],
-        selectedFacilities.length > 0
-          ? [
-              "2. From and To facilities have been pre-filled based on your selection",
-            ]
-          : ["2. Fill in the From and To facility codes for each row"],
-        ["3. From and To must be different facilities"],
-        ["4. Each row represents one shipment between a facility pair"],
-        ["5. Enter the Quantity for each product column"],
-        ["6. Leave a product quantity empty or 0 to skip it"],
-        ["7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs"],
-        ["8. Delete facility rows you do not need"],
-        ["9. Save the file and upload it back on the stock upload screen"],
+      boundaryHeaders.forEach((boundaryType) => {
+        const values = hierarchyFilterOptions[boundaryType];
+        if (!Array.isArray(values) || !values.length) return;
+        const colLetter = getExcelCol(colIndex);
+        values.forEach((val, i) => {
+          hierarchySheet.getCell(`${colLetter}${i + 1}`).value = val || "";
+        });
+        headerToColumnMap[boundaryType] = { colLetter, length: values.length };
+        colIndex++;
+      });
+      hierarchySheet.state = "hidden"; // ✅ NOT veryHidden — breaks dropdowns
+
+      // ─── STEP 7: FACILITY HIDDEN SHEET ──────────────────────────
+      const hiddenSheet = workbook.addWorksheet("hidden");
+      const allFacilitiesForDropdown = [
+        ...(fromFacilityList || []),
+        ...(allToFacilities || []),
       ];
-      const readmeWs = XLSX.utils.aoa_to_sheet(readmeData);
-      readmeWs["!cols"] = [{ wch: 80 }];
-      XLSX.utils.book_append_sheet(wb, readmeWs, "ReadMe");
+      const seenIds = new Set();
+      const uniqueFacilities = allFacilitiesForDropdown.filter((f) => {
+        if (!f?.name || seenIds.has(f.id)) return false;
+        seenIds.add(f.id);
+        return true;
+      });
+      uniqueFacilities.forEach((f, i) => {
+        hiddenSheet.getCell(`A${i + 1}`).value = f.name || f.id; // col A = names
+        hiddenSheet.getCell(`B${i + 1}`).value = f.id || ""; // col B = codes
+      });
+      hiddenSheet.state = "hidden"; // ✅ NOT veryHidden
+      const facilityCount = uniqueFacilities.length || 1;
 
-      XLSX.writeFile(wb, `Stock_Template_${campaignNumber || "campaign"}.xlsx`);
+      // ─── ✅ STEP 8: ALL DATA VALIDATIONS WITH ERROR MESSAGES ─────
+      // 8a. Boundary dropdowns
+      boundaryHeaders.forEach((boundaryType) => {
+        const col = getColIndex(boundaryType);
+        if (col <= 0) return;
+        const colLetter = getExcelCol(col);
+        const meta = headerToColumnMap[boundaryType];
+        if (!meta) return;
+        sheet.dataValidations.add(`${colLetter}2:${colLetter}${MAX_ROW}`, {
+          type: "list",
+          allowBlank: true,
+          formulae: [
+            `'hierarchy'!$${meta.colLetter}$1:$${meta.colLetter}$${meta.length}`,
+          ],
+          showErrorMessage: true,
+          errorStyle: "stop",
+          errorTitle: `Invalid ${boundaryType}`,
+          error: `Please select a valid ${boundaryType} from the dropdown.`,
+          showInputMessage: true,
+          promptTitle: boundaryType,
+          prompt: `Select ${boundaryType} from the list.`,
+        });
+      });
+
+      // 8b. Facility Name dropdowns — col A of hidden sheet (MANDATORY)
+      ["From (Facility Name)", "To (Facility Name)"].forEach((header) => {
+        const col = getColIndex(header);
+        if (col <= 0) return;
+        const colLetter = getExcelCol(col);
+        sheet.dataValidations.add(`${colLetter}2:${colLetter}${MAX_ROW}`, {
+          type: "list",
+          allowBlank: false,
+          formulae: [`'hidden'!$A$1:$A$${facilityCount}`],
+          showErrorMessage: true,
+          errorStyle: "stop",
+          errorTitle: "Invalid Facility Name",
+          error: "Facility name must be selected from the provided list.",
+          showInputMessage: true,
+          promptTitle: "Facility Name",
+          prompt: "Select a facility name from the dropdown.",
+        });
+      });
+
+      // 8d. Project Id — mandatory, cannot be empty
+      const projectIdCol = getColIndex("Project Id");
+      if (projectIdCol > 0) {
+        const cl = getExcelCol(projectIdCol);
+        sheet.dataValidations.add(`${cl}2:${cl}${MAX_ROW}`, {
+          type: "textLength",
+          operator: "greaterThanOrEqual",
+          allowBlank: false,
+          formulae: [1],
+          showErrorMessage: true,
+          errorStyle: "stop",
+          errorTitle: "Missing Project Id",
+          error: "Project Id is mandatory and cannot be empty.",
+        });
+      }
+
+      // 8e. Product quantity columns — whole number >= 1
+      const productStart =
+        stockHeaders.length - (productVariants?.length || 0) + 1;
+      for (let col = productStart; col <= stockHeaders.length; col++) {
+        const colLetter = getExcelCol(col);
+        const productName = stockHeaders[col - 1];
+        sheet.dataValidations.add(`${colLetter}2:${colLetter}${MAX_ROW}`, {
+          type: "whole",
+          operator: "greaterThanOrEqual",
+          allowBlank: true,
+          formulae: [1],
+          showErrorMessage: true,
+          errorStyle: "stop",
+          errorTitle: "Invalid Quantity",
+          error: `Quantity for '${productName}' must be a whole number ≥ 1.`,
+          showInputMessage: true,
+          promptTitle: "Quantity",
+          prompt: "Enter a whole number ≥ 1 (leave empty to skip).",
+        });
+      }
+
+      // ─── STEP 9: COLUMN WIDTHS ───────────────────────────────────
+      sheet.columns = stockHeaders.map(() => ({ width: 30 }));
+
+      // ─── ✅ STEP 10: SHEET PROTECTION ────────────────────────────
+      // MUST be the very last step — after cell protection and validations
+      await sheet.protect("HCM@1234", {
+        sheet: true,
+        insertColumns: false, // ✅ blocks adding new columns
+        deleteColumns: false, // ✅ blocks deleting columns
+        insertRows: true, // allow adding new data rows
+        deleteRows: true, // allow removing rows
+        formatCells: true, // allow formatting data cells
+        formatColumns: false,
+        formatRows: true,
+        sort: true,
+        autoFilter: true,
+        selectLockedCells: true,
+        selectUnlockedCells: true,
+      });
+
+      // ─── STEP 11: DOWNLOAD ───────────────────────────────────────
+      const buffer = await workbook.xlsx.writeBuffer();
+      saveAs(
+        new Blob([buffer]),
+        `Stock_Template_${campaignNumber || "campaign"}.xlsx`,
+      );
       setShowToast({ key: "success", label: t("HCM_DOWNLOAD_STOCK_TEMPLATE") });
     } catch (error) {
+      //  catch (err) {
+      //   console.error("TEMPLATE ERROR:", err);
+      //   alert("Failed to generate template: " + err.message);
+      // }
+
       console.error("Error downloading template:", error);
       setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
     } finally {
       setIsDownloading(false);
     }
-  }, [
-    selectedFacilities,
-    fromFacility,
-    getTemplateHeaders,
-    productVariants,
-    boundaryAncestorMap,
-    campaignNumber,
-    t,
-  ]);
+  };
 
   const handleFileUpload = useCallback((files) => {
     try {
@@ -741,65 +914,221 @@ const NewShipmentPopup = ({
         setIsSubmitting(false);
         return;
       }
+
       const data = await file.arrayBuffer();
       const workbook = XLSX.read(data, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      // Parse all rows including the hidden variant ID row (row 2)
       const allRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-      if (!allRows || allRows.length < 3) {
+      if (!allRows || allRows.length < 2) {
         setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
         setIsSubmitting(false);
         return;
       }
 
-      const headers = allRows[0]; // Header row
-      const variantIdRow = allRows[1]; // Hidden row with product variant IDs (fallback)
-      const dataRows = allRows.slice(2); // Actual data rows
+      const headers = allRows[0]; // row 1 — header
+      const dataRows = allRows
+        .slice(1)
+        .filter((row) =>
+          row.some(
+            (cell) => cell !== null && cell !== undefined && cell !== "",
+          ),
+        ); // skip completely empty rows
 
-      // Find the indices of fixed columns
-      const fromCodeIdx = headers.indexOf("From (Facility Code)");
-      const toCodeIdx = headers.indexOf("To (Facility Code)");
-      const projectIdIdx = headers.indexOf("Project Id");
+      // ─── ✅ VALIDATION 1: Template structure — column count must match ──────────
+      const { stockHeaders, boundaryHeaders } = getTemplateHeaders();
+      if (headers.length !== stockHeaders.length) {
+        setShowToast({
+          key: "error",
+          label: `${t(
+            "HCM_STOCK_VALIDATION_ERROR",
+          )}: Template structure has changed. Expected ${
+            stockHeaders.length
+          } columns, found ${headers.length}.`,
+        });
+        setIsSubmitting(false);
+        return;
+      }
 
-      // Build a name→variantId lookup from known product variants
+      // ─── ✅ VALIDATION 2: Header names must match exactly ───────────────────────
+      const mismatchedHeaders = stockHeaders
+        .map((expected, idx) => ({ expected, actual: headers[idx], idx }))
+        .filter(({ expected, actual }) => expected !== actual);
+
+      if (mismatchedHeaders.length > 0) {
+        const detail = mismatchedHeaders
+          .map(
+            ({ expected, actual, idx }) =>
+              `Col ${idx + 1}: expected "${expected}", found "${actual}"`,
+          )
+          .join("; ");
+        setShowToast({
+          key: "error",
+          label: `${t(
+            "HCM_STOCK_VALIDATION_ERROR",
+          )}: Column headers don't match template. ${detail}`,
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!dataRows.length) {
+        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ─── Column index helpers ────────────────────────────────────────────────────
+      const colIdx = (name) => headers.indexOf(name);
+      const fromNameIdx = colIdx("From (Facility Name)");
+      const toNameIdx = colIdx("To (Facility Name)");
+      const fromCodeIdx = colIdx("From (Facility Code)");
+      const toCodeIdx = colIdx("To (Facility Code)");
+      const projectIdIdx = colIdx("Project Id");
+
+      // ─── Build valid facility name set from known lists ─────────────────────────
+      const validFacilityNames = new Set([
+        ...(fromFacilityList || []).map((f) => f.name || f.id),
+        ...(toFacilityList || []).map((f) => f.name || f.id),
+      ]);
+
+      // ─── Build product column mapping ───────────────────────────────────────────
       const variantByName = {};
       productVariants.forEach((pv) => {
         variantByName[pv.name || pv.productVariantId] = pv.productVariantId;
       });
 
-      // Build product column mapping: match header names against known product variants,
-      // falling back to hidden row 2 for variant IDs
+      const fixedAndBoundaryHeaders = new Set([
+        ...boundaryHeaders,
+        "Project Id",
+        "From (Facility Code)",
+        "From (Facility Name)",
+        "To (Facility Code)",
+        "To (Facility Name)",
+      ]);
+
       const productColumns = [];
-      const fixedHeaders = new Set(["Project Id", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
-      const boundaryHeaders = sortedHierarchy.map((item) => item.boundaryType);
-      const skipHeaders = new Set([...fixedHeaders, ...boundaryHeaders]);
       headers.forEach((header, idx) => {
-        if (skipHeaders.has(header)) return;
-        const variantId = variantByName[header] || (variantIdRow && variantIdRow[idx]) || "";
-        if (variantId) {
-          productColumns.push({ idx, productVariantId: variantId, name: header });
-        }
+        if (fixedAndBoundaryHeaders.has(header)) return;
+        const variantId = variantByName[header] || "";
+        if (variantId)
+          productColumns.push({
+            idx,
+            productVariantId: variantId,
+            name: header,
+          });
       });
 
-      if (!dataRows.length || !productColumns.length) {
+      if (!productColumns.length) {
         setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
         setIsSubmitting(false);
         return;
       }
 
+      // ─── ✅ VALIDATION 3 + 4 + 5: Per-row validation ────────────────────────────
+      const rowErrors = [];
+
+      dataRows.forEach((row, rowIndex) => {
+        const displayRow = rowIndex + 2; // +2 because row 1 is header, dataRows starts at row 2
+        const errors = [];
+
+        // VALIDATION 3a: Project Id is mandatory
+        const projectId = row[projectIdIdx];
+        if (
+          projectIdIdx >= 0 &&
+          (!projectId || String(projectId).trim() === "")
+        ) {
+          errors.push(`Project Id is required`);
+        }
+
+        // VALIDATION 3b + 2: From Facility Name — mandatory + must be in valid list
+        const fromName = fromNameIdx >= 0 ? row[fromNameIdx] : null;
+        if (!fromName || String(fromName).trim() === "") {
+          errors.push(`From (Facility Name) is required`);
+        } else if (
+          validFacilityNames.size > 0 &&
+          !validFacilityNames.has(String(fromName).trim())
+        ) {
+          errors.push(
+            `From (Facility Name) "${fromName}" is not a valid facility`,
+          );
+        }
+
+        // VALIDATION 3c + 2: To Facility Name — mandatory + must be in valid list
+        const toName = toNameIdx >= 0 ? row[toNameIdx] : null;
+        if (!toName || String(toName).trim() === "") {
+          errors.push(`To (Facility Name) is required`);
+        } else if (
+          validFacilityNames.size > 0 &&
+          !validFacilityNames.has(String(toName).trim())
+        ) {
+          errors.push(`To (Facility Name) "${toName}" is not a valid facility`);
+        }
+
+        // VALIDATION 3d: From and To must differ
+        const fromCode = fromCodeIdx >= 0 ? row[fromCodeIdx] : null;
+        const toCode = toCodeIdx >= 0 ? row[toCodeIdx] : null;
+        if (
+          fromCode &&
+          toCode &&
+          String(fromCode).trim() === String(toCode).trim()
+        ) {
+          errors.push(`From and To facility cannot be the same`);
+        }
+
+        // VALIDATION 4: Product quantity — must be a whole number > 0 if provided
+        productColumns.forEach(({ idx, name }) => {
+          const rawVal = row[idx];
+          if (rawVal === null || rawVal === undefined || rawVal === "") return; // blank is allowed
+          const numVal = Number(rawVal);
+          if (!Number.isInteger(numVal) || numVal <= 0) {
+            errors.push(
+              `Quantity for "${name}" must be a whole number > 0 (found: ${rawVal})`,
+            );
+          }
+        });
+
+        if (errors.length > 0) {
+          rowErrors.push({ row: displayRow, errors });
+        }
+      });
+
+      // ─── If any row errors, show first few and stop ──────────────────────────────
+      if (rowErrors.length > 0) {
+        const MAX_SHOWN = 3;
+        const shown = rowErrors.slice(0, MAX_SHOWN);
+        const remaining = rowErrors.length - MAX_SHOWN;
+        const errorMessage = shown
+          .map(({ row, errors }) => `Row ${row}: ${errors.join(", ")}`)
+          .join(" | ");
+        const suffix =
+          remaining > 0 ? ` (+${remaining} more rows with errors)` : "";
+        setShowToast({
+          key: "error",
+          label: `Validation failed — ${errorMessage}${suffix}`,
+          transitionTime: 10000,
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // ─── Build stock payload (same as before) ────────────────────────────────────
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
       const stockPayload = [];
 
       dataRows.forEach((row) => {
-        const rowProjectId = (projectIdIdx >= 0 ? row[projectIdIdx] : "") || "";
-        const senderId = (fromCodeIdx >= 0 ? row[fromCodeIdx] : "") || fromFacility?.id || "";
-        const receiverId = (toCodeIdx >= 0 ? row[toCodeIdx] : "") || "";
+        const rowProjectId =
+          projectIdIdx >= 0 ? String(row[projectIdIdx] || "").trim() : "";
+        const senderId =
+          fromCodeIdx >= 0
+            ? String(row[fromCodeIdx] || "").trim()
+            : fromFacility?.id || "";
+        const receiverId =
+          toCodeIdx >= 0 ? String(row[toCodeIdx] || "").trim() : "";
 
         if (!senderId || !receiverId || senderId === receiverId) return;
 
-        // Create one stock entry per product column that has a valid quantity
         productColumns.forEach(({ idx, productVariantId }) => {
           const quantity = parseInt(row[idx], 10);
           if (!quantity || quantity <= 0) return;
@@ -840,37 +1169,22 @@ const NewShipmentPopup = ({
         return;
       }
 
+      // ─── API call ─────────────────────────────────────────────────────────────────
       let failedCount = 0;
-      /*for (let i = 0; i < stockPayload.length; i++) {
-        try {
-          await stockMutation.mutateAsync({
-            url: `/stock/v1/_create`,
-            body: {
-              RequestInfo: {
-                authToken: Digit.UserService.getUser()?.access_token,
-              },
-              Stock: stockPayload[i],
+      try {
+        await stockMutation.mutateAsync({
+          url: `/stock/v1/bulk/_create`,
+          body: {
+            RequestInfo: {
+              authToken: Digit.UserService.getUser()?.access_token,
             },
-          });
-        } catch (error) {
-          console.error(`Stock create error for row ${i}:`, error);
-          failedCount++;
-        }
-      }*/
-           try {
-  await stockMutation.mutateAsync({
-    url: `/stock/v1/bulk/_create`,
-    body: {
-      RequestInfo: {
-        authToken: Digit.UserService.getUser()?.access_token,
-      },
-      Stock: stockPayload,
-    },
-  });
-} catch (error) {
-  console.error("Bulk stock create error:", error);
-  failedCount = stockPayload.length;
-}
+            Stock: stockPayload,
+          },
+        });
+      } catch (error) {
+        console.error("Bulk stock create error:", error);
+        failedCount = stockPayload.length;
+      }
 
       if (failedCount > 0 && failedCount === stockPayload.length) {
         throw new Error("All stock transactions failed");
@@ -886,19 +1200,13 @@ const NewShipmentPopup = ({
         return;
       }
 
-      // setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
       setViewState("success");
       setUploadSummary({
         total: stockPayload.length,
         success: stockPayload.length - failedCount,
         failed: failedCount,
       });
-
-      setViewState("success");
-      // setTimeout(() => onSuccess?.(), 2000);
     } catch (error) {
-      // console.error("Stock upload error:", error);
-      // setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
       setViewState("error");
     } finally {
       setIsSubmitting(false);
@@ -911,6 +1219,12 @@ const NewShipmentPopup = ({
     stockMutation,
     onSuccess,
     t,
+    fromFacilityList, // ✅ added — needed for facility name validation
+    toFacilityList, // ✅ added — needed for facility name validation
+    productVariants, // ✅ added — needed for column mapping
+    sortedHierarchy, // ✅ added — needed for boundary header list
+    getTemplateHeaders, // ✅ added — needed for structure validation
+    fromFacility,
   ]);
 
   const isLoadingInitialData =
@@ -923,6 +1237,36 @@ const NewShipmentPopup = ({
   const allVisibleSelected =
     filteredFacilities.length > 0 &&
     filteredFacilities.every((f) => selectedFacilityIds.has(f.id));
+  const safeFacilities = useMemo(
+    () =>
+      (selectedFacilities || []).filter(
+        (f) => f && typeof f === "object" && f.name,
+      ),
+    [selectedFacilities],
+  );
+
+  // Add this new memo — uses ALL projects with facilities, ignoring filters
+  const allHierarchyOptions = useMemo(() => {
+    if (!projectIdsWithFacilities?.size || !sortedHierarchy?.length) return {};
+    const options = {};
+    sortedHierarchy.forEach((h) => {
+      const values = new Set();
+      // ✅ Iterate ALL projects, not filtered ones
+      Object.entries(projectBoundaryMap).forEach(([pid, bInfo]) => {
+        if (!projectIdsWithFacilities.has(pid)) return;
+        const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
+        const val = ancestors[h.boundaryType];
+        if (val) values.add(val);
+      });
+      if (values.size > 0) options[h.boundaryType] = Array.from(values).sort();
+    });
+    return options;
+  }, [
+    projectIdsWithFacilities,
+    projectBoundaryMap,
+    sortedHierarchy,
+    boundaryAncestorMap,
+  ]);
 
   return (
     <>
@@ -980,7 +1324,6 @@ const NewShipmentPopup = ({
               ]
         }
         sortFooterChildren={true}
-        
         style={{ width: "60rem" }}
       >
         <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
@@ -1060,12 +1403,30 @@ const NewShipmentPopup = ({
                           </label>
                           <Dropdown
                             t={t}
-                            option={[{ code: "", name: t("ES_COMMON_ALL") }, ...availableOptions.map((code) => ({ code, name: t(code) }))]}
+                            option={[
+                              { code: "", name: t("ES_COMMON_ALL") },
+                              ...availableOptions.map((code) => ({
+                                code,
+                                name: t(code),
+                              })),
+                            ]}
                             optionKey="name"
-                            selected={fromHierarchyFilters[h.boundaryType]
-                              ? { code: fromHierarchyFilters[h.boundaryType], name: t(fromHierarchyFilters[h.boundaryType]) }
-                              : { code: "", name: t("ES_COMMON_ALL") }}
-                            select={(value) => handleFromHierarchyChange(h.boundaryType, value.code)}
+                            selected={
+                              fromHierarchyFilters[h.boundaryType]
+                                ? {
+                                    code: fromHierarchyFilters[h.boundaryType],
+                                    name: t(
+                                      fromHierarchyFilters[h.boundaryType],
+                                    ),
+                                  }
+                                : { code: "", name: t("ES_COMMON_ALL") }
+                            }
+                            select={(value) =>
+                              handleFromHierarchyChange(
+                                h.boundaryType,
+                                value.code,
+                              )
+                            }
                             style={{ width: "100%" }}
                           />
                         </div>
@@ -1106,8 +1467,14 @@ const NewShipmentPopup = ({
                         options={filteredFromFacilities.map((f) => ({
                           code: f.id,
                           name: f.boundaryType
-                            ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
-                            : f.name !== f.id ? `${f.name} (${f.id})` : f.id,
+                            ? `${
+                                f.name !== f.id ? `${f.name} (${f.id})` : f.id
+                              }  ${t(f.boundaryType)}${
+                                f.boundary ? `: ${f.boundary}` : ""
+                              }`
+                            : f.name !== f.id
+                            ? `${f.name} (${f.id})`
+                            : f.id,
                         }))}
                         optionsKey="name"
                         selectedOption={
@@ -1116,13 +1483,23 @@ const NewShipmentPopup = ({
                                 .map((f) => ({
                                   code: f.id,
                                   name: f.boundaryType
-                                    ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
-                                    : f.name !== f.id ? `${f.name} (${f.id})` : f.id,
+                                    ? `${
+                                        f.name !== f.id
+                                          ? `${f.name} (${f.id})`
+                                          : f.id
+                                      }  ${t(f.boundaryType)}${
+                                        f.boundary ? `: ${f.boundary}` : ""
+                                      }`
+                                    : f.name !== f.id
+                                    ? `${f.name} (${f.id})`
+                                    : f.id,
                                 }))
                                 .find((f) => f.code === fromFacilityId)
                             : undefined
                         }
-                        onSelect={(selected) => setFromFacilityId(selected.code)}
+                        onSelect={(selected) =>
+                          setFromFacilityId(selected.code)
+                        }
                       />
                     </div>
                     {fromFacility && (
@@ -1196,12 +1573,31 @@ const NewShipmentPopup = ({
                               </label>
                               <Dropdown
                                 t={t}
-                                option={[{ code: "", name: t("ES_COMMON_ALL") }, ...availableOptions.map((code) => ({ code, name: t(code) }))]}
+                                option={[
+                                  { code: "", name: t("ES_COMMON_ALL") },
+                                  ...availableOptions.map((code) => ({
+                                    code,
+                                    name: t(code),
+                                  })),
+                                ]}
                                 optionKey="name"
-                                selected={toHierarchyFilters[h.boundaryType]
-                                  ? { code: toHierarchyFilters[h.boundaryType], name: t(toHierarchyFilters[h.boundaryType]) }
-                                  : { code: "", name: t("ES_COMMON_ALL") }}
-                                select={(value) => handleToHierarchyChange(h.boundaryType, value.code)}
+                                selected={
+                                  toHierarchyFilters[h.boundaryType]
+                                    ? {
+                                        code:
+                                          toHierarchyFilters[h.boundaryType],
+                                        name: t(
+                                          toHierarchyFilters[h.boundaryType],
+                                        ),
+                                      }
+                                    : { code: "", name: t("ES_COMMON_ALL") }
+                                }
+                                select={(value) =>
+                                  handleToHierarchyChange(
+                                    h.boundaryType,
+                                    value.code,
+                                  )
+                                }
                                 style={{ width: "100%" }}
                               />
                             </div>
@@ -1262,8 +1658,16 @@ const NewShipmentPopup = ({
                                 onChange={() => toggleFacility(f.id)}
                                 label={
                                   f.boundaryType
-                                    ? `${f.name !== f.id ? `${f.name} (${f.id})` : f.id}  ${t(f.boundaryType)}${f.boundary ? `: ${f.boundary}` : ""}`
-                                    : f.name !== f.id ? `${f.name} (${f.id})` : f.id
+                                    ? `${
+                                        f.name !== f.id
+                                          ? `${f.name} (${f.id})`
+                                          : f.id
+                                      }  ${t(f.boundaryType)}${
+                                        f.boundary ? `: ${f.boundary}` : ""
+                                      }`
+                                    : f.name !== f.id
+                                    ? `${f.name} (${f.id})`
+                                    : f.id
                                 }
                               />
                             </div>
@@ -1296,7 +1700,18 @@ const NewShipmentPopup = ({
                   variation="secondary"
                   type="button"
                   icon="DownloadIcon"
-                  onClick={handleDownloadTemplate}
+                  // onClick={handleDownloadTemplate}
+                  onClick={() =>
+                    handleDownloadTemplate({
+                      selectedFacilities: safeFacilities,
+                      boundaryAncestorMap,
+                      hierarchyFilterOptions: allHierarchyOptions, // ✅ full options, not filtered
+                      productVariants,
+                      fromFacility,
+                      allToFacilities: toFacilityList,
+                      fromFacilityList: fromFacilityList,
+                    })
+                  }
                   isDisabled={isDownloading}
                 />
               </Card>
