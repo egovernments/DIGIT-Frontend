@@ -6,8 +6,10 @@ import {
     Loader,
     TextInput,
     Button,
+    Toast,
 } from "@egovernments/digit-ui-components";
 import EditAttendanceManagementTable from "./EditAttendanceManagementTable";
+import BulkUpload from "./BulkUpload";
 import { useHistory } from "react-router-dom";
 
 /**
@@ -48,6 +50,7 @@ const EditAttendeePopUp = ({
     const labels = [
         "HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL",
         "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER",
+        "HCM_AM_BULK_EDIT_ATTENDEES_LABEL",
     ];
     const maxLabelLength = Math.max(...labels.map((label) => label.length));
     const labelWidth = `${maxLabelLength * 6}px`;
@@ -61,6 +64,13 @@ const EditAttendeePopUp = ({
     const [searchQuery, setSearchQuery] = useState(""); // Local search input
     const [flag, setFlag] = useState(false); // Used to trigger API refresh
     const [searchUserpopUp, setSearchUserpopUp] = useState(false); // Placeholder for additional popup (if needed)
+
+    // Bulk edit popup state
+    const [showBulkEditPopUp, setShowBulkEditPopUp] = useState(false);
+    const [bulkEditFile, setBulkEditFile] = useState(null);
+    const [bulkEditUploadedData, setBulkEditUploadedData] = useState(null);
+    const [bulkEditLoader, setBulkEditLoader] = useState(false);
+    const [bulkEditToast, setBulkEditToast] = useState(null);
 
     // Popup size (responsive)
     const [popupWidth, setPopupWidth] = useState(getResponsiveWidth());
@@ -244,6 +254,75 @@ const EditAttendeePopUp = ({
     };
 
     /** -----------------------------
+     *  6. Bulk Edit Handlers
+     * -----------------------------
+     */
+    const closeBulkEditPopUp = () => {
+        setShowBulkEditPopUp(false);
+        setBulkEditFile(null);
+        setBulkEditUploadedData(null);
+        setBulkEditToast(null);
+    };
+
+    // Download template using excel-ingestion API (same pattern as NewUploadData.js)
+    const downloadBulkEditTemplate = async () => {
+        // TODO: wire up excel-ingestion API calls once the backend contract is confirmed
+    };
+
+    // Handle file selection from BulkUpload component (receives file array from drag-drop)
+    const handleBulkEditFileUpload = async (files) => {
+        if (!files || files.length === 0) return;
+        if (files.length > 1) {
+            setBulkEditToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
+            return;
+        }
+        const file = files[0];
+        try {
+            setBulkEditLoader(true);
+            const response = await Digit.UploadServices.Filestorage(
+                "health-payments",
+                file,
+                tenantId
+            );
+            const uploaded = response?.data?.files?.[0];
+            if (uploaded?.fileStoreId) {
+                setBulkEditUploadedData([{
+                    filestoreId: uploaded.fileStoreId,
+                    filename: file.name,
+                    id: uploaded.fileStoreId,
+                }]);
+                setBulkEditFile(file);
+            } else {
+                setBulkEditToast({ key: "error", label: t("HCM_FILE_UPLOAD_FAILED") });
+            }
+        } catch (err) {
+            setBulkEditToast({ key: "error", label: t("HCM_FILE_UPLOAD_FAILED") });
+        } finally {
+            setBulkEditLoader(false);
+        }
+    };
+
+    const handleBulkEditFileDelete = () => {
+        setBulkEditFile(null);
+        setBulkEditUploadedData(null);
+    };
+
+    const handleBulkEditFileDownload = (file) => {
+        if (file?.filestoreId) {
+            const fileNameWithoutExtension = file?.filename?.split(/\.(xlsx|xls|csv)/)?.[0];
+            Digit.Utils.campaign.downloadExcelWithCustomName({
+                fileStoreId: file.filestoreId,
+                customName: fileNameWithoutExtension || "bulk-edit-attendees",
+            });
+        }
+    };
+
+    const handleBulkEditSubmit = () => {
+        // TODO: call resource-details API with bulkEditUploadedData?.[0]?.filestoreId
+        closeBulkEditPopUp();
+    };
+
+    /** -----------------------------
      *  Render UI
      * -----------------------------
      */
@@ -257,11 +336,9 @@ const EditAttendeePopUp = ({
                 children={[
                     isAttendanceLoading || isAllIndividualsLoading ? (
                         // Loader section while fetching data
-
                         <Loader variant={"PageLoader"} className={"digit-center-loader"} />
-
                     ) : (
-                        // Main content: search + table + link
+                        // Main content: search + table + links
                         <div
                             style={{
                                 display: "flex",
@@ -290,7 +367,7 @@ const EditAttendeePopUp = ({
                                 sessionType={sessionType}
                             />
 
-                            {/* Action section for searching new users */}
+                            {/* Action section for searching new users and bulk edit */}
                             <div
                                 style={{
                                     display: "grid",
@@ -310,6 +387,12 @@ const EditAttendeePopUp = ({
                                         );
                                     }}
                                 />
+                                <div>{t(labels[2])}</div>
+                                <Button
+                                    label={t("HCM_AM_BULK_EDIT")}
+                                    variation="link"
+                                    onClick={() => setShowBulkEditPopUp(true)}
+                                />
                             </div>
                         </div>
                     ),
@@ -326,6 +409,81 @@ const EditAttendeePopUp = ({
                 ]}
                 sortFooterChildren={true}
             />
+
+            {/* Bulk Edit PopUp */}
+            {showBulkEditPopUp && (
+                <PopUp
+                    heading={t("HCM_AM_BULK_EDIT_ATTENDEES")}
+                    onClose={closeBulkEditPopUp}
+                    onOverlayClick={closeBulkEditPopUp}
+                    children={[
+                        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minWidth: "420px" }}>
+                            {bulkEditLoader && (
+                                <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+                            )}
+                            {/* Download template button aligned to the right */}
+                            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                <Button
+                                    label={t("WBH_DOWNLOAD_TEMPLATE")}
+                                    title={t("WBH_DOWNLOAD_TEMPLATE")}
+                                    variation="secondary"
+                                    icon={"FileDownload"}
+                                    type="button"
+                                    className="campaign-download-template-btn"
+                                    onClick={downloadBulkEditTemplate}
+                                />
+                            </div>
+
+                            {/* Info text shown only when no file is uploaded */}
+                            {!bulkEditFile && (
+                                <div className="info-text">{t("HCM_AM_BULK_EDIT_UPLOAD_MESSAGE")}</div>
+                            )}
+
+                            {/* File upload area */}
+                            <BulkUpload
+                                multiple={false}
+                                onSubmit={handleBulkEditFileUpload}
+                                fileData={bulkEditUploadedData}
+                                onFileDelete={handleBulkEditFileDelete}
+                                onFileDownload={handleBulkEditFileDownload}
+                            />
+                        </div>,
+                    ]}
+                    footerChildren={[
+                        <Button
+                            type="button"
+                            size="large"
+                            variation="secondary"
+                            label={t("HCM_AM_CANCEL")}
+                            onClick={closeBulkEditPopUp}
+                        />,
+                        <Button
+                            type="button"
+                            size="large"
+                            variation="primary"
+                            label={t("HCM_AM_SUBMIT")}
+                            isDisabled={!bulkEditUploadedData?.length}
+                            onClick={handleBulkEditSubmit}
+                        />,
+                    ]}
+                    sortFooterChildren={true}
+                />
+            )}
+
+            {/* Toast for bulk edit feedback */}
+            {bulkEditToast && (
+                <Toast
+                    type={
+                        bulkEditToast?.key === "error"
+                            ? "error"
+                            : bulkEditToast?.key === "info"
+                            ? "info"
+                            : "success"
+                    }
+                    label={t(bulkEditToast.label)}
+                    onClose={() => setBulkEditToast(null)}
+                />
+            )}
         </React.Fragment>
     );
 };
