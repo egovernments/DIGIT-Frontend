@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Button, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
@@ -66,10 +66,58 @@ const MapUsersToRegistersScreen = () => {
   };
   const { data: campaignData, isLoading: isCampaignLoading, isFetching: isCampaignFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Fetch attendance registers for this campaign
+  // Check resource-details status for register creation
+  const resourceSearchCriteria = { //TODO check api call
+    url: `/project-factory/v1/resource-details/_search`,
+    body: {
+      ResourceDetailsCriteria: {
+        tenantId,
+        campaignId: campaignData?.id,
+        type: ["attendanceRegister"],
+        isActive: true,
+      },
+      // Pagination: {
+      //   limit: 50,
+      //   offset: 0,
+      //   sortBy: "createdTime",
+      //   sortOrder: "DESC",
+      // },
+    },
+    config: {
+      enabled: !!campaignData?.id,
+      select: (data) => data?.ResourceDetails || [],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: resourceDetails = [], isLoading: isResourceLoading, isFetching: isResourceFetching, refetch: refetchResourceDetails } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
+
+  // Derive register creation status from resource details
+  const registerCreationStatus = resourceDetails.length > 0 ? resourceDetails[0]?.status : null;
+
+  // Poll every 5 seconds while register creation is in progress
+  useEffect(() => {
+    if (registerCreationStatus !== "creating") return;
+    const interval = setInterval(() => {
+      refetchResourceDetails();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [registerCreationStatus]);
+  const isRegisterCreationCompleted = registerCreationStatus === "completed";
+
+  // Show toast when resource status is not completed
+  useEffect(() => {
+    if (isResourceLoading || isResourceFetching || resourceDetails.length === 0) return;
+    if (registerCreationStatus === "creating" ) {
+      setShowToast({ key: "warning", label: t("HCM_REGISTER_CREATION_IN_PROGRESS") });
+    } else if (registerCreationStatus === "failed") {
+      setShowToast({ key: "error", label: t("HCM_REGISTER_CREATION_FAILED") });
+    }
+  }, [registerCreationStatus, isResourceLoading, isResourceFetching]);
+
+  // Fetch attendance registers only when register creation is completed
   const attendanceParams = { tenantId,
-    campaignId: campaignData?.id 
-    // // Commenting out campaignId filter as per new API changes, will re-add if backend team adds support for it again
+    campaignId: campaignData?.id
   };
   if (campaignData?.serviceCode) attendanceParams.serviceCode = campaignData.serviceCode;
 
@@ -78,7 +126,7 @@ const MapUsersToRegistersScreen = () => {
     params: attendanceParams,
     body: {},
     config: {
-      enabled: !!campaignData?.id,
+      enabled: !!campaignData?.id && isRegisterCreationCompleted,
       select: (data) => data?.attendanceRegister || [],
       staleTime: 0,
       cacheTime: 0,
@@ -240,7 +288,7 @@ const MapUsersToRegistersScreen = () => {
     },
   ];
 
-  if (isCampaignLoading || isCampaignFetching || isLoading || isFetching)
+  if (isCampaignLoading || isCampaignFetching || isResourceLoading || isResourceFetching || isLoading || isFetching)
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
         <Loader page={true} />
@@ -372,7 +420,7 @@ const MapUsersToRegistersScreen = () => {
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
-          type={showToast.key === "error" ? "error" : "success"}
+          type={showToast.key === "error" ? "error" : showToast.key === "warning" ? "warning" : "success"}
           label={showToast.label}
           onClose={() => setShowToast(null)}
         />

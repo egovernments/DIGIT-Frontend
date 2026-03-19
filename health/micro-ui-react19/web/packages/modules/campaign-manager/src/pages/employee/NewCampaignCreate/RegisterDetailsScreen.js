@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card, Button, Loader } from "@egovernments/digit-ui-components";
+import { Card, Button, Loader, Toast } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
@@ -54,13 +54,74 @@ const RegisterDetailsScreen = () => {
   const registerName = searchParams.get("registerName");
   const boundaryCode = searchParams.get("boundaryCode");
 
+  const [showToast, setShowToast] = useState(null);
+
+  // Fetch campaign data to get campaignId
+  const campaignReqCriteria = {//TODO check api call
+    url: `/project-factory/v1/project-type/search`,
+    body: { CampaignDetails: { tenantId, campaignNumber } },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => data?.CampaignDetails?.[0],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+
+  // Check resource-details status for attendee mapping on this register
+  const attendeeResourceCriteria = {
+    url: `/project-factory/v1/resource-details/_search`,
+    body: {
+      ResourceDetailsCriteria: {
+        tenantId,
+        campaignId: campaignData?.id,
+        type: ["attendanceRegisterAttendee"],
+        parentResourceId: registerId,
+        isActive: true,
+      },
+    },
+    config: {
+      enabled: !!campaignData?.id && !!registerId,
+      select: (data) => data?.ResourceDetails || [],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: attendeeResourceDetails = [], isLoading: isAttendeeResourceLoading, isFetching: isAttendeeResourceFetching, refetch: refetchAttendeeResource } = Digit.Hooks.useCustomAPIHook(attendeeResourceCriteria);
+
+  const attendeeMappingStatus = attendeeResourceDetails.length > 0 ? attendeeResourceDetails[0]?.status : null;
+
+  // Poll every 5 seconds while attendee mapping is in progress
+  useEffect(() => {
+    if (attendeeMappingStatus !== "creating") return;
+    const interval = setInterval(() => {
+      refetchAttendeeResource();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [attendeeMappingStatus]);
+  const isAttendeeCreationCompleted = attendeeMappingStatus === "completed";
+
+  // Show toast based on attendee mapping status
+  useEffect(() => {
+    if (isAttendeeResourceLoading || isAttendeeResourceFetching || attendeeResourceDetails.length === 0) return;
+    if (attendeeMappingStatus === "creating") {
+      setShowToast({ key: "warning", label: t("HCM_ATTENDEE_MAPPING_IN_PROGRESS") });
+    } else if (attendeeMappingStatus === "failed") {
+      setShowToast({ key: "error", label: t("HCM_ATTENDEE_MAPPING_FAILED") });
+    } 
+    // else if (attendeeMappingStatus === "completed") {
+    //   setShowToast({ key: "success", label: t("HCM_ATTENDEE_MAPPING_COMPLETED") });
+    // }
+  }, [attendeeMappingStatus, isAttendeeResourceLoading, isAttendeeResourceFetching]);
+
   // Fetch register details using registerNumber
   const attendanceReqCriteria = {
     url: `/attendance/v1/_search`,
     params: { tenantId, registerNumber },
     body: {},
     config: {
-      enabled: !!registerNumber,
+      enabled: !!registerNumber && isAttendeeCreationCompleted,
       select: (data) => data?.attendanceRegister?.[0],
       staleTime: 0,
       cacheTime: 0,
@@ -177,7 +238,7 @@ const RegisterDetailsScreen = () => {
     },
   ];
 
-  if (isLoading || isIndividualsLoading)
+  if (isCampaignLoading || isAttendeeResourceLoading || isLoading || isIndividualsLoading)
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
         <Loader page={true} />
@@ -263,6 +324,15 @@ const RegisterDetailsScreen = () => {
           onClick={handleBack}
         />
       </div>
+
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          type={showToast.key === "error" ? "error" : showToast.key === "warning" ? "warning" : "success"}
+          label={showToast.label}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </div>
   );
 };

@@ -98,7 +98,17 @@ const MapAttendeesScreen = () => {
             },
           });
           navigate(
-            `/${window.contextPath}/employee/campaign/register-details?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`
+            `/${window.contextPath}/employee/campaign/response?isSuccess=true`,
+            {
+              state: {
+                message: t("HCM_ATTENDEE_MAPPING_SUCCESS"),
+                text: t("HCM_ATTENDEE_MAPPING_SUCCESS_TEXT"),
+                actionLabel: "HCM_VIEW_REGISTER_DETAILS",
+                actionLink: `/${window.contextPath}/employee/campaign/register-details?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`,
+                secondaryActionLabel: "HCM_BACK_TO_REGISTERS",
+                secondaryActionLink: `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+              },
+            }
           );
         },
         onError: (error) => {
