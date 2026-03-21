@@ -25,7 +25,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
             if (type === "attendanceRegisterAttendee-validation") {
                 resourceDetails.type = "attendanceRegisterAttendee-validation";
                 resourceDetails.referenceId = additionalDetails?.registerId || id;
-                // resourceDetails.referenceType = "attendanceRegister";
+                resourceDetails.referenceType = "attendanceRegister";
             } else if (type === "attendanceRegister-validation") {
                 resourceDetails.type = "attendanceRegister-validation";
                 resourceDetails.referenceId = id;
