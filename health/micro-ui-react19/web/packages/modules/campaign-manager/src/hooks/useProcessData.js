@@ -32,7 +32,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
                 resourceDetails.referenceType = "campaign";
             } else {
                 resourceDetails.referenceId = id;
-                // resourceDetails.referenceType = "campaign";
+                resourceDetails.referenceType = "campaign";
             }
         } else {
             resourceDetails.campaignId = id;
