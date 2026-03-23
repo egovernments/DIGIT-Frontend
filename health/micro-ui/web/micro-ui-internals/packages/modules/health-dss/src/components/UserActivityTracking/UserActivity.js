@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 // import { deviceData, MAX_SYNC_GAP_HOURS } from "./dummyData";
-import { MAX_SYNC_GAP_HOURS } from "./dummyData";
-import useUserTrackingData from "../../hooks/useUserTrackingData";
+// import { MAX_SYNC_GAP_HOURS } from "./dummyData";
+// import useUserTrackingData from "../../hooks/useUserTrackingData";
+import useUserActivityData from "../../hooks/useUserActivityData";
 import UserProfilePopup from "./UserProfilePopup";
 
 const roleTagType = {
@@ -21,7 +22,7 @@ const SummaryCard = ({ card, index }) => {
     <Card style={{ borderRadius: "12px" }}>
       <div style={{ fontSize: "14px", fontWeight: 700, color: "#505A5F" }}>{t(card.label)}</div>
       <div style={{ fontSize: "32px", fontWeight: 700, color: isWarning ? "#C84C0E" : "#0B4B66" }}>{card.value}</div>
-      <div style={{ fontSize: "12px", color: "#787878" }}>{card.description}</div>
+      <div style={{ fontSize: "12px", color: "#787878" }}>{t(card.description)}</div>
     </Card>
   );
 };
@@ -150,16 +151,9 @@ const tableCustomStyles = {
   },
 };
 
-const getSyncGapHours = (lastSyncTimestamp) => {
-  return (Date.now() - new Date(lastSyncTimestamp).getTime()) / (1000 * 60 * 60);
-};
-
-const isUserOnline = (lastSyncTimestamp) => {
-  return getSyncGapHours(lastSyncTimestamp) <= MAX_SYNC_GAP_HOURS;
-};
-
 const formatSyncTime = (lastSyncTimestamp) => {
-  const date = new Date(lastSyncTimestamp);
+  if (!lastSyncTimestamp) return "-";
+  var date = new Date(lastSyncTimestamp);
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
 };
 
@@ -171,40 +165,29 @@ const UserActivity = () => {
   const [boundaryFilter, setBoundaryFilter] = useState("ALL");
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Fetch real data from ES indices (pass campaignId from URL/context as needed)
-  const { data: trackingData, isLoading: trackingLoading } = useUserTrackingData({
-    campaignId: null, // TODO: pass actual campaignId from URL params or context
+  // Fetch data from dashboard-analytics getChartV2 API
+  const { overallMetrics, usersSummary, isLoading } = useUserActivityData({
     enabled: true,
   });
 
+  // Enrich table data with formatted lastSync
   const enrichedData = useMemo(() => {
-    return (trackingData || []).map((row) => {
-      const online = isUserOnline(row.lastSyncTimestamp);
-      const gapHours = getSyncGapHours(row.lastSyncTimestamp);
-      const hasSyncWarning = gapHours > MAX_SYNC_GAP_HOURS;
+    return (usersSummary || []).map(function (row) {
       return {
         ...row,
-        status: online ? "ONLINE" : "OFFLINE",
         lastSync: formatSyncTime(row.lastSyncTimestamp),
-        syncWarning: hasSyncWarning,
-        syncWarningText: hasSyncWarning ? `Sync gap >${MAX_SYNC_GAP_HOURS}h` : "",
       };
     });
-  }, [trackingData]);
+  }, [usersSummary]);
 
-  const summaryCards = useMemo(() => {
-    const totalWorkers = enrichedData.length;
-    const onlineCount = enrichedData.filter((r) => r.status === "ONLINE").length;
-    const offlineCount = totalWorkers - onlineCount;
-    const totalRecords = enrichedData.reduce((sum, r) => sum + r.recordsToday, 0);
-    const syncWarnings = enrichedData.filter((r) => r.syncWarning).length;
-    return [
-      { label: "TOTAL_FIELD_WORKERS", value: totalWorkers, description: "Active campaign" },
-      { label: "ONLINE_NOW", value: onlineCount, description: `${offlineCount} offline` },
-      { label: "RECORDS_TODAY", value: totalRecords, description: "Across all CDDs" },
-      { label: "SYNC_WARNINGS", value: syncWarnings, description: `>${MAX_SYNC_GAP_HOURS}h gap detected` },
-    ];
-  }, [enrichedData]);
+  // Summary cards from overallUsersMetrics API
+  var offlineCount = overallMetrics.totalFieldWorkers - overallMetrics.onlineNow;
+  var summaryCards = [
+    { label: "TOTAL_FIELD_WORKERS", value: overallMetrics.totalFieldWorkers, description: t("ACTIVE_CAMPAIGN") },
+    { label: "ONLINE_NOW", value: overallMetrics.onlineNow, description: offlineCount + " " + t("OFFLINE").toLowerCase() },
+    { label: "RECORDS_TODAY", value: overallMetrics.recordsToday, description: t("ACROSS_ALL_CDDS") },
+    { label: "SYNC_WARNINGS", value: overallMetrics.syncWarnings, description: t("SYNC_GAP_DETECTED") },
+  ];
 
   // Derive unique filter options from data
   const statusOptions = [
@@ -238,18 +221,8 @@ const UserActivity = () => {
 
   const handleExportCSV = useCallback(() => {
     const headers = ["User", "User ID", "Role", "Geo Boundary", "Last Sync", "Records Today", "Status"];
-    const rows = enrichedData.map((row) => [
-      row.userName,
-      row.userId,
-      row.role,
-      row.geoBoundary,
-      row.lastSync,
-      row.recordsToday,
-      row.status,
-    ]);
-    const csvContent = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
-      .join("\r\n");
+    const rows = enrichedData.map((row) => [row.userName, row.userId, row.role, row.geoBoundary, row.lastSync, row.recordsToday, row.status]);
+    const csvContent = [headers, ...rows].map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\r\n");
     const BOM = "\uFEFF";
     const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -262,7 +235,7 @@ const UserActivity = () => {
 
   const columns = [
     {
-      name: t("USER"),
+      name: t("USER_ACTIVITY_USER"),
       cell: (row) => (
         <div>
           <div style={{ fontWeight: 600, color: "#0B4B66" }}>{row.userName}</div>
@@ -271,25 +244,25 @@ const UserActivity = () => {
       ),
       sortable: true,
       sortFunction: (a, b) => a.userName.localeCompare(b.userName),
-      grow: 1.5,
+      grow: 1.25,
       minWidth: "150px",
     },
     {
-      name: t("ROLE"),
-      cell: (row) => <Tag label={row.role} type={roleTagType[row.role] || "monochrome"} showIcon={false} stroke={true} />,
+      name: t("USER_ACTIVITY_ROLE"),
+      cell: (row) => <Tag label={t(row.role)} type={roleTagType[row.role] || "monochrome"} showIcon={false} stroke={true} />,
       sortable: true,
-      grow: 0.8,
-      minWidth: "100px",
+      grow: 1,
+      minWidth: "120px",
     },
     {
-      name: t("GEO_BOUNDARY"),
+      name: t("USER_ACTIVITY_GEO_BOUNDARY"),
       selector: (row) => row.geoBoundary,
       sortable: true,
       grow: 1.5,
       minWidth: "160px",
     },
     {
-      name: t("LAST_SYNC"),
+      name: t("USER_ACTIVITY_LAST_SYNC"),
       cell: (row) => (
         <div>
           <div style={{ color: row.syncWarning ? "#D4351C" : "#363636", fontWeight: row.syncWarning ? 600 : 400 }}>
@@ -305,7 +278,7 @@ const UserActivity = () => {
       minWidth: "120px",
     },
     {
-      name: t("RECORDS_TODAY"),
+      name: t("USER_ACTIVITY_RECORDS_TODAY"),
       cell: (row) => <span style={{ fontWeight: 600, color: row.recordsToday === 0 ? "#D4351C" : "#363636" }}>{row.recordsToday}</span>,
       sortable: true,
       sortFunction: (a, b) => a.recordsToday - b.recordsToday,
@@ -313,7 +286,7 @@ const UserActivity = () => {
       minWidth: "120px",
     },
     {
-      name: t("STATUS"),
+      name: t("USER_ACTIVITY_STATUS"),
       cell: (row) => <Tag label={row.status} type={row.status === "ONLINE" ? "success" : "error"} showIcon={true} />,
       sortable: true,
       grow: 0.8,
@@ -321,14 +294,25 @@ const UserActivity = () => {
     },
     {
       name: "",
-      cell: (row) => <Button label={t("View Profile")} variation="teritiary" onClick={() => setSelectedUser(row)} icon={"ArrowForward"} isSuffix={true} size={"medium"}/>,
+      cell: (row) => (
+        <Button
+          label={t("VIEW_PROFILE")}
+          variation="teritiary"
+          onClick={() => {
+            setSelectedUser(row);
+          }}
+          icon={"ArrowForward"}
+          isSuffix={true}
+          size={"medium"}
+        />
+      ),
       grow: 0.8,
       minWidth: "130px",
-      center:true
+      center: true,
     },
   ];
 
-  if (trackingLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -347,18 +331,24 @@ const UserActivity = () => {
       <Card>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
-            {/* <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#0B4B66", margin: 0 }}></h2> */}
-             <HeaderComponent>
-                            <span className={`digit-generic-chart-header`} style={{color: "#0B4B66"}}>
-                  {t("DEVICE_MANAGEMENT")}
-                            </span>
-                          </HeaderComponent>
+            <HeaderComponent>
+              <span className={`digit-generic-chart-header`} style={{ color: "#0B4B66" }}>
+                {t("DEVICE_MANAGEMENT")}
+              </span>
+            </HeaderComponent>
 
             <div style={{ fontSize: "14px", color: "#787878", marginTop: "8px" }}>
-              All devices registered to this campaign — click View Profile to see activity log
+              {t("DEVICE_MANAGEMENT_DESC")}
             </div>
           </div>
-          <Button label={t("EXPORT_CSV")} variation="secondary" icon="FileDownload" style={{ fontSize: "14px" }} onClick={handleExportCSV} size={"medium"}/>
+          <Button
+            label={t("EXPORT_CSV")}
+            variation="secondary"
+            icon="FileDownload"
+            style={{ fontSize: "14px" }}
+            onClick={handleExportCSV}
+            size={"medium"}
+          />
         </div>
 
         {/* Filters Row */}
@@ -366,7 +356,7 @@ const UserActivity = () => {
           <div style={{ minWidth: "240px" }}>
             <TextInput
               type="text"
-              placeholder={t("Search name, user ID, device...")}
+              placeholder={t("SEARCH_PLACEHOLDER")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ height: "40px" }}
@@ -427,7 +417,9 @@ const UserActivity = () => {
       {selectedUser && (
         <UserProfilePopup
           user={enrichedData.find((d) => d.userId === selectedUser.userId)}
-          onClose={() => setSelectedUser(null)}
+          onClose={() => {
+            setSelectedUser(null);
+          }}
         />
       )}
     </div>
