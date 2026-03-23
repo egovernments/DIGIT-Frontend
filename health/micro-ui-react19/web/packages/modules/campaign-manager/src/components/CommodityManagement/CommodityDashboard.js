@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Toggle, HeaderComponent, LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Toggle, HeaderComponent, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
 import DateRangePicker from "./DateRangePicker";
@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import useStockData from "../../hooks/useStockData";
 import { computeStockSummary } from "../../utils/stockDataProcessor";
 import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
+import { useCommodityProject } from "./CommodityProjectContext";
 
 
 const CommodityDashboard = () => {
@@ -16,11 +17,35 @@ const CommodityDashboard = () => {
   const tenantName = tenantId?.split(".")?.[1] || tenantId;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const campaignId = searchParams.get("campaignId");
   const campaignNumber = searchParams.get("campaignNumber");
 
-  // Read campaign data from navigation state (passed from HCMMyCampaignRowCard)
+  // Backward compat: still check URL for campaignId first
+  const campaignIdFromUrl = searchParams.get("campaignId");
+
+  // Read campaign data from navigation state (passed from HCMCommodityRowCard)
   const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, isCompleted } = location.state || {};
+
+  // Read userBoundary from context
+  const { userBoundary } = useCommodityProject();
+
+  // Lazy fetch campaignId from campaignNumber if not in URL
+  const campaignReqCriteria = useMemo(() => ({
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId,
+        campaignNumber,
+      },
+    },
+    config: {
+      enabled: !!campaignNumber && !campaignIdFromUrl,
+      select: (data) => data?.CampaignDetails?.[0]?.id,
+    },
+  }), [tenantId, campaignNumber, campaignIdFromUrl]);
+
+  const { data: fetchedCampaignId, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+
+  const campaignId = campaignIdFromUrl || fetchedCampaignId;
 
   const campaignStartDate = useMemo(
     () => (campaignStartEpoch ? new Date(campaignStartEpoch) : null),
@@ -138,6 +163,11 @@ const CommodityDashboard = () => {
     { key: "stock", label: t("HCM_STOCK_SUMMARY") },
   ];
 
+  // Show loader while campaignId is being fetched
+  if (campaignIdLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
+
   return (
     <div className="cm-dashboard">
       <HeaderComponent className="cm-header">
@@ -209,6 +239,7 @@ const CommodityDashboard = () => {
           projectId={projectId}
           refetchStockData={refetchStockData}
           isCompleted={isCompleted}
+          userBoundary={userBoundary}
         />
       )}
     </div>

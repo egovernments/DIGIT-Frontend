@@ -9,7 +9,7 @@ import GenericChart from "./GenericChart";
 import NewShipmentPopup from "./NewShipmentPopup";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
@@ -537,6 +537,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           campaignNumber={campaignNumber}
           campaignId={campaignId}
           tenantId={tenantId}
+          projectId={projectId}
+          userBoundary={userBoundary}
+          productVariants={productVariantList}
           onClose={() => setShowNewShipmentPopup(false)}
           onSuccess={() => setShowNewShipmentPopup(false)}
         />

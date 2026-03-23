@@ -1,30 +1,17 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Loader, SVG } from "@egovernments/digit-ui-components";
-import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { CommodityProjectProvider, useCommodityProject } from "./CommodityProjectContext";
 
-const ProjectStaffGuard = ({ children }) => {
+const ProjectStaffGuardInner = ({ children }) => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const user = Digit.SessionStorage.get("User");
-
-  const staffSearchCriteria = useMemo(() => ({
-    url: `${getProjectServiceUrl()}/staff/v1/_search`,
-    params: { tenantId, offset: 0, limit: 100 },
-    body: { ProjectStaff: { staffId: [user?.info?.uuid] } },
-    config: {
-      enabled: !!user?.info?.uuid,
-      select: (data) => data?.ProjectStaff,
-    },
-  }), [tenantId, user?.info?.uuid]);
-
-  const { isLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(staffSearchCriteria);
+  const { isLoading, hasStaff } = useCommodityProject();
 
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  if (!projectStaff || projectStaff.length === 0) {
+  if (!hasStaff) {
     return (
       <div
         className="digit-no-data-found"
@@ -37,6 +24,14 @@ const ProjectStaffGuard = ({ children }) => {
   }
 
   return children;
+};
+
+const ProjectStaffGuard = ({ children }) => {
+  return (
+    <CommodityProjectProvider>
+      <ProjectStaffGuardInner>{children}</ProjectStaffGuardInner>
+    </CommodityProjectProvider>
+  );
 };
 
 export default ProjectStaffGuard;

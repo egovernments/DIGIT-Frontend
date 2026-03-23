@@ -16,6 +16,7 @@ import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
 import useMDMSServiceSearch from "./useMDMSServiceSearch";
+import useCommodityProjectSearch from "./useCommodityProjectSearch";
 import useFetchFromMicroplan from "./useFetchFromMicroplan";
 import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
 import { useSearchLocalisation } from "./useSearchLocalisation";
@@ -51,6 +52,7 @@ const campaign = {
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
   useMDMSServiceSearch,
+  useCommodityProjectSearch,
   useFetchFromMicroplan,
   useReadExcelData,
   useUpdateAndUploadExcel,
