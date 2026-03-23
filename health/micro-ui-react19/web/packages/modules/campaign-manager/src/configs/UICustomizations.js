@@ -1269,6 +1269,174 @@ export const UICustomizations = {
       return "TQM_VIEW_TEST_DETAILS";
     },
   },
+  CommodityCampaignConfigOngoing: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
+        campaignsIncludeDates: true,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
+        endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [{ name: "projectTypes" }],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes,
+        },
+      };
+    },
+  },
+  CommodityCampaignConfigUpcoming: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
+        campaignsIncludeDates: false,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [{ name: "projectTypes" }],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes,
+        },
+      };
+    },
+  },
+  CommodityCampaignConfigCompleted: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
+        endDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [{ name: "projectTypes" }],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes,
+        },
+      };
+    },
+  },
   CampaignTemplateConfig: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit?.ULBService?.getCurrentTenantId();

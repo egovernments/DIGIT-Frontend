@@ -57,7 +57,9 @@ import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetai
 import AppPreview from "./components/AppPreview";
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
+import HCMCommodityRowCard from "./components/HCMCommodityRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
+import CommodityCampaigns from "./pages/employee/CommodityCampaigns";
 import QRButton from "./components/CreateCampaignComponents/QRButton";
 import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
 import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignNameInfo";
@@ -266,7 +268,9 @@ const componentsToRegister = {
   ViewDetailComponent,
   CycleSelection,
   HCMMyCampaignRowCard,
+  HCMCommodityRowCard,
   MyCampaignNew,
+  CommodityCampaigns,
   QRButton,
   EqualHeightWrapper,
   CampaignNameInfo,

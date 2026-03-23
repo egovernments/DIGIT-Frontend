@@ -109,9 +109,6 @@ const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
   }
 };
 
-// Roles that can access the stock/commodity dashboard
-const STOCK_DASHBOARD_ROLES = ["WAREHOUSE_MANAGER", "CAMPAIGN_MANAGER"];
-
 // function to generate action buttons
 const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp, handleRetryLogic) => {
   const actions = {};
@@ -178,33 +175,6 @@ const getActionButtons = (rowData, tabData, navigate, setShowErrorPopUp, setShow
       icon: "",
       variation: "secondary",
       id:`my-campaigns-row-card-retry-campaign-button-${campaignId}`
-    };
-  }
-
-  // Show "View Stock Dashboard" for ongoing, upcoming, and completed campaigns if user has the right roles
-  if ((currentTab === "CAMPAIGN_COMPLETED" || currentTab === "CAMPAIGN_ONGOING" || currentTab === "CAMPAIGN_UPCOMING") && Digit.Utils.didEmployeeHasAtleastOneRole(STOCK_DASHBOARD_ROLES)) {
-    const isCompleted = currentTab === "CAMPAIGN_COMPLETED";
-    actions.viewStockDashboard = {
-      label: "HCM_VIEW_STOCK_DASHBOARD",
-      title: "HCM_VIEW_STOCK_DASHBOARD",
-      size: "medium",
-      onClick: () =>
-        navigate(
-          `/${window?.contextPath}/employee/campaign/commodity-dashboard?campaignNumber=${
-            rowData?.campaignNumber
-          }&campaignId=${campaignId}&tenantId=${Digit.ULBService.getCurrentTenantId()}`,
-          {
-            state: {
-              projectId: rowData?.projectId,
-              campaignStartDate: rowData?.startDate,
-              campaignEndDate: rowData?.endDate,
-              isCompleted,
-            },
-          }
-        ),
-      icon: "Visibility",
-      variation: "primary",
-      id: `my-campaigns-row-card-view-stock-dashboard-button-${campaignId}`,
     };
   }
 

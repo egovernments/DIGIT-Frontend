@@ -123,10 +123,22 @@ const CampaignTemplates = lazyWithFallback(
   { loaderText: "Loading Campaign Templates..." }
 );
 
+const CommodityCampaigns = lazyWithFallback(
+  () => import(/* webpackChunkName: "commodity-campaigns" */ "./CommodityCampaigns"),
+  () => require("./CommodityCampaigns").default,
+  { loaderText: "Loading Commodity Campaigns..." }
+);
+
 const CommodityDashboard = lazyWithFallback(
   () => import(/* webpackChunkName: "commodity-dashboard" */ "../../components/CommodityManagement/CommodityDashboard"),
   () => require("../../components/CommodityManagement/CommodityDashboard").default,
   { loaderText: "Loading Commodity Dashboard..." }
+);
+
+const ProjectStaffGuard = lazyWithFallback(
+  () => import(/* webpackChunkName: "project-staff-guard" */ "../../components/CommodityManagement/ProjectStaffGuard"),
+  () => require("../../components/CommodityManagement/ProjectStaffGuard").default,
+  { loaderText: "Loading..." }
 );
 
 const BulkStockUpload = lazyWithFallback(
@@ -281,9 +293,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.includes("campaign-templates") ? true : false,
     },
     {
-      internalLink: pathVar.includes("my-campaign-new") ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
-      content: t("MY_CAMPAIGN"),
-      show: pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
+      internalLink: pathVar.includes("commodity-campaigns") ? "" : `/${window?.contextPath}/employee/campaign/commodity-campaigns`,
+      content: t("HCM_COMMODITY_CAMPAIGNS"),
+      show: pathVar.includes("commodity-campaigns") || pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
     },
     {
       internalLink: pathVar.includes("commodity-dashboard") ? "" : `/${window?.contextPath}/employee/campaign/commodity-dashboard`,
@@ -413,8 +425,9 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
-          <Route path={`commodity-dashboard`} element={<CommodityDashboard />} />
-          <Route path={`bulk-stock-upload`} element={<BulkStockUpload />} />
+          <Route path={`commodity-campaigns`} element={<ProjectStaffGuard><CommodityCampaigns /></ProjectStaffGuard>} />
+          <Route path={`commodity-dashboard`} element={<ProjectStaffGuard><CommodityDashboard /></ProjectStaffGuard>} />
+          <Route path={`bulk-stock-upload`} element={<ProjectStaffGuard><BulkStockUpload /></ProjectStaffGuard>} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>
       </AppContainer>

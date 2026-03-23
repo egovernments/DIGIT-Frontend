@@ -557,7 +557,7 @@ const NewShipmentPopup = ({
       ws.addRow(variantIdRow);
       ws.getRow(2).hidden = true;
 
-      // Data rows (row 3+)
+      // Data rows (row 3+) — one row per selected To facility
       selectedFacilities.forEach((facility) => {
         const row = [];
         boundaryHeaders.forEach((bType) => {
@@ -572,6 +572,8 @@ const NewShipmentPopup = ({
         productVariants.forEach(() => row.push(""));
         ws.addRow(row);
       });
+
+      const dataRowCount = Math.max(selectedFacilities.length, 100);
 
       // Set column widths
       ws.columns = stockHeaders.map(() => ({ width: 30 }));
@@ -588,9 +590,6 @@ const NewShipmentPopup = ({
         optionsWs.addRow(optionsColData.map((col) => (r < col.length ? col[r] : "")));
       }
       optionsWs.columns = optionsCols.map(() => ({ width: 25 }));
-
-      // --- Data validations on Stock Data sheet ---
-      const dataRowCount = Math.max(selectedFacilities.length, 100);
 
       // From Facility Code validation (Options column A)
       const fromCodeColIdx = stockHeaders.indexOf("From (Facility Code)");
@@ -625,7 +624,7 @@ const NewShipmentPopup = ({
       }
 
       // --- Lock cells & protect sheet ---
-      // Unlock only product quantity cells
+      // Only unlock product quantity cells (everything else stays locked)
       const firstProductCol = boundaryHeaders.length + 5 + 1; // 1-based col index
       const lastProductCol = firstProductCol + productVariants.length - 1;
 
@@ -634,22 +633,6 @@ const NewShipmentPopup = ({
           ws.getCell(r, c).protection = { locked: false };
         }
       }
-
-      // Protect the sheet
-      await ws.protect('', {
-        selectLockedCells: true,
-        selectUnlockedCells: true,
-        formatCells: false,
-        formatColumns: false,
-        formatRows: false,
-        insertColumns: false,
-        insertRows: false,
-        insertHyperlinks: false,
-        deleteColumns: false,
-        deleteRows: false,
-        sort: false,
-        autoFilter: false,
-      });
 
       // --- Quantity validation on product cells ---
       for (let r = 3; r <= dataRowCount + 2; r++) {
@@ -672,20 +655,35 @@ const NewShipmentPopup = ({
       const readmeLines = [
         "Instructions",
         "",
-        "1. 'From' is the source warehouse and 'To' is the destination facility",
-        selectedFacilities.length > 0
-          ? "2. From and To facilities have been pre-filled based on your selection"
-          : "2. Fill in the From and To facility codes for each row",
-        "3. From and To must be different facilities",
-        "4. Each row represents one shipment between a facility pair",
-        "5. Enter the Quantity for each product column",
-        "6. Leave a product quantity empty or 0 to skip it",
-        "7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs",
-        "8. Delete facility rows you do not need",
-        "9. Save the file and upload it back on the stock upload screen",
+        "1. Only the product quantity columns are editable — all other columns are locked.",
+        "2. Boundary, Project Name, and Facility columns have been pre-filled based on your selection and cannot be modified.",
+        "3. 'From' is the source warehouse and 'To' is the destination facility.",
+        "4. Each row represents one shipment between a From and To facility pair.",
+        "5. Enter a whole number (0 or greater) for each product quantity.",
+        "6. Leave a product quantity empty or 0 to skip that product for the row.",
+        "7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
+        "8. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
+        "9. Do NOT add new rows — only the pre-filled rows will be processed on upload.",
+        "10. Save the file and upload it back on the stock upload screen.",
       ];
       readmeLines.forEach((line) => readmeWs.addRow([line]));
       readmeWs.getColumn(1).width = 80;
+
+      // Protect the Stock Data sheet (must be after all cell operations)
+      await ws.protect('', {
+        selectLockedCells: true,
+        selectUnlockedCells: true,
+        formatCells: false,
+        formatColumns: false,
+        formatRows: false,
+        insertColumns: false,
+        insertRows: false,
+        insertHyperlinks: false,
+        deleteColumns: false,
+        deleteRows: false,
+        sort: false,
+        autoFilter: false,
+      });
 
       // Write and download
       const buffer = await wb.xlsx.writeBuffer();
@@ -1365,7 +1363,7 @@ const NewShipmentPopup = ({
                   type="button"
                   icon="DownloadIcon"
                   onClick={handleDownloadTemplate}
-                  isDisabled={isDownloading || fromSelectedLevel < 0 || toSelectedLevel < 0}
+                  isDisabled={isDownloading || fromSelectedLevel < 0 || toSelectedLevel < 0 || !fromFacilityId || selectedFacilityIds.size === 0}
                 />
               </Card>
 
