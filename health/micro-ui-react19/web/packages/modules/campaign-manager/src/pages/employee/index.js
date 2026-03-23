@@ -117,6 +117,35 @@ const UnifiedUploadScreen = lazyWithFallback(
   { loaderText: "Loading Unified Upload Screen..." }
 );
 
+const SetupAttendanceScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "setup-attendance" */ "./NewCampaignCreate/SetupAttendanceScreen"),
+  () => require("./NewCampaignCreate/SetupAttendanceScreen").default,
+  { loaderText: "Loading Setup Attendance..." }
+);
+
+const CreateRegistersScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "create-registers-screen" */ "./NewCampaignCreate/CreateRegistersScreen"),
+  () => require("./NewCampaignCreate/CreateRegistersScreen").default,
+  { loaderText: "Loading Create Registers..." }
+);
+
+const MapUsersToRegistersScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "map-users-to-registers" */ "./NewCampaignCreate/MapUsersToRegistersScreen"),
+  () => require("./NewCampaignCreate/MapUsersToRegistersScreen").default,
+  { loaderText: "Loading Map Users to Registers..." }
+);
+
+const RegisterDetailsScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "register-details" */ "./NewCampaignCreate/RegisterDetailsScreen"),
+  () => require("./NewCampaignCreate/RegisterDetailsScreen").default,
+  { loaderText: "Loading Register Details..." }
+);
+const MapAttendeesScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "map-attendees-screen" */ "./NewCampaignCreate/MapAttendeesScreen"),
+  () => require("./NewCampaignCreate/MapAttendeesScreen").default,
+  { loaderText: "Loading Map Attendees..." }
+);
+
 const CampaignTemplates = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
   () => require("./campaignTemplateScreens/CampaignTemplates").default,
@@ -207,6 +236,10 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("checklist/update") ||
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
+        pathVar.includes("setup-attendance") ||
+        pathVar.includes("create-registers-screen") ||
+        pathVar.includes("map-users-to-registers") ||
+        pathVar.includes("register-details") ||
         pathVar.includes("update-dates-boundary") ||
         pathVar.includes("delivery-details-preview") ||
         pathVar.includes("localization-add")
@@ -244,6 +277,31 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.ACTION_UPLOAD_SCREEN),
       show: pathVar.includes("unified-upload-screen") ? true : false,
+    },
+    {
+      internalLink:
+        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details")
+          ? ""
+          : `/${window?.contextPath}/employee/campaign/setup-attendance`,
+      content: t(I18N_KEYS.PAGES.SETUP_ATTENDANCE),
+      query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.CREATE_REGISTERS),
+      show: pathVar.includes("create-registers-screen") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") ? "" : `/${window?.contextPath}/employee/campaign/map-users-to-registers`,
+      content: t(I18N_KEYS.PAGES.MAP_USERS_TO_REGISTERS),
+      query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show: pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.REGISTER_DETAILS),
+      show: pathVar.includes("register-details") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,
@@ -422,6 +480,11 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-features`} element={<AppFeatures />} />
           <Route path={`upload-screen`} element={<NewUploadScreen />} />
           <Route path={`unified-upload-screen`} element={<UnifiedUploadScreen />} />
+          <Route path={`setup-attendance`} element={<SetupAttendanceScreen />} />
+          <Route path={`create-registers-screen`} element={<CreateRegistersScreen />} />
+          <Route path={`map-users-to-registers`} element={<MapUsersToRegistersScreen />} />
+          <Route path={`register-details`} element={<RegisterDetailsScreen />} />
+          <Route path={`map-attendees-screen`} element={<MapAttendeesScreen />} />
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />

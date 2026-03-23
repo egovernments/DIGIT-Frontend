@@ -97,6 +97,7 @@ module.exports = merge(common, {
           "/excel-ingestion",
           "/boundary-management",
           "/stock/v1",
+          "/attendance"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://bauchi-hcm-uat.digit.org" || "https://unified-uat.digit.org",
         changeOrigin: true,

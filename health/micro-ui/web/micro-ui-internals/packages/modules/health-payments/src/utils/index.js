@@ -58,14 +58,13 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
 
   if (fileStoreId) {
     const fileTypeMapping = {
-      excel: {
-        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        extension: "xlsx",
-      },
-      pdf: {
-        mimeType: "application/pdf",
-        extension: "pdf",
-      },
+      excel: { mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", extension: "xlsx" },
+      xls:   { mimeType: "application/vnd.ms-excel", extension: "xls" },
+      csv:   { mimeType: "text/csv", extension: "csv" },
+      pdf:   { mimeType: "application/pdf", extension: "pdf" },
+      png:   { mimeType: "image/png", extension: "png" },
+      jpg:   { mimeType: "image/jpeg", extension: "jpg" },
+      jpeg:  { mimeType: "image/jpeg", extension: "jpeg" },
     };
 
     const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"]; // Default to Excel if type is invalid

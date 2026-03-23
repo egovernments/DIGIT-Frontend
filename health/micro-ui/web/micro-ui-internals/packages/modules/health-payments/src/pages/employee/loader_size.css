@@ -1,0 +1,11 @@
+.small-loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.25rem; /* spacing between loader and text */
+}
+
+.scaled-loader {
+  transform: scale(0.25);
+  transform-origin: left center;
+}

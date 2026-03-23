@@ -38,6 +38,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const parentId = searchParams.get("parentId");
+  const registerId = searchParams.get("registerId");
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const [uploadLoader, setUploadLoader] = useState(false);
@@ -49,6 +50,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   {},
   //   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   // );
+  console.log("regsterId123", registerId);
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -124,6 +126,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else if (type === "unified-console") {
       onSelect("uploadUnified", { uploadedFile, isError, isValidation, apiError, isSuccess });
+    } else if (type === "attendanceRegister") {
+      onSelect("uploadAttendanceRegister", { uploadedFile, isError, isValidation, apiError, isSuccess });
+    } else if (type === "attendanceRegisterAttendee") {
+      onSelect("uploadAttendanceRegisterAttendee", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else {
       onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
     }
@@ -329,6 +335,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         uploadType = "uploadFacility";
       } else if (type === "unified-console") {
         uploadType = "uploadUnified";
+      } else if (type === "attendanceRegister") {
+        uploadType = "uploadAttendanceRegister";
       }
       onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
       setExecutionCount((prevCount) => prevCount + 1);
@@ -414,6 +422,20 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       }
       case "unified-console": {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA", "unified-console-resources");
+        setUploadedFile(uploadedFile);
+        setIsSuccess(isSuccess);
+        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        break;
+      }
+      case "attendanceRegister": {
+        const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
+        setUploadedFile(uploadedFile);
+        setIsSuccess(isSuccess);
+        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        break;
+      }
+      case "attendanceRegisterAttendee": {
+        const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
         setUploadedFile(uploadedFile);
         setIsSuccess(isSuccess);
         setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
@@ -1034,8 +1056,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
-        // For unified-console, use hyphenated validation type; for others use camelCase
-        const validationType = type === "unified-console" ? "unified-console-validation" : `${type}Validation`;
+        // For unified-console and attendanceRegister, use hyphenated validation type; for others use camelCase
+        const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : type === "attendanceRegisterAttendee" ? "attendanceRegisterAttendee-validation" : `${type}Validation`;
 
         try {
           const temp = await Digit.Hooks.campaign.useProcessData(
@@ -1043,8 +1065,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
             validationType,
             tenantId,
-            id,
-            baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
+            type === "attendanceRegisterAttendee" ? registerId : id, //TODO CHECK
+            baseTimeOut?.[CONSOLE_MDMS_MODULENAME],
+            type === "attendanceRegisterAttendee" ? { registerId } : {}
           );
           if (temp?.isError) {
             setLoader(false);
@@ -1069,12 +1092,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           if (temp?.status === "completed") {
             setLoader(false);
             setIsValidation(false);
-            // For unified-console, check validationStatus/totalErrors; for others, check sheetErrors
-            const isUnifiedConsoleInvalid =
-              type === "unified-console" &&
+            // For unified-console and attendanceRegister, check validationStatus/totalErrors; for others, check sheetErrors
+            const isExcelIngestionType = type === "unified-console" || type === "attendanceRegister" || type === "attendanceRegisterAttendee";
+            const isExcelIngestionInvalid =
+              isExcelIngestionType &&
               (temp?.additionalDetails?.validationStatus === "invalid" || temp?.additionalDetails?.totalErrors > 0);
             const hasSheetErrors = temp?.additionalDetails?.sheetErrors?.length > 0;
-            const isValidFile = !hasSheetErrors && !isUnifiedConsoleInvalid;
+            const isValidFile = !hasSheetErrors && !isExcelIngestionInvalid;
 
             if (isValidFile) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
@@ -1175,6 +1199,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     facility: false,
     user: false,
     "unified-console": false,
+    attendanceRegister: false,
+    attendanceRegisterAttendee: false,
   });
 
   const downloadTemplate = async () => {
@@ -1231,6 +1257,143 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         }));
       } catch (error) {
         console.error("Error in unified-console download:", error);
+        const errorCode = error?.response?.data?.Errors?.[0]?.code;
+        if (errorCode === "NativeIoException") {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        }
+      }
+      return;
+    }
+
+    // For attendanceRegister / attendanceRegisterAttendee type, use generation search API with polling and generate fallback
+    if (type === "attendanceRegister" || type === "attendanceRegisterAttendee") {
+      const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
+      const pollRetryInterval = 2000;
+      const maxPollTime = 60000;
+
+      // Helper: search for generated resource
+      const searchGeneration = async () => {
+        const response = await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_search",
+          body: {
+            GenerationSearchCriteria: {
+              tenantId: tenantId,
+              referenceIds: [type === "attendanceRegisterAttendee" ? registerId : id],
+              statuses: ["completed", "failed", "pending", "inprogress"],
+              limit: 5,
+              offset: 0,
+              locale: locale,
+              types: [type],
+              referenceTypes: [type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign"],
+            },
+          },
+        });
+        return response?.GenerationDetails?.[0];
+      };
+
+      // Helper: poll until completed/failed or timeout
+      const pollUntilDone = async () => {
+        const startTime = Date.now();
+        while (Date.now() - startTime < maxPollTime) {
+          await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
+          const resource = await searchGeneration();
+          if (!resource || resource?.status === "completed" || resource?.status === "failed") {
+            return resource;
+          }
+        }
+        return null; // timeout
+      };
+
+      // Helper: trigger generate
+      const triggerGenerate = async () => {
+        await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_init",
+          body: {
+            GenerateResource: {
+              tenantId: tenantId,
+              type: type,
+              hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
+              referenceId: type === "attendanceRegisterAttendee" ? registerId : id,
+              referenceType: type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign",
+              locale: locale,
+              additionalDetails: {
+                campaignName: campaignName,
+                campaignId: id
+              },
+            },
+          },
+        });
+      };
+
+      // Helper: download from a completed resource
+      const downloadFromResource = (resource) => {
+        const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
+        if (!fileStoreId) {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+        setDownloadError(false);
+        const templateLabel = type === "attendanceRegisterAttendee" ? "Attendee_Template" : "Attendance_Register_Template";
+        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
+        downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
+        setDownloadedTemplates((prev) => ({
+          ...prev,
+          [type]: true,
+        }));
+      };
+
+      try {
+        setLoader(true);
+        // Step 1: Search if completed is available
+        let resource = await searchGeneration();
+
+        // If completed, download directly
+        if (resource?.status === "completed") {
+          setLoader(false);
+          downloadFromResource(resource);
+          return;
+        }
+
+        // If pending/inprogress, poll till timeout
+        if (resource?.status === "pending" || resource?.status === "inprogress") {
+          resource = await pollUntilDone();
+          if (resource?.status === "completed") {
+            setLoader(false);
+            downloadFromResource(resource);
+            return;
+          }
+          // If still not completed after polling, treat as failed
+        }
+
+        // If failed or no resource found, trigger generate
+        await triggerGenerate();
+
+        // Then search + poll again
+        resource = await pollUntilDone();
+
+        setLoader(false);
+
+        if (resource?.status === "completed") {
+          downloadFromResource(resource);
+          return;
+        }
+
+        // If failed or timeout after generate, stop
+        if (resource?.status === "failed") {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        }
+      } catch (error) {
+        setLoader(false);
+        console.error("Error in attendanceRegister download:", error);
         const errorCode = error?.response?.data?.Errors?.[0]?.code;
         if (errorCode === "NativeIoException") {
           setDownloadError(true);
@@ -1386,6 +1549,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("WBH_UPLOAD_FACILITY")
                   : type === "unified-console"
                   ? t("WBH_UPLOAD_UNIFIED_DATA")
+                  : type === "attendanceRegister"
+                  ? t("WBH_UPLOAD_ATTENDANCE_REGISTER")
                   : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
             </div>
@@ -1397,6 +1562,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("HCM_FACILITY_MESSAGE")
                   : type === "unified-console"
                   ? t("HCM_UNIFIED_DATA_MESSAGE")
+                  : type === "attendanceRegister"
+                  ? t("HCM_ATTENDANCE_REGISTER_MESSAGE")
                   : t("HCM_USER_MESSAGE")}
               </div>
             )}
@@ -1462,6 +1629,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
                 : type === "unified-console"
                 ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER")
+                : type === "attendanceRegister"
+                ? t("ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_HEADER")
                 : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
@@ -1472,6 +1641,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
                   : type === "unified-console"
                   ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT")
+                  : type === "attendanceRegister"
+                  ? t("ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT")
                   : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
               </div>,
             ]}

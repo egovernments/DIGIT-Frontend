@@ -74,7 +74,6 @@ const ProjectSelect = () => {
       const boundaryTypeOrder = AGGREGATION_LEVEL_OPTIONS.find((option) => option.code === selectedProject?.address?.boundaryType)?.order;
 
       if (boundaryTypeOrder) {
-        setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS.filter((option) => option.order >= boundaryTypeOrder));
       } else {
         setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS);
       }
@@ -83,46 +82,61 @@ const ProjectSelect = () => {
     }
   }, [selectedProject]);
 
-  useEffect(() => {
-    if (project == null || project?.length === 0) {
-      const projectData = Digit?.SessionStorage.get("staffProjects") || [];
-      setProject(projectData);
-      handleProjectSelect(projectData?.[0]);
-    }
-  }, []);
+    // Load project data if not already loaded
+    useEffect(() => {
+        if (project == null || project?.length === 0) {
+            const projectData = Digit?.SessionStorage.get("staffProjects") || [];
+            setProject(projectData);
+            if(selectedProject == null){
+                handleProjectSelect(projectData?.[0]); // Default to the first project
+            }
+        }
+    }, []);
 
-  const handleProjectSelect = (value) => {
-    Digit.SessionStorage.set("selectedProject", value);
-    setSelectedProject(value);
-  };
+    // Handle project selection
+    const handleProjectSelect = (value) => {
+        if (value !== Digit.SessionStorage.get("selectedProject")) {
+            Digit.SessionStorage.del("selectedBoundaryCode");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("selectedValues");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("paymentInbox");
+        }
+        Digit.SessionStorage.set("selectedProject", value);
+        setSelectedProject(value);
+    };
 
-  const handleAggregationLevelChange = (value) => {
-    if (value !== Digit.SessionStorage.get("selectedLevel")) {
-      Digit.SessionStorage.del("selectedBoundaryCode");
-      Digit.SessionStorage.del("boundary");
-      Digit.SessionStorage.del("selectedValues");
-    }
-    setSelectedLevel(value);
-    Digit.SessionStorage.set("selectedLevel", value);
-  };
+    // Handle aggregation level selection
+    const handleAggregationLevelChange = value => {
+        if (value !== Digit.SessionStorage.get("selectedLevel")) {
+            Digit.SessionStorage.del("selectedBoundaryCode");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("selectedValues");
+            Digit.SessionStorage.del("boundary");
+            Digit.SessionStorage.del("paymentInbox");
+        }
+        setSelectedLevel(value);
+        Digit.SessionStorage.set("selectedLevel", value);
+    };
 
-  const handleNextClick = () => {
-    if (billScreen) {
-      if (!selectedProject || !selectedLevel) {
-        setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"), transitionTime: 3000 });
-        return;
-      }
-      Digit.SessionStorage.set("selectedProject", selectedProject);
-      history.push(`/${window.contextPath}/employee/payments/generate-bill`);
-    } else {
-      if (!selectedProject) {
-        setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
-        return;
-      }
-      Digit.SessionStorage.set("selectedProject", selectedProject);
-      history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-    }
-  };
+    // Handle navigation to next screen
+    const handleNextClick = () => {
+        if (billScreen) {
+            if (!selectedProject || !selectedLevel) {
+                setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS"), transitionTime: 3000 });
+                return;
+            }
+            Digit.SessionStorage.set("selectedProject", selectedProject);
+            history.push(`/${window.contextPath}/employee/payments/generate-bill`);
+        } else {
+            if (!selectedProject) {
+                setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
+                return;
+            }
+            Digit.SessionStorage.set("selectedProject", selectedProject);
+            history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+        }
+    };
 
   return (
     <React.Fragment>

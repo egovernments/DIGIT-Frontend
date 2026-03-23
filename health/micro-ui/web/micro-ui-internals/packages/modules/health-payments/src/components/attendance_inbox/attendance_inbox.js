@@ -89,16 +89,17 @@ const AttendanceInboxComponent = () => {
             const rowData =
               data?.attendanceRegister.length > 0
                 ? data?.attendanceRegister?.map((item, index) => {
-                    return {
-                      id: item?.registerNumber,
-                      registerId: item?.id,
-                      name: selectedProject?.name,
-                      boundary: item?.localityCode,
-                      status: item?.attendees == null ? 0 : item?.attendees.length || 0,
-                      markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
-                      approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
-                    };
-                  })
+                  return {
+                    id: item?.registerNumber,
+                    registerId: item?.id,
+                    name: selectedProject?.name,
+                    boundary: item?.localityCode,
+                    boundaryType: item?.additionalDetails?.boundaryType,
+                    status: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                    markby: item?.staff?.[0].additionalDetails?.ownerName || "NA",
+                    approvedBy: item?.staff?.[0].additionalDetails?.staffName || "NA",
+                  };
+                })
                 : [];
             setChildrenDataLoading(false);
             setCard(true);
@@ -130,14 +131,14 @@ const AttendanceInboxComponent = () => {
     const selectedArea = Digit.SessionStorage.get("selectedValues");
 
     const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
-  
+
     if (data && selectedPeriod) {
-  
+
       triggerAttendanceSearch(data);
     } else if (selectedArea) {
       const pp = Object.values(selectedArea).find((v) => v !== null);
       if (pp && selectedPeriod) {
-  
+
         triggerAttendanceSearch(pp?.code);
       }
     }

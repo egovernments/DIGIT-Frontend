@@ -285,7 +285,8 @@ module.exports = {
           "/stock/v1",
           "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
           "/kibana",
-          "/kibana-upgrade"
+          "/kibana-upgrade",
+          "/attendance"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
