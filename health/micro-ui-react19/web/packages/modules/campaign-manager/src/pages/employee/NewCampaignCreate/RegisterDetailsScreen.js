@@ -94,7 +94,7 @@ const RegisterDetailsScreen = () => {
 
   // Poll every 5 seconds while attendee mapping is in progress
   useEffect(() => {
-    if (attendeeMappingStatus !== "creating") return;
+    if (attendeeMappingStatus !== "creating" && attendeeMappingStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchAttendeeResource();
     }, 3000);
@@ -105,7 +105,7 @@ const RegisterDetailsScreen = () => {
   // Show toast based on attendee mapping status
   useEffect(() => {
     if (isAttendeeResourceLoading || isAttendeeResourceFetching || attendeeResourceDetails.length === 0) return;
-    if (attendeeMappingStatus === "creating") {
+    if (attendeeMappingStatus === "creating" && attendeeMappingStatus !== "toCreate") {
       setShowToast({ key: "warning", label: t("HCM_ATTENDEE_MAPPING_IN_PROGRESS") });
     } else if (attendeeMappingStatus === "failed") {
       setShowToast({ key: "error", label: t("HCM_ATTENDEE_MAPPING_FAILED") });
