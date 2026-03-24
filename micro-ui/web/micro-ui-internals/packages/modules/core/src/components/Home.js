@@ -148,6 +148,7 @@ const CitizenHome = ({
   if (isLoading) {
     return <Loader />;
   }
+  
 
   return (
     <React.Fragment>
