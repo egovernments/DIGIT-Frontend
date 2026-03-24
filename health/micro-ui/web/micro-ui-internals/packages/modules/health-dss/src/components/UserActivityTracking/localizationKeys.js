@@ -41,6 +41,11 @@ const localizationKeys = {
   HCM_ROLE_DISTRIBUTOR: "Distributor",
   HCM_ROLE_SUPERVISOR: "Supervisor",
   HCM_ROLE_CDD: "CDD",
+  HCM_ROLE_WAREHOUSE_MANAGER: "Warehouse Manager",
+  HCM_ROLE_HEALTH_FACILITY_WORKER: "Health Facility Worker",
+  HCM_ROLE_DISTRICT_SUPERVISOR: "District Supervisor",
+  HCM_ROLE_COMMUNITY_DISTRIBUTOR: "Community Distributor",
+  HCM_ROLE_TEAM_SUPERVISOR: "Team Supervisor",
   HCM_ROLE_UNKNOWN: "Unknown",
 
   // ─── Main Screen: Search & Table ───
