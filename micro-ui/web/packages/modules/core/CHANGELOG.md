@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-dev-16"] [09-MAR-2026]
+- New feature of get started popup indroduced on landing page
+
 ## ["2.0.0-dev-15"] [25-Feb-2026]
 - Removed unneccessary isUserRegistered check and directly handing the logic based on sendOtp network call success or failure status
 
