@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card, Button, Loader, Toast } from "@egovernments/digit-ui-components";
+import { Card, Button, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
@@ -55,6 +55,16 @@ const RegisterDetailsScreen = () => {
   const boundaryCode = searchParams.get("boundaryCode");
 
   const [showToast, setShowToast] = useState(null);
+  const [deletePopup, setDeletePopup] = useState(null);
+
+  // Mutation hook for de-enrolling an attendee
+  const deenrollReqCriteria = {
+    url: `/attendance/attendee/v1/_delete`,
+    params: {},
+    body: {},
+    config: { enabled: false },
+  };
+  const deenrollMutation = Digit.Hooks.useCustomAPIMutationHook(deenrollReqCriteria);
 
   // Fetch campaign data to get campaignId
   const campaignReqCriteria = {//TODO check api call
@@ -121,13 +131,13 @@ const RegisterDetailsScreen = () => {
     params: { tenantId, registerNumber },
     body: {},
     config: {
-      enabled: !!registerNumber && isAttendeeCreationCompleted,
+      enabled: !!registerNumber,
       select: (data) => data?.attendanceRegister?.[0],
       staleTime: 0,
       cacheTime: 0,
     },
   };
-  const { data: registerData, isLoading } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
+  const { data: registerData, isLoading, refetch: refetchRegister } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
 
   const attendees = registerData?.attendees || [];
   const staff = registerData?.staff || [];
@@ -177,8 +187,44 @@ const RegisterDetailsScreen = () => {
     return owner?.additionalDetails?.staffName || owner?.additionalDetails?.ownerName || NA;
   };
 
-  const handleDeleteUser = (_user) => {
-    // TODO: Call delete API for this user
+  const handleDeleteUser = (user) => {
+    setDeletePopup(user);
+  };
+
+  const confirmDeleteUser = () => {
+    const user = deletePopup;
+    setDeletePopup(null);
+    deenrollMutation.mutate(
+      {
+        url: `/attendance/attendee/v1/_delete`,
+        body: {
+          attendees: [
+            {
+              registerId: registerId,
+              individualId: user.individualId,
+              enrollmentDate: null,
+              denrollmentDate: new Date().getTime(),
+              tenantId: String(tenantId),
+            },
+          ],
+        },
+        config: { enable: true },
+      },
+      {
+        onSuccess: () => {
+          setShowToast({ key: "success", label: t("HCM_ATTENDEE_DE_ENROLL_SUCCESS") });
+          setTimeout(() => setShowToast(null), 3000);
+          refetchRegister();
+        },
+        onError: (error) => {
+          setShowToast({
+            key: "error",
+            label: error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_DE_ENROLLING_ATTENDEE"),
+          });
+          setTimeout(() => setShowToast(null), 3000);
+        },
+      }
+    );
   };
 
   const handleBack = () => {
@@ -202,7 +248,14 @@ const RegisterDetailsScreen = () => {
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_BOUNDARY_COLUMN),
-      selector: () => boundaryCode || registerData?.localityCode || NA,
+      cell: () => {
+        const code = registerData?.localityCode || boundaryCode || NA;
+        return (
+          <span title={code} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {code}
+          </span>
+        );
+      },
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_TEAM_CODE_COLUMN),
@@ -226,15 +279,18 @@ const RegisterDetailsScreen = () => {
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELETE_USER_COLUMN),
-      cell: (row) => (
-        <Button
-          label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
-          variation="secondary"
-          size="small"
-          icon="Delete"
-          onClick={() => handleDeleteUser(row)}
-        />
-      ),
+      cell: (row) =>
+        row.status === "Inactive" ? (
+          <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t("HCM_ALREADY_REMOVED")}</span>
+        ) : (
+          <Button
+            label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+            variation="secondary"
+            size="small"
+            icon="Delete"
+            onClick={() => handleDeleteUser(row)}
+          />
+        ),
     },
   ];
 
@@ -263,6 +319,10 @@ const RegisterDetailsScreen = () => {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
+            <div style={detailLabelStyle}>{t("HCM_REGISTER_ID")} :</div>
+            <div style={detailValueStyle}>{registerData?.serviceCode || NA}</div>
+          </div>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN)} :</div>
             <div style={detailValueStyle}>{registerData?.registerNumber || registerNumber || NA}</div>
           </div>
@@ -278,10 +338,10 @@ const RegisterDetailsScreen = () => {
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN)} :</div>
             <div style={detailValueStyle}>{attendees.length}</div>
           </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
+          {/* <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.COMPONENTS.STATUS)} :</div>
             <div style={detailValueStyle}>{registerData?.status || NA}</div>
-          </div>
+          </div> */}
         </div>
       </Card>
 
@@ -325,6 +385,34 @@ const RegisterDetailsScreen = () => {
         />
       </div>
 
+      {deletePopup && (
+        <PopUp
+          className="custom-popup"
+          type="alert"
+          alertHeading={t("HCM_CONFIRM_DELETE_ATTENDEE")}
+          alertMessage={t("HCM_DELETE_ATTENDEE_CONFIRM_MSG")}
+          onClose={() => setDeletePopup(null)}
+          onOverlayClick={() => setDeletePopup(null)}
+          footerChildren={[
+            <Button
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t("CANCEL")}
+              onClick={() => setDeletePopup(null)}
+            />,
+            <Button
+              type="button"
+              size="large"
+              variation="primary"
+              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+              onClick={confirmDeleteUser}
+            />,
+          ]}
+          sortFooterChildren={true}
+        />
+      )}
+
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
@@ -344,6 +432,7 @@ const detailLabelStyle = {
   marginBottom: "4px",
   textTransform: "uppercase",
   letterSpacing: "0.04em",
+  minWidth: "180px",
 };
 
 const detailValueStyle = {
