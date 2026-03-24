@@ -97,7 +97,7 @@ const MapUsersToRegistersScreen = () => {
 
   // Poll every 5 seconds while register creation is in progress
   useEffect(() => {
-    if (registerCreationStatus !== "creating" || registerCreationStatus !== "toCreate") return;
+    if (registerCreationStatus !== "creating" && registerCreationStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchResourceDetails();
     }, 3000);
@@ -108,7 +108,7 @@ const MapUsersToRegistersScreen = () => {
   // Show toast when resource status is not completed
   useEffect(() => {
     if (isResourceLoading || isResourceFetching || resourceDetails.length === 0) return;
-    if (registerCreationStatus === "creating" || registerCreationStatus !== "toCreate") {
+    if (registerCreationStatus === "creating" || registerCreationStatus === "toCreate") {
       setShowToast({ key: "warning", label: t("HCM_REGISTER_CREATION_IN_PROGRESS") });
     } else if (registerCreationStatus === "failed") {
       setShowToast({ key: "error", label: t("HCM_REGISTER_CREATION_FAILED") });
@@ -157,7 +157,7 @@ const MapUsersToRegistersScreen = () => {
   };
 
   const filteredRegisters = registers.filter((reg) => {
-    const matchId = !appliedFilters.registerId || reg.id === appliedFilters.registerId;
+    const matchId = !appliedFilters.registerId || reg.serviceCode === appliedFilters.registerId;
     const matchOfficer =
       !appliedFilters.officer ||
       getOwnerName(reg).toLowerCase().includes(appliedFilters.officer.toLowerCase());
@@ -218,26 +218,34 @@ const MapUsersToRegistersScreen = () => {
 
   const columns = [
     {
-      name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN),
-      selector: (row) => row.registerNumber,
-      cell: (row) => (
-        <span
-          onClick={() => handleMapUsers(row)}
-          style={{ color: PRIMARY, cursor: "pointer", fontWeight: "500", textDecoration: "underline" }}
-        >
-          {row.registerNumber}
-        </span>
-      ),
-    },
-    {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NAME_COLUMN),
       selector: (row) => row.name,
       cell: (row) => (
-        <span title={row.name} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <span
+          title={row.name}
+          onClick={() => handleMapUsers(row)}
+          style={{ color: PRIMARY, cursor: "pointer", fontWeight: "500", textDecoration: "underline", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+        >
           {row.name}
         </span>
       ),
     },
+    {
+      name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL),
+      selector: (row) => row.serviceCode,
+    },
+    // {
+    //   name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN),
+    //   selector: (row) => row.registerNumber,
+    //   cell: (row) => (
+    //     <span
+    //       onClick={() => handleMapUsers(row)}
+    //       style={{ color: PRIMARY, cursor: "pointer", fontWeight: "500", textDecoration: "underline" }}
+    //     >
+    //       {row.registerNumber}
+    //     </span>
+    //   ),
+    // },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN),
       selector: (row) => getOwnerName(row),
@@ -328,7 +336,7 @@ const MapUsersToRegistersScreen = () => {
               >
                 <option value=""></option>
                 {registers.map((r) => (
-                  <option key={r.id} value={r.id}>{r.name}</option>
+                  <option key={r.id} value={r.serviceCode} title={r.serviceCode}>{r.serviceCode}</option>
                 ))}
               </select>
               <svg style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}
