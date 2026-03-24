@@ -6,13 +6,11 @@ import SummaryCard from "./SummaryCard";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
-import NewShipmentPopup from "./NewShipmentPopup";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 
 const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
   const [shipmentFacility, setShipmentFacility] = useState(null); // { id, name } for CommodityShipmentPopup
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
@@ -408,18 +406,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   return (
     <div ref={fullPageRef}>
-      {!isCompleted && (
-        <div className="cm-stock-actions">
-          <Button
-            type="button"
-            variation="primary"
-            label={t("HCM_NEW_SHIPMENT")}
-            icon="AddIcon"
-            onClick={() => setShowNewShipmentPopup(true)}
-          />
-        </div>
-      )}
-
       <DataSyncCard
         items={[
           {
@@ -531,19 +517,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           headerClassName=""
         />
       </GenericChart>
-
-      {showNewShipmentPopup && (
-        <NewShipmentPopup
-          campaignNumber={campaignNumber}
-          campaignId={campaignId}
-          tenantId={tenantId}
-          projectId={projectId}
-          userBoundary={userBoundary}
-          productVariants={productVariantList}
-          onClose={() => setShowNewShipmentPopup(false)}
-          onSuccess={() => setShowNewShipmentPopup(false)}
-        />
-      )}
 
       {shipmentFacility && (
         <CommodityShipmentPopup

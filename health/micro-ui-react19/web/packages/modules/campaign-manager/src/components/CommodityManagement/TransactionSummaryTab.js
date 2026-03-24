@@ -65,6 +65,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     createdTime,
     sentFrom: facilityNameMap[stock?.senderId] || stock?.senderId || "N/A",
     sentTo: facilityNameMap[stock?.receiverId] || stock?.receiverId || "N/A",
+    userName: stock?.nameOfUser || stock?.userName,
     createdBy: stock?.auditDetails?.createdBy || "N/A",
     status,
     commodity,
@@ -165,10 +166,12 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return map;
   }, [productVariants, products]);
 
-  // Transform stock data with resolved names
+  // Transform stock data with resolved names, sorted by createdTime descending
   const tableData = useMemo(() => {
     if (!rawStockData?.length) return [];
-    return rawStockData.map(stock => transformStock(stock, facilityNameMap, productNameMap));
+    return rawStockData
+      .map(stock => transformStock(stock, facilityNameMap, productNameMap))
+      .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [rawStockData, facilityNameMap, productNameMap]);
 
   const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading;

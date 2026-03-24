@@ -20,7 +20,7 @@ export const createRegistersConfig = ({ totalFormData, campaignData }) => {
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "attendanceRegister",
+                screenType: "attendanceRegister",
               },
               populators: {
                 name: "uploadAttendanceRegister",

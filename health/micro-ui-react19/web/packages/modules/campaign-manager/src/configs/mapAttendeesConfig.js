@@ -20,7 +20,7 @@ export const mapAttendeesConfig = ({ totalFormData, campaignData }) => {
                 module: "HCM",
                 sessionData: totalFormData,
                 campaignData: campaignData,
-                type: "attendanceRegisterAttendee",
+                screenType: "attendanceRegisterAttendee",
               },
               populators: {
                 name: "uploadAttendanceRegisterAttendee",

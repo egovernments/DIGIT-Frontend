@@ -23,7 +23,6 @@ const NewShipmentPopup = ({
   tenantId,
   projectId: projectIdProp,
   userBoundary,
-  productVariants: productVariantsProp,
   onClose,
   onSuccess,
 }) => {
@@ -119,7 +118,47 @@ const NewShipmentPopup = ({
     return map;
   }, [boundaryRelationships]);
 
-  const projectId = projectIdProp;
+  // Fetch campaign data to get projectId and product variants
+  const campaignReqCriteria = useMemo(() => ({
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId,
+        campaignNumber,
+        isOverrideDatesFromProject: true,
+      },
+    },
+    config: {
+      enabled: !!campaignNumber,
+      staleTime: 0,
+      cacheTime: 0,
+      select: (data) => data?.CampaignDetails?.[0],
+    },
+  }), [tenantId, campaignNumber]);
+
+  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+
+  const projectId = campaignData?.projectId || projectIdProp;
+  const campaignName = campaignData?.campaignName || "";
+
+  // Extract product variants from campaign delivery rules
+  const productVariants = useMemo(() => {
+    if (!campaignData?.deliveryRules) return [];
+    const variants = [];
+    const seen = new Set();
+    campaignData.deliveryRules.forEach((rule) => {
+      rule?.resources?.forEach((r) => {
+        if (r?.productVariantId && !seen.has(r.productVariantId)) {
+          seen.add(r.productVariantId);
+          variants.push({
+            productVariantId: r.productVariantId,
+            name: r.name || r.productVariantId,
+          });
+        }
+      });
+    });
+    return variants;
+  }, [campaignData]);
 
   const projectSearchCriteria = useMemo(
     () => ({
@@ -373,26 +412,68 @@ const NewShipmentPopup = ({
   );
 
   const {
-    data: toFacilityList,
+    data: rawToFacilityList,
     isLoading: toFacilitiesLoading,
   } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
 
-  const productVariants = productVariantsProp || [];
+  // Collect all unique facility IDs from both lists for name resolution
+  const allFacilityIds = useMemo(() => {
+    const ids = new Set();
+    (fromFacilityList || []).forEach((f) => ids.add(f.id));
+    (rawToFacilityList || []).forEach((f) => ids.add(f.id));
+    return [...ids];
+  }, [fromFacilityList, rawToFacilityList]);
+
+  // Fetch facility details to get names
+  const facilityNameSearchCriteria = useMemo(() => ({
+    url: `/facility/v1/_search`,
+    params: { tenantId, limit: allFacilityIds.length || 10, offset: 0 },
+    body: { Facility: { id: allFacilityIds } },
+    config: {
+      enabled: !!allFacilityIds.length && !!tenantId,
+      select: (data) => {
+        const nameMap = {};
+        (data?.Facilities || []).forEach((f) => {
+          if (f.id) nameMap[f.id] = f.name || f.id;
+        });
+        return nameMap;
+      },
+    },
+  }), [tenantId, allFacilityIds]);
+
+  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = Digit.Hooks.useCustomAPIHook(facilityNameSearchCriteria);
+
+  // Enrich facility lists with resolved names
+  const enrichedFromFacilityList = useMemo(() => {
+    if (!fromFacilityList?.length) return fromFacilityList;
+    return fromFacilityList.map((f) => ({
+      ...f,
+      name: facilityNameMap[f.id] || f.id,
+    }));
+  }, [fromFacilityList, facilityNameMap]);
+
+  const toFacilityList = useMemo(() => {
+    if (!rawToFacilityList?.length) return rawToFacilityList;
+    return rawToFacilityList.map((f) => ({
+      ...f,
+      name: facilityNameMap[f.id] || f.id,
+    }));
+  }, [rawToFacilityList, facilityNameMap]);
 
   const filteredFromFacilities = useMemo(() => {
-    if (!fromFacilityList?.length) return [];
-    if (!fromSearchQuery?.trim()) return fromFacilityList;
+    if (!enrichedFromFacilityList?.length) return [];
+    if (!fromSearchQuery?.trim()) return enrichedFromFacilityList;
     const q = fromSearchQuery.toLowerCase();
-    return fromFacilityList.filter(
+    return enrichedFromFacilityList.filter(
       (f) =>
         (f.id && f.id.toLowerCase().includes(q)) ||
         (f.name && f.name.toLowerCase().includes(q)),
     );
-  }, [fromFacilityList, fromSearchQuery]);
+  }, [enrichedFromFacilityList, fromSearchQuery]);
 
   const fromFacility = useMemo(
-    () => fromFacilityList?.find((f) => f.id === fromFacilityId) || null,
-    [fromFacilityList, fromFacilityId],
+    () => enrichedFromFacilityList?.find((f) => f.id === fromFacilityId) || null,
+    [enrichedFromFacilityList, fromFacilityId],
   );
 
   const filteredFacilities = useMemo(() => {
@@ -492,6 +573,7 @@ const NewShipmentPopup = ({
       boundaryHeaders,
       stockHeaders: [
         ...boundaryHeaders,
+        "Campaign Number",
         "Project Name",
         "From (Facility Code)",
         "From (Facility Name)",
@@ -506,11 +588,15 @@ const NewShipmentPopup = ({
     setIsDownloading(true);
     try {
       const { boundaryHeaders, stockHeaders } = getTemplateHeaders();
-      const projectName = campaignNumber || "";
+      const projectName = campaignName || "";
 
-      // Collect facility IDs for Options sheet
-      const fromFacIds = (fromFacilityList || []).map((f) => f.id);
-      const toFacIds = (toFacilityList || []).map((f) => f.id);
+      // Collect facility IDs and names for Options sheet
+      const fromFacs = (enrichedFromFacilityList || []).map((f) => ({ id: f.id, name: f.name || f.id }));
+      const toFacs = (toFacilityList || []).map((f) => ({ id: f.id, name: f.name || f.id }));
+      const fromFacIds = fromFacs.map((f) => f.id);
+      const fromFacNames = fromFacs.map((f) => f.name);
+      const toFacIds = toFacs.map((f) => f.id);
+      const toFacNames = toFacs.map((f) => f.name);
 
       // Helper: convert column index (1-based) to Excel column letter
       const colLetter = (idx) => {
@@ -532,6 +618,7 @@ const NewShipmentPopup = ({
       // Row 2: hidden variant ID row
       const variantIdRow = [];
       boundaryHeaders.forEach(() => variantIdRow.push(""));
+      variantIdRow.push(""); // Campaign Number
       variantIdRow.push(""); // Project Name
       variantIdRow.push(""); // From (Facility Code)
       variantIdRow.push(""); // From (Facility Name)
@@ -548,6 +635,7 @@ const NewShipmentPopup = ({
           const code = fromHierarchyFilters[bType] || toHierarchyFilters[bType] || "";
           row.push(code ? t(code) : "");
         });
+        row.push(campaignNumber || "");
         row.push(projectName);
         row.push(fromFacility?.id || "");
         row.push(fromFacility?.name || "");
@@ -564,55 +652,90 @@ const NewShipmentPopup = ({
       // Bold header row
       ws.getRow(1).font = { bold: true };
 
-      // --- Options sheet (hidden) ---
+      // --- Options sheet (hidden) — 4 columns: From Codes, From Names, To Codes, To Names ---
       const optionsWs = wb.addWorksheet("Options", { state: "hidden" });
-      const optionsCols = ["From Facilities", "To Facilities"];
-      const optionsColData = [fromFacIds, toFacIds];
-      optionsWs.addRow(optionsCols);
-      const maxOptionsRows = Math.max(1, ...optionsColData.map((col) => col.length));
+      optionsWs.addRow(["From Facility Codes", "From Facility Names", "To Facility Codes", "To Facility Names"]);
+      const maxOptionsRows = Math.max(1, fromFacIds.length, toFacIds.length);
       for (let r = 0; r < maxOptionsRows; r++) {
-        optionsWs.addRow(optionsColData.map((col) => (r < col.length ? col[r] : "")));
+        optionsWs.addRow([
+          r < fromFacIds.length ? fromFacIds[r] : "",
+          r < fromFacNames.length ? fromFacNames[r] : "",
+          r < toFacIds.length ? toFacIds[r] : "",
+          r < toFacNames.length ? toFacNames[r] : "",
+        ]);
       }
-      optionsWs.columns = optionsCols.map(() => ({ width: 25 }));
+      optionsWs.columns = [{ width: 30 }, { width: 30 }, { width: 30 }, { width: 30 }];
 
-      // From Facility Code validation (Options column A)
+      // Column indices in Stock Data sheet (0-based for stockHeaders, 1-based for Excel)
       const fromCodeColIdx = stockHeaders.indexOf("From (Facility Code)");
-      if (fromCodeColIdx >= 0 && fromFacIds.length > 0) {
-        const mainCol = colLetter(fromCodeColIdx + 1);
+      const fromNameColIdx = stockHeaders.indexOf("From (Facility Name)");
+      const toCodeColIdx = stockHeaders.indexOf("To (Facility Code)");
+      const toNameColIdx = stockHeaders.indexOf("To (Facility Name)");
+
+      // From Facility Name dropdown (Options column B = names)
+      if (fromNameColIdx >= 0 && fromFacNames.length > 0) {
+        const nameCol = colLetter(fromNameColIdx + 1);
         for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${mainCol}${r}`).dataValidation = {
+          ws.getCell(`${nameCol}${r}`).dataValidation = {
             type: "list",
             allowBlank: true,
-            formulae: [`Options!$A$2:$A$${fromFacIds.length + 1}`],
+            formulae: [`Options!$B$2:$B$${fromFacNames.length + 1}`],
             showErrorMessage: true,
             errorTitle: "Invalid facility",
-            error: "Please select a valid From Facility",
+            error: "Please select a valid From Facility Name",
           };
         }
       }
 
-      // To Facility Code validation (Options column B)
-      const toCodeColIdx = stockHeaders.indexOf("To (Facility Code)");
-      if (toCodeColIdx >= 0 && toFacIds.length > 0) {
-        const mainCol = colLetter(toCodeColIdx + 1);
+      // From Facility Code auto-fill via INDEX/MATCH from name
+      if (fromCodeColIdx >= 0 && fromNameColIdx >= 0 && fromFacIds.length > 0) {
+        const codeCol = colLetter(fromCodeColIdx + 1);
+        const nameCol = colLetter(fromNameColIdx + 1);
         for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${mainCol}${r}`).dataValidation = {
+          ws.getCell(`${codeCol}${r}`).value = {
+            formula: `IFERROR(INDEX(Options!$A$2:$A$${fromFacIds.length + 1},MATCH(${nameCol}${r},Options!$B$2:$B$${fromFacNames.length + 1},0)),"")`,
+          };
+        }
+      }
+
+      // To Facility Name dropdown (Options column D = names)
+      if (toNameColIdx >= 0 && toFacNames.length > 0) {
+        const nameCol = colLetter(toNameColIdx + 1);
+        for (let r = 3; r <= dataRowCount + 2; r++) {
+          ws.getCell(`${nameCol}${r}`).dataValidation = {
             type: "list",
             allowBlank: true,
-            formulae: [`Options!$B$2:$B$${toFacIds.length + 1}`],
+            formulae: [`Options!$D$2:$D$${toFacNames.length + 1}`],
             showErrorMessage: true,
             errorTitle: "Invalid facility",
-            error: "Please select a valid To Facility",
+            error: "Please select a valid To Facility Name",
+          };
+        }
+      }
+
+      // To Facility Code auto-fill via INDEX/MATCH from name
+      if (toCodeColIdx >= 0 && toNameColIdx >= 0 && toFacIds.length > 0) {
+        const codeCol = colLetter(toCodeColIdx + 1);
+        const nameCol = colLetter(toNameColIdx + 1);
+        for (let r = 3; r <= dataRowCount + 2; r++) {
+          ws.getCell(`${codeCol}${r}`).value = {
+            formula: `IFERROR(INDEX(Options!$C$2:$C$${toFacIds.length + 1},MATCH(${nameCol}${r},Options!$D$2:$D$${toFacNames.length + 1},0)),"")`,
           };
         }
       }
 
       // --- Lock cells & protect sheet ---
-      // Only unlock product quantity cells (everything else stays locked)
-      const firstProductCol = boundaryHeaders.length + 5 + 1; // 1-based col index
+      // Unlock: Facility Name + Facility Code columns + product quantity cells
+      const firstProductCol = boundaryHeaders.length + 6 + 1; // 1-based col index (6 fixed: CampaignNumber, ProjectName, FromCode, FromName, ToCode, ToName)
       const lastProductCol = firstProductCol + productVariants.length - 1;
 
       for (let r = 3; r <= dataRowCount + 2; r++) {
+        // Unlock facility name and code columns
+        if (fromCodeColIdx >= 0) ws.getCell(r, fromCodeColIdx + 1).protection = { locked: false };
+        if (fromNameColIdx >= 0) ws.getCell(r, fromNameColIdx + 1).protection = { locked: false };
+        if (toCodeColIdx >= 0) ws.getCell(r, toCodeColIdx + 1).protection = { locked: false };
+        if (toNameColIdx >= 0) ws.getCell(r, toNameColIdx + 1).protection = { locked: false };
+        // Unlock product quantity cells
         for (let c = firstProductCol; c <= lastProductCol; c++) {
           ws.getCell(r, c).protection = { locked: false };
         }
@@ -639,16 +762,17 @@ const NewShipmentPopup = ({
       const readmeLines = [
         "Instructions",
         "",
-        "1. Only the product quantity columns are editable — all other columns are locked.",
-        "2. Boundary, Project Name, and Facility columns have been pre-filled based on your selection and cannot be modified.",
-        "3. 'From' is the source warehouse and 'To' is the destination facility.",
-        "4. Each row represents one shipment between a From and To facility pair.",
-        "5. Enter a whole number (0 or greater) for each product quantity.",
-        "6. Leave a product quantity empty or 0 to skip that product for the row.",
-        "7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
-        "8. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
-        "9. Do NOT add new rows — only the pre-filled rows will be processed on upload.",
-        "10. Save the file and upload it back on the stock upload screen.",
+        "1. Product quantity columns and facility columns are editable — all other columns are locked.",
+        "2. Select a facility name from the dropdown in the Facility Name columns; the Facility Code will auto-fill.",
+        "3. Boundary and Project Name columns have been pre-filled based on your selection and cannot be modified.",
+        "4. 'From' is the source warehouse and 'To' is the destination facility.",
+        "5. Each row represents one shipment between a From and To facility pair.",
+        "6. Enter a whole number (0 or greater) for each product quantity.",
+        "7. Leave a product quantity empty or 0 to skip that product for the row.",
+        "8. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
+        "9. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
+        "10. Do NOT add new rows — only the pre-filled rows will be processed on upload.",
+        "11. Save the file and upload it back on the stock upload screen.",
       ];
       readmeLines.forEach((line) => readmeWs.addRow([line]));
       readmeWs.getColumn(1).width = 80;
@@ -693,11 +817,12 @@ const NewShipmentPopup = ({
     fromFacility,
     getTemplateHeaders,
     productVariants,
-    fromFacilityList,
+    enrichedFromFacilityList,
     toFacilityList,
     fromHierarchyFilters,
     toHierarchyFilters,
     campaignNumber,
+    campaignName,
     t,
   ]);
 
@@ -777,7 +902,7 @@ const NewShipmentPopup = ({
       // Build product column mapping: match header names against known product variants,
       // falling back to hidden row 2 for variant IDs
       const productColumns = [];
-      const fixedHeaders = new Set(["Project Name", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
+      const fixedHeaders = new Set(["Campaign Number", "Project Name", "From (Facility Code)", "From (Facility Name)", "To (Facility Code)", "To (Facility Name)"]);
       const boundaryHeaders = effectiveHierarchy.map((item) => item.boundaryType);
       const skipHeaders = new Set([...fixedHeaders, ...boundaryHeaders]);
       headers.forEach((header, idx) => {
@@ -803,6 +928,13 @@ const NewShipmentPopup = ({
         const rowNum = rowIdx + 3; // Excel row number
         const senderId = fromCodeIdx >= 0 ? String(row[fromCodeIdx] || "").trim() : "";
         const receiverId = toCodeIdx >= 0 ? String(row[toCodeIdx] || "").trim() : "";
+
+        // Skip entirely empty rows (template generates blank rows for user input)
+        const hasAnyProduct = productColumns.some(({ idx }) => {
+          const val = row[idx];
+          return val !== undefined && val !== null && val !== "";
+        });
+        if (!senderId && !receiverId && !hasAnyProduct) return;
 
         if (!senderId) {
           errors.push(`Row ${rowNum}: Missing From Facility Code`);
@@ -857,6 +989,10 @@ const NewShipmentPopup = ({
           const quantity = parseInt(row[idx], 10);
           if (!quantity || quantity <= 0) return;
 
+          // Look up SKU from product variants
+          const matchedVariant = productVariants.find((pv) => pv.productVariantId === productVariantId);
+          const productVariantSku = matchedVariant?.name || productVariantId;
+
           stockPayload.push({
             tenantId,
             clientReferenceId: crypto.randomUUID(),
@@ -864,7 +1000,7 @@ const NewShipmentPopup = ({
             quantity,
             referenceId: projectId || campaignId,
             referenceIdType: "PROJECT",
-            transactionType: "RECEIVED",
+            transactionType: "DISPATCHED",
             senderType: "WAREHOUSE",
             senderId,
             receiverType: "WAREHOUSE",
@@ -872,6 +1008,16 @@ const NewShipmentPopup = ({
             dateOfEntry: timestamp,
             isDeleted: false,
             rowVersion: 1,
+            additionalFields: {
+              schema: "Stock",
+              version: 1,
+              fields: [
+                { key: "sku", value: productVariantSku },
+                { key: "stockEntryType", value: "ISSUED" },
+                { key: "primaryRole", value: "SENDER" },
+                { key: "secondaryRole", value: "RECEIVER" },
+              ],
+            },
             auditDetails: {
               createdBy: userInfo?.uuid,
               lastModifiedBy: userInfo?.uuid,
@@ -964,12 +1110,14 @@ const NewShipmentPopup = ({
     fromFacility,
     fromFacilityList,
     toFacilityList,
+    productVariants,
     stockMutation,
     onSuccess,
     t,
   ]);
 
   const isLoadingInitialData =
+    campaignLoading ||
     hierarchyTypeLoading ||
     hierarchyLoading ||
     boundaryRelLoading ||
@@ -1133,9 +1281,9 @@ const NewShipmentPopup = ({
                   </div>
                 )}
 
-                {fromFacilitiesLoading ? (
+                {fromFacilitiesLoading || facilityNamesLoading ? (
                   <Loader />
-                ) : fromFacilityList?.length > 0 ? (
+                ) : enrichedFromFacilityList?.length > 0 ? (
                   <div style={{}}>
                     <input
                       type="text"

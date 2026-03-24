@@ -1,175 +1,97 @@
 import { useMemo } from "react";
-import useSimpleElasticsearch from "./useSimpleElasticsearch";
-import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 
-// Source fields to fetch from the stock ES index
-const STOCK_SOURCE_FIELDS = [
-  "Data.*",
-];
+/**
+ * Fetches stock transaction data via getChartV2 API (visualizationCode: "commodityStockSummary").
+ *
+ * Replaces the previous Kibana/ES proxy implementation. Returns the same interface
+ * so that useStockData and downstream consumers (computeFromRawData) work unchanged.
+ *
+ * @param {Object} params
+ * @param {string} params.tenantId
+ * @param {Object} params.dateRange - { startDate, endDate } (Date objects)
+ * @param {string} params.referenceId - Project ID (unused by getChartV2, kept for interface compat)
+ * @param {string} params.campaignId - (unused by getChartV2, kept for interface compat)
+ * @param {string} params.campaignNumber - Campaign number used as filter for getChartV2
+ * @param {boolean} params.enabled
+ * @returns {{ data: Array, isLoading: boolean, error: any, metadata: Object, refetch: Function, source: string }}
+ */
+const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, enabled = true }) => {
+  const reqCriteria = useMemo(() => {
+    const user = Digit.UserService.getUser();
+    const RequestInfo = {
+      apiId: "Rainmaker",
+      authToken: user?.access_token,
+      userInfo: user?.info,
+      msgId: `${Date.now()}|${Digit.StoreData?.getCurrentLanguage?.() || "en_IN"}`,
+      plainAccessRequest: {},
+    };
 
-// Aggregations: summary stats computed server-side by ES
-const STOCK_AGGS = {
-  // Count by transaction type (RECEIVED, DISPATCHED, RETURNED, DAMAGED)
-  by_event_type: {
-    terms: { field: "Data.eventType.keyword", size: 20 },
-    aggs: {
-      total_quantity: { sum: { field: "Data.physicalCount" } },
-    },
-  },
-  // Per-product breakdown with quantity sums per event type
-  by_product: {
-    terms: { field: "Data.productName.keyword", size: 100 },
-    aggs: {
-      by_event_type: {
-        terms: { field: "Data.eventType.keyword", size: 20 },
-        aggs: {
-          total_quantity: { sum: { field: "Data.physicalCount" } },
+    const startDate = dateRange?.startDate instanceof Date ? dateRange.startDate.getTime() : dateRange?.startDate;
+    const endDate = dateRange?.endDate instanceof Date ? dateRange.endDate.getTime() : dateRange?.endDate;
+
+    return {
+      url: `/dashboard-analytics/dashboard/getChartV2`,
+      body: {
+        aggregationRequestDto: {
+          visualizationCode: "commodityStockSummary",
+          visualizationType: "metric",
+          queryType: "",
+          requestDate: {
+            startDate: startDate || 0,
+            endDate: endDate || Date.now(),
+            interval: "day",
+            title: "home",
+          },
+          filters: { campaignNumber: campaignNumber || "" },
+          aggregationFactors: null,
         },
+        headers: { tenantId: tenantId || "" },
+        RequestInfo,
       },
-      total_quantity: { sum: { field: "Data.physicalCount" } },
-    },
-  },
-  // Unique facility count
-  unique_facilities: {
-    cardinality: { field: "Data.facilityId.keyword" },
-  },
-  // Per-facility breakdown
-  by_facility: {
-    terms: { field: "Data.facilityId.keyword", size: 500 },
-    aggs: {
-      facility_name: {
-        terms: { field: "Data.facilityName.keyword", size: 1 },
+      config: {
+        enabled: enabled && !!tenantId && !!campaignNumber,
+        select: (data) => data?.responseData?.customData?.rawResponse?.stockDataTransformer || [],
       },
-      by_event_type: {
-        terms: { field: "Data.eventType.keyword", size: 20 },
-        aggs: {
-          total_quantity: { sum: { field: "Data.physicalCount" } },
-        },
-      },
-    },
-  },
-  // Per-project breakdown
-  by_projectId: {
-    terms: { field: "Data.projectId.keyword", size: 20 },
-  },
-  // Total record count
-  total_quantity: { sum: { field: "Data.physicalCount" } },
-};
+      changeQueryName: `stockSummary_${campaignNumber}_${startDate}_${endDate}`,
+    };
+  }, [tenantId, dateRange, campaignNumber, enabled]);
 
-// Transform an ES hit (_source.Data) into the same shape as /stock/v1/_search response
-const transformHitToStock = (hit) => {
-  const source = hit?._source?.Data || hit?._source || {};
+  const { data: rawRecords, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Build additionalFields from flat ES fields (ES index has additionalFields: null)
-  const fields = [];
-  if (source.productName) fields.push({ key: "productName", value: source.productName });
-  if (source.waybillNumber) fields.push({ key: "waybillNumber", value: source.waybillNumber });
-
-  // In ES, facilityId is the "primary" facility that performed the action.
-  // For RECEIVED/RETURNED: facilityId = receiver, transactingFacilityId = sender
-  // For DISPATCHED/DAMAGED/LOSS: facilityId = sender, transactingFacilityId = receiver
-  const isInbound = source.eventType === "RECEIVED" || source.eventType === "RETURNED";
-  return {
-    id: source.id,
-    clientReferenceId: source.clientReferenceId,
-    productVariantId: source.productVariant,
-    senderId: isInbound ? source.transactingFacilityId : source.facilityId,
-    receiverId: isInbound ? source.facilityId : source.transactingFacilityId,
-    senderType: isInbound ? source.transactingFacilityType : source.facilityType,
-    receiverType: isInbound ? source.facilityType : source.transactingFacilityType,
-    transactionType: source.eventType,
-    quantity: source.physicalCount,
-    referenceId: source.projectId,
-    referenceIdType: "PROJECT",
-    facilityId: source.facilityId,
-    facilityName: source.facilityName,
-    transactingFacilityId: source.transactingFacilityId,
-    transactingFacilityName: source.transactingFacilityName,
-    additionalFields: { fields },
-    auditDetails: {
-      createdTime: source.createdTime || source.dateOfEntry,
-      lastModifiedTime: source.lastModifiedTime,
-      createdBy: source.createdBy,
-    },
-    // Extra fields from ES that may be useful
-    campaignId: source.campaignId,
-    projectId: source.projectId,
-    projectName: source.projectName,
-    userName: source.userName,
-    taskDates: source.taskDates,
-  };
-};
-
-const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId,enabled = true }) => {
-  const indexName = getKibanaDetails("projectStockIndex") || "ba-stock-index-v1";
-
-  // Build the ES query from the same filters used by the stock API
-  const query = useMemo(() => {
-    const mustClauses = [];
-
-    // Filter by referenceId (projectId)
-    if (referenceId) {
-      mustClauses.push({
-        // term: { "Data.projectId.keyword": referenceId },
-        term: { "Data.campaignId.keyword": campaignId },
-      });
-    }
-
-    // Date range filter on dateOfEntry (epoch ms)
-    // Normalize to UTC so filters match regardless of browser timezone
-    // if (dateRange?.startDate || dateRange?.endDate) {
-    //   const toUtcStartOfDay = (d) => {
-    //     if (!(d instanceof Date)) return d;
-    //     return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-    //   };
-    //   const toUtcEndOfDay = (d) => {
-    //     if (!(d instanceof Date)) return d;
-    //     return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
-    //   };
-    //   const rangeFilter = {};
-    //   if (dateRange.startDate) {
-    //     rangeFilter.gte = toUtcStartOfDay(dateRange.startDate);
-    //   }
-    //   if (dateRange.endDate) {
-    //     rangeFilter.lte = toUtcEndOfDay(dateRange.endDate);
-    //   }
-    //   mustClauses.push({
-    //     range: { "Data.dateOfEntry": rangeFilter },
-    //   });
-    // }
-
-    // If no filters, match all
-    if (mustClauses.length === 0) {
-      return { match_all: {} };
-    }
-
-    return { bool: { must: mustClauses } };
-  }, [referenceId, dateRange]);
-
-  const esConfig = useMemo(() => ({
-    indexName,
-    query,
-    sourceFields: STOCK_SOURCE_FIELDS,
-    aggs: STOCK_AGGS,
-    maxRecordLimit: 10000,
-    enabled: enabled && !!tenantId,
-    autoFetch: true,
-  }), [indexName, query, tenantId, enabled]);
-
-  const { data: esHits, loading, error, progress, metadata, refetch } = useSimpleElasticsearch(esConfig);
-
-  // Normalize ES hits to stock API response shape
+  // Transform getChartV2 records to match the shape expected by computeFromRawData
   const stockData = useMemo(() => {
-    if (!esHits?.length) return [];
-    return esHits.map(transformHitToStock);
-  }, [esHits]);
+    if (!rawRecords?.length) return [];
+    return rawRecords.map((record) => {
+      const isInbound = record.transactionType === "RECEIVED" || record.transactionType === "RETURNED";
+      return {
+        id: record.id,
+        productVariantId: record.productVariantId,
+        senderId: isInbound ? record.transactingFacilityId : record.facilityId,
+        receiverId: isInbound ? record.facilityId : record.transactingFacilityId,
+        transactionType: record.transactionType,
+        quantity: record.quantity,
+        facilityId: record.facilityId,
+        facilityName: record.facilityName,
+        transactingFacilityId: record.transactingFacilityId,
+        transactingFacilityName: record.transactingFacilityName,
+        productName: record.productName,
+        userName: record.userName,
+        nameOfUser: record.nameOfUser,
+        auditDetails: {
+          createdTime: record.createdTime || record.dateOfEntry,
+        },
+      };
+    });
+  }, [rawRecords]);
+
+  // Return error as null when loading or when there's no explicit error from the hook
+  const error = (!isLoading && enabled && !!tenantId && !!campaignNumber && rawRecords === undefined) ? new Error("getChartV2 stock request failed") : null;
 
   return {
     data: stockData,
-    isLoading: loading,
+    isLoading,
     error,
-    progress,
-    metadata,
+    metadata: { aggregations: null }, // Forces computeStockSummary to use computeFromRawData path
     refetch,
     source: "kibana",
   };

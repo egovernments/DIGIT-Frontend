@@ -1,88 +1,72 @@
 import { useMemo } from "react";
-import useSimpleElasticsearch from "./useSimpleElasticsearch";
-import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 
 /**
- * Fetches warehouse manager sync stats from two ES indexes:
+ * Fetches warehouse manager sync stats via getChartV2 API
+ * (visualizationCode: "commodityWarehouseManagerSynced").
  *
- * 1. projectStaffIndex — total WMs assigned (role = WAREHOUSE_MANAGER)
- * 2. userSyncIndex     — unique WMs who have synced at least once (syncedUserId + role filter)
+ * Replaces the previous dual-ES-query implementation. The getChartV2 response
+ * provides totalManagers, syncedManagers, and syncRate in a single call.
  *
  * Returns: { totalManagers, syncedManagers, syncRate, isLoading, error }
  */
-const useWarehouseManagerSync = ({ enabled = true }) => {
-  const staffIndex = getKibanaDetails("projectStaffIndex") || "project-staff-index-v1";
-  const syncIndex = getKibanaDetails("userSyncIndex") || "user-sync-index-v1";
+const useWarehouseManagerSync = ({ enabled = true, dateRange } = {}) => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  // --- Query 1: Total warehouse managers from project-staff index ---
-  const staffQuery = useMemo(() => ({
-    bool: {
-      must: [
-        { term: { "Data.role.keyword": "WAREHOUSE_MANAGER" } },
-        { "exists": { "field": "Data.boundaryHierarchy.country.keyword" } },
-      ],
-    },
-  }), []);
+  const reqCriteria = useMemo(() => {
+    const user = Digit.UserService.getUser();
+    const RequestInfo = {
+      apiId: "Rainmaker",
+      authToken: user?.access_token,
+      userInfo: user?.info,
+      msgId: `${Date.now()}|${Digit.StoreData?.getCurrentLanguage?.() || "en_IN"}`,
+      plainAccessRequest: {},
+    };
 
-  const staffAggs = useMemo(() => ({
-    total_users: {
-      value_count: { field: "Data.userId.keyword" },
-    },
-  }), []);
+    const startDate = dateRange?.startDate instanceof Date ? dateRange.startDate.getTime() : dateRange?.startDate || 0;
+    const endDate = dateRange?.endDate instanceof Date ? dateRange.endDate.getTime() : dateRange?.endDate || Date.now();
 
-  const staffConfig = useMemo(() => ({
-    indexName: staffIndex,
-    query: staffQuery,
-    sourceFields: ["Data.userId"],
-    aggs: staffAggs,
-    maxRecordLimit: 1,
-    enabled,
-    autoFetch: true,
-  }), [staffIndex, staffQuery, staffAggs, enabled]);
+    return {
+      url: `/dashboard-analytics/dashboard/getChartV2`,
+      body: {
+        aggregationRequestDto: {
+          visualizationCode: "commodityWarehouseManagerSynced",
+          visualizationType: "metric",
+          queryType: "",
+          requestDate: {
+            startDate,
+            endDate,
+            interval: "day",
+            title: "home",
+          },
+          filters: {},
+          aggregationFactors: null,
+        },
+        headers: { tenantId: tenantId || "" },
+        RequestInfo,
+      },
+      config: {
+        enabled: enabled && !!tenantId,
+        select: (data) => data?.responseData?.customData?.rawResponse || {},
+      },
+      changeQueryName: `warehouseManagerSync_${tenantId}_${startDate}_${endDate}`,
+    };
+  }, [tenantId, enabled, dateRange]);
 
-  const { metadata: staffMeta, loading: staffLoading, error: staffError } = useSimpleElasticsearch(staffConfig);
+  const { data: syncData, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // --- Query 2: Unique synced warehouse managers from user-sync index ---
-  const syncQuery = useMemo(() => ({
-    bool: {
-      must: [
-        { exists: { field: "Data.syncedUserId.keyword" } },
-        { terms: { "Data.role.keyword": ["WAREHOUSE_MANAGER"] } },
-      ],
-    },
-  }), []);
-
-  const syncAggs = useMemo(() => ({
-    unique_synced_users: {
-      cardinality: { field: "Data.syncedUserId.keyword" },
-    },
-  }), []);
-
-  const syncConfig = useMemo(() => ({
-    indexName: syncIndex,
-    query: syncQuery,
-    sourceFields: ["Data.syncedUserId"],
-    aggs: syncAggs,
-    maxRecordLimit: 1,
-    enabled,
-    autoFetch: true,
-  }), [syncIndex, syncQuery, syncAggs, enabled]);
-
-  const { metadata: syncMeta, loading: syncLoading, error: syncError } = useSimpleElasticsearch(syncConfig);
-
-  // --- Compute stats ---
   const result = useMemo(() => {
-    const totalManagers = staffMeta?.aggregations?.total_users?.value || 0;
-    const syncedManagers = syncMeta?.aggregations?.unique_synced_users?.value || 0;
-    const syncRate = totalManagers > 0 ? Math.round((syncedManagers / totalManagers) * 100) : 0;
-
+    const totalManagers = syncData?.totalManagers || 0;
+    const syncedManagers = syncData?.syncedManagers || 0;
+    const syncRate = syncData?.syncRate || (totalManagers > 0 ? Math.round((syncedManagers / totalManagers) * 100) : 0);
     return { totalManagers, syncedManagers, syncRate };
-  }, [staffMeta, syncMeta]);
+  }, [syncData]);
+
+  const error = (!isLoading && enabled && !!tenantId && syncData === undefined) ? new Error("getChartV2 WM sync request failed") : null;
 
   return {
     ...result,
-    isLoading: staffLoading || syncLoading,
-    error: staffError || syncError,
+    isLoading,
+    error,
   };
 };
 

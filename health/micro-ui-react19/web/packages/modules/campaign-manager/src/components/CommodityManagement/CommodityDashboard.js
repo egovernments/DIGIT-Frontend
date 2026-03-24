@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Toggle, HeaderComponent, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
+import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button } from "@egovernments/digit-ui-components";
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
 import DateRangePicker from "./DateRangePicker";
@@ -9,6 +9,7 @@ import useStockData from "../../hooks/useStockData";
 import { computeStockSummary } from "../../utils/stockDataProcessor";
 import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
 import { useCommodityProject } from "./CommodityProjectContext";
+import NewShipmentPopup from "./NewShipmentPopup";
 
 
 const CommodityDashboard = () => {
@@ -60,6 +61,7 @@ const CommodityDashboard = () => {
   const useKibanaFlag = true;
 
   const [activeTab, setActiveTab] = useState("transaction");
+  const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
   // Default to cumulative: campaign start date → today
   const [dateRange, setDateRange] = useState({
     startDate: null,
@@ -96,6 +98,7 @@ const CommodityDashboard = () => {
     dateRange: effectiveDateRange,
     referenceId: projectId,
     campaignId,
+    campaignNumber,
     useKibana: useKibanaFlag,
   });
 
@@ -108,6 +111,7 @@ const CommodityDashboard = () => {
   // Warehouse manager sync stats from project-staff + user-sync ES indexes
   const { totalManagers, syncedManagers, syncRate, isLoading: syncLoading } = useWarehouseManagerSync({
     enabled: useKibanaFlag,
+    dateRange: effectiveDateRange,
   });
 
   // Override stockSummary.dataSyncStats with real ES data when available
@@ -170,10 +174,21 @@ const CommodityDashboard = () => {
 
   return (
     <div className="cm-dashboard">
-      <HeaderComponent className="cm-header">
-        {t("HCM_COMMODITY_MANAGEMENT_MODULE")}{" "}
-        <span className="cm-header-tenant">({tenantName})</span>
-      </HeaderComponent>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <HeaderComponent className="cm-header">
+          {t("HCM_COMMODITY_MANAGEMENT_MODULE")}{" "}
+          <span className="cm-header-tenant">({tenantName})</span>
+        </HeaderComponent>
+        {!isCompleted && (
+          <Button
+            type="button"
+            variation="secondary"
+            label={t("HCM_NEW_SHIPMENT")}
+            icon="AddIcon"
+            onClick={() => setShowNewShipmentPopup(true)}
+          />
+        )}
+      </div>
 
       <div className="cm-date-section">
         <LabelFieldPair vertical={true} removeMargin={true}>
@@ -240,6 +255,18 @@ const CommodityDashboard = () => {
           refetchStockData={refetchStockData}
           isCompleted={isCompleted}
           userBoundary={userBoundary}
+        />
+      )}
+
+      {showNewShipmentPopup && (
+        <NewShipmentPopup
+          campaignNumber={campaignNumber}
+          campaignId={campaignId}
+          tenantId={tenantId}
+          projectId={projectId}
+          userBoundary={userBoundary}
+          onClose={() => setShowNewShipmentPopup(false)}
+          onSuccess={() => setShowNewShipmentPopup(false)}
         />
       )}
     </div>

@@ -46,7 +46,6 @@ const CommodityShipmentPopup = ({
 
   // Form state
   const [waybillNumber, setWaybillNumber] = useState("");
-  const [shortCode, setShortCode] = useState("");
   const [toFacility, setToFacility] = useState(null);
   const [completeImmediately, setCompleteImmediately] = useState(true);
   const [comment, setComment] = useState("");
@@ -378,7 +377,30 @@ const CommodityShipmentPopup = ({
     if (!toFacility) {
       newErrors.to = t(COMMODITY_KEYS.HCM_DESTINATION_REQUIRED);
     }
-    if (!shipmentItems.length) {
+
+    // Auto-add current selection if user filled commodity + quantity but didn't click "Add"
+    let effectiveItems = shipmentItems;
+    if (selectedCommodity && quantity) {
+      const qty = parseInt(quantity, 10);
+      if (qty > 0 && !shipmentItems.some((item) => item.productVariantId === selectedCommodity.productVariantId)) {
+        const available = warehouseStock[selectedCommodity.productVariantId] || 0;
+        if (available > 0 && qty > available) {
+          newErrors.quantity = `${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
+        } else {
+          const autoItem = {
+            productVariantId: selectedCommodity.productVariantId,
+            name: selectedCommodity.name || selectedCommodity.productVariantId,
+            quantity: qty,
+          };
+          effectiveItems = [...shipmentItems, autoItem];
+          setShipmentItems(effectiveItems);
+          setSelectedCommodity(null);
+          setQuantity("");
+        }
+      }
+    }
+
+    if (!effectiveItems.length) {
       newErrors.items = t(COMMODITY_KEYS.HCM_ADD_AT_LEAST_ONE_COMMODITY);
     }
     if (Object.keys(newErrors).length) {
@@ -392,8 +414,6 @@ const CommodityShipmentPopup = ({
     try {
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
-      const transactionType = completeImmediately ? "RECEIVED" : "DISPATCHED";
-      const transactionReason = completeImmediately ? "RECEIVED" : "DISPATCHED";
       // Use TO facility's projectId from project-facility mapping (like BulkStockUpload's rowProjectId)
       const rowProjectId = facilityToProject[toFacility.id] || "";
       const resolvedRefId =
@@ -403,11 +423,8 @@ const CommodityShipmentPopup = ({
       const toProjectBoundary = projectBoundaryMap[rowProjectId];
       const administrativeArea = toProjectBoundary?.boundary || "";
 
-      // Generate MRN number (like APK does)
-      const mrnNumber = `${Math.random().toString(16).slice(2, 6).toUpperCase()}-${Math.random().toString(16).slice(2, 6).toUpperCase()}-${Math.random().toString(16).slice(2, 6).toUpperCase()}`;
-
       // Build stock payload matching APK structure for proper ES indexing
-      const stockPayload = shipmentItems.map((item) => ({
+      const stockPayload = effectiveItems.map((item) => ({
         tenantId: tenantId,
         clientReferenceId: crypto.randomUUID(),
         facilityId: toFacility.id,
@@ -415,8 +432,8 @@ const CommodityShipmentPopup = ({
         quantity: item.quantity,
         referenceId: resolvedRefId,
         referenceIdType: "PROJECT",
-        transactionType: transactionType,
-        transactionReason: transactionReason,
+        transactionType: "DISPATCHED",
+        transactionReason: comment || "",
         senderType: "WAREHOUSE",
         senderId: fromFacility.id,
         receiverType: "WAREHOUSE",
@@ -430,13 +447,10 @@ const CommodityShipmentPopup = ({
           version: 1,
           fields: [
             { key: "sku", value: item.name || "" },
-            { key: "stockEntryType", value: "RECEIPT" },
-            { key: "primaryRole", value: "RECEIVER" },
-            { key: "secondaryRole", value: "SENDER" },
+            { key: "stockEntryType", value: "ISSUED" },
+            { key: "primaryRole", value: "SENDER" },
+            { key: "secondaryRole", value: "RECEIVER" },
             { key: "administrativeArea", value: administrativeArea },
-            { key: "stockInHand", value: "0.0" },
-            { key: "mrnNumber", value: mrnNumber },
-            ...(comment ? [{ key: "comments", value: comment }] : []),
           ],
         },
         auditDetails: {
@@ -504,7 +518,9 @@ const CommodityShipmentPopup = ({
   }, [
     toFacility,
     shipmentItems,
-    completeImmediately,
+    selectedCommodity,
+    quantity,
+    warehouseStock,
     tenantId,
     fromFacility,
     stockMutation,
@@ -563,16 +579,6 @@ const CommodityShipmentPopup = ({
             value={waybillNumber}
             onChange={(e) => setWaybillNumber(e.target.value)}
             placeholder={t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER)}
-          />
-        </div>
-        <div className="cm-shipment-field">
-          <label className="cm-shipment-label">
-            {t(COMMODITY_KEYS.HCM_SHORT_CODE)}
-          </label>
-          <TextInput
-            value={shortCode}
-            onChange={(e) => setShortCode(e.target.value)}
-            placeholder={t(COMMODITY_KEYS.HCM_SHORT_CODE)}
           />
         </div>
         {/* Row 2: From + To */}
