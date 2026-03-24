@@ -61,7 +61,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/home`;
     }
 
-    navigate(redirectPath, { replace: true }); // Replaced history.replace with navigate
+    navigate(redirectPath, { replace: true, state: { justLoggedIn: true } }); // Replaced history.replace with navigate
   }, [user]);
 
   const onLogin = async (data) => {
