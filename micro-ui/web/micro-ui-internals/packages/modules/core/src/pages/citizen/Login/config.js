@@ -14,8 +14,8 @@ export const loginSteps = [
         error: "ERR_HRMS_INVALID_MOB_NO",
         validation: {
           required: true,
-          minlength: 10,
-          maxlength: 10,
+          minlength: 1,
+          maxlength: 15,
         },
       },
     ],

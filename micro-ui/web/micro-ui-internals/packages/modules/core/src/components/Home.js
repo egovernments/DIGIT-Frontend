@@ -6,10 +6,11 @@ import {
 
 import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { RoleBasedEmployeeHome } from "./RoleBasedEmployeeHome";
 import QuickSetupConfigComponent from "../pages/employee/QuickStart/Config";
+import WhatsAppNotificationPopup from "./Dialog/WhatsAppNotificationPopup";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -90,12 +91,67 @@ const CitizenHome = ({
   const moduleArr = modules.filter(({ code }) => code !== "Payment");
   const moduleArray = [paymentModule, ...moduleArr];
   const { t } = useTranslation();
+
+  const userInfo = Digit.UserService.getUser()?.info || {};
+  const isLoggedIn = !!Digit.UserService.getUser()?.access_token;
+  const tenant = Digit.ULBService.getCurrentTenantId();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const stateLvlTenantId = isMultiRootTenant
+    ? Digit.ULBService.getCurrentTenantId()
+    : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+
+  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false);
+
+  // Check if user preferences feature is enabled
+  const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserPreferencesConfig" }],
+    {
+      select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+    },
+    { schemaCode: `${moduleName}.UserPreferencesConfig` }
+  );
+
+  // Search existing preference to check if WhatsApp is already opted in
+  const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
+    url: "/user-preference/v1/_search",
+    body: {
+      criteria: {
+        userId: userInfo?.uuid,
+        tenantId: tenant,
+        preferenceCode: "USER_NOTIFICATION_PREFERENCES",
+      },
+    },
+    changeQueryName: "whatsapp_popup_preference_search",
+    config: {
+      enabled: !!userInfo?.uuid && isLoggedIn && !!enableUserPreferences,
+      select: (data) => data?.preferences?.[0],
+      cacheTime: 0,
+      staleTime: 0,
+    },
+  });
+
+  useEffect(() => {
+    if (!isLoggedIn || !enableUserPreferences || isPreferenceLoading) return;
+    const alreadyShown = sessionStorage.getItem("whatsapp_popup_shown");
+    if (alreadyShown) return;
+
+    const whatsappStatus = preferenceData?.payload?.consent?.WHATSAPP?.status;
+    // Show popup only if WhatsApp is not already GRANTED
+    if (whatsappStatus !== "GRANTED") {
+      setShowWhatsAppPopup(true);
+    }
+  }, [isLoggedIn, enableUserPreferences, isPreferenceLoading, preferenceData]);
+
   if (isLoading) {
     return <Loader />;
   }
 
   return (
     <React.Fragment>
+      {showWhatsAppPopup && <WhatsAppNotificationPopup onClose={() => setShowWhatsAppPopup(false)} />}
       <div className="citizen-all-services-wrapper">
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
