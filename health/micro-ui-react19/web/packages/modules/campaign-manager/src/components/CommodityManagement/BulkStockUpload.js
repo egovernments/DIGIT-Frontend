@@ -742,6 +742,7 @@ const BulkStockUpload = () => {
                 { key: "stockEntryType", value: "ISSUED" },
                 { key: "primaryRole", value: "RECEIVER" },
                 { key: "secondaryRole", value: "SENDER" },
+                { key: "status", value: "IN_TRANSIT" },
                 { key: "administrativeArea", value: administrativeArea },
                 { key: "stockInHand", value: "0.0" },
                 { key: "mrnNumber", value: mrnNumber },
@@ -814,7 +815,7 @@ const BulkStockUpload = () => {
       }
 
       if (failedCount > 0) {
-        setShowToast({ key: "warning", label: `${stockPayload.length - failedCount}/${stockPayload.length} rows created. ${failedCount} failed.`, transitionTime: 5000000 });
+        setShowToast({ key: "warning", label: `${stockPayload.length - failedCount}/${stockPayload.length} rows created. ${failedCount} failed.` });
         return;
       }
 
@@ -1093,7 +1094,7 @@ const BulkStockUpload = () => {
           type={showToast?.key === "error" ? "error" : showToast?.key === "warning" ? "warning" : "success"}
           isDleteBtn={true}
           onClose={() => setShowToast(null)}
-          transitionTime={showToast?.transitionTime}
+          transitionTime={5000}
         />
       )}
     </div>

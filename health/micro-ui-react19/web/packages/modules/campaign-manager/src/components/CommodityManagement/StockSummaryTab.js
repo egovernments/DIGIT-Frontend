@@ -530,7 +530,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           onClose={() => setShipmentFacility(null)}
           onSuccess={() => {
             setShipmentFacility(null);
-            // Refetch stock data after a short delay to allow ES indexing
+            setShowToast({ key: "success", label: t("HCM_SHIPMENT_CREATED_SUCCESS") });
             if (refetchStockData) {
               setTimeout(() => refetchStockData(), 2000);
             }
@@ -544,6 +544,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           type={showToast?.key === "error" ? "error" : "success"}
           isDleteBtn={true}
           onClose={() => setShowToast(null)}
+          transitionTime={5000}
         />
       )}
     </div>

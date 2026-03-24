@@ -40,10 +40,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const txType =
     stock?.transactionType === "RETURNED" ? "Reverse - Logistics" : "Logistics";
 
-  // Generate short TRN from id
-  const trn = (stock?.clientReferenceId || stock?.id || "")
-    .substring(0, 5)
-    .toUpperCase();
+  const trn = stock?.id || "N/A";
 
   // Format creation date
   const createdTime = stock?.auditDetails?.createdTime;
@@ -516,6 +513,7 @@ return (
           type={showToast?.key === "error" ? "error" : "success"}
           isDleteBtn={true}
           onClose={() => setShowToast(null)}
+          transitionTime={5000}
         />
       )}
     </div>

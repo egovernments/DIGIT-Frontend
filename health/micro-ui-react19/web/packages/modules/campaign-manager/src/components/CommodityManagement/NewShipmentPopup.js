@@ -39,12 +39,7 @@ const NewShipmentPopup = ({
   const [showToast, setShowToast] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [viewState, setViewState] = useState("form"); // "form" | "success" | "error"
-  const [uploadSummary, setUploadSummary] = useState({
-    total: 0,
-    success: 0,
-    failed: 0,
-  });
+  const [viewState, setViewState] = useState("form"); // "form" | "error"
 
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
   const {
@@ -968,7 +963,6 @@ const NewShipmentPopup = ({
         setShowToast({
           key: "error",
           label: `${errors.length} validation error(s): ${errors.slice(0, 3).join("; ")}${errors.length > 3 ? "..." : ""}`,
-          transitionTime: 10000,
         });
         setIsSubmitting(false);
         return;
@@ -1016,6 +1010,7 @@ const NewShipmentPopup = ({
                 { key: "stockEntryType", value: "ISSUED" },
                 { key: "primaryRole", value: "SENDER" },
                 { key: "secondaryRole", value: "RECEIVER" },
+                { key: "status", value: "IN_TRANSIT" },
               ],
             },
             auditDetails: {
@@ -1080,21 +1075,11 @@ const NewShipmentPopup = ({
           label: `${stockPayload.length - failedCount}/${
             stockPayload.length
           } rows created. ${failedCount} failed.`,
-          transitionTime: 5000000,
         });
         return;
       }
 
-      // setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
-      setViewState("success");
-      setUploadSummary({
-        total: stockPayload.length,
-        success: stockPayload.length - failedCount,
-        failed: failedCount,
-      });
-
-      setViewState("success");
-      // setTimeout(() => onSuccess?.(), 2000);
+      onSuccess?.();
     } catch (error) {
       // console.error("Stock upload error:", error);
       // setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
@@ -1136,20 +1121,7 @@ const NewShipmentPopup = ({
         onOverlayClick={onClose}
         onClose={onClose}
         footerChildren={
-          viewState === "success"
-            ? [
-                <Button
-                  type="button"
-                  size="large"
-                  variation="primary"
-                  label={t("ES_COMMON_CLOSE")}
-                  onClick={() => {
-                    setViewState("form");
-                    onSuccess?.();
-                  }}
-                />,
-              ]
-            : viewState === "error"
+          viewState === "error"
             ? [
                 <Button
                   type="button"
@@ -1195,22 +1167,6 @@ const NewShipmentPopup = ({
               }}
             >
               <Loader />
-            </div>
-          ) : viewState === "success" ? (
-            <div style={{ padding: "2rem 1rem" }}>
-              <Panels
-                type="success"
-                message={t("HCM_STOCK_UPLOAD_SUCCESS")}
-                info={`${selectedFacilityIds.size} facilities updated successfully`}
-                response={t("HCM_STOCK_UPLOAD_PROCESSED")}
-                showAsSvg={false}
-                animationProps={{ loop: false }}
-                multipleResponses={[
-                  `Total Rows: ${uploadSummary.total}`,
-                  `Successful: ${uploadSummary.success}`,
-                  `Failed: ${uploadSummary.failed}`,
-                ]}
-              />
             </div>
           ) : viewState === "error" ? (
             <div style={{ padding: "2rem 1rem" }}>
@@ -1527,7 +1483,7 @@ const NewShipmentPopup = ({
             }
             isDleteBtn={true}
             onClose={() => setShowToast(null)}
-            transitionTime={showToast?.transitionTime}
+            transitionTime={5000}
           />
         )}
       </PopUp>

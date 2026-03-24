@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button } from "@egovernments/digit-ui-components";
+import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
 import DateRangePicker from "./DateRangePicker";
@@ -62,6 +62,7 @@ const CommodityDashboard = () => {
 
   const [activeTab, setActiveTab] = useState("transaction");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   // Default to cumulative: campaign start date → today
   const [dateRange, setDateRange] = useState({
     startDate: null,
@@ -267,7 +268,21 @@ const CommodityDashboard = () => {
           projectId={projectId}
           userBoundary={userBoundary}
           onClose={() => setShowNewShipmentPopup(false)}
-          onSuccess={() => setShowNewShipmentPopup(false)}
+          onSuccess={() => {
+            setShowNewShipmentPopup(false);
+            setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
+            refetchStockData?.();
+          }}
+        />
+      )}
+
+      {showToast && (
+        <Toast
+          label={showToast.label}
+          type={showToast.key === "error" ? "error" : "success"}
+          isDleteBtn={true}
+          onClose={() => setShowToast(null)}
+          transitionTime={5000}
         />
       )}
     </div>

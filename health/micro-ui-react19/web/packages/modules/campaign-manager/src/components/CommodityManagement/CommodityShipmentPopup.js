@@ -8,8 +8,6 @@ import {
   TextArea,
   Dropdown,
   Loader,
-  CheckBox,
-  SVG,
   Card,
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
@@ -47,7 +45,6 @@ const CommodityShipmentPopup = ({
   // Form state
   const [waybillNumber, setWaybillNumber] = useState("");
   const [toFacility, setToFacility] = useState(null);
-  const [completeImmediately, setCompleteImmediately] = useState(true);
   const [comment, setComment] = useState("");
 
   // Commodity add state
@@ -73,7 +70,7 @@ const CommodityShipmentPopup = ({
   const moduleName = Digit.Utils.campaign.getModuleName();
 
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS (same as BulkStockUpload)
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(
+  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
     [{ name: "HierarchySchema", filter: `[?(@.type=='${moduleName}')]` }],
@@ -101,9 +98,42 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, BOUNDARY_HIERARCHY_TYPE],
   );
-  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(
+  const { data: hierarchyDefinition, isLoading: hierarchyLoading } = Digit.Hooks.useCustomAPIHook(
     hierarchyDefCriteria,
   );
+
+  // Fetch boundary relationships for geographic containment filtering
+  const boundaryRelationshipCriteria = useMemo(() => ({
+    url: `/boundary-service/boundary-relationships/_search`,
+    params: {
+      tenantId,
+      hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      includeChildren: true,
+    },
+    body: {},
+    config: {
+      enabled: !!BOUNDARY_HIERARCHY_TYPE,
+      cacheTime: 1000000,
+    },
+  }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
+
+  const { data: boundaryRelationships, isLoading: boundaryRelLoading } = Digit.Hooks.useCustomAPIHook(boundaryRelationshipCriteria);
+
+  // Build boundary code → ancestor path map
+  const boundaryAncestorMap = useMemo(() => {
+    const boundaries = boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
+    const map = {};
+    const traverse = (node, ancestors) => {
+      const currentPath = { ...ancestors };
+      if (node?.boundaryType && node?.code) {
+        currentPath[node.boundaryType] = node.code;
+      }
+      map[node?.code] = currentPath;
+      (node?.children || []).forEach((child) => traverse(child, currentPath));
+    };
+    boundaries.forEach((root) => traverse(root, {}));
+    return map;
+  }, [boundaryRelationships]);
 
   // Build sorted hierarchy levels (same as BulkStockUpload)
   const sortedHierarchy = useMemo(() => {
@@ -143,7 +173,7 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, campaignNumber],
   );
-  const { data: campaignData } = Digit.Hooks.useCustomAPIHook(
+  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(
     campaignReqCriteria,
   );
   const resolvedProjectId = campaignData?.projectId;
@@ -183,7 +213,7 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, resolvedProjectId],
   );
-  const { data: projectData } = Digit.Hooks.useCustomAPIHook(
+  const { data: projectData, isLoading: projectsLoading } = Digit.Hooks.useCustomAPIHook(
     projectSearchCriteria,
   );
   const allProjectIds = projectData?.ids || [];
@@ -222,7 +252,7 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, allProjectIds],
   );
-  const { data: facilityMappingData } = Digit.Hooks.useCustomAPIHook(
+  const { data: facilityMappingData, isLoading: facilityMappingLoading } = Digit.Hooks.useCustomAPIHook(
     facilityMappingCriteria,
   );
   const facilityToProject = facilityMappingData?.facilityToProject || {};
@@ -251,7 +281,7 @@ const CommodityShipmentPopup = ({
     }),
     [tenantId, allMappedFacilityIds],
   );
-  const { data: allCampaignFacilities = [] } = Digit.Hooks.useCustomAPIHook(
+  const { data: allCampaignFacilities = [], isLoading: facilityDetailsLoading } = Digit.Hooks.useCustomAPIHook(
     facilityDetailsCriteria,
   );
 
@@ -285,16 +315,40 @@ const CommodityShipmentPopup = ({
     return getFacilityLevel(fromFacility?.id);
   }, [getFacilityLevel, fromFacility]);
 
-  // Filter "To" facilities: exclude source, only same level or below (like BulkStockUpload)
+  // Get the From facility's boundary info for geographic containment filtering
+  const fromFacilityBoundary = useMemo(() => {
+    const pids = facilityToProjects[fromFacility?.id] || [];
+    for (const pid of pids) {
+      const bInfo = projectBoundaryMap[pid];
+      if (bInfo?.boundary && bInfo?.boundaryType) {
+        const level = hierarchyLevelIndex[bInfo.boundaryType] ?? -1;
+        if (level === fromFacilityLevel) return bInfo;
+      }
+    }
+    return null;
+  }, [facilityToProjects, fromFacility, projectBoundaryMap, hierarchyLevelIndex, fromFacilityLevel]);
+
+  // Filter "To" facilities: exclude source, only one level below AND under the same geographic subtree
   const [toSearchText, setToSearchText] = useState("");
   const filteredToFacilities = useMemo(() => {
     let list = allCampaignFacilities.filter((f) => f.id !== fromFacility?.id);
-    // If we know the "From" facility's hierarchy level, filter "To" to same level or below
     if (fromFacilityLevel >= 0) {
       list = list.filter((f) => {
         const level = getFacilityLevel(f.id);
-        if (level < 0) return true; // include if level can't be determined
-        return level >= fromFacilityLevel; // same level (siblings) or below
+        if (level < 0) return false;
+        if (level !== fromFacilityLevel + 1) return false;
+
+        // Geographic containment: facility's boundary must have the From boundary as ancestor
+        if (fromFacilityBoundary) {
+          const fPids = facilityToProjects[f.id] || [];
+          return fPids.some((pid) => {
+            const bInfo = projectBoundaryMap[pid];
+            if (!bInfo?.boundary) return false;
+            const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
+            return ancestors[fromFacilityBoundary.boundaryType] === fromFacilityBoundary.boundary;
+          });
+        }
+        return true;
       });
     }
     if (!toSearchText) return list;
@@ -310,6 +364,10 @@ const CommodityShipmentPopup = ({
     toSearchText,
     fromFacilityLevel,
     getFacilityLevel,
+    fromFacilityBoundary,
+    facilityToProjects,
+    projectBoundaryMap,
+    boundaryAncestorMap,
   ]);
 
   // Commodities available for dropdown: exclude already added items
@@ -414,7 +472,7 @@ const CommodityShipmentPopup = ({
     try {
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
-      // Use TO facility's projectId from project-facility mapping (like BulkStockUpload's rowProjectId)
+      // Use TO facility's projectId from project-facility mapping
       const rowProjectId = facilityToProject[toFacility.id] || "";
       const resolvedRefId =
         rowProjectId || campaignData?.projectId || campaignId;
@@ -450,6 +508,7 @@ const CommodityShipmentPopup = ({
             { key: "stockEntryType", value: "ISSUED" },
             { key: "primaryRole", value: "SENDER" },
             { key: "secondaryRole", value: "RECEIVER" },
+            { key: "status", value: "IN_TRANSIT" },
             { key: "administrativeArea", value: administrativeArea },
           ],
         },
@@ -498,13 +557,7 @@ const CommodityShipmentPopup = ({
           label: t(COMMODITY_KEYS.HCM_SHIPMENT_FAILED),
         });
       } else {
-        setShowToast({
-          key: "success",
-          label: t(COMMODITY_KEYS.HCM_SHIPMENT_CREATED_SUCCESS),
-        });
-        setTimeout(() => {
-          onSuccess?.();
-        }, 1500);
+        onSuccess?.();
       }
     } catch (error) {
       console.error("Shipment error:", error);
@@ -534,6 +587,15 @@ const CommodityShipmentPopup = ({
     onSuccess,
   ]);
 
+  const isLoadingInitialData =
+    hierarchyTypeLoading ||
+    hierarchyLoading ||
+    boundaryRelLoading ||
+    campaignLoading ||
+    projectsLoading ||
+    facilityMappingLoading ||
+    facilityDetailsLoading;
+
   return (
     <>
       <PopUp
@@ -546,7 +608,7 @@ const CommodityShipmentPopup = ({
         onOverlayClick={onClose}
         onClose={onClose}
         equalWidthButtons={true}
-        footerChildren={[
+        footerChildren={isLoadingInitialData ? [] : [
           <Button
             key="close"
             type="button"
@@ -571,6 +633,12 @@ const CommodityShipmentPopup = ({
           />,
         ]}
       >
+        {isLoadingInitialData ? (
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "3rem" }}>
+            <Loader />
+          </div>
+        ) : (
+        <>
         <div className="cm-shipment-field">
           <label className="cm-shipment-label">
             {t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER)}
@@ -613,20 +681,6 @@ const CommodityShipmentPopup = ({
             />
             {errors.to && <ErrorMessage message={errors.to} showIcon={true} />}
           </div>
-          </div>
-          {/* Complete Shipment Immediately */}
-          <div className="cm-shipment-checkbox-row">
-            <CheckBox
-              label={t(COMMODITY_KEYS.HCM_COMPLETE_SHIPMENT_IMMEDIATELY)}
-              checked={completeImmediately}
-              onChange={() => setCompleteImmediately((prev) => !prev)}
-            />
-            <span
-              className="cm-shipment-hint"
-              title={t(COMMODITY_KEYS.HCM_COMPLETE_SHIPMENT_HINT)}
-            >
-              <SVG.Help width="16px" height="16px" />
-            </span>
           </div>
         </Card>
 
@@ -687,7 +741,7 @@ const CommodityShipmentPopup = ({
             <div className="cm-shipment-items-list">
               <table className="cm-shipment-items-table">
                 <thead>
-                  <tr>''
+                  <tr>
                     <th>{t(COMMODITY_KEYS.HCM_COMMODITY)}</th>
                     <th>{t(COMMODITY_KEYS.HCM_QUANTITY)}</th>
                     <th></th>
@@ -731,6 +785,8 @@ const CommodityShipmentPopup = ({
             style={{ maxWidth: "100%" }}
           />
         </div>
+        </>
+        )}
       </PopUp>
 
       {showToast && (
@@ -740,6 +796,7 @@ const CommodityShipmentPopup = ({
             type={showToast.key === "error" ? "error" : "success"}
             isDleteBtn={true}
             onClose={() => setShowToast(null)}
+            transitionTime={5000}
           />
         </div>
       )}
