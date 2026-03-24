@@ -246,6 +246,17 @@ const UserProfilePopup = ({ user, onClose }) => {
     }
   ];
 
+  // Derive unique filter options from activity log data
+  const actionTypeOptions = useMemo(() => {
+    const unique = [...new Set(activityLog.map((a) => a.actionType).filter(Boolean))];
+    return [{ name: t("ALL_ACTION_TYPES"), code: "ALL" }, ...unique.map((a) => ({ name: a, code: a }))];
+  }, [activityLog, t]);
+
+  const outcomeOptions = useMemo(() => {
+    const unique = [...new Set(activityLog.map((a) => a.outcome).filter(Boolean))];
+    return [{ name: t("ALL_OUTCOMES"), code: "ALL" }, ...unique.map((o) => ({ name: o, code: o.toUpperCase() }))];
+  }, [activityLog, t]);
+
   const filteredLog = useMemo(() => {
     return activityLog.filter((entry) => {
       const matchesAction = actionTypeFilter === "ALL" || entry.actionType === actionTypeFilter;
@@ -277,8 +288,8 @@ const UserProfilePopup = ({ user, onClose }) => {
       selector: (row) => formatTime(row.timestamp),
       sortable: true,
       sortFunction: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
-      minWidth: "150px",
-      grow: 0.8,
+      minWidth: "180px",
+      grow: 1.0,
     },
     {
       name: t("ACTION_TYPE"),
@@ -294,15 +305,15 @@ const UserProfilePopup = ({ user, onClose }) => {
           {row.detail}
         </span>
       ),
-      grow: 2,
-      minWidth: "200px",
+      grow: 1.75,
+      minWidth: "180px",
     },
     {
       name: t("OUTCOME"),
       cell: (row) => <Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : "error"} showIcon={true} />,
       sortable: true,
-      minWidth: "150px",
-      grow: 0.8,
+      minWidth: "190px",
+      grow: 1.25,
     },
     {
       name: t("GPS"),
@@ -343,7 +354,7 @@ const UserProfilePopup = ({ user, onClose }) => {
           <Tag label={online ? "ONLINE" : "OFFLINE"} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
         </div>
       }
-      style={{ width: "95vh", maxWidth: "95vh", maxHeight: "90vh" }}
+      style={{ width: "75vw", maxWidth: "75vw", maxHeight: "90vh" }}
       className="user-profile-popup"
     >
       {/* Info Tags */}
@@ -380,29 +391,18 @@ const UserProfilePopup = ({ user, onClose }) => {
         <div style={{ minWidth: "160px" }}>
           <Dropdown
             t={t}
-            option={[
-              { name: t("ALL_ACTION_TYPES"), code: "ALL" },
-              { name: t("SYNC_COMPLETED"), code: "Sync Completed" },
-              { name: t("RECORD_SUBMITTED"), code: "Record Submitted" },
-              { name: t("STOCK_ACTION"), code: "Stock Action" },
-              { name: t("LOGIN"), code: "Login" },
-              { name: t("DELIVERY"), code: "Delivery" },
-            ]}
+            option={actionTypeOptions}
             optionKey="name"
-            selected={{ name: actionTypeFilter === "ALL" ? t("ALL_ACTION_TYPES") : actionTypeFilter, code: actionTypeFilter }}
+            selected={actionTypeOptions.find((o) => o.code === actionTypeFilter)}
             select={(val) => setActionTypeFilter(val.code)}
           />
         </div>
         <div style={{ minWidth: "150px" }}>
           <Dropdown
             t={t}
-            option={[
-              { name: t("ALL_OUTCOMES"), code: "ALL" },
-              { name: t("SUCCESS"), code: "SUCCESS" },
-              { name: t("FAILED"), code: "FAILED" },
-            ]}
+            option={outcomeOptions}
             optionKey="name"
-            selected={{ name: outcomeFilter === "ALL" ? t("ALL_OUTCOMES") : outcomeFilter, code: outcomeFilter }}
+            selected={outcomeOptions.find((o) => o.code === outcomeFilter)}
             select={(val) => setOutcomeFilter(val.code)}
           />
         </div>

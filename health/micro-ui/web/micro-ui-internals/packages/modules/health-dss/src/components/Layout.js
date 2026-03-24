@@ -15,6 +15,8 @@ import BannerCard from "./BannerCard";
 import LatLongMapChart from "./AdvancedMapCharts/LatLongMap"
 import KibanaCard from "./KibanaCard";
 import VennDiagram from "./VennDiagramChart";
+import UserActivityMetrics from "./UserActivityTracking/UserActivityMetrics";
+import UserActivitySummaryTable from "./UserActivityTracking/UserActivitySummaryTable";
 
 let index = 1;
 
@@ -130,6 +132,10 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         return <KibanaCard moduleName={visualizer?.moduleName} pageName={visualizer?.pageName} />
       case "latlong":
         return <LatLongMapChart data={visualizer} chartId={visualizer?.id} chartName={visualizer?.name} pageZoom={pageZoom}/>;
+      case "cards-list":
+        return <UserActivityMetrics data={visualizer} key={key} />;
+      case "summary-table":
+        return <UserActivitySummaryTable data={visualizer} key={key} />;
       default:
         return null;
     }
