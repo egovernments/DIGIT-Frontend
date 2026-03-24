@@ -15,12 +15,13 @@ import {
   Toast,
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
-import { CameraIcon } from "@egovernments/digit-ui-react-components";
+import { CameraIcon,ToggleSwitch  } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
+
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -56,6 +57,8 @@ const defaultValidationConfig = {
   ],
 };
 
+const PREFERENCE_CODE = "USER_NOTIFICATION_PREFERENCES";
+
 const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const history = useHistory();
   const { t } = useTranslation();
@@ -82,6 +85,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [errors, setErrors] = React.useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+
+  const [notificationConsent, setNotificationConsent] = useState({
+    SMS: { scope: "GLOBAL", status: "REVOKED" },
+    EMAIL: { scope: "GLOBAL", status: "REVOKED" },
+    WHATSAPP: { scope: "GLOBAL", status: "REVOKED" },
+  });
+  const [preferredLanguage, setPreferredLanguage] = useState(Digit.StoreData.getCurrentLanguage() || "en_IN");
+  const availableLanguages = Digit.SessionStorage.get("initData")?.languages;
 
   const mapConfigToRegExp = (config) => {
     return (
@@ -112,10 +123,124 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   };
 
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
+  
+   const stateLvlTenantId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+
+    // User Preferences - fetch enable flag from MDMS v2
+  const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+    stateLvlTenantId,
+    "commonUiConfig",
+    [{ name: "UserPreferencesConfig" }],
+    {
+      select: (data) => {
+        console.log("[UserProfile] useCustomMDMS raw response:", data);
+        console.log("[UserProfile] enableUserPreferences value:", data?.commonUiConfig?.UserPreferencesConfig?.[0]?.enableUserPreferences);
+        return data?.commonUiConfig?.UserPreferencesConfig?.[0]?.enableUserPreferences;
+      },
+    },
+    { schemaCode: "commonUiConfig.UserPreferencesConfig" }
+  );
+
+  useEffect(() => {
+    console.log("[UserProfile] enableUserPreferences changed:", enableUserPreferences);
+  }, [enableUserPreferences]);
+
+  const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
+    url: "/user-preference/v1/_search",
+    body: {
+      criteria: {
+        userId: userInfo?.uuid,
+        tenantId: tenant,
+        preferenceCode: PREFERENCE_CODE,
+      },
+    },
+    changeQueryName: "user_preference_search",
+    config: {
+      enabled: !!userInfo?.uuid && (userType === "citizen" || isMultiRootTenant) && !!enableUserPreferences,
+      select: (data) => data?.preferences?.[0],
+      cacheTime: 0,
+      staleTime: 0,
+    },
+  });
+
+  const preferenceUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/user-preference/v1/_upsert",
+  });
+
+  useEffect(() => {
+    if (preferenceData?.payload) {
+      const consent = preferenceData.payload.consent || {};
+      setNotificationConsent((prev) => ({
+        SMS: consent.SMS || prev.SMS,
+        EMAIL: consent.EMAIL || prev.EMAIL,
+        WHATSAPP: consent.WHATSAPP || prev.WHATSAPP,
+      }));
+      if (preferenceData.payload.preferredLanguage) {
+        setPreferredLanguage(preferenceData.payload.preferredLanguage);
+      }
+    }
+  }, [preferenceData]);
+
+  // Fetch enabled notification channels from config-service
+  const { data: channelConfigData } = Digit.Hooks.useCustomAPIHook({
+    url: "/config-service/config/v1/_search",
+    body: {
+      criteria: {
+        schemaCode: "NotificationChannel",
+        tenantId: tenant,
+      },
+    },
+    changeQueryName: "config_service_search",
+    config: {
+      enabled: !!enableUserPreferences && !!tenant,
+      select: (data) => {
+        const channels = {};
+        data?.configData?.forEach((item) => {
+          channels[item.uniqueIdentifier] = item.data?.enabled === true;
+        });
+        return channels;
+      },
+    },
+  });
+
+  const handleConsentToggle = (channel) => {
+    setNotificationConsent((prev) => ({
+      ...prev,
+      [channel]: {
+        ...prev[channel],
+        status: prev[channel].status === "GRANTED" ? "REVOKED" : "GRANTED",
+      },
+    }));
+  };
+
+  const saveUserPreferences = async () => {
+    try {
+      await preferenceUpsertMutation.mutateAsync({
+        body: {
+          preference: {
+            userId: userInfo?.uuid,
+            tenantId: tenant,
+            preferenceCode: PREFERENCE_CODE,
+            payload: {
+              consent: notificationConsent,
+              preferredLanguage: preferredLanguage,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw JSON.stringify({
+        type: "error",
+        message: error?.response?.data?.Errors?.[0]?.description || "CORE_COMMON_PROFILE_PREFERENCE_UPDATE_ERROR",
+      });
+    }
+  };
+
 
   const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
     stateCode,
-    "commonUiConfig",
+    moduleName,
     [{ name: "UserProfileValidationConfig" }],
     {
       select: (data) => {
@@ -400,6 +525,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           });
         }
       } else if (responseInfo?.status && responseInfo.status === "200") {
+        if ((userType === "citizen" || Digit.Utils.getMultiRootTenant()) && enableUserPreferences) {
+          await saveUserPreferences();
+        }
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
       }
     } catch (error) {
@@ -629,6 +757,54 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                   )}
                 </div>
               </LabelFieldPair>
+
+                       {/* Preferred Language Dropdown */}
+              {enableUserPreferences && availableLanguages?.length >= 1 ? (
+                <LabelFieldPair>
+                  <CardLabel className="user-profile">{t("CORE_COMMON_PREFERRED_LANGUAGE")}</CardLabel>
+                  <div style={{ width: "100%" }}>
+                    <Dropdown
+                      option={availableLanguages}
+                      optionKey="label"
+                      selected={availableLanguages?.find((lang) => lang.value === preferredLanguage)}
+                      select={(lang) => setPreferredLanguage(lang.value)}
+                      t={t}
+                    />
+                  </div>
+                </LabelFieldPair>
+              ) : null}
+
+              {/* Notification Preferences - controlled by ENABLE_USER_PREFERENCES global config and config-service channels */}
+              {enableUserPreferences ? (
+                [
+                  { key: "SMS", label: t("CORE_COMMON_SMS_NOTIFICATIONS") },
+                  { key: "EMAIL", label: t("CORE_COMMON_EMAIL_NOTIFICATIONS") },
+                  { key: "WHATSAPP", label: t("CORE_COMMON_WHATSAPP_NOTIFICATIONS") },
+                ].map((channel) => {
+                  const isChannelEnabled = channelConfigData?.[channel.key] === true;
+                  return (
+                    <LabelFieldPair key={channel.key}>
+                      <CardLabel className="user-profile" style={{ width: "30%", minWidth: "150px", ...(!isChannelEnabled ? { color: "#B1B4B6" } : {}) }}>
+                        {channel.label}
+                      </CardLabel>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: "10px" }}>
+                        <ToggleSwitch
+                          value={notificationConsent[channel.key].status === "GRANTED"}
+                          onChange={() => handleConsentToggle(channel.key)}
+                          disabled={!isChannelEnabled}
+                          name={`notification-${channel.key}`}
+                          style={{ margin: "0px", opacity: isChannelEnabled ? 1 : 0.4 }}
+                        />
+                        <span style={{ fontSize: "14px", marginBottom: "2px", color: isChannelEnabled ? "#505A5F" : "#B1B4B6" }}>
+                          {isChannelEnabled
+                            ? notificationConsent[channel.key].status === "GRANTED" ? t("CORE_COMMON_ENABLED") : t("CORE_COMMON_DISABLED")
+                            : t("CORE_COMMON_DISABLED")}
+                        </span>
+                      </div>
+                    </LabelFieldPair>
+                  );
+                })
+              ) : null}
 
               <button
                 onClick={updateProfile}
