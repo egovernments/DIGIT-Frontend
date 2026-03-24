@@ -86,21 +86,15 @@ const CreateRegistersScreen = () => {
       {
         onSuccess: () => {
           setLoader(false);
-          setParams({
-            HCM_ATTENDANCE_REGISTER_DATA: {
-              uploadAttendanceRegister: uploadedData,
-            },
-          });
+          setParams({});
           navigate(
             `/${window.contextPath}/employee/campaign/response?isSuccess=true`,
             {
               state: {
                 message: t("HCM_REGISTER_CREATION_SUCCESS"),
                 text: t("HCM_REGISTER_CREATION_SUCCESS_TEXT"),
-                actionLabel: "HCM_VIEW_REGISTERS",
-                actionLink: `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-                secondaryActionLabel: "HCM_BACK_TO_CAMPAIGN",
-                secondaryActionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+                actionLabel: "HCM_BACK_TO_SETUP_ATTENDANCE",
+                actionLink: `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
               },
             }
           );

@@ -97,7 +97,7 @@ const MapUsersToRegistersScreen = () => {
 
   // Poll every 5 seconds while register creation is in progress
   useEffect(() => {
-    if (registerCreationStatus !== "creating") return;
+    if (registerCreationStatus !== "creating" || registerCreationStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchResourceDetails();
     }, 3000);
@@ -108,7 +108,7 @@ const MapUsersToRegistersScreen = () => {
   // Show toast when resource status is not completed
   useEffect(() => {
     if (isResourceLoading || isResourceFetching || resourceDetails.length === 0) return;
-    if (registerCreationStatus === "creating" ) {
+    if (registerCreationStatus === "creating" || registerCreationStatus !== "toCreate") {
       setShowToast({ key: "warning", label: t("HCM_REGISTER_CREATION_IN_PROGRESS") });
     } else if (registerCreationStatus === "failed") {
       setShowToast({ key: "error", label: t("HCM_REGISTER_CREATION_FAILED") });
