@@ -9,7 +9,7 @@ import { useMemo } from "react";
  *
  * Returns: { totalManagers, syncedManagers, syncRate, isLoading, error }
  */
-const useWarehouseManagerSync = ({ enabled = true, dateRange } = {}) => {
+const useWarehouseManagerSync = ({ enabled = true, dateRange, campaignId } = {}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const reqCriteria = useMemo(() => {
@@ -38,7 +38,7 @@ const useWarehouseManagerSync = ({ enabled = true, dateRange } = {}) => {
             interval: "day",
             title: "home",
           },
-          filters: {},
+          filters: { campaignId: campaignId || "" },
           aggregationFactors: null,
         },
         headers: { tenantId: tenantId || "" },
@@ -48,16 +48,17 @@ const useWarehouseManagerSync = ({ enabled = true, dateRange } = {}) => {
         enabled: enabled && !!tenantId,
         select: (data) => data?.responseData?.customData?.rawResponse || {},
       },
-      changeQueryName: `warehouseManagerSync_${tenantId}_${startDate}_${endDate}`,
+      changeQueryName: `warehouseManagerSync_${tenantId}_${campaignId}_${startDate}_${endDate}`,
     };
-  }, [tenantId, enabled, dateRange]);
+  }, [tenantId, enabled, dateRange, campaignId]);
 
   const { data: syncData, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const result = useMemo(() => {
     const totalManagers = syncData?.totalManagers || 0;
     const syncedManagers = syncData?.syncedManagers || 0;
-    const syncRate = syncData?.syncRate || (totalManagers > 0 ? Math.round((syncedManagers / totalManagers) * 100) : 0);
+    const rawSyncRate = syncData?.syncRate || (totalManagers > 0 ? (syncedManagers / totalManagers) * 100 : 0);
+    const syncRate = Math.round(rawSyncRate * 100) / 100;
     return { totalManagers, syncedManagers, syncRate };
   }, [syncData]);
 

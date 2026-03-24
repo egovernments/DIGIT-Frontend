@@ -150,7 +150,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         warehouseMap[key].currentStock += qty;
       } else if (
         stock.transactionType === "DISPATCHED" ||
-        stock.transactionType === "ISSUE"
+        stock.transactionType === "ISSUED"
       ) {
         warehouseMap[key].currentStock -= qty;
       } else if (stock.transactionType === "RETURNED") {
