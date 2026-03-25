@@ -17,15 +17,6 @@ import { useMemo } from "react";
  */
 const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, campaignNumber, enabled = true }) => {
   const reqCriteria = useMemo(() => {
-    const user = Digit.UserService.getUser();
-    const RequestInfo = {
-      apiId: "Rainmaker",
-      authToken: user?.access_token,
-      userInfo: user?.info,
-      msgId: `${Date.now()}|${Digit.StoreData?.getCurrentLanguage?.() || "en_IN"}`,
-      plainAccessRequest: {},
-    };
-
     const startDate = dateRange?.startDate instanceof Date ? dateRange.startDate.getTime() : dateRange?.startDate;
     const endDate = dateRange?.endDate instanceof Date ? dateRange.endDate.getTime() : dateRange?.endDate;
 
@@ -33,7 +24,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
       url: `/dashboard-analytics/dashboard/getChartV2`,
       body: {
         aggregationRequestDto: {
-          visualizationCode: "commodityStockSummary",
+          visualizationCode: "commodityFacilityStockBalance",
           visualizationType: "metric",
           queryType: "",
           requestDate: {
@@ -46,11 +37,10 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
           aggregationFactors: null,
         },
         headers: { tenantId: tenantId || "" },
-        RequestInfo,
       },
       config: {
         enabled: enabled && !!tenantId && !!campaignId,
-        select: (data) => data?.responseData?.customData?.rawResponse?.stockDataTransformer || [],
+        select: (data) => data?.responseData?.customData?.rawResponse?.stockBalanceTransformer || [],
       },
       changeQueryName: `stockSummary_${campaignId}_${startDate}_${endDate}`,
     };
@@ -62,13 +52,18 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
   const stockData = useMemo(() => {
     if (!rawRecords?.length) return [];
     return rawRecords.map((record) => {
-      const isInbound = record.transactionType === "RECEIVED" || record.transactionType === "RETURNED";
+      const stockEntryType = record.stockEntryType || "";
+      // RECEIPT: facilityId is receiver, transactingFacilityId is sender
+      // ISSUED: facilityId is sender, transactingFacilityId is receiver
+      // REJECTED/RETURNED: facilityId is rejector/returner, transactingFacilityId is original sender
+      const isInbound = stockEntryType === "RECEIPT";
       return {
         id: record.id,
         productVariantId: record.productVariantId,
         senderId: isInbound ? record.transactingFacilityId : record.facilityId,
         receiverId: isInbound ? record.facilityId : record.transactingFacilityId,
         transactionType: record.transactionType,
+        stockEntryType,
         quantity: record.quantity,
         facilityId: record.facilityId,
         facilityName: record.facilityName,

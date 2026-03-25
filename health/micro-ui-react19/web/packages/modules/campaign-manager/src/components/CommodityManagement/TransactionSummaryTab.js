@@ -32,6 +32,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     RETURNED: "Complete",
     DAMAGED: "Rejected",
     LOST: "Cancelled",
+    REJECTED: "Returned",
   };
   const status =
     statusMap[stock?.transactionType] || stock?.transactionType || "N/A";
@@ -62,7 +63,10 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     createdTime,
     sentFrom: facilityNameMap[stock?.senderId] || stock?.senderId || "N/A",
     sentTo: facilityNameMap[stock?.receiverId] || stock?.receiverId || "N/A",
-    userName: stock?.nameOfUser || stock?.userName,
+    senderId: stock?.senderId || "",
+    receiverId: stock?.receiverId || "",
+    nameOfUser: stock?.nameOfUser || "",
+    userName: stock?.userName || "",
     createdBy: stock?.auditDetails?.createdBy || "N/A",
     status,
     commodity,
@@ -76,7 +80,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   };
 };
 
-const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId }) => {
+const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId, userBoundary, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
@@ -104,8 +108,12 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
         const nameMap = {};
+        const boundaryMap = {};
         (data?.Facilities || []).forEach(f => {
-          if (f.id) nameMap[f.id] = f.name || f.id;
+          if (f.id) {
+            nameMap[f.id] = f.name || f.id;
+            boundaryMap[f.id] = f.address?.locality?.code || "";
+          }
         });
         // Disambiguate duplicate facility names by appending short ID suffix
         const nameCount = {};
@@ -118,11 +126,23 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
             nameMap[id] = `${name} (${shortId})`;
           }
         });
-        return nameMap;
+        return { nameMap, boundaryMap };
       },
     },
   }), [tenantId, facilityIds]);
-  const { data: facilityNameMap = {}, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+  const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
+  const facilityNameMap = facilityMaps?.nameMap || {};
+  const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
+
+  // Determine user's facility IDs from boundary matching
+  const userFacilityIds = useMemo(() => {
+    if (!userBoundary?.boundary || !Object.keys(facilityBoundaryMap).length) return new Set();
+    const ids = new Set();
+    Object.entries(facilityBoundaryMap).forEach(([fId, bCode]) => {
+      if (bCode === userBoundary.boundary) ids.add(fId);
+    });
+    return ids;
+  }, [userBoundary, facilityBoundaryMap]);
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({
@@ -163,13 +183,18 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return map;
   }, [productVariants, products]);
 
-  // Transform stock data with resolved names, sorted by createdTime descending
+  // Transform stock data with resolved names, filtered to user's facility, sorted by createdTime descending
   const tableData = useMemo(() => {
     if (!rawStockData?.length) return [];
     return rawStockData
+      .filter((stock) => {
+        // If no user facility found (top-level or loading), show all
+        if (userFacilityIds.size === 0) return true;
+        return userFacilityIds.has(stock.senderId) || userFacilityIds.has(stock.receiverId);
+      })
       .map(stock => transformStock(stock, facilityNameMap, productNameMap))
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap]);
+  }, [rawStockData, facilityNameMap, productNameMap, userFacilityIds]);
 
   const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading;
 
@@ -352,25 +377,36 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     sentFrom: (row) => <span className="cm-cell-link">{row.sentFrom}</span>,
     sentTo: (row) => <span className="cm-cell-link">{row.sentTo}</span>,
     createdBy: (row) => {
-     const userName = row?.userName ;
+      const displayName = row?.nameOfUser || "";
+      const loginName = row?.userName || "";
+
+      // Mask userName: show last 4 chars, mask the rest with *
+      const maskLogin = (name) => {
+        if (!name) return "";
+        if (name.length <= 4) return name;
+        return "*".repeat(name.length - 4) + name.slice(-4);
+      };
+
+      if (displayName && loginName) {
+        return `${displayName} (${maskLogin(loginName)})`;
+      }
+      if (displayName) return displayName;
+      if (loginName) return maskLogin(loginName);
 
       const userId = row?.createdBy;
-      if(userName) return userName;
-      if (userId || userId !== "N/A"){
-return (
-        <UserDetails
-          uuid={userId}
-          style={{ fontSize: "inherit" }}
-          iconSize="14px"
-          tooltipPosition="top"
-      showIcon={false}   // ← hides the info icon
-        />
-      );
+      if (userId && userId !== "N/A") {
+        return (
+          <UserDetails
+            uuid={userId}
+            style={{ fontSize: "inherit" }}
+            iconSize="14px"
+            tooltipPosition="top"
+            showIcon={false}
+          />
+        );
       }
-      
-      else{
-        return "N/A"
-      }
+
+      return "N/A";
     },
     transactionType: (row) => (
       <span

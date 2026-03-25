@@ -8,7 +8,7 @@ import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [shipmentFacility, setShipmentFacility] = useState(null); // { id, name } for CommodityShipmentPopup
@@ -40,10 +40,12 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       select: (data) => {
         const nameMap = {};
         const boundaryMap = {};
+        const boundaryTypeMap = {};
         (data?.Facilities || []).forEach(f => {
           if (f.id) {
             nameMap[f.id] = f.name || f.id;
             boundaryMap[f.id] = f.address?.locality?.code || "";
+            boundaryTypeMap[f.id] = f.address?.locality?.type || f.address?.boundaryType || "";
           }
         });
         // Disambiguate duplicate facility names by appending short ID suffix
@@ -57,13 +59,14 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             nameMap[id] = `${name} (${shortId})`;
           }
         });
-        return { nameMap, boundaryMap };
+        return { nameMap, boundaryMap, boundaryTypeMap };
       },
     },
   }), [tenantId, facilityIds]);
   const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
   const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
+  const facilityBoundaryTypeMap = facilityMaps?.boundaryTypeMap || {};
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({
@@ -104,6 +107,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return map;
   }, [productVariants, products]);
 
+  // Determine user's facility IDs from boundary matching
+  const userFacilityIds = useMemo(() => {
+    if (!userBoundary?.boundary || !Object.keys(facilityBoundaryMap).length) return new Set();
+    const ids = new Set();
+    Object.entries(facilityBoundaryMap).forEach(([fId, bCode]) => {
+      if (bCode === userBoundary.boundary) ids.add(fId);
+    });
+    return ids;
+  }, [userBoundary, facilityBoundaryMap]);
+
   // Use pre-computed summary from stockSummary (computed in CommodityDashboard)
   const { commoditySummaries = [], dataSyncStats: syncStats } = stockSummary || {};
   const dataSyncStats = {
@@ -112,70 +125,96 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     syncRate: syncStats?.syncRate || 0,
   };
 
-  // Warehouse table data still needs raw hits + facility/product name resolution
+  // Helper: build boundary display string with type in brackets
+  const getBoundaryDisplay = useCallback((facilityId) => {
+    const boundaryCode = facilityBoundaryMap[facilityId];
+    if (!boundaryCode) return "N/A";
+    let boundaryType = facilityBoundaryTypeMap[facilityId];
+    // Fallback: if this facility's boundary matches userBoundary, use its type
+    if (!boundaryType && boundaryCode === userBoundary?.boundary) {
+      boundaryType = userBoundary.boundaryType;
+    }
+    return boundaryType
+      ? `${t(boundaryCode)} (${t(boundaryType)})`
+      : t(boundaryCode);
+  }, [facilityBoundaryMap, facilityBoundaryTypeMap, userBoundary, t]);
+
+  // Per-transaction rows filtered to user's facility
   const warehouseData = useMemo(() => {
     if (!finalStockData?.length) return [];
 
-    const warehouseMap = {};
+    // Find the first user facility ID for the action button
+    const userFacId = userFacilityIds.size > 0 ? [...userFacilityIds][0] : null;
+
+    const rows = [];
     finalStockData.forEach((stock) => {
+      const senderId = stock.senderId;
+      const receiverId = stock.receiverId;
+
+      // Filter: only show transactions involving user's facility
+      // If no user facility found (top-level or loading), show all
+      if (userFacilityIds.size > 0 && !userFacilityIds.has(senderId) && !userFacilityIds.has(receiverId)) {
+        return;
+      }
+
       const productName =
         productNameMap[stock?.productVariantId] ||
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")
           ?.value || "Unknown";
-
-      const facilityId =
-        stock.transactionType === "RECEIVED"
-          ? stock.receiverId
-          : stock.senderId;
-      const key = `${facilityId}-${productName}`;
-
-      if (!warehouseMap[key]) {
-        warehouseMap[key] = {
-          warehouseName: facilityNameMap[facilityId] || facilityId || "N/A",
-          type:
-            stock.senderType === "WAREHOUSE" ||
-              stock.receiverType === "WAREHOUSE"
-              ? "Warehouse"
-              : "Facility",
-          boundary: facilityBoundaryMap[facilityId] ? t(facilityBoundaryMap[facilityId]) : "N/A",
-          commodity: productName,
-          currentStock: 0,
-          facilityId,
-          productVariantId: stock.productVariantId,
-        };
-      }
-
       const qty = stock.quantity || 0;
-      if (stock.transactionType === "RECEIVED") {
-        warehouseMap[key].currentStock += qty;
-      } else if (
-        stock.transactionType === "DISPATCHED" ||
-        stock.transactionType === "ISSUED"
-      ) {
-        warehouseMap[key].currentStock -= qty;
-      } else if (stock.transactionType === "RETURNED") {
-        warehouseMap[key].currentStock += qty;
-      }
+
+      rows.push({
+        warehouseName: facilityNameMap[senderId] || senderId || "N/A",
+        toFacility: facilityNameMap[receiverId] || receiverId || "N/A",
+        type:
+          stock.senderType === "WAREHOUSE" || stock.receiverType === "WAREHOUSE"
+            ? "Warehouse"
+            : "Facility",
+        boundary: getBoundaryDisplay(senderId),
+        commodity: productName,
+        quantity: Math.max(0, qty),
+        facilityId: userFacId || senderId,
+        productVariantId: stock.productVariantId,
+      });
     });
 
-    return Object.values(warehouseMap);
-  }, [finalStockData, facilityNameMap, facilityBoundaryMap, productNameMap]);
+    return rows;
+  }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, getBoundaryDisplay]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
   const facilityStockMap = useMemo(() => {
     if (!finalStockData?.length) return {};
     const map = {};
+    const init = (fId, pvId) => {
+      if (!map[fId]) map[fId] = {};
+      if (!map[fId][pvId]) map[fId][pvId] = 0;
+    };
     finalStockData.forEach((stock) => {
-      const facilityId = stock.transactionType === "RECEIVED" ? stock.receiverId : stock.senderId;
+      const stockEntryType = stock.stockEntryType || "";
       const pvId = stock.productVariantId;
-      if (!facilityId || !pvId) return;
-      if (!map[facilityId]) map[facilityId] = {};
-      if (!map[facilityId][pvId]) map[facilityId][pvId] = 0;
       const qty = stock.quantity || 0;
-      if (stock.transactionType === "RECEIVED" || stock.transactionType === "RETURNED") {
-        map[facilityId][pvId] += qty;
-      } else if (stock.transactionType === "DISPATCHED" || stock.transactionType === "ISSUE") {
-        map[facilityId][pvId] -= qty;
+      if (!pvId) return;
+
+      if (stockEntryType === "ISSUED") {
+        // Dual-attribution: Sender loses, Receiver gains
+        if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
+      } else if (stockEntryType === "RECEIPT") {
+        // Skip — already counted by ISSUED dual-attribution
+      } else if (stockEntryType === "RETURNED" || stockEntryType === "REJECTED") {
+        // Dual-attribution: Returner loses, Original sender gains
+        if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
+      } else {
+        // Fallback to existing transactionType logic
+        const facilityId = stock.transactionType === "RECEIVED" ? stock.receiverId : stock.senderId;
+        if (!facilityId) return;
+        init(facilityId, pvId);
+        if (stock.transactionType === "RECEIVED" || stock.transactionType === "RETURNED") {
+          map[facilityId][pvId] += qty;
+        } else if (stock.transactionType === "DISPATCHED" || stock.transactionType === "ISSUE") {
+          map[facilityId][pvId] -= qty;
+        }
       }
     });
     return map;
@@ -196,8 +235,15 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
 
   const columns = [
     {
-      label: t("HCM_WAREHOUSE_NAME"),
+      label: t("HCM_FROM_FACILITY"),
       key: "warehouseName",
+      grow: 1.5,
+      minWidth: "180px",
+      sortable: true,
+    },
+    {
+      label: t("HCM_TO_FACILITY"),
+      key: "toFacility",
       grow: 1.5,
       minWidth: "180px",
       sortable: true,
@@ -224,8 +270,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       sortable: true,
     },
     {
-      label: t("HCM_CURRENT_STOCK"),
-      key: "currentStock",
+      label: t("HCM_QUANTITY"),
+      key: "quantity",
       grow: 0.8,
       minWidth: "130px",
       sortable: true,
@@ -374,16 +420,15 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   );
 
   const customCellRenderer = {
-    currentStock: (row) => (
+    quantity: (row) => (
       <span className="cm-cell-stock">
-        {row.currentStock?.toLocaleString()}
+        {row.quantity?.toLocaleString()}
       </span>
     ),
     action: (row) => (
-     
       <Button
         onClick={() =>
-          setShipmentFacility({ id: row.facilityId, name: row.warehouseName,productVariantId: row.productVariantId })
+          setShipmentFacility({ id: row.facilityId, name: row.warehouseName, productVariantId: row.productVariantId })
         }
         title={t("HCM_SHIP_COMMODITY")}
         icon={"Add"}
@@ -420,7 +465,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         ]}
       />
 
-      {commoditySummaries.map((commodity, index) => (
+      {!isTopLevel && commoditySummaries.map((commodity, index) => (
         <SummaryCard
           key={index}
           title="HCM_STOCK_SUMMARY"

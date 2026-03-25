@@ -26,10 +26,10 @@ const CommodityDashboard = () => {
   // Read campaign data from navigation state (passed from HCMCommodityRowCard)
   const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, isCompleted } = location.state || {};
 
-  // Read userBoundary from context
-  const { userBoundary } = useCommodityProject();
+  // Read userBoundary and isTopLevel from context
+  const { userBoundary, isTopLevel } = useCommodityProject();
 
-  // Lazy fetch campaignId from campaignNumber if not in URL
+  // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
   const campaignReqCriteria = useMemo(() => ({
     url: `/project-factory/v1/project-type/search`,
     body: {
@@ -39,14 +39,24 @@ const CommodityDashboard = () => {
       },
     },
     config: {
-      enabled: !!campaignNumber && !campaignIdFromUrl,
-      select: (data) => data?.CampaignDetails?.[0]?.id,
+      enabled: !!campaignNumber,
+      select: (data) => {
+        const campaign = data?.CampaignDetails?.[0];
+        return {
+          id: campaign?.id,
+          createdTime: campaign?.auditDetails?.createdTime,
+        };
+      },
     },
-  }), [tenantId, campaignNumber, campaignIdFromUrl]);
+  }), [tenantId, campaignNumber]);
 
-  const { data: fetchedCampaignId, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
+  const { data: campaignSearchData, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
-  const campaignId = campaignIdFromUrl || fetchedCampaignId;
+  const campaignId = campaignIdFromUrl || campaignSearchData?.id;
+  const campaignCreatedDate = useMemo(
+    () => (campaignSearchData?.createdTime ? new Date(campaignSearchData.createdTime) : null),
+    [campaignSearchData?.createdTime]
+  );
 
   const campaignStartDate = useMemo(
     () => (campaignStartEpoch ? new Date(campaignStartEpoch) : null),
@@ -205,7 +215,7 @@ const CommodityDashboard = () => {
             }}
             onSelect={handleDateRangeSelect}
             props={{ name: "dateRange" }}
-            minDate={campaignStartDate}
+            minDate={campaignCreatedDate}
             maxDate={campaignEndDate}
           />
         </LabelFieldPair>
@@ -244,6 +254,8 @@ const CommodityDashboard = () => {
           tenantId={tenantId}
           campaignId={campaignId}
           projectId={projectId}
+          userBoundary={userBoundary}
+          isTopLevel={isTopLevel}
         />
       ) : (
         <StockSummaryTab
@@ -257,6 +269,7 @@ const CommodityDashboard = () => {
           refetchStockData={refetchStockData}
           isCompleted={isCompleted}
           userBoundary={userBoundary}
+          isTopLevel={isTopLevel}
         />
       )}
 
@@ -267,6 +280,7 @@ const CommodityDashboard = () => {
           tenantId={tenantId}
           projectId={projectId}
           userBoundary={userBoundary}
+          isTopLevel={isTopLevel}
           onClose={() => setShowNewShipmentPopup(false)}
           onSuccess={() => {
             setShowNewShipmentPopup(false);

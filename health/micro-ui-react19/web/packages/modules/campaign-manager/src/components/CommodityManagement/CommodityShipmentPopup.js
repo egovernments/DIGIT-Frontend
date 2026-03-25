@@ -461,6 +461,15 @@ const CommodityShipmentPopup = ({
     if (!effectiveItems.length) {
       newErrors.items = t(COMMODITY_KEYS.HCM_ADD_AT_LEAST_ONE_COMMODITY);
     }
+
+    // Re-validate all items against current stock
+    effectiveItems.forEach((item) => {
+      const available = warehouseStock[item.productVariantId] || 0;
+      if (item.quantity > available) {
+        newErrors.items = `${item.name}: ${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
+      }
+    });
+
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
       return;
@@ -472,14 +481,14 @@ const CommodityShipmentPopup = ({
     try {
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
-      // Use TO facility's projectId from project-facility mapping
-      const rowProjectId = facilityToProject[toFacility.id] || "";
+      // Use sender (From) facility's projectId from project-facility mapping
+      const rowProjectId = facilityToProject[fromFacility?.id] || "";
       const resolvedRefId =
         rowProjectId || campaignData?.projectId || campaignId;
 
-      // Resolve administrativeArea from TO facility's project boundary
-      const toProjectBoundary = projectBoundaryMap[rowProjectId];
-      const administrativeArea = toProjectBoundary?.boundary || "";
+      // Resolve administrativeArea from sender (From) facility's project boundary
+      const fromProjectBoundary = projectBoundaryMap[rowProjectId];
+      const administrativeArea = fromProjectBoundary?.boundary || "";
 
       // Build stock payload matching APK structure for proper ES indexing
       const stockPayload = effectiveItems.map((item) => ({

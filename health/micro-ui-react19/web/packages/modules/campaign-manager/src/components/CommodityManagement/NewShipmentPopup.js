@@ -10,6 +10,7 @@ import {
   CheckBox,
   RadioButtons,
   Dropdown,
+  MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
@@ -23,6 +24,7 @@ const NewShipmentPopup = ({
   tenantId,
   projectId: projectIdProp,
   userBoundary,
+  isTopLevel,
   onClose,
   onSuccess,
 }) => {
@@ -235,6 +237,12 @@ const NewShipmentPopup = ({
     }
   }, [userBoundary, effectiveHierarchy]);
 
+  // Auto-select the first from facility when the facility list changes (new boundary → new list)
+  useEffect(() => {
+    if (!fromFacilityList?.length) return;
+    setFromFacilityId(fromFacilityList[0].id);
+  }, [fromFacilityList]);
+
   // Build hierarchy filter options from boundary tree
   const hierarchyFilterOptions = useMemo(() => {
     const boundaries = boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
@@ -259,9 +267,14 @@ const NewShipmentPopup = ({
     return allOptions.filter((code) => {
       const ancestors = boundaryAncestorMap[code] || {};
       return Object.entries(filters).every(([type, value]) => {
-        if (!value || type === boundaryType) return true;
+        if (type === boundaryType) return true;
         const filterLevelIdx = sortedHierarchy.findIndex((h) => h.boundaryType === type);
-        if (filterLevelIdx >= currentLevelIdx) return true; // skip same-level and lower-level filters
+        if (filterLevelIdx >= currentLevelIdx) return true;
+        if (Array.isArray(value)) {
+          if (!value.length) return true;
+          return value.includes(ancestors[type]);
+        }
+        if (!value) return true;
         return ancestors[type] === value;
       });
     });
@@ -286,7 +299,8 @@ const NewShipmentPopup = ({
   const toSelectedLevel = useMemo(() => {
     let level = -1;
     toHierarchyLevels.forEach((h) => {
-      if (toHierarchyFilters[h.boundaryType]) {
+      const val = toHierarchyFilters[h.boundaryType];
+      if (Array.isArray(val) ? val.length > 0 : !!val) {
         const idx = effectiveHierarchy.findIndex((s) => s.boundaryType === h.boundaryType);
         if (idx > level) level = idx;
       }
@@ -306,7 +320,8 @@ const NewShipmentPopup = ({
     if (!toHierarchyLevels.length) return [];
     let deepestRelIdx = -1;
     toHierarchyLevels.forEach((h, idx) => {
-      if (toHierarchyFilters[h.boundaryType]) deepestRelIdx = idx;
+      const val = toHierarchyFilters[h.boundaryType];
+      if (Array.isArray(val) ? val.length > 0 : !!val) deepestRelIdx = idx;
     });
     if (deepestRelIdx < 0) return toHierarchyLevels.slice(0, 1);
     return toHierarchyLevels.slice(0, Math.min(deepestRelIdx + 2, toHierarchyLevels.length));
@@ -332,7 +347,7 @@ const NewShipmentPopup = ({
   // Filter project IDs for "To" — projects matching all combined filters at the selected To level
   const toFilteredProjectIds = useMemo(() => {
     if (!allProjectIds.length) return [];
-    const hasToFilters = Object.values(toHierarchyFilters).some((v) => !!v);
+    const hasToFilters = Object.values(toHierarchyFilters).some((v) => Array.isArray(v) ? v.length > 0 : !!v);
     if (!hasToFilters) return [];
     const targetBoundaryType = toSelectedLevel >= 0
       ? effectiveHierarchy[toSelectedLevel]?.boundaryType
@@ -345,6 +360,10 @@ const NewShipmentPopup = ({
       if (bInfo.boundaryType !== targetBoundaryType) return false;
       const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
       return Object.entries(combinedFilters).every(([type, value]) => {
+        if (Array.isArray(value)) {
+          if (!value.length) return true;
+          return value.includes(ancestors[type]);
+        }
         if (!value) return true;
         return ancestors[type] === value;
       });
@@ -501,6 +520,88 @@ const NewShipmentPopup = ({
     config: { enabled: false },
   });
 
+  // Fetch stock balance data for validation using 2-query config:
+  // Query 1 filters Data.facilityId = fromFacilityId (covers RECEIPT/ISSUED)
+  // Query 2 filters Data.transactingFacilityId = fromFacilityId (covers REJECTED/RETURNED back)
+  const stockBalanceCriteria = useMemo(() => ({
+    url: `/dashboard-analytics/dashboard/getChartV2`,
+    body: {
+      aggregationRequestDto: {
+        visualizationCode: "commodityFacilityStockByFacility",
+        visualizationType: "metric",
+        queryType: "",
+        requestDate: { startDate: 0, endDate: Date.now(), interval: "day", title: "home" },
+        filters: { campaignId: campaignId || "", facilityId: fromFacilityId || "" },
+        aggregationFactors: null,
+      },
+      headers: { tenantId: tenantId || "" },
+    },
+    config: {
+      enabled: !isTopLevel && !!tenantId && !!campaignId && !!fromFacilityId,
+      select: (data) => {
+        // Combine results from both queries and dedup by record id
+        const r1 = data?.responseData?.customData?.rawResponse?.facilityStockTransformer || [];
+        const r2 = data?.responseData?.customData?.rawResponse?.transactingStockTransformer || [];
+        const seen = new Set();
+        const combined = [];
+        [...r1, ...r2].forEach((r) => {
+          if (r.id && !seen.has(r.id)) {
+            seen.add(r.id);
+            combined.push(r);
+          }
+        });
+        return combined;
+      },
+    },
+    changeQueryName: `stockBalance_shipment_${campaignId}_${fromFacilityId}`,
+  }), [tenantId, campaignId, isTopLevel, fromFacilityId]);
+
+  const { data: stockRecords } = Digit.Hooks.useCustomAPIHook(stockBalanceCriteria);
+
+  // Compute per-facility stock map from raw ES records using stockEntryType
+  // Records come from 2-query config: facilityId=fromFacilityId OR transactingFacilityId=fromFacilityId
+  // Must check which role fromFacilityId plays in each record
+  const facilityStockMap = useMemo(() => {
+    if (!stockRecords?.length || !fromFacilityId) return {};
+    const map = {};
+    const init = (fId, pvId) => {
+      if (!map[fId]) map[fId] = {};
+      if (!map[fId][pvId]) map[fId][pvId] = 0;
+    };
+    stockRecords.forEach((record) => {
+      const pvId = record.productVariantId;
+      const qty = record.quantity || 0;
+      const entryType = record.stockEntryType || "";
+      if (!pvId) return;
+
+      if (entryType === "ISSUED") {
+        if (record.facilityId === fromFacilityId) {
+          // I dispatched → -qty
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+        } else if (record.transactingFacilityId === fromFacilityId) {
+          // Someone dispatched TO me → +qty
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+        }
+      } else if (entryType === "RECEIPT") {
+        // Skip — avoid double-counting with ISSUED
+      } else if (entryType === "RETURNED" || entryType === "REJECTED") {
+        if (record.transactingFacilityId === fromFacilityId) {
+          // Stock returned/rejected TO me → +qty
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+        } else if (record.facilityId === fromFacilityId) {
+          // I returned stock → -qty
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+        }
+      }
+    });
+    return map;
+  }, [stockRecords, fromFacilityId]);
+
+  // Determine if the "From" level is top level (skip stock validation)
+  const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType;
+  const fromBoundaryType = effectiveHierarchy[fromSelectedLevel]?.boundaryType;
+  const isFromTopLevel = isTopLevel || fromBoundaryType === topLevelBoundaryType;
+
   // Handle "From" hierarchy filter change (cascading + clear To filters)
   const handleFromHierarchyChange = useCallback((boundaryType, value) => {
     // Don't allow changing the locked user boundary level
@@ -523,11 +624,12 @@ const NewShipmentPopup = ({
     setFromFacilityId("");
   }, [effectiveHierarchy, userBoundary]);
 
-  // Handle "To" hierarchy filter change (cascading)
-  const handleToHierarchyChange = useCallback((boundaryType, value) => {
+  // Handle "To" hierarchy filter change (cascading, multi-select arrays)
+  const handleToHierarchyChange = useCallback((boundaryType, values) => {
     setToHierarchyFilters((prev) => {
       const next = { ...prev };
-      next[boundaryType] = value;
+      next[boundaryType] = values; // array of selected boundary codes
+      // Clear all levels below the changed level
       let foundCurrent = false;
       toHierarchyLevels.forEach((h) => {
         if (h.boundaryType === boundaryType) {
@@ -626,8 +728,11 @@ const NewShipmentPopup = ({
       // Data rows (row 3+) — one row per selected To facility
       selectedFacilities.forEach((facility) => {
         const row = [];
+        // Look up facility's actual boundary ancestors for accurate boundary columns
+        const facilityBoundaryInfo = projectBoundaryMap[facility.projectId];
+        const facilityAncestors = boundaryAncestorMap[facilityBoundaryInfo?.boundary] || {};
         boundaryHeaders.forEach((bType) => {
-          const code = fromHierarchyFilters[bType] || toHierarchyFilters[bType] || "";
+          const code = fromHierarchyFilters[bType] || facilityAncestors[bType] || "";
           row.push(code ? t(code) : "");
         });
         row.push(campaignNumber || "");
@@ -816,6 +921,8 @@ const NewShipmentPopup = ({
     toFacilityList,
     fromHierarchyFilters,
     toHierarchyFilters,
+    projectBoundaryMap,
+    boundaryAncestorMap,
     campaignNumber,
     campaignName,
     t,
@@ -959,6 +1066,34 @@ const NewShipmentPopup = ({
         });
       });
 
+      // Stock balance validation: check that dispatched quantities don't exceed available stock
+      if (!isFromTopLevel && Object.keys(facilityStockMap).length > 0) {
+        // Aggregate total quantities per senderId per productVariantId across all data rows
+        const aggregatedQty = {};
+        dataRows.forEach((row) => {
+          const senderId = fromCodeIdx >= 0 ? String(row[fromCodeIdx] || "").trim() : "";
+          if (!senderId) return;
+          productColumns.forEach(({ idx, productVariantId, name }) => {
+            const val = row[idx];
+            if (val === undefined || val === null || val === "") return;
+            const num = Number(val);
+            if (!Number.isFinite(num) || num <= 0) return;
+            const key = `${senderId}|${productVariantId}`;
+            if (!aggregatedQty[key]) aggregatedQty[key] = { senderId, productVariantId, name, total: 0 };
+            aggregatedQty[key].total += num;
+          });
+        });
+
+        // Compare each against available stock
+        Object.values(aggregatedQty).forEach(({ senderId, productVariantId, name, total }) => {
+          const available = facilityStockMap[senderId]?.[productVariantId] || 0;
+          if (total > available) {
+            const facilityName = facilityNameMap[senderId] || senderId;
+            errors.push(`"${name}" from "${facilityName}": shipping ${total} but only ${Math.max(0, available)} available`);
+          }
+        });
+      }
+
       if (errors.length > 0) {
         setShowToast({
           key: "error",
@@ -1055,9 +1190,6 @@ const NewShipmentPopup = ({
   await stockMutation.mutateAsync({
     url: `/stock/v1/bulk/_create`,
     body: {
-      RequestInfo: {
-        authToken: Digit.UserService.getUser()?.access_token,
-      },
       Stock: stockPayload,
     },
   });
@@ -1099,6 +1231,9 @@ const NewShipmentPopup = ({
     stockMutation,
     onSuccess,
     t,
+    isFromTopLevel,
+    facilityStockMap,
+    facilityNameMap,
   ]);
 
   const isLoadingInitialData =
@@ -1335,6 +1470,7 @@ const NewShipmentPopup = ({
                           const options = hierarchyFilterOptions[h.boundaryType];
                           if (!options) return null;
                           const availableOptions = getAvailableOptions(h.boundaryType, { ...fromHierarchyFilters, ...toHierarchyFilters });
+                          const selectedCodes = toHierarchyFilters[h.boundaryType] || [];
                           return (
                             <div
                               key={h.boundaryType}
@@ -1350,18 +1486,24 @@ const NewShipmentPopup = ({
                               >
                                 {t(h.boundaryType)}
                               </label>
-                              <Dropdown
+                              <MultiSelectDropdown
+                                disablePortal={true}
                                 t={t}
-                                option={availableOptions.map((code) => ({ code, name: t(code) }))}
-                                optionKey="name"
-                                selected={
-                                  toHierarchyFilters[h.boundaryType]
-                                    ? { code: toHierarchyFilters[h.boundaryType], name: t(toHierarchyFilters[h.boundaryType]) }
-                                    : undefined
-                                }
-                                select={(selected) => handleToHierarchyChange(h.boundaryType, selected.code)}
-                                placeholder={t("ES_COMMON_SELECT")}
-                                style={{ width: "100%" }}
+                                options={availableOptions.map((code) => ({ code, name: t(code) }))}
+                                optionsKey="code"
+                                selected={selectedCodes.map((code) => ({ code, name: t(code) }))}
+                                onSelect={() => {}}
+                                onClose={(selectedArray) => {
+                                  const codes = (selectedArray || [])
+                                    .map((arr) => arr?.[1]?.code)
+                                    .filter(Boolean);
+                                  handleToHierarchyChange(h.boundaryType, codes);
+                                }}
+                                config={{
+                                  isDropdownWithChip: true,
+                                  chipKey: "code",
+                                }}
+                                isSearchable={true}
                               />
                             </div>
                           );

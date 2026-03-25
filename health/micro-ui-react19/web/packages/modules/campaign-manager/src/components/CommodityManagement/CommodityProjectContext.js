@@ -3,8 +3,11 @@ import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 const CommodityProjectContext = createContext(null);
 
+const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
+
 const CommodityProjectProvider = ({ children }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const moduleName = Digit.Utils.campaign.getModuleName();
   const user = Digit.SessionStorage.get("User");
   const uuid = user?.info?.uuid;
 
@@ -53,15 +56,67 @@ const CommodityProjectProvider = ({ children }) => {
     return null;
   }, [projects]);
 
-  const isLoading = staffLoading || projectsLoading;
+  // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
+  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "HierarchySchema", filter: `[?(@.type=='${moduleName}')]` }],
+    {
+      select: (data) =>
+        data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy,
+    },
+    { schemaCode: "HierarchySchema" },
+  );
+
+  // Fetch hierarchy definition to determine top-level boundary type
+  const hierarchyDefCriteria = useMemo(() => ({
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `commodityCtx_${BOUNDARY_HIERARCHY_TYPE}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      },
+    },
+    config: { enabled: !!BOUNDARY_HIERARCHY_TYPE },
+  }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
+
+  const { data: hierarchyDefinition, isLoading: hierarchyDefLoading } = Digit.Hooks.useCustomAPIHook(hierarchyDefCriteria);
+
+  // Build sorted hierarchy and determine top-level boundary type
+  const sortedHierarchy = useMemo(() => {
+    const boundaryHierarchy =
+      hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return [];
+    const sorted = [];
+    let current = boundaryHierarchy.find((item) => !item?.parentBoundaryType);
+    while (current) {
+      sorted.push(current);
+      const next = boundaryHierarchy.find(
+        (item) => item?.parentBoundaryType === current?.boundaryType,
+      );
+      if (!next) break;
+      current = next;
+    }
+    return sorted;
+  }, [hierarchyDefinition]);
+
+  const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType || null;
+  const isTopLevel = !!(userBoundary?.boundaryType && topLevelBoundaryType && userBoundary.boundaryType === topLevelBoundaryType);
+
+  const isLoading = staffLoading || projectsLoading || hierarchyTypeLoading || hierarchyDefLoading;
   const hasStaff = !!(projectStaff?.length > 0);
 
   const value = useMemo(() => ({
     projects: projects || [],
     userBoundary,
+    isTopLevel,
+    topLevelBoundaryType,
     isLoading,
     hasStaff,
-  }), [projects, userBoundary, isLoading, hasStaff]);
+  }), [projects, userBoundary, isTopLevel, topLevelBoundaryType, isLoading, hasStaff]);
 
   return (
     <CommodityProjectContext.Provider value={value}>

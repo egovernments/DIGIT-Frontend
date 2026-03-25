@@ -46,7 +46,7 @@ const computeFromAggregations = (aggregations) => {
 
     const totalReceived = getQty("RECEIVED");
     const totalIssued = getQty("DISPATCHED", "ISSUE");
-    const totalReturned = getQty("RETURNED");
+    const totalReturned = getQty("RETURNED", "REJECTED");
 
     return {
       name: bucket.key,
@@ -101,10 +101,19 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
 
   stockData.forEach((stock) => {
     const txType = stock.transactionType;
-    const category = statusMap[txType];
-    if (category === "completed") completed++;
-    else if (category === "pending") pending++;
-    else if (category === "rejected") rejected++;
+    const stockEntryType = stock.stockEntryType || stock.additionalDetails?.stockEntryType || "";
+
+    // Use stockEntryType as primary for categorization, fallback to transactionType
+    if (stockEntryType === "RECEIPT") completed++;
+    else if (stockEntryType === "ISSUED") pending++;
+    else if (stockEntryType === "REJECTED") completed++;
+    else if (stockEntryType === "RETURNED") completed++;
+    else {
+      const category = statusMap[txType];
+      if (category === "completed") completed++;
+      else if (category === "pending") pending++;
+      else if (category === "rejected") rejected++;
+    }
 
     // Commodity
     const productName =
@@ -118,14 +127,18 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
     }
 
     const qty = stock.quantity || 0;
-    switch (txType) {
-      case "RECEIVED":
-        commodityMap[productName].totalReceived += qty;
-        break;
+    const entryType = stockEntryType || txType; // fallback
+    switch (entryType) {
+      case "ISSUED":
       case "DISPATCHED":
       case "ISSUE":
-        commodityMap[productName].totalIssued += qty;
+        commodityMap[productName].totalReceived += qty;  // ISSUED = received downstream
         break;
+      case "RECEIPT":
+      case "RECEIVED":
+        commodityMap[productName].totalIssued += qty;    // RECEIPT = confirmed/issued further
+        break;
+      case "REJECTED":
       case "RETURNED":
         commodityMap[productName].totalReturned += qty;
         break;
@@ -147,7 +160,7 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
 
   const commoditySummaries = Object.values(commodityMap).map((c) => ({
     ...c,
-    balance: c.totalReceived - c.totalIssued + c.totalReturned,
+    balance: c.totalReceived - c.totalIssued - c.totalReturned,
   }));
 
   const totalFacilities = facilitySet.size;
