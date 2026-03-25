@@ -36,6 +36,9 @@ const localizationKeys = {
   HCM_OFFLINE: "Offline",
   HCM_ALL_ROLES: "All Roles",
   HCM_ALL_BOUNDARIES: "All Boundaries",
+  HCM_SELECT_ALL: "Select All",
+  HCM_SELECT_BOUNDARIES: "Select Boundaries",
+  HCM_BOUNDARIES: "Boundaries",
 
   // ─── Main Screen: Role Labels ───
   HCM_ROLE_DISTRIBUTOR: "Distributor",
@@ -52,6 +55,9 @@ const localizationKeys = {
   SEARCH_PLACEHOLDER: "Search name, user ID, device...",
   NO_DATA: "No data available",
   CS_COMMON_ROWS_PER_PAGE: "Rows Per Page",
+  SHOWING: "Showing",
+  OF: "of",
+  USERS: "users",
 
   // ─── Main Screen: View Profile Button ───
   VIEW_PROFILE: "View Profile",

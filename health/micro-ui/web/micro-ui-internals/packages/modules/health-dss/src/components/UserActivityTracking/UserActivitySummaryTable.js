@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown } from "@egovernments/digit-ui-components";
+import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import FilterContext from "../FilterContext";
 import UserProfilePopup from "./UserProfilePopup";
@@ -12,6 +12,9 @@ const roleTagType = {
   SUPERVISOR: "warning",
   COMMUNITY_DISTRIBUTOR: "monochrome",
   TEAM_SUPERVISOR: "warning",
+  WAREHOUSE_MANAGER: "monochrome",
+  HEALTH_FACILITY_WORKER: "monochrome",
+  DISTRICT_SUPERVISOR: "warning",
 };
 
 const tableCustomStyles = {
@@ -59,19 +62,30 @@ const UserActivitySummaryTable = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [roleFilter, setRoleFilter] = useState("ALL");
-  const [boundaryFilter, setBoundaryFilter] = useState("ALL");
+  const [selectedBoundaries, setSelectedBoundaries] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Build aggregationRequestDto following the same pattern as CustomTable
+  // Extract parent boundary from URL params (e.g. boundaryType=province, boundaryValue=Grand Gedeh)
+  const searchParams = new URLSearchParams(window.location.search);
+  const parentBoundaryType = searchParams.get("boundaryType") || "";
+  const parentBoundaryValue = searchParams.get("boundaryValue") || "";
+
+  // Get hierarchy type and tenantId from session storage
+  const tenantId = Digit.ULBService.getCurrentTenantId(); 
+  const campaignSelected = Digit.SessionStorage.get("campaignSelected"); 
+  const hierarchyType = (campaignSelected && campaignSelected.hierarchyType) || "";
+
+  // Build aggregationRequestDto
   const chart = data?.charts?.[0];
   const aggregationRequestDto = {
     visualizationCode: chart?.id || "usersSummaryTable",
     visualizationType: chart?.chartType || "metric",
     queryType: "",
     requestDate: {
-      ...value?.requestDate,
-      startDate: value?.range?.startDate?.getTime(),
-      endDate: value?.range?.endDate?.getTime(),
+      startDate: value?.range?.startDate?.getTime() || 0,
+      endDate: value?.range?.endDate?.getTime() || Date.now(),
+      interval: value?.requestDate?.interval || "month",
+      title: value?.requestDate?.title || "",
     },
     filters: { ...value?.filters, campaignNumber },
     moduleLevel: value?.moduleLevel,
@@ -83,14 +97,13 @@ const UserActivitySummaryTable = ({ data }) => {
   // Transform response to table rows
   const usersSummary = useMemo(() => {
     if (!response) return [];
-    const rd = response?.responseData;
+    const rd = response.responseData;
     const raw = rd?.customData?.rawResponse?.mergedUsersSummary
       || response?.customData?.rawResponse?.mergedUsersSummary
       || rd?.data
       || [];
     return raw.map((user) => ({
       syncedUserId: user.userId,
-      // TODO: backend will add nameOfUser to response
       userName: user.nameOfUser || user.userName || user.userId,
       userId: user.userName || user.userId,
       role: user.role || "Unknown",
@@ -99,15 +112,56 @@ const UserActivitySummaryTable = ({ data }) => {
       lastSyncTimestamp: user.latestSyncTime,
       lastSync: formatSyncTime(user.latestSyncTime),
       recordsToday: user.totalRecords != null ? user.totalRecords : 0,
-      // TODO: backend will send inactive status explicitly when active is null
-      status: user.active === true ? "ONLINE" : "OFFLINE",
+      status: user.active === "ACTIVE" ? "ONLINE" : "OFFLINE",
       province: user.province,
       district: user.district,
+      provinceCode: user.provinceCode,
+      districtCode: user.districtCode,
       campaign: user.campaignName || "",
     }));
   }, [response]);
 
-  // Filter options derived from data
+  // Derive parent boundary code from response data (provinceCode from first row)
+  const parentBoundaryCode = useMemo(() => {
+    if (!usersSummary || usersSummary.length === 0) return "";
+    return usersSummary[0].provinceCode || "";
+  }, [usersSummary]);
+
+  // Fetch child boundaries under the parent boundary from boundary API
+  const boundaryReqCriteria = {
+    url: "/boundary-service/boundary-relationships/_search",
+    changeQueryName: "userActivityChildBoundaries_" + parentBoundaryCode,
+    params: {
+      tenantId,
+      includeChildren: true,
+      includeParents: false,
+      codes: parentBoundaryCode,
+      hierarchyType,
+    },
+    config: {
+      enabled: !!(hierarchyType && parentBoundaryCode),
+      select: (resp) => (resp?.TenantBoundary?.[0]?.boundary) || [],
+    },
+  };
+  const { data: boundaryData = [] } = Digit.Hooks.useCustomAPIHook(boundaryReqCriteria);
+
+  // Build nested options for MultiSelectDropdown from boundary API children
+  const childBoundaryOptions = useMemo(() => {
+    if (!boundaryData.length) return [];
+    const parentNode = boundaryData[0];
+    const children = (parentNode && parentNode.children) || [];
+    if (children.length === 0) return [];
+    return [{
+      code: parentNode.code,
+      name: t(parentNode.code) !== parentNode.code ? t(parentNode.code) : (parentBoundaryValue || parentNode.code),
+      options: children.map((child) => ({
+        code: child.code,
+        name: t(child.code) !== child.code ? t(child.code) : child.code,
+      })),
+    }];
+  }, [boundaryData, t, parentBoundaryValue]);
+
+  // Filter options derived from response data
   const statusOptions = [
     { name: t("HCM_ALL_STATUS"), code: "ALL" },
     { name: t("HCM_ONLINE"), code: "ONLINE" },
@@ -119,26 +173,23 @@ const UserActivitySummaryTable = ({ data }) => {
     return [{ name: t("HCM_ALL_ROLES"), code: "ALL" }, ...unique.map((r) => ({ name: t("HCM_ROLE_" + r.toUpperCase()), code: r }))];
   }, [usersSummary, t]);
 
-  const boundaryOptions = useMemo(() => {
-    const unique = [...new Set(usersSummary.map((r) => r.geoBoundary).filter(Boolean))];
-    return [{ name: t("HCM_ALL_BOUNDARIES"), code: "ALL" }, ...unique.map((b) => ({ name: b, code: b }))];
-  }, [usersSummary, t]);
-
+  // Client-side filtering
   const filteredData = useMemo(() => {
     return usersSummary.filter((row) => {
       const matchesSearch = !searchQuery
-        || row.userName.toLowerCase().includes(searchQuery.toLowerCase())
-        || row.userId.toLowerCase().includes(searchQuery.toLowerCase());
+        || (row.userName && row.userName.toLowerCase().includes(searchQuery.toLowerCase()))
+        || (row.userId && row.userId.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = statusFilter === "ALL" || row.status === statusFilter;
       const matchesRole = roleFilter === "ALL" || row.role === roleFilter;
-      const matchesBoundary = boundaryFilter === "ALL" || row.geoBoundary === boundaryFilter;
+      const matchesBoundary = selectedBoundaries.length === 0 || selectedBoundaries.some((b) => row.district === b.code || row.district === t(b.code));
       return matchesSearch && matchesStatus && matchesRole && matchesBoundary;
     });
-  }, [searchQuery, statusFilter, roleFilter, boundaryFilter, usersSummary]);
+  }, [searchQuery, statusFilter, roleFilter, selectedBoundaries, usersSummary]);
 
+  // Export CSV
   const handleExportCSV = useCallback(() => {
     const headers = ["User", "User ID", "Role", "Geo Boundary", "Last Sync", "Records Today", "Status"];
-    const rows = usersSummary.map((row) => [row.userName, row.userId, row.role, row.geoBoundary, row.lastSync, row.recordsToday, row.status]);
+    const rows = filteredData.map((row) => [row.userName, row.userId, row.role, row.geoBoundary, row.lastSync || "-", row.recordsToday, row.status]);
     const csvContent = [headers, ...rows]
       .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
       .join("\r\n");
@@ -150,8 +201,9 @@ const UserActivitySummaryTable = ({ data }) => {
     link.download = `user-activity-tracking-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
-  }, [usersSummary]);
+  }, [filteredData]);
 
+  // Table columns
   const columns = [
     {
       name: t("USER_ACTIVITY_USER"),
@@ -254,7 +306,7 @@ const UserActivitySummaryTable = ({ data }) => {
         </div>
 
         {/* Filters Row */}
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-start" }}>
           <div style={{ minWidth: "240px" }}>
             <TextInput
               type="text"
@@ -272,7 +324,7 @@ const UserActivitySummaryTable = ({ data }) => {
               select={(val) => setStatusFilter(val.code)}
             />
           </div>
-          <div style={{ minWidth: "160px" }}>
+          <div style={{ minWidth: "180px" }}>
             <Dropdown
               t={t}
               option={roleOptions}
@@ -281,17 +333,41 @@ const UserActivitySummaryTable = ({ data }) => {
               select={(val) => setRoleFilter(val.code)}
             />
           </div>
-          <div style={{ minWidth: "180px" }}>
-            <Dropdown
-              t={t}
-              option={boundaryOptions}
-              optionKey="name"
-              selected={boundaryOptions.find((o) => o.code === boundaryFilter)}
-              select={(val) => setBoundaryFilter(val.code)}
-            />
-          </div>
+          {/* Parent boundary shown as non-editable text field */}
+          {parentBoundaryValue && (
+            <div style={{ minWidth: "160px" }}>
+              <TextInput
+                type="text"
+                value={parentBoundaryType.charAt(0).toUpperCase() + parentBoundaryType.slice(1) + ": " + parentBoundaryValue}
+                disabled={true}
+                variant={"nonEditable"}
+                // style={{ backgroundColor: "#EEEEEE", color: "#505A5F", cursor: "default" }}
+              />
+            </div>
+          )}
+          {/* Child boundary nested multi-select dropdown from boundary API */}
+          {childBoundaryOptions.length > 0 && (
+            <div style={{ width: "100%",maxWidth:"37.5rem"}} className="digit-field digit-user-tracking-boundary-filter">
+              <MultiSelectDropdown
+                options={childBoundaryOptions}
+                optionsKey="name"
+                selected={selectedBoundaries}
+                onSelect={(selected) => {
+                  const selectedItems = (selected || [])
+                    .filter((item) => item && item[1] && !item[1].options)
+                    .map((item) => item[1]);
+                  setSelectedBoundaries(selectedItems);
+                }}
+                defaultLabel={t("HCM_SELECT_BOUNDARIES")}
+                defaultUnit={t("HCM_BOUNDARIES")}
+                variant="nestedmultiselect"
+                addCategorySelectAllCheck={true}
+                config={{ isDropdownWithChip: selectedBoundaries.length > 0 ? true : false  }}
+              />
+            </div>
+          )}
           <div style={{ marginLeft: "auto", fontSize: "13px", color: "#787878" }}>
-            Showing {filteredData.length} of {usersSummary.length} users
+            {t("SHOWING")} {filteredData.length} {t("OF")} {usersSummary.length} {t("USERS")}
           </div>
         </div>
 

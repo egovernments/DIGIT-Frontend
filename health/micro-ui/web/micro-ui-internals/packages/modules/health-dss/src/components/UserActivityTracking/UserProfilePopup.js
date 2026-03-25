@@ -310,7 +310,7 @@ const UserProfilePopup = ({ user, onClose }) => {
     },
     {
       name: t("OUTCOME"),
-      cell: (row) => <Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : "error"} showIcon={true} />,
+      cell: (row) => <Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : row.outcome.toUpperCase() !== "FAILURE" ? "warning" : "error"} showIcon={true} />,
       sortable: true,
       minWidth: "190px",
       grow: 1.25,
@@ -349,7 +349,7 @@ const UserProfilePopup = ({ user, onClose }) => {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-start",justifyContent:"center" }}>
             <span style={{ color: "#0b4b66" }}>{user.userName}</span>
-            <span style={{ color: "#787878", fontSize: "14px" }}>{`${user.userId} · ${user.role} · ${user.geoBoundary}`}</span>
+            <span style={{ color: "#787878", fontSize: "14px" }}>{`${user.userId} · ${t("HCM_ROLE_" + (user.role || "").toUpperCase())} · ${user.geoBoundary}`}</span>
           </div>
           <Tag label={online ? "ONLINE" : "OFFLINE"} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
         </div>
@@ -359,9 +359,9 @@ const UserProfilePopup = ({ user, onClose }) => {
     >
       {/* Info Tags */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-        <Tag label={`${t("ROLE_LABEL")}: ${user.role}`} type="monochrome" showIcon={false} stroke={true} />
+        <Tag label={`${t("ROLE_LABEL")}: ${t("HCM_ROLE_" + (user.role || "").toUpperCase())}`} type="monochrome" showIcon={false} stroke={true} />
         <Tag label={user.geoBoundary} type="monochrome" showIcon={false} stroke={true} />
-        <Tag label={`${t("CAMPAIGN_LABEL")}: ${user.campaign || t("NA")}`} type="monochrome" showIcon={false} stroke={true} />
+        <Tag label={`${t("CAMPAIGN_LABEL")}: ${user.campaign || Digit.SessionStorage.get("campaignSelected")?.campaignName || Digit.SessionStorage.get("projectSelected")?.project?.name || t("NA")}`} type="monochrome" showIcon={false} stroke={true} />
         <Tag label={`${t("LAST_SYNC_LABEL")}: ${lastSyncFormatted}`} type="monochrome" showIcon={false} stroke={true} />
         <Tag label={`${t("GPS_LABEL")}: ${latestGps}`} type="monochrome" showIcon={false} stroke={true} />
       </div>
