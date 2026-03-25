@@ -144,14 +144,17 @@ const NewShipmentPopup = ({
     const variants = [];
     const seen = new Set();
     campaignData.deliveryRules.forEach((rule) => {
-      rule?.resources?.forEach((r) => {
-        if (r?.productVariantId && !seen.has(r.productVariantId)) {
-          seen.add(r.productVariantId);
-          variants.push({
-            productVariantId: r.productVariantId,
-            name: r.name || r.productVariantId,
+      (rule?.cycles || []).forEach((cycle) => {
+        (cycle?.deliveries || []).forEach((delivery) => {
+          (delivery?.doseCriteria || []).forEach((dose) => {
+            (dose?.ProductVariants || []).forEach((pv) => {
+              if (pv?.productVariantId && !seen.has(pv.productVariantId)) {
+                seen.add(pv.productVariantId);
+                variants.push({ productVariantId: pv.productVariantId, name: pv.name || pv.productVariantId });
+              }
+            });
           });
-        }
+        });
       });
     });
     return variants;
@@ -711,7 +714,10 @@ const NewShipmentPopup = ({
 
       // --- Stock Data sheet ---
       const ws = wb.addWorksheet("Stock Data");
-      ws.addRow(stockHeaders); // Row 1: headers
+      // Set column widths before adding data (ExcelJS handles this more reliably)
+      ws.columns = stockHeaders.map((header) => ({ header, width: 30, style: { font: { bold: false } } }));
+      // Bold header row (row 1 was auto-created by ws.columns)
+      ws.getRow(1).font = { bold: true };
       // Row 2: hidden variant ID row
       const variantIdRow = [];
       boundaryHeaders.forEach(() => variantIdRow.push(""));
@@ -746,11 +752,6 @@ const NewShipmentPopup = ({
       });
 
       const dataRowCount = Math.max(selectedFacilities.length, 100);
-
-      // Set column widths
-      ws.columns = stockHeaders.map(() => ({ width: 30 }));
-      // Bold header row
-      ws.getRow(1).font = { bold: true };
 
       // --- Options sheet (hidden) — 4 columns: From Codes, From Names, To Codes, To Names ---
       const optionsWs = wb.addWorksheet("Options", { state: "hidden" });
