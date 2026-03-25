@@ -1,9 +1,9 @@
-FROM node:14.21.3-alpine3.17 AS build
+FROM node:14.21.3-alpine3.16 AS build
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
-# Install dependencies required for node-gyp (Python, make, g++, etc.)
-RUN apk add --no-cache python2 make g++ \
-    && ln -sf /usr/bin/python2 /usr/bin/python
+# Install dependencies required for node-gyp (Python 3, make, g++)
+RUN apk add --no-cache python3 make g++ \
+    && ln -sf /usr/bin/python3 /usr/bin/python
     
 ARG WORK_DIR
 WORKDIR /app
