@@ -30,10 +30,10 @@ const CommodityProjectProvider = ({ children }) => {
     return [...new Set(projectStaff.map((ps) => ps.projectId).filter(Boolean))];
   }, [projectStaff]);
 
-  // Step 2: Fetch project details for all staff-assigned projects
+  // Step 2: Fetch project details for all staff-assigned projects (with descendants)
   const projectSearchCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/v1/_search`,
-    params: { tenantId, limit: staffProjectIds.length || 10, offset: 0 },
+    params: { tenantId, limit: staffProjectIds.length || 10, offset: 0, includeDescendants: true },
     body: { Projects: staffProjectIds.map((id) => ({ id, tenantId })) },
     config: {
       enabled: !!staffProjectIds.length,
@@ -54,6 +54,18 @@ const CommodityProjectProvider = ({ children }) => {
       };
     }
     return null;
+  }, [projects]);
+
+  // Collect ALL boundary codes from user's projects + their descendants
+  const userBoundaries = useMemo(() => {
+    const boundaries = new Set();
+    if (!projects?.length) return boundaries;
+    const collectBoundaries = (proj) => {
+      if (proj?.address?.boundary) boundaries.add(proj.address.boundary);
+      if (proj?.descendants) proj.descendants.forEach(collectBoundaries);
+    };
+    projects.forEach(collectBoundaries);
+    return boundaries;
   }, [projects]);
 
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
@@ -112,11 +124,12 @@ const CommodityProjectProvider = ({ children }) => {
   const value = useMemo(() => ({
     projects: projects || [],
     userBoundary,
+    userBoundaries,
     isTopLevel,
     topLevelBoundaryType,
     isLoading,
     hasStaff,
-  }), [projects, userBoundary, isTopLevel, topLevelBoundaryType, isLoading, hasStaff]);
+  }), [projects, userBoundary, userBoundaries, isTopLevel, topLevelBoundaryType, isLoading, hasStaff]);
 
   return (
     <CommodityProjectContext.Provider value={value}>

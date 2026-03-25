@@ -8,7 +8,7 @@ import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
 
-const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, isTopLevel }) => {
+const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [shipmentFacility, setShipmentFacility] = useState(null); // { id, name } for CommodityShipmentPopup
@@ -107,18 +107,49 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return map;
   }, [productVariants, products]);
 
-  // Determine user's facility IDs from boundary matching
+  // Determine user's facility IDs from boundary matching (match against ALL descendant boundaries)
   const userFacilityIds = useMemo(() => {
-    if (!userBoundary?.boundary || !Object.keys(facilityBoundaryMap).length) return new Set();
+    if ((!userBoundaries?.size && !userBoundary?.boundary) || !Object.keys(facilityBoundaryMap).length) return new Set();
     const ids = new Set();
     Object.entries(facilityBoundaryMap).forEach(([fId, bCode]) => {
-      if (bCode === userBoundary.boundary) ids.add(fId);
+      if (userBoundaries?.size > 0 ? userBoundaries.has(bCode) : bCode === userBoundary?.boundary) {
+        ids.add(fId);
+      }
     });
     return ids;
-  }, [userBoundary, facilityBoundaryMap]);
+  }, [userBoundary, userBoundaries, facilityBoundaryMap]);
 
-  // Use pre-computed summary from stockSummary (computed in CommodityDashboard)
-  const { commoditySummaries = [], dataSyncStats: syncStats } = stockSummary || {};
+  // Compute per-facility commodity summaries for SummaryCards (non-top-level users)
+  const facilityCommoditySummaries = useMemo(() => {
+    if (isTopLevel || !finalStockData?.length || !userFacilityIds.size) return [];
+    const commodityMap = {};
+    finalStockData.forEach((stock) => {
+      const stockEntryType = stock.stockEntryType || "";
+      const qty = stock.quantity || 0;
+      const productName =
+        productNameMap[stock?.productVariantId] ||
+        stock?.additionalFields?.fields?.find((f) => f.key === "productName")?.value ||
+        "Unknown";
+      if (!commodityMap[productName]) {
+        commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0 };
+      }
+      if (stockEntryType === "RECEIPT" && userFacilityIds.has(stock.receiverId)) {
+        commodityMap[productName].totalReceived += qty;
+      } else if (stockEntryType === "ISSUED" && userFacilityIds.has(stock.senderId)) {
+        commodityMap[productName].totalIssued += qty;
+      } else if ((stockEntryType === "RETURNED" || stockEntryType === "REJECTED") && userFacilityIds.has(stock.senderId)) {
+        commodityMap[productName].totalReturned += qty;
+      }
+    });
+    return Object.values(commodityMap).map((c) => ({
+      ...c,
+      balance: c.totalReceived - c.totalIssued - c.totalReturned,
+    }));
+  }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
+
+  // Use per-facility summaries when available, otherwise fall back to global
+  const { commoditySummaries: globalCommoditySummaries = [], dataSyncStats: syncStats } = stockSummary || {};
+  const commoditySummaries = facilityCommoditySummaries.length > 0 ? facilityCommoditySummaries : globalCommoditySummaries;
   const dataSyncStats = {
     total: syncStats?.totalFacilities || 0,
     synced: syncStats?.syncedFacilities || 0,
@@ -162,6 +193,18 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")
           ?.value || "Unknown";
       const qty = stock.quantity || 0;
+      const stockEntryType = stock.stockEntryType || "";
+
+      // Compute effective quantity from user's facility perspective:
+      // ISSUED where user is receiver = 0 (in transit, not yet received)
+      // RECEIPT where user is receiver = qty (confirmed received)
+      // Otherwise show raw qty
+      let effectiveQty = qty;
+      if (userFacilityIds.size > 0) {
+        if (stockEntryType === "ISSUED" && userFacilityIds.has(receiverId) && !userFacilityIds.has(senderId)) {
+          effectiveQty = 0;
+        }
+      }
 
       rows.push({
         warehouseName: facilityNameMap[senderId] || senderId || "N/A",
@@ -172,7 +215,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             : "Facility",
         boundary: getBoundaryDisplay(senderId),
         commodity: productName,
-        quantity: Math.max(0, qty),
+        quantity: Math.max(0, effectiveQty),
         facilityId: userFacId || senderId,
         productVariantId: stock.productVariantId,
       });
@@ -196,11 +239,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!pvId) return;
 
       if (stockEntryType === "ISSUED") {
-        // Dual-attribution: Sender loses, Receiver gains
+        // Sender loses stock (in transit, not yet received by receiver)
         if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
       } else if (stockEntryType === "RECEIPT") {
-        // Skip — already counted by ISSUED dual-attribution
+        // Receiver confirms receipt → gains stock
+        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
       } else if (stockEntryType === "RETURNED" || stockEntryType === "REJECTED") {
         // Dual-attribution: Returner loses, Original sender gains
         if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }

@@ -132,11 +132,11 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
       case "ISSUED":
       case "DISPATCHED":
       case "ISSUE":
-        commodityMap[productName].totalReceived += qty;  // ISSUED = received downstream
+        commodityMap[productName].totalIssued += qty;
         break;
       case "RECEIPT":
       case "RECEIVED":
-        commodityMap[productName].totalIssued += qty;    // RECEIPT = confirmed/issued further
+        commodityMap[productName].totalReceived += qty;
         break;
       case "REJECTED":
       case "RETURNED":

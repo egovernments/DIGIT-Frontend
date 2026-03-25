@@ -52,17 +52,21 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
   const stockData = useMemo(() => {
     if (!rawRecords?.length) return [];
     return rawRecords.map((record) => {
-      const stockEntryType = record.stockEntryType || "";
-      // RECEIPT: facilityId is receiver, transactingFacilityId is sender
-      // ISSUED: facilityId is sender, transactingFacilityId is receiver
+      const rawStockEntryType = record.stockEntryType || "";
+      const eventType = record.eventType || record.transactionType || "";
+      // RECEIVED/RECEIPT: facilityId is receiver, transactingFacilityId is sender
+      // ISSUED/DISPATCHED: facilityId is sender, transactingFacilityId is receiver
       // REJECTED/RETURNED: facilityId is rejector/returner, transactingFacilityId is original sender
-      const isInbound = stockEntryType === "RECEIPT";
+      // Note: RECEIVED events may have stockEntryType "LESS" instead of "RECEIPT", so also check eventType
+      const isInbound = rawStockEntryType === "RECEIPT" || eventType === "RECEIVED";
+      // Normalize stockEntryType to "RECEIPT" for RECEIVED events so downstream code works correctly
+      const stockEntryType = isInbound && rawStockEntryType !== "RECEIPT" ? "RECEIPT" : rawStockEntryType;
       return {
         id: record.id,
         productVariantId: record.productVariantId,
         senderId: isInbound ? record.transactingFacilityId : record.facilityId,
         receiverId: isInbound ? record.facilityId : record.transactingFacilityId,
-        transactionType: record.transactionType,
+        transactionType: record.transactionType || record.eventType,
         stockEntryType,
         quantity: record.quantity,
         facilityId: record.facilityId,

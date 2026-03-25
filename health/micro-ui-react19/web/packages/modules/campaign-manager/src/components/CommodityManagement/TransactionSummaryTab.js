@@ -80,7 +80,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   };
 };
 
-const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId, userBoundary, isTopLevel }) => {
+const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, projectId, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
@@ -134,15 +134,17 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   const facilityNameMap = facilityMaps?.nameMap || {};
   const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
 
-  // Determine user's facility IDs from boundary matching
+  // Determine user's facility IDs from boundary matching (match against ALL descendant boundaries)
   const userFacilityIds = useMemo(() => {
-    if (!userBoundary?.boundary || !Object.keys(facilityBoundaryMap).length) return new Set();
+    if ((!userBoundaries?.size && !userBoundary?.boundary) || !Object.keys(facilityBoundaryMap).length) return new Set();
     const ids = new Set();
     Object.entries(facilityBoundaryMap).forEach(([fId, bCode]) => {
-      if (bCode === userBoundary.boundary) ids.add(fId);
+      if (userBoundaries?.size > 0 ? userBoundaries.has(bCode) : bCode === userBoundary?.boundary) {
+        ids.add(fId);
+      }
     });
     return ids;
-  }, [userBoundary, facilityBoundaryMap]);
+  }, [userBoundary, userBoundaries, facilityBoundaryMap]);
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({

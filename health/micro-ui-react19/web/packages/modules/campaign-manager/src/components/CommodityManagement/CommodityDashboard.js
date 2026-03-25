@@ -26,8 +26,8 @@ const CommodityDashboard = () => {
   // Read campaign data from navigation state (passed from HCMCommodityRowCard)
   const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, isCompleted } = location.state || {};
 
-  // Read userBoundary and isTopLevel from context
-  const { userBoundary, isTopLevel } = useCommodityProject();
+  // Read userBoundary, userBoundaries, and isTopLevel from context
+  const { userBoundary, userBoundaries, isTopLevel } = useCommodityProject();
 
   // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
   const campaignReqCriteria = useMemo(() => ({
@@ -255,6 +255,7 @@ const CommodityDashboard = () => {
           campaignId={campaignId}
           projectId={projectId}
           userBoundary={userBoundary}
+          userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
         />
       ) : (
@@ -269,6 +270,7 @@ const CommodityDashboard = () => {
           refetchStockData={refetchStockData}
           isCompleted={isCompleted}
           userBoundary={userBoundary}
+          userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
         />
       )}

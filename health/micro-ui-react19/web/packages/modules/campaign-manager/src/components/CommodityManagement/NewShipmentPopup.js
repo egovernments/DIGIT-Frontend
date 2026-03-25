@@ -579,14 +579,15 @@ const NewShipmentPopup = ({
 
       if (entryType === "ISSUED") {
         if (record.facilityId === fromFacilityId) {
-          // I dispatched → -qty
+          // I dispatched → -qty (stock left my warehouse, in transit)
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-        } else if (record.transactingFacilityId === fromFacilityId) {
-          // Someone dispatched TO me → +qty
+        }
+        // If someone dispatched TO me (transactingFacilityId=me): NO credit — still in transit
+      } else if (entryType === "RECEIPT") {
+        if (record.facilityId === fromFacilityId) {
+          // I confirmed receipt → +qty (stock arrived and accepted)
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
         }
-      } else if (entryType === "RECEIPT") {
-        // Skip — avoid double-counting with ISSUED
       } else if (entryType === "RETURNED" || entryType === "REJECTED") {
         if (record.transactingFacilityId === fromFacilityId) {
           // Stock returned/rejected TO me → +qty
