@@ -574,7 +574,12 @@ const NewShipmentPopup = ({
     stockRecords.forEach((record) => {
       const pvId = record.productVariantId;
       const qty = record.quantity || 0;
-      const entryType = record.stockEntryType || "";
+      const rawEntryType = record.stockEntryType || "";
+      const eventType = record.eventType || record.transactionType || "";
+      // Normalize: raw ES records may have mismatched stockEntryType (e.g., "LESS" for RECEIVED events)
+      const entryType = (rawEntryType === "RECEIPT" || eventType === "RECEIVED") ? "RECEIPT"
+        : (rawEntryType === "ISSUED" || eventType === "DISPATCHED") ? "ISSUED"
+        : rawEntryType;
       if (!pvId) return;
 
       if (entryType === "ISSUED") {
@@ -588,14 +593,20 @@ const NewShipmentPopup = ({
           // I confirmed receipt → +qty (stock arrived and accepted)
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
         }
-      } else if (entryType === "RETURNED" || entryType === "REJECTED") {
-        if (record.transactingFacilityId === fromFacilityId) {
-          // Stock returned/rejected TO me → +qty
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-        } else if (record.facilityId === fromFacilityId) {
-          // I returned stock → -qty
+      } else if (entryType === "RETURNED") {
+        if (record.facilityId === fromFacilityId) {
+          // I returned stock → -qty (I had it and am returning it)
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+        } else if (record.transactingFacilityId === fromFacilityId) {
+          // Stock returned TO me → +qty
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
         }
+      } else if (entryType === "REJECTED") {
+        if (record.transactingFacilityId === fromFacilityId) {
+          // My dispatch was rejected, stock returned to me → +qty
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+        }
+        // If I rejected (facilityId=me): no effect — I never had the stock
       }
     });
     return map;

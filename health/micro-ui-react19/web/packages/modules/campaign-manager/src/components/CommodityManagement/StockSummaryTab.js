@@ -133,17 +133,36 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!commodityMap[productName]) {
         commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0 };
       }
-      if (stockEntryType === "RECEIPT" && userFacilityIds.has(stock.receiverId)) {
-        commodityMap[productName].totalReceived += qty;
-      } else if (stockEntryType === "ISSUED" && userFacilityIds.has(stock.senderId)) {
-        commodityMap[productName].totalIssued += qty;
-      } else if ((stockEntryType === "RETURNED" || stockEntryType === "REJECTED") && userFacilityIds.has(stock.senderId)) {
-        commodityMap[productName].totalReturned += qty;
+      if (stockEntryType === "RECEIPT") {
+        // I confirmed receipt → totalReceived
+        if (userFacilityIds.has(stock.receiverId)) {
+          commodityMap[productName].totalReceived += qty;
+        }
+        // Downstream confirmed my dispatch → totalIssued (only counts when accepted)
+        if (userFacilityIds.has(stock.senderId)) {
+          commodityMap[productName].totalIssued += qty;
+        }
+      } else if (stockEntryType === "RETURNED") {
+        // I returned stock to upstream → outgoing
+        if (userFacilityIds.has(stock.senderId)) {
+          commodityMap[productName].totalIssued += qty;
+        }
+        // Stock returned TO me → incoming
+        if (userFacilityIds.has(stock.receiverId)) {
+          commodityMap[productName].totalReturned += qty;
+        }
+      } else if (stockEntryType === "REJECTED") {
+        // My dispatch was rejected, stock returned to me
+        if (userFacilityIds.has(stock.receiverId)) {
+          commodityMap[productName].totalReturned += qty;
+        }
+        // If I'm the rejector: no effect (I never had the stock)
       }
+      // ISSUED: not counted as totalIssued until downstream confirms (RECEIPT)
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
-      balance: c.totalReceived - c.totalIssued - c.totalReturned,
+      balance: c.totalReceived - c.totalIssued + c.totalReturned,
     }));
   }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
 
@@ -244,9 +263,12 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       } else if (stockEntryType === "RECEIPT") {
         // Receiver confirms receipt → gains stock
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "RETURNED" || stockEntryType === "REJECTED") {
-        // Dual-attribution: Returner loses, Original sender gains
+      } else if (stockEntryType === "RETURNED") {
+        // Returner DID have the stock: returner loses, original sender gains
         if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
+      } else if (stockEntryType === "REJECTED") {
+        // Rejector NEVER had the stock: only credit original sender (gets stock back)
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
       } else {
         // Fallback to existing transactionType logic

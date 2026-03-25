@@ -57,10 +57,11 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
       // RECEIVED/RECEIPT: facilityId is receiver, transactingFacilityId is sender
       // ISSUED/DISPATCHED: facilityId is sender, transactingFacilityId is receiver
       // REJECTED/RETURNED: facilityId is rejector/returner, transactingFacilityId is original sender
-      // Note: RECEIVED events may have stockEntryType "LESS" instead of "RECEIPT", so also check eventType
+      // Note: eventType may differ from stockEntryType (e.g., RECEIVED with stockEntryType "LESS")
       const isInbound = rawStockEntryType === "RECEIPT" || eventType === "RECEIVED";
-      // Normalize stockEntryType to "RECEIPT" for RECEIVED events so downstream code works correctly
-      const stockEntryType = isInbound && rawStockEntryType !== "RECEIPT" ? "RECEIPT" : rawStockEntryType;
+      const isOutbound = rawStockEntryType === "ISSUED" || eventType === "DISPATCHED";
+      // Normalize stockEntryType so downstream code works correctly
+      const stockEntryType = isInbound ? "RECEIPT" : isOutbound ? "ISSUED" : rawStockEntryType;
       return {
         id: record.id,
         productVariantId: record.productVariantId,
