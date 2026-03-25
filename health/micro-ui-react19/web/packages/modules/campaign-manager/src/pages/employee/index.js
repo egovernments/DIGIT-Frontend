@@ -240,6 +240,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("create-registers-screen") ||
         pathVar.includes("map-users-to-registers") ||
         pathVar.includes("register-details") ||
+        pathVar.includes("map-attendees-screen") ||
         pathVar.includes("update-dates-boundary") ||
         pathVar.includes("delivery-details-preview") ||
         pathVar.includes("localization-add")
@@ -280,12 +281,12 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink:
-        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details")
+        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen")
           ? ""
           : `/${window?.contextPath}/employee/campaign/setup-attendance`,
       content: t(I18N_KEYS.PAGES.SETUP_ATTENDANCE),
       query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") ? true : false,
+      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
     },
     {
       internalLink: "",
@@ -293,15 +294,21 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.includes("create-registers-screen") ? true : false,
     },
     {
-      internalLink: pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") ? "" : `/${window?.contextPath}/employee/campaign/map-users-to-registers`,
+      internalLink: pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") ? "" : `/${window?.contextPath}/employee/campaign/map-users-to-registers`,
       content: t(I18N_KEYS.PAGES.MAP_USERS_TO_REGISTERS),
       query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-      show: pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") ? true : false,
+      show: pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") ? "" : `/${window?.contextPath}/employee/campaign/register-details`,
+      content: t(I18N_KEYS.PAGES.REGISTER_DETAILS),
+      query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${url?.registerId || ""}&registerNumber=${url?.registerNumber || ""}&registerName=${encodeURIComponent(url?.registerName || "")}`,
+      show: pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
     },
     {
       internalLink: "",
-      content: t(I18N_KEYS.PAGES.REGISTER_DETAILS),
-      show: pathVar.includes("register-details") ? true : false,
+      content: t(I18N_KEYS.PAGES.MAP_ATTENDEES),
+      show: pathVar.includes("map-attendees-screen") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,

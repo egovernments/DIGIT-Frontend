@@ -105,6 +105,9 @@ const MapUsersToRegistersScreen = () => {
   }, [registerCreationStatus]);
   const isRegisterCreationCompleted = registerCreationStatus === "completed";
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   // Show toast when resource status is not completed
   useEffect(() => {
     if (isResourceLoading || isResourceFetching || resourceDetails.length === 0) return;
@@ -115,11 +118,22 @@ const MapUsersToRegistersScreen = () => {
     }
   }, [registerCreationStatus, isResourceLoading, isResourceFetching]);
 
+  const [registerIdFilter, setRegisterIdFilter] = useState("");
+  const [officerFilter, setOfficerFilter] = useState("");
+  const [appliedFilters, setAppliedFilters] = useState({ registerId: "", officer: "" });
+
   // Fetch attendance registers only when register creation is completed
-  const attendanceParams = { tenantId,
-    campaignId: campaignData?.id
+  const attendanceParams = {
+    tenantId,
+    campaignId: campaignData?.id,
+    limit: rowsPerPage,
+    offset: (currentPage - 1) * rowsPerPage,
   };
-  if (campaignData?.serviceCode) attendanceParams.serviceCode = campaignData.serviceCode;
+  if (appliedFilters.registerId) {
+    attendanceParams.serviceCode = appliedFilters.registerId;
+  } else if (campaignData?.serviceCode) {
+    attendanceParams.serviceCode = campaignData.serviceCode;
+  }
 
   const attendanceReqCriteria = {
     url: `/attendance/v1/_search`,
@@ -127,12 +141,18 @@ const MapUsersToRegistersScreen = () => {
     body: {},
     config: {
       enabled: !!campaignData?.id && isRegisterCreationCompleted,
-      select: (data) => data?.attendanceRegister || [],
+      select: (data) => ({
+        registers: data?.attendanceRegister || [],
+        totalCount: data?.totalCount ?? 0,
+      }),
       staleTime: 0,
       cacheTime: 0,
+      keepPreviousData: true,
     },
   };
-  const { data: registers = [], isLoading, isFetching, refetch: refetchRegisters } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
+  const { data: registerData = { registers: [], totalCount: 0 }, isLoading, isFetching, refetch: refetchRegisters } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
+  const registers = registerData.registers;
+  const totalRegisters = registerData.totalCount;
 
   const [showToast, setShowToast] = useState(null);
   const [deletePopup, setDeletePopup] = useState(null);
@@ -146,10 +166,6 @@ const MapUsersToRegistersScreen = () => {
   };
   const deleteMutation = Digit.Hooks.useCustomAPIMutationHook(deleteReqCriteria);
 
-  const [registerIdFilter, setRegisterIdFilter] = useState("");
-  const [officerFilter, setOfficerFilter] = useState("");
-  const [appliedFilters, setAppliedFilters] = useState({ registerId: "", officer: "" });
-
   // Helper to get the owner staff name from a register
   const getOwnerName = (reg) => {
     const owner = reg?.staff?.find((s) => s.staffType === "OWNER");
@@ -157,19 +173,22 @@ const MapUsersToRegistersScreen = () => {
   };
 
   const filteredRegisters = registers.filter((reg) => {
-    const matchId = !appliedFilters.registerId || reg.serviceCode === appliedFilters.registerId;
     const matchOfficer =
       !appliedFilters.officer ||
       getOwnerName(reg).toLowerCase().includes(appliedFilters.officer.toLowerCase());
-    return matchId && matchOfficer;
+    return matchOfficer;
   });
 
-  const handleSearch = () => setAppliedFilters({ registerId: registerIdFilter, officer: officerFilter });
+  const handleSearch = () => {
+    setAppliedFilters({ registerId: registerIdFilter, officer: officerFilter });
+    setCurrentPage(1);
+  };
 
   const handleClearSearch = () => {
     setRegisterIdFilter("");
     setOfficerFilter("");
     setAppliedFilters({ registerId: "", officer: "" });
+    setCurrentPage(1);
   };
 
   const handleMapUsers = (register) => {
@@ -296,7 +315,7 @@ const MapUsersToRegistersScreen = () => {
     },
   ];
 
-  if (isCampaignLoading || isCampaignFetching || isResourceLoading || isResourceFetching || isLoading || isFetching)
+  if (isCampaignLoading || isCampaignFetching || isResourceLoading || isResourceFetching || isLoading)
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
         <Loader page={true} />
@@ -328,22 +347,12 @@ const MapUsersToRegistersScreen = () => {
         <div style={{ display: "flex", gap: "1.25rem", alignItems: "flex-end", flexWrap: "wrap" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "210px" }}>
             <label style={labelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)}</label>
-            <div style={{ position: "relative" }}>
-              <select
-                value={registerIdFilter}
-                onChange={(e) => setRegisterIdFilter(e.target.value)}
-                style={{ ...inputStyle, appearance: "none", paddingRight: "2rem", width: "100%" }}
-              >
-                <option value=""></option>
-                {registers.map((r) => (
-                  <option key={r.id} value={r.serviceCode} title={r.serviceCode}>{r.serviceCode}</option>
-                ))}
-              </select>
-              <svg style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}
-                width="12" height="12" viewBox="0 0 24 24" fill="none">
-                <path d="M6 9l6 6 6-6" stroke="#505a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
+            <input
+              type="text"
+              value={registerIdFilter}
+              onChange={(e) => setRegisterIdFilter(e.target.value)}
+              style={inputStyle}
+            />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "210px" }}>
@@ -380,6 +389,23 @@ const MapUsersToRegistersScreen = () => {
           columns={columns}
           data={filteredRegisters}
           customStyles={tableCustomStyle}
+          pagination
+          paginationServer
+          paginationTotalRows={totalRegisters}
+          paginationPerPage={rowsPerPage}
+          paginationDefaultPage={currentPage}
+          paginationRowsPerPageOptions={[10, 20, 50, 100]}
+          onChangePage={(page) => setCurrentPage(page)}
+          onChangeRowsPerPage={(newPerPage) => {
+            setRowsPerPage(newPerPage);
+            setCurrentPage(1);
+          }}
+          paginationComponentOptions={{
+            rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE"),
+          }}
+          progressPending={isFetching}
+          progressComponent={<Loader />}
+          persistTableHead
           noDataComponent={
             <div style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}>
               {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
