@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.9.15]  [18-MAR-2026]
+- Package Publish Core Version 1.9.15
+- **Feature**: Added preferred language dropdown on citizen profile page, populated from MDMS StateInfo languages
+- **Feature**: Integrated config-service API to control notification channel toggles (SMS, EMAIL, WHATSAPP) — only channels enabled in config-service are interactive, others are greyed out and disabled
+- **Fix**: User preferences (notification consent, preferred language) now fetch fresh data on every profile page visit (`cacheTime: 0`, `staleTime: 0`) to reflect latest saved state
+
+## [1.9.13]  [12-MAR-2026]
+- **Feature**: Added preferred language dropdown on citizen profile page, populated from MDMS StateInfo languages
+- **Feature**: Integrated config-service API to control notification channel toggles (SMS, EMAIL, WHATSAPP) — only channels enabled in config-service are interactive, others are greyed out and disabled
+- **Fix**: User preferences (notification consent, preferred language) now fetch fresh data on every profile page visit (`cacheTime: 0`, `staleTime: 0`) to reflect latest saved state
+
 ## [1.9.12]  [17-FEB-2026]
 - **Enhancement**: Stateinfo prop added and  `logoUrlWhite` prop support to TopBarSideBar component for secondary logo display
 
