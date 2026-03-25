@@ -18,7 +18,7 @@ const ViewDashboard = ({ stateCode }) => {
   const [loaderText, setLoaderText] = useState(t("LOADING"));
 
   // campaign search call
-  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.DSS.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       campaignNumber: campaignNumber,

@@ -4,13 +4,15 @@ import useInboxSearch from "./useInboxSearch";
 import useAPIHook from "./useAPIHook";
 import useGetChartV2 from "./useGetChartV2";
 import useDSSGeoJson from "./useDSSGeoJson";
+import useSearchCampaign from "./useSearchCampaign";
 
 const DSS = {
   useProjectSearch,
   useInboxSearch,
   useAPIHook,
   useGetChartV2,
-  useDSSGeoJson
+  useDSSGeoJson,
+  useSearchCampaign
 };
 
 const Hooks = {
