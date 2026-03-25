@@ -368,6 +368,13 @@ const RegisterDetailsScreen = () => {
           columns={columns}
           data={tableData}
           customStyles={tableCustomStyle}
+          pagination
+          paginationPerPage={10}
+          paginationRowsPerPageOptions={[10, 20, 50, 100]}
+          paginationComponentOptions={{
+            rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE"),
+          }}
+          persistTableHead
           noDataComponent={
             <div style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}>
               {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
