@@ -65,7 +65,7 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
 
   // campaign search call
-  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch } = Digit.Hooks.DSS.useSearchCampaign({
+  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       campaignNumber: rowData?.referenceID,
