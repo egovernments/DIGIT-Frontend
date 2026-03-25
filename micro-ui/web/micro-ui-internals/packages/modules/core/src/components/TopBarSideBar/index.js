@@ -26,8 +26,17 @@ const TopBarSideBar = ({
     setShowDialog(true);
   };
   const handleOnSubmit = () => {
+    // Check if user is citizen or employee
+    const userType = Digit.UserService.getUser()?.info?.type;
+    const isCitizen = userType === "CITIZEN";
+
     Digit.UserService.logout();
     setShowDialog(false);
+
+    if (isCitizen) {
+      window.location.href = `/${window?.contextPath}/citizen/login`;
+    }
+    // Employee logout will use default redirect behavior
   };
   const handleOnCancel = () => {
     setShowDialog(false);

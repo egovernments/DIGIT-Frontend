@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.16-cms]  [25-MAR-2026]
+- **Feature**: Enhanced citizen logout flow to redirect directly to citizen login page
+- **Feature**: Added user type detection (citizen vs employee) for conditional logout redirection behavior
+- **Fix**: Improved logout UX by ensuring citizens land on correct login page after logout
+- **Code Quality**: Applied logout improvements to both StaticCitizenSideBar and TopBarSideBar components
+
 ## [1.9.15]  [18-MAR-2026]
 - Package Publish Core Version 1.9.15
 - **Feature**: Added preferred language dropdown on citizen profile page, populated from MDMS StateInfo languages

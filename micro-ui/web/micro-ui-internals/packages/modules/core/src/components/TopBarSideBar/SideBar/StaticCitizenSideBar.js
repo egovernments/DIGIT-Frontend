@@ -95,8 +95,17 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
       setShowDialog(false);
       window.location.href = `/${window?.contextPath}/citizen/login`;
     } else {
+      // Check if user is citizen or employee
+      const userType = Digit.UserService.getUser()?.info?.type;
+      const isCitizen = userType === "CITIZEN";
+
       Digit.UserService.logout();
       setShowDialog(false);
+
+      if (isCitizen) {
+        window.location.href = `/${window?.contextPath}/citizen/login`;
+      }
+      // Employee logout will use default redirect behavior
     }
   };
   const handleOnCancel = () => {
