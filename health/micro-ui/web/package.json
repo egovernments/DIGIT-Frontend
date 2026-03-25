@@ -22,7 +22,7 @@
     "@egovernments/digit-ui-module-hcmworkbench": "0.1.5",
     "@egovernments/digit-ui-module-utilities": "1.1.2",
     "@egovernments/digit-ui-module-campaign-manager": "0.4.4",
-    "@egovernments/digit-ui-module-health-dss":"0.0.5",
+    "@egovernments/digit-ui-module-health-dss":"0.0.6",
     "@egovernments/digit-ui-module-health-pgr": "0.0.2",
     "@egovernments/digit-ui-react-components": "1.9.2",
     "@egovernments/digit-ui-svg-components": "1.0.21",
