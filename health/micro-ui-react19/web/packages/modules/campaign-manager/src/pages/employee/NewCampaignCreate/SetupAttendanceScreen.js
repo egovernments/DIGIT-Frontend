@@ -37,17 +37,17 @@ const SetupAttendanceScreen = () => {
         );
       },
     },
-    {
-      id: "setup-attendance-view-registers",
-      icon: <Visibility fill={"#C84C0E"} width={"40"} height={"40"} />,
-      heading: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_REGISTERS_HEADING),
-      description: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_REGISTERS_DESC),
-      onClick: () => {
-        navigate(
-          `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
-        );
-      },
-    },
+    // {
+    //   id: "setup-attendance-view-registers",
+    //   icon: <Visibility fill={"#C84C0E"} width={"40"} height={"40"} />,
+    //   heading: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_REGISTERS_HEADING),
+    //   description: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_REGISTERS_DESC),
+    //   onClick: () => {
+    //     navigate(
+    //       `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
+    //     );
+    //   },
+    // },
   ];
 
   return (
