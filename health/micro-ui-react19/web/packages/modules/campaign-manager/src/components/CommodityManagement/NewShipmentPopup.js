@@ -311,23 +311,27 @@ const NewShipmentPopup = ({
     return level;
   }, [toHierarchyFilters, toHierarchyLevels, effectiveHierarchy]);
 
-  // Visible "From" levels: show up to one level beyond the deepest selection
+  // Visible "From" levels: show up to one level beyond the deepest selection (exclude last 2 hierarchy levels)
   const fromVisibleLevels = useMemo(() => {
     if (!effectiveHierarchy.length) return [];
+    const maxLevel = effectiveHierarchy.length - 2; // exclude last 2 levels (e.g., Locality + Village)
+    if (maxLevel <= 0) return [];
     if (fromSelectedLevel < 0) return effectiveHierarchy.slice(0, 1);
-    return effectiveHierarchy.slice(0, Math.min(fromSelectedLevel + 2, effectiveHierarchy.length));
+    return effectiveHierarchy.slice(0, Math.min(fromSelectedLevel + 2, maxLevel));
   }, [effectiveHierarchy, fromSelectedLevel]);
 
-  // Visible "To" levels: show up to one level beyond the deepest To selection
+  // Visible "To" levels: show up to one level beyond the deepest To selection (exclude last hierarchy level)
   const toVisibleLevels = useMemo(() => {
     if (!toHierarchyLevels.length) return [];
+    const maxLevel = toHierarchyLevels.length - 1; // exclude last level (e.g., Village)
+    if (maxLevel <= 0) return [];
     let deepestRelIdx = -1;
     toHierarchyLevels.forEach((h, idx) => {
       const val = toHierarchyFilters[h.boundaryType];
       if (Array.isArray(val) ? val.length > 0 : !!val) deepestRelIdx = idx;
     });
-    if (deepestRelIdx < 0) return toHierarchyLevels.slice(0, 1);
-    return toHierarchyLevels.slice(0, Math.min(deepestRelIdx + 2, toHierarchyLevels.length));
+    if (deepestRelIdx < 0) return toHierarchyLevels.slice(0, Math.min(1, maxLevel));
+    return toHierarchyLevels.slice(0, Math.min(deepestRelIdx + 2, maxLevel));
   }, [toHierarchyLevels, toHierarchyFilters]);
 
   // Filter project IDs for "From" — projects matching all From filters at the selected level
@@ -1140,7 +1144,7 @@ const NewShipmentPopup = ({
             clientReferenceId: crypto.randomUUID(),
             productVariantId,
             quantity,
-            referenceId: projectId || campaignId,
+            referenceId: fromFacility?.projectId || projectId || campaignId,
             referenceIdType: "PROJECT",
             transactionType: "DISPATCHED",
             senderType: "WAREHOUSE",
