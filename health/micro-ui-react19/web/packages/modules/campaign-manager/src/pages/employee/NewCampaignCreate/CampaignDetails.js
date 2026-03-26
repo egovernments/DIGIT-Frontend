@@ -512,7 +512,9 @@ const CampaignDetails = () => {
               navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               type: "primary",
               icon: <Groups fill={"#C84C0E"} />,
-              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" || campaignData?.parentId,
+              // disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" || campaignData?.parentId, //todo check
+              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created",
+
             },
           },
         ],

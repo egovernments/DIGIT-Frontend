@@ -1,4 +1,4 @@
-export const mapAttendeesConfig = ({ totalFormData, campaignData }) => {
+export const mapAttendeesConfig = ({ totalFormData, campaignData, resourceDetails }) => {
   return [
     {
       form: [
@@ -21,6 +21,7 @@ export const mapAttendeesConfig = ({ totalFormData, campaignData }) => {
                 sessionData: totalFormData,
                 campaignData: campaignData,
                 screenType: "attendanceRegisterAttendee",
+                resourceDetails: resourceDetails,
               },
               populators: {
                 name: "uploadAttendanceRegisterAttendee",

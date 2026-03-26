@@ -382,6 +382,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     const totalFormData = props?.props?.sessionData;
     const campaignResources = props?.props?.campaignData?.resources || [];
+    const resourceDetailsFromSearch = props?.props?.resourceDetails || [];
 
     const getUploadedData = (dataPath, typeKey) => {
       const data = totalFormData?.[dataPath];
@@ -392,6 +393,20 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           isSuccess: data?.[uploadKey]?.isSuccess || null,
         };
       } else {
+        // For attendance types, use resource-details search API data
+        const isAttendanceType = typeKey === "attendanceRegister" || typeKey === "attendanceRegisterAttendee";
+        if (isAttendanceType && resourceDetailsFromSearch.length > 0) {
+          const fromResource = resourceDetailsFromSearch[0];
+          console.log("fromResourceDetails search:", fromResource);
+          return {
+            uploadedFile: [{
+              ...fromResource,
+              filestoreId: fromResource?.processedFileStoreId || fromResource?.filestoreId || fromResource?.fileStoreId,
+            }],
+            isSuccess: true,
+          };
+        }
+        // For other types, fallback to campaign resources
         const fromCampaign = campaignResources.find((r) => r.type === typeKey);
         return fromCampaign
           ? {
@@ -454,7 +469,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setDownloadError(false);
     setIsError(false);
-  }, [type, props?.props?.totalFormData, props?.props?.campaignData]);
+  }, [type, props?.props?.totalFormData, props?.props?.campaignData, props?.props?.resourceDetails?.[0]?.id]);
 
   useEffect(() => {
     if (errorsType[type]) {
@@ -1028,8 +1043,11 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     if (file && file?.url) {
       // Splitting filename before .xlsx or .xls
       const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
+      const downloadId = (type === "attendanceRegister" || type === "attendanceRegisterAttendee")
+        ? (file?.processedFileStoreId || file?.filestoreId)
+        : file?.filestoreId;
       downloadExcelWithCustomName({
-        fileStoreId: file?.filestoreId,
+        fileStoreId: downloadId,
         customName: fileNameWithoutExtension,
       });
     }

@@ -1,4 +1,4 @@
-export const createRegistersConfig = ({ totalFormData, campaignData }) => {
+export const createRegistersConfig = ({ totalFormData, campaignData, resourceDetails }) => {
   return [
     {
       form: [
@@ -21,6 +21,7 @@ export const createRegistersConfig = ({ totalFormData, campaignData }) => {
                 sessionData: totalFormData,
                 campaignData: campaignData,
                 screenType: "attendanceRegister",
+                resourceDetails: resourceDetails,
               },
               populators: {
                 name: "uploadAttendanceRegister",

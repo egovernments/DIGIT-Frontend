@@ -30,6 +30,26 @@ const MapAttendeesScreen = () => {
   };
   const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  const attendeeResourceCriteria = {
+    url: `/project-factory/v1/resource-details/_search`,
+    body: {
+      ResourceDetailsCriteria: {
+        tenantId,
+        campaignId: campaignData?.id,
+        type: ["attendanceRegisterAttendee"],
+        parentResourceId: registerId,
+        isActive: true,
+      },
+    },
+    config: {
+      enabled: !!campaignData?.id && !!registerId,
+      select: (data) => data?.ResourceDetails || [],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: resourceDetails = [] } = Digit.Hooks.useCustomAPIHook(attendeeResourceCriteria);
+
   // Enrich campaignData with registerId as id so NewUploadData uses it as referenceId
   const enrichedCampaignData = useMemo(
     () => (campaignData ? { ...campaignData, id: registerId } : null),
@@ -45,8 +65,8 @@ const MapAttendeesScreen = () => {
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   const config = useMemo(
-    () => mapAttendeesConfig({ totalFormData: params, campaignData: enrichedCampaignData }),
-    [params, enrichedCampaignData]
+    () => mapAttendeesConfig({ totalFormData: params, campaignData: enrichedCampaignData, resourceDetails }),
+    [params, enrichedCampaignData, resourceDetails]
   );
 
   const showErrorToast = (messageKey) => {
