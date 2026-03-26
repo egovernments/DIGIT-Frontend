@@ -312,12 +312,20 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const newReadMeUnifiedConsole = await translateReadMeInfo(
           readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
         );
+        const newReadMeAttendanceRegister = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
+        const newReadMeAttendee = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
 
         const readMeText = {
           boundary: newReadMeboundary,
           facility: newReadMeFacility,
           user: newReadMeUser,
           "unified-console": newReadMeUnifiedConsole,
+          attendanceRegister: newReadMeAttendanceRegister,
+          attendanceRegisterAttendee: newReadMeAttendee,
         };
 
         setReadMeInfo(readMeText);
