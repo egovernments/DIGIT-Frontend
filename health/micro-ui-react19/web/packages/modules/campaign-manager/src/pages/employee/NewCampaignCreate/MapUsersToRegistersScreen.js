@@ -149,6 +149,7 @@ const MapUsersToRegistersScreen = () => {
       cacheTime: 0,
       keepPreviousData: true,
     },
+    changeQueryName: `registers_${currentPage}_${rowsPerPage}_${appliedFilters.registerId}`,
   };
   const { data: registerData = { registers: [], totalCount: 0 }, isLoading, isFetching, refetch: refetchRegisters } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
   const registers = registerData.registers;
