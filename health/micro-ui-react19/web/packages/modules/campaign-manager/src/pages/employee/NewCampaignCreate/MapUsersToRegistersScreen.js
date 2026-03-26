@@ -167,16 +167,16 @@ const MapUsersToRegistersScreen = () => {
   };
   const deleteMutation = Digit.Hooks.useCustomAPIMutationHook(deleteReqCriteria);
 
-  // Helper to get the owner staff name from a register
-  const getOwnerName = (reg) => {
-    const owner = reg?.staff?.find((s) => s.staffType === "OWNER");
-    return owner?.additionalDetails?.staffName || owner?.additionalDetails?.ownerName || "";
+  // Helper to get the approver staff name from a register
+  const getApproverName = (reg) => {
+    const approver = reg?.staff?.find((s) => s.staffType === "APPROVER");
+    return approver?.additionalDetails?.staffName || t(I18N_KEYS.COMMON.NA);
   };
 
   const filteredRegisters = registers.filter((reg) => {
     const matchOfficer =
       !appliedFilters.officer ||
-      getOwnerName(reg).toLowerCase().includes(appliedFilters.officer.toLowerCase());
+      getApproverName(reg).toLowerCase().includes(appliedFilters.officer.toLowerCase());
     return matchOfficer;
   });
 
@@ -268,7 +268,7 @@ const MapUsersToRegistersScreen = () => {
     // },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN),
-      selector: (row) => getOwnerName(row),
+      selector: (row) => getApproverName(row),
     },
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN),
