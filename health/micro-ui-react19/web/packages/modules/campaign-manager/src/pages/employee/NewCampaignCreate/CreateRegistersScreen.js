@@ -28,6 +28,25 @@ const CreateRegistersScreen = () => {
   };
   const { data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  const resourceSearchCriteria = {
+    url: `/project-factory/v1/resource-details/_search`,
+    body: {
+      ResourceDetailsCriteria: {
+        tenantId,
+        campaignId: campaignData?.id,
+        type: ["attendanceRegister"],
+        isActive: true,
+      },
+    },
+    config: {
+      enabled: !!campaignData?.id,
+      select: (data) => data?.ResourceDetails || [],
+      staleTime: 0,
+      cacheTime: 0,
+    },
+  };
+  const { data: resourceDetails = [] } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
+
   const reqUpdate = {
     url: `/project-factory/v1/resource-details/_create`,
     params: {},
@@ -38,11 +57,11 @@ const CreateRegistersScreen = () => {
 
   useEffect(() => setTotalFormData(params), [params]);
 
-  const [config, setConfig] = useState(createRegistersConfig({ totalFormData, campaignData }));
+  const [config, setConfig] = useState(createRegistersConfig({ totalFormData, campaignData, resourceDetails }));
 
   useEffect(() => {
-    setConfig(createRegistersConfig({ totalFormData, campaignData }));
-  }, [campaignData, totalFormData]);
+    setConfig(createRegistersConfig({ totalFormData, campaignData, resourceDetails }));
+  }, [campaignData, totalFormData, resourceDetails]);
 
   const showErrorToast = (messageKey) => {
     setShowToast({ key: "error", label: messageKey });
