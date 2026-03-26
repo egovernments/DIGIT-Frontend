@@ -109,7 +109,7 @@ const RegisterDetailsScreen = () => {
     if (attendeeMappingStatus !== "creating" && attendeeMappingStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchAttendeeResource();
-    }, 3000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [attendeeMappingStatus]);
   const isAttendeeCreationCompleted = attendeeMappingStatus === "completed";

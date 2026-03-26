@@ -100,7 +100,7 @@ const MapUsersToRegistersScreen = () => {
     if (registerCreationStatus !== "creating" && registerCreationStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchResourceDetails();
-    }, 3000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [registerCreationStatus]);
   const isRegisterCreationCompleted = registerCreationStatus === "completed";
