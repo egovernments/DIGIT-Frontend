@@ -79,6 +79,8 @@ const RegisterDetailsScreen = () => {
   };
   const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
+  const isCampaignStarted = campaignData?.startDate ? campaignData.startDate <= Date.now() : false;
+
   // Check resource-details status for attendee mapping on this register
   const attendeeResourceCriteria = {
     url: `/project-factory/v1/resource-details/_search`,
@@ -178,7 +180,7 @@ const RegisterDetailsScreen = () => {
       username: ind.userDetails?.username || NA,
       role: ind.skills?.[0]?.type || NA,
       team: attendee.tag || NA,
-      status: attendee.denrollmentDate ? "Inactive" : "Active",
+      status: attendee.denrollmentDate && attendee.denrollmentDate <= Date.now() ? "Inactive" : "Active",
     };
   }), [attendees, individualMap, NA]);
 
@@ -283,13 +285,16 @@ const RegisterDetailsScreen = () => {
         row.status === "Inactive" ? (
           <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t("HCM_ALREADY_REMOVED")}</span>
         ) : (
-          <Button
-            label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
-            variation="secondary"
-            size="small"
-            icon="Delete"
-            onClick={() => handleDeleteUser(row)}
-          />
+          <span title={!isCampaignStarted ? t("HCM_DELETE_DISABLED_CAMPAIGN_NOT_STARTED") : ""}>
+            <Button
+              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+              variation="secondary"
+              size="small"
+              icon="Delete"
+              isDisabled={!isCampaignStarted}
+              onClick={() => handleDeleteUser(row)}
+            />
+          </span>
         ),
     },
   ];
