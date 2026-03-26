@@ -1,7 +1,7 @@
 import { FormStep, CardLabelError, CardLabel } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 
-const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMobileChange, config, canSubmit }) => {
+const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMobileChange, config, canSubmit, whatsAppOptIn, onWhatsAppOptInChange, showWhatsAppOptIn }) => {
   const stateId = Digit.Utils.getMultiRootTenant()
     ? Digit.ULBService.getCurrentTenantId()
     : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
@@ -191,6 +191,36 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
         />
       </div>
       {error && <CardLabelError style={{ fontSize: "14px", marginTop: "8px" }}>{error}</CardLabelError>}
+
+      {showWhatsAppOptIn && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            padding: "12px 0",
+            marginTop: "16px",
+            borderTop: "1px solid #D6D5D4",
+            cursor: "pointer",
+          }}
+          onClick={() => onWhatsAppOptInChange(!whatsAppOptIn)}
+        >
+          <input
+            type="checkbox"
+            checked={whatsAppOptIn}
+            onChange={() => onWhatsAppOptInChange(!whatsAppOptIn)}
+            style={{
+              width: "20px",
+              height: "20px",
+              accentColor: "#c84c0e",
+              cursor: "pointer",
+            }}
+          />
+          <span style={{ fontSize: "14px", fontWeight: "600", color: "#0B0C0C" }}>
+            {t("CS_WHATSAPP_LOGIN_CHECKBOX_LABEL")}
+          </span>
+        </div>
+      )}
     </FormStep>
   );
 };
