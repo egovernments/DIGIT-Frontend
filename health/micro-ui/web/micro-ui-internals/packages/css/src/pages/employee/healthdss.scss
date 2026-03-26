@@ -932,6 +932,11 @@
     overflow: visible;
     width: unset;
     max-width: unset;
+
+    .rdrDateRangePickerWrapper{
+      position: absolute !important;
+      z-index: 100;
+    }
   }
 }
 
