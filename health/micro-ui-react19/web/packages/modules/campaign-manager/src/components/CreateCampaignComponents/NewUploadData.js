@@ -76,6 +76,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const totalData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
+  const [loaderText, setLoaderText] = useState("CAMPAIGN_VALIDATION_INPROGRESS");
   const [currentStep, setCurrentStep] = useState(1);
   const [projectType, setprojectType] = useState(props?.props?.projectType);
   const baseKey = 10;
@@ -1081,6 +1082,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid == 1) {
         setIsValidation(true);
         setIsError(true);
+        setLoaderText("CAMPAIGN_VALIDATION_INPROGRESS");
         setLoader(true);
         // For unified-console and attendanceRegister, use hyphenated validation type; for others use camelCase
         const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : type === "attendanceRegisterAttendee" ? "attendanceRegisterAttendee-validation" : `${type}Validation`;
@@ -1374,6 +1376,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       };
 
       try {
+        setLoaderText("CAMPAIGN_DOWNLOADING_TEMPLATE");
         setLoader(true);
         // Step 1: Search if completed is available
         let resource = await searchGeneration();
@@ -1550,7 +1553,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full" style={{ width: "100%" }}>
-        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
+        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t(loaderText)} />}
         {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
           <Card>
