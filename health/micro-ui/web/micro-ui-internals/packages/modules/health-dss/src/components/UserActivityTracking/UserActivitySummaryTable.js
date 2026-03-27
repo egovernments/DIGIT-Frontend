@@ -45,8 +45,10 @@ const tableCustomStyles = {
 
 const formatSyncTime = (timestamp) => {
   if (!timestamp) return null;
-  const date = new Date(timestamp);
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+  const d = new Date(timestamp);
+  var date = d.toLocaleDateString([], { day: "2-digit", month: "short", year: "numeric" });
+  var time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+  return date + ", " + time;
 };
 
 /**
@@ -374,11 +376,12 @@ const UserActivitySummaryTable = ({ data }) => {
         {/* Data Table */}
         <div className="user-tracking-inbox-table-wrapper">
           <DataTable
+            key={`${searchQuery}-${statusFilter}-${roleFilter}-${selectedBoundaries.length}-${filteredData.length}`}
             columns={columns}
-            data={filteredData}
+            data={[...filteredData]}
             customStyles={tableCustomStyles}
             pagination
-            paginationPerPage={5}
+            paginationPerPage={10}
             progressComponent={<Loader />}
             noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t("NO_DATA")}</div>}
             className="data-table user-tracking-inbox-table"

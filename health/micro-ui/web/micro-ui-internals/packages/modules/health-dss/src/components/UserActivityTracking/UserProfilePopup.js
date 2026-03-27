@@ -258,13 +258,27 @@ const UserProfilePopup = ({ user, onClose }) => {
   }, [activityLog, t]);
 
   const filteredLog = useMemo(() => {
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     return activityLog.filter((entry) => {
       const matchesAction = actionTypeFilter === "ALL" || entry.actionType === actionTypeFilter;
       const matchesOutcome = outcomeFilter === "ALL" || (entry.outcome && entry.outcome.toUpperCase()) === outcomeFilter;
       const matchesSearch = !searchQuery || entry.detail.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesAction && matchesOutcome && matchesSearch;
+      var matchesTime = true;
+      if (timeFilter === "TODAY") {
+        matchesTime = entry.timestamp && new Date(entry.timestamp) >= startOfToday;
+      } else if (timeFilter === "LAST_7_DAYS") {
+        var sevenDaysAgo = new Date(now);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        matchesTime = entry.timestamp && new Date(entry.timestamp) >= sevenDaysAgo;
+      } else if (timeFilter === "LAST_30_DAYS") {
+        var thirtyDaysAgo = new Date(now);
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        matchesTime = entry.timestamp && new Date(entry.timestamp) >= thirtyDaysAgo;
+      }
+      return matchesAction && matchesOutcome && matchesSearch && matchesTime;
     });
-  }, [activityLog, actionTypeFilter, outcomeFilter, searchQuery]);
+  }, [activityLog, actionTypeFilter, outcomeFilter, searchQuery, timeFilter]);
 
   const handleExportCSV = useCallback(() => {
     const headers = ["Timestamp", "Action Type", "Detail", "Outcome", "GPS"];
@@ -282,7 +296,7 @@ const UserProfilePopup = ({ user, onClose }) => {
     URL.revokeObjectURL(url);
   }, [filteredLog, user.userId]);
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       name: t("TIMESTAMP"),
       selector: (row) => formatTime(row.timestamp),
@@ -322,7 +336,7 @@ const UserProfilePopup = ({ user, onClose }) => {
       grow: 1,
       style: { color: "#787878" },
     },
-  ];
+  ], [t]);
 
   return (
     <PopUp
@@ -388,7 +402,7 @@ const UserProfilePopup = ({ user, onClose }) => {
 
       {/* Filters */}
       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ minWidth: "160px" }}>
+        <div style={{ minWidth: "180px" }}>
           <Dropdown
             t={t}
             option={actionTypeOptions}
@@ -397,7 +411,7 @@ const UserProfilePopup = ({ user, onClose }) => {
             select={(val) => setActionTypeFilter(val.code)}
           />
         </div>
-        <div style={{ minWidth: "150px" }}>
+        <div style={{ minWidth: "180px" }}>
           <Dropdown
             t={t}
             option={outcomeOptions}
@@ -406,7 +420,7 @@ const UserProfilePopup = ({ user, onClose }) => {
             select={(val) => setOutcomeFilter(val.code)}
           />
         </div>
-        <div style={{ minWidth: "120px" }}>
+        <div style={{ minWidth: "160px" }}>
           <Dropdown
             t={t}
             option={[
@@ -415,7 +429,7 @@ const UserProfilePopup = ({ user, onClose }) => {
               { name: t("FILTER_LAST_30_DAYS"), code: "LAST_30_DAYS" },
             ]}
             optionKey="name"
-            selected={{ name: timeFilter === "TODAY" ? t("FILTER_TODAY") : timeFilter, code: timeFilter }}
+            selected={{ name: t("FILTER_" + timeFilter), code: timeFilter }}
             select={(val) => setTimeFilter(val.code)}
           />
         </div>
@@ -427,11 +441,12 @@ const UserProfilePopup = ({ user, onClose }) => {
       {/* Table */}
       <div className={`user-tracking-inbox-table-wrapper`}>
         <DataTable
+          key={`${actionTypeFilter}-${outcomeFilter}-${timeFilter}-${searchQuery}-${filteredLog.length}`}
           columns={columns}
-          data={filteredLog}
+          data={[...filteredLog]}
           customStyles={tableCustomStyles}
           pagination
-          paginationPerPage={5}
+          paginationPerPage={10}
           progressComponent={<Loader />}
           noDataComponent={<div style={{ padding: "24px", color: "#787878" }}>{t("NO_DATA")}</div>}
           sortIcon={<SVG.ArrowUpward width={"14px"} height={"14px"} fill={"#0b4b66"} />}
