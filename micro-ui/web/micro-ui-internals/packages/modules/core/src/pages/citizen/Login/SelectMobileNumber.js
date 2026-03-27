@@ -1,9 +1,16 @@
-import { InputCard, TextBlock, FieldV1, LinkLabel } from "@egovernments/digit-ui-components";
+import { InputCard, TextBlock, FieldV1, LinkLabel, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
+import { ToggleSwitch } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 
-const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange, onEmailChange, config, canSubmit, validationConfig }) => {
+const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange, onEmailChange, config, canSubmit, validationConfig, onConsentChange, enableUserPreferences, isWhatsAppEnabled }) => {
   const [isEmail, setIsEmail] = useState(emailId ? true : false);
   const [error, setError] = useState("");
+
+  // WhatsApp consent state (only WhatsApp required)
+  const [whatsappConsent, setWhatsappConsent] = useState(false);
+
+  // Show consent toggle only if both configs are enabled
+  const showWhatsAppConsent = enableUserPreferences && isWhatsAppEnabled;
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const rawPattern = validationConfig?.pattern || "^[6-9][0-9]{9}$";
@@ -14,19 +21,28 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
   const isEmailValid = useMemo(() => EMAIL_REGEX.test(emailId), [emailId]);
   const isMobileValid = useMemo(() => mobileNumberPattern.test(mobileNumber || ""), [mobileNumber, mobileNumberPattern]);
 
+  const handleConsentToggle = () => {
+    const newValue = !whatsappConsent;
+    setWhatsappConsent(newValue);
+    // Notify parent component of consent change
+    if (onConsentChange) {
+      onConsentChange(newValue);
+    }
+  };
+
   const handleSubmit = () => {
     if (isEmail) {
       if (!isEmailValid) {
         setError(t("ERR_INVALID_EMAIL"));
         return;
       }
-      onSelect({ userName: emailId });
+      onSelect({ userName: emailId, whatsappConsent });
     } else {
       if (!isMobileValid) {
         setError(t("ERR_INVALID_MOBILE_NUMBER"));
         return;
       }
-      onSelect({ mobileNumber });
+      onSelect({ mobileNumber, whatsappConsent });
     }
   };
 
@@ -106,6 +122,28 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
           {linkLabel}
         </LinkLabel>
       </div>
+
+      {/* WhatsApp Consent Section - Only show if enabled */}
+      {showWhatsAppConsent && (
+        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+          <LabelFieldPair style={{ marginBottom: "0.75rem" }}>
+            <CardLabel className="user-profile" style={{ width: "60%", fontSize: "14px" }}>
+              {t("CORE_COMMON_WHATSAPP_NOTIFICATIONS")}
+            </CardLabel>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <ToggleSwitch
+                value={whatsappConsent}
+                onChange={handleConsentToggle}
+                name="whatsapp-consent"
+                style={{ margin: "0px" }}
+              />
+              <span style={{ fontSize: "14px", color: "#505A5F" }}>
+                {whatsappConsent ? t("CORE_COMMON_ENABLED") : t("CORE_COMMON_DISABLED")}
+              </span>
+            </div>
+          </LabelFieldPair>
+        </div>
+      )}
     </InputCard>
   );
 };
