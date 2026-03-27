@@ -2,6 +2,7 @@ import React, { useState, useContext, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
+import XLSX from "xlsx";
 import FilterContext from "../FilterContext";
 import UserProfilePopup from "./UserProfilePopup";
 
@@ -188,21 +189,19 @@ const UserActivitySummaryTable = ({ data }) => {
     });
   }, [searchQuery, statusFilter, roleFilter, selectedBoundaries, usersSummary]);
 
-  // Export CSV
+  // Export XLSX
   const handleExportCSV = useCallback(() => {
     const headers = ["User", "User ID", "Role", "Geo Boundary", "Last Sync", "Records Today", "Status"];
     const rows = filteredData.map((row) => [row.userName, row.userId, row.role, row.geoBoundary, row.lastSync || "-", row.recordsToday, row.status]);
-    const csvContent = [headers, ...rows]
-      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
-      .join("\r\n");
-    const BOM = "\uFEFF";
-    const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `user-activity-tracking-${new Date().toISOString().slice(0, 10)}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const allData = [headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(allData);
+    ws["!cols"] = headers.map((_, colIdx) => {
+      var maxLen = allData.reduce((max, row) => Math.max(max, String(row[colIdx] || "").length), 0);
+      return { wch: maxLen + 2 };
+    });
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "User Activity");
+    XLSX.writeFile(wb, `user-activity-tracking-${new Date().toISOString().slice(0, 10)}.xlsx`);
   }, [filteredData]);
 
   // Table columns
@@ -304,7 +303,7 @@ const UserActivitySummaryTable = ({ data }) => {
               {t("DEVICE_MANAGEMENT_DESC")}
             </div>
           </div>
-          <Button label={t("EXPORT_CSV")} variation="secondary" icon="FileDownload" onClick={handleExportCSV} size="medium" />
+          <Button label={t("EXPORT_XLSX")} variation="secondary" icon="FileDownload" onClick={handleExportCSV} size="medium" />
         </div>
 
         {/* Filters Row */}

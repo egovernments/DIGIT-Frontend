@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
+import XLSX from "xlsx";
 // import { MAX_SYNC_GAP_HOURS } from "./dummyData";
 
 // const getSyncGapHours = (timestamp) => (Date.now() - new Date(timestamp).getTime()) / (1000 * 60 * 60);
@@ -283,17 +284,15 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
   const handleExportCSV = useCallback(() => {
     const headers = ["Timestamp", "Action Type", "Detail", "Outcome", "GPS"];
     const rows = filteredLog.map((entry) => [formatTime(entry.timestamp), entry.actionType, entry.detail, entry.outcome, entry.gps]);
-    const csvContent = [headers, ...rows].map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\r\n");
-    const BOM = "\uFEFF";
-    const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `activity-log-${user.userId}-${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const allData = [headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(allData);
+    ws["!cols"] = headers.map((_, colIdx) => {
+      var maxLen = allData.reduce((max, row) => Math.max(max, String(row[colIdx] || "").length), 0);
+      return { wch: maxLen + 2 };
+    });
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Activity Log");
+    XLSX.writeFile(wb, `activity-log-${user.userId}-${new Date().toISOString().slice(0, 10)}.xlsx`);
   }, [filteredLog, user.userId]);
 
   const columns = useMemo(() => [
@@ -397,7 +396,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
           <span style={{ fontSize: "18px", fontWeight: 700, color: "#0B4B66" }}>{t("ACTIVITY_LOG")}</span>
           <Tag label={`${filteredLog.length} ${t("ENTRIES")}`} type="monochrome" showIcon={false} />
         </div>
-        <Button label={t("EXPORT_CSV")} variation="secondary" icon="FileDownload" size="small" onClick={handleExportCSV} />
+        <Button label={t("EXPORT_XLSX")} variation="secondary" icon="FileDownload" size="small" onClick={handleExportCSV} />
       </div>
 
       {/* Filters */}
