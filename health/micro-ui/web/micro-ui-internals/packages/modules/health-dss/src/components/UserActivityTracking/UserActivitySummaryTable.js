@@ -397,6 +397,7 @@ const UserActivitySummaryTable = ({ data }) => {
         <UserProfilePopup
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
+          dateRange={value?.range}
         />
       )}
     </div>

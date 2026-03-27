@@ -135,7 +135,7 @@ const tableCustomStyles = {
   },
 };
 
-const UserProfilePopup = ({ user, onClose }) => {
+const UserProfilePopup = ({ user, onClose, dateRange }) => {
   const { t } = useTranslation();
   const [actionTypeFilter, setActionTypeFilter] = useState("ALL");
   const [outcomeFilter, setOutcomeFilter] = useState("ALL");
@@ -151,9 +151,9 @@ const UserProfilePopup = ({ user, onClose }) => {
       filters: { userId: user.syncedUserId },
       moduleLevel: "",
       aggregationFactors: null,
-      requestDate: { startDate: 0, endDate: Date.now(), interval: "month", title: "" },
+      requestDate: { startDate: dateRange?.startDate?.getTime() || 0, endDate: dateRange?.endDate?.getTime() || Date.now(), interval: "month", title: "" },
     };
-  }, [user.syncedUserId]);
+  }, [user.syncedUserId, dateRange?.startDate, dateRange?.endDate]);
 
   var individualResult = Digit.Hooks.DSS.useGetChartV2(individualMetricsDto);
   var individualMetricsRaw = individualResult.data;
@@ -184,9 +184,9 @@ const UserProfilePopup = ({ user, onClose }) => {
       filters: { userId: user.syncedUserId },
       moduleLevel: "",
       aggregationFactors: null,
-      requestDate: { startDate: 0, endDate: Date.now(), interval: "month", title: "" },
+      requestDate: { startDate: dateRange?.startDate?.getTime() || 0, endDate: dateRange?.endDate?.getTime() || Date.now(), interval: "month", title: "" },
     };
-  }, [user.syncedUserId]);
+  }, [user.syncedUserId, dateRange?.startDate, dateRange?.endDate]);
 
   var recordsResult = Digit.Hooks.DSS.useGetChartV2(userRecordsDto);
   var userRecordsRaw = recordsResult.data;
