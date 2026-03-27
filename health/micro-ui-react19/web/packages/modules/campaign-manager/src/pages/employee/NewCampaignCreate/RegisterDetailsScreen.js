@@ -109,7 +109,7 @@ const RegisterDetailsScreen = () => {
     if (attendeeMappingStatus !== "creating" && attendeeMappingStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchAttendeeResource();
-    }, 3000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [attendeeMappingStatus]);
   const isAttendeeCreationCompleted = attendeeMappingStatus === "completed";
@@ -184,9 +184,9 @@ const RegisterDetailsScreen = () => {
     };
   }), [attendees, individualMap, NA]);
 
-  const getOwnerName = () => {
-    const owner = staff.find((s) => s.staffType === "OWNER");
-    return owner?.additionalDetails?.staffName || owner?.additionalDetails?.ownerName || NA;
+  const getApproverName = () => {
+    const approver = staff.find((s) => s.staffType === "APPROVER");
+    return approver?.additionalDetails?.staffName || NA;
   };
 
   const handleDeleteUser = (user) => {
@@ -337,7 +337,7 @@ const RegisterDetailsScreen = () => {
           </div>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)} :</div>
-            <div style={detailValueStyle}>{getOwnerName()}</div>
+            <div style={detailValueStyle}>{getApproverName()}</div>
           </div>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN)} :</div>
