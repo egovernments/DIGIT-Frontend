@@ -1,16 +1,16 @@
 import { InputCard, TextBlock, FieldV1, LinkLabel, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-components";
-import { ToggleSwitch } from "@egovernments/digit-ui-react-components";
+import { CheckBox } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 
-const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange, onEmailChange, config, canSubmit, validationConfig, onConsentChange, enableUserPreferences, isWhatsAppEnabled }) => {
+const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange, onEmailChange, config, canSubmit, validationConfig, onConsentChange, enableUserPreferences }) => {
   const [isEmail, setIsEmail] = useState(emailId ? true : false);
   const [error, setError] = useState("");
 
   // WhatsApp consent state (only WhatsApp required)
   const [whatsappConsent, setWhatsappConsent] = useState(false);
 
-  // Show consent toggle only if both configs are enabled
-  const showWhatsAppConsent = enableUserPreferences && isWhatsAppEnabled;
+  // Show consent toggle only if enabled from MDMS
+  const showWhatsAppConsent = enableUserPreferences;
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const rawPattern = validationConfig?.pattern || "^[6-9][0-9]{9}$";
@@ -95,7 +95,8 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
       onNext={handleSubmit}
       isDisable={isDisabled}
     >
-      <div>
+      {/* Mobile/Email Input Wrapper */}
+      <div className="input-field-wrapper" style={{ marginBottom: "0" }}>
         <FieldV1
           key={isEmail ? "email" : "mobile"}
           withoutLabel
@@ -116,34 +117,21 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
           value={isEmail ? emailId : mobileNumber}
         />
       </div>
+      <div style={{ marginTop: "-4rem" }}>
+        {showWhatsAppConsent && (
+          <CheckBox
+            onChange={handleConsentToggle}
+            checked={whatsappConsent}
+            label={t("CORE_COMMON_WHATSAPP_NOTIFICATIONS")}
+            styles={{ display: "flex", alignItems: "center", textTransform: "capitalize" }}
+          />
+        )}
 
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem", marginTop: "-24px" }}>
         <LinkLabel style={{ display: "inline", ...mobileViewStyles }} onClick={switchMode}>
           {linkLabel}
         </LinkLabel>
       </div>
 
-      {/* WhatsApp Consent Section - Only show if enabled */}
-      {showWhatsAppConsent && (
-        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-          <LabelFieldPair style={{ marginBottom: "0.75rem" }}>
-            <CardLabel className="user-profile" style={{ width: "60%", fontSize: "14px" }}>
-              {t("CORE_COMMON_WHATSAPP_NOTIFICATIONS")}
-            </CardLabel>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <ToggleSwitch
-                value={whatsappConsent}
-                onChange={handleConsentToggle}
-                name="whatsapp-consent"
-                style={{ margin: "0px" }}
-              />
-              <span style={{ fontSize: "14px", color: "#505A5F" }}>
-                {whatsappConsent ? t("CORE_COMMON_ENABLED") : t("CORE_COMMON_DISABLED")}
-              </span>
-            </div>
-          </LabelFieldPair>
-        </div>
-      )}
     </InputCard>
   );
 };

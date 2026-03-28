@@ -53,8 +53,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   // Check if individual service context path is configured
   const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
 
+  // Get stateId and determine module name based on multiroot tenant
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const stateId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
-  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+  const moduleName = isMultiRootTenant ? (Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig") : "commonUiConfig";
   const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
     stateId,
     moduleName,
@@ -86,25 +88,6 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     },
     { schemaCode: `${moduleName}.UserPreferencesConfig` }
   );
-
-  // Check if WhatsApp channel is enabled from config-service
-  const { data: isWhatsAppEnabled } = Digit.Hooks.useCustomAPIHook({
-    url: "/config-service/config/v1/_search",
-    body: {
-      criteria: {
-        schemaCode: "NotificationChannel",
-        tenantId: stateCode,
-      },
-    },
-    changeQueryName: "whatsapp_channel_config",
-    config: {
-      enabled: !!enableUserPreferences && !!stateCode,
-      select: (data) => {
-        const whatsappChannel = data?.configData?.find((item) => item.uniqueIdentifier === "WHATSAPP");
-        return whatsappChannel?.data?.enabled === true;
-      },
-    },
-  });
 
   useEffect(() => {
     let errorTimeout;
@@ -182,7 +165,35 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     }
 
     try {
-      const preferredLanguage = Digit.StoreData.getCurrentLanguage() || "en_IN";
+      // Check if WhatsApp channel is enabled from config-service
+      const configResponse = await Digit.CustomService.getResponse({
+        url: "/config-service/config/v1/_search",
+        body: {
+          criteria: {
+            schemaCode: "NotificationChannel",
+            tenantId: stateCode,
+          },
+        },
+        useCache: false,
+        method: "POST",
+        userService: false,
+      });
+
+      const whatsappChannel = configResponse?.configData?.find((item) => item.uniqueIdentifier === "WHATSAPP");
+      const isWhatsAppEnabled = whatsappChannel?.data?.enabled === true;
+
+      // Only save if WhatsApp is enabled
+      if (!isWhatsAppEnabled) {
+        return null;
+      }
+
+      // Get preferred language from multiple sources
+      const preferredLanguage =
+        Digit.StoreData.getCurrentLanguage() ||
+        localStorage.getItem("locale") ||
+        localStorage.getItem("Citizen.locale") ||
+        JSON.parse(sessionStorage.getItem("Digit.initData") || "{}")?.value?.selectedLanguage ||
+        "en_IN";
 
       const consentPayload = {
         SMS: { scope: "GLOBAL", status: "REVOKED" },
@@ -463,7 +474,6 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               t={t}
               validationConfig={validationConfig}
               enableUserPreferences={enableUserPreferences}
-              isWhatsAppEnabled={isWhatsAppEnabled}
             />
           </Route>
           <Route path={`${path}/otp`}>
