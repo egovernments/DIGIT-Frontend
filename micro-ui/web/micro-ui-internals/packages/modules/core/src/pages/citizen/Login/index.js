@@ -48,12 +48,15 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const [canSubmitName, setCanSubmitName] = useState(false);
   const [canSubmitOtp, setCanSubmitOtp] = useState(true);
   const [canSubmitNo, setCanSubmitNo] = useState(true);
+  const [whatsappConsent, setWhatsappConsent] = useState(false);
 
   // Check if individual service context path is configured
   const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
 
+  // Get stateId and determine module name based on multiroot tenant
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const stateId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
-  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+  const moduleName = isMultiRootTenant ? (Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig") : "commonUiConfig";
   const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
     stateId,
     moduleName,
@@ -73,6 +76,17 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       staleTime: 300000,
       enabled: !!stateId,
     }
+  );
+
+  // Check if user preferences are enabled from MDMS
+  const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+    stateId,
+    moduleName,
+    [{ name: "UserPreferencesConfig" }],
+    {
+      select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+    },
+    { schemaCode: `${moduleName}.UserPreferencesConfig` }
   );
 
   useEffect(() => {
@@ -138,11 +152,90 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     setParmas({ ...params, userName: value });
   };
 
+  const handleConsentChange = (consent) => {
+    setWhatsappConsent(consent);
+  };
+
+  // Function to save user preferences (WhatsApp consent + preferred language)
+  // Called AFTER OTP success
+  const saveUserPreferences = async (userInfo, tenantId) => {
+    // Only save preferences if feature is enabled
+    if (!enableUserPreferences) {
+      return null;
+    }
+
+    try {
+      // Check if WhatsApp channel is enabled from config-service
+      const configResponse = await Digit.CustomService.getResponse({
+        url: "/config-service/config/v1/_search",
+        body: {
+          criteria: {
+            schemaCode: "NotificationChannel",
+            tenantId: stateCode,
+          },
+        },
+        useCache: false,
+        method: "POST",
+        userService: false,
+      });
+
+      const whatsappChannel = configResponse?.configData?.find((item) => item.uniqueIdentifier === "WHATSAPP");
+      const isWhatsAppEnabled = whatsappChannel?.data?.enabled === true;
+
+      // Only save if WhatsApp is enabled
+      if (!isWhatsAppEnabled) {
+        return null;
+      }
+
+      // Get preferred language from multiple sources
+      const preferredLanguage =
+        Digit.StoreData.getCurrentLanguage() ||
+        localStorage.getItem("locale") ||
+        localStorage.getItem("Citizen.locale") ||
+        JSON.parse(sessionStorage.getItem("Digit.initData") || "{}")?.value?.selectedLanguage ||
+        "en_IN";
+
+      const consentPayload = {
+        SMS: { scope: "GLOBAL", status: "REVOKED" },
+        EMAIL: { scope: "GLOBAL", status: "REVOKED" },
+        WHATSAPP: { scope: "GLOBAL", status: whatsappConsent ? "GRANTED" : "REVOKED" },
+      };
+
+      const response = await Digit.CustomService.getResponse({
+        url: "/user-preference/v1/_upsert",
+        body: {
+          preference: {
+            userId: userInfo?.uuid,
+            tenantId: tenantId,
+            preferenceCode: "USER_NOTIFICATION_PREFERENCES",
+            payload: {
+              consent: consentPayload,
+              preferredLanguage: preferredLanguage,
+            },
+          },
+        },
+        useCache: false,
+        method: "POST",
+        userService: false,
+      });
+      return response;
+    } catch (error) {
+      console.error("Error saving user preferences:", error);
+      // Don't block login flow if preference save fails
+      return null;
+    }
+  };
+
   const selectMobileNumber = async (mobileNumber) => {
     setCanSubmitNo(false);
-    setParmas({ ...params, ...mobileNumber });
+    // Extract WhatsApp consent from mobileNumber object if it exists
+    const { whatsappConsent: consent, ...mobileData } = mobileNumber;
+    if (consent !== undefined) {
+      setWhatsappConsent(consent);
+    }
+    setParmas({ ...params, ...mobileData });
     const data = {
-      ...mobileNumber,
+      ...mobileData,
       tenantId: stateCode,
       userType: getUserType(),
     };
@@ -294,6 +387,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           info.tenantId = Digit.ULBService.getStateId();
         }
 
+        // Save user preferences (consent + language) after successful authentication
+        await saveUserPreferences(info, stateCode);
+
         setUser({ info, ...tokens });
       } else {
         // OLD REGISTER FLOW: Register user with OTP
@@ -309,6 +405,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
           info.tenantId = Digit.ULBService.getStateId();
         }
+
+        // Save user preferences (consent + language) after successful registration
+        await saveUserPreferences(info, stateCode);
 
         setUser({ info, ...tokens });
       }
@@ -369,10 +468,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               emailId={params.userName || ""}
               onMobileChange={handleMobileChange}
               onEmailChange={handleEmailChange}
+              onConsentChange={handleConsentChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
               t={t}
               validationConfig={validationConfig}
+              enableUserPreferences={enableUserPreferences}
             />
           </Route>
           <Route path={`${path}/otp`}>

@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.9.17-cms]  [29-MAR-2026]
+- **Feature**: WhatsApp notification consent on citizen login/register screen
+  - Added WhatsApp consent checkbox on login/register page (before OTP)
+  - Checkbox visibility controlled by MDMS `UserPreferencesConfig.enableUserPreferences`
+  - Consent state captured during login/register and saved after OTP verification
+  - Integrated with `/user-preference/v1/_upsert` API to save consent + preferred language
+  - Config-service `/config-service/config/v1/_search` call moved from login screen to post-OTP success
+  - Only saves preferences when WhatsApp channel is enabled in config-service `NotificationChannel`
+  - Preferred language auto-detected from locale (multiple sources: StoreData, localStorage, sessionStorage)
+  - Checkbox displays with proper camel case formatting ("Whatsapp Notifications")
+  - Default consent state: unchecked (opt-in required by user)
+- **Code Quality**:
+  - Refactored `SelectMobileNumber` component with proper wrapper structure
+  - Enhanced `saveUserPreferences` function with multi-source language detection
+  - Added multiroot tenant check with dynamic module name resolution (`commonUiConfig`)
+  - Improved component spacing and layout for better UX
+- **Fix**:
+  - Removed hardcoded `enableUserPreferences = true`, now fetched from MDMS
+  - Fixed spacing between input field, checkbox, and email/mobile switch link
+
 ## [1.9.16-cms]  [25-MAR-2026]
 - **Feature**: Enhanced citizen logout flow to redirect directly to citizen login page
 - **Feature**: Added user type detection (citizen vs employee) for conditional logout redirection behavior
