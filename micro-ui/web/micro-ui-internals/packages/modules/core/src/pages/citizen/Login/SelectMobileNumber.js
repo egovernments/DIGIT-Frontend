@@ -117,7 +117,7 @@ const SelectMobileNumber = ({ t, onSelect, mobileNumber, emailId, onMobileChange
           value={isEmail ? emailId : mobileNumber}
         />
       </div>
-      <div style={{ marginTop: "-4rem" }}>
+      <div style={{ marginTop: "-3rem" }}>
         {showWhatsAppConsent && (
           <CheckBox
             onChange={handleConsentToggle}
