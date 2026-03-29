@@ -248,9 +248,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   };
 
   const saveWhatsAppPreference = async (userInfo) => {
-    if (!whatsAppOptIn) return;
     if (!enableUserPreferences) return;
     if (sessionStorage.getItem("whatsapp_popup_shown")) return;
+
+    const locale = JSON.parse(sessionStorage.getItem("Digit.initData"))?.value?.selectedLanguage || localStorage.getItem("locale") || "en_IN";
 
     try {
       await Digit.CustomService.getResponse({
@@ -262,8 +263,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             preferenceCode: PREFERENCE_CODE,
             payload: {
               consent: {
-                WHATSAPP: { scope: "GLOBAL", status: "GRANTED" },
+                WHATSAPP: { scope: "GLOBAL", status: whatsAppOptIn ? "GRANTED" : "REVOKED" },
               },
+              preferredLanguage: locale,
             },
           },
         },

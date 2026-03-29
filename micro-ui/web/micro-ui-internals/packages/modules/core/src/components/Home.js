@@ -101,49 +101,46 @@ const CitizenHome = ({
     : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
   const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
 
-  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false);
+  // const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false);
 
-  // Check if user preferences feature is enabled
-  const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
-    stateLvlTenantId,
-    moduleName,
-    [{ name: "UserPreferencesConfig" }],
-    {
-      select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
-    },
-    { schemaCode: `${moduleName}.UserPreferencesConfig` }
-  );
+  // // WhatsApp popup disabled — preference is now handled at login
+  // const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+  //   stateLvlTenantId,
+  //   moduleName,
+  //   [{ name: "UserPreferencesConfig" }],
+  //   {
+  //     select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+  //   },
+  //   { schemaCode: `${moduleName}.UserPreferencesConfig` }
+  // );
 
-  // Search existing preference to check if WhatsApp is already opted in
-  const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
-    url: "/user-preference/v1/_search",
-    body: {
-      criteria: {
-        userId: userInfo?.uuid,
-        tenantId: tenant,
-        preferenceCode: "USER_NOTIFICATION_PREFERENCES",
-      },
-    },
-    changeQueryName: "whatsapp_popup_preference_search",
-    config: {
-      enabled: !!userInfo?.uuid && isLoggedIn && !!enableUserPreferences,
-      select: (data) => data?.preferences?.[0],
-      cacheTime: 0,
-      staleTime: 0,
-    },
-  });
+  // const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
+  //   url: "/user-preference/v1/_search",
+  //   body: {
+  //     criteria: {
+  //       userId: userInfo?.uuid,
+  //       tenantId: tenant,
+  //       preferenceCode: "USER_NOTIFICATION_PREFERENCES",
+  //     },
+  //   },
+  //   changeQueryName: "whatsapp_popup_preference_search",
+  //   config: {
+  //     enabled: !!userInfo?.uuid && isLoggedIn && !!enableUserPreferences,
+  //     select: (data) => data?.preferences?.[0],
+  //     cacheTime: 0,
+  //     staleTime: 0,
+  //   },
+  // });
 
-  useEffect(() => {
-    if (!isLoggedIn || !enableUserPreferences || isPreferenceLoading) return;
-    const alreadyShown = sessionStorage.getItem("whatsapp_popup_shown");
-    if (alreadyShown) return;
-
-    const whatsappStatus = preferenceData?.payload?.consent?.WHATSAPP?.status;
-    // Show popup only if WhatsApp is not already GRANTED
-    if (whatsappStatus !== "GRANTED") {
-      setShowWhatsAppPopup(true);
-    }
-  }, [isLoggedIn, enableUserPreferences, isPreferenceLoading, preferenceData]);
+  // useEffect(() => {
+  //   if (!isLoggedIn || !enableUserPreferences || isPreferenceLoading) return;
+  //   const alreadyShown = sessionStorage.getItem("whatsapp_popup_shown");
+  //   if (alreadyShown) return;
+  //   const whatsappStatus = preferenceData?.payload?.consent?.WHATSAPP?.status;
+  //   if (whatsappStatus !== "GRANTED") {
+  //     setShowWhatsAppPopup(true);
+  //   }
+  // }, [isLoggedIn, enableUserPreferences, isPreferenceLoading, preferenceData]);
 
   if (isLoading) {
     return <Loader />;
@@ -152,7 +149,8 @@ const CitizenHome = ({
 
   return (
     <React.Fragment>
-      {showWhatsAppPopup && <WhatsAppNotificationPopup onClose={() => setShowWhatsAppPopup(false)} />}
+      {/* WhatsApp popup disabled — preference is now handled at login */}
+      {/* {showWhatsAppPopup && <WhatsAppNotificationPopup onClose={() => setShowWhatsAppPopup(false)} />} */}
       <div className="citizen-all-services-wrapper">
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
