@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.9.18-cms]  [29-MAR-2026]
+- **Style Changes Added to login page 
+
 ## [1.9.17-cms]  [29-MAR-2026]
 - **Feature**: WhatsApp notification consent on citizen login/register screen
   - Added WhatsApp consent checkbox on login/register page (before OTP)
