@@ -77,6 +77,8 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
         productName: record.productName,
         userName: record.userName,
         nameOfUser: record.nameOfUser,
+        status: record.status || "",
+        additionalFields: record.additionalFields || null,
         auditDetails: {
           createdTime: record.createdTime || record.dateOfEntry,
         },

@@ -119,6 +119,15 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return ids;
   }, [userBoundary, userBoundaries, facilityBoundaryMap]);
 
+  // Helper: check if a stock record was rejected via additionalFields status
+  const isStockRejected = useCallback((stock) => {
+    // Check top-level status (Kibana path)
+    if (stock.status === "REJECTED") return true;
+    // Check additionalFields.fields (Stock API path)
+    const statusField = stock.additionalFields?.fields?.find((f) => f.key === "status");
+    return statusField?.value === "REJECTED";
+  }, []);
+
   // Compute per-facility commodity summaries for SummaryCards (non-top-level users)
   const facilityCommoditySummaries = useMemo(() => {
     if (isTopLevel || !finalStockData?.length || !userFacilityIds.size) return [];
@@ -151,20 +160,22 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         if (userFacilityIds.has(stock.receiverId)) {
           commodityMap[productName].totalReturned += qty;
         }
-      } else if (stockEntryType === "REJECTED") {
-        // My dispatch was rejected, stock returned to me
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReturned += qty;
+      } else if (stockEntryType === "ISSUED") {
+        // Check if this dispatch was rejected (additionalFields status = REJECTED)
+        if (isStockRejected(stock)) {
+          // Rejected dispatch: stock returned to sender
+          if (userFacilityIds.has(stock.senderId)) {
+            commodityMap[productName].totalReturned += qty;
+          }
         }
-        // If I'm the rejector: no effect (I never had the stock)
+        // Non-rejected ISSUED: not counted as totalIssued until downstream confirms (RECEIPT)
       }
-      // ISSUED: not counted as totalIssued until downstream confirms (RECEIPT)
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
       balance: c.totalReceived - c.totalIssued + c.totalReturned,
     }));
-  }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
+  }, [finalStockData, userFacilityIds, isTopLevel, productNameMap, isStockRejected]);
 
   // Use per-facility summaries when available, otherwise fall back to global
   const { commoditySummaries: globalCommoditySummaries = [], dataSyncStats: syncStats } = stockSummary || {};
@@ -189,7 +200,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       : t(boundaryCode);
   }, [facilityBoundaryMap, facilityBoundaryTypeMap, userBoundary, t]);
 
-  // Per-transaction rows filtered to user's facility
+  // Per-transaction rows: only ISSUED transactions where user's facility is the sender
+  // (i.e. dispatches from my facility to below-level facilities)
   const warehouseData = useMemo(() => {
     if (!finalStockData?.length) return [];
 
@@ -200,30 +212,18 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     finalStockData.forEach((stock) => {
       const senderId = stock.senderId;
       const receiverId = stock.receiverId;
+      const stockEntryType = stock.stockEntryType || "";
 
-      // Filter: only show transactions involving user's facility
-      // If no user facility found (top-level or loading), show all
-      if (userFacilityIds.size > 0 && !userFacilityIds.has(senderId) && !userFacilityIds.has(receiverId)) {
-        return;
-      }
+      // Only show ISSUED transactions from user's facility to below-level facilities
+      if (stockEntryType !== "ISSUED") return;
+      // If user facilities are known, only show where user is the sender
+      if (userFacilityIds.size > 0 && !userFacilityIds.has(senderId)) return;
 
       const productName =
         productNameMap[stock?.productVariantId] ||
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")
           ?.value || "Unknown";
       const qty = stock.quantity || 0;
-      const stockEntryType = stock.stockEntryType || "";
-
-      // Compute effective quantity from user's facility perspective:
-      // ISSUED where user is receiver = 0 (in transit, not yet received)
-      // RECEIPT where user is receiver = qty (confirmed received)
-      // Otherwise show raw qty
-      let effectiveQty = qty;
-      if (userFacilityIds.size > 0) {
-        if (stockEntryType === "ISSUED" && userFacilityIds.has(receiverId) && !userFacilityIds.has(senderId)) {
-          effectiveQty = 0;
-        }
-      }
 
       rows.push({
         warehouseName: facilityNameMap[senderId] || senderId || "N/A",
@@ -234,7 +234,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             : "Facility",
         boundary: getBoundaryDisplay(senderId),
         commodity: productName,
-        quantity: Math.max(0, effectiveQty),
+        quantity: qty,
         facilityId: userFacId || senderId,
         productVariantId: stock.productVariantId,
       });
@@ -258,17 +258,18 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!pvId) return;
 
       if (stockEntryType === "ISSUED") {
-        // Sender loses stock (in transit, not yet received by receiver)
-        if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        if (isStockRejected(stock)) {
+          // Rejected dispatch: stock never left sender (net zero, don't deduct)
+        } else {
+          // Sender loses stock (in transit, not yet received by receiver)
+          if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        }
       } else if (stockEntryType === "RECEIPT") {
         // Receiver confirms receipt → gains stock
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
       } else if (stockEntryType === "RETURNED") {
         // Returner DID have the stock: returner loses, original sender gains
         if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "REJECTED") {
-        // Rejector NEVER had the stock: only credit original sender (gets stock back)
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
       } else {
         // Fallback to existing transactionType logic
@@ -283,7 +284,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       }
     });
     return map;
-  }, [finalStockData]);
+  }, [finalStockData, isStockRejected]);
 
   // Build product variant list for the commodity dropdown
   const productVariantList = useMemo(() => {
@@ -302,8 +303,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       label: t("HCM_FROM_FACILITY"),
       key: "warehouseName",
-      grow: 1.2,
-      minWidth: "160px",
+      grow: 1.5,
+      minWidth: "180px",
       sortable: true,
     },
     {
@@ -330,8 +331,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       label: t("HCM_COMMODITY"),
       key: "commodity",
-      grow: 0.8,
-      minWidth: "120px",
+      grow: 0.6,
+      minWidth: "100px",
       sortable: true,
     },
     {
