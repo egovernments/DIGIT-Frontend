@@ -42,16 +42,6 @@ module.exports = merge(common, {
     proxy: [
       {
         context: [
-          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana"),
-          "/kibana",
-          "/kibana-upgrade"
-        ],
-        target: process.env.REACT_APP_KIBANA_URL || "https://bauchi-hcm-uat.digit.org",
-        changeOrigin: true,
-        secure: false,
-      },
-      {
-        context: [
           "/egov-mdms-service",
           "/access/v1/actions/mdms",
           "/tenant-management",

@@ -283,9 +283,6 @@ module.exports = {
           "/excel-ingestion",
           "/boundary-management",
           "/stock/v1",
-          "/" + (process.env.REACT_APP_KIBANA_PATH || "kibana-upgrade"),
-          "/kibana",
-          "/kibana-upgrade",
           "/attendance"
         ],
         target: envFile.REACT_APP_PROXY_API,

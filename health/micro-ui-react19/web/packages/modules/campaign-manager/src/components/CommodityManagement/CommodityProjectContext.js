@@ -56,6 +56,18 @@ const CommodityProjectProvider = ({ children }) => {
     return null;
   }, [projects]);
 
+  // All direct project assignments (for multi-project users)
+  const userAssignments = useMemo(() => {
+    if (!projects?.length) return [];
+    return projects
+      .map((p) => ({
+        projectId: p.id,
+        boundary: p.address?.boundary,
+        boundaryType: p.address?.boundaryType,
+      }))
+      .filter((a) => a.boundary);
+  }, [projects]);
+
   // Collect ALL boundary codes from user's projects + their descendants
   const userBoundaries = useMemo(() => {
     const boundaries = new Set();
@@ -125,11 +137,12 @@ const CommodityProjectProvider = ({ children }) => {
     projects: projects || [],
     userBoundary,
     userBoundaries,
+    userAssignments,
     isTopLevel,
     topLevelBoundaryType,
     isLoading,
     hasStaff,
-  }), [projects, userBoundary, userBoundaries, isTopLevel, topLevelBoundaryType, isLoading, hasStaff]);
+  }), [projects, userBoundary, userBoundaries, userAssignments, isTopLevel, topLevelBoundaryType, isLoading, hasStaff]);
 
   return (
     <CommodityProjectContext.Provider value={value}>

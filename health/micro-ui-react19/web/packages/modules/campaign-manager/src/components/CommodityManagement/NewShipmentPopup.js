@@ -169,25 +169,24 @@ const NewShipmentPopup = ({
         enabled: !!projectId,
         select: (data) => {
           const projects = data?.Project || [];
-          const ids = [];
+          const idSet = new Set();
           const boundaryMap = {};
           const collectProject = (proj) => {
-            if (proj?.id) {
-              ids.push(proj.id);
-              if (proj?.address?.boundary) {
-                boundaryMap[proj.id] = {
-                  boundary: proj.address.boundary,
-                  boundaryType: proj.address.boundaryType,
-                };
-              }
+            if (!proj?.id || idSet.has(proj.id)) return;
+            idSet.add(proj.id);
+            if (proj?.address?.boundary) {
+              boundaryMap[proj.id] = {
+                boundary: proj.address.boundary,
+                boundaryType: proj.address.boundaryType,
+                referenceId: proj.referenceId,
+              };
             }
-          };
-          projects.forEach((proj) => {
-            collectProject(proj);
+            // Recurse into nested descendants
             if (proj?.descendants) proj.descendants.forEach(collectProject);
-          });
-          if (ids.length === 0 && projectId) ids.push(projectId);
-          return { ids, boundaryMap };
+          };
+          projects.forEach(collectProject);
+          if (idSet.size === 0 && projectId) idSet.add(projectId);
+          return { ids: [...idSet], boundaryMap };
         },
       },
     }),
@@ -311,47 +310,26 @@ const NewShipmentPopup = ({
     return level;
   }, [toHierarchyFilters, toHierarchyLevels, effectiveHierarchy]);
 
-  // Visible "From" levels: show up to one level beyond the deepest selection (exclude last 2 hierarchy levels)
+  // From: show only the user's assigned boundary level (disabled, for context)
   const fromVisibleLevels = useMemo(() => {
-    if (!effectiveHierarchy.length) return [];
-    const maxLevel = effectiveHierarchy.length - 2; // exclude last 2 levels (e.g., Locality + Village)
-    if (maxLevel <= 0) return [];
-    if (fromSelectedLevel < 0) return effectiveHierarchy.slice(0, 1);
-    return effectiveHierarchy.slice(0, Math.min(fromSelectedLevel + 2, maxLevel));
-  }, [effectiveHierarchy, fromSelectedLevel]);
+    if (!userBoundary?.boundaryType || !effectiveHierarchy.length) return [];
+    const userLevel = effectiveHierarchy.find((h) => h.boundaryType === userBoundary.boundaryType);
+    return userLevel ? [userLevel] : [];
+  }, [userBoundary, effectiveHierarchy]);
 
-  // Visible "To" levels: show up to one level beyond the deepest To selection (exclude last hierarchy level)
+  // To: only show the immediate child level below From (one level dropdown)
   const toVisibleLevels = useMemo(() => {
     if (!toHierarchyLevels.length) return [];
-    const maxLevel = toHierarchyLevels.length - 1; // exclude last level (e.g., Village)
-    if (maxLevel <= 0) return [];
-    let deepestRelIdx = -1;
-    toHierarchyLevels.forEach((h, idx) => {
-      const val = toHierarchyFilters[h.boundaryType];
-      if (Array.isArray(val) ? val.length > 0 : !!val) deepestRelIdx = idx;
-    });
-    if (deepestRelIdx < 0) return toHierarchyLevels.slice(0, Math.min(1, maxLevel));
-    return toHierarchyLevels.slice(0, Math.min(deepestRelIdx + 2, maxLevel));
-  }, [toHierarchyLevels, toHierarchyFilters]);
+    return toHierarchyLevels.slice(0, 1);
+  }, [toHierarchyLevels]);
 
-  // Filter project IDs for "From" — projects matching all From filters at the selected level
+  // "From" uses the exact projectId passed from the dashboard (user's assigned project)
   const fromFilteredProjectIds = useMemo(() => {
-    if (!allProjectIds.length || fromSelectedLevel < 0) return [];
-    const targetBoundaryType = effectiveHierarchy[fromSelectedLevel]?.boundaryType;
-    if (!targetBoundaryType) return [];
-    return allProjectIds.filter((pid) => {
-      const bInfo = projectBoundaryMap[pid];
-      if (!bInfo?.boundary) return false;
-      if (bInfo.boundaryType !== targetBoundaryType) return false;
-      const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-      return Object.entries(fromHierarchyFilters).every(([type, value]) => {
-        if (!value) return true;
-        return ancestors[type] === value;
-      });
-    });
-  }, [allProjectIds, fromHierarchyFilters, fromSelectedLevel, effectiveHierarchy, projectBoundaryMap, boundaryAncestorMap]);
+    if (!projectIdProp) return [];
+    return [projectIdProp];
+  }, [projectIdProp]);
 
-  // Filter project IDs for "To" — projects matching all combined filters at the selected To level
+  // Filter project IDs for "To" — only projects whose referenceId matches this campaign
   const toFilteredProjectIds = useMemo(() => {
     if (!allProjectIds.length) return [];
     const hasToFilters = Object.values(toHierarchyFilters).some((v) => Array.isArray(v) ? v.length > 0 : !!v);
@@ -365,6 +343,8 @@ const NewShipmentPopup = ({
       const bInfo = projectBoundaryMap[pid];
       if (!bInfo?.boundary) return false;
       if (bInfo.boundaryType !== targetBoundaryType) return false;
+      // Only include projects belonging to this campaign
+      if (campaignNumber && bInfo.referenceId && bInfo.referenceId !== campaignNumber) return false;
       const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
       return Object.entries(combinedFilters).every(([type, value]) => {
         if (Array.isArray(value)) {
@@ -375,7 +355,7 @@ const NewShipmentPopup = ({
         return ancestors[type] === value;
       });
     });
-  }, [allProjectIds, fromHierarchyFilters, toHierarchyFilters, toSelectedLevel, effectiveHierarchy, projectBoundaryMap, boundaryAncestorMap]);
+  }, [allProjectIds, fromHierarchyFilters, toHierarchyFilters, toSelectedLevel, effectiveHierarchy, projectBoundaryMap, boundaryAncestorMap, campaignNumber]);
 
   // Fetch "From" facilities using filtered project IDs
   const fromFacilityReqCriteria = useMemo(
@@ -464,21 +444,35 @@ const NewShipmentPopup = ({
 
   const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = Digit.Hooks.useCustomAPIHook(facilityNameSearchCriteria);
 
-  // Enrich facility lists with resolved names
+  // Enrich facility lists with resolved names (dedup by id as safety net)
   const enrichedFromFacilityList = useMemo(() => {
     if (!fromFacilityList?.length) return fromFacilityList;
-    return fromFacilityList.map((f) => ({
-      ...f,
-      name: facilityNameMap[f.id] || f.id,
-    }));
+    const seen = new Set();
+    return fromFacilityList
+      .filter((f) => {
+        if (seen.has(f.id)) return false;
+        seen.add(f.id);
+        return true;
+      })
+      .map((f) => ({
+        ...f,
+        name: facilityNameMap[f.id] || f.id,
+      }));
   }, [fromFacilityList, facilityNameMap]);
 
   const toFacilityList = useMemo(() => {
     if (!rawToFacilityList?.length) return rawToFacilityList;
-    return rawToFacilityList.map((f) => ({
-      ...f,
-      name: facilityNameMap[f.id] || f.id,
-    }));
+    const seen = new Set();
+    return rawToFacilityList
+      .filter((f) => {
+        if (seen.has(f.id)) return false;
+        seen.add(f.id);
+        return true;
+      })
+      .map((f) => ({
+        ...f,
+        name: facilityNameMap[f.id] || f.id,
+      }));
   }, [rawToFacilityList, facilityNameMap]);
 
   const filteredFromFacilities = useMemo(() => {
