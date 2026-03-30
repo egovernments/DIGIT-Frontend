@@ -8,8 +8,10 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     };
     let response;
     try {
-        // For unified-console-validation, use different API and referenceId instead of campaignId
+        // For unified-console-validation and attendanceRegisterValidation, use different API and referenceId instead of campaignId
         const isUnifiedConsole = type === "unified-console-validation";
+        const isAttendanceRegister = type === "attendanceRegister-validation" || type === "attendanceRegisterAttendee-validation";
+        const useExcelIngestion = isUnifiedConsole || isAttendanceRegister;
         const resourceDetails = {
             type,
             hierarchyType: hierarchyType,
@@ -18,15 +20,25 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
             additionalDetails: additionalDetails,
         };
 
-        if (isUnifiedConsole) {
-            resourceDetails.referenceId = id;
+        if (useExcelIngestion) { //TODO CHECK
             resourceDetails.locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
-            resourceDetails.referenceType = "campaign"
+            if (type === "attendanceRegisterAttendee-validation") {
+                resourceDetails.type = "attendanceRegisterAttendee-validation";
+                resourceDetails.referenceId = additionalDetails?.registerId || id;
+                resourceDetails.referenceType = "attendanceRegister";
+            } else if (type === "attendanceRegister-validation") {
+                resourceDetails.type = "attendanceRegister-validation";
+                resourceDetails.referenceId = id;
+                resourceDetails.referenceType = "campaign";
+            } else {
+                resourceDetails.referenceId = id;
+                resourceDetails.referenceType = "campaign";
+            }
         } else {
             resourceDetails.campaignId = id;
         }
 
-        const apiUrl = isUnifiedConsole
+        const apiUrl = useExcelIngestion
             ? "/excel-ingestion/v1/data/process/_validation"
             : "/project-factory/v2/data/_process";
 
@@ -60,14 +72,16 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     const maxTime = baseTimeOut?.baseTimeout?.[0]?.maxTime;
     let retryInterval = 2000;
 
-    // For unified-console, use different search API and response structure
+    // For unified-console and attendanceRegister, use different search API and response structure
     const isUnifiedConsole = type === "unified-console-validation";
-    const searchUrl = isUnifiedConsole
+    const isAttendanceRegister = type === "attendanceRegister-validation" || type === "attendanceRegisterAttendee-validation";
+    const useExcelIngestion = isUnifiedConsole || isAttendanceRegister;
+    const searchUrl = useExcelIngestion
         ? "/excel-ingestion/v1/data/process/_search"
         : "/project-factory/v1/data/_search";
 
-    // Get the ID from the response - different field for unified-console
-    const processId = isUnifiedConsole
+    // Get the ID from the response - different field for excel-ingestion types
+    const processId = useExcelIngestion
         ? response?.ProcessResource?.id
         : response?.ResourceDetails?.id;
 
@@ -79,7 +93,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
 
     while (isStatusPending(status)) {
         try {
-            if (isUnifiedConsole) {
+            if (useExcelIngestion) {
                 searchResponse = await Digit.CustomService.getResponse({
                     url: searchUrl,
                     body: {
@@ -120,7 +134,7 @@ export const useProcessData = async (data, hierarchyType, type, tenantId, id, ba
     if (Error.isError) {
         return Error;
     }
-    return isUnifiedConsole
+    return useExcelIngestion
         ? searchResponse?.ProcessingDetails?.[0]
         : searchResponse?.ResourceDetails?.[0];
 };

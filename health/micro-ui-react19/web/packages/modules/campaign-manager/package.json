@@ -37,6 +37,7 @@
     "geojsonhint": "^2.0.0",
     "leaflet": "^1.9.4",
     "proj4": "^2.15.0",
+    "date-fns": "^2.30.0",
     "react-date-range": "1.4.0",
     "react-drag-drop-files": "^2.3.10",
     "react-hook-form": "6.15.8",
