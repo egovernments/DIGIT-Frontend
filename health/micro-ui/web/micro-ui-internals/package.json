@@ -43,12 +43,13 @@
     "clean": "rm -rf node_modules"
   },
   "resolutions": {
-    "**/@babel/runtime": "7.20.1",
+    "**/@babel/runtime":"^7.22.5",
     "**/styled-components": "5.0.0",
     "**/@babel/traverse": "7.25.9",
     "**/babel-preset-react-app": "10.0.0",
     "**/@jridgewell/gen-mapping": "0.3.5",
-    "**/minimatch": "7.4.6"
+    "**/minimatch": "7.4.6",
+    "**/splaytree": "3.1.1"
   },
   "devDependencies": {
     "husky": "7.0.4",
@@ -61,7 +62,7 @@
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
-   "@egovernments/digit-ui-react-components": "1.9.0",
+   "@egovernments/digit-ui-react-components": "1.9.2",
     "@egovernments/digit-ui-svg-components": "1.1.0",
     "@egovernments/digit-ui-components":  "0.2.3",
     "ajv": "8.12.0",

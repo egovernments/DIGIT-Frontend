@@ -4,7 +4,8 @@
   "main": "index.js",
   "workspaces": [
     "packages/modules/microplan",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/modules/hcm-microplanning"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -25,13 +26,13 @@
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
-    "buildD:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
+    "build:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
     "build:microplan": "cd packages/modules/microplan && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
   "resolutions": {
-    "**/@babel/runtime": "7.20.1",
+    "**/@babel/runtime": "^7.22.5",
     "**/@babel/traverse":"7.25.9",
     "**/babel-preset-react-app": "10.0.0",
     "**/babel-loader": "8.2.2",
@@ -40,7 +41,8 @@
     "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
     "**/@jridgewell/gen-mapping": "0.3.5",
     "**/polished":"4.2.2",
-    "fast-uri":"2.1.0"
+    "fast-uri":"2.1.0",
+    "**/splaytree": "3.1.1"
   },
   "devDependencies": {
     "husky": "7.0.4",
@@ -55,7 +57,7 @@
   "dependencies": {
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
-    "@egovernments/digit-ui-react-components": "1.8.1-beta.2",
+    "@egovernments/digit-ui-react-components": "1.9.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",

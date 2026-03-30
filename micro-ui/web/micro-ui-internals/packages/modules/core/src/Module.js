@@ -159,8 +159,8 @@ const componentsToRegister = {
   ChangeLanguage,
   LoginSignupSelector,
   ForgotOrganizationTooltip,
-  PrivacyComponent,
   OtpComponent,
+  PrivacyComponent,
 };
 
 export const initCoreComponents = () => {
