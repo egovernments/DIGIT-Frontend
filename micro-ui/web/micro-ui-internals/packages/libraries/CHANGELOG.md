@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.9.4] [10-March-2026]
+
+### 🔧 Multi-Root Tenant Support Enhancement:
+
+#### 🏢 ULB Service Improvements:
+- **Enhanced `getCurrentTenantId()` Method**: Added sandbox-ui multi-root tenant support
+  - Added `MULTI_ROOT_TENANT` global config check
+  - When multi-root tenant is enabled, directly returns `user.info.tenantId`
+  - Provides better tenant isolation for sandbox environments
+  - Falls back to existing logic when multi-root tenant is disabled
+
+#### 📋 Modified Files:
+- `packages/libraries/src/services/molecules/Ulb/index.js`:
+  - Added `MULTI_ROOT_TENANT` config check in `getCurrentTenantId()`
+  - Enhanced tenant ID resolution logic for multi-tenant deployments
+
+### Impact:
+- Better support for sandbox multi-root tenant configurations
+- Improved tenant context handling for multi-tenant deployments
+- Ensures correct tenant ID is used when multi-root tenant is enabled
+
 ## [1.9.3] [15-December-2025]
 
 ### 🔧 Validation Pattern Enhancements:

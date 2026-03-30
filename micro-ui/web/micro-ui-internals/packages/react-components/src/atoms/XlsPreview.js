@@ -1,5 +1,6 @@
 import React from "react";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+// Removed @cyntler/react-doc-viewer to fix CVE-2024-4367 (pdfjs-dist vulnerability).
+// Replaced with Office Online iframe for XLSX preview.
 import { useTranslation } from "react-i18next";
 import PopUp from "./PopUp";
 import { DownloadIcon } from "./svgindex";
@@ -7,15 +8,15 @@ import Button from "./Button";
 import { SVG } from "./SVG";
 
 
-/* Steps to use 
-*   1. Import the XlsPreview component 
+/* Steps to use
+*   1. Import the XlsPreview component
 *        import XlsPreview from "@egovernments/digit-ui-react-components";
 *    2.  Call the component
 *        <XlsPreview file={file} onDownload={() => handleFileDownload(fileUrl)} onBack={() => {}} />
 *
-*    Note: 
-*      Props need to pass in XlsPreview while calling 
-*      a) file 
+*    Note:
+*      Props need to pass in XlsPreview while calling
+*      a) file
 *      The Structure of the file props is
 *      {
 *          "id": fileStoreId, (id is optional)
@@ -31,17 +32,21 @@ import { SVG } from "./SVG";
 import PropTypes from 'prop-types';
 import { COLOR_FILL } from "./contants";
 
+const sanitizeUri = (value) => {
+  if (!value) return null;
+  if (typeof value === "string" && value.startsWith("blob:")) return value;
+  try {
+    const parsed = new URL(value, window.location.origin);
+    if (!["http:", "https:", "blob:"].includes(parsed.protocol)) return null;
+    return parsed.href;
+  } catch (e) {
+    return null;
+  }
+};
+
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
-  const documents = file
-    ? [
-        {
-          fileType: "xlsx",
-          fileName: file?.fileName,
-          uri: file?.url,
-        },
-      ]
-    : null;
+  const safeUrl = sanitizeUri(file?.url);
 
   return (
     <PopUp className={props?.className} style={{ flexDirection: "column", ...props?.modalStyle }}>
@@ -71,20 +76,15 @@ function XlsPreview({ file, ...props }) {
         />
       </div>
       <div className="xls-popup-module" style={{ marginTop: "1.5rem", ...props?.containerStyle }}>
-        <DocViewer
-          style={{ height: "80vh", overflowY: "hidden" }}
-          theme={{
-            primary: "#c84c0e",
-            secondary: "#feefe7",
-            tertiary: "#feefe7",
-            textPrimary: "#0B0C0C",
-            textSecondary: "#505A5F",
-            textTertiary: "#00000099",
-            disableThemeScrollbar: true,
-          }}
-          documents={documents}
-          pluginRenderers={DocViewerRenderers}
-        />
+        {safeUrl ? (
+          <iframe
+            src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(safeUrl)}`}
+            style={{ width: "100%", height: "80vh", border: "none" }}
+            title="XLSX Preview"
+          />
+        ) : (
+          <span>Unable to preview this file.</span>
+        )}
       </div>
     </PopUp>
   );

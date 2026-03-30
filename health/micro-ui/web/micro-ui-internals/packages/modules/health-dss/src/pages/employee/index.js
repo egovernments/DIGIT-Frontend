@@ -8,6 +8,7 @@ import L1Main from "./L1Main";
 import L2Main from "./L2Main";
 import ViewDashboard from "./ViewDashboard";
 import Inbox from "./Inbox";
+import UserActivity from "../../components/UserActivityTracking/UserActivity";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -63,6 +64,11 @@ const ProjectBreadCrumb = ({ location }) => {
       content: t("LEVEL_TWO_DASHBOARD"),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_TWO",
     },
+    {
+      internalLink: `/${window?.contextPath}/employee/dss/user-activity-tracking`,
+      content: t("USER_ACTIVITY_TRACKING"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_ACTIVITY_TRACKING",
+    },
   ];
   return <BreadCrumb crumbs={crumbs} />;
 };
@@ -84,6 +90,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashboard stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/level-one/:moduleCode`} component={() => <L1Main />} />
         <PrivateRoute path={`${path}/level-two/:moduleCode`} component={() => <L2Main />} />
+        <PrivateRoute path={`${path}/user-activity-tracking`} component={() => <UserActivity />} />
       </AppContainer>
     </Switch>
   );

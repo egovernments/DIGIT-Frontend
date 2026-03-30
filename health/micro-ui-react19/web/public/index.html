@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@2.0.0-dev-03/dist/index.css" />
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-components-css@2.0.0-dev-12/dist/index.css" />
   <!-- added below css for hcm-workbench module inclusion-->
-  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@1.0.8/dist/index.css" /> 
+  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-health-css@1.0.9/dist/index.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#00bcd1" />
   <title>DIGIT HCM</title>
@@ -19,6 +19,11 @@
 
 
   <script src="https://central-instance-uat-assets.s3.af-south-1.amazonaws.com/globalConfigsWorkbench-ba.js"></script>
+  <script>
+    if (navigator.platform.indexOf('Mac') !== -1) {
+      document.documentElement.style.fontSize = '14.4px';
+    }
+  </script>
 
 </head>
 
