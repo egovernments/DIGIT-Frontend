@@ -79,6 +79,8 @@ const RegisterDetailsScreen = () => {
   };
   const { data: campaignData, isLoading: isCampaignLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
+  const isCampaignStarted = campaignData?.startDate ? campaignData.startDate <= Date.now() : false;
+
   // Check resource-details status for attendee mapping on this register
   const attendeeResourceCriteria = {
     url: `/project-factory/v1/resource-details/_search`,
@@ -107,7 +109,7 @@ const RegisterDetailsScreen = () => {
     if (attendeeMappingStatus !== "creating" && attendeeMappingStatus !== "toCreate") return;
     const interval = setInterval(() => {
       refetchAttendeeResource();
-    }, 3000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [attendeeMappingStatus]);
   const isAttendeeCreationCompleted = attendeeMappingStatus === "completed";
@@ -178,13 +180,13 @@ const RegisterDetailsScreen = () => {
       username: ind.userDetails?.username || NA,
       role: ind.skills?.[0]?.type || NA,
       team: attendee.tag || NA,
-      status: attendee.denrollmentDate ? "Inactive" : "Active",
+      status: attendee.denrollmentDate && attendee.denrollmentDate <= Date.now() ? "Inactive" : "Active",
     };
   }), [attendees, individualMap, NA]);
 
-  const getOwnerName = () => {
-    const owner = staff.find((s) => s.staffType === "OWNER");
-    return owner?.additionalDetails?.staffName || owner?.additionalDetails?.ownerName || NA;
+  const getApproverName = () => {
+    const approver = staff.find((s) => s.staffType === "APPROVER");
+    return approver?.additionalDetails?.staffName || NA;
   };
 
   const handleDeleteUser = (user) => {
@@ -283,13 +285,16 @@ const RegisterDetailsScreen = () => {
         row.status === "Inactive" ? (
           <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t("HCM_ALREADY_REMOVED")}</span>
         ) : (
-          <Button
-            label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
-            variation="secondary"
-            size="small"
-            icon="Delete"
-            onClick={() => handleDeleteUser(row)}
-          />
+          <span title={!isCampaignStarted ? t("HCM_DELETE_DISABLED_CAMPAIGN_NOT_STARTED") : ""}>
+            <Button
+              label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
+              variation="secondary"
+              size="small"
+              icon="Delete"
+              isDisabled={!isCampaignStarted}
+              onClick={() => handleDeleteUser(row)}
+            />
+          </span>
         ),
     },
   ];
@@ -332,7 +337,7 @@ const RegisterDetailsScreen = () => {
           </div>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)} :</div>
-            <div style={detailValueStyle}>{getOwnerName()}</div>
+            <div style={detailValueStyle}>{getApproverName()}</div>
           </div>
           <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
             <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN)} :</div>
