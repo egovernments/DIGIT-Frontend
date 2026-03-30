@@ -590,10 +590,18 @@ const NewShipmentPopup = ({
         : rawEntryType;
       if (!pvId) return;
 
+      // Check if this ISSUED record was rejected via additionalFields status
+      const statusField = record.additionalFields?.fields?.find((f) => f.key === "status");
+      const isRejected = record.status === "REJECTED" || statusField?.value === "REJECTED";
+
       if (entryType === "ISSUED") {
         if (record.facilityId === fromFacilityId) {
-          // I dispatched → -qty (stock left my warehouse, in transit)
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+          if (isRejected) {
+            // Rejected dispatch: stock never left sender (net zero, don't deduct)
+          } else {
+            // I dispatched → -qty (stock left my warehouse, in transit)
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+          }
         }
         // If someone dispatched TO me (transactingFacilityId=me): NO credit — still in transit
       } else if (entryType === "RECEIPT") {
@@ -609,12 +617,6 @@ const NewShipmentPopup = ({
           // Stock returned TO me → +qty
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
         }
-      } else if (entryType === "REJECTED") {
-        if (record.transactingFacilityId === fromFacilityId) {
-          // My dispatch was rejected, stock returned to me → +qty
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-        }
-        // If I rejected (facilityId=me): no effect — I never had the stock
       }
     });
     return map;

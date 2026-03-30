@@ -347,13 +347,13 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   );
 
   const columns = [
-  { label: t("HCM_TRN"), key: "trn", grow: 0.5, minWidth: "80px",sortable: true },
+  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px",sortable: true },
   { label: t("HCM_CREATION_DATE"), key: "creationDate", grow: 1.5, minWidth: "200px",sortable: true },
   { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px",sortable: true },
   { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px",sortable: true },
   { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1 ,sortable: true},
   { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px",sortable: true },
-  { label: t("HCM_COMMODITY"), key: "commodity", grow: 1.5 ,sortable: true},
+  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8 ,sortable: true},
   { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1,sortable: true },
 ];
 
