@@ -1,0 +1,336 @@
+import React, { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import MyBillsSearch from "../../components/MyBillsSearch";
+import ManageBillsTable from "../../components/ManageBillsTable";
+import { defaultRowsPerPage } from "../../utils/constants";
+import { findAllOverlappingPeriods } from "../../utils/time_conversion";
+import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
+import { formatDate } from "../../utils/time_conversion";
+import { Card, NoResultsFound, Loader, Toast, Tab } from "@egovernments/digit-ui-components";
+import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
+import _ from "lodash";
+
+const STATUS_MAP = {
+  NOT_VERIFIED: ["PENDING_VERIFICATION"],
+  VERIFICATION_IN_PROGRESS: ["VERIFICATION_IN_PROGRESS"],
+  PARTIALLY_VERIFIED: ["PARTIALLY_VERIFIED"],
+  FULLY_VERIFIED: ["FULLY_VERIFIED"],
+  SENT_FOR_REVIEW: ["SENT_FOR_REVIEW"],
+};
+
+const ManageBills = () => {
+  const { t } = useTranslation();
+  const history = useHistory();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [showToast, setShowToast] = useState(null);
+  const [selectedBills, setSelectedBills] = useState([]);
+  const [clearSelectedRows, setClearSelectedRows] = useState(false);
+
+  const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+
+  // State Variables
+  const [periodType, setPeriodType] = useState(null);
+  const [tableData, setTableData] = useState([]);
+  const [billID, setBillID] = useState(null);
+  const [dateRange, setDateRange] = useState({
+    startDate: "",
+    endDate: "",
+    title: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+  const [totalCount, setTotalCount] = useState(0);
+  const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+
+  // Tab state
+  const [activeLink, setActiveLink] = useState({
+    code: "NOT_VERIFIED",
+    name: t("HCM_AM_NOT_VERIFIED"),
+  });
+
+  const project = Digit?.SessionStorage.get("staffProjects");
+  const projectPeriods = Digit.SessionStorage.get("projectPeriods");
+
+  const BillSearchCri = {
+    url: `/${expenseContextPath}/bill/v1/_search`,
+    body: {
+      billCriteria: {
+        tenantId: tenantId,
+        referenceIds: project?.map((p) => p?.id) || [],
+        // status: STATUS_MAP[activeLink.code]?.[0] || null, // TODO: restore once columns confirmed
+        ...(billID ? { billNumbers: [billID] } : {}),
+        ...(dateRange.startDate && dateRange.endDate
+          ? {
+              fromDate: new Date(dateRange.startDate).getTime(),
+              toDate: new Date(dateRange.endDate).getTime(),
+            }
+          : {}),
+        pagination: {
+          limit: limitAndOffset.limit,
+          offset: limitAndOffset.offset,
+        },
+        billingPeriodIds:
+          periodType && periodType?.code === "FINAL_AGGREGATE"
+            ? []
+            : periodType &&
+              periodType?.code === "INTERMEDIATE" &&
+              dateRange.startDate === "" &&
+              dateRange.endDate === ""
+            ? (projectPeriods || []).map((x) => x?.id)
+            : dateRange.startDate === "" && dateRange.endDate === ""
+            ? []
+            : findAllOverlappingPeriods(
+                dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
+                dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+              ).map((x) => x?.id),
+        ...(periodType && periodType?.code === "FINAL_AGGREGATE"
+          ? { billingType: periodType?.code }
+          : {}),
+      },
+    },
+    config: {
+      enabled: project ? true : false,
+      select: (data) => data,
+    },
+  };
+
+  const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+
+  const reqMdmsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            moduleName: "HCM",
+            masterDetails: [{ name: "WORKER_RATES" }],
+          },
+        ],
+      },
+    },
+    config: {
+      enabled: BillData?.bills?.length > 0 ? true : false,
+      select: (mdmsData) => {
+        const referenceCampaignId = BillData?.bills?.[0]?.referenceId?.split(".")?.[0];
+        return mdmsData?.MdmsRes?.HCM?.WORKER_RATES?.find((item) => item.campaignId === referenceCampaignId);
+      },
+    },
+  };
+  const { data: workerRatesData } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+  Digit.SessionStorage.set("workerRatesData", workerRatesData);
+
+  const handlePageChange = (page, totalRows) => {
+    setCurrentPage(page);
+    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
+  };
+
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+    setRowsPerPage(currentRowsPerPage);
+    setCurrentPage(1);
+    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+  };
+
+  // Fetch billing config and periods
+  const fetchBillingPeriods = useCallback(
+    async (projectId) => {
+      try {
+        const body = {
+          searchCriteria: {
+            tenantId: tenantId,
+            campaignNumber: projectId,
+            includePeriods: true,
+          },
+        };
+
+        const response = await PaymentSetUpService.billingConfigSearchByProjectId({ body });
+
+        if (response && response.periods && response.periods.length > 0) {
+          const periodOptions = response.periods.map((period) => ({
+            code: period.id,
+            name: `Period ${period.periodNumber} (${formatDate(period.periodStartDate)} - ${formatDate(period.periodEndDate)})`,
+            periodNumber: period.periodNumber,
+            periodStartDate: period.periodStartDate,
+            periodEndDate: period.periodEndDate,
+            status: period.status,
+            billingFrequency: period.billingFrequency,
+            ...period,
+          }));
+
+          periodOptions.sort((a, b) => a.periodNumber - b.periodNumber);
+          Digit.SessionStorage.set("projectPeriods", periodOptions);
+        } else {
+          Digit.SessionStorage.del("projectPeriods");
+        }
+      } catch (error) {
+        console.error("Error fetching billing periods:", error);
+        Digit.SessionStorage.del("projectPeriods");
+      }
+    },
+    [tenantId]
+  );
+
+  useEffect(() => {
+    const periodsCheck = Digit.SessionStorage.get("projectPeriods") || [];
+    if (periodsCheck.length == 0) {
+      if (project?.[0]?.referenceID || project?.[0]?.id) {
+        fetchBillingPeriods(project?.[0]?.referenceID || project?.[0]?.id);
+      }
+    }
+  }, [fetchBillingPeriods]);
+
+  // When BillData changes, update table data
+  useEffect(() => {
+    if (BillData) {
+      const bills = BillData.bills || [];
+      setTableData(bills);
+      setTotalCount(BillData?.pagination?.totalCount || bills.length);
+    }
+  }, [BillData]);
+
+  // Refetch on filter change
+  useEffect(() => {
+    refetchBill();
+  }, [billID, dateRange, limitAndOffset, periodType, activeLink.code]);
+
+  const onSubmit = (billID, dateRange, selectedBillType) => {
+    if (dateRange.startDate !== "" && dateRange.endDate !== "") {
+      const filteredPeriods = findAllOverlappingPeriods(
+        dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
+        dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+      ).map((x) => x?.id);
+
+      if (filteredPeriods.length == 0) {
+        setTableData([]);
+        setTotalCount(0);
+        return;
+      }
+    }
+    setBillID(billID);
+    setDateRange(dateRange);
+    setPeriodType(selectedBillType);
+  };
+
+  const onClear = () => {
+    setDateRange({ startDate: "", endDate: "", title: "" });
+    setBillID("");
+    setPeriodType(null);
+  };
+
+  if (isBillLoading) {
+    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
+  }
+
+  return (
+    <React.Fragment>
+      <Header styles={{ fontSize: "32px" }}>
+        <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+      </Header>
+
+      <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
+
+      <Card>
+        <Tab
+          activeLink={activeLink?.code}
+          configItemKey="code"
+          configDisplayKey="name"
+          itemStyle={{
+            flex: "1 1 auto",
+            textAlign: "center",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            minWidth: "200px",
+          }}
+          configNavItems={[
+            {
+              code: "NOT_VERIFIED",
+              name: t("HCM_AM_NOT_VERIFIED"),
+            },
+            {
+              code: "VERIFICATION_IN_PROGRESS",
+              name: t("HCM_AM_VERIFICATION_IN_PROGRESS"),
+            },
+            {
+              code: "PARTIALLY_VERIFIED",
+              name: t("HCM_AM_PARTIALLY_VERIFIED"),
+            },
+            {
+              code: "FULLY_VERIFIED",
+              name: t("HCM_AM_VERIFIED"),
+            },
+            {
+              code: "SENT_FOR_REVIEW",
+              name: t("HCM_AM_SENT_FOR_REVIEW"),
+            },
+          ]}
+          navStyles={{
+            display: "flex",
+            width: "100%",
+          }}
+          onTabClick={(e) => {
+            setCurrentPage(1);
+            setLimitAndOffset({ limit: rowsPerPage, offset: 0 });
+            setActiveLink(e);
+          }}
+          setActiveLink={setActiveLink}
+          showNav={true}
+          style={{ width: "100%" }}
+        />
+
+        {isFetching ? (
+          <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
+        ) : tableData.length === 0 ? (
+          <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
+        ) : (
+          <ManageBillsTable
+            data={tableData.sort((a, b) => (a?.auditDetails?.createdTime || 0) - (b?.auditDetails?.createdTime || 0))}
+            totalCount={totalCount}
+            rowsPerPage={rowsPerPage}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
+            handlePerRowsChange={handlePerRowsChange}
+            onSelectionChange={setSelectedBills}
+            clearSelectedRows={clearSelectedRows}
+            activeTab={activeLink.code}
+          />
+        )}
+      </Card>
+
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          label={showToast.label}
+          type={showToast.key}
+          transitionTime={showToast.transitionTime}
+          onClose={() => setShowToast(null)}
+        />
+      )}
+
+      <ActionBar style={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
+        <Button
+          variation="secondary"
+          label={t("HCM_AM_BACK")}
+          icon="ArrowBack"
+          onClick={() => history.goBack()}
+        />
+        {activeLink.code === "NOT_VERIFIED" && (
+          <Button
+            variation="primary"
+            label={t("HCM_AM_VERIFY_BILLS")}
+            isDisabled={selectedBills.length === 0}
+            onClick={() => {
+              Digit.SessionStorage.set("selectedBillsForVerification", selectedBills);
+              history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`);
+            }}
+          />
+        )}
+      </ActionBar>
+    </React.Fragment>
+  );
+};
+
+export default ManageBills;
