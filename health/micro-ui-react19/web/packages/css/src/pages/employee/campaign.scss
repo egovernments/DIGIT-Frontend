@@ -1261,3 +1261,78 @@
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+.reports-configuration {
+  &__heading {
+  font-family: var(--digitv2-fontFamily-rc);
+  font-weight: var(--digitv2-fontWeight-bold);
+  font-style: Bold;
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  color: var(--digitv2-lightTheme-primary-2) !important;
+  }
+
+  &__description {
+      margin: 0rem;
+  color: var(--digitv2-lightTheme-text-color-secondary);
+  }
+
+  &__count {
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  &__checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__not-applicable {
+    font-size: 0.75rem;
+    color: var(--digitv2-lightTheme-text-secondary);
+    font-style: italic;
+  }
+
+  &__frequency-card {
+    padding: 0rem;
+  }
+
+  &__frequency-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+
+    &--bordered {
+      border-bottom: 1px solid var(--digitv2-lightTheme-generic-divider);
+    }
+  }
+
+  &__frequency-row-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  &__frequency-row-label {
+    flex: 1;
+    font-size: 0.875rem;
+  }
+
+  &__frequency-row-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+}
