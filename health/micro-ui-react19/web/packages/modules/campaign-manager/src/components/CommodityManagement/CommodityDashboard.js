@@ -238,7 +238,10 @@ const CommodityDashboard = () => {
                   ? "digit-dss-switch-tab-selected"
                   : "digit-dss-switch-tab-unselected"
               }
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => {
+                setActiveTab(tab.key);
+                if (refetchStockData) refetchStockData();
+              }}
             >
               {tab.label}
             </div>

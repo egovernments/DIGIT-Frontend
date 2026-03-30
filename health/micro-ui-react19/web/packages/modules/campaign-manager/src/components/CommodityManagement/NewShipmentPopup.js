@@ -317,11 +317,21 @@ const NewShipmentPopup = ({
     return userLevel ? [userLevel] : [];
   }, [userBoundary, effectiveHierarchy]);
 
-  // To: only show the immediate child level below From (one level dropdown)
+  // To: show hierarchy levels below From based on context
+  // - Top level (Country): only the immediate next level
+  // - Non-top level: all levels below From except the last level of the full hierarchy
+  // - Edge case: always show at least 1 To level
   const toVisibleLevels = useMemo(() => {
     if (!toHierarchyLevels.length) return [];
-    return toHierarchyLevels.slice(0, 1);
-  }, [toHierarchyLevels]);
+    const fromBType = effectiveHierarchy[fromSelectedLevel]?.boundaryType;
+    const fromIsTopLevel = isTopLevel || fromBType === sortedHierarchy[0]?.boundaryType;
+    if (fromIsTopLevel) {
+      return toHierarchyLevels.slice(0, 1);
+    }
+    const lastBoundaryType = sortedHierarchy[sortedHierarchy.length - 1]?.boundaryType;
+    const withoutLast = toHierarchyLevels.filter((h) => h.boundaryType !== lastBoundaryType);
+    return withoutLast.length > 0 ? withoutLast : toHierarchyLevels.slice(0, 1);
+  }, [toHierarchyLevels, isTopLevel, effectiveHierarchy, fromSelectedLevel, sortedHierarchy]);
 
   // "From" uses the exact projectId passed from the dashboard (user's assigned project)
   const fromFilteredProjectIds = useMemo(() => {
@@ -1033,9 +1043,8 @@ const NewShipmentPopup = ({
       }
 
       // --- Upload validations ---
+      // Validate against the specific facilities selected in the popup, not all available
       const errors = [];
-      const validFromIds = new Set((fromFacilityList || []).map((f) => f.id));
-      const validToIds = new Set((toFacilityList || []).map((f) => f.id));
 
       dataRows.forEach((row, rowIdx) => {
         const rowNum = rowIdx + 3; // Excel row number
@@ -1051,14 +1060,14 @@ const NewShipmentPopup = ({
 
         if (!senderId) {
           errors.push(`Row ${rowNum}: Missing From Facility Code`);
-        } else if (validFromIds.size > 0 && !validFromIds.has(senderId)) {
-          errors.push(`Row ${rowNum}: Invalid From Facility "${senderId}"`);
+        } else if (senderId !== fromFacilityId) {
+          errors.push(`Row ${rowNum}: From Facility "${senderId}" doesn't match selected From Facility`);
         }
 
         if (!receiverId) {
           errors.push(`Row ${rowNum}: Missing To Facility Code`);
-        } else if (validToIds.size > 0 && !validToIds.has(receiverId)) {
-          errors.push(`Row ${rowNum}: Invalid To Facility "${receiverId}"`);
+        } else if (!selectedFacilityIds.has(receiverId)) {
+          errors.push(`Row ${rowNum}: To Facility "${receiverId}" is not one of the selected To Facilities`);
         }
 
         if (senderId && receiverId && senderId === receiverId) {
@@ -1477,7 +1486,13 @@ const NewShipmentPopup = ({
                           marginBottom: "1rem",
                         }}
                       >
-                        {toVisibleLevels.map((h) => {
+                        {toVisibleLevels.map((h, idx) => {
+                          // Progressive reveal: only show this level if all previous levels have selections
+                          if (idx > 0) {
+                            const prevBoundaryType = toVisibleLevels[idx - 1]?.boundaryType;
+                            const prevSelected = toHierarchyFilters[prevBoundaryType];
+                            if (!prevSelected || (Array.isArray(prevSelected) && prevSelected.length === 0)) return null;
+                          }
                           const options = hierarchyFilterOptions[h.boundaryType];
                           if (!options) return null;
                           const availableOptions = getAvailableOptions(h.boundaryType, { ...fromHierarchyFilters, ...toHierarchyFilters });
