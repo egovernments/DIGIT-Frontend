@@ -12,6 +12,23 @@ import { downloadFileWithName, formatTimestampToDate,formatTimestampToDateTime }
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
+
+const BILL_STATUS_VIEW = {
+  PENDING_VERIFICATION: "NOT_VERIFIED_VIEW",
+  VERIFICATION_IN_PROGRESS: "VERIFICATION_IN_PROGRESS_VIEW",
+  PARTIALLY_VERIFIED: "PARTIALLY_VERIFIED_VIEW",
+  FULLY_VERIFIED: "VERIFIED_VIEW",
+  SENT_FOR_REVIEW: "SENT_FOR_REVIEW_VIEW"
+};
+
+const STATUS_DISPLAY_MAP = {
+  PENDING_VERIFICATION: "HCM_AM_NOT_VERIFIED",
+  VERIFICATION_IN_PROGRESS: "HCM_AM_SENT_FOR_PAYMENT_REVIEW",
+  PARTIALLY_VERIFIED: "HCM_AM_PARTIALLY_VERIFIED",
+  FULLY_VERIFIED: "HCM_AM_VERIFIED",
+  SENT_FOR_REVIEW: "HCM_AM_SENT_FOR_PAYMENT_REVIEW",
+};
+
 /**
  * @function BillPaymentDetails
  * @description This component is used to view attendance.
@@ -206,6 +223,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         userId: individual?.userDetails?.username,
         role: matchedSkill?.type,
         wage: wage,
+        perDay: rateBreakup.PER_DAY || 0,
+        food: rateBreakup.FOOD || 0,
+        travel: rateBreakup.TRAVEL || 0,
+        misc: 0,
+        payeeName: "\u2014",
       };
     });
   }
@@ -725,34 +747,53 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     setClearSelectedRows(prev => !prev);
   }, [activeLink])
   useEffect(() => {
+    if (!billData) return;
+    if (editBillDetails) {
+      setActiveLink({ code: "PENDING_FOR_EDIT", name: t("HCM_AM_PENDING_FOR_EDIT") });
+    } else if (billData?.status === "PARTIALLY_VERIFIED") {
+      setActiveLink({ code: "VERIFICATION_FAILED", name: t("HCM_AM_VERIFICATION_FAILED") });
+    }
+  }, [billData?.status]);
+
+  useEffect(() => {
     if (billData && AllIndividualsData) {
       const enriched = addIndividualDetailsToBillDetails(
         billData?.billDetails,
         AllIndividualsData,
         workerRatesData
       );
-      const statusMap = {
-        VERIFICATION_FAILED: ["VERIFICATION_FAILED"], //send for edit action
-        PAYMENT_FAILED: ["PAYMENT_FAILED"],
-        VERIFIED: ["VERIFIED"], //generate payment action
-        PAYMENT_GENERATED: ["PAID"],
-        NOT_VERIFIED: ["PENDING_VERIFICATION", "EDITED","PENDING_EDIT"], //verify action
-        PENDING_FOR_EDIT: ["PENDING_EDIT"], //EDIT action
-        EDITED: ["EDITED"]
-      };
-      const filtered = enriched.filter((item) =>
-        statusMap[activeLink.code]?.includes(item.status)
-      );
-      console.log("Filtered Data:", filtered);
-      setTableData(filtered || []);
-        const counts = {};
-    Object.keys(statusMap).forEach((key) => {
-      counts[key] = enriched.filter((item) =>
-        statusMap[key]?.includes(item.status)
-      ).length;
-    });
 
-    setTabCounts(counts);
+      const view = editBillDetails
+        ? "EDIT_VIEW"
+        : BILL_STATUS_VIEW[billData?.status] || "NOT_VERIFIED_VIEW";
+
+      if (view === "PARTIALLY_VERIFIED_VIEW") {
+        const filtered = enriched.filter((item) =>
+          activeLink?.code === "VERIFICATION_FAILED"
+            ? item.status === "VERIFICATION_FAILED"
+            : item.status === "VERIFIED"
+        );
+        setTableData(filtered || []);
+      } else if (view === "EDIT_VIEW") {
+        const editStatusMap = {
+          PENDING_FOR_EDIT: ["PENDING_EDIT"],
+          EDITED: ["EDITED"],
+        };
+        const filtered = enriched.filter((item) =>
+          editStatusMap[activeLink?.code]?.includes(item.status)
+        );
+        setTableData(filtered || []);
+      } else {
+        setTableData(enriched || []);
+      }
+
+      const counts = {
+        VERIFICATION_FAILED: enriched.filter((item) => item.status === "VERIFICATION_FAILED").length,
+        VERIFIED: enriched.filter((item) => item.status === "VERIFIED").length,
+        PENDING_FOR_EDIT: enriched.filter((item) => item.status === "PENDING_EDIT").length,
+        EDITED: enriched.filter((item) => item.status === "EDITED").length,
+      };
+      setTabCounts(counts);
     }
   }, [AllIndividualsData, billData, activeLink]);
 
@@ -767,6 +808,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
 
+
+  const currentView = editBillDetails
+    ? "EDIT_VIEW"
+    : BILL_STATUS_VIEW[billData?.status] || "NOT_VERIFIED_VIEW";
 
   if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading) {
     console.log("Loading bill data or individual data...");
@@ -891,6 +936,39 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
           {editBillDetails ? t('HCM_AM_EDIT_BILL') : t('HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')}
         </Header>
+        {currentView !== "PARTIALLY_VERIFIED_VIEW" && (
+        <>
+        {/* Summary cards row */}
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+          {[
+            {
+              label: t("HCM_AM_BILL_AMOUNT"),
+              value: billData?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || t("NA"),
+            },
+            {
+              label: t("HCM_AM_NUMBER_OF_WORKERS"),
+              value: billData?.billDetails?.length || t("NA"),
+            },
+            {
+              label: t("HCM_AM_NO_OF_REGISTERS"),
+              value: billData?.additionalDetails?.noOfRegisters || t("NA"),
+            },
+          ].map((item, idx) => (
+            <Card
+              key={idx}
+              type="primary"
+              style={{ flex: 1, textAlign: "center", padding: "1rem" }}
+            >
+              <div style={{ fontSize: "13px", color: "#787878", marginBottom: "0.4rem" }}>
+                {item.label}
+              </div>
+              <div style={{ fontSize: "22px", fontWeight: "700", color: "#0B4B66" }}>
+                {item.value}
+              </div>
+            </Card>
+          ))}
+        </div>
+
         <Card type="primary" className="bottom-gap-card-payment">
           {isBillLoading || isFetching ? (
             <Loader />
@@ -898,8 +976,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             <>
               {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"), { color: "#C84C0E" })}
               {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
-              {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
-              {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
+              {/* {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))} */}
+              {/* {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))} */}
               {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
               {renderLabelPair(
                 'HCM_AM_STATUS',
@@ -920,7 +998,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     textAlign: "center",
                   }}
                 >
-                  {t(billData?.status || "NA")}
+                  {t(STATUS_DISPLAY_MAP[billData?.status] || billData?.status || "NA")}
                 </span>
               )}
 
@@ -1089,73 +1167,59 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             </>
           )}
         </Card>
+        </>
+        )}
 
-        {
-          (
+        {/* Tabs: only for PARTIALLY_VERIFIED and EDIT views */}
+        {(currentView === "PARTIALLY_VERIFIED_VIEW" || currentView === "EDIT_VIEW") && (
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
               configDisplayKey="name"
               itemStyle={{
-                  flex: "1 1 auto",        
-                  textAlign: "center",     
-                  overflow: "hidden",     
-                  whiteSpace: "nowrap",   
+                  flex: "1 1 auto",
+                  textAlign: "center",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   minWidth: "240px"
               }}
-              configNavItems={!editBillDetails ? [
+              configNavItems={currentView === "PARTIALLY_VERIFIED_VIEW" ? [
                 {
-        code: "NOT_VERIFIED",
-        name: `${t("HCM_AM_NOT_VERIFIED")} (${tabCounts["NOT_VERIFIED"] || 0})`,
-      },
-      {
-        code: "VERIFICATION_FAILED",
-        name: `${t("HCM_AM_VERIFICATION_FAILED")} (${tabCounts["VERIFICATION_FAILED"] || 0})`,
-      },
-      {
-        code: "VERIFIED",
-        name: `${t("HCM_AM_VERIFIED")} (${tabCounts["VERIFIED"] || 0})`,
-      },
-      {
-        code: "PAYMENT_GENERATED",
-        name: `${t("HCM_AM_PAYMENT_GENERATED")} (${tabCounts["PAYMENT_GENERATED"] || 0})`,
-      },
-      {
-        code: "PAYMENT_FAILED",
-        name: `${t("HCM_AM_PAYMENT_FAILED")} (${tabCounts["PAYMENT_FAILED"] || 0})`,
-      },
-    ]
-  : [
-      {
-        code: "PENDING_FOR_EDIT",
-        name: `${t("HCM_AM_PENDING_FOR_EDIT")} (${tabCounts["PENDING_FOR_EDIT"] || 0})`,
-      },
-      {
-        code: "EDITED",
-        name: `${t("HCM_AM_EDITED")} (${tabCounts["EDITED"] || 0})`,
-      },
-                ]}
+                  code: "VERIFICATION_FAILED",
+                  name: `${t("HCM_AM_VERIFICATION_FAILED")} (${tabCounts["VERIFICATION_FAILED"] || 0})`,
+                },
+                {
+                  code: "VERIFIED",
+                  name: `${t("HCM_AM_VERIFIED")} (${tabCounts["VERIFIED"] || 0})`,
+                },
+              ] : [
+                {
+                  code: "PENDING_FOR_EDIT",
+                  name: `${t("HCM_AM_PENDING_FOR_EDIT")} (${tabCounts["PENDING_FOR_EDIT"] || 0})`,
+                },
+                {
+                  code: "EDITED",
+                  name: `${t("HCM_AM_EDITED")} (${tabCounts["EDITED"] || 0})`,
+                },
+              ]}
               navStyles={{
                   display: "flex",
                   width: "100%",
-                }}
+              }}
               onTabClick={(e) => {
-                setLimitAndOffset((prev) => {
-                  return {
+                setLimitAndOffset((prev) => ({
                     limit: prev.limit,
                     offset: 0,
-                  };
-                });
+                }));
                 setCurrentPage(1);
-                setActiveLink(e);                
+                setActiveLink(e);
               }}
               setActiveLink={setActiveLink}
               showNav={true}
-              style={{ width: "100%" }} 
+              style={{ width: "100%" }}
             />
-          )
-        }
+        )}
         <Card style={{ width: "100%", }}>
           {isBillLoading || isFetching ? (
             <Loader />
@@ -1166,8 +1230,16 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               <BillDetailsTable
                 style={{ width: "100%", }}
                 data={paginatedData} totalCount={tableData.length}
-                selectableRows={!["PAYMENT_GENERATED", "EDITED"].includes(activeLink?.code)}
+                selectableRows={
+                  currentView === "EDIT_VIEW"
+                    ? activeLink?.code !== "EDITED"
+                    : currentView === "PARTIALLY_VERIFIED_VIEW"
+                      ? activeLink?.code === "VERIFICATION_FAILED"
+                      : !["VERIFICATION_IN_PROGRESS_VIEW", "SENT_FOR_REVIEW_VIEW"].includes(currentView)
+                }
                 status={activeLink?.code}
+                billStatus={billData?.status}
+                subTab={currentView === "PARTIALLY_VERIFIED_VIEW" ? activeLink?.code : null}
                 editBill={editBillDetails}
                 clearSelectedRows={clearSelectedRows}
                 onSelectionChange={setSelectedRows}
@@ -1176,7 +1248,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 isSelectionDisabledVerify={isSelectionDisabledVerify}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
-                workerRatesData = {workerRatesData}
+                workerRatesData={workerRatesData}
               />
             </Fragment>
           )}
@@ -1209,135 +1281,67 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           setOpenSendForEditPopUp(false);
         }}
       />}
-      {/* action bar for bill generation*/}
-      {/* {showGenerateBillAction && BillData?.bills?.length === 0 && */}
-      {activeLink?.code !== "PAYMENT_GENERATED" && (
-        <ActionBar
-          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
-        >
-          {!editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
-              [
-                <Button
-                  className="custom-class"
-                  iconFill=""
-                  label={t(`HCM_AM_VERIFY`)}
-                  menuStyles={{
-                    bottom: "40px",
-                  }}
-                  optionsKey="name"
-                  onClick={() => {
-                    setOpenVerifyAlertPopUp(true);
-                  }}
-                  size=""
-                  style={{ minWidth: "14rem" }}
-                  title=""
-                  type="button"
-                  variation="primary"
-                  isDisabled={selectedRows.length === 0}
-
-                />
-              ] :
-              !editBillDetails && activeLink?.code === 'VERIFICATION_FAILED' ?
-                [
-                  <Button
-                    className="custom-class"
-                    icon="Arrow"
-                    label={t(`HCM_AM_SEND_FOR_EDIT`)}
-                    menuStyles={{
-                      bottom: "40px",
-                    }}
-                    onClick={() => {
-                      // triggerSearchHrmsUsers();
-                      setOpenSendForEditPopUp(true);
-                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
-                    }}
-                    optionsKey="name"
-                    size=""
-                    style={{ minWidth: "14rem" }}
-                    title=""
-                    type="button"
-                    // variation="secondary"
-                    variation="primary"
-                    isDisabled={
-                      // billData?.status === "PENDING_VERIFICATION" ||
-                      selectedRows.length === 0}
-                  />
-                ] :
-                editBillDetails && activeLink?.code === 'PENDING_FOR_EDIT' ?
-                  [
-                    <Button
-                      className="custom-class"
-                      icon="Arrow"
-                      label={t(`HCM_AM_SAVE_CHANGES_AND_FORWARD`)}
-                      menuStyles={{
-                        bottom: "40px",
-                      }}
-                      onClick={() => {
-                        //TODO: add alert popup
-                        setOpenEditAlertPopUp(true);
-                        // triggerIndividualBulkUpdate(AllIndividualsData,selectedRows, billData);
-                        // setOpenSendForEditPopUp(true);
-                      }}
-                      optionsKey="name"
-                      size=""
-                      style={{ minWidth: "14rem" }}
-                      title=""
-                      type="button"
-                      variation="primary"
-                      isDisabled={selectedRows.length === 0}
-
-                    />
-                  ]
-                  : !editBillDetails && activeLink?.code === 'VERIFIED' ? [
-                    <Button
-                      label={t(`HCM_AM_GENERATE_PAYMENT`)}
-                      title={t(`HCM_AM_GENERATE_PAYMENT`)}
-                      onClick={() => {
-                        setOpenApprovePaymentAlertPopUp(true);
-                      }}
-                      style={{ minWidth: "14rem" }}
-                      type="button"
-                      variation="primary"
-                      isDisabled={selectedRows.length === 0}
-                    // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-                    />
-                  ]
-                   : !editBillDetails && activeLink?.code === 'PAYMENT_FAILED' ? [
-                    <Button
-                    className="custom-class"
-                    icon="Arrowback"
-                    label={t(`HCM_AM_SEND_FOR_EDIT`)}
-                    menuStyles={{
-                      bottom: "40px",
-                    }}
-                    onClick={() => {
-                      setOpenSendForEditPopUp(true);
-                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
-                    }}
-                    optionsKey="name"
-                    size=""
-                    style={{ minWidth: "14rem" }}
-                    title=""
-                    type="button"
-                    variation="secondary"
-
-                    isDisabled={selectedRows.length === 0}
-                  />,
-                    <Button
-                      label={t(`HCM_AM_GENERATE_PAYMENT`)} //TODO : change to RETRY PAYMENT
-                      title={t(`HCM_AM_GENERATE_PAYMENT`)}
-                      onClick={() => {
-                        setOpenApprovePaymentAlertPopUp(true);
-                      }}
-                      style={{ minWidth: "14rem" }}
-                      type="button"
-                      variation="primary"
-                      isDisabled={selectedRows.length === 0}
-                    // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-                    />
-                  ]
-                    : null
-          }
+      {/* Action bar based on currentView */}
+      {currentView === "NOT_VERIFIED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_VERIFY`)}
+            onClick={() => setOpenVerifyAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "VERIFIED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_GENERATE_PAYMENT`)}
+            title={t(`HCM_AM_GENERATE_PAYMENT`)}
+            onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SEND_FOR_EDIT`)}
+            onClick={() => setOpenSendForEditPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFIED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_GENERATE_PAYMENT`)}
+            title={t(`HCM_AM_GENERATE_PAYMENT`)}
+            onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "EDIT_VIEW" && activeLink?.code === "PENDING_FOR_EDIT" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SAVE_CHANGES_AND_FORWARD`)}
+            onClick={() => setOpenEditAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
         </ActionBar>
       )}
       {/* /* Alert Pop-Up for approve */}
