@@ -1,9 +1,158 @@
+// import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
+// import { useTranslation } from "react-i18next";
+// import { useNavigate } from "react-router-dom";
+// import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+// import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
+// import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+
+// const NewAppModule = () => {
+//   const { t } = useTranslation();
+//   const navigate = useNavigate();
+//   const searchParams = new URLSearchParams(location.search);
+//   const campaignNumber = searchParams.get("campaignNumber");
+//   const projectType = searchParams.get("projectType");
+//   const tenantId = searchParams.get("tenantId");
+//   const viewMode = searchParams.get("viewMode") === "true";
+
+//   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
+//   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
+//     Digit.Utils.campaign.getMDMSV2Criteria(
+//       tenantId,
+//       schemaCode,
+//       {
+//         project: campaignNumber,
+//       },
+//       `MDMSDATA-${schemaCode}-${campaignNumber}`,
+//       {
+//         enabled: !!campaignNumber,
+//         cacheTime: 0,
+//         staleTime: 0,
+//       }
+//     )
+//   );
+
+//   // Sort mdmsData by order
+//   const sortedMdmsData = mdmsData?.slice().sort((a, b) => {
+//     const orderA = a?.data?.order ?? Number.MAX_SAFE_INTEGER;
+//     const orderB = b?.data?.order ?? Number.MAX_SAFE_INTEGER;
+//     return orderA - orderB;
+//   });
+
+//   const handleCardClick = (moduleName, version) => {
+//     navigate(
+//       `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=${moduleName}&version=${version}${viewMode ? "&viewMode=true" : ""}`
+//     );
+//   };
+
+//   if (isLoading) {
+//     return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.LOADING)} />;
+//   }
+
+//   return (
+//     <div className="app-modules-select-wrapper">
+//       <div>
+//         <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
+//           {t(I18N_KEYS.PAGES.HCM_CHOOSE_MODULE)}
+//         </HeaderComponent>
+//       </div>
+//       <EqualHeightWrapper deps={[sortedMdmsData]}>
+//         <div className="modules-container">
+//           {sortedMdmsData?.map((item, index) => {
+//             const isActive = item?.data?.active === true;
+//             const isVisited = item?.data?.version > 1;
+
+//             return (
+//               <Card
+//                 key={item?.id || index}
+//                 className={`module-card ${isActive ? "selected-card" : ""}`}
+//                 onClick={() => {}}
+//                 id={`setup-mobile-app-card-${item?.data?.name}`}
+//                 style={{
+//                   cursor: "pointer",
+//                   position: "relative",
+//                 }}
+//               >
+//                 {isVisited && (
+//                   <SVG.CheckCircle
+//                     fill={"#00703C"}
+//                     width={"3rem"}
+//                     height={"3rem"}
+//                     style={{
+//                       position: "absolute",
+//                       left: "-10px",
+//                       top: "-14px",
+//                     }}
+//                   />
+//                 )}
+//                 <HeaderComponent className={`detail-header ${isActive ? "selected-header" : ""}`}>{t(item?.data?.name)}</HeaderComponent>
+//                 <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0" }} />
+//                 <p className="module-description">{item?.data?.description || t(`MODULE_DESCRIPTION_${item?.data?.name}`)}</p>
+
+//                 <Button
+//                   type="button"
+//                   size="medium"
+//                   variation={isVisited ? "secondary" : isActive ? "primary" : "secondary"}
+//                   icon={isVisited && !viewMode ? "Edit" : null}
+//                   className={`campaign-module-button ${isVisited || isActive ? "primaryButton" : "secondButton"}`}
+//                   label={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
+//                   title={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
+//                   onClick={(e) => {
+//                     e.stopPropagation(); // Prevent card click
+//                     if (isActive) {
+//                       // Handle button click for allowed modules
+//                       handleCardClick(item?.data?.name, item?.data?.version);
+//                     }
+//                   }}
+//                   isDisabled={!isActive}
+//                   id={`setup-mobile-app-card-${item?.data?.name}`}
+//                   style={{
+//                     marginTop: "1rem",
+//                     width: "100%",
+//                   }}
+//                 />
+//               </Card>
+//             );
+//           })}
+//         </div>
+//       </EqualHeightWrapper>
+//       <Footer
+//         actionFields={[
+//           <Button
+//             icon="ArrowBack"
+//             label={t(I18N_KEYS.COMMON.GO_BACK)}
+//             title={t(I18N_KEYS.COMMON.GO_BACK)}
+//             onClick={() => {
+//               // Handle back navigation - could go to module selection or previous screen
+//               navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+//             }}
+//             type="button"
+//             variation="secondary"
+//             style={{
+//               marginLeft: "4rem",
+//               minWidth: "12.5rem",
+//             }}
+//           />,
+//         ]}
+//         maxActionFieldsAllowed={5}
+//       />
+//     </div>
+//   );
+// };
+
+// export default NewAppModule;
+
+
+
+
+
+import { useState } from "react";
 import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import AttendanceFeatureFlowPopup from "./AttendanceFeatureFlowPopup";
 
 const NewAppModule = () => {
   const { t } = useTranslation();
@@ -13,6 +162,7 @@ const NewAppModule = () => {
   const projectType = searchParams.get("projectType");
   const tenantId = searchParams.get("tenantId");
   const viewMode = searchParams.get("viewMode") === "true";
+  const [showAttendanceFlow, setShowAttendanceFlow] = useState(false);
 
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
@@ -97,9 +247,8 @@ const NewAppModule = () => {
                   label={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
                   title={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click
+                    e.stopPropagation();
                     if (isActive) {
-                      // Handle button click for allowed modules
                       handleCardClick(item?.data?.name, item?.data?.version);
                     }
                   }}
@@ -113,6 +262,43 @@ const NewAppModule = () => {
               </Card>
             );
           })}
+
+          {/* Attendance Flow Card */}
+          <Card
+            key="attendance-flow-card"
+            className="module-card selected-card"
+            onClick={() => {}}
+            id="setup-mobile-app-card-attendance"
+            style={{
+              cursor: "pointer",
+              position: "relative",
+            }}
+          >
+            <HeaderComponent className="detail-header selected-header">
+              {t("ATTENDANCE")}
+            </HeaderComponent>
+            <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0" }} />
+            <p className="module-description">
+              {t("MODULE_DESCRIPTION_ATTENDANCE")}
+            </p>
+            <Button
+              type="button"
+              size="medium"
+              variation="primary"
+              className="campaign-module-button primaryButton"
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAttendanceFlow(true);
+              }}
+              id="setup-mobile-app-card-attendance-btn"
+              style={{
+                marginTop: "1rem",
+                width: "100%",
+              }}
+            />
+          </Card>
         </div>
       </EqualHeightWrapper>
       <Footer
@@ -122,7 +308,6 @@ const NewAppModule = () => {
             label={t(I18N_KEYS.COMMON.GO_BACK)}
             title={t(I18N_KEYS.COMMON.GO_BACK)}
             onClick={() => {
-              // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
             }}
             type="button"
@@ -135,6 +320,16 @@ const NewAppModule = () => {
         ]}
         maxActionFieldsAllowed={5}
       />
+
+      {/* Attendance Feature Flow Popup */}
+      {showAttendanceFlow && (
+        <AttendanceFeatureFlowPopup
+          onClose={() => setShowAttendanceFlow(false)}
+          campaignNumber={campaignNumber}
+          projectType={projectType}
+          tenantId={tenantId}
+        />
+      )}
     </div>
   );
 };
