@@ -180,8 +180,8 @@ const FeatureSelectionStep = ({
         padding: "2rem",
         background: "#FFFFFF",
         borderRadius: "0.75rem",
-        maxHeight: "80vh",
-        overflow: "auto",
+        // maxHeight: "80vh",
+        // overflow: "auto",
       }}
     >
       {/* Header */}
@@ -202,7 +202,7 @@ const FeatureSelectionStep = ({
         >
           <HeaderComponent
             style={{
-              fontSize: "2rem",
+              fontSize: "5rem",
               lineHeight: "114%",
               color: "#0B4B66",
               margin: 0,
@@ -765,8 +765,8 @@ const SuccessStep = ({ onContinue }) => {
         footerChildren={[
           <Button
             key="continue"
-            label={t(I18N_KEYS.CAMPAIGN_CREATE.CONTINUE_TO_APP_CONFIGURATION)}
-            title={t(I18N_KEYS.CAMPAIGN_CREATE.CONTINUE_TO_APP_CONFIGURATION)}
+            label={t(I18N_KEYS.CAMPAIGN_CREATE.START_APPLICATION_CONFIGURATION)}
+            title={t(I18N_KEYS.CAMPAIGN_CREATE.START_APPLICATION_CONFIGURATION)}
             variation="primary"
             onClick={onContinue}
             style={{ width: "100%" }}
@@ -830,14 +830,10 @@ const AttendanceFeatureFlowPopup = ({
     );
   }, [onClose, navigate, campaignNumber]);
 
-  /** Portal so the popup escapes side panels and fills the viewport layer */
-  function BodyPortal({ children }) {
-    if (typeof document === "undefined") return null; // SSR guard
-    return ReactDOM.createPortal(children, document.body);
-  }
+
 
   return (
-    // <BodyPortal>
+  
       <PopUp
         style={{ maxWidth: "70rem", width: "100%", padding: 0 }}
         type="default"
@@ -873,7 +869,7 @@ const AttendanceFeatureFlowPopup = ({
         ]}
         sortFooterChildren={false}
       />
-    // </BodyPortal>
+   
   );
 };
 
