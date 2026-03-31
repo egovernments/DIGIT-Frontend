@@ -12,9 +12,9 @@ import {
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
 import { I18N_KEYS } from "../../utils/i18nKeyConstants";
+import { useCommodityProject } from "./CommodityProjectContext";
 
 const COMMODITY_KEYS = I18N_KEYS.COMMODITY_MANAGEMENT;
-const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
 /**
  * CommodityShipmentPopup — modal for creating a single stock shipment from a warehouse.
@@ -37,6 +37,7 @@ const CommodityShipmentPopup = ({
   productVariants = [],
   selectedCommodity: defaultCommodityId,
   warehouseStock = {},
+  isTopLevel = false,
   onClose,
   onSuccess,
 }) => {
@@ -67,169 +68,30 @@ const CommodityShipmentPopup = ({
     config: { enabled: false },
   });
 
-  const moduleName = Digit.Utils.campaign.getModuleName();
+  // Get user's projects from context (projectStaff → project search, already at correct level)
+  const { projects: contextProjects } = useCommodityProject();
 
-  // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS (same as BulkStockUpload)
-  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [{ name: "HierarchySchema", filter: `[?(@.type=='${moduleName}')]` }],
-    {
-      select: (data) =>
-        data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy,
-    },
-    { schemaCode: "HierarchySchema" },
-  );
+  // User's project and its direct child project IDs (one level below)
+  const userProject = (contextProjects || [])[0];
+  const userProjectId = userProject?.id;
 
-  // Fetch boundary hierarchy definition (same as BulkStockUpload)
-  const hierarchyDefCriteria = useMemo(
-    () => ({
-      url: `/boundary-service/boundary-hierarchy-definition/_search`,
-      changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
-      body: {
-        BoundaryTypeHierarchySearchCriteria: {
-          tenantId,
-          limit: 2,
-          offset: 0,
-          hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-        },
-      },
-      config: { enabled: !!BOUNDARY_HIERARCHY_TYPE },
-    }),
-    [tenantId, BOUNDARY_HIERARCHY_TYPE],
-  );
-  const { data: hierarchyDefinition, isLoading: hierarchyLoading } = Digit.Hooks.useCustomAPIHook(
-    hierarchyDefCriteria,
-  );
+  const toProjectIds = useMemo(() => {
+    if (!userProject?.descendants?.length) return [];
+    return userProject.descendants
+      .filter((d) => d.parent === userProjectId)
+      .map((d) => d.id);
+  }, [userProject, userProjectId]);
 
-  // Fetch boundary relationships for geographic containment filtering
-  const boundaryRelationshipCriteria = useMemo(() => ({
-    url: `/boundary-service/boundary-relationships/_search`,
-    params: {
-      tenantId,
-      hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-      includeChildren: true,
-    },
-    body: {},
-    config: {
-      enabled: !!BOUNDARY_HIERARCHY_TYPE,
-      cacheTime: 1000000,
-    },
-  }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
-
-  const { data: boundaryRelationships, isLoading: boundaryRelLoading } = Digit.Hooks.useCustomAPIHook(boundaryRelationshipCriteria);
-
-  // Build boundary code → ancestor path map
-  const boundaryAncestorMap = useMemo(() => {
-    const boundaries = boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
-    const map = {};
-    const traverse = (node, ancestors) => {
-      const currentPath = { ...ancestors };
-      if (node?.boundaryType && node?.code) {
-        currentPath[node.boundaryType] = node.code;
-      }
-      map[node?.code] = currentPath;
-      (node?.children || []).forEach((child) => traverse(child, currentPath));
-    };
-    boundaries.forEach((root) => traverse(root, {}));
-    return map;
-  }, [boundaryRelationships]);
-
-  // Build sorted hierarchy levels (same as BulkStockUpload)
-  const sortedHierarchy = useMemo(() => {
-    const bh =
-      hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
-    if (!bh.length) return [];
-    const sorted = [];
-    let current = bh.find((item) => !item?.parentBoundaryType);
-    while (current) {
-      sorted.push(current);
-      const next = bh.find(
-        (item) => item?.parentBoundaryType === current?.boundaryType,
-      );
-      if (!next) break;
-      current = next;
-    }
-    return sorted;
-  }, [hierarchyDefinition]);
-
-  // Step 1: Fetch campaign data to get projectId (same as BulkStockUpload)
-  const campaignReqCriteria = useMemo(
-    () => ({
-      url: `/project-factory/v1/project-type/search`,
-      body: {
-        CampaignDetails: {
-          tenantId: tenantId,
-          campaignNumber: campaignNumber,
-          isOverrideDatesFromProject: true,
-        },
-      },
-      config: {
-        enabled: !!campaignNumber,
-        staleTime: 0,
-        cacheTime: 0,
-        select: (data) => data?.CampaignDetails?.[0],
-      },
-    }),
-    [tenantId, campaignNumber],
-  );
-  const { data: campaignData, isLoading: campaignLoading } = Digit.Hooks.useCustomAPIHook(
-    campaignReqCriteria,
-  );
-  const resolvedProjectId = campaignData?.projectId;
-
-  // Step 2: Fetch all descendant project IDs + boundary map (same as BulkStockUpload)
-  const projectSearchCriteria = useMemo(
-    () => ({
-      url: `/project/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0, includeDescendants: true },
-      body: { Projects: [{ id: resolvedProjectId, tenantId }] },
-      config: {
-        enabled: !!resolvedProjectId,
-        select: (data) => {
-          const projects = data?.Project || [];
-          const ids = [];
-          const boundaryMap = {};
-          const collectProject = (proj) => {
-            if (proj?.id) {
-              ids.push(proj.id);
-              if (proj?.address?.boundary) {
-                boundaryMap[proj.id] = {
-                  boundary: proj.address.boundary,
-                  boundaryType: proj.address.boundaryType,
-                };
-              }
-            }
-          };
-          projects.forEach((proj) => {
-            collectProject(proj);
-            if (proj?.descendants) proj.descendants.forEach(collectProject);
-          });
-          if (ids.length === 0 && resolvedProjectId)
-            ids.push(resolvedProjectId);
-          return { ids, boundaryMap };
-        },
-      },
-    }),
-    [tenantId, resolvedProjectId],
-  );
-  const { data: projectData, isLoading: projectsLoading } = Digit.Hooks.useCustomAPIHook(
-    projectSearchCriteria,
-  );
-  const allProjectIds = projectData?.ids || [];
-  const projectBoundaryMap = projectData?.boundaryMap || {};
-
-  // Step 3: Fetch project-facility mappings (same as BulkStockUpload)
+  // Fetch project-facility mappings for descendant projects
   const facilityMappingCriteria = useMemo(
     () => ({
       url: `/project/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
-      body: { ProjectFacility: { projectId: allProjectIds } },
+      body: { ProjectFacility: { projectId: toProjectIds } },
       config: {
-        enabled: !!allProjectIds?.length,
+        enabled: !!toProjectIds?.length,
         select: (data) => {
           const facilityToProject = {};
-          const facilityToProjects = {}; // facilityId → [projectId, ...] (all mappings)
           const allFacilityIds = [];
           const seen = new Set();
           (data?.ProjectFacilities || []).forEach((pf) => {
@@ -237,40 +99,35 @@ const CommodityShipmentPopup = ({
             if (!facilityToProject[pf.facilityId]) {
               facilityToProject[pf.facilityId] = pf.projectId;
             }
-            if (!facilityToProjects[pf.facilityId]) {
-              facilityToProjects[pf.facilityId] = [];
-            }
-            facilityToProjects[pf.facilityId].push(pf.projectId);
             if (!seen.has(pf.facilityId)) {
               seen.add(pf.facilityId);
               allFacilityIds.push(pf.facilityId);
             }
           });
-          return { facilityToProject, facilityToProjects, allFacilityIds };
+          return { facilityToProject, allFacilityIds };
         },
       },
     }),
-    [tenantId, allProjectIds],
+    [tenantId, toProjectIds],
   );
   const { data: facilityMappingData, isLoading: facilityMappingLoading } = Digit.Hooks.useCustomAPIHook(
     facilityMappingCriteria,
   );
   const facilityToProject = facilityMappingData?.facilityToProject || {};
-  const facilityToProjects = facilityMappingData?.facilityToProjects || {};
-  const allMappedFacilityIds = facilityMappingData?.allFacilityIds || [];
+  const toFacilityIds = facilityMappingData?.allFacilityIds || [];
 
-  // Step 4: Fetch facility details (names) for all mapped facilities
+  // Fetch facility details (names) for the To facilities
   const facilityDetailsCriteria = useMemo(
     () => ({
       url: `/facility/v1/_search`,
       params: {
         tenantId,
-        limit: allMappedFacilityIds.length || 10,
+        limit: toFacilityIds.length || 10,
         offset: 0,
       },
-      body: { Facility: { id: allMappedFacilityIds } },
+      body: { Facility: { id: toFacilityIds } },
       config: {
-        enabled: !!allMappedFacilityIds.length && !!tenantId,
+        enabled: !!toFacilityIds.length && !!tenantId,
         select: (data) => {
           return (data?.Facilities || []).map((f) => ({
             id: f.id,
@@ -279,78 +136,16 @@ const CommodityShipmentPopup = ({
         },
       },
     }),
-    [tenantId, allMappedFacilityIds],
+    [tenantId, toFacilityIds],
   );
-  const { data: allCampaignFacilities = [], isLoading: facilityDetailsLoading } = Digit.Hooks.useCustomAPIHook(
+  const { data: toFacilitiesList = [], isLoading: facilityDetailsLoading } = Digit.Hooks.useCustomAPIHook(
     facilityDetailsCriteria,
   );
 
-  // Build hierarchy level index: boundaryType → level number (0 = top)
-  const hierarchyLevelIndex = useMemo(() => {
-    const map = {};
-    sortedHierarchy.forEach((h, idx) => {
-      map[h.boundaryType] = idx;
-    });
-    return map;
-  }, [sortedHierarchy]);
-
-  // Helper: get the deepest hierarchy level for a facility across all its project mappings
-  const getFacilityLevel = useCallback(
-    (facilityId) => {
-      const pids = facilityToProjects[facilityId] || [];
-      let deepest = -1;
-      for (const pid of pids) {
-        const bInfo = projectBoundaryMap[pid];
-        if (!bInfo?.boundaryType) continue;
-        const level = hierarchyLevelIndex[bInfo.boundaryType] ?? -1;
-        if (level > deepest) deepest = level;
-      }
-      return deepest;
-    },
-    [facilityToProjects, projectBoundaryMap, hierarchyLevelIndex],
-  );
-
-  // Determine the "From" facility's hierarchy level
-  const fromFacilityLevel = useMemo(() => {
-    return getFacilityLevel(fromFacility?.id);
-  }, [getFacilityLevel, fromFacility]);
-
-  // Get the From facility's boundary info for geographic containment filtering
-  const fromFacilityBoundary = useMemo(() => {
-    const pids = facilityToProjects[fromFacility?.id] || [];
-    for (const pid of pids) {
-      const bInfo = projectBoundaryMap[pid];
-      if (bInfo?.boundary && bInfo?.boundaryType) {
-        const level = hierarchyLevelIndex[bInfo.boundaryType] ?? -1;
-        if (level === fromFacilityLevel) return bInfo;
-      }
-    }
-    return null;
-  }, [facilityToProjects, fromFacility, projectBoundaryMap, hierarchyLevelIndex, fromFacilityLevel]);
-
-  // Filter "To" facilities: exclude source, only one level below AND under the same geographic subtree
+  // Filter To facilities: exclude From facility, apply search text
   const [toSearchText, setToSearchText] = useState("");
   const filteredToFacilities = useMemo(() => {
-    let list = allCampaignFacilities.filter((f) => f.id !== fromFacility?.id);
-    if (fromFacilityLevel >= 0) {
-      list = list.filter((f) => {
-        const level = getFacilityLevel(f.id);
-        if (level < 0) return false;
-        if (level !== fromFacilityLevel + 1) return false;
-
-        // Geographic containment: facility's boundary must have the From boundary as ancestor
-        if (fromFacilityBoundary) {
-          const fPids = facilityToProjects[f.id] || [];
-          return fPids.some((pid) => {
-            const bInfo = projectBoundaryMap[pid];
-            if (!bInfo?.boundary) return false;
-            const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
-            return ancestors[fromFacilityBoundary.boundaryType] === fromFacilityBoundary.boundary;
-          });
-        }
-        return true;
-      });
-    }
+    let list = toFacilitiesList.filter((f) => f.id !== fromFacility?.id);
     if (!toSearchText) return list;
     const lower = toSearchText.toLowerCase();
     return list.filter(
@@ -358,17 +153,7 @@ const CommodityShipmentPopup = ({
         f.name?.toLowerCase().includes(lower) ||
         f.id?.toLowerCase().includes(lower),
     );
-  }, [
-    allCampaignFacilities,
-    fromFacility,
-    toSearchText,
-    fromFacilityLevel,
-    getFacilityLevel,
-    fromFacilityBoundary,
-    facilityToProjects,
-    projectBoundaryMap,
-    boundaryAncestorMap,
-  ]);
+  }, [toFacilitiesList, fromFacility, toSearchText]);
 
   // Commodities available for dropdown: exclude already added items
   const availableCommodities = useMemo(() => {
@@ -388,7 +173,7 @@ const CommodityShipmentPopup = ({
     if (!qty || qty <= 0) {
       newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_MUST_BE_POSITIVE);
     }
-    if (selectedCommodity && qty > 0) {
+    if (!isTopLevel && selectedCommodity && qty > 0) {
       const available = warehouseStock[selectedCommodity.productVariantId] || 0;
       if (qty > available) {
         newErrors.quantity = `${t(
@@ -442,7 +227,7 @@ const CommodityShipmentPopup = ({
       const qty = parseInt(quantity, 10);
       if (qty > 0 && !shipmentItems.some((item) => item.productVariantId === selectedCommodity.productVariantId)) {
         const available = warehouseStock[selectedCommodity.productVariantId] || 0;
-        if (available > 0 && qty > available) {
+        if (!isTopLevel && available > 0 && qty > available) {
           newErrors.quantity = `${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
         } else {
           const autoItem = {
@@ -462,13 +247,15 @@ const CommodityShipmentPopup = ({
       newErrors.items = t(COMMODITY_KEYS.HCM_ADD_AT_LEAST_ONE_COMMODITY);
     }
 
-    // Re-validate all items against current stock
-    effectiveItems.forEach((item) => {
-      const available = warehouseStock[item.productVariantId] || 0;
-      if (item.quantity > available) {
-        newErrors.items = `${item.name}: ${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
-      }
-    });
+    // Re-validate all items against current stock (skip for top-level)
+    if (!isTopLevel) {
+      effectiveItems.forEach((item) => {
+        const available = warehouseStock[item.productVariantId] || 0;
+        if (item.quantity > available) {
+          newErrors.items = `${item.name}: ${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
+        }
+      });
+    }
 
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
@@ -481,14 +268,8 @@ const CommodityShipmentPopup = ({
     try {
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
-      // Use sender (From) facility's projectId from project-facility mapping
-      const rowProjectId = facilityToProject[fromFacility?.id] || "";
-      const resolvedRefId =
-        rowProjectId || campaignData?.projectId || campaignId;
-
-      // Resolve administrativeArea from sender (From) facility's project boundary
-      const fromProjectBoundary = projectBoundaryMap[rowProjectId];
-      const administrativeArea = fromProjectBoundary?.boundary || "";
+      const resolvedRefId = userProjectId || campaignId;
+      const administrativeArea = userProject?.address?.boundary || "";
 
       // Build stock payload matching APK structure for proper ES indexing
       const stockPayload = effectiveItems.map((item) => ({
@@ -586,9 +367,8 @@ const CommodityShipmentPopup = ({
     tenantId,
     fromFacility,
     stockMutation,
-    facilityToProject,
-    projectBoundaryMap,
-    campaignData,
+    userProjectId,
+    userProject,
     campaignId,
     waybillNumber,
     comment,
@@ -597,11 +377,6 @@ const CommodityShipmentPopup = ({
   ]);
 
   const isLoadingInitialData =
-    hierarchyTypeLoading ||
-    hierarchyLoading ||
-    boundaryRelLoading ||
-    campaignLoading ||
-    projectsLoading ||
     facilityMappingLoading ||
     facilityDetailsLoading;
 

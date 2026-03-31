@@ -569,9 +569,9 @@ const NewShipmentPopup = ({
 
   const { data: stockRecords } = Digit.Hooks.useCustomAPIHook(stockBalanceCriteria);
 
-  // Compute per-facility stock map from raw ES records using stockEntryType
+  // Compute per-facility stock map from raw ES records using stockEntryType + status
   // Records come from 2-query config: facilityId=fromFacilityId OR transactingFacilityId=fromFacilityId
-  // Must check which role fromFacilityId plays in each record
+  // Direction: RECEIVED → facilityId is receiver; DISPATCHED → facilityId is sender
   const facilityStockMap = useMemo(() => {
     if (!stockRecords?.length || !fromFacilityId) return {};
     const map = {};
@@ -582,39 +582,43 @@ const NewShipmentPopup = ({
     stockRecords.forEach((record) => {
       const pvId = record.productVariantId;
       const qty = record.quantity || 0;
-      const rawEntryType = record.stockEntryType || "";
+      const entryType = record.stockEntryType || "";
       const eventType = record.eventType || record.transactionType || "";
-      // Normalize: raw ES records may have mismatched stockEntryType (e.g., "LESS" for RECEIVED events)
-      const entryType = (rawEntryType === "RECEIPT" || eventType === "RECEIVED") ? "RECEIPT"
-        : (rawEntryType === "ISSUED" || eventType === "DISPATCHED") ? "ISSUED"
-        : rawEntryType;
       if (!pvId) return;
 
-      // Check if this ISSUED record was rejected via additionalFields status
-      const statusField = record.additionalFields?.fields?.find((f) => f.key === "status");
-      const isRejected = record.status === "REJECTED" || statusField?.value === "REJECTED";
+      // Determine direction: RECEIVED → facilityId is receiver, DISPATCHED → facilityId is sender
+      const isInbound = eventType === "RECEIVED";
+      const senderId = isInbound ? record.transactingFacilityId : record.facilityId;
+      const receiverId = isInbound ? record.facilityId : record.transactingFacilityId;
 
       if (entryType === "ISSUED") {
-        if (record.facilityId === fromFacilityId) {
-          if (isRejected) {
-            // Rejected dispatch: stock never left sender (net zero, don't deduct)
-          } else {
-            // I dispatched → -qty (stock left my warehouse, in transit)
-            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-          }
+        const status = record.status || "";
+        if (status === "REJECTED") {
+          // Rejected dispatch: stock came back, net zero
+        } else if (senderId === fromFacilityId) {
+          // ACCEPTED or IN_TRANSIT: stock physically left my warehouse
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
         }
-        // If someone dispatched TO me (transactingFacilityId=me): NO credit — still in transit
       } else if (entryType === "RECEIPT") {
-        if (record.facilityId === fromFacilityId) {
-          // I confirmed receipt → +qty (stock arrived and accepted)
+        if (receiverId === fromFacilityId) {
+          // I confirmed receipt → +qty
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
         }
-      } else if (entryType === "RETURNED") {
-        if (record.facilityId === fromFacilityId) {
-          // I returned stock → -qty (I had it and am returning it)
+      } else if (entryType === "EXCESS") {
+        // Received more than expected → additional stock for receiver
+        if (receiverId === fromFacilityId) {
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+        }
+      } else if (entryType === "LESS") {
+        // Received less than expected → reduces receiver stock
+        if (receiverId === fromFacilityId) {
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-        } else if (record.transactingFacilityId === fromFacilityId) {
-          // Stock returned TO me → +qty
+        }
+      } else if (entryType === "RETURNED") {
+        // Returner loses stock, original sender gains
+        if (senderId === fromFacilityId) {
+          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+        } else if (receiverId === fromFacilityId) {
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
         }
       }
