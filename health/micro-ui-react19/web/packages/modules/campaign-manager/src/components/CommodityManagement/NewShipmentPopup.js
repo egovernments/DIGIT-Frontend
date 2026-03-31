@@ -615,12 +615,18 @@ const NewShipmentPopup = ({
           init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
         }
       } else if (entryType === "RETURNED") {
-        // Returner loses stock, original sender gains
-        if (senderId === fromFacilityId) {
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-        } else if (receiverId === fromFacilityId) {
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+        const retStatus = record.status || "";
+        if (retStatus === "ACCEPTED") {
+          // Return confirmed: returner loses stock, original sender gains it back
+          if (senderId === fromFacilityId) {
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+          }
+          if (receiverId === fromFacilityId) {
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+          }
         }
+        // IN_TRANSIT: return initiated but not confirmed, no stock movement
+        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;

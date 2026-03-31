@@ -201,6 +201,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           }
         }
         // IN_TRANSIT: return not confirmed yet, don't count in commodity
+        // REJECTED: return rejected, stock stays with returner, no commodity impact
       }
     });
     return Object.values(commodityMap).map((c) => ({
@@ -317,16 +318,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] -= qty; }
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
-        if (retStatus === "REJECTED") {
-          // Rejected return: stock stays with returner, net zero
-        } else {
-          // ACCEPTED or IN_TRANSIT: stock physically left returner
+        if (retStatus === "ACCEPTED") {
+          // Return confirmed: returner loses stock, original sender gains it back
           if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
-          if (retStatus === "ACCEPTED" && stock.receiverId) {
-            // Return confirmed: receiver gains stock back
-            init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty;
-          }
+          if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
+        // IN_TRANSIT: return initiated but not confirmed, no stock movement
+        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;

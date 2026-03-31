@@ -37,6 +37,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     else status = "In-Transit"; // IN_TRANSIT or unset
   } else if (stockEntryType === "RETURNED") {
     if (rawStatus === "ACCEPTED") status = "Returned";
+    else if (rawStatus === "REJECTED") status = "Return Rejected";
     else status = "Return Initiated"; // IN_TRANSIT or unset
   }
 
@@ -381,6 +382,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       Rejected: "cm-status-badge--rejected",
       Returned: "cm-status-badge--completed",
       "Return Initiated": "cm-status-badge--in-transit",
+      "Return Rejected": "cm-status-badge--rejected",
     };
     return classMap[status] || "cm-status-badge--default";
   };
