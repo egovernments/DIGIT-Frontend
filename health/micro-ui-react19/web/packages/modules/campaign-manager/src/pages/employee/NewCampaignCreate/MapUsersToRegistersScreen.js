@@ -137,9 +137,11 @@ const MapUsersToRegistersScreen = () => {
   };
   if (appliedFilters.registerId) {
     attendanceParams.serviceCode = appliedFilters.registerId;
-  } else if (campaignData?.serviceCode) {
-    attendanceParams.serviceCode = campaignData.serviceCode;
-  }
+    attendanceParams.isServiceCodeExact = false;
+  } 
+  // else if (campaignData?.serviceCode) {
+  //   attendanceParams.serviceCode = campaignData.serviceCode;
+  // }
   if (appliedFilters.officer) {
     attendanceParams.staffName = appliedFilters.officer;
     attendanceParams.staffTypes = "APPROVER";
