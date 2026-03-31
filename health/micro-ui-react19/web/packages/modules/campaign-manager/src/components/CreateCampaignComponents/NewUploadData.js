@@ -402,8 +402,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           isSuccess: data?.[uploadKey]?.isSuccess || null,
         };
       } else {
-        // For attendance types, use resource-details search API data
-        const isAttendanceType = typeKey === "attendanceRegister" || typeKey === "attendanceRegisterAttendee";
+        // Both attendanceRegister and attendanceRegisterAttendee show upload area directly; existing file accessed via download button
+        const isAttendanceType = false; //todo check
         if (isAttendanceType && resourceDetailsFromSearch.length > 0) {
           const fromResource = resourceDetailsFromSearch[0];
           console.log("fromResourceDetails search:", fromResource);
@@ -452,17 +452,25 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         break;
       }
       case "attendanceRegister": {
-        const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
-        setUploadedFile(uploadedFile);
-        setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        // Always show upload area directly; existing file accessible via download button
+        // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
+        // setUploadedFile(uploadedFile);
+        // setIsSuccess(isSuccess);
+        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setUploadedFile([]);
+        setIsSuccess(null);
+        setShowPopUp(!downloadedTemplates[type]);
         break;
       }
       case "attendanceRegisterAttendee": {
-        const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
-        setUploadedFile(uploadedFile);
-        setIsSuccess(isSuccess);
-        setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        // Always show upload area directly; existing file accessible via download button
+        // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
+        // setUploadedFile(uploadedFile);
+        // setIsSuccess(isSuccess);
+        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setUploadedFile([]);
+        setIsSuccess(null);
+        setShowPopUp(!downloadedTemplates[type]);
         break;
       }
       default: {
@@ -1506,6 +1514,18 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
+  const downloadCurrentFile = async (suffix) => {
+    const processedFileStoreId = props?.props?.resourceDetails?.[0]?.processedFileStoreId;
+    if (!processedFileStoreId) return;
+    try {
+      downloadExcelWithCustomName({ fileStoreId: processedFileStoreId, customName: `${campaignName}_${suffix}` });
+    } catch (error) {
+      setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+    }
+  };
+  const downloadCurrentAttendeesFile = () => downloadCurrentFile("Current_Attendees");
+  const downloadCurrentRegisterFile = () => downloadCurrentFile("Current_Register");
+
   // Modify the condition for showing the popup
   useEffect(() => {
     // Only show popup if the template for this type hasn't been downloaded yet
@@ -1559,16 +1579,38 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           <Card>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <TagComponent campaignName={campaignName} />
-              <Button
-                label={getDownloadLabel()}
-                title={getDownloadLabel()}
-                variation="secondary"
-                icon={"FileDownload"}
-                type="button"
-                className="campaign-download-template-btn"
-                onClick={downloadTemplate}
-                id={"file-download-template"}
-              />
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                {type === "attendanceRegisterAttendee" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
+                  <Button
+                    label={t("HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE")}
+                    title={t("HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE")}
+                    variation="secondary"
+                    icon={"FileDownload"}
+                    type="button"
+                    onClick={downloadCurrentAttendeesFile}
+                  />
+                )}
+                {type === "attendanceRegister" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
+                  <Button
+                    label={t("HCM_DOWNLOAD_CURRENT_REGISTER_FILE")}
+                    title={t("HCM_DOWNLOAD_CURRENT_REGISTER_FILE")}
+                    variation="secondary"
+                    icon={"FileDownload"}
+                    type="button"
+                    onClick={downloadCurrentRegisterFile}
+                  />
+                )}
+                <Button
+                  label={getDownloadLabel()}
+                  title={getDownloadLabel()}
+                  variation="secondary"
+                  icon={"FileDownload"}
+                  type="button"
+                  className="campaign-download-template-btn"
+                  onClick={downloadTemplate}
+                  id={"file-download-template"}
+                />
+              </div>
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
