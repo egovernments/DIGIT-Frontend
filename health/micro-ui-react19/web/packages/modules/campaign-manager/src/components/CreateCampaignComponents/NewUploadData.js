@@ -1325,6 +1325,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               locale: locale,
               types: [type],
               referenceTypes: [type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign"],
+              additionalDetails: type === "attendanceRegisterAttendee" ? {
+                campaignId: id
+              } : undefined,
             },
           },
         });
