@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo,useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { Card, HeaderComponent, SVG, Loader } from "@egovernments/digit-ui-components";
@@ -24,6 +24,12 @@ const ReportsListPage = () => {
       select: (data) => data?.[0],
     },
   });
+
+  useEffect(() => {
+    if (campaignData) {
+      Digit.SessionStorage.set("campaignSelected", campaignData);
+    }
+  }, [campaignData]);
 
   const projectType = campaignData?.projectType;
 

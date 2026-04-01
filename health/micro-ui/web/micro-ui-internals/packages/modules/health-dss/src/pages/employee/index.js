@@ -17,6 +17,7 @@ const ProjectBreadCrumb = ({ location }) => {
   const dashboardId = Digit.SessionStorage.get("dashboardData")?.[0]?.id || "";
   const selectedDashboard = Digit.SessionStorage.get("selectedDashboard");
   const campaignNumber = Digit.SessionStorage.get("campaignSelected")?.campaignNumber;
+  const campaignName = Digit.SessionStorage.get("campaignSelected")?.campaignName;
   const boundaryType = Digit.SessionStorage.get("projectSelected")?.project?.address?.boundaryType?.toLowerCase();
   const boundaryValue = Digit.SessionStorage.get("projectSelected")?.boundaryCodeResponse?.message || t(Digit.SessionStorage.get("projectSelected")?.project?.address?.boundary);
   const crumbs = [
@@ -76,6 +77,7 @@ const ProjectBreadCrumb = ({ location }) => {
     {
       internalLink: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS" ? "" : `/${window?.contextPath}/employee/dss/campaign-reports`,
       content: t("HCM_CAMPAIGN_REPORTS"),
+      query: `campaignNumber=${campaignNumber}&campaignName=${campaignName}`,
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS" || Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REPORT_DETAIL",
     },
     {
