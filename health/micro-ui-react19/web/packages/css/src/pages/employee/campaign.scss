@@ -1312,6 +1312,7 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem 1.5rem;
+    flex-wrap: wrap;
 
     &--bordered {
       border-bottom: 1px solid var(--digitv2-lightTheme-generic-divider);
@@ -1327,6 +1328,7 @@
   &__frequency-row-label {
     flex: 1;
     font-size: 0.875rem;
+    font-weight: 700;
   }
 
   &__frequency-row-controls {
@@ -1334,5 +1336,36 @@
     align-items: center;
     gap: 0.5rem;
     flex-shrink: 0;
+
+    .reports-frequency-dropdown {
+      min-width: 20rem;
+      margin-bottom: 0rem;
+    }
+  }
+
+  &__custom-dates {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.digit-frequency-selection-filter{
+  .digit-multiselectdropdown-wrap{
+    margin: 0rem;
+  }
+
+  .digit-tag-container{
+    margin-bottom: 0rem;
+  }
+}
+
+.reports-configuration__custom-dates{
+  margin: 0rem;
+
+  .digit-header-content{
+    &.label{
+      width: 100% !important;
+    }
   }
 }

@@ -1,38 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { Card, HeaderComponent, Button, Tag, CheckBox, SVG, Accordion, AccordionList } from "@egovernments/digit-ui-components";
-
-// Dummy data — will be replaced with API calls
-const generateDummyReports = () => {
-  const today = new Date();
-  const makeReports = (count, offsetDays) =>
-    Array.from({ length: count }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i * offsetDays);
-      return {
-        id: `${offsetDays}-${i}`,
-        date: date.toISOString(),
-        dateLabel: date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
-        size: `${Math.floor(Math.random() * 500 + 100)} KB`,
-        fileStoreId: `file-${offsetDays}-${i}`,
-      };
-    });
-
-  return {
-    DAILY: makeReports(7, 1),
-    WEEKLY: makeReports(4, 7),
-    MONTHLY: makeReports(6, 30),
-  };
-};
-
-const REPORT_LABELS = {
-  "household-registration": "HCM_REPORT_HOUSEHOLD_REGISTRATION",
-  "suspected-anomalies": "HCM_REPORT_SUSPECTED_ANOMALIES",
-  "duplicate-reports": "HCM_REPORT_DUPLICATE_REPORTS",
-  "stock-transactions": "HCM_REPORT_STOCK_TRANSACTIONS",
-  "referrals": "HCM_REPORT_REFERRAL",
-};
+import { Card, HeaderComponent, Button, Tag, CheckBox, SVG, Accordion, AccordionList, Loader } from "@egovernments/digit-ui-components";
 
 const FrequencyContent = ({ reports, t }) => {
   const [maskPII, setMaskPII] = React.useState({});
@@ -48,7 +17,7 @@ const FrequencyContent = ({ reports, t }) => {
           <div className="digit-report-detail__file-row">
             <div className="digit-report-detail__file-info">
               <div className="digit-report-detail__file-date">{report.dateLabel}</div>
-              <div className="digit-report-detail__file-size">{report.size}</div>
+              <div className="digit-report-detail__file-size">{report.triggerTime}</div>
             </div>
             <div className="digit-report-detail__file-actions">
               <CheckBox
@@ -75,10 +44,63 @@ const ReportDetailPage = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  const campaignNumber = searchParams.get("campaignNumber");
   const reportType = searchParams.get("reportType");
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
-  const reportLabel = REPORT_LABELS[reportType] || reportType;
-  const reportsByFrequency = useMemo(() => generateDummyReports(), [reportType]);
+  // Fetch report configs filtered by campaignIdentifier and reportName
+  const mdmsReqCriteria = {
+    url: `/${mdms_context_path}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: "airflow-configs.campaign-report-config",
+        isActive: true,
+        limit: 1000,
+        filters: {
+          campaignIdentifier: campaignNumber,
+          reportName: reportType,
+        },
+      },
+    },
+    config: {
+      enabled: !!campaignNumber && !!reportType,
+      select: (data) => data?.mdms,
+    },
+  };
+
+  const { isLoading, data: reportConfigs } = Digit.Hooks.useCustomAPIHook(mdmsReqCriteria);
+
+  // Group by triggerFrequency
+  const reportsByFrequency = useMemo(() => {
+    if (!reportConfigs) return {};
+
+    const filtered = reportConfigs;
+
+    const grouped = {};
+    filtered.forEach((item) => {
+      const freq = item?.data?.triggerFrequency;
+      if (!freq) return;
+      if (!grouped[freq]) grouped[freq] = [];
+      grouped[freq].push({
+        id: item.id,
+        dateLabel: `${item?.data?.campaignStartDate} — ${item?.data?.campaignEndDate}`,
+        triggerTime: `${t("HCM_TRIGGER_TIME")}: ${item?.data?.triggerTime}`,
+        reportStartTime: item?.data?.reportStartTime,
+        reportEndTime: item?.data?.reportEndTime,
+        fileStoreId: item.id,
+        rawData: item?.data,
+      });
+    });
+
+    return grouped;
+  }, [reportConfigs, campaignNumber, reportType]);
+
+  const reportLabel = `HCM_${reportType?.toUpperCase()}`;
+  const totalConfigs = Object.values(reportsByFrequency).flat().length;
+
+  if (isLoading) return <Loader />;
 
   return (
     <Card>
@@ -93,21 +115,25 @@ const ReportDetailPage = () => {
         </div>
       </div>
 
-      <AccordionList allowMultipleOpen={true}>
-        {Object.entries(reportsByFrequency).map(([frequency, reports]) => (
-          <Accordion
-            key={frequency}
-            title={`${t(`HCM_REPORT_FREQUENCY_${frequency}`)}  ${reports.length} ${t("HCM_REPORTS_COUNT")}`}
-            icon="CalendarMonth"
-            isOpenInitially={false}
-            hideCardBorder={false}
-            hideCardBg={true}
-            hideBorderRadius={true}
-          >
-            <FrequencyContent reports={reports} t={t} />
-          </Accordion>
-        ))}
-      </AccordionList>
+      {totalConfigs === 0 ? (
+        <p>{t("HCM_NO_REPORT_CONFIGS_FOUND")}</p>
+      ) : (
+        <AccordionList allowMultipleOpen={true}>
+          {Object.entries(reportsByFrequency).map(([frequency, reports]) => (
+            <Accordion
+              key={frequency}
+              title={`${t(`HCM_REPORT_FREQUENCY_${frequency}`)}  ${reports.length} ${t("HCM_REPORTS_COUNT")}`}
+              icon="CalendarMonth"
+              isOpenInitially={false}
+              hideCardBorder={false}
+              hideCardBg={true}
+              hideBorderRadius={true}
+            >
+              <FrequencyContent reports={reports} t={t} />
+            </Accordion>
+          ))}
+        </AccordionList>
+      )}
     </Card>
   );
 };

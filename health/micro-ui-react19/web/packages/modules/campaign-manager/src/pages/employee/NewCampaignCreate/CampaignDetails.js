@@ -266,6 +266,30 @@ const CampaignDetails = () => {
     return checklistData?.mdmsData?.some((item) => item?.ServiceRequest?.length > 0);
   }, [checklistData]);
 
+  // Check if reports configuration exists for this campaign
+  const { data: reportsConfigData } = Digit.Hooks.useCustomAPIHook({
+    url: `/${mdms_context_path}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: "airflow-configs.campaign-report-config",
+        isActive: true,
+        limit: 1,
+        filters: {
+          campaignIdentifier: campaignNumber,
+        },
+      },
+    },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => data?.mdms,
+    },
+  });
+
+  const isReportsConfigured = useMemo(() => {
+    return reportsConfigData?.length > 0;
+  }, [reportsConfigData]);
+
   useEffect(() => {
     if (campaignData) {
       sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
@@ -574,16 +598,14 @@ const CampaignDetails = () => {
               return {
                 headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REPORTS_CONFIGURATION_HEADING),
                 desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REPORTS_CONFIGURATION_DESC),
-                buttonLabel:
-                  campaignData?.status === "created" || campaignData?.parentId
+                buttonLabel: isReportsConfigured
                     ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_REPORTS_CONFIGURATION_BUTTON)
                     : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REPORTS_CONFIGURATION_BUTTON),
-                buttonId:
-                  campaignData?.status === "created" || campaignData?.parentId
+                buttonId: isReportsConfigured
                     ? `campaign-details-page-button-edit-reports-configuration`
                     : `campaign-details-page-button-reports-configuration`,
-                type: campaignData?.status === "created" || campaignData?.parentId ? "secondary" : "primary",
-                navLink: `reports-configuration?campaignNumber=${campaignData?.campaignNumber}&projectType=${campaignData?.projectType}&tenantId=${tenantId}`,
+                type: isReportsConfigured ? "secondary" : "primary",
+                navLink: `reports-configuration?campaignNumber=${campaignData?.campaignNumber}&projectType=${campaignData?.projectType}&tenantId=${tenantId}${isReportsConfigured ? "&edit=true" : ""}`,
                 icon: <Assessment fill={isOngoingCampaign ? "#c5c5c5" : "#C84C0E"} width={"40px"} height={"40px"} />,
                 disabled: isOngoingCampaign,
               };
