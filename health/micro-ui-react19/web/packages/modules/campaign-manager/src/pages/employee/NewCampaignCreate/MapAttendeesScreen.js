@@ -50,9 +50,9 @@ const MapAttendeesScreen = () => {
   };
   const { data: resourceDetails = [] } = Digit.Hooks.useCustomAPIHook(attendeeResourceCriteria);
 
-  // Enrich campaignData with registerId as id so NewUploadData uses it as referenceId
+  // Enrich campaignData with registerId so NewUploadData can use it as referenceId
   const enrichedCampaignData = useMemo(
-    () => (campaignData ? { ...campaignData, id: registerId } : null),
+    () => (campaignData ? { ...campaignData, registerId: registerId } : null),
     [campaignData, registerId]
   );
 

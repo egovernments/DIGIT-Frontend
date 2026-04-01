@@ -38,7 +38,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const parentId = searchParams.get("parentId");
-  const registerId = searchParams.get("registerId");
+  const registerId = searchParams.get("registerId") || props?.props?.campaignData?.registerId;
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const [uploadLoader, setUploadLoader] = useState(false);
