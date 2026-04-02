@@ -13,11 +13,13 @@ import {
   Switch,
   TextInput,
   LabelFieldPair,
+  Toast,
 } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
-
+const MDMS_CONTEXT_PATH =
+  window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
 const ProgressStepper = ({ currentStep, totalSteps = 3 }) => {
   return (
@@ -38,7 +40,6 @@ const ProgressStepper = ({ currentStep, totalSteps = 3 }) => {
     </div>
   );
 };
-
 
 const SidebarTab = ({ label, tagType, isSelected, isFirst, isLast, onClick }) => {
   const { t } = useTranslation();
@@ -66,7 +67,6 @@ const SidebarTab = ({ label, tagType, isSelected, isFirst, isLast, onClick }) =>
         border: isSelected ? "1px solid #C84C0E" : "1px solid #D6D5D4",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
         cursor: "pointer",
-        // width: isSelected ? "11.5rem" : "10.4375rem",
         borderRadius,
       }}
     >
@@ -82,18 +82,17 @@ const SidebarTab = ({ label, tagType, isSelected, isFirst, isLast, onClick }) =>
       >
         {t(label)}
       </span>
+      {/* Gap #4: use I18N_KEYS constants */}
       {isSelected && tagType && (
         <Tag
-          label={tagType === "ready" ? t("FEATURE_READY_TO_USE") : t("FEATURE_REQUIRES_SETUP")}
-          type={tagType === "ready" ? "success" : "warning"}
+          label={tagType === "setup" ? t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_REQUIRES_SETUP) : t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_READY_TO_USE)}
+          type={tagType === "setup" ? "warning" : "success"}
           showIcon={false}
         />
       )}
     </div>
   );
 };
-
-
 
 const NumberStepper = ({ value, onChange, min = 0, max = 99 }) => {
   return (
@@ -156,7 +155,6 @@ const NumberStepper = ({ value, onChange, min = 0, max = 99 }) => {
   );
 };
 
-
 const QRCodeConfig = ({ config, onConfigChange }) => {
   const { t } = useTranslation();
 
@@ -175,10 +173,10 @@ const QRCodeConfig = ({ config, onConfigChange }) => {
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
         <span style={{ fontWeight: 700, fontSize: "1rem", lineHeight: "114%", color: "#0B4B66" }}>
-          {t("ENABLE_DYNAMIC_QR_CODE")} *
+          {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_DYNAMIC_QR_CODE)} *
         </span>
         <span style={{ fontWeight: 400, fontSize: "0.875rem", lineHeight: "114%", color: "#787878" }}>
-          {t("ENABLE_DYNAMIC_QR_CODE_DESC")}
+          {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_DYNAMIC_QR_CODE_DESC)}
         </span>
       </div>
       <Switch
@@ -189,13 +187,11 @@ const QRCodeConfig = ({ config, onConfigChange }) => {
   );
 };
 
-
 const PhotoVerificationConfig = ({ config, onConfigChange }) => {
   const { t } = useTranslation();
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      {/* Number of Daily Photos */}
       <Card
         style={{
           border: "1px solid #D6D5D4",
@@ -208,10 +204,10 @@ const PhotoVerificationConfig = ({ config, onConfigChange }) => {
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <span style={{ fontWeight: 700, fontSize: "1rem", lineHeight: "114%", color: "#0B4B66" }}>
-            {t("NUMBER_OF_DAILY_PHOTOS")} *
+            {t(I18N_KEYS.CAMPAIGN_CREATE.NUMBER_OF_DAILY_PHOTOS)} *
           </span>
           <span style={{ fontWeight: 400, fontSize: "0.875rem", lineHeight: "114%", color: "#787878" }}>
-            {t("NUMBER_OF_DAILY_PHOTOS_DESC")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.NUMBER_OF_DAILY_PHOTOS_DESC)}
           </span>
         </div>
         <NumberStepper
@@ -219,8 +215,6 @@ const PhotoVerificationConfig = ({ config, onConfigChange }) => {
           onChange={(val) => onConfigChange({ ...config, dailyPhotoCount: val })}
         />
       </Card>
-
-      {/* Session Timings */}
       <Card
         style={{
           border: "1px solid #D6D5D4",
@@ -233,16 +227,16 @@ const PhotoVerificationConfig = ({ config, onConfigChange }) => {
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <span style={{ fontWeight: 700, fontSize: "1rem", lineHeight: "114%", color: "#0B4B66" }}>
-            {t("SESSION_TIMINGS")} *
+            {t(I18N_KEYS.CAMPAIGN_CREATE.SESSION_TIMINGS)} *
           </span>
           <span style={{ fontWeight: 400, fontSize: "0.875rem", lineHeight: "114%", color: "#787878" }}>
-            {t("SESSION_TIMINGS_DESC")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.SESSION_TIMINGS_DESC)}
           </span>
         </div>
         <div style={{ display: "flex", gap: "1.5rem" }}>
           <LabelFieldPair style={{ width: "15.3125rem" }}>
             <span style={{ fontSize: "1rem", lineHeight: "19px", color: "#0B0C0C" }}>
-              {t("START_TIME")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.START_TIME)}
             </span>
             <TextInput
               type="time"
@@ -252,7 +246,7 @@ const PhotoVerificationConfig = ({ config, onConfigChange }) => {
           </LabelFieldPair>
           <LabelFieldPair style={{ width: "15.3125rem" }}>
             <span style={{ fontSize: "1rem", lineHeight: "19px", color: "#0B0C0C" }}>
-              {t("END_TIME")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.END_TIME)}
             </span>
             <TextInput
               type="time"
@@ -266,7 +260,40 @@ const PhotoVerificationConfig = ({ config, onConfigChange }) => {
   );
 };
 
+/* Gap #1 fix: Separate config component for Signature Verification */
+const SignatureVerificationConfig = ({ config, onConfigChange }) => {
+  const { t } = useTranslation();
 
+  return (
+    <Card
+      style={{
+        border: "1px solid #D6D5D4",
+        borderRadius: "0.75rem",
+        padding: "1rem",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "1.5rem",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
+        <span style={{ fontWeight: 700, fontSize: "1rem", lineHeight: "114%", color: "#0B4B66" }}>
+          {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_SIGNATURE_VERIFICATION)} *
+        </span>
+        <span style={{ fontWeight: 400, fontSize: "0.875rem", lineHeight: "114%", color: "#787878" }}>
+          {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_SIGNATURE_VERIFICATION_DESC)}
+        </span>
+      </div>
+      <Switch
+        isCheckedInitially={config?.enableSignature ?? true}
+        onToggle={(val) => onConfigChange({ ...config, enableSignature: val })}
+      />
+    </Card>
+  );
+};
+
+/* Gap #1 fix: Reordered matching — signature before photo, removed "verification" from photo branch */
 const ConfigPanelRenderer = ({ feature, config, onConfigChange }) => {
   const { t } = useTranslation();
 
@@ -275,10 +302,12 @@ const ConfigPanelRenderer = ({ feature, config, onConfigChange }) => {
     if (code.includes("qr") || code.includes("scanner")) {
       return <QRCodeConfig config={config} onConfigChange={onConfigChange} />;
     }
-    if (code.includes("photo") || code.includes("verification")) {
+    if (code.includes("signature")) {
+      return <SignatureVerificationConfig config={config} onConfigChange={onConfigChange} />;
+    }
+    if (code.includes("photo")) {
       return <PhotoVerificationConfig config={config} onConfigChange={onConfigChange} />;
     }
-    // Ready-to-use features (offline mode, map view, etc.) — no config needed
     return null;
   };
 
@@ -310,6 +339,71 @@ const ConfigPanelRenderer = ({ feature, config, onConfigChange }) => {
   );
 };
 
+/* Gap #2 fix: MDMS persistence helper */
+const saveFeatureConfigToMDMS = async ({
+  tenantId,
+  campaignNumber,
+  projectType,
+  moduleName,
+  selectedFeatures,
+  featureConfigs,
+}) => {
+  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FeatureConfig`;
+  const payload = {
+    Mdms: {
+      tenantId,
+      schemaCode,
+      isActive: true,
+      data: {
+        project: campaignNumber,
+        projectType,
+        module: moduleName,
+        selectedFeatures,
+        featureConfigs,
+      },
+    },
+  };
+
+  const searchResponse = await Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId,
+        schemaCode,
+        isActive: true,
+        filters: {
+          project: campaignNumber,
+          module: moduleName,
+        },
+      },
+    },
+    useCache: false,
+  });
+
+  if (searchResponse?.mdms && searchResponse.mdms.length > 0) {
+    const existing = searchResponse.mdms[0];
+    return Digit.CustomService.getResponse({
+      url: `/${MDMS_CONTEXT_PATH}/v2/_update/${schemaCode}`,
+      body: {
+        Mdms: {
+          ...existing,
+          data: {
+            ...existing.data,
+            selectedFeatures,
+            featureConfigs,
+          },
+        },
+      },
+      useCache: false,
+    });
+  }
+
+  return Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_create/${schemaCode}`,
+    body: payload,
+    useCache: false,
+  });
+};
 
 const NewAppFeatureConfig = () => {
   const { t } = useTranslation();
@@ -323,15 +417,18 @@ const NewAppFeatureConfig = () => {
     step,
   } = Digit.Hooks.useQueryParams();
 
-  const featureCodes = useMemo(() => featureParam?.split(",") || [], [featureParam]);
+  const resolvedTenantId = tenantId || Digit?.ULBService?.getCurrentTenantId();
+  const featureCodes = useMemo(() => featureParam?.split(",").filter(Boolean) || [], [featureParam]);
   const currentStep = parseInt(step || "0", 10);
   const [selectedFeatureIndex, setSelectedFeatureIndex] = useState(0);
   const [featureConfigs, setFeatureConfigs] = useState({});
+  /* Gap #7 fix: saving + error state */
+  const [isSaving, setIsSaving] = useState(false);
+  const [showToast, setShowToast] = useState(null);
 
-  // Fetch module schemas to get feature details
   const { isLoading, data: moduleSchemas } = Digit.Hooks.useCustomAPIHook(
     Digit.Utils.campaign.getMDMSV1Criteria(
-      tenantId,
+      resolvedTenantId,
       CONSOLE_MDMS_MODULENAME,
       [{ name: "AppModuleSchema" }],
       "MDMSDATA-AppModuleSchema-FeatureConfig",
@@ -339,7 +436,6 @@ const NewAppFeatureConfig = () => {
     )
   );
 
-  // Extract features matching selected codes from the module schema
   const allFeatures = useMemo(() => {
     const moduleFeatures = moduleSchemas?.find((mod) => mod?.code === moduleName)?.features || [];
     return moduleFeatures.filter(
@@ -361,28 +457,42 @@ const NewAppFeatureConfig = () => {
     [selectedFeature]
   );
 
+  /* Gap #3 fix: navigate to existing route */
   const handleBack = useCallback(() => {
     navigate(
-      `/${window.contextPath}/employee/campaign/new-app-module-features?campaignNumber=${campaignNumber}&projectType=${projectType}&tenantId=${tenantId}&moduleName=${moduleName}`
+      `/${window.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&projectType=${projectType}&tenantId=${resolvedTenantId}`
     );
-  }, [navigate, campaignNumber, projectType, tenantId, moduleName]);
+  }, [navigate, campaignNumber, projectType, resolvedTenantId]);
 
-  const handleNext = useCallback(() => {
+  /* Gap #2 + #7 fix: persist to MDMS before navigating */
+  const handleNext = useCallback(async () => {
     if (!isLastFeature) {
       setSelectedFeatureIndex((prev) => prev + 1);
       return;
     }
-    // All features configured — navigate to success screen
-    navigate(
-      `/${window.contextPath}/employee/campaign/new-app-feature-success?campaignNumber=${campaignNumber}&projectType=${projectType}&tenantId=${tenantId}&moduleName=${moduleName}`,
-      {
-        state: {
-          featureConfigs,
-          features: featureCodes,
-        },
-      }
-    );
-  }, [navigate, isLastFeature, campaignNumber, projectType, tenantId, moduleName, featureConfigs, featureCodes]);
+    setIsSaving(true);
+    try {
+      await saveFeatureConfigToMDMS({
+        tenantId: resolvedTenantId,
+        campaignNumber,
+        projectType,
+        moduleName,
+        selectedFeatures: featureCodes,
+        featureConfigs,
+      });
+      navigate(
+        `/${window.contextPath}/employee/campaign/new-app-feature-success?campaignNumber=${campaignNumber}&projectType=${projectType}&tenantId=${resolvedTenantId}&moduleName=${moduleName}`
+      );
+    } catch (error) {
+      console.error("Error saving feature config:", error);
+      setShowToast({
+        key: "error",
+        label: t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_CONFIG_SAVE_ERROR),
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [navigate, isLastFeature, campaignNumber, projectType, resolvedTenantId, moduleName, featureConfigs, featureCodes, t]);
 
   if (isLoading) {
     return (
@@ -394,99 +504,141 @@ const NewAppFeatureConfig = () => {
     );
   }
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", borderRadius: "0.75rem" }}>
-      {/* Main Body */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "1.5rem",
-          gap: "1.5rem",
-          background: "#FFFFFF",
-          borderRadius: "0.75rem 0.75rem 0 0",
-        }}
-      >
-        {/* Progress Stepper + Close */}
-        <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
-          <ProgressStepper currentStep={currentStep} totalSteps={3} />
-          <SVG.Close
-            fill="#0B0C0C"
-            width="1.5rem"
-            height="1.5rem"
-            style={{ cursor: "pointer", flexShrink: 0 }}
-            onClick={handleBack}
-          />
-        </div>
-
-        {/* Heading */}
-        <HeaderComponent style={{ fontSize: "2rem", lineHeight: "114%", color: "#0B4B66", margin: 0 }}>
-          {t("CUSTOMIZE_YOUR_FEATURES")}
+  /* Gap #6 fix: empty state when no features found */
+  if (!isLoading && allFeatures.length === 0) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", padding: "1.5rem", gap: "1.5rem" }}>
+        <HeaderComponent style={{ fontSize: "2rem", color: "#0B4B66", margin: 0 }}>
+          {t(I18N_KEYS.CAMPAIGN_CREATE.CUSTOMIZE_YOUR_FEATURES)}
         </HeaderComponent>
-
-        {/* Subheading */}
         <TextBlock
-          body={t("CUSTOMIZE_FEATURES_DESCRIPTION")}
-          bodyStyle={{ color: "#787878", fontSize: "1rem", lineHeight: "137%", margin: 0 }}
+          body={t(I18N_KEYS.CAMPAIGN_CREATE.NO_FEATURES_FOUND)}
+          bodyStyle={{ color: "#787878", fontSize: "1rem", margin: 0 }}
         />
+        <Footer
+          actionFields={[
+            <Button
+              key="back"
+              label={t(I18N_KEYS.COMMON.GO_BACK)}
+              title={t(I18N_KEYS.COMMON.GO_BACK)}
+              variation="secondary"
+              onClick={handleBack}
+              style={{ minWidth: "15.0625rem" }}
+            />,
+          ]}
+        />
+      </div>
+    );
+  }
 
-        {/* Sidebar + Config Panel */}
-        <div style={{ display: "flex", gap: "4.25rem", alignItems: "flex-start" }}>
-          {/* Left Sidebar */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "11.5rem",
-              flexShrink: 0,
-            }}
-          >
-            {allFeatures.map((feature, index) => (
-              <SidebarTab
-                key={feature?.code || index}
-                label={feature?.code}
-                tagType={feature?.requiresSetup ? "setup" : "ready"}
-                isSelected={index === selectedFeatureIndex}
-                isFirst={index === 0}
-                isLast={index === allFeatures.length - 1}
-                onClick={() => setSelectedFeatureIndex(index)}
-              />
-            ))}
+  return (
+    <>
+      <div style={{ display: "flex", flexDirection: "column", borderRadius: "0.75rem" }}>
+        {/* Gap #7 fix: saving overlay */}
+        {isSaving && (
+          <Loader
+            page={true}
+            variant="OverlayLoader"
+            loaderText={t(I18N_KEYS.CAMPAIGN_CREATE.SAVING_FEATURES_CONFIG_IN_SERVER)}
+          />
+        )}
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "1.5rem",
+            gap: "1.5rem",
+            background: "#FFFFFF",
+            borderRadius: "0.75rem 0.75rem 0 0",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
+            <ProgressStepper currentStep={currentStep} totalSteps={3} />
+            <SVG.Close
+              fill="#0B0C0C"
+              width="1.5rem"
+              height="1.5rem"
+              style={{ cursor: "pointer", flexShrink: 0 }}
+              onClick={handleBack}
+            />
           </div>
 
-          {/* Right Config Panel */}
-          {selectedFeature && (
-            <ConfigPanelRenderer
-              feature={selectedFeature}
-              config={featureConfigs[selectedFeature?.code] || {}}
-              onConfigChange={handleConfigChange}
-            />
-          )}
-        </div>
-      </div>
+          {/* Gap #4 fix: use I18N_KEYS constants */}
+          <HeaderComponent style={{ fontSize: "2rem", lineHeight: "114%", color: "#0B4B66", margin: 0 }}>
+            {t(I18N_KEYS.CAMPAIGN_CREATE.CUSTOMIZE_YOUR_FEATURES)}
+          </HeaderComponent>
 
-      {/* Footer with Back / Next|Save */}
-      <Footer
-        actionFields={[
-          <Button
-            key="back"
-            label={t(I18N_KEYS.COMMON.GO_BACK)}
-            title={t(I18N_KEYS.COMMON.GO_BACK)}
-            variation="secondary"
-            onClick={handleBack}
-            style={{ minWidth: "15.0625rem" }}
-          />,
-          <Button
-            key="next-save"
-            label={isLastFeature ? t("SAVE") : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
-            title={isLastFeature ? t("SAVE") : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
-            variation="primary"
-            onClick={handleNext}
-            style={{ minWidth: "15.0625rem" }}
-          />,
-        ]}
-      />
-    </div>
+          <TextBlock
+            body={t(I18N_KEYS.CAMPAIGN_CREATE.CUSTOMIZE_FEATURES_DESCRIPTION)}
+            bodyStyle={{ color: "#787878", fontSize: "1rem", lineHeight: "137%", margin: 0 }}
+          />
+
+          <div style={{ display: "flex", gap: "4.25rem", alignItems: "flex-start" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "11.5rem",
+                flexShrink: 0,
+              }}
+            >
+              {/* Gap #5 fix: use disabled field from MDMS instead of requiresSetup */}
+              {allFeatures.map((feature, index) => (
+                <SidebarTab
+                  key={feature?.code || index}
+                  label={feature?.code}
+                  tagType={feature?.disabled === false ? "setup" : "ready"}
+                  isSelected={index === selectedFeatureIndex}
+                  isFirst={index === 0}
+                  isLast={index === allFeatures.length - 1}
+                  onClick={() => setSelectedFeatureIndex(index)}
+                />
+              ))}
+            </div>
+
+            {selectedFeature && (
+              <ConfigPanelRenderer
+                feature={selectedFeature}
+                config={featureConfigs[selectedFeature?.code] || {}}
+                onConfigChange={handleConfigChange}
+              />
+            )}
+          </div>
+        </div>
+
+        <Footer
+          actionFields={[
+            <Button
+              key="back"
+              label={t(I18N_KEYS.COMMON.GO_BACK)}
+              title={t(I18N_KEYS.COMMON.GO_BACK)}
+              variation="secondary"
+              onClick={handleBack}
+              isDisabled={isSaving}
+              style={{ minWidth: "15.0625rem" }}
+            />,
+            <Button
+              key="next-save"
+              label={isLastFeature ? t(I18N_KEYS.CAMPAIGN_CREATE.SAVE) : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
+              title={isLastFeature ? t(I18N_KEYS.CAMPAIGN_CREATE.SAVE) : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
+              variation="primary"
+              onClick={handleNext}
+              isDisabled={isSaving}
+              style={{ minWidth: "15.0625rem" }}
+            />,
+          ]}
+        />
+      </div>
+      {/* Gap #7 fix: error toast */}
+      {showToast && (
+        <Toast
+          type="error"
+          label={showToast.label}
+          onClose={() => setShowToast(null)}
+        />
+      )}
+    </>
   );
 };
 

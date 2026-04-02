@@ -1,0 +1,248 @@
+   {
+            "id": "0d9e9303-e04e-4d69-b679-f7f474da8b8f",
+            "tenantId": "ba",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FormConfigTemplate",
+            "uniqueIdentifier": "ATTENDANCE.MR-DN",
+            "data": {
+                "name": "ATTENDANCE",
+                "flows": [
+                    {
+                        "name": "MARK_ATTENDANCE",
+                        "order": 1,
+                        "pages": [
+                            {
+                                "page": "attendeeIdentification",
+                                "type": "object",
+                                "label": "APP_CONFIG_ATTENDANCE_attendeeIdentification_SCREEN_HEADING",
+                                "order": 1,
+                                "navigateTo": {
+                                    "name": "attendanceVerification",
+                                    "type": "form"
+                                },
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_ATTENDANCE_attendeeIdentification_NAME_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "text",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendeeIdentification_ENTER_ATTENDEE_NAME_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "attendeeName",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_ATTENDANCE_attendeeIdentification_NAME_IS_REQUIRED"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_ATTENDANCE_attendeeIdentification_SCAN_QR_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "scanner",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendeeIdentification_SCAN_QR_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "attendeeQRCode",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "integer",
+                                        "label": "APP_CONFIG_ATTENDANCE_attendeeIdentification_DATE_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "date",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendeeIdentification_SELECT_ATTENDANCE_DATE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "attendanceDate",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": true,
+                                        "validations": [
+                                            {
+                                                "type": "required",
+                                                "value": true,
+                                                "message": "APP_CONFIG_ATTENDANCE_attendeeIdentification_DATE_IS_REQUIRED"
+                                            }
+                                        ],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "APP_CONFIG_ATTENDANCE_attendeeIdentification_ACTION_BUTTON_LABEL",
+                                "description": "APP_CONFIG_ATTENDANCE_attendeeIdentification_SCREEN_DESCRIPTION"
+                            },
+                            {
+                                "page": "attendanceVerification",
+                                "type": "object",
+                                "label": "APP_CONFIG_ATTENDANCE_attendanceVerification_SCREEN_HEADING",
+                                "order": 2,
+                                "navigateTo": null,
+                                "properties": [
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_ATTENDANCE_attendanceVerification_PHOTO_LABEL",
+                                        "order": 1,
+                                        "value": "",
+                                        "format": "photoVerification",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendanceVerification_CAPTURE_PHOTO_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "attendeePhoto",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "enums": [],
+                                        "label": "APP_CONFIG_ATTENDANCE_attendanceVerification_SIGNATURE_LABEL",
+                                        "order": 2,
+                                        "value": "",
+                                        "format": "signatureVerification",
+                                        "hidden": false,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendanceVerification_CAPTURE_SIGNATURE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "attendeeSignature",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_ATTENDANCE_attendanceVerification_MAP_LABEL",
+                                        "order": 3,
+                                        "value": "",
+                                        "format": "map",
+                                        "hidden": true,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendanceVerification_MAP_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "attendanceLocation",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    },
+                                    {
+                                        "type": "string",
+                                        "label": "APP_CONFIG_ATTENDANCE_attendanceVerification_OFFLINE_LABEL",
+                                        "order": 4,
+                                        "value": "",
+                                        "format": "offlineMode",
+                                        "hidden": true,
+                                        "tooltip": "",
+                                        "helpText": "APP_CONFIG_ATTENDANCE_attendanceVerification_OFFLINE_HELP_TEXT",
+                                        "infoText": "",
+                                        "readOnly": false,
+                                        "fieldName": "offlineSync",
+                                        "deleteFlag": false,
+                                        "innerLabel": "",
+                                        "systemDate": false,
+                                        "validations": [],
+                                        "errorMessage": "",
+                                        "isMultiSelect": false
+                                    }
+                                ],
+                                "actionLabel": "APP_CONFIG_ATTENDANCE_attendanceVerification_ACTION_BUTTON_LABEL",
+                                "description": "APP_CONFIG_ATTENDANCE_attendanceVerification_SCREEN_DESCRIPTION"
+                            }
+                        ],
+                        "summary": false,
+                        "version": 1,
+                        "disabled": false,
+                        "onAction": [
+                            {
+                                "actions": [
+                                    {
+                                        "actionType": "NAVIGATION",
+                                        "properties": {
+                                            "name": "attendance-acknowledgement",
+                                            "type": "TEMPLATE"
+                                        }
+                                    }
+                                ],
+                                "condition": {
+                                    "expression": "DEFAULT"
+                                }
+                            }
+                        ],
+                        "isSelected": true,
+                        "screenType": "FORM"
+                    },
+                    {
+                        "body": [
+                            {
+                                "type": "template",
+                                "format": "panelCard",
+                                "heading": "ATTENDANCE_ACKNOWLEDGEMENT_HEADING",
+                                "description": "ATTENDANCE_ACKNOWLEDGEMENT_DESCRIPTION",
+                                "primaryAction": {
+                                    "actionType": "NAVIGATION",
+                                    "properties": {
+                                        "name": "searchBeneficiary",
+                                        "type": "TEMPLATE"
+                                    }
+                                },
+                                "primaryActionLabel": "ATTENDANCE_ACKNOWLEDGEMENT_PRIMARY_ACTION"
+                            }
+                        ],
+                        "name": "attendance-acknowledgement",
+                        "order": 2,
+                        "disabled": false,
+                        "isSelected": true,
+                        "screenType": "TEMPLATE"
+                    }
+                ],
+                "order": 8,
+                "active": true,
+                "project": "MR-DN",
+                "version": 1,
+                "disabled": false,
+                "isSelected": false,
+                "initialPage": "attendeeIdentification"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "e2bd8b28-e7d5-4f88-9ef9-952988bcd391",
+                "lastModifiedBy": "e67a72b6-bb3d-4fd4-bc01-d63508c03056",
+                "createdTime": 1770449155041,
+                "lastModifiedTime": 1775113288956
+            }
+        }

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Card,
   HeaderComponent,
@@ -11,60 +11,31 @@ import {
   TextBlock,
   PanelCard,
   SVG,
+  Loader,
+  Toast,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
 
-/**
- * Dummy feature data for the Attendance module.
- * In production, replace with MDMS fetch.
- */
-const ATTENDANCE_FEATURES = [
-  {
-    code: "QR_CODE_SCANNING",
-    description:
-      "Quickly scan and verify resources being delivered to beneficiaries.",
-    requiresSetup: true,
-  },
-  {
-    code: "PHOTO_VERIFICATION",
-    description:
-      "Quickly scan and verify resources being delivered to beneficiaries.",
-    requiresSetup: true,
-  },
-  {
-    code: "SIGNATURE_VERIFICATION",
-    description:
-      "Quickly scan and verify resources being delivered to beneficiaries.",
-    requiresSetup: true,
-  },
-  {
-    code: "MAP_VIEW",
-    description:
-      "Quickly scan and verify resources being delivered to beneficiaries.",
-    requiresSetup: false,
-  },
-  {
-    code: "OFFLINE_MODE",
-    description:
-      "Quickly scan and verify resources being delivered to beneficiaries.",
-    requiresSetup: false,
-  },
-];
+const MDMS_CONTEXT_PATH =
+  window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
 /* ─── Shared Sub-components ────────────────────────────────────────────────── */
 
-const FeatureTag = ({ requiresSetup }) => {
+const FeatureTag = ({ isSetup }) => {
   const { t } = useTranslation();
   return (
     <Tag
       label={
-        requiresSetup
+
+        isSetup
           ? t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_REQUIRES_SETUP)
           : t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_READY_TO_USE)
       }
-      type={requiresSetup ? "warning" : "success"}
+      type={isSetup ? "warning" : "success"}
       showIcon={false}
     />
   );
@@ -154,7 +125,7 @@ const NumberStepper = ({ value, onChange, min = 0, max = 99 }) => (
   </div>
 );
 
-/* ─── Step 1: Feature Selection Grid (Screens 2-3) ────────────────────────── */
+/* ─── Step 1: Feature Selection Grid ───────────────────────────────────────── */
 
 const FeatureSelectionStep = ({
   features,
@@ -180,8 +151,6 @@ const FeatureSelectionStep = ({
         padding: "2rem",
         background: "#FFFFFF",
         borderRadius: "0.75rem",
-        // maxHeight: "80vh",
-        // overflow: "auto",
       }}
     >
       {/* Header */}
@@ -202,7 +171,7 @@ const FeatureSelectionStep = ({
         >
           <HeaderComponent
             style={{
-              fontSize: "5rem",
+              fontSize: "2rem",
               lineHeight: "114%",
               color: "#0B4B66",
               margin: 0,
@@ -220,7 +189,6 @@ const FeatureSelectionStep = ({
             }}
           />
         </div>
-        {/* <SVG.Close fill="#0B0C0C" width="1.5rem" height="1.5rem" style={{ cursor: "pointer", flexShrink: 0 }} onClick={onClose} /> */}
       </div>
 
       {/* Feature Cards Grid */}
@@ -228,16 +196,18 @@ const FeatureSelectionStep = ({
         {featureRows.map((row, rowIndex) => (
           <div key={rowIndex} style={{ display: "flex", gap: "1.5rem" }}>
             {row.map((feature) => {
-              const isSelected = selectedFeatures.includes(feature.code);
+              const isSelected = selectedFeatures.includes(feature.format);
+              const isDisabled = feature.disabled;
               return (
                 <Card
                   key={feature.code}
                   className={`module-card ${isSelected ? "selected-card" : ""}`}
-                  onClick={() => onToggleFeature(feature.code)}
+                  onClick={() =>  onToggleFeature(feature.format)}
                   style={{
-                    cursor: "pointer",
+                    cursor: isDisabled ? "not-allowed" : "pointer",
+                    opacity: isDisabled ? 0.5 : 1,
                     position: "relative",
-                    width: "19.9375rem",
+                    width: "319px",
                     border: isSelected
                       ? "2.5px solid #C84C0E"
                       : "1px solid #787878",
@@ -247,6 +217,7 @@ const FeatureSelectionStep = ({
                       ? "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.16))"
                       : "none",
                     background: "#FFFFFF",
+                    height: "206px",
                   }}
                 >
                   {isSelected ? (
@@ -290,7 +261,7 @@ const FeatureSelectionStep = ({
                     >
                       {t(feature.code)}
                     </HeaderComponent>
-                    <FeatureTag requiresSetup={feature.requiresSetup} />
+                    <FeatureTag isSetup={feature.requiresSetup} />
                     <p
                       style={{
                         fontFamily: "Roboto, sans-serif",
@@ -359,7 +330,7 @@ const FeatureSelectionStep = ({
   );
 };
 
-/* ─── Step 2: Feature Configuration (Screens 4-5-6) ───────────────────────── */
+/* ─── Step 2: Feature Configuration ────────────────────────────────────────── */
 
 const FeatureConfigStep = ({
   features,
@@ -369,6 +340,7 @@ const FeatureConfigStep = ({
   onClose,
   featureConfigs,
   setFeatureConfigs,
+  isSaving,
 }) => {
   const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -382,7 +354,7 @@ const FeatureConfigStep = ({
         [activeFeature.code]: newConfig,
       }));
     },
-    [activeFeature, setFeatureConfigs],
+    [activeFeature, setFeatureConfigs]
   );
 
   const handleLocalNext = () => {
@@ -394,10 +366,10 @@ const FeatureConfigStep = ({
   };
 
   const renderConfigPanel = () => {
-    const code = activeFeature?.code?.toLowerCase() || "";
+    const format = activeFeature?.format || "";
     const config = featureConfigs[activeFeature?.code] || {};
 
-    if (code.includes("qr") || code.includes("scanner")) {
+    if (format === "scanner") {
       return (
         <Card
           style={{
@@ -411,44 +383,25 @@ const FeatureConfigStep = ({
             gap: "1.5rem",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              flex: 1,
-            }}
-          >
-            <span
-              style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}
-            >
-              {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_DYNAMIC_QR_CODE)} *
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
+            <span style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}>
+              {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_DYNAMIC_QR_CODE)} 
             </span>
-            <span
-              style={{
-                fontWeight: 400,
-                fontSize: "0.875rem",
-                color: "#787878",
-              }}
-            >
+            <span style={{ fontWeight: 400, fontSize: "0.875rem", color: "#787878" }}>
               {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_DYNAMIC_QR_CODE_DESC)}
             </span>
           </div>
           <Switch
             isCheckedInitially={config?.enableDynamicQR ?? true}
-            onToggle={(val) =>
-              handleConfigChange({ ...config, enableDynamicQR: val })
-            }
+            onToggle={(val) => handleConfigChange({ ...config, enableDynamicQR: val })}
           />
         </Card>
       );
     }
 
-    if (code.includes("photo")) {
+    if (format === "photoVerification") {
       return (
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           <Card
             style={{
               border: "1px solid #D6D5D4",
@@ -459,33 +412,17 @@ const FeatureConfigStep = ({
               gap: "1rem",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
-            >
-              <span
-                style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}
-              >
-                {t(I18N_KEYS.CAMPAIGN_CREATE.NUMBER_OF_DAILY_PHOTOS)} *
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <span style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}>
+                {t(I18N_KEYS.CAMPAIGN_CREATE.NUMBER_OF_DAILY_PHOTOS)} 
               </span>
-              <span
-                style={{
-                  fontWeight: 400,
-                  fontSize: "0.875rem",
-                  color: "#787878",
-                }}
-              >
+              <span style={{ fontWeight: 400, fontSize: "0.875rem", color: "#787878" }}>
                 {t(I18N_KEYS.CAMPAIGN_CREATE.NUMBER_OF_DAILY_PHOTOS_DESC)}
               </span>
             </div>
             <NumberStepper
               value={config?.dailyPhotoCount ?? 0}
-              onChange={(val) =>
-                handleConfigChange({ ...config, dailyPhotoCount: val })
-              }
+              onChange={(val) => handleConfigChange({ ...config, dailyPhotoCount: val })}
             />
           </Card>
           <Card
@@ -498,25 +435,11 @@ const FeatureConfigStep = ({
               gap: "1rem",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}
-            >
-              <span
-                style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}
-              >
-                {t(I18N_KEYS.CAMPAIGN_CREATE.SESSION_TIMINGS)} *
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <span style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}>
+                {t(I18N_KEYS.CAMPAIGN_CREATE.SESSION_TIMINGS)} 
               </span>
-              <span
-                style={{
-                  fontWeight: 400,
-                  fontSize: "0.875rem",
-                  color: "#787878",
-                }}
-              >
+              <span style={{ fontWeight: 400, fontSize: "0.875rem", color: "#787878" }}>
                 {t(I18N_KEYS.CAMPAIGN_CREATE.SESSION_TIMINGS_DESC)}
               </span>
             </div>
@@ -528,9 +451,7 @@ const FeatureConfigStep = ({
                 <TextInput
                   type="time"
                   value={config?.startTime || ""}
-                  onChange={(e) =>
-                    handleConfigChange({ ...config, startTime: e.target.value })
-                  }
+                  onChange={(e) => handleConfigChange({ ...config, startTime: e.target.value })}
                 />
               </LabelFieldPair>
               <LabelFieldPair style={{ width: "15.3125rem" }}>
@@ -540,9 +461,7 @@ const FeatureConfigStep = ({
                 <TextInput
                   type="time"
                   value={config?.endTime || ""}
-                  onChange={(e) =>
-                    handleConfigChange({ ...config, endTime: e.target.value })
-                  }
+                  onChange={(e) => handleConfigChange({ ...config, endTime: e.target.value })}
                 />
               </LabelFieldPair>
             </div>
@@ -551,7 +470,37 @@ const FeatureConfigStep = ({
       );
     }
 
-    // Ready-to-use features — no config panel needed
+    if (format === "signatureVerification") {
+      return (
+        <Card
+          style={{
+            border: "1px solid #D6D5D4",
+            borderRadius: "0.75rem",
+            padding: "1rem",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1.5rem",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
+            <span style={{ fontWeight: 700, fontSize: "1rem", color: "#0B4B66" }}>
+              {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_SIGNATURE_VERIFICATION)} *
+            </span>
+            <span style={{ fontWeight: 400, fontSize: "0.875rem", color: "#787878" }}>
+              {t(I18N_KEYS.CAMPAIGN_CREATE.ENABLE_SIGNATURE_VERIFICATION_DESC)}
+            </span>
+          </div>
+          <Switch
+            isCheckedInitially={config?.enableSignature ?? true}
+            onToggle={(val) => handleConfigChange({ ...config, enableSignature: val })}
+          />
+        </Card>
+      );
+    }
+
+    // Ready-to-use features (map, offlineMode) — no config panel
     return null;
   };
 
@@ -564,7 +513,6 @@ const FeatureConfigStep = ({
         borderRadius: "0.75rem",
       }}
     >
-      {/* Body */}
       <div
         style={{
           display: "flex",
@@ -577,19 +525,12 @@ const FeatureConfigStep = ({
           flex: 1,
         }}
       >
-        {/* Stepper + Close */}
         <div style={{ display: "flex", alignItems: "center", gap: "1.75rem" }}>
           <ProgressStepper currentStep={currentStep} totalSteps={3} />
-          {/* <SVG.Close fill="#0B0C0C" width="1.5rem" height="1.5rem" style={{ cursor: "pointer", flexShrink: 0 }} onClick={onClose} /> */}
         </div>
 
         <HeaderComponent
-          style={{
-            fontSize: "2rem",
-            lineHeight: "114%",
-            color: "#0B4B66",
-            margin: 0,
-          }}
+          style={{ fontSize: "2rem", lineHeight: "114%", color: "#0B4B66", margin: 0 }}
         >
           {t(I18N_KEYS.CAMPAIGN_CREATE.CUSTOMIZE_YOUR_FEATURES)}
         </HeaderComponent>
@@ -598,14 +539,9 @@ const FeatureConfigStep = ({
           bodyStyle={{ color: "#787878", fontSize: "1rem", margin: 0 }}
         />
 
-        {/* Sidebar + Panel */}
-        <div
-          style={{ display: "flex", gap: "4.25rem", alignItems: "flex-start" }}
-        >
-          {/* Left Sidebar */}
-          <div
-            style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}
-          >
+        <div style={{ display: "flex", gap: "4.25rem", alignItems: "flex-start" }}>
+          {/* Sidebar */}
+          <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
             {features.map((feature, index) => {
               const isActive = index === activeIndex;
               const isFirst = index === 0;
@@ -623,9 +559,7 @@ const FeatureConfigStep = ({
                     padding: isActive ? "2rem 1.5rem" : "1.5rem",
                     gap: "0.625rem",
                     background: isActive ? "#FFFFFF" : "#FAFAFA",
-                    border: isActive
-                      ? "1px solid #C84C0E"
-                      : "1px solid #D6D5D4",
+                    border: isActive ? "1px solid #C84C0E" : "1px solid #D6D5D4",
                     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.15)",
                     cursor: "pointer",
                     borderRadius: isActive
@@ -648,15 +582,13 @@ const FeatureConfigStep = ({
                   >
                     {t(feature.code)}
                   </span>
-                  {isActive && (
-                    <FeatureTag requiresSetup={feature.requiresSetup} />
-                  )}
+                  {isActive && <FeatureTag isSetup={feature.requiresSetup} />}
                 </div>
               );
             })}
           </div>
 
-          {/* Right Panel */}
+          {/* Config Panel */}
           <Card
             style={{
               flex: 1,
@@ -669,21 +601,9 @@ const FeatureConfigStep = ({
               gap: "1.5rem",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-                width: "100%",
-              }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", width: "100%" }}>
               <HeaderComponent
-                style={{
-                  fontSize: "1.5rem",
-                  lineHeight: "114%",
-                  color: "#0B4B66",
-                  margin: 0,
-                }}
+                style={{ fontSize: "1.5rem", lineHeight: "114%", color: "#0B4B66", margin: 0 }}
               >
                 {t(activeFeature?.code)}
               </HeaderComponent>
@@ -717,18 +637,11 @@ const FeatureConfigStep = ({
           style={{ minWidth: "15.0625rem", height: "2.5rem" }}
         />
         <Button
-          label={
-            isLast
-              ? t(I18N_KEYS.CAMPAIGN_CREATE.SAVE)
-              : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)
-          }
-          title={
-            isLast
-              ? t(I18N_KEYS.CAMPAIGN_CREATE.SAVE)
-              : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)
-          }
+          label={isLast ? t(I18N_KEYS.CAMPAIGN_CREATE.SAVE) : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
+          title={isLast ? t(I18N_KEYS.CAMPAIGN_CREATE.SAVE) : t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
           variation="primary"
           onClick={handleLocalNext}
+          isDisabled={isSaving}
           style={{ minWidth: "15.0625rem", height: "2.5rem" }}
         />
       </div>
@@ -736,7 +649,7 @@ const FeatureConfigStep = ({
   );
 };
 
-/* ─── Step 3: Success Panel (Screen 7) ─────────────────────────────────────── */
+/* ─── Step 3: Success Panel ────────────────────────────────────────────────── */
 
 const SuccessStep = ({ onContinue }) => {
   const { t } = useTranslation();
@@ -772,10 +685,243 @@ const SuccessStep = ({ onContinue }) => {
             style={{ width: "100%" }}
           />,
         ]}
-        showAsSvg={true}
       />
     </div>
   );
+};
+
+/* ─── MDMS Helpers ─────────────────────────────────────────────────────────── */
+
+/**
+ * Creates FormConfig for ATTENDANCE from FormConfigTemplate if it doesn't exist.
+ * Mirrors what AppModule.js does for other modules.
+ */
+const ensureFormConfigExists = async ({ tenantId, campaignNumber, projectType }) => {
+  const formConfigSchemaCode = `${CONSOLE_MDMS_MODULENAME}.${HCMCONSOLE_APPCONFIG_MODULENAME}`;
+
+  // Check if FormConfig already exists for this campaign + ATTENDANCE
+  const existingResponse = await Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId,
+        schemaCode: formConfigSchemaCode,
+        isActive: true,
+        filters: {
+          project: campaignNumber,
+          name: "ATTENDANCE",
+        },
+      },
+    },
+    useCache: false,
+  });
+
+  if (existingResponse?.mdms && existingResponse.mdms.length > 0) {
+    // Already exists — return it
+    return existingResponse.mdms[0];
+  }
+
+  // Fetch the ATTENDANCE template for the project type
+  const templateSchemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfigTemplate`;
+  const templateResponse = await Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId,
+        schemaCode: templateSchemaCode,
+        isActive: true,
+        filters: {
+          name: "ATTENDANCE",
+          project: projectType,
+        },
+      },
+    },
+    useCache: false,
+  });
+
+  if (!templateResponse?.mdms || templateResponse.mdms.length === 0) {
+    throw new Error("No ATTENDANCE FormConfigTemplate found for project type: " + projectType);
+  }
+
+  const templateData = templateResponse.mdms[0].data;
+
+  // Create FormConfig from template, scoped to this campaign
+  const formConfigData = {
+    ...templateData,
+    project: campaignNumber,
+    isSelected: true,
+    active: true,
+    version: 1,
+  };
+
+  const createResponse = await Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_create/${formConfigSchemaCode}`,
+    body: {
+      Mdms: {
+        tenantId,
+        schemaCode: formConfigSchemaCode,
+        data: formConfigData,
+        isActive: true,
+      },
+    },
+    useCache: false,
+  });
+
+  return createResponse?.mdms;
+};
+
+/**
+ * Updates hidden flags in FormConfig based on selected features.
+ * Same logic as useUpdateAppConfigForFeatures but inline for the popup flow.
+ */
+const updateFormConfigFeatureFlags = async ({
+  tenantId,
+  campaignNumber,
+  selectedFormats,
+  availableFeatures,
+}) => {
+  const formConfigSchemaCode = `${CONSOLE_MDMS_MODULENAME}.${HCMCONSOLE_APPCONFIG_MODULENAME}`;
+
+  // Fetch the FormConfig for ATTENDANCE
+  const response = await Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId,
+        schemaCode: formConfigSchemaCode,
+        isActive: true,
+        filters: {
+          project: campaignNumber,
+          name: "ATTENDANCE",
+        },
+      },
+    },
+    useCache: false,
+  });
+
+  if (!response?.mdms || response.mdms.length === 0) {
+    throw new Error("No FormConfig found for ATTENDANCE");
+  }
+
+  const record = response.mdms[0];
+
+  // All available feature formats for ATTENDANCE
+  const featureFormats = availableFeatures
+    .filter((f) => !f.disabled)
+    .map((f) => f.format);
+
+  // Update hidden flags on pages → properties based on format match
+  const updatedFlows = record.data.flows.map((flow) => {
+    if (!flow.pages) return flow;
+
+    return {
+      ...flow,
+      pages: flow.pages.map((page) => ({
+        ...page,
+        properties: page.properties?.map((property) => {
+          let hidden = property.hidden;
+
+          // Check if field is required (always visible)
+          const isRequired = property.validations?.some(
+            (rule) => rule.type === "required" && rule.value
+          );
+
+          if (isRequired) {
+            hidden = false;
+          } else if (featureFormats.includes(property.format)) {
+            // Toggle hidden based on whether this format was selected
+            hidden = !selectedFormats.includes(property.format);
+          }
+
+          return { ...property, hidden };
+        }),
+      })),
+    };
+  });
+
+  // Update MDMS record
+  return Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_update/${formConfigSchemaCode}`,
+    body: {
+      Mdms: {
+        ...record,
+        data: {
+          ...record.data,
+          flows: updatedFlows,
+        },
+      },
+    },
+    useCache: false,
+  });
+};
+
+/**
+ * Saves additional feature configuration (photo count, session timings, etc.)
+ * to a separate MDMS schema.
+ */
+const saveFeatureConfigToMDMS = async ({
+  tenantId,
+  campaignNumber,
+  projectType,
+  selectedFormats,
+  featureConfigs,
+}) => {
+  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.AttendanceFeatureConfig`;
+  const payload = {
+    Mdms: {
+      tenantId,
+      schemaCode,
+      isActive: true,
+      data: {
+        project: campaignNumber,
+        projectType,
+        module: "ATTENDANCE",
+        selectedFormats,
+        featureConfigs,
+      },
+    },
+  };
+
+  // Check if a record already exists
+  const searchResponse = await Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId,
+        schemaCode,
+        isActive: true,
+        filters: {
+          project: campaignNumber,
+          module: "ATTENDANCE",
+        },
+      },
+    },
+    useCache: false,
+  });
+
+  if (searchResponse?.mdms && searchResponse.mdms.length > 0) {
+    const existing = searchResponse.mdms[0];
+    return Digit.CustomService.getResponse({
+      url: `/${MDMS_CONTEXT_PATH}/v2/_update/${schemaCode}`,
+      body: {
+        Mdms: {
+          ...existing,
+          data: {
+            ...existing.data,
+            selectedFormats,
+            featureConfigs,
+          },
+        },
+      },
+      useCache: false,
+    });
+  }
+
+  return Digit.CustomService.getResponse({
+    url: `/${MDMS_CONTEXT_PATH}/v2/_create/${schemaCode}`,
+    body: payload,
+    useCache: false,
+  });
 };
 
 /* ─── Main Popup Orchestrator ──────────────────────────────────────────────── */
@@ -786,54 +932,151 @@ const AttendanceFeatureFlowPopup = ({
   projectType,
   tenantId,
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [flowStep, setFlowStep] = useState(0); // 0=select, 1=configure, 2=success
-  const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const [selectedFormats, setSelectedFormats] = useState([]); // stores format values, not codes
   const [featureConfigs, setFeatureConfigs] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
+  const [showToast, setShowToast] = useState(null);
 
-  const selectedFeatureObjects = useMemo(
-    () => ATTENDANCE_FEATURES.filter((f) => selectedFeatures.includes(f.code)),
-    [selectedFeatures],
+  const resolvedTenantId = tenantId || Digit?.ULBService?.getCurrentTenantId();
+
+  // Fetch features from AppModuleSchema instead of hardcoded data
+  const { isLoading: isModuleSchemaLoading, data: moduleSchemaData } =
+    Digit.Hooks.useCustomAPIHook(
+      Digit.Utils.campaign.getMDMSV1Criteria(
+        resolvedTenantId,
+        CONSOLE_MDMS_MODULENAME,
+        [{ name: "AppModuleSchema" }],
+        "MDMSDATA-AppModuleSchema-ATTENDANCE",
+        Digit.Utils.campaign.getMDMSV1Selector(
+          CONSOLE_MDMS_MODULENAME,
+          "AppModuleSchema"
+        )
+      )
+    );
+
+  // Extract ATTENDANCE features from AppModuleSchema
+  const attendanceFeatures = useMemo(() => {
+    if (!moduleSchemaData) return [];
+    const attendanceModule = moduleSchemaData.find(
+      (mod) => mod.code === "ATTENDANCE"
+    );
+    return attendanceModule?.features || [];
+  }, [moduleSchemaData]);
+
+  // Only show features that can be configured (not disabled)
+  const configurableFeatures = useMemo(
+    () => attendanceFeatures.filter((f) => !f.disabled),
+    [attendanceFeatures]
   );
 
-  const handleToggleFeature = useCallback((code) => {
-    setSelectedFeatures((prev) =>
-      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code],
+  // Features selected by format for config step
+  const selectedFeatureObjects = useMemo(
+    () => attendanceFeatures.filter((f) => selectedFormats.includes(f.format)),
+    [selectedFormats, attendanceFeatures]
+  );
+
+  // Only configurable features among selected (for config step sidebar)
+  const selectedConfigurableFeatures = useMemo(
+    () => selectedFeatureObjects.filter((f) => !f.disabled),
+    [selectedFeatureObjects]
+  );
+
+  const handleToggleFeature = useCallback((format) => {
+    setSelectedFormats((prev) =>
+      prev.includes(format)
+        ? prev.filter((f) => f !== format)
+        : [...prev, format]
     );
   }, []);
 
   const handleSkip = useCallback(() => {
     onClose();
-    // navigate(
-    //   `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=ATTENDANCE&version=1`,
-    // );
-  }, [onClose, navigate, campaignNumber]);
+  }, [onClose]);
 
   const handleContinueToConfig = useCallback(() => {
-    if (selectedFeatures.length > 0) {
+    if (selectedFormats.length > 0) {
       setFlowStep(1);
     }
-  }, [selectedFeatures]);
+  }, [selectedFormats]);
 
   const handleBackToSelection = useCallback(() => {
     setFlowStep(0);
   }, []);
 
-  const handleSaveConfig = useCallback(() => {
-    setFlowStep(2);
-  }, []);
+  const handleSaveConfig = useCallback(async () => {
+    setIsSaving(true);
+    try {
+      // Step 1: Ensure FormConfig exists for ATTENDANCE (create from template if needed)
+      await ensureFormConfigExists({
+        tenantId: resolvedTenantId,
+        campaignNumber,
+        projectType,
+      });
+
+      // Step 2: Update hidden flags in FormConfig based on selected features
+      await updateFormConfigFeatureFlags({
+        tenantId: resolvedTenantId,
+        campaignNumber,
+        selectedFormats,
+        availableFeatures: attendanceFeatures,
+      });
+
+      // Step 3: Save additional feature config (photo count, session timings, etc.)
+      await saveFeatureConfigToMDMS({
+        tenantId: resolvedTenantId,
+        campaignNumber,
+        projectType,
+        selectedFormats,
+        featureConfigs,
+      });
+
+      setFlowStep(2);
+    } catch (error) {
+      console.error("Error saving attendance feature config:", error);
+      setShowToast({
+        key: "error",
+        label: t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_CONFIG_SAVE_ERROR),
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [
+    resolvedTenantId,
+    campaignNumber,
+    projectType,
+    selectedFormats,
+    featureConfigs,
+    attendanceFeatures,
+    t,
+  ]);
 
   const handleFinalContinue = useCallback(() => {
     onClose();
     navigate(
-      `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=ATTENDANCE&version=1`,
+      `/${window.contextPath}/employee/campaign/app-config-init?campaignNumber=${campaignNumber}&flow=ATTENDANCE&version=1`
     );
   }, [onClose, navigate, campaignNumber]);
 
-
+  if (isModuleSchemaLoading) {
+    return (
+      <PopUp
+        style={{ maxWidth: "70rem", width: "100%", padding: 0 }}
+        type="default"
+        className="attendance-feature-flow-popup"
+        onOverlayClick={onClose}
+        onClose={onClose}
+        heading=""
+        children={[<Loader key="loader" page={false} />]}
+        sortFooterChildren={false}
+      />
+    );
+  }
 
   return (
-  
+    <>
       <PopUp
         style={{ maxWidth: "70rem", width: "100%", padding: 0 }}
         type="default"
@@ -843,10 +1086,19 @@ const AttendanceFeatureFlowPopup = ({
         heading=""
         children={[
           <div key="flow-content">
+            {isSaving && (
+              <Loader
+                page={true}
+                variant="OverlayLoader"
+                loaderText={t(
+                  I18N_KEYS.CAMPAIGN_CREATE.SAVING_FEATURES_CONFIG_IN_SERVER
+                )}
+              />
+            )}
             {flowStep === 0 && (
               <FeatureSelectionStep
-                features={ATTENDANCE_FEATURES}
-                selectedFeatures={selectedFeatures}
+                features={attendanceFeatures}
+                selectedFeatures={selectedFormats}
                 onToggleFeature={handleToggleFeature}
                 onSkip={handleSkip}
                 onNext={handleContinueToConfig}
@@ -855,21 +1107,31 @@ const AttendanceFeatureFlowPopup = ({
             )}
             {flowStep === 1 && (
               <FeatureConfigStep
-                features={selectedFeatureObjects}
+                features={selectedConfigurableFeatures}
                 currentStep={1}
                 onBack={handleBackToSelection}
                 onNextOrSave={handleSaveConfig}
                 onClose={onClose}
                 featureConfigs={featureConfigs}
                 setFeatureConfigs={setFeatureConfigs}
+                isSaving={isSaving}
               />
             )}
-            {flowStep === 2 && <SuccessStep onContinue={handleFinalContinue} />}
+            {flowStep === 2 && (
+              <SuccessStep onContinue={handleFinalContinue} />
+            )}
           </div>,
         ]}
         sortFooterChildren={false}
       />
-   
+      {showToast && (
+        <Toast
+          type="error"
+          label={showToast.label}
+          onClose={() => setShowToast(null)}
+        />
+      )}
+    </>
   );
 };
 

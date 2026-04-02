@@ -13,21 +13,21 @@ const NewAppFeatureSuccess = () => {
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
       <PanelCard
         type="success"
-        message={t("GREAT_YOU_ARE_ALL_SET")}
+        message={t(I18N_KEYS.CAMPAIGN_CREATE.GREAT_YOU_ARE_ALL_SET)}
         info=""
         response=""
         children={[
           <div key="desc" style={{ margin: 0 }}>
             <p style={{ margin: 0, color: "#505A5F", fontSize: "0.875rem", lineHeight: "137%" }}>
-              {t("FEATURE_CONFIG_SUCCESS_DESCRIPTION")}
+              {t(I18N_KEYS.CAMPAIGN_CREATE.FEATURE_CONFIG_SUCCESS_DESCRIPTION)}
             </p>
           </div>,
         ]}
         footerChildren={[
           <Button
             key="continue"
-            label={t("CONTINUE_TO_APP_CONFIGURATION")}
-            title={t("CONTINUE_TO_APP_CONFIGURATION")}
+            label={t(I18N_KEYS.CAMPAIGN_CREATE.START_APPLICATION_CONFIGURATION)}
+            title={t(I18N_KEYS.CAMPAIGN_CREATE.START_APPLICATION_CONFIGURATION)}
             variation="primary"
             onClick={() => {
               navigate(
