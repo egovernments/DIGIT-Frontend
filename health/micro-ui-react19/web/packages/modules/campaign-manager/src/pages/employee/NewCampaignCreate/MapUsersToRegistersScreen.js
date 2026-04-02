@@ -122,17 +122,29 @@ const MapUsersToRegistersScreen = () => {
   const [officerFilter, setOfficerFilter] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({ registerId: "", officer: "" });
 
+  const isSearchDisabled =
+    (registerIdFilter.length === 0 && officerFilter.length === 0) ||
+    (registerIdFilter.length > 0 && registerIdFilter.length < 3) ||
+    (officerFilter.length > 0 && officerFilter.length < 3);
+
   // Fetch attendance registers only when register creation is completed
   const attendanceParams = {
     tenantId,
-    campaignId: campaignData?.id,
+    // campaignId: campaignData?.id,
+    campaignNumber: campaignNumber,
     limit: rowsPerPage,
     offset: (currentPage - 1) * rowsPerPage,
   };
   if (appliedFilters.registerId) {
     attendanceParams.serviceCode = appliedFilters.registerId;
-  } else if (campaignData?.serviceCode) {
-    attendanceParams.serviceCode = campaignData.serviceCode;
+    attendanceParams.isServiceCodeExact = false;
+  } 
+  // else if (campaignData?.serviceCode) {
+  //   attendanceParams.serviceCode = campaignData.serviceCode;
+  // }
+  if (appliedFilters.officer) {
+    attendanceParams.staffName = appliedFilters.officer;
+    attendanceParams.staffTypes = "APPROVER";
   }
 
   const attendanceReqCriteria = {
@@ -140,7 +152,7 @@ const MapUsersToRegistersScreen = () => {
     params: attendanceParams,
     body: {},
     config: {
-      enabled: !!campaignData?.id && isRegisterCreationCompleted,
+      enabled: !!campaignNumber && isRegisterCreationCompleted,
       select: (data) => ({
         registers: data?.attendanceRegister || [],
         totalCount: data?.totalCount ?? 0,
@@ -149,7 +161,7 @@ const MapUsersToRegistersScreen = () => {
       cacheTime: 0,
       keepPreviousData: true,
     },
-    changeQueryName: `registers_${currentPage}_${rowsPerPage}_${appliedFilters.registerId}`,
+    changeQueryName: `registers_${currentPage}_${rowsPerPage}_${appliedFilters.registerId}_${appliedFilters.officer}`,
   };
   const { data: registerData = { registers: [], totalCount: 0 }, isLoading, isFetching, refetch: refetchRegisters } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
   const registers = registerData.registers;
@@ -173,12 +185,7 @@ const MapUsersToRegistersScreen = () => {
     return approver?.additionalDetails?.staffName || t(I18N_KEYS.COMMON.NA);
   };
 
-  const filteredRegisters = registers.filter((reg) => {
-    const matchOfficer =
-      !appliedFilters.officer ||
-      getApproverName(reg).toLowerCase().includes(appliedFilters.officer.toLowerCase());
-    return matchOfficer;
-  });
+  const filteredRegisters = registers;
 
   const handleSearch = () => {
     setAppliedFilters({ registerId: registerIdFilter, officer: officerFilter });
@@ -373,13 +380,16 @@ const MapUsersToRegistersScreen = () => {
             >
               {t(I18N_KEYS.COMMON.CLEAR_ALL)}
             </span>
-            <Button
-              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
-              variation="secondary"
-              icon="Search"
-              size="small"
-              onClick={handleSearch}
-            />
+            <span title={isSearchDisabled ? t("HCM_MIN_3_CHARS_REQUIRED") : undefined} style={{ display: "inline-block" }}>
+              <Button
+                label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
+                variation="secondary"
+                icon="Search"
+                size="small"
+                onClick={handleSearch}
+                isDisabled={isSearchDisabled}
+              />
+            </span>
           </div>
         </div>
       </Card>
@@ -480,5 +490,6 @@ const inputStyle = {
   outline: "none",
   boxSizing: "border-box",
 };
+
 
 export default MapUsersToRegistersScreen;

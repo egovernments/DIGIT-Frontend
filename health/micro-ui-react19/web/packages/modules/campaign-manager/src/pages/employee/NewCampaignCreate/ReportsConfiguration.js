@@ -35,6 +35,7 @@ const getTimezoneOffset = (date) => {
   return `${hours}${minutes}`;
 };
 
+
 const ALL_FREQUENCY_OPTIONS = [
   { code: "DAILY", label: "HCM_REPORT_FREQUENCY_DAILY" },
   { code: "WEEKLY", label: "HCM_REPORT_FREQUENCY_WEEKLY" },
