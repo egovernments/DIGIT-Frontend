@@ -8,7 +8,7 @@ import {
   Footer,
   CheckBox,
   MultiSelectDropdown,
-  FieldV1,
+  // FieldV1, // TODO: Uncomment when CUSTOM frequency is re-enabled
   Loader,
   Toast,
   LabelFieldPair,
@@ -35,32 +35,14 @@ const getTimezoneOffset = (date) => {
   return `${hours}${minutes}`;
 };
 
-// Dummy data — kept as fallback, will be removed once MDMS is verified
-// const AVAILABLE_REPORTS = [
-//   { code: "HOUSEHOLD_REGISTRATION_REPORT", label: "HCM_REPORT_HOUSEHOLD_REGISTRATION", applicableTypes: ["SMC", "MDA"] },
-//   { code: "REGISTRATION_AND_DISTRIBUTION_DATA", label: "HCM_REPORT_REGISTRATION_AND_DISTRIBUTION" },
-//   { code: "COHORT_DATA_REUSE_TRACKING_CYCLEWISE", label: "HCM_REPORT_COHORT_DATA_REUSE_CYCLEWISE" },
-//   { code: "CHILDREN_TREATED_SINGLE_CYCLE", label: "HCM_REPORT_CHILDREN_TREATED_SINGLE_CYCLE" },
-//   { code: "COHORT_CHILDREN_TREATED_ALL_CYCLES", label: "HCM_REPORT_COHORT_CHILDREN_TREATED_ALL_CYCLES" },
-//   { code: "RESOURCE_SCANNING_DISTRIBUTION", label: "HCM_REPORT_RESOURCE_SCANNING_DISTRIBUTION" },
-//   { code: "STOCK_TRANSACTIONS", label: "HCM_REPORT_STOCK_TRANSACTIONS" },
-//   { code: "RESOURCE_SCANNING_INVENTORY", label: "HCM_REPORT_RESOURCE_SCANNING_INVENTORY" },
-//   { code: "DUPLICATE_REPORTS", label: "HCM_REPORT_DUPLICATE_REPORTS" },
-//   { code: "SUSPECTED_ANOMALIES", label: "HCM_REPORT_SUSPECTED_ANOMALIES" },
-//   { code: "ATTENDANCE", label: "HCM_REPORT_ATTENDANCE" },
-//   { code: "DUPLICATE_VOUCHER_USAGE", label: "HCM_REPORT_DUPLICATE_VOUCHER_USAGE", applicableTypes: ["SMC"] },
-//   { code: "SUPERVISION_CHECKLIST_RESPONSES", label: "HCM_REPORT_SUPERVISION_CHECKLIST_RESPONSES" },
-//   { code: "REFERRAL", label: "HCM_REPORT_REFERRAL" },
-//   { code: "ADVERSE_EFFECTS", label: "HCM_REPORT_ADVERSE_EFFECTS" },
-//   { code: "DATA_REUSE_CAMPAIGNWISE", label: "HCM_REPORT_DATA_REUSE_CAMPAIGNWISE" },
-// ];
 
 const ALL_FREQUENCY_OPTIONS = [
   { code: "DAILY", label: "HCM_REPORT_FREQUENCY_DAILY" },
   { code: "WEEKLY", label: "HCM_REPORT_FREQUENCY_WEEKLY" },
   { code: "MONTHLY", label: "HCM_REPORT_FREQUENCY_MONTHLY" },
   { code: "END_OF_CAMPAIGN", label: "HCM_REPORT_FREQUENCY_END_OF_CAMPAIGN" },
-  { code: "CUSTOM", label: "HCM_REPORT_FREQUENCY_CUSTOM" },
+  // TODO: Uncomment when CUSTOM frequency is re-enabled
+  // { code: "CUSTOM", label: "HCM_REPORT_FREQUENCY_CUSTOM" },
 ];
 
 const STEP_SELECTION = 0;
@@ -160,11 +142,20 @@ const ReportsConfiguration = () => {
         freqConfig[reportName].frequencies.push(freq);
       }
 
+      // TODO: Uncomment when CUSTOM frequency is re-enabled
       // If custom frequency, populate the date range
-      if (freq === "CUSTOM" && item?.data?.customReportStartTime) {
-        freqConfig[reportName].customStartDate = item.data.customReportStartTime;
-        freqConfig[reportName].customEndDate = item.data.customReportEndTime || "";
-      }
+      // Convert MDMS format "DD-MM-YYYY HH:MM:SS+TZ" to "YYYY-MM-DD" for date input
+      // if (freq === "CUSTOM" && item?.data?.customReportStartTime) {
+      //   const mdmsToInputDate = (mdmsDate) => {
+      //     if (!mdmsDate) return "";
+      //     const datePart = mdmsDate.split(" ")?.[0];
+      //     const parts = datePart?.split("-");
+      //     if (parts?.length !== 3) return "";
+      //     return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      //   };
+      //   freqConfig[reportName].customStartDate = mdmsToInputDate(item.data.customReportStartTime);
+      //   freqConfig[reportName].customEndDate = mdmsToInputDate(item.data.customReportEndTime);
+      // }
     });
 
     setSelectedReports(reports);
@@ -226,17 +217,17 @@ const ReportsConfiguration = () => {
     }));
   }, []);
 
-  const handleCustomDateChange = useCallback((reportCode, field, value) => {
-    const isValidDate = value && !isNaN(new Date(value).getTime());
-
-    setFrequencyConfig((prev) => ({
-      ...prev,
-      [reportCode]: {
-        ...prev[reportCode],
-        [field]: isValidDate ? value : null,
-      },
-    }));
-  }, []);
+  // TODO: Uncomment when CUSTOM frequency is re-enabled
+  // const handleCustomDateChange = useCallback((reportCode, field, value) => {
+  //   const isValidDate = value && !isNaN(new Date(value).getTime());
+  //   setFrequencyConfig((prev) => ({
+  //     ...prev,
+  //     [reportCode]: {
+  //       ...prev[reportCode],
+  //       [field]: isValidDate ? value : null,
+  //     },
+  //   }));
+  // }, []);
 
   const getSelectedFrequencies = useCallback(
     (reportCode) => {
@@ -253,8 +244,9 @@ const ReportsConfiguration = () => {
         if (selectedReports[code] && !updatedConfig[code]) {
           updatedConfig[code] = {
             frequencies: [],
-            customStartDate: "",
-            customEndDate: "",
+            // TODO: Uncomment when CUSTOM frequency is re-enabled
+            // customStartDate: "",
+            // customEndDate: "",
           };
         }
       });
@@ -307,16 +299,17 @@ const ReportsConfiguration = () => {
           campaignIdentifier: campaignNumber,
         };
 
-        if (freq === "CUSTOM") {
-          const customStart = frequencyConfig[reportCode]?.customStartDate;
-          const customEnd = frequencyConfig[reportCode]?.customEndDate;
-          payload.customReportStartTime = customStart
-            ? formatEpochToDate(new Date(customStart).getTime(), tz)
-            : campaignStartDate;
-          payload.customReportEndTime = customEnd
-            ? formatEpochToDate(new Date(customEnd).getTime(), tz)
-            : campaignEndDate;
-        }
+        // TODO: Uncomment when CUSTOM frequency is re-enabled
+        // if (freq === "CUSTOM") {
+        //   const customStart = frequencyConfig[reportCode]?.customStartDate;
+        //   const customEnd = frequencyConfig[reportCode]?.customEndDate;
+        //   payload.customReportStartTime = customStart
+        //     ? formatEpochToDate(new Date(customStart).getTime(), tz)
+        //     : campaignStartDate;
+        //   payload.customReportEndTime = customEnd
+        //     ? formatEpochToDate(new Date(customEnd).getTime(), tz)
+        //     : campaignEndDate;
+        // }
 
         return payload;
       };
@@ -527,7 +520,8 @@ const ReportsConfiguration = () => {
           >
             {selectedReportsList.map((report, index) => {
               const selectedFrequencies = getSelectedFrequencies(report.code);
-              const hasCustom = selectedFrequencies.includes("CUSTOM");
+              // TODO: Uncomment when CUSTOM frequency is re-enabled
+              // const hasCustom = selectedFrequencies.includes("CUSTOM");
               const frequencyOptions = getFrequencyOptionsForReport(
                 report.code,
               );
@@ -545,26 +539,6 @@ const ReportsConfiguration = () => {
                     {t(report.label)}
                   </div>
                   <div className="reports-configuration__frequency-row-controls">
-                    {/* <div
-                      className="digit-field .digit-frequency-selection-filter"
-                      style={{ width: "100%" ,minWidth:"25rem"}}
-                    >
-                      <MultiSelectDropdown
-                        props={{ className: "reports-frequency-dropdown" }}
-                        t={t}
-                        options={frequencyOptions}
-                        optionsKey="label"
-                        selected={frequencyOptions.filter((o) =>
-                          selectedFrequencies.includes(o.code),
-                        )}
-                        onSelect={(value) =>
-                          handleFrequencyChange(report.code, value)
-                        }
-                        style={{ minWidth: "25rem" }}
-                        disablePortal={true}
-                        config={{ isDropdownWithChip: false }}
-                      />
-                    </div> */}
                     <LabelFieldPair
                       removeMargin={true}
                       vertical={true}
@@ -596,64 +570,36 @@ const ReportsConfiguration = () => {
                       </div>
                     </LabelFieldPair>
 
+                    {/* TODO: Uncomment when CUSTOM frequency is re-enabled
                     {hasCustom && (
                       <div className="reports-configuration__custom-dates">
                         <FieldV1
                           withoutLabel={false}
                           label={t("HCM_CUSTOM_START_DATE")}
                           type="date"
-                          value={
-                            frequencyConfig[report.code]?.customStartDate || null
-                          }
+                          value={frequencyConfig[report.code]?.customStartDate || null}
                           populators={{
                             newDateFormat: true,
-                            min: campaignData?.startDate
-                              ? Digit.Utils.date.getDate(campaignData.startDate)
-                              : undefined,
-                            max: campaignData?.endDate
-                              ? Digit.Utils.date.getDate(campaignData.endDate)
-                              : undefined,
-                            alignFieldPairVerically: true,
+                            min: campaignData?.startDate ? Digit.Utils.date.getDate(campaignData.startDate) : undefined,
+                            max: campaignData?.endDate ? Digit.Utils.date.getDate(campaignData.endDate) : undefined,
                           }}
-                          onChange={(d) =>
-                            handleCustomDateChange(
-                              report.code,
-                              "customStartDate",
-                              d,
-                            )
-                          }
+                          onChange={(d) => handleCustomDateChange(report.code, "customStartDate", d)}
                         />
                         <FieldV1
                           withoutLabel={false}
                           label={t("HCM_CUSTOM_END_DATE")}
                           type="date"
-                          value={
-                            frequencyConfig[report.code]?.customEndDate || ""
-                          }
+                          value={frequencyConfig[report.code]?.customEndDate || null}
                           populators={{
                             newDateFormat: true,
-                            min:
-                              frequencyConfig[report.code]?.customStartDate ||
-                              (campaignData?.startDate
-                                ? Digit.Utils.date.getDate(
-                                    campaignData.startDate,
-                                  )
-                                : ""),
-                            max: campaignData?.endDate
-                              ? Digit.Utils.date.getDate(campaignData.endDate)
-                              : "",
-                            alignFieldPairVerically: true,
+                            min: frequencyConfig[report.code]?.customStartDate || (campaignData?.startDate ? Digit.Utils.date.getDate(campaignData.startDate) : undefined),
+                            max: campaignData?.endDate ? Digit.Utils.date.getDate(campaignData.endDate) : undefined,
                           }}
-                          onChange={(d) =>
-                            handleCustomDateChange(
-                              report.code,
-                              "customEndDate",
-                              d,
-                            )
-                          }
+                          onChange={(d) => handleCustomDateChange(report.code, "customEndDate", d)}
                         />
                       </div>
                     )}
+                    */}
                   </div>
                 </div>
               );
