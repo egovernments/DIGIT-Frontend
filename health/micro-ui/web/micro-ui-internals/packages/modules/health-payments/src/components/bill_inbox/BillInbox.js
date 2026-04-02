@@ -99,7 +99,8 @@ const BillInboxComponent = () => {
       billingPeriodId: pId,
     },
     config: {
-      enabled: false,
+//      enabled: false,
+      enabled: selectedBoundaryCode && selectedProject ? true : false,
       onError: (error) => {
         setApprovalCount(0);
         setPendingApprovalCount(0);
@@ -138,36 +139,41 @@ const BillInboxComponent = () => {
       },
     },
     config: {
-      enabled: false,
+//      enabled: false,
+      enabled: selectedBoundaryCode ? true : false,
       select: (data) => {
         return data;
       },
     },
   };
 
-  const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+    // Fetch configurations for bill data
+    const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
-  // Update attendance table data after attendance data is loaded
-  useEffect(() => {
-    if (AttendanceData?.attendanceRegister) {
-      const formattedList = AttendanceData?.attendanceRegister.map((item) => {
-        const approver = item?.staff?.find((staff) => staff?.staffType?.includes("APPROVER"));
-        const owner = item?.staff?.find((staff) => staff?.staffType?.includes("OWNER"));
-        return {
-          id: item?.registerNumber,
-          registerId: item?.id,
-          name: selectedProject?.name,
-          boundary: item?.localityCode,
-          noOfAttendees: item?.attendees == null ? 0 : item?.attendees.length || 0,
-          approvedBy: approver?.additionalDetails?.staffName || "NA",
-          markedBy: owner?.additionalDetails?.ownerName || "NA",
-        };
-      });
+    // Update attendance table data after attendance data is loaded
+    useEffect(() => {
+        if (AttendanceData?.attendanceRegister) {
 
-      setApprovalCount(AttendanceData?.statusCount?.APPROVED);
-      setPendingApprovalCount(AttendanceData?.statusCount?.PENDINGFORAPPROVAL);
-      setTotalCount(AttendanceData?.totalCount);
-      setTableData(formattedList);
+            const formattedList = AttendanceData?.attendanceRegister.map((item) => {
+                // Find the staff with type 'APPROVER' and 'OWNER'
+                const approver = item?.staff?.find((staff) => staff?.staffType?.includes("APPROVER"));
+                const owner = item?.staff?.find((staff) => staff?.staffType?.includes("OWNER"));
+                return {
+                    id: item?.registerNumber,
+                    registerId: item?.id,
+                    name: selectedProject?.name,
+                    boundary: item?.localityCode,
+                    boundaryType: item?.additionalDetails?.boundaryType,
+                    noOfAttendees: item?.attendees == null ? 0 : item?.attendees.length || 0,
+                    approvedBy: approver?.additionalDetails?.staffName || "NA",
+                    markedBy: owner?.additionalDetails?.ownerName || "NA",
+                };
+            });
+
+            setApprovalCount(AttendanceData?.statusCount?.APPROVED);
+            setPendingApprovalCount(AttendanceData?.statusCount?.PENDINGFORAPPROVAL);
+            setTotalCount(AttendanceData?.totalCount);
+            setTableData(formattedList);
 
       if (AttendanceData?.statusCount.PENDINGFORAPPROVAL === 0 && AttendanceData?.statusCount.APPROVED > 0) {
         setShowGenerateBillAction(true);
@@ -194,13 +200,13 @@ const BillInboxComponent = () => {
     }
   }, [selectedBoundaryCode]);
 
-  // Refetch data when navigating back from the view screen
-  useEffect(() => {
-    if (fromViewScreen) {
-      refetchAttendance();
-      refetchBill();
-    }
-  }, []);
+    // Refetch data when navigating back from the view screen
+    useEffect(() => {
+        if (fromViewScreen) {
+            refetchAttendance();
+            refetchBill();
+        }
+    }, []);
 
   // update bill generation info message when bill data is loaded
   useEffect(() => {
@@ -250,8 +256,9 @@ const BillInboxComponent = () => {
   const handleFilterUpdate = (boundaryCode, isDistrictSelected, period) => {
     if (!boundaryCode) return;
 
-    setSelectedBoundaryCode(boundaryCode);
-    Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
+        setSelectedBoundaryCode(boundaryCode);
+        Digit.SessionStorage.set("selectedBoundaryCode", boundaryCode);
+    
 
     if (period) {
       setSelectedPeriod(period);
