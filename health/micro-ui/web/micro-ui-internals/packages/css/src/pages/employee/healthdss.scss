@@ -1413,3 +1413,167 @@
   height: 37.5rem !important;
   width: 100% !important;
 }
+
+.digit-reports-list__heading {
+  font-family: "Roboto Condensed";
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 2.5rem;
+  color: #0b4b66 !important;
+}
+
+.digit-reports-list {
+  &__description {
+    margin: 0rem;
+    color: #505a5f;
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__row-card {
+    cursor: pointer;
+
+    &:hover {
+      background-color: theme(digitv2.lightTheme.generic-background);
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__row-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #C7E0F1;
+  }
+
+  &__row-content {
+    flex: 1;
+    gap: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__row-title {
+    font-family: theme(digitv2.fontFamily.sans);
+    font-weight: theme(digitv2.fontWeight.bold);
+    font-size: theme(digitv2.fontSize.body-s.desktop);
+    color: theme(digitv2.lightTheme.text-color-primary);
+  }
+
+  &__row-desc {
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: theme(digitv2.fontSize.caption.desktop);
+    color: theme(digitv2.lightTheme.text-color-secondary);
+    margin-top: 0.125rem;
+  }
+
+  &__row-chevron {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.digit-report-detail {
+  &__files-list {
+    display: flex;
+    flex-direction: column;
+
+    .digit-report-detail__file-card {
+      border-bottom: none;
+
+      &:last-child {
+        border-bottom: 0.063rem solid theme(digitv2.lightTheme.divider);
+      }
+    }
+  }
+
+  &__file-card{
+    padding: 0.75rem;
+  }
+  &__file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0rem;
+  }
+
+  &__file-date {
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: theme(digitv2.fontSize.body-s.desktop);
+    font-weight: theme(digitv2.fontWeight.medium);
+    color: theme(digitv2.lightTheme.text-color-primary);
+  }
+
+  &__file-size {
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: theme(digitv2.fontSize.caption.desktop);
+    color: theme(digitv2.lightTheme.text-color-secondary);
+    margin-top: 0.125rem;
+  }
+
+  &__file-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .digit-checkbox-container{
+      margin: 0rem;
+    }
+  }
+}
+.digit-report-detail {
+  &__header-wrap {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  &__header-svg {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  &__header {
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  &__header-with-tag {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .digit-tag-wrapper{
+      height: fit-content;
+    }
+  }
+
+  &__header-with-tag-header {
+    font-family: "Roboto Condensed";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 2.5rem;
+    color: #0b4b66 !important;
+  }
+
+  &__subtitle {
+    margin: 0rem;
+  }
+}
