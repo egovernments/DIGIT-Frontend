@@ -181,6 +181,10 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           if (userFacilityIds.has(stock.senderId)) {
             commodityMap[productName].totalIssued += qty;
           }
+          // Accepted by receiver → counts as received for receiver
+          if (userFacilityIds.has(stock.receiverId)) {
+            commodityMap[productName].totalReceived += qty;
+          }
         } else if (status === "REJECTED") {
           // Rejected dispatch → stock came back to sender
           if (userFacilityIds.has(stock.senderId)) {
@@ -278,10 +282,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rawStatus: status,
         facilityId: userOwnFacilityId || senderId,
         productVariantId: stock.productVariantId,
+        createdTime: stock.auditDetails?.createdTime || 0,
       });
     });
 
-    return rows;
+    return rows.sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
