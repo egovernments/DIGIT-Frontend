@@ -130,6 +130,18 @@ const CommodityProjectProvider = ({ children }) => {
   const topLevelBoundaryType = sortedHierarchy[0]?.boundaryType || null;
   const isTopLevel = !!(userBoundary?.boundaryType && topLevelBoundaryType && userBoundary.boundaryType === topLevelBoundaryType);
 
+  const userLevelIndex = useMemo(() => {
+    if (!userBoundary?.boundaryType || !sortedHierarchy.length) return -1;
+    const idx = sortedHierarchy.findIndex((h) => h.boundaryType === userBoundary.boundaryType);
+    return idx >= 0 ? idx : -1;
+  }, [userBoundary, sortedHierarchy]);
+
+  const isAuthorizedForCommodity = useMemo(() => {
+    if (sortedHierarchy.length < 3) return false;
+    if (userLevelIndex < 0) return false;
+    return userLevelIndex <= sortedHierarchy.length - 3;
+  }, [sortedHierarchy, userLevelIndex]);
+
   const isLoading = staffLoading || projectsLoading || hierarchyTypeLoading || hierarchyDefLoading;
   const hasStaff = !!(projectStaff?.length > 0);
 
@@ -140,9 +152,12 @@ const CommodityProjectProvider = ({ children }) => {
     userAssignments,
     isTopLevel,
     topLevelBoundaryType,
+    sortedHierarchy,
+    userLevelIndex,
+    isAuthorizedForCommodity,
     isLoading,
     hasStaff,
-  }), [projects, userBoundary, userBoundaries, userAssignments, isTopLevel, topLevelBoundaryType, isLoading, hasStaff]);
+  }), [projects, userBoundary, userBoundaries, userAssignments, isTopLevel, topLevelBoundaryType, sortedHierarchy, userLevelIndex, isAuthorizedForCommodity, isLoading, hasStaff]);
 
   return (
     <CommodityProjectContext.Provider value={value}>

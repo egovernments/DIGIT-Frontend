@@ -7,6 +7,8 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
+import { useCommodityProject } from "./CommodityProjectContext";
+import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const getFieldValue = (fieldKey) => {
@@ -25,21 +27,23 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const commodity =
     productName !== "N/A" ? productName : "N/A";
 
-  // Map transactionType to display status
-  const statusMap = {
-    RECEIVED: "Completed",
-    DISPATCHED: "In-Transit",
-    RETURNED: "Complete",
-    DAMAGED: "Rejected",
-    LOST: "Cancelled",
-    REJECTED: "Returned",
-  };
-  const status =
-    statusMap[stock?.transactionType] || stock?.transactionType || "N/A";
+  // Derive display status from stockEntryType + status
+  const stockEntryType = stock?.stockEntryType || "";
+  const rawStatus = stock?.status || "";
+  let status = "N/A";
+  if (stockEntryType === "ISSUED") {
+    if (rawStatus === "ACCEPTED") status = "Completed";
+    else if (rawStatus === "REJECTED") status = "Rejected";
+    else status = "In-Transit"; // IN_TRANSIT or unset
+  } else if (stockEntryType === "RETURNED") {
+    if (rawStatus === "ACCEPTED") status = "Returned";
+    else if (rawStatus === "REJECTED") status = "Return Rejected";
+    else status = "Return Initiated"; // IN_TRANSIT or unset
+  }
 
-  // Map to transaction type category
+  // Transaction type: RETURNED → "Reverse - Logistics", everything else → "Logistics"
   const txType =
-    stock?.transactionType === "RETURNED" ? "Reverse - Logistics" : "Logistics";
+    stockEntryType === "RETURNED" ? "Reverse - Logistics" : "Logistics";
 
   const trn = stock?.id || "N/A";
 
@@ -85,6 +89,32 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
+
+  // Get user's staff project from context
+  const { projects: contextProjects } = useCommodityProject();
+  const userStaffProjectId = useMemo(() => {
+    if (!contextProjects?.length) return null;
+    const match = contextProjects.find(p => p.address?.boundary === userBoundary?.boundary);
+    return match?.id || contextProjects[0]?.id || null;
+  }, [contextProjects, userBoundary]);
+
+  // Fetch project facilities using user's staff project
+  const projectFacilityCriteria = useMemo(() => ({
+    url: `${getProjectServiceUrl()}/facility/v1/_search`,
+    params: { tenantId, limit: 100, offset: 0 },
+    body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+    config: {
+      enabled: !!userStaffProjectId && !!tenantId,
+      select: (data) => {
+        const ids = new Set();
+        (data?.ProjectFacilities || []).forEach(pf => {
+          if (pf.facilityId) ids.add(pf.facilityId);
+        });
+        return ids;
+      },
+    },
+  }), [tenantId, userStaffProjectId]);
+  const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
   // Extract unique facility IDs and product variant IDs from stock data
   const { facilityIds, productVariantIds } = useMemo(() => {
@@ -132,19 +162,6 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   }), [tenantId, facilityIds]);
   const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
-  const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
-
-  // Determine user's facility IDs from boundary matching (match against ALL descendant boundaries)
-  const userFacilityIds = useMemo(() => {
-    if ((!userBoundaries?.size && !userBoundary?.boundary) || !Object.keys(facilityBoundaryMap).length) return new Set();
-    const ids = new Set();
-    Object.entries(facilityBoundaryMap).forEach(([fId, bCode]) => {
-      if (userBoundaries?.size > 0 ? userBoundaries.has(bCode) : bCode === userBoundary?.boundary) {
-        ids.add(fId);
-      }
-    });
-    return ids;
-  }, [userBoundary, userBoundaries, facilityBoundaryMap]);
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({
@@ -185,23 +202,23 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     return map;
   }, [productVariants, products]);
 
-  // Transform stock data with resolved names, filtered to user's facility, sorted by createdTime descending
+  // Transform stock data with resolved names, sorted by createdTime descending
+  // Filter to only show transactions involving the user's project facility
   const tableData = useMemo(() => {
     if (!rawStockData?.length) return [];
     return rawStockData
-      .filter((stock) => {
-        // If no user facility found (top-level or loading), show all
-        if (userFacilityIds.size === 0) return true;
-        return userFacilityIds.has(stock.senderId) || userFacilityIds.has(stock.receiverId);
+      .filter(stock => {
+        if (projectFacilityIds.size === 0) return false;
+        return projectFacilityIds.has(stock.senderId) || projectFacilityIds.has(stock.receiverId);
       })
       .map(stock => transformStock(stock, facilityNameMap, productNameMap))
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [rawStockData, facilityNameMap, productNameMap, userFacilityIds]);
+  }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
 
-  const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading;
+  const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading || projectFacilitiesLoading;
 
   // Use pre-computed summary from stockSummary (computed in CommodityDashboard)
-  const { transactionSummary: summaryStats = { total: 0, completed: 0, pending: 0, rejected: 0 }, dataSyncStats: syncStats } = stockSummary || {};
+  const { transactionSummary: summaryStats = { total: 0, completed: 0, pending: 0, rejected: 0, returned: 0 }, dataSyncStats: syncStats } = stockSummary || {};
   const dataSyncStats = {
     totalManagers: syncStats?.totalFacilities || 0,
     syncedManagers: syncStats?.syncedFacilities || 0,
@@ -347,13 +364,13 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   );
 
   const columns = [
-  { label: t("HCM_TRN"), key: "trn", grow: 0.5, minWidth: "80px",sortable: true },
+  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px",sortable: true },
   { label: t("HCM_CREATION_DATE"), key: "creationDate", grow: 1.5, minWidth: "200px",sortable: true },
   { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px",sortable: true },
   { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px",sortable: true },
   { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1 ,sortable: true},
   { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px",sortable: true },
-  { label: t("HCM_COMMODITY"), key: "commodity", grow: 1.5 ,sortable: true},
+  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8 ,sortable: true},
   { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1,sortable: true },
 ];
 
@@ -361,11 +378,11 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   const getStatusClass = (status) => {
     const classMap = {
       Completed: "cm-status-badge--completed",
-      Complete: "cm-status-badge--completed",
       "In-Transit": "cm-status-badge--in-transit",
-      "In-transit": "cm-status-badge--in-transit",
       Rejected: "cm-status-badge--rejected",
-      Cancelled: "cm-status-badge--cancelled",
+      Returned: "cm-status-badge--completed",
+      "Return Initiated": "cm-status-badge--in-transit",
+      "Return Rejected": "cm-status-badge--rejected",
     };
     return classMap[status] || "cm-status-badge--default";
   };
@@ -376,8 +393,18 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
         {row.status}
       </span>
     ),
-    sentFrom: (row) => <span className="cm-cell-link">{row.sentFrom}</span>,
-    sentTo: (row) => <span className="cm-cell-link">{row.sentTo}</span>,
+    sentFrom: (row) => (
+      <div>
+        <div className="cm-cell-link">{row.sentFrom}</div>
+        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.senderId}</div>
+      </div>
+    ),
+    sentTo: (row) => (
+      <div>
+        <div className="cm-cell-link">{row.sentTo}</div>
+        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.receiverId}</div>
+      </div>
+    ),
     createdBy: (row) => {
       const displayName = row?.nameOfUser || "";
       const loginName = row?.userName || "";
@@ -457,6 +484,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           { label: "HCM_TOTAL_COMPLETED", value: summaryStats.completed },
           { label: "HCM_TOTAL_PENDING", value: summaryStats.pending },
           { label: "HCM_TOTAL_REJECTED", value: summaryStats.rejected },
+          { label: "HCM_TOTAL_RETURNED", value: summaryStats.returned },
         ]}
       />
 

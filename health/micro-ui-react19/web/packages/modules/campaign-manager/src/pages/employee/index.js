@@ -152,6 +152,12 @@ const CampaignTemplates = lazyWithFallback(
   { loaderText: "Loading Campaign Templates..." }
 );
 
+const ReportsConfiguration = lazyWithFallback(
+  () => import(/* webpackChunkName: "reports-configuration" */ "./NewCampaignCreate/ReportsConfiguration"),
+  () => require("./NewCampaignCreate/ReportsConfiguration").default,
+  { loaderText: "Loading Reports Configuration..." }
+);
+
 const CommodityCampaigns = lazyWithFallback(
   () => import(/* webpackChunkName: "commodity-campaigns" */ "./CommodityCampaigns"),
   () => require("./CommodityCampaigns").default,
@@ -243,7 +249,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("map-attendees-screen") ||
         pathVar.includes("update-dates-boundary") ||
         pathVar.includes("delivery-details-preview") ||
-        pathVar.includes("localization-add")
+        pathVar.includes("localization-add") ||
+        pathVar.includes("reports-configuration")
           ? true
           : false,
     },
@@ -373,6 +380,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("HCM_BULK_STOCK_UPLOAD"),
       show: pathVar.includes("bulk-stock-upload") ? true : false,
     },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.REPORTS_CONFIGURATION),
+      show: pathVar.includes("reports-configuration") ? true : false,
+    },
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} />;
@@ -495,6 +507,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
+          <Route path={`reports-configuration`} element={<ReportsConfiguration />} />
           <Route path={`commodity-campaigns`} element={<ProjectStaffGuard><CommodityCampaigns /></ProjectStaffGuard>} />
           <Route path={`commodity-dashboard`} element={<ProjectStaffGuard><CommodityDashboard /></ProjectStaffGuard>} />
           <Route path={`bulk-stock-upload`} element={<ProjectStaffGuard><BulkStockUpload /></ProjectStaffGuard>} />

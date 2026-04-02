@@ -7,7 +7,7 @@
  *
  * Output shape:
  * {
- *   transactionSummary: { total, completed, pending, rejected },
+ *   transactionSummary: { total, completed, pending, rejected, returned },
  *   commoditySummaries: [{ name, totalReceived, totalIssued, totalReturned, balance }],
  *   dataSyncStats: { totalFacilities, syncedFacilities, syncRate },
  * }
@@ -34,7 +34,7 @@ const computeFromAggregations = (aggregations) => {
     .filter((b) => b.key === "DAMAGED" || b.key === "LOST")
     .reduce((sum, b) => sum + b.doc_count, 0);
 
-  const transactionSummary = { total, completed, pending, rejected };
+  const transactionSummary = { total, completed, pending, rejected, returned: 0 };
 
   // Commodity summaries
   const commoditySummaries = byProduct.map((bucket) => {
@@ -74,24 +74,16 @@ const computeFromAggregations = (aggregations) => {
 const computeFromRawData = (stockData, productNameMap = {}) => {
   if (!stockData?.length) {
     return {
-      transactionSummary: { total: 0, completed: 0, pending: 0, rejected: 0 },
+      transactionSummary: { total: 0, completed: 0, pending: 0, rejected: 0, returned: 0 },
       commoditySummaries: [],
       dataSyncStats: { totalFacilities: 0, syncedFacilities: 0, syncRate: 0 },
     };
   }
 
-  // Transaction summary
-  const statusMap = {
-    RECEIVED: "completed",
-    RETURNED: "completed",
-    DISPATCHED: "pending",
-    DAMAGED: "rejected",
-    LOST: "rejected",
-  };
-
   let completed = 0;
   let pending = 0;
   let rejected = 0;
+  let returned = 0;
 
   // Commodity aggregation
   const commodityMap = {};
@@ -100,20 +92,31 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
   const facilitySet = new Set();
 
   stockData.forEach((stock) => {
-    const txType = stock.transactionType;
-    const stockEntryType = stock.stockEntryType || stock.additionalDetails?.stockEntryType || "";
+    const stockEntryType = stock.stockEntryType || "";
+    const status = stock.status || "";
 
-    // Use stockEntryType as primary for categorization, fallback to transactionType
-    if (stockEntryType === "RECEIPT") completed++;
-    else if (stockEntryType === "ISSUED") pending++;
-    else if (stockEntryType === "REJECTED") completed++;
-    else if (stockEntryType === "RETURNED") completed++;
-    else {
-      const category = statusMap[txType];
-      if (category === "completed") completed++;
-      else if (category === "pending") pending++;
-      else if (category === "rejected") rejected++;
+    // Transaction summary categorization (status-based, no pair-matching)
+    if (stockEntryType === "ISSUED") {
+      if (status === "ACCEPTED") {
+        completed++;
+      } else if (status === "REJECTED") {
+        rejected++;
+      } else {
+        // IN_TRANSIT or unset
+        pending++;
+      }
+    } else if (stockEntryType === "RETURNED") {
+      if (status === "ACCEPTED") {
+        returned++;
+      } else if (status === "REJECTED") {
+        // Return rejected by receiver, counted as rejected
+        rejected++;
+      } else {
+        // IN_TRANSIT or unset — Return Initiated, counted as pending
+        pending++;
+      }
     }
+    // RECEIPT, EXCESS, LESS: not counted in transaction summary (auxiliary records)
 
     // Commodity
     const productName =
@@ -123,27 +126,29 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
       "Unknown";
 
     if (!commodityMap[productName]) {
-      commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0 };
+      commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
     }
 
     const qty = stock.quantity || 0;
-    const entryType = stockEntryType || txType; // fallback
-    switch (entryType) {
-      case "ISSUED":
-      case "DISPATCHED":
-      case "ISSUE":
+    if (stockEntryType === "RECEIPT") {
+      commodityMap[productName].totalReceived += qty;
+    } else if (stockEntryType === "EXCESS") {
+      commodityMap[productName].totalReceived += qty;
+    } else if (stockEntryType === "LESS") {
+      commodityMap[productName].totalReceived -= qty;
+    } else if (stockEntryType === "ISSUED") {
+      if (status === "ACCEPTED") {
         commodityMap[productName].totalIssued += qty;
-        break;
-      case "RECEIPT":
-      case "RECEIVED":
-        commodityMap[productName].totalReceived += qty;
-        break;
-      case "REJECTED":
-      case "RETURNED":
+      } else if (status === "REJECTED") {
+        commodityMap[productName].totalRejected += qty;
+      }
+      // IN_TRANSIT: not counted in commodity summary
+    } else if (stockEntryType === "RETURNED") {
+      if (status === "ACCEPTED") {
         commodityMap[productName].totalReturned += qty;
-        break;
-      default:
-        break;
+      }
+      // IN_TRANSIT: return not confirmed yet, don't count in commodity
+      // REJECTED: return rejected, stock stays with returner, no commodity impact
     }
 
     // Facilities
@@ -152,15 +157,16 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
   });
 
   const transactionSummary = {
-    total: stockData.length,
+    total: completed + pending + rejected + returned,
     completed,
     pending,
     rejected,
+    returned,
   };
 
   const commoditySummaries = Object.values(commodityMap).map((c) => ({
     ...c,
-    balance: c.totalReceived - c.totalIssued - c.totalReturned,
+    balance: c.totalReceived - Math.max(0, c.totalIssued - c.totalReturned - c.totalRejected),
   }));
 
   const totalFacilities = facilitySet.size;

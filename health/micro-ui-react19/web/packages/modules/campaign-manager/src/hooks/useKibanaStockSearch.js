@@ -48,20 +48,16 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
 
   const { data: rawRecords, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // Transform getChartV2 records to match the shape expected by computeFromRawData
+  // Transform getChartV2 records to match the shape expected by downstream consumers
   const stockData = useMemo(() => {
     if (!rawRecords?.length) return [];
     return rawRecords.map((record) => {
-      const rawStockEntryType = record.stockEntryType || "";
+      const stockEntryType = record.stockEntryType || "";
       const eventType = record.eventType || record.transactionType || "";
-      // RECEIVED/RECEIPT: facilityId is receiver, transactingFacilityId is sender
-      // ISSUED/DISPATCHED: facilityId is sender, transactingFacilityId is receiver
-      // REJECTED/RETURNED: facilityId is rejector/returner, transactingFacilityId is original sender
-      // Note: eventType may differ from stockEntryType (e.g., RECEIVED with stockEntryType "LESS")
-      const isInbound = rawStockEntryType === "RECEIPT" || eventType === "RECEIVED";
-      const isOutbound = rawStockEntryType === "ISSUED" || eventType === "DISPATCHED";
-      // Normalize stockEntryType so downstream code works correctly
-      const stockEntryType = isInbound ? "RECEIPT" : isOutbound ? "ISSUED" : rawStockEntryType;
+      // Direction based on transactionType (NOT stockEntryType):
+      // RECEIVED: facilityId is receiver, transactingFacilityId is sender
+      // DISPATCHED: facilityId is sender/dispatcher, transactingFacilityId is receiver
+      const isInbound = eventType === "RECEIVED";
       return {
         id: record.id,
         productVariantId: record.productVariantId,
@@ -77,6 +73,8 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
         productName: record.productName,
         userName: record.userName,
         nameOfUser: record.nameOfUser,
+        status: record.status || "",
+        additionalFields: record.additionalFields || null,
         auditDetails: {
           createdTime: record.createdTime || record.dateOfEntry,
         },

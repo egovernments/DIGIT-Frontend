@@ -7,6 +7,8 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
 import CommodityShipmentPopup from "./CommodityShipmentPopup";
+import { useCommodityProject } from "./CommodityProjectContext";
+import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
@@ -107,19 +109,43 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return map;
   }, [productVariants, products]);
 
-  // Determine user's facility IDs from boundary matching (match against ALL descendant boundaries)
-  const userFacilityIds = useMemo(() => {
-    if ((!userBoundaries?.size && !userBoundary?.boundary) || !Object.keys(facilityBoundaryMap).length) return new Set();
-    const ids = new Set();
-    Object.entries(facilityBoundaryMap).forEach(([fId, bCode]) => {
-      if (userBoundaries?.size > 0 ? userBoundaries.has(bCode) : bCode === userBoundary?.boundary) {
-        ids.add(fId);
-      }
-    });
-    return ids;
-  }, [userBoundary, userBoundaries, facilityBoundaryMap]);
+  // Get user's staff project from context (the project the user is directly assigned to)
+  const { projects: contextProjects } = useCommodityProject();
+  const userStaffProjectId = useMemo(() => {
+    if (!contextProjects?.length) return null;
+    // First project is the user's directly assigned staff project
+    // (context searches staffProjectIds with includeDescendants, staff project comes first)
+    const match = contextProjects.find(p => p.address?.boundary === userBoundary?.boundary);
+    return match?.id || contextProjects[0]?.id || null;
+  }, [contextProjects, userBoundary]);
+
+  // Fetch project facilities using user's staff project (not campaign's top-level projectId)
+  const projectFacilityCriteria = useMemo(() => ({
+    url: `${getProjectServiceUrl()}/facility/v1/_search`,
+    params: { tenantId, limit: 100, offset: 0 },
+    body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+    config: {
+      enabled: !!userStaffProjectId && !!tenantId,
+      select: (data) => {
+        const ids = new Set();
+        (data?.ProjectFacilities || []).forEach(pf => {
+          if (pf.facilityId) ids.add(pf.facilityId);
+        });
+        return ids;
+      },
+    },
+  }), [tenantId, userStaffProjectId]);
+  const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
+
+  // User's own facility: first project facility (primary facility for shipment actions)
+  const userOwnFacilityId = useMemo(() => {
+    if (!userFacilityIds.size) return null;
+    return userFacilityIds.values().next().value;
+  }, [userFacilityIds]);
 
   // Compute per-facility commodity summaries for SummaryCards (non-top-level users)
+  // Uses status field on ISSUED records: ACCEPTED→issued, REJECTED→returned, IN_TRANSIT→skip
+  // LESS/EXCESS adjust received totals; RETURNED adds to returned
   const facilityCommoditySummaries = useMemo(() => {
     if (isTopLevel || !finalStockData?.length || !userFacilityIds.size) return [];
     const commodityMap = {};
@@ -131,38 +157,56 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")?.value ||
         "Unknown";
       if (!commodityMap[productName]) {
-        commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0 };
+        commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
       }
       if (stockEntryType === "RECEIPT") {
         // I confirmed receipt → totalReceived
         if (userFacilityIds.has(stock.receiverId)) {
           commodityMap[productName].totalReceived += qty;
         }
-        // Downstream confirmed my dispatch → totalIssued (only counts when accepted)
-        if (userFacilityIds.has(stock.senderId)) {
-          commodityMap[productName].totalIssued += qty;
+      } else if (stockEntryType === "EXCESS") {
+        // Received more than expected → additional stock for receiver
+        if (userFacilityIds.has(stock.receiverId)) {
+          commodityMap[productName].totalReceived += qty;
         }
+      } else if (stockEntryType === "LESS") {
+        // Received less than expected → reduces receiver stock
+        if (userFacilityIds.has(stock.receiverId)) {
+          commodityMap[productName].totalReceived -= qty;
+        }
+      } else if (stockEntryType === "ISSUED") {
+        const status = stock.status || "";
+        if (status === "ACCEPTED") {
+          // Confirmed dispatch → counts as issued for sender
+          if (userFacilityIds.has(stock.senderId)) {
+            commodityMap[productName].totalIssued += qty;
+          }
+        } else if (status === "REJECTED") {
+          // Rejected dispatch → stock came back to sender
+          if (userFacilityIds.has(stock.senderId)) {
+            commodityMap[productName].totalRejected += qty;
+          }
+        }
+        // IN_TRANSIT or other: not counted in summary yet
       } else if (stockEntryType === "RETURNED") {
-        // I returned stock to upstream → outgoing
-        if (userFacilityIds.has(stock.senderId)) {
-          commodityMap[productName].totalIssued += qty;
+        const retStatus = stock.status || "";
+        if (retStatus === "ACCEPTED") {
+          // Return confirmed: receiver (original sender) gets stock back
+          if (userFacilityIds.has(stock.receiverId)) {
+            commodityMap[productName].totalReturned += qty;
+          }
+          // Sender (the one returning) loses stock
+          if (userFacilityIds.has(stock.senderId)) {
+            commodityMap[productName].totalIssued += qty;
+          }
         }
-        // Stock returned TO me → incoming
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReturned += qty;
-        }
-      } else if (stockEntryType === "REJECTED") {
-        // My dispatch was rejected, stock returned to me
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReturned += qty;
-        }
-        // If I'm the rejector: no effect (I never had the stock)
+        // IN_TRANSIT: return not confirmed yet, don't count in commodity
+        // REJECTED: return rejected, stock stays with returner, no commodity impact
       }
-      // ISSUED: not counted as totalIssued until downstream confirms (RECEIPT)
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
-      balance: c.totalReceived - c.totalIssued + c.totalReturned,
+      balance: c.totalReceived - Math.max(0, c.totalIssued - c.totalReturned - c.totalRejected),
     }));
   }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
 
@@ -189,61 +233,59 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       : t(boundaryCode);
   }, [facilityBoundaryMap, facilityBoundaryTypeMap, userBoundary, t]);
 
-  // Per-transaction rows filtered to user's facility
+  // Per-transaction rows: all ISSUED transactions where user's facility is the sender
   const warehouseData = useMemo(() => {
     if (!finalStockData?.length) return [];
 
-    // Find the first user facility ID for the action button
-    const userFacId = userFacilityIds.size > 0 ? [...userFacilityIds][0] : null;
+    // Map raw status to display status
+    const statusDisplayMap = {
+      ACCEPTED: "Completed",
+      IN_TRANSIT: "In-Transit",
+      REJECTED: "Rejected",
+    };
 
     const rows = [];
     finalStockData.forEach((stock) => {
       const senderId = stock.senderId;
       const receiverId = stock.receiverId;
+      const stockEntryType = stock.stockEntryType || "";
+      const status = stock.status || "";
 
-      // Filter: only show transactions involving user's facility
-      // If no user facility found (top-level or loading), show all
-      if (userFacilityIds.size > 0 && !userFacilityIds.has(senderId) && !userFacilityIds.has(receiverId)) {
-        return;
-      }
+      // Only show ISSUED transactions
+      if (stockEntryType !== "ISSUED") return;
+      // If user facilities are known, only show where user is the sender
+      if (userFacilityIds.size > 0 && !userFacilityIds.has(senderId)) return;
 
       const productName =
         productNameMap[stock?.productVariantId] ||
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")
           ?.value || "Unknown";
       const qty = stock.quantity || 0;
-      const stockEntryType = stock.stockEntryType || "";
-
-      // Compute effective quantity from user's facility perspective:
-      // ISSUED where user is receiver = 0 (in transit, not yet received)
-      // RECEIPT where user is receiver = qty (confirmed received)
-      // Otherwise show raw qty
-      let effectiveQty = qty;
-      if (userFacilityIds.size > 0) {
-        if (stockEntryType === "ISSUED" && userFacilityIds.has(receiverId) && !userFacilityIds.has(senderId)) {
-          effectiveQty = 0;
-        }
-      }
 
       rows.push({
         warehouseName: facilityNameMap[senderId] || senderId || "N/A",
+        fromFacilityId: senderId || "N/A",
         toFacility: facilityNameMap[receiverId] || receiverId || "N/A",
+        toFacilityId: receiverId || "N/A",
         type:
           stock.senderType === "WAREHOUSE" || stock.receiverType === "WAREHOUSE"
             ? "Warehouse"
             : "Facility",
         boundary: getBoundaryDisplay(senderId),
         commodity: productName,
-        quantity: Math.max(0, effectiveQty),
-        facilityId: userFacId || senderId,
+        quantity: qty,
+        displayStatus: statusDisplayMap[status] || status || "N/A",
+        rawStatus: status,
+        facilityId: userOwnFacilityId || senderId,
         productVariantId: stock.productVariantId,
       });
     });
 
     return rows;
-  }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, getBoundaryDisplay]);
+  }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
+  // Used for stock balance validation — deducts IN_TRANSIT (physically left warehouse)
   const facilityStockMap = useMemo(() => {
     if (!finalStockData?.length) return {};
     const map = {};
@@ -258,28 +300,31 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!pvId) return;
 
       if (stockEntryType === "ISSUED") {
-        // Sender loses stock (in transit, not yet received by receiver)
-        if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        const status = stock.status || "";
+        if (status === "REJECTED") {
+          // Rejected dispatch: stock came back, net zero
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock physically left sender
+          if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+        }
       } else if (stockEntryType === "RECEIPT") {
         // Receiver confirms receipt → gains stock
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
+      } else if (stockEntryType === "EXCESS") {
+        // Received more than expected → additional stock for receiver
+        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
+      } else if (stockEntryType === "LESS") {
+        // Received less than expected → reduces receiver stock
+        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] -= qty; }
       } else if (stockEntryType === "RETURNED") {
-        // Returner DID have the stock: returner loses, original sender gains
-        if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "REJECTED") {
-        // Rejector NEVER had the stock: only credit original sender (gets stock back)
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else {
-        // Fallback to existing transactionType logic
-        const facilityId = stock.transactionType === "RECEIVED" ? stock.receiverId : stock.senderId;
-        if (!facilityId) return;
-        init(facilityId, pvId);
-        if (stock.transactionType === "RECEIVED" || stock.transactionType === "RETURNED") {
-          map[facilityId][pvId] += qty;
-        } else if (stock.transactionType === "DISPATCHED" || stock.transactionType === "ISSUE") {
-          map[facilityId][pvId] -= qty;
+        const retStatus = stock.status || "";
+        if (retStatus === "ACCEPTED") {
+          // Return confirmed: returner loses stock, original sender gains it back
+          if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+          if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
+        // IN_TRANSIT: return initiated but not confirmed, no stock movement
+        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;
@@ -302,8 +347,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       label: t("HCM_FROM_FACILITY"),
       key: "warehouseName",
-      grow: 1.2,
-      minWidth: "160px",
+      grow: 1.5,
+      minWidth: "180px",
       sortable: true,
     },
     {
@@ -330,8 +375,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     {
       label: t("HCM_COMMODITY"),
       key: "commodity",
-      grow: 0.8,
-      minWidth: "120px",
+      grow: 0.6,
+      minWidth: "100px",
       sortable: true,
     },
     {
@@ -339,6 +384,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       key: "quantity",
       grow: 0.6,
       minWidth: "100px",
+      sortable: true,
+    },
+    {
+      label: t("HCM_STATUS"),
+      key: "displayStatus",
+      grow: 0.8,
+      minWidth: "120px",
       sortable: true,
     },
     ...(!isCompleted ? [{
@@ -484,10 +536,37 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     [tenantId, t, handleExcelDownload],
   );
 
+  // Helper to map status to CSS class
+  const getStatusClass = (status) => {
+    const classMap = {
+      Completed: "cm-status-badge--completed",
+      "In-Transit": "cm-status-badge--in-transit",
+      Rejected: "cm-status-badge--rejected",
+    };
+    return classMap[status] || "cm-status-badge--default";
+  };
+
   const customCellRenderer = {
+    warehouseName: (row) => (
+      <div>
+        <div>{row.warehouseName}</div>
+        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.fromFacilityId}</div>
+      </div>
+    ),
+    toFacility: (row) => (
+      <div>
+        <div>{row.toFacility}</div>
+        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.toFacilityId}</div>
+      </div>
+    ),
     quantity: (row) => (
       <span className="cm-cell-stock">
         {row.quantity?.toLocaleString()}
+      </span>
+    ),
+    displayStatus: (row) => (
+      <span className={`cm-status-badge ${getStatusClass(row.displayStatus)}`}>
+        {row.displayStatus}
       </span>
     ),
     action: (row) => (
@@ -508,7 +587,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     setSearchQuery(value);
   };
 
-  const allLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading;
+  const allLoading = stockLoading || facilitiesLoading || projectFacilitiesLoading || variantsLoading || productsLoading;
 
   if (allLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -538,6 +617,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           items={[
             { label: "HCM_TOTAL_RECEIVED", value: commodity.totalReceived },
             { label: "HCM_TOTAL_ISSUED", value: commodity.totalIssued },
+            { label: "HCM_TOTAL_REJECTED", value: commodity.totalRejected },
             { label: "HCM_TOTAL_RETURNED", value: commodity.totalReturned },
             { label: "HCM_BALANCE", value: commodity.balance },
           ]}
@@ -637,6 +717,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           selectedCommodity={shipmentFacility.productVariantId}
           productVariants={productVariantList}
           warehouseStock={facilityStockMap[shipmentFacility.id] || {}}
+          isTopLevel={isTopLevel}
           onClose={() => setShipmentFacility(null)}
           onSuccess={() => {
             setShipmentFacility(null);
