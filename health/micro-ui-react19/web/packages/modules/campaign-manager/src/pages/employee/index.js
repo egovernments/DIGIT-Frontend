@@ -176,6 +176,21 @@ const BulkStockUpload = lazyWithFallback(
   { loaderText: "Loading Bulk Stock Upload..." }
 );
 
+
+
+
+const NewAppFeatureConfig = lazyWithFallback(
+  () => import(/* webpackChunkName: "new-app-feature-config" */ "./NewCampaignCreate/NewAppFeatureConfig"),
+  () => require("./NewCampaignCreate/NewAppFeatureConfig").default,
+  { loaderText: "Loading Feature Configuration..." }
+);
+
+const NewAppFeatureSuccess = lazyWithFallback(
+  () => import(/* webpackChunkName: "new-app-feature-success" */ "./NewCampaignCreate/NewAppFeatureSuccess"),
+  () => require("./NewCampaignCreate/NewAppFeatureSuccess").default,
+  { loaderText: "Loading..." }
+);
+
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -499,6 +514,9 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`commodity-dashboard`} element={<ProjectStaffGuard><CommodityDashboard /></ProjectStaffGuard>} />
           <Route path={`bulk-stock-upload`} element={<ProjectStaffGuard><BulkStockUpload /></ProjectStaffGuard>} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
+
+          <Route path="new-app-feature-config" element={<NewAppFeatureConfig />} />
+          <Route path="new-app-feature-success" element={<NewAppFeatureSuccess />} />
         </Routes>
       </AppContainer>
       {/* <Switch>
