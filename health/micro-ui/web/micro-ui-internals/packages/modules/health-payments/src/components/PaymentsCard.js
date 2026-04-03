@@ -7,6 +7,7 @@ const ROLES = {
   BILLS: ["CAMPAIGN_SUPERVISOR"],
   PAYMENT_SETUP: ["CAMPAIGN_MANAGER"],
   EDIT_BILLS: ["PAYMENT_EDITOR"],
+  MANAGE_BILLS: ["PAYMENT_EDITOR", "PAYMENT_REVIEWER", "PAYMENT_APPROVER", "CAMPAIGN_SUPERVISOR"],
 };
 
 const PaymentsCard = () => {
@@ -40,7 +41,7 @@ const PaymentsCard = () => {
     generateLink("ATTENDANCE_REGISTERS", "project-selection"),
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
-    generateLink("CS_TITLE_MANAGE_BILLS", "manage-bills", ROLES.BILLS),//todo check
+    generateLink("CS_TITLE_MANAGE_BILLS", "manage-bills", ROLES.MANAGE_BILLS),//todo check role
     generateLink("CS_TITLE_VERIFY_AND_GENERATE_PAYMENTS", "verify-bills", ROLES.BILLS),
     generateLink("CS_TITLE_EDIT_BILLS", "edit-bills", ROLES.EDIT_BILLS),
   ];

@@ -12,7 +12,10 @@ import { downloadFileWithName, formatTimestampToDate,formatTimestampToDateTime }
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
+import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
+import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 
+// Fallback view map (used when role config is not available)
 const BILL_STATUS_VIEW = {
   PENDING_VERIFICATION: "NOT_VERIFIED_VIEW",
   VERIFICATION_IN_PROGRESS: "VERIFICATION_IN_PROGRESS_VIEW",
@@ -21,12 +24,41 @@ const BILL_STATUS_VIEW = {
   SENT_FOR_REVIEW: "SENT_FOR_REVIEW_VIEW"
 };
 
+// Fallback status display map
 const STATUS_DISPLAY_MAP = {
   PENDING_VERIFICATION: "HCM_AM_NOT_VERIFIED",
   VERIFICATION_IN_PROGRESS: "HCM_AM_SENT_FOR_PAYMENT_REVIEW",
   PARTIALLY_VERIFIED: "HCM_AM_PARTIALLY_VERIFIED",
   FULLY_VERIFIED: "HCM_AM_VERIFIED",
   SENT_FOR_REVIEW: "HCM_AM_SENT_FOR_PAYMENT_REVIEW",
+};
+
+// Views that show sub-tabs (similar to PARTIALLY_VERIFIED_VIEW and EDIT_VIEW)
+const VIEWS_WITH_SUB_TABS = [
+  "PARTIALLY_VERIFIED_VIEW",
+  "EDIT_VIEW",
+  "EDITOR_PARTIALLY_VERIFIED_VIEW",
+  "APPROVER_PARTIALLY_PAID_VIEW",
+];
+
+// Sub-tab config per view
+const VIEW_SUB_TABS = {
+  PARTIALLY_VERIFIED_VIEW: [
+    { code: "VERIFICATION_FAILED", name: "HCM_AM_VERIFICATION_FAILED", statusFilter: "VERIFICATION_FAILED" },
+    { code: "VERIFIED", name: "HCM_AM_VERIFIED", statusFilter: "VERIFIED" },
+  ],
+  EDITOR_PARTIALLY_VERIFIED_VIEW: [
+    { code: "VERIFICATION_FAILED", name: "HCM_AM_VERIFICATION_FAILED", statusFilter: "VERIFICATION_FAILED" },
+    { code: "VERIFIED", name: "HCM_AM_VERIFIED", statusFilter: "VERIFIED" },
+  ],
+  EDIT_VIEW: [
+    { code: "PENDING_FOR_EDIT", name: "HCM_AM_PENDING_FOR_EDIT", statusFilter: "PENDING_EDIT" },
+    { code: "EDITED", name: "HCM_AM_EDITED", statusFilter: "EDITED" },
+  ],
+  APPROVER_PARTIALLY_PAID_VIEW: [
+    { code: "FAILED", name: "HCM_AM_FAILED", statusFilter: "PAYMENT_FAILED" },
+    { code: "PAID", name: "HCM_AM_PAID", statusFilter: "PAID" },
+  ],
 };
 
 /**
@@ -41,6 +73,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   console.log("billID", billID);
   const { t } = useTranslation();
   const history = useHistory();
+
+  // Role-based config
+  const activeRole = getManageBillsRole();
+  const roleConfig = getManageBillsConfig();
   const [infoDescription, setInfoDescription] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
@@ -752,6 +788,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       setActiveLink({ code: "PENDING_FOR_EDIT", name: t("HCM_AM_PENDING_FOR_EDIT") });
     } else if (billData?.status === "PARTIALLY_VERIFIED") {
       setActiveLink({ code: "VERIFICATION_FAILED", name: t("HCM_AM_VERIFICATION_FAILED") });
+    } else if (billData?.status === "PARTIALLY_PAID" && activeRole === MANAGE_BILLS_ROLES.PAYMENT_APPROVER) {
+      setActiveLink({ code: "FAILED", name: t("HCM_AM_FAILED") });
     }
   }, [billData?.status]);
 
@@ -765,33 +803,34 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
       const view = editBillDetails
         ? "EDIT_VIEW"
-        : BILL_STATUS_VIEW[billData?.status] || "NOT_VERIFIED_VIEW";
+        : roleConfig?.billDetailViewMap?.[billData?.status]
+          || BILL_STATUS_VIEW[billData?.status]
+          || "NOT_VERIFIED_VIEW";
 
-      if (view === "PARTIALLY_VERIFIED_VIEW") {
-        const filtered = enriched.filter((item) =>
-          activeLink?.code === "VERIFICATION_FAILED"
-            ? item.status === "VERIFICATION_FAILED"
-            : item.status === "VERIFIED"
-        );
-        setTableData(filtered || []);
-      } else if (view === "EDIT_VIEW") {
-        const editStatusMap = {
-          PENDING_FOR_EDIT: ["PENDING_EDIT"],
-          EDITED: ["EDITED"],
-        };
-        const filtered = enriched.filter((item) =>
-          editStatusMap[activeLink?.code]?.includes(item.status)
-        );
-        setTableData(filtered || []);
-      } else {
-        setTableData(enriched || []);
-      }
+      // TODO check: Re-enable sub-tab filtering after testing
+      // if (VIEW_SUB_TABS[view]) {
+      //   const activeSubTab = VIEW_SUB_TABS[view].find((st) => st.code === activeLink?.code);
+      //   if (activeSubTab) {
+      //     const filtered = enriched.filter((item) => item.status === activeSubTab.statusFilter);
+      //     setTableData(filtered || []);
+      //   } else {
+      //     const firstSubTab = VIEW_SUB_TABS[view][0];
+      //     const filtered = enriched.filter((item) => item.status === firstSubTab.statusFilter);
+      //     setTableData(filtered || []);
+      //   }
+      // } else {
+      //   setTableData(enriched || []);
+      // }
+      setTableData(enriched || []);// todo remove after testing 
 
       const counts = {
         VERIFICATION_FAILED: enriched.filter((item) => item.status === "VERIFICATION_FAILED").length,
         VERIFIED: enriched.filter((item) => item.status === "VERIFIED").length,
         PENDING_FOR_EDIT: enriched.filter((item) => item.status === "PENDING_EDIT").length,
         EDITED: enriched.filter((item) => item.status === "EDITED").length,
+        // Approver sub-tab counts
+        FAILED: enriched.filter((item) => item.status === "PAYMENT_FAILED").length,
+        PAID: enriched.filter((item) => item.status === "PAID").length,
       };
       setTabCounts(counts);
     }
@@ -811,7 +850,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   const currentView = editBillDetails
     ? "EDIT_VIEW"
-    : BILL_STATUS_VIEW[billData?.status] || "NOT_VERIFIED_VIEW";
+    : roleConfig?.billDetailViewMap?.[billData?.status]
+      || BILL_STATUS_VIEW[billData?.status]
+      || "NOT_VERIFIED_VIEW";
+
+  // Resolve status display label using role config or fallback
+  const statusDisplayLabel = roleConfig?.statusDisplayMap?.[billData?.status]
+    || STATUS_DISPLAY_MAP[billData?.status]
+    || billData?.status
+    || "NA";
 
   if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading) {
     console.log("Loading bill data or individual data...");
@@ -934,9 +981,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editBillDetails ? t('HCM_AM_EDIT_BILL') : t('HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')}
+          {editBillDetails
+            ? t('HCM_AM_EDIT_BILL')
+            : t(roleConfig?.headerLabel || 'HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')
+          }
         </Header>
-        {currentView !== "PARTIALLY_VERIFIED_VIEW" && (
+        {!VIEWS_WITH_SUB_TABS.includes(currentView) && (
         <>
         {/* Summary cards row */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
@@ -998,7 +1048,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     textAlign: "center",
                   }}
                 >
-                  {t(STATUS_DISPLAY_MAP[billData?.status] || billData?.status || "NA")}
+                  {t(statusDisplayLabel)}
                 </span>
               )}
 
@@ -1170,8 +1220,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         </>
         )}
 
-        {/* Tabs: only for PARTIALLY_VERIFIED and EDIT views */}
-        {(currentView === "PARTIALLY_VERIFIED_VIEW" || currentView === "EDIT_VIEW") && (
+        {/* Tabs: for views that have sub-tabs (partially verified, edit, partially paid) */}
+        {VIEWS_WITH_SUB_TABS.includes(currentView) && VIEW_SUB_TABS[currentView] && (
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
@@ -1184,25 +1234,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   textOverflow: "ellipsis",
                   minWidth: "240px"
               }}
-              configNavItems={currentView === "PARTIALLY_VERIFIED_VIEW" ? [
-                {
-                  code: "VERIFICATION_FAILED",
-                  name: `${t("HCM_AM_VERIFICATION_FAILED")} (${tabCounts["VERIFICATION_FAILED"] || 0})`,
-                },
-                {
-                  code: "VERIFIED",
-                  name: `${t("HCM_AM_VERIFIED")} (${tabCounts["VERIFIED"] || 0})`,
-                },
-              ] : [
-                {
-                  code: "PENDING_FOR_EDIT",
-                  name: `${t("HCM_AM_PENDING_FOR_EDIT")} (${tabCounts["PENDING_FOR_EDIT"] || 0})`,
-                },
-                {
-                  code: "EDITED",
-                  name: `${t("HCM_AM_EDITED")} (${tabCounts["EDITED"] || 0})`,
-                },
-              ]}
+              configNavItems={VIEW_SUB_TABS[currentView].map((subTab) => ({
+                code: subTab.code,
+                name: `${t(subTab.name)} (${tabCounts[subTab.code] || 0})`,
+              }))}
               navStyles={{
                   display: "flex",
                   width: "100%",
@@ -1233,14 +1268,21 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 selectableRows={
                   currentView === "EDIT_VIEW"
                     ? activeLink?.code !== "EDITED"
-                    : currentView === "PARTIALLY_VERIFIED_VIEW"
+                    : (currentView === "PARTIALLY_VERIFIED_VIEW" || currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW")
                       ? activeLink?.code === "VERIFICATION_FAILED"
-                      : !["VERIFICATION_IN_PROGRESS_VIEW", "SENT_FOR_REVIEW_VIEW"].includes(currentView)
+                      : currentView === "APPROVER_PARTIALLY_PAID_VIEW"
+                        ? activeLink?.code === "FAILED"
+                        : !["VERIFICATION_IN_PROGRESS_VIEW", "SENT_FOR_REVIEW_VIEW",
+                            "EDITOR_VERIFICATION_IN_PROGRESS_VIEW", "EDITOR_SENT_FOR_REVIEW_VIEW",
+                            "REVIEWER_SENT_FOR_APPROVAL_VIEW",
+                            "APPROVER_IN_PROGRESS_VIEW", "APPROVER_PAID_VIEW"
+                          ].includes(currentView)
                 }
                 status={activeLink?.code}
                 billStatus={billData?.status}
-                subTab={currentView === "PARTIALLY_VERIFIED_VIEW" ? activeLink?.code : null}
+                subTab={VIEWS_WITH_SUB_TABS.includes(currentView) ? activeLink?.code : null}
                 editBill={editBillDetails}
+                role={activeRole}
                 clearSelectedRows={clearSelectedRows}
                 onSelectionChange={setSelectedRows}
                 selectedBills={selectedRows}
@@ -1344,6 +1386,97 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           />
         </ActionBar>
       )}
+
+      {/* ── Editor role-specific views (new config-driven) ── */}
+      {currentView === "EDITOR_NOT_VERIFIED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_VERIFY`)}
+            onClick={() => setOpenVerifyAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "EDITOR_VERIFIED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SEND_FOR_REVIEW`)}
+            onClick={() => {
+              // Mock — placeholder for future implementation
+              setShowToast({ key: "info", label: t("HCM_AM_SEND_FOR_REVIEW_PLACEHOLDER"), transitionTime: 3000 });
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_VERIFY`)}
+            onClick={() => setOpenVerifyAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+
+      {/* ── Reviewer role-specific views ── */}
+      {currentView === "REVIEWER_PENDING_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
+            onClick={() => {
+              // Mock — placeholder for future implementation
+              setShowToast({ key: "info", label: t("HCM_AM_SEND_FOR_APPROVAL_PLACEHOLDER"), transitionTime: 3000 });
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+
+      {/* ── Approver role-specific views ── */}
+      {currentView === "APPROVER_NOT_INITIATED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_INITIATE_PAYMENT`)}
+            onClick={() => {
+              // Mock — placeholder for future implementation
+              setShowToast({ key: "info", label: t("HCM_AM_INITIATE_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "APPROVER_PARTIALLY_PAID_VIEW" && activeLink?.code === "FAILED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_RETRY_PAYMENT`)}
+            onClick={() => {
+              // Mock — placeholder for future implementation
+              setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+
       {/* /* Alert Pop-Up for approve */}
       {openVerifyAlertPopUp && <AlertPopUp
         onClose={() => {

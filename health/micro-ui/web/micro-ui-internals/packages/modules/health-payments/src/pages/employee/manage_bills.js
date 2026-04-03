@@ -11,14 +11,7 @@ import { Card, NoResultsFound, Loader, Toast, Tab } from "@egovernments/digit-ui
 import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
-
-const STATUS_MAP = {
-  NOT_VERIFIED: ["PENDING_VERIFICATION"],
-  VERIFICATION_IN_PROGRESS: ["VERIFICATION_IN_PROGRESS"],
-  PARTIALLY_VERIFIED: ["PARTIALLY_VERIFIED"],
-  FULLY_VERIFIED: ["FULLY_VERIFIED"],
-  SENT_FOR_REVIEW: ["SENT_FOR_REVIEW"],
-};
+import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
 
 const ManageBills = () => {
   const { t } = useTranslation();
@@ -27,6 +20,10 @@ const ManageBills = () => {
   const [showToast, setShowToast] = useState(null);
   const [selectedBills, setSelectedBills] = useState([]);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
+
+  // Role-based config
+  const activeRole = getManageBillsRole();
+  const roleConfig = getManageBillsConfig();
 
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -45,10 +42,11 @@ const ManageBills = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
 
-  // Tab state
+  // Tab state — initialize from role config
+  const firstTab = roleConfig?.tabs?.[0];
   const [activeLink, setActiveLink] = useState({
-    code: "NOT_VERIFIED",
-    name: t("HCM_AM_NOT_VERIFIED"),
+    code: firstTab?.code || "NOT_VERIFIED",
+    name: t(firstTab?.name || "HCM_AM_NOT_VERIFIED"),
   });
 
   const project = Digit?.SessionStorage.get("staffProjects");
@@ -60,7 +58,8 @@ const ManageBills = () => {
       billCriteria: {
         tenantId: tenantId,
         referenceIds: project?.map((p) => p?.id) || [],
-        // status: STATUS_MAP[activeLink.code]?.[0] || null, // TODO: restore once columns confirmed
+        // TODO: Re-enable status filter after testing
+        // status: roleConfig?.tabStatusMap?.[activeLink.code]?.[0] || null,
         ...(billID ? { billNumbers: [billID] } : {}),
         ...(dateRange.startDate && dateRange.endDate
           ? {
@@ -220,14 +219,54 @@ const ManageBills = () => {
     setPeriodType(null);
   };
 
+  // Handle CTA action (mock for now — real implementation later)
+  const handleCTAAction = (action) => {
+    if (!selectedBills || selectedBills.length === 0) return;
+
+    switch (action) {
+      case "VERIFY":
+        Digit.SessionStorage.set("selectedBillsForVerification", selectedBills);
+        history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`);
+        break;
+      case "SEND_FOR_REVIEW":
+      case "SEND_FOR_APPROVAL":
+      case "INITIATE_PAYMENT":
+      case "RETRY_PAYMENT":
+        // Mock — placeholder for future implementation
+        setShowToast({ key: "info", label: t(`HCM_AM_${action}_PLACEHOLDER`), transitionTime: 3000 });
+        break;
+      case "DOWNLOAD_TXN_HISTORY":
+        // Mock — placeholder for future implementation
+        setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER"), transitionTime: 3000 });
+        break;
+      default:
+        break;
+    }
+  };
+
+  if (!roleConfig) {
+    return (
+      <React.Fragment>
+        <Header styles={{ fontSize: "32px" }}>
+          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+        </Header>
+        <Card>
+          <NoResultsFound text={t("HCM_AM_NO_ACCESS")} />
+        </Card>
+      </React.Fragment>
+    );
+  }
+
   if (isBillLoading) {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
+  const currentCTA = roleConfig.tabCTAs?.[activeLink.code];
+
   return (
     <React.Fragment>
       <Header styles={{ fontSize: "32px" }}>
-        <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+        <span style={{ color: "#0B4B66" }}>{t(roleConfig.headerLabel)}</span>
       </Header>
 
       <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
@@ -245,28 +284,10 @@ const ManageBills = () => {
             textOverflow: "ellipsis",
             minWidth: "200px",
           }}
-          configNavItems={[
-            {
-              code: "NOT_VERIFIED",
-              name: t("HCM_AM_NOT_VERIFIED"),
-            },
-            {
-              code: "VERIFICATION_IN_PROGRESS",
-              name: t("HCM_AM_VERIFICATION_IN_PROGRESS"),
-            },
-            {
-              code: "PARTIALLY_VERIFIED",
-              name: t("HCM_AM_PARTIALLY_VERIFIED"),
-            },
-            {
-              code: "FULLY_VERIFIED",
-              name: t("HCM_AM_VERIFIED"),
-            },
-            {
-              code: "SENT_FOR_REVIEW",
-              name: t("HCM_AM_SENT_FOR_REVIEW"),
-            },
-          ]}
+          configNavItems={roleConfig.tabs.map((tab) => ({
+            code: tab.code,
+            name: t(tab.name),
+          }))}
           navStyles={{
             display: "flex",
             width: "100%",
@@ -274,6 +295,8 @@ const ManageBills = () => {
           onTabClick={(e) => {
             setCurrentPage(1);
             setLimitAndOffset({ limit: rowsPerPage, offset: 0 });
+            setSelectedBills([]);
+            setClearSelectedRows((prev) => !prev);
             setActiveLink(e);
           }}
           setActiveLink={setActiveLink}
@@ -295,7 +318,8 @@ const ManageBills = () => {
             handlePerRowsChange={handlePerRowsChange}
             onSelectionChange={setSelectedBills}
             clearSelectedRows={clearSelectedRows}
-            activeTab={activeLink.code}
+            columnKeys={roleConfig.tabColumns[activeLink.code]}
+            isSelectable={roleConfig.selectableTabs.includes(activeLink.code)}
           />
         )}
       </Card>
@@ -317,15 +341,12 @@ const ManageBills = () => {
           icon="ArrowBack"
           onClick={() => history.goBack()}
         />
-        {activeLink.code === "NOT_VERIFIED" && (
+        {currentCTA && (
           <Button
             variation="primary"
-            label={t("HCM_AM_VERIFY_BILLS")}
+            label={t(currentCTA.label)}
             isDisabled={selectedBills.length === 0}
-            onClick={() => {
-              Digit.SessionStorage.set("selectedBillsForVerification", selectedBills);
-              history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`);
-            }}
+            onClick={() => handleCTAAction(currentCTA.action)}
           />
         )}
       </ActionBar>

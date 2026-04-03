@@ -389,6 +389,20 @@ const BillDetailsTable = ({ ...props }) => {
             width: "120px",
         };
 
+        // --- Additional columns for approver views ---
+
+        const errorMessageCol = {
+            name: colHeader(t("HCM_AM_ERROR_MESSAGE")),
+            selector: (row) => (
+                <span className="ellipsis-cell" title={t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                    style={{ fontSize: "14px", color: "#B91900" }}>
+                    {t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                </span>
+            ),
+            minWidth: "180px",
+            style: { justifyContent: "start" },
+        };
+
         // --- Column set selection based on billStatus ---
 
         // Edit mode: keep existing columns with edit buttons
@@ -405,10 +419,20 @@ const BillDetailsTable = ({ ...props }) => {
             return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, roleCol, daysCol, wageCol, totalAmountCol];
         }
 
-        // Standard view for PENDING_VERIFICATION, VERIFICATION_IN_PROGRESS, FULLY_VERIFIED, SENT_FOR_REVIEW
+        // Approver: Partially Paid with sub-tabs (Failed / Paid)
+        if (billStatus === "PARTIALLY_PAID") {
+            if (subTab === "FAILED") {
+                return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol];
+            }
+            // PAID sub-tab
+            return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
+        }
+
+        // Standard view for PENDING_VERIFICATION, VERIFICATION_IN_PROGRESS, FULLY_VERIFIED, SENT_FOR_REVIEW,
+        // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
         return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
 
-    }, [tableData, t, props?.isSelectionDisabledTransfer, props?.isSelectionDisabledVerify, billStatus, subTab, props?.editBill]);
+    }, [tableData, t, props?.isSelectionDisabledTransfer, props?.isSelectionDisabledVerify, billStatus, subTab, props?.editBill, props?.role]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
