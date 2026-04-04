@@ -17,6 +17,7 @@ import UploadAndFetchBillsCard from "./upload_and_fetch_bills";
 import VerifyAndGeneratePayments from "./verify_generate_payements";
 import BillPaymentDetails from "./bill_payment_details";
 import ManageBills from "./manage_bills";
+import EditBillOnExcel from "./EditBillOnExcel";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -87,6 +88,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/edit-bill-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/view-bill-payment-details`} component={() => <BillPaymentDetails />} />
         <PrivateRoute path={`${path}/edit-bill-payment-details`} component={() => <BillPaymentDetails editBillDetails={true} />} />
+        <PrivateRoute path={`${path}/edit-bill-on-excel`} component={() => <EditBillOnExcel />} />
         <PrivateRoute path={`${path}/project-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/project-and-aggregation-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/payment-setup`} component={() => <PaymentSetUpPage />} />

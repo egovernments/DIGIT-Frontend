@@ -36,7 +36,6 @@ const STATUS_DISPLAY_MAP = {
 // Views that show sub-tabs (similar to PARTIALLY_VERIFIED_VIEW and EDIT_VIEW)
 const VIEWS_WITH_SUB_TABS = [
   "PARTIALLY_VERIFIED_VIEW",
-  "EDIT_VIEW",
   "EDITOR_PARTIALLY_VERIFIED_VIEW",
   "APPROVER_PARTIALLY_PAID_VIEW",
 ];
@@ -50,10 +49,6 @@ const VIEW_SUB_TABS = {
   EDITOR_PARTIALLY_VERIFIED_VIEW: [
     { code: "VERIFICATION_FAILED", name: "HCM_AM_VERIFICATION_FAILED", statusFilter: "VERIFICATION_FAILED" },
     { code: "VERIFIED", name: "HCM_AM_VERIFIED", statusFilter: "VERIFIED" },
-  ],
-  EDIT_VIEW: [
-    { code: "PENDING_FOR_EDIT", name: "HCM_AM_PENDING_FOR_EDIT", statusFilter: "PENDING_EDIT" },
-    { code: "EDITED", name: "HCM_AM_EDITED", statusFilter: "EDITED" },
   ],
   APPROVER_PARTIALLY_PAID_VIEW: [
     { code: "FAILED", name: "HCM_AM_FAILED", statusFilter: "PAYMENT_FAILED" },
@@ -84,7 +79,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [billData, setBillData] = useState(null);
   const [paginatedData, setPaginatedData] = useState([]);
   const [openSendForEditPopUp, setOpenSendForEditPopUp] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [openVerifyAlertPopUp, setOpenVerifyAlertPopUp] = useState(false);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
@@ -96,7 +90,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isSelectionDisabledTransfer, setIsSelectionDisabledTransfer] = useState(false);
   const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
-  const [clearSelectedRows, setClearSelectedRows] = useState(false);
+  const [isReviewerEdit, setIsReviewerEdit] = useState(false);
   // --------------------
 // Report (PDF / EXCEL)
 // --------------------
@@ -312,8 +306,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
     }
     catch (error) {
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
             console.error("Error updating individuals:", error);
       setShowToast({
         key: "error",
@@ -346,8 +339,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async () => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);            
+            // Selection cleared (no-op — row selection removed)
             setShowToast({
               key: "success",
               label: t(`HCM_AM_SELECTED_BILL_DETAILS_${wfAction}_SUCCESS`), //TODO UPDATE TOAST MSG
@@ -370,8 +362,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             }
           },
           onError: (error) => {
-            setSelectedRows([]);  
-            setClearSelectedRows(prev => !prev);      
+            // Selection cleared (no-op — row selection removed)
                 console.log("Error updating bill detail workflow:", error);
             setShowToast({
               key: "error",
@@ -384,8 +375,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       
     } catch (error) {
       console.log("Error updating bill detail workflow:", error);
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
        setShowToast({
         key: "error",
         label: t(`HCM_AM_BILL_DETAILS_${wfAction}_ERROR`), //TODO UPDATE TOAST MSG
@@ -414,8 +404,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async (verifyResponse) => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             console.log("Verify Response", verifyResponse);
             const taskId = verifyResponse?.taskId;
             if (!taskId) {
@@ -477,8 +466,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           },
           onError: (error) => {
             setIsLoading(false);
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             setShowToast({
               key: "error",
               label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),//TODO UPDATE TOAST MSG
@@ -489,8 +477,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
     } catch (error) {
       setIsLoading(false);
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
       setShowToast({
         key: "error",
         label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),//TODO UPDATE TOAST MSG
@@ -517,8 +504,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async (paymentResponse) => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             console.log("Payment Response", paymentResponse);
             const taskId = paymentResponse?.taskId;
             if (!taskId) {
@@ -578,8 +564,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             pollStatus();
           },
           onError: (error) => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             setIsLoading(false);
             setShowToast({
               key: "error",
@@ -591,8 +576,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
     } catch (error) {
       setIsLoading(false);
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
       setShowToast({
         key: "error",
         label: t("HCM_AM_PAYMENT_GENERATION_EXCEPTION"),//TODO UPDATE TOAST MSG
@@ -779,8 +763,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     setPaginatedData(slicedData);
   }, [tableData, currentPage, rowsPerPage]);
   useEffect(() => {
-    setSelectedRows([]);
-    setClearSelectedRows(prev => !prev);
+    // Reset reviewer edit mode on tab change
+    setIsReviewerEdit(false);
   }, [activeLink])
   useEffect(() => {
     if (!billData) return;
@@ -848,11 +832,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
 
-  const currentView = editBillDetails
-    ? "EDIT_VIEW"
-    : roleConfig?.billDetailViewMap?.[billData?.status]
-      || BILL_STATUS_VIEW[billData?.status]
-      || "NOT_VERIFIED_VIEW";
+  // TODO: Remove forced view after testing — revert to role-config-based resolution
+  const currentView = "REVIEWER_PENDING_VIEW";
+  // const currentView = roleConfig?.billDetailViewMap?.[billData?.status]
+  //   || BILL_STATUS_VIEW[billData?.status]
+  //   || "NOT_VERIFIED_VIEW";
 
   // Resolve status display label using role config or fallback
   const statusDisplayLabel = roleConfig?.statusDisplayMap?.[billData?.status]
@@ -1262,32 +1246,35 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
             <Fragment>
+              {/* TODO: Restore status check: activeRole === "PAYMENT_REVIEWER" && billData?.status === "SENT_FOR_REVIEW" */}
+              {activeRole === "PAYMENT_REVIEWER" && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem", gap: "1rem" }}>
+                  <Button
+                    variation={isReviewerEdit ? "secondary" : "primary"}
+                    label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
+                    icon={isReviewerEdit ? "Close" : "Edit"}
+                    onClick={() => setIsReviewerEdit((prev) => !prev)}
+                  />
+                  <Button
+                    variation="secondary"
+                    label={t("HCM_AM_EDIT_ON_EXCEL")}
+                    icon="FileDownload"
+                    onClick={() => history.push(
+                      `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
+                      { billID, billData }
+                    )}
+                  />
+                </div>
+              )}
               <BillDetailsTable
                 style={{ width: "100%", }}
                 data={paginatedData} totalCount={tableData.length}
-                selectableRows={
-                  currentView === "EDIT_VIEW"
-                    ? activeLink?.code !== "EDITED"
-                    : (currentView === "PARTIALLY_VERIFIED_VIEW" || currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW")
-                      ? activeLink?.code === "VERIFICATION_FAILED"
-                      : currentView === "APPROVER_PARTIALLY_PAID_VIEW"
-                        ? activeLink?.code === "FAILED"
-                        : !["VERIFICATION_IN_PROGRESS_VIEW", "SENT_FOR_REVIEW_VIEW",
-                            "EDITOR_VERIFICATION_IN_PROGRESS_VIEW", "EDITOR_SENT_FOR_REVIEW_VIEW",
-                            "REVIEWER_SENT_FOR_APPROVAL_VIEW",
-                            "APPROVER_IN_PROGRESS_VIEW", "APPROVER_PAID_VIEW"
-                          ].includes(currentView)
-                }
                 status={activeLink?.code}
                 billStatus={billData?.status}
                 subTab={VIEWS_WITH_SUB_TABS.includes(currentView) ? activeLink?.code : null}
-                editBill={editBillDetails}
                 role={activeRole}
-                clearSelectedRows={clearSelectedRows}
-                onSelectionChange={setSelectedRows}
-                selectedBills={selectedRows}
-                isSelectionDisabledTransfer={isSelectionDisabledTransfer}
-                isSelectionDisabledVerify={isSelectionDisabledVerify}
+                isReviewerEdit={isReviewerEdit}
+                onTableDataChange={(updatedData) => setTableData(updatedData)}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
                 workerRatesData={workerRatesData}
@@ -1319,7 +1306,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
+          updateBillDetailWorkflow(billData, tableData, "SEND_FOR_EDIT");
           setOpenSendForEditPopUp(false);
         }}
       />}
@@ -1332,7 +1319,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1345,7 +1331,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1357,7 +1342,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1370,19 +1354,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
-          />
-        </ActionBar>
-      )}
-      {currentView === "EDIT_VIEW" && activeLink?.code === "PENDING_FOR_EDIT" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_SAVE_CHANGES_AND_FORWARD`)}
-            onClick={() => setOpenEditAlertPopUp(true)}
-            style={{ minWidth: "14rem" }}
-            type="button"
-            variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1396,7 +1367,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1405,13 +1375,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           <Button
             label={t(`HCM_AM_SEND_FOR_REVIEW`)}
             onClick={() => {
-              // Mock — placeholder for future implementation
               setShowToast({ key: "info", label: t("HCM_AM_SEND_FOR_REVIEW_PLACEHOLDER"), transitionTime: 3000 });
             }}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1423,24 +1391,36 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
 
       {/* ── Reviewer role-specific views ── */}
-      {currentView === "REVIEWER_PENDING_VIEW" && (
+      {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit && (
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
             label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
             onClick={() => {
-              // Mock — placeholder for future implementation
               setShowToast({ key: "info", label: t("HCM_AM_SEND_FOR_APPROVAL_PLACEHOLDER"), transitionTime: 3000 });
             }}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
+          />
+        </ActionBar>
+      )}
+      {currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SAVE_CHANGES`)}
+            onClick={() => {
+              // Mock — placeholder for future implementation
+              setShowToast({ key: "info", label: t("HCM_AM_SAVE_CHANGES_PLACEHOLDER"), transitionTime: 3000 });
+              setIsReviewerEdit(false);
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
           />
         </ActionBar>
       )}
@@ -1451,13 +1431,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           <Button
             label={t(`HCM_AM_INITIATE_PAYMENT`)}
             onClick={() => {
-              // Mock — placeholder for future implementation
               setShowToast({ key: "info", label: t("HCM_AM_INITIATE_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
             }}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1466,13 +1444,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           <Button
             label={t(`HCM_AM_RETRY_PAYMENT`)}
             onClick={() => {
-              // Mock — placeholder for future implementation
               setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
             }}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
-            isDisabled={selectedRows.length === 0}
           />
         </ActionBar>
       )}
@@ -1487,7 +1463,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerVerifyBill(billData, selectedRows);
+          triggerVerifyBill(billData, tableData);
           setOpenVerifyAlertPopUp(false);
         }}
       />}
@@ -1500,7 +1476,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerIndividualBulkUpdate(AllIndividualsData, selectedRows, billData);
+          triggerIndividualBulkUpdate(AllIndividualsData, tableData, billData);
           setOpenEditAlertPopUp(false);
         }}
       />}
@@ -1513,7 +1489,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerGeneratePayment(billData, selectedRows);
+          triggerGeneratePayment(billData, tableData);
           setOpenApprovePaymentAlertPopUp(false);
         }}
       />}

@@ -239,6 +239,14 @@ const ManageBills = () => {
         // Mock — placeholder for future implementation
         setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER"), transitionTime: 3000 });
         break;
+      case "GENERATE_ADVISORY":
+        // Mock — placeholder for future implementation
+        setShowToast({ key: "info", label: t("HCM_AM_GENERATE_ADVISORY_PLACEHOLDER"), transitionTime: 3000 });
+        break;
+      case "DOWNLOAD_ADVISORY":
+        // Mock — placeholder for future implementation
+        setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_ADVISORY_PLACEHOLDER"), transitionTime: 3000 });
+        break;
       default:
         break;
     }

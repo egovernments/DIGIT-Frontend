@@ -16,6 +16,7 @@ export const MANAGE_BILLS_ROLES = {
   PAYMENT_EDITOR: "PAYMENT_EDITOR",
   PAYMENT_REVIEWER: "PAYMENT_REVIEWER",
   PAYMENT_APPROVER: "PAYMENT_APPROVER",
+  PAYMENT_APPROVER_BANK: "PAYMENT_APPROVER_BANK",
 };
 
 const MANAGE_BILLS_ROLE_CONFIG = {
@@ -132,6 +133,35 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       PAYMENT_IN_PROGRESS: "HCM_AM_PAYMENT_IN_PROGRESS",
       PARTIALLY_PAID: "HCM_AM_PARTIALLY_PAID_FAILED",
       FULLY_PAID: "HCM_AM_PAID",
+    },
+  },
+
+  // ─── PAYMENT_APPROVER (BANK MODE) ─────────────────────────────────
+  [MANAGE_BILLS_ROLES.PAYMENT_APPROVER_BANK]: {
+    headerLabel: "HCM_AM_APPROVE_PAYMENTS",
+    tabs: [
+      { code: "PENDING_BILLS", name: "HCM_AM_PENDING_BILLS" },
+      { code: "GENERATED_ADVISORIES", name: "HCM_AM_GENERATED_ADVISORIES" },
+    ],
+    tabStatusMap: {
+      PENDING_BILLS: ["SENT_FOR_APPROVAL"],
+      GENERATED_ADVISORIES: ["FULLY_PAID"],
+    },
+    selectableTabs: ["PENDING_BILLS"],
+    tabColumns: {
+      PENDING_BILLS: ["billId", "source", "payees", "totalAmount", "download"],
+      GENERATED_ADVISORIES: ["billId", "source", "payees", "totalAmount", "download", "downloadAdvisory"],
+    },
+    tabCTAs: {
+      PENDING_BILLS: { label: "HCM_AM_GENERATE_PAYMENT_ADVISORY", action: "GENERATE_ADVISORY" },
+    },
+    billDetailViewMap: {
+      SENT_FOR_APPROVAL: "APPROVER_NOT_INITIATED_VIEW",
+      FULLY_PAID: "APPROVER_PAID_VIEW",
+    },
+    statusDisplayMap: {
+      SENT_FOR_APPROVAL: "HCM_AM_PENDING_BILLS",
+      FULLY_PAID: "HCM_AM_ADVISORY_GENERATED",
     },
   },
 };

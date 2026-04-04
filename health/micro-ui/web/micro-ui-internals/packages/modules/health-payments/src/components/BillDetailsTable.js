@@ -8,7 +8,6 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
 import { useHistory } from "react-router-dom";
-import EditWorkerDetailsPopUp from "./editWorkerDetailsPopUp ";
 import WorkerDetailsPopUp from "./WorkerDetailsPopUp";
 
 
@@ -18,16 +17,12 @@ const BillDetailsTable = ({ ...props }) => {
     const [showToast, setShowToast] = useState(null);
     const project = Digit?.SessionStorage.get("staffProjects");
     const selectedProject = Digit?.SessionStorage.get("selectedProject");
-    const [showEditField, setShowEditField] = useState(false);
-    const [editFieldName, setEditFieldName] = useState(null);
-    const [fieldKey, setFieldKey] = useState(null);
-    const [editingRowIndex, setEditingRowIndex] = useState(null);
-    const [initialFieldValue, setInitialFieldValue] = useState("");
     const [tableData, setTableData] = useState(props?.data || []);
     const [selectedRow, setSelectedRow] = useState(null);
     const workerRatesData = props?.workerRatesData;
     const billStatus = props?.billStatus;
     const subTab = props?.subTab;
+    const isReviewerEdit = props?.isReviewerEdit;
 
     useEffect(() => {
         setTableData(props?.data || []);
@@ -43,6 +38,22 @@ const BillDetailsTable = ({ ...props }) => {
         return Math.round(finalAmount);
     };
 
+    const getPerDayValue = (total, days) => {
+        const d = Number(days);
+        if (!d || d === 0) return total != null ? total : 0;
+        return Math.round((Number(total || 0) / d) * 100) / 100;
+    };
+
+    const handleReviewerCellChange = (rowId, field, value) => {
+        const updatedData = tableData.map((row) =>
+            row.id === rowId ? { ...row, [field]: value === "" ? "" : Number(value) } : row
+        );
+        setTableData(updatedData);
+        if (props?.onTableDataChange) {
+            props.onTableDataChange(updatedData);
+        }
+    };
+
     const currencySuffix = workerRatesData?.currency ? ` (${workerRatesData.currency})` : "";
 
     const colHeader = (label) => (
@@ -50,6 +61,34 @@ const BillDetailsTable = ({ ...props }) => {
             {label}
         </div>
     );
+
+    const editableCell = (row, field, withDollar = true) => {
+        if (!isReviewerEdit) {
+            return (
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                    {row?.[field] != null ? row[field] : 0}
+                </div>
+            );
+        }
+        return (
+            <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
+                {withDollar && <span style={{ fontSize: "14px", color: "#505A5F" }}>$</span>}
+                <input
+                    type="number"
+                    value={row?.[field] != null ? row[field] : ""}
+                    onChange={(e) => handleReviewerCellChange(row.id, field, e.target.value)}
+                    style={{
+                        width: "70px",
+                        padding: "4px 6px",
+                        border: "1px solid #B1B4B6",
+                        borderRadius: "4px",
+                        fontSize: "14px",
+                        textAlign: "right",
+                    }}
+                />
+            </div>
+        );
+    };
 
     const columns = useMemo(() => {
         // --- Reusable column definitions ---
@@ -123,49 +162,6 @@ const BillDetailsTable = ({ ...props }) => {
             minWidth: "150px",
         };
 
-        const workerNameColWithEdit = {
-            name: colHeader(t("HCM_AM_WORKER_NAME")),
-            selector: (row) => {
-                const showErrorName =
-                    ["VERIFICATION_FAILED", "PENDING_EDIT"].includes(row?.status) &&
-                    ["NAME_MISMATCH", "MTN_USERINFO_MISSING_NAME", "MTN_USERINFO_FETCH_FAILED"]
-                        .some(r => (row?.additionalDetails?.errorDetails?.reasonForFailure || "").toLowerCase().includes(r.toLowerCase()));
-                return (
-                    <div className="ellipsis-cell" style={{ display: "flex", alignItems: "center", minWidth: 0, maxWidth: "100%" }}>
-                        <span className="ellipsis-cell" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block", marginRight: "4px" }}
-                            title={row?.givenName || t("NA")}>
-                            {row?.givenName || t("NA")}
-                        </span>
-                        {props?.editBill && row?.status === "PENDING_EDIT" && (
-                            <Button
-                                style={{ minWidth: "auto", padding: "0px 4px", fontSize: "11px", height: "20px", lineHeight: "16px", marginRight: "4px" }}
-                                variation="secondary" size="small" icon="Edit"
-                                onClick={() => {
-                                    setShowEditField(true);
-                                    setFieldKey("givenName");
-                                    setInitialFieldValue(row?.givenName || "");
-                                    setEditingRowIndex(row?.id);
-                                    setEditFieldName(t("HCM_AM_WORKER_NAME"));
-                                }}
-                            />
-                        )}
-                        {showErrorName && (
-                            <TooltipWrapper arrow
-                                content={<div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>{t(row?.additionalDetails?.errorDetails?.reasonForFailure)}</div>}
-                                enterDelay={100} header={t("HCM_AM_DATA_ERROR")} leaveDelay={0} placement="right">
-                                <span style={{ display: "inline-block" }}>
-                                    <Button style={{ minWidth: "auto", color: "#B91900", paddingLeft: "0.25rem", cursor: "default", backgroundColor: "transparent" }}
-                                        variation="tertiary" size="medium" icon="Error" iconFill="#B91900" />
-                                </span>
-                            </TooltipWrapper>
-                        )}
-                    </div>
-                );
-            },
-            allowOverflow: true,
-            minWidth: "220px",
-        };
-
         const payeeNameCol = {
             name: colHeader(t("HCM_AM_PAYEE_NAME")),
             selector: (row) => (
@@ -185,48 +181,6 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             minWidth: "140px",
-        };
-
-        const phoneColWithEdit = {
-            name: colHeader(t("HCM_AM_MOBILE_NUMBER")),
-            selector: (row) => {
-                const showErrorMobileNumber =
-                    ["VERIFICATION_FAILED", "PENDING_EDIT"].includes(row?.status) &&
-                    ["MTN_ACCOUNT_VALIDATION_FAILED", "MTN_ACCOUNT_INACTIVE", "MTN_USERINFO_FETCH_FAILED"]
-                        .some(r => (row?.additionalDetails?.errorDetails?.reasonForFailure || "").toLowerCase().includes(r.toLowerCase()));
-                return (
-                    <div style={{ display: "flex", alignItems: "center", minWidth: 0, maxWidth: "100%" }}>
-                        <span className="ellipsis-cell" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block", marginRight: "4px" }}>
-                            {row?.mobileNumber || t("ES_COMMON_NA")}
-                        </span>
-                        {props?.editBill && row?.status === "PENDING_EDIT" && (
-                            <Button
-                                style={{ minWidth: "auto", padding: "0px 4px", fontSize: "11px", height: "20px", lineHeight: "16px", marginRight: "4px" }}
-                                variation="secondary" size="small" icon="Edit"
-                                onClick={() => {
-                                    setFieldKey("mobileNumber");
-                                    setInitialFieldValue(row?.mobileNumber || "");
-                                    setEditingRowIndex(row?.id);
-                                    setShowEditField(true);
-                                    setEditFieldName(t("HCM_AM_MOBILE_NUMBER"));
-                                }}
-                            />
-                        )}
-                        {showErrorMobileNumber && (
-                            <TooltipWrapper arrow
-                                content={<div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>{t(row?.additionalDetails?.errorDetails?.reasonForFailure)}</div>}
-                                enterDelay={100} header={t("HCM_AM_DATA_ERROR")} leaveDelay={0} placement="right">
-                                <span style={{ display: "inline-block" }}>
-                                    <Button style={{ minWidth: "auto", color: "#B91900", paddingLeft: "0.25rem", cursor: "default", backgroundColor: "transparent" }}
-                                        variation="tertiary" size="medium" icon="Error" iconFill="#B91900" />
-                                </span>
-                            </TooltipWrapper>
-                        )}
-                    </div>
-                );
-            },
-            allowOverflow: true,
-            minWidth: "220px",
         };
 
         const roleCol = {
@@ -279,26 +233,13 @@ const BillDetailsTable = ({ ...props }) => {
             style: { justifyContent: "flex-end" },
         };
 
-        const totalWithFeesCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT_WITH_FEES")}${currencySuffix}`),
-            selector: (row) => {
-                const finalAmount = row?.totalAmount ? calculateTotalWithFees(row.totalAmount, 3.5) : null;
-                return (
-                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {finalAmount !== null ? `${finalAmount}` : 0}
-                    </div>
-                );
-            },
-            style: { justifyContent: "flex-end" },
-        };
-
-        // --- New columns for standard view ---
+        // --- Per-day rate columns (values divided by days worked) ---
 
         const perDayCol = {
             name: colHeader(`${t("HCM_AM_WAGE_RATE")} (A)${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.perDay != null ? row.perDay : 0}
+                    {getPerDayValue(row?.perDay, row?.additionalDetails?.noOfDaysWorked)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -308,7 +249,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")} (B)${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.food != null ? row.food : 0}
+                    {getPerDayValue(row?.food, row?.additionalDetails?.noOfDaysWorked)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -318,7 +259,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_TRANSPORTATION")} (C)${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.travel != null ? row.travel : 0}
+                    {getPerDayValue(row?.travel, row?.additionalDetails?.noOfDaysWorked)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -328,7 +269,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_MISC")} (D)${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.misc != null ? row.misc : 0}
+                    {getPerDayValue(row?.misc, row?.additionalDetails?.noOfDaysWorked)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -403,11 +344,107 @@ const BillDetailsTable = ({ ...props }) => {
             style: { justifyContent: "start" },
         };
 
-        // --- Column set selection based on billStatus ---
+        // --- Reviewer editable columns ---
 
-        // Edit mode: keep existing columns with edit buttons
-        if (props?.editBill) {
-            return [userIdCol, workerNameColWithEdit, phoneColWithEdit, roleCol, operatorCol, daysCol, wageCol, totalAmountCol, totalWithFeesCol];
+        const reviewerWageCol = {
+            name: colHeader(`${t("HCM_AM_WAGE_RATE")}${currencySuffix}`),
+            selector: (row) => editableCell(row, "perDay"),
+            style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+        };
+
+        const reviewerFoodCol = {
+            name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")}${currencySuffix}`),
+            selector: (row) => editableCell(row, "food"),
+            style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+        };
+
+        const reviewerTravelCol = {
+            name: colHeader(`${t("HCM_AM_TRANSPORTATION")}${currencySuffix}`),
+            selector: (row) => editableCell(row, "travel"),
+            style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+        };
+
+        const reviewerMiscCol = {
+            name: colHeader(`${t("HCM_AM_MISC")}${currencySuffix}`),
+            selector: (row) => editableCell(row, "misc"),
+            style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+        };
+
+        const reviewerDaysCol = {
+            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
+            selector: (row) => {
+                if (!isReviewerEdit) {
+                    return (
+                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                            {row?.additionalDetails?.noOfDaysWorked != null ? row.additionalDetails.noOfDaysWorked : t("NA")}
+                        </div>
+                    );
+                }
+                return (
+                    <input
+                        type="number"
+                        value={row?.additionalDetails?.noOfDaysWorked != null ? row.additionalDetails.noOfDaysWorked : ""}
+                        onChange={(e) => {
+                            const updatedData = tableData.map((r) =>
+                                r.id === row.id
+                                    ? { ...r, additionalDetails: { ...r.additionalDetails, noOfDaysWorked: e.target.value === "" ? "" : Number(e.target.value) } }
+                                    : r
+                            );
+                            setTableData(updatedData);
+                            if (props?.onTableDataChange) props.onTableDataChange(updatedData);
+                        }}
+                        style={{
+                            width: "70px",
+                            padding: "4px 6px",
+                            border: "1px solid #B1B4B6",
+                            borderRadius: "4px",
+                            fontSize: "14px",
+                            textAlign: "right",
+                        }}
+                    />
+                );
+            },
+            style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+        };
+
+        const reviewerFeesCol = {
+            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")}${currencySuffix}`),
+            selector: (row) => editableCell(row, "fees"),
+            style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+        };
+
+        const reviewerTotalCol = {
+            name: colHeader(`${t("HCM_AM_TOTAL")}${currencySuffix}`),
+            selector: (row) => {
+                const wage = Number(row?.perDay || 0);
+                const food = Number(row?.food || 0);
+                const travel = Number(row?.travel || 0);
+                const misc = Number(row?.misc || 0);
+                const days = Number(row?.additionalDetails?.noOfDaysWorked || 0);
+                const fees = Number(row?.fees || 0);
+                const total = (wage + food + travel + misc) * days + fees;
+                return (
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontWeight: "bold" }}>
+                        {total}
+                    </div>
+                );
+            },
+            style: { justifyContent: "flex-end" },
+            minWidth: "120px",
+        };
+
+        // --- Column set selection based on billStatus and role ---
+
+        // Reviewer view (SENT_FOR_REVIEW / SENT_FOR_APPROVAL)
+        if (props?.role === "PAYMENT_REVIEWER") {
+            return [userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, roleCol,
+                reviewerWageCol, reviewerFoodCol, reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol];
         }
 
         // Partially Verified with sub-tabs
@@ -432,7 +469,7 @@ const BillDetailsTable = ({ ...props }) => {
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
         return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
 
-    }, [tableData, t, props?.isSelectionDisabledTransfer, props?.isSelectionDisabledVerify, billStatus, subTab, props?.editBill, props?.role]);
+    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -442,28 +479,12 @@ const BillDetailsTable = ({ ...props }) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
 
-    const handleFieldUpdate = (key, newValue) => {
-        console.log("inside handleFieldUpdate", key, newValue, editingRowIndex);
-        const updatedData = tableData.map((row) =>
-            row.id === editingRowIndex
-                ? { ...row, [key]: newValue }
-                : row
-        );
-        setTableData(updatedData);
-        setShowEditField(false);
-        setEditFieldName(null);
-        setEditingRowIndex(null);
-    };
     const handleMultiFieldUpdate = (updatedFields) => {
         const updatedData = tableData.map((row) =>
             row.id === selectedRow?.id ? { ...row, ...updatedFields } : row
         );
         setTableData(updatedData);
         setSelectedRow(null);
-    };
-
-    const handleSelectedRowsChange = ({ selectedRows }) => {
-        props?.onSelectionChange(selectedRows);
     };
 
     return (
@@ -478,47 +499,15 @@ const BillDetailsTable = ({ ...props }) => {
                 paginationDefaultPage={props?.currentPage}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handlePerRowsChange}
-                clearSelectedRows={props?.clearSelectedRows}
                 paginationTotalRows={props?.totalCount}
                 paginationPerPage={props?.rowsPerPage}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                 paginationRowsPerPageOptions={defaultPaginationValues}
                 fixedHeader={true}
-                selectableRows={props?.selectableRows}
-                selectableRowDisabled={(row) =>
-                    (props?.status === "VERIFIED" && props?.isSelectionDisabledTransfer) ||
-                    (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabledTransfer) ||
-                    (props?.status === "NOT_VERIFIED" && props?.isSelectionDisabledVerify) ||
-                    (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
-                    (row?.status === 'EDITED' && props?.editBill)
-                }
-                conditionalRowStyles={[
-                    {
-                        when: (row) =>
-                            (props?.status === "VERIFIED" && props?.isSelectionDisabledTransfer) ||
-                            (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabledTransfer) ||
-                            (props?.status === "NOT_VERIFIED" && props?.isSelectionDisabledVerify) ||
-                            (row?.status === 'PENDING_EDIT' && !props?.editBill),
-                        style: {
-                            backgroundColor: "#f0f0f0",
-                            color: "#999",
-                            opacity: 0.6,
-                        },
-                    },
-                ]}
-                onSelectedRowsChange={handleSelectedRowsChange}
+                selectableRows={false}
                 fixedHeaderScrollHeight={"70vh"}
                 paginationComponentOptions={getCustomPaginationOptions(t)}
             />
-            {showEditField && (
-                <EditWorkerDetailsPopUp
-                    onClose={() => setShowEditField(false)}
-                    editFieldName={editFieldName}
-                    onSubmit={handleFieldUpdate}
-                    fieldKey={fieldKey}
-                    initialValue={initialFieldValue}
-                />
-            )}
             {selectedRow && (
                 <WorkerDetailsPopUp
                     row={selectedRow}
