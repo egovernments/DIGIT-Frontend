@@ -49,8 +49,9 @@ const BillDetailsTable = ({ ...props }) => {
             row.id === rowId ? { ...row, [field]: value === "" ? "" : Number(value) } : row
         );
         setTableData(updatedData);
-        if (props?.onTableDataChange) {
-            props.onTableDataChange(updatedData);
+        if (props?.onRowChange) {
+            const updatedRow = updatedData.find((r) => r.id === rowId);
+            if (updatedRow) props.onRowChange(updatedRow);
         }
     };
 
@@ -389,13 +390,17 @@ const BillDetailsTable = ({ ...props }) => {
                         type="number"
                         value={row?.additionalDetails?.noOfDaysWorked != null ? row.additionalDetails.noOfDaysWorked : ""}
                         onChange={(e) => {
+                            const val = e.target.value === "" ? "" : Number(e.target.value);
                             const updatedData = tableData.map((r) =>
                                 r.id === row.id
-                                    ? { ...r, additionalDetails: { ...r.additionalDetails, noOfDaysWorked: e.target.value === "" ? "" : Number(e.target.value) } }
+                                    ? { ...r, additionalDetails: { ...r.additionalDetails, noOfDaysWorked: val } }
                                     : r
                             );
                             setTableData(updatedData);
-                            if (props?.onTableDataChange) props.onTableDataChange(updatedData);
+                            if (props?.onRowChange) {
+                                const updatedRow = updatedData.find((r) => r.id === row.id);
+                                if (updatedRow) props.onRowChange(updatedRow);
+                            }
                         }}
                         style={{
                             width: "70px",

@@ -14,6 +14,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
 import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
+import SendForApprovalPopUp from "../../components/SendForApprovalPopUp";
 
 // Fallback view map (used when role config is not available)
 const BILL_STATUS_VIEW = {
@@ -91,6 +92,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [isReviewerEdit, setIsReviewerEdit] = useState(false);
+  const [openSendForApprovalPopUp, setOpenSendForApprovalPopUp] = useState(false);
   // --------------------
 // Report (PDF / EXCEL)
 // --------------------
@@ -818,7 +820,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       };
       setTabCounts(counts);
     }
-  }, [AllIndividualsData, billData, activeLink]);
+  }, [AllIndividualsData, billData, activeLink, isReviewerEdit]);
 
   
   const renderLabelPair = (heading, text, style) => (
@@ -1255,15 +1257,17 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     icon={isReviewerEdit ? "Close" : "Edit"}
                     onClick={() => setIsReviewerEdit((prev) => !prev)}
                   />
-                  <Button
-                    variation="secondary"
-                    label={t("HCM_AM_EDIT_ON_EXCEL")}
-                    icon="FileDownload"
-                    onClick={() => history.push(
-                      `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
-                      { billID, billData }
-                    )}
-                  />
+                  {!isReviewerEdit && (
+                    <Button
+                      variation="secondary"
+                      label={t("HCM_AM_EDIT_ON_EXCEL")}
+                      icon="FileDownload"
+                      onClick={() => history.push(
+                        `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
+                        { billID, billData }
+                      )}
+                    />
+                  )}
                 </div>
               )}
               <BillDetailsTable
@@ -1274,7 +1278,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 subTab={VIEWS_WITH_SUB_TABS.includes(currentView) ? activeLink?.code : null}
                 role={activeRole}
                 isReviewerEdit={isReviewerEdit}
-                onTableDataChange={(updatedData) => setTableData(updatedData)}
+                onRowChange={(updatedRow) => setTableData((prev) => prev.map((r) => r.id === updatedRow.id ? updatedRow : r))}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
                 workerRatesData={workerRatesData}
@@ -1297,6 +1301,18 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
     
+      {openSendForApprovalPopUp && (
+        <SendForApprovalPopUp
+          onClose={() => setOpenSendForApprovalPopUp(false)}
+          onSubmit={({ comment, supportingDocs }) => {
+            setOpenSendForApprovalPopUp(false);
+            // Mock — placeholder for future API call
+            console.log("Send for approval:", { comment, supportingDocs, billID });
+            setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
+          }}
+        />
+      )}
+
         {openSendForEditPopUp && <AlertPopUp
         onClose={() => {
           setOpenSendForEditPopUp(false);
@@ -1400,9 +1416,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
             label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
-            onClick={() => {
-              setShowToast({ key: "info", label: t("HCM_AM_SEND_FOR_APPROVAL_PLACEHOLDER"), transitionTime: 3000 });
-            }}
+            onClick={() => setOpenSendForApprovalPopUp(true)}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
