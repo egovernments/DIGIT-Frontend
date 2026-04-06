@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button, Toast } from "@egovernments/digit-ui-components";
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
+import PendingTransactionsTab from "./PendingTransactionsTab";
 import DateRangePicker from "./DateRangePicker";
 import { useLocation } from "react-router-dom";
 import useStockData from "../../hooks/useStockData";
@@ -80,16 +81,18 @@ const CommodityDashboard = () => {
     preset: "cumulative",
   });
 
-  // Compute effective date range, resolving cumulative/null start dates to campaign start
+  // Compute effective date range, resolving cumulative/null start dates to campaign created time
   const effectiveDateRange = useMemo(() => {
     const now = new Date();
-    // Fallback start: campaignStartDate, or 90 days ago if campaign start is unavailable
-    const fallbackStart = campaignStartDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    // Start: campaign auditDetails.createdTime, fallback to 90 days ago
+    const fallbackStart = campaignCreatedDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    // End: today if before project endDate, otherwise project endDate
+    const fallbackEnd = campaignEndDate && now < campaignEndDate ? now : (campaignEndDate || now);
 
     if (dateRange.preset === "cumulative") {
       return {
         startDate: fallbackStart,
-        endDate: now,
+        endDate: fallbackEnd,
         preset: "cumulative",
       };
     }
@@ -99,9 +102,9 @@ const CommodityDashboard = () => {
     return {
       ...dateRange,
       startDate: dateRange.startDate || fallbackStart,
-      endDate: dateRange.endDate || now,
+      endDate: dateRange.endDate || fallbackEnd,
     };
-  }, [dateRange, campaignStartDate]);
+  }, [dateRange, campaignCreatedDate, campaignEndDate]);
 
   // Centralized stock data fetch (single call for both tabs)
   const { data: rawStockData, isLoading: stockLoading, metadata, source, refetch: refetchStockData } = useStockData({
@@ -154,7 +157,8 @@ const CommodityDashboard = () => {
 
   const handlePresetSelect = (code) => {
     const now = new Date();
-    const fallbackStart = campaignStartDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    const fallbackStart = campaignCreatedDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    const fallbackEnd = campaignEndDate && now < campaignEndDate ? now : (campaignEndDate || now);
 
     if (code === "today") {
       const startOfDay = new Date(now);
@@ -163,12 +167,12 @@ const CommodityDashboard = () => {
       endOfDay.setHours(23, 59, 59, 999);
       setDateRange({ startDate: startOfDay, endDate: endOfDay, preset: "today" });
     } else if (code === "cumulative") {
-      setDateRange({ startDate: fallbackStart, endDate: now, preset: "cumulative" });
+      setDateRange({ startDate: fallbackStart, endDate: fallbackEnd, preset: "cumulative" });
     } else {
       // Custom: inherit current effective dates so the picker doesn't reset
       setDateRange((prev) => ({
         startDate: prev.startDate || fallbackStart,
-        endDate: prev.endDate || now,
+        endDate: prev.endDate || fallbackEnd,
         preset: "custom",
       }));
     }
@@ -177,6 +181,7 @@ const CommodityDashboard = () => {
   const tabs = [
     { key: "transaction", label: t("HCM_TRANSACTION_SUMMARY") },
     { key: "stock", label: t("HCM_STOCK_SUMMARY") },
+    { key: "pending", label: t("HCM_PENDING_TRANSACTIONS") },
   ];
 
   // Show loader while campaignId is being fetched
@@ -249,7 +254,7 @@ const CommodityDashboard = () => {
         </div>
       </div>
 
-      {activeTab === "transaction" ? (
+      {activeTab === "transaction" && (
         <TransactionSummaryTab
           rawStockData={rawStockData}
           stockLoading={stockLoading}
@@ -261,7 +266,8 @@ const CommodityDashboard = () => {
           userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
         />
-      ) : (
+      )}
+      {activeTab === "stock" && (
         <StockSummaryTab
           rawStockData={rawStockData}
           stockLoading={stockLoading}
@@ -275,6 +281,18 @@ const CommodityDashboard = () => {
           userBoundary={userBoundary}
           userBoundaries={userBoundaries}
           isTopLevel={isTopLevel}
+        />
+      )}
+      {activeTab === "pending" && (
+        <PendingTransactionsTab
+          rawStockData={rawStockData}
+          stockLoading={stockLoading}
+          tenantId={tenantId}
+          campaignId={campaignId}
+          projectId={projectId}
+          userBoundary={userBoundary}
+          isTopLevel={isTopLevel}
+          refetchStockData={refetchStockData}
         />
       )}
 

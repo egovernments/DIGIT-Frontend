@@ -595,9 +595,15 @@ const NewShipmentPopup = ({
         const status = record.status || "";
         if (status === "REJECTED") {
           // Rejected dispatch: stock came back, net zero
-        } else if (senderId === fromFacilityId) {
-          // ACCEPTED or IN_TRANSIT: stock physically left my warehouse
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock physically left sender
+          if (senderId === fromFacilityId) {
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+          }
+          // ACCEPTED: receiver gained stock
+          if (status === "ACCEPTED" && receiverId === fromFacilityId) {
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+          }
         }
       } else if (entryType === "RECEIPT") {
         if (receiverId === fromFacilityId) {

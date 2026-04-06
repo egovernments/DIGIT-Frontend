@@ -311,6 +311,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         } else {
           // ACCEPTED or IN_TRANSIT: stock physically left sender
           if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+          // ACCEPTED: receiver gained stock
+          if (status === "ACCEPTED" && stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
       } else if (stockEntryType === "RECEIPT") {
         // Receiver confirms receipt → gains stock
