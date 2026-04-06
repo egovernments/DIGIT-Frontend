@@ -28,11 +28,13 @@ module.exports = {
     ],
   },
   output: {
-    filename: "[name].bundle.js",
+    filename: "[name].[chunkhash:8].bundle.js",
+    chunkFilename: "[name].[chunkhash:8].bundle.js",
     path: path.resolve(__dirname, "build"),
     publicPath: "/payments-ui/",
   },
   optimization: {
+    moduleIds: 'hashed',
     splitChunks: {
       chunks: 'all',
       minSize: 100000,
