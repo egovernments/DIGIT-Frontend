@@ -37,8 +37,8 @@ module.exports = {
     moduleIds: 'hashed',
     splitChunks: {
       chunks: 'all',
-      minSize: 500000,
-      maxSize: 2000000,
+      minSize: 2000000,
+      maxSize: 8000000,
       minChunks: 1,
       maxAsyncRequests: 15,
       maxInitialRequests: 15,
