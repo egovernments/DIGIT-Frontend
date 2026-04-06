@@ -371,6 +371,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1 ,sortable: true},
   { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px",sortable: true },
   { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8 ,sortable: true},
+  { label: t("HCM_QUANTITY"), key: "quantity", grow: 0.6, minWidth: "100px", sortable: true },
   { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1,sortable: true },
 ];
 
@@ -409,18 +410,16 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       const displayName = row?.nameOfUser || "";
       const loginName = row?.userName || "";
 
-      // Mask userName: show last 4 chars, mask the rest with *
-      const maskLogin = (name) => {
-        if (!name) return "";
-        if (name.length <= 4) return name;
-        return "*".repeat(name.length - 4) + name.slice(-4);
-      };
-
-      if (displayName && loginName) {
-        return `${displayName} (${maskLogin(loginName)})`;
+      if (displayName || loginName) {
+        return (
+          <div>
+            <div>{displayName || loginName}</div>
+            {displayName && loginName && (
+              <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{loginName}</div>
+            )}
+          </div>
+        );
       }
-      if (displayName) return displayName;
-      if (loginName) return maskLogin(loginName);
 
       const userId = row?.createdBy;
       if (userId && userId !== "N/A") {

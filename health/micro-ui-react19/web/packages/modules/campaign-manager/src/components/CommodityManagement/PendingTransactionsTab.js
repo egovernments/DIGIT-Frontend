@@ -325,17 +325,16 @@ const PendingTransactionsTab = ({
       const displayName = row?.nameOfUser || "";
       const loginName = row?.userName || "";
 
-      const maskLogin = (name) => {
-        if (!name) return "";
-        if (name.length <= 4) return name;
-        return "*".repeat(name.length - 4) + name.slice(-4);
-      };
-
-      if (displayName && loginName) {
-        return `${displayName} (${maskLogin(loginName)})`;
+      if (displayName || loginName) {
+        return (
+          <div>
+            <div>{displayName || loginName}</div>
+            {displayName && loginName && (
+              <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{loginName}</div>
+            )}
+          </div>
+        );
       }
-      if (displayName) return displayName;
-      if (loginName) return maskLogin(loginName);
 
       const userId = row?.createdBy;
       if (userId && userId !== "N/A") {
