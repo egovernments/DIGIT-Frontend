@@ -4,9 +4,8 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-  // mode: 'development',
   entry: "./src/index.js",
-  devtool: "none",
+  devtool: false,
   module: {
     rules: [
       {
@@ -36,17 +35,29 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all',
-      minSize:20000,
-      maxSize:50000,
-      enforceSizeThreshold:50000,
-      minChunks:1,
-      maxAsyncRequests:30,
-      maxInitialRequests:30
+      minSize: 100000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 8,
+      maxInitialRequests: 8,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: -10,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
     },
   },
   plugins: [
     new CleanWebpackPlugin(),
     // new BundleAnalyzerPlugin(),
-    new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
+    new HtmlWebpackPlugin({ inject: true, template: "public/index.html", scriptLoading: 'defer' }),
   ],
 };
