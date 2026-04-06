@@ -37,17 +37,17 @@ module.exports = {
     moduleIds: 'hashed',
     splitChunks: {
       chunks: 'all',
-      minSize: 100000,
-      maxSize: 0,
+      minSize: 500000,
+      maxSize: 2000000,
       minChunks: 1,
-      maxAsyncRequests: 8,
-      maxInitialRequests: 8,
+      maxAsyncRequests: 15,
+      maxInitialRequests: 15,
       cacheGroups: {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
           chunks: 'all',
           priority: -10,
+          reuseExistingChunk: true,
         },
         default: {
           minChunks: 2,
