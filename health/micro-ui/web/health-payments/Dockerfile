@@ -32,8 +32,8 @@ WORKDIR /app/web
 # Increase timeout before install (recommended for GitHub Actions)
 RUN yarn config set network-timeout 600000
 
-# Install dependencies
-RUN yarn install
+# Install dependencies (ignore-engines: node:14-alpine3.14 ships 14.19.3, some deps gate on 14.21.3+)
+RUN yarn install --ignore-engines
 
 # Build the project
 RUN yarn build:webpack
