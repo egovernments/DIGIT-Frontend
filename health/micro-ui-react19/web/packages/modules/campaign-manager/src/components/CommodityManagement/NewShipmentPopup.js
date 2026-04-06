@@ -1105,7 +1105,7 @@ const NewShipmentPopup = ({
       });
 
       // Stock balance validation: check that dispatched quantities don't exceed available stock
-      if (!isFromTopLevel && Object.keys(facilityStockMap).length > 0) {
+      if (!isFromTopLevel) {
         // Aggregate total quantities per senderId per productVariantId across all data rows
         const aggregatedQty = {};
         dataRows.forEach((row) => {
