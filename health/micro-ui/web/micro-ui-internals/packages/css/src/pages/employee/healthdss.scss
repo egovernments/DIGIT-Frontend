@@ -758,10 +758,10 @@
 }
 
 .digit-dss-options-header-text {
-  color: theme(digitv2.lightTheme.text-color-primary);
   font-family: theme(digitv2.fontFamily.rc);
   font-style: theme(digitv2.fontStyle.normal);
   font-weight: theme(digitv2.fontWeight.bold);
+  color: #0b4b66 !important;
 
   @media (max-aspect-ratio: 9/16) {
     /* Media query for mobile */
@@ -975,6 +975,12 @@
   margin-bottom: 1.5rem;
   display: flex;
   gap: 2rem;
+  width: 80%;
+
+  &.progressBar{
+    padding: 8px;
+    overflow: hidden;
+  }
 }
 
 .digit-dss-switch-tab-wrapper::-webkit-scrollbar {
@@ -1003,8 +1009,16 @@
   flex-direction: row;
   height: 4.5rem;
   align-items: center;
-  max-width: 80%;
+  max-width: 100%;
   overflow: auto;
+}
+
+.digit-dss-switch-tabs-progressbar-wrapper{
+  display: flex;
+  max-width: 100%;
+  gap: 2rem;
+  width: 100%;
+  overflow: hidden;
 }
 
 .digit-dss-switch-tab-selected {
@@ -1020,21 +1034,7 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-
-  @media (max-aspect-ratio: 9/16) {
-    /* Media query for mobile */
-    font-size: theme(digitv2.fontSize.heading-m.mobile);
-  }
-
-  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
-    /* Media query for tablets */
-    font-size: theme(digitv2.fontSize.heading-m.tablet);
-  }
-
-  @media (min-aspect-ratio: 3/4) {
-    /* Media query for desktop */
-    font-size: theme(digitv2.fontSize.heading-m.desktop);
-  }
+  font-size: theme(digitv2.fontSize.caption-m.mobile);
 }
 
 .digit-dss-switch-tab-unselected {
@@ -1057,9 +1057,9 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  justify-content: flex-end;
-  width: 20%;
-  margin-right: 2rem;
+  justify-content: flex-start;
+  width: 100%;
+  margin-right: 0rem;
 }
 
 .digit-containerDiv-progress {
@@ -1585,5 +1585,37 @@
 
   &__subtitle {
     margin: 0rem;
+  }
+}
+
+
+.digit-dss-options-header-boundary{
+  line-height: normal;
+  color: #0b4b66 !important;
+}
+
+.view-more-popup-user-activity{
+  .digit-popup-heading{
+    color: #0b4b66;
+  }
+}
+
+.digit-user-tracking-boundary-filter {
+  .digit-tag-container {
+    .digit-button-link {
+      h2 {
+        @media (max-aspect-ratio: 9/16) {
+          font-size: 0.875rem;
+        }
+
+        @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+          font-size: 1rem;
+        }
+
+        @media (min-aspect-ratio: 3/4) {
+          font-size: 1rem;
+        }
+      }
+    }
   }
 }

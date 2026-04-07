@@ -342,7 +342,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       onClose={onClose}
       onOverlayClick={onClose}
       heading={
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
           <div
             style={{
               width: "40px",
@@ -364,7 +364,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             <span style={{ color: "#0b4b66" }}>{user.userName}</span>
             <span style={{ color: "#787878", fontSize: "14px" }}>{`${user.userId} · ${t("HCM_ROLE_" + (user.role || "").toUpperCase())} · ${user.geoBoundary}`}</span>
           </div>
-          <Tag label={online ? "ONLINE" : "OFFLINE"} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
+          <Tag label={online ? t("ONLINE") : t("OFFLINE")} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
         </div>
       }
       style={{ width: "75vw", maxWidth: "75vw", maxHeight: "90vh" }}
@@ -401,7 +401,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
 
       {/* Filters */}
       <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ minWidth: "180px" }}>
+        <div style={{ minWidth: "200px" }}>
           <Dropdown
             t={t}
             option={actionTypeOptions}
@@ -410,7 +410,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             select={(val) => setActionTypeFilter(val.code)}
           />
         </div>
-        <div style={{ minWidth: "180px" }}>
+        <div style={{ minWidth: "200px" }}>
           <Dropdown
             t={t}
             option={outcomeOptions}
@@ -419,7 +419,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             select={(val) => setOutcomeFilter(val.code)}
           />
         </div>
-        <div style={{ minWidth: "160px" }}>
+        <div style={{ minWidth: "200px" }}>
           <Dropdown
             t={t}
             option={[

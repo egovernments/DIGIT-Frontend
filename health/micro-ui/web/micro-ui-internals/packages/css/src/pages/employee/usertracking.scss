@@ -12,6 +12,22 @@
     margin-top: 0rem;
     width: 100%;
   }
+
+  .rdt_TableRow{
+    .rdt_TableCell{
+      align-items: flex-start;
+
+      .digit-tag-wrapper{
+        word-break: normal;
+        overflow-wrap: anywhere;
+
+        .digit-tag-text{
+            word-break: normal;
+            overflow-wrap: anywhere;
+        }
+      }
+    }
+  }
 }
 
 .digit-dss-user-tracking-header-text{

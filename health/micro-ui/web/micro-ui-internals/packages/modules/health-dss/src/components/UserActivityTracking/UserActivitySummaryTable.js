@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown, PopUp, Chip } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
 import FilterContext from "../FilterContext";
@@ -67,6 +67,7 @@ const UserActivitySummaryTable = ({ data }) => {
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [selectedBoundaries, setSelectedBoundaries] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [viewMoreBoundaries, setViewMoreBoundaries] = useState(null);
 
   // Extract parent boundary from URL params (e.g. boundaryType=province, boundaryValue=Grand Gedeh)
   const searchParams = new URLSearchParams(window.location.search);
@@ -262,13 +263,13 @@ const UserActivitySummaryTable = ({ data }) => {
     },
     {
       name: t("USER_ACTIVITY_STATUS"),
-      cell: (row) => <Tag label={row.status} type={row.status === "ONLINE" ? "success" : "error"} showIcon={true} />,
+      cell: (row) => <Tag label={t(row.status)} type={row.status === "ONLINE" ? "success" : "error"} showIcon={true} />,
       sortable: true,
       grow: 0.8,
       minWidth: "120px",
     },
     {
-      name: "",
+      name: t("USER_ACTIVITY_ACTION"),
       cell: (row) => (
         <Button
           label={t("VIEW_PROFILE")}
@@ -305,10 +306,9 @@ const UserActivitySummaryTable = ({ data }) => {
           </div>
           <Button label={t("EXPORT_XLSX")} variation="secondary" icon="FileDownload" onClick={handleExportCSV} size="medium" />
         </div>
-
         {/* Filters Row */}
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-start" }}>
-          <div style={{ minWidth: "240px" }}>
+          <div style={{ minWidth: "250px" }}>
             <TextInput
               type="text"
               placeholder={t("SEARCH_PLACEHOLDER")}
@@ -316,7 +316,7 @@ const UserActivitySummaryTable = ({ data }) => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div style={{ minWidth: "160px" }}>
+          <div style={{ minWidth: "200px" }}>
             <Dropdown
               t={t}
               option={statusOptions}
@@ -325,7 +325,7 @@ const UserActivitySummaryTable = ({ data }) => {
               select={(val) => setStatusFilter(val.code)}
             />
           </div>
-          <div style={{ minWidth: "180px" }}>
+          <div style={{ minWidth: "250px" }}>
             <Dropdown
               t={t}
               option={roleOptions}
@@ -336,7 +336,7 @@ const UserActivitySummaryTable = ({ data }) => {
           </div>
           {/* Parent boundary shown as non-editable text field */}
           {parentBoundaryValue && (
-            <div style={{ minWidth: "160px" }}>
+            <div style={{ minWidth: "180px" }}>
               <TextInput
                 type="text"
                 value={parentBoundaryType.charAt(0).toUpperCase() + parentBoundaryType.slice(1) + ": " + parentBoundaryValue}
@@ -363,14 +363,18 @@ const UserActivitySummaryTable = ({ data }) => {
                 defaultUnit={t("HCM_BOUNDARIES")}
                 variant="nestedmultiselect"
                 addCategorySelectAllCheck={true}
-                config={{ isDropdownWithChip: selectedBoundaries.length > 0 ? true : false  }}
+                config={{ isDropdownWithChip: selectedBoundaries.length > 0 ? true : false, numberOfChips: 3 }}
+                handleViewMore={(allSelected) => setViewMoreBoundaries(allSelected)}
               />
             </div>
           )}
-          <div style={{ marginLeft: "auto", fontSize: "13px", color: "#787878" }}>
+        </div>
+        {
+          /* SHOWING ROWS DETAILS */ 
+          <div style={{ marginLeft: "auto", fontSize: "12px", color: "#787878" }}>
             {t("SHOWING")} {filteredData.length} {t("OF")} {usersSummary.length} {t("USERS")}
           </div>
-        </div>
+        }
 
         {/* Data Table */}
         <div className="user-tracking-inbox-table-wrapper">
@@ -388,6 +392,8 @@ const UserActivitySummaryTable = ({ data }) => {
             persistTableHead
             fixedHeader={true}
             paginationComponentOptions={{ rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE") }}
+            onRowClicked={(row) => setSelectedUser(row)}
+            pointerOnHover
           />
         </div>
       </Card>
@@ -398,6 +404,30 @@ const UserActivitySummaryTable = ({ data }) => {
           onClose={() => setSelectedUser(null)}
           dateRange={value?.range}
         />
+      )}
+      {viewMoreBoundaries && (
+        <PopUp
+          onClose={() => setViewMoreBoundaries(null)}
+          onOverlayClick={() => setViewMoreBoundaries(null)}
+          heading={t("HCM_SELECTED_BOUNDARIES")}
+          footerChildren={[
+            <Button
+              key="close"
+              label={t("HCM_CLOSE")}
+              onClick={() => setViewMoreBoundaries(null)}
+              variation="primary"
+            />
+          ]}
+          className="view-more-popup-user-activity"
+        >
+          <div className="digit-tag-container" style={{marginBottom:"0rem"}}>
+            {viewMoreBoundaries
+              ?.filter((item) => !item?.propsData?.[1]?.options)
+              ?.map((item, index) => (
+                <Chip key={index} text={t(item?.name || item?.code)} hideClose={true} />
+              ))}
+          </div>
+        </PopUp>
       )}
     </div>
   );
