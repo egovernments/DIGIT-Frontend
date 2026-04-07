@@ -1,5 +1,6 @@
 # Changelog
-
+## [1.9.19-cms]  [07-APR-2026]
+- **Default Landing Page**: Added default landing page validation configuration for mobile number in citizen and employee
 ## [1.9.18-cms]  [29-MAR-2026]
 - **Style Changes Added to login page 
 

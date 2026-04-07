@@ -38,15 +38,25 @@ const CreateEmployee = () => {
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
-        const rules = validationData?.rules;
-        const attributes = validationData?.attributes;
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true,
+        }));
+        
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
         return {
-          prefix: attributes?.prefix || "+91",
-          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          maxLength: rules?.maxLength || 10,
-          minLength: rules?.minLength || 10,
-          errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+          mobileConfigs,
+          defaultConfig: defaultItem,
+          prefix: defaultItem?.prefix || "+91",
+          pattern: defaultItem?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: defaultItem?.maxLength || 10,
+          minLength: defaultItem?.minLength || 10,
+          errorMessage: defaultItem?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
         };
       },
       staleTime: 300000, // Cache for 5 minutes
@@ -92,10 +102,11 @@ const CreateEmployee = () => {
     return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
   }
   useEffect(() => {
-    const maxLength = validationConfig?.maxLength || 10;
-    const minLength = validationConfig?.minLength || 10;
-    const pattern = validationConfig?.pattern
-      ? new RegExp(validationConfig.pattern, 'i')
+    const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+    const maxLength = currentValidation?.maxLength || 10;
+    const minLength = currentValidation?.minLength || 10;
+    const pattern = currentValidation?.pattern
+      ? new RegExp(currentValidation.pattern, 'i')
       : Digit.Utils.getPattern('MobileNo');
 
     if (
@@ -231,17 +242,18 @@ const CreateEmployee = () => {
 
     if (mobileNum) {
       // Get validation parameters from MDMS or use defaults
-      const maxLength = validationConfig?.maxLength || 10;
-      const minLength = validationConfig?.minLength || 10;
-      const pattern = validationConfig?.pattern
-        ? new RegExp(validationConfig.pattern, 'i')
+      const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+      const maxLength = currentValidation?.maxLength || 10;
+      const minLength = currentValidation?.minLength || 10;
+      const pattern = currentValidation?.pattern
+        ? new RegExp(currentValidation.pattern, 'i')
         : Digit.Utils.getPattern('MobileNo');
 
       // Check length
       if (mobileNum.length < minLength || mobileNum.length > maxLength) {
         setShowToast({
           key: "error",
-          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
         });
         return;
       }
@@ -250,7 +262,7 @@ const CreateEmployee = () => {
       if (!mobileNum.match(pattern)) {
         setShowToast({
           key: "error",
-          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
         });
         return;
       }
@@ -322,6 +334,7 @@ const CreateEmployee = () => {
         jurisdictions: data?.Jurisdictions,
         user: {
           mobileNumber: data?.SelectEmployeePhoneNumber?.mobileNumber,
+          countryCode: (data?.SelectEmployeePhoneNumber?.countryCode || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.prefix || "+91").replace("+", ""),
           name: data?.SelectEmployeeName?.employeeName,
           correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress,
           emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : undefined,

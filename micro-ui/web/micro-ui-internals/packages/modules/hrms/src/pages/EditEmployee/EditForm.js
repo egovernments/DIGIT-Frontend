@@ -36,15 +36,25 @@ const EditForm = ({ tenantId, data }) => {
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
-        const rules = validationData?.rules;
-        const attributes = validationData?.attributes;
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true,
+        }));
+        
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
         return {
-          prefix: attributes?.prefix || "+91",
-          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          maxLength: rules?.maxLength || 10,
-          minLength: rules?.minLength || 10,
-          errorMessage: rules?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+          mobileConfigs,
+          defaultConfig: defaultItem,
+          prefix: defaultItem?.prefix || "+91",
+          pattern: defaultItem?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: defaultItem?.maxLength || 10,
+          minLength: defaultItem?.minLength || 10,
+          errorMessage: defaultItem?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
         };
       },
       staleTime: 300000,
@@ -73,10 +83,11 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    const maxLength = validationConfig?.maxLength || 10;
-    const minLength = validationConfig?.minLength || 10;
-    const pattern = validationConfig?.pattern
-      ? new RegExp(validationConfig.pattern, 'i')
+    const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+    const maxLength = currentValidation?.maxLength || 10;
+    const minLength = currentValidation?.minLength || 10;
+    const pattern = currentValidation?.pattern
+      ? new RegExp(currentValidation.pattern, 'i')
       : Digit.Utils.getPattern('MobileNo');
 
     if (mobileNumber && mobileNumber.length >= minLength && mobileNumber.length <= maxLength && mobileNumber.match(pattern)) {
@@ -214,17 +225,18 @@ const EditForm = ({ tenantId, data }) => {
 
     if (mobileNum) {
       // Get validation parameters from MDMS or use defaults
-      const maxLength = validationConfig?.maxLength || 10;
-      const minLength = validationConfig?.minLength || 10;
-      const pattern = validationConfig?.pattern
-        ? new RegExp(validationConfig.pattern, 'i')
+      const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+      const maxLength = currentValidation?.maxLength || 10;
+      const minLength = currentValidation?.minLength || 10;
+      const pattern = currentValidation?.pattern
+        ? new RegExp(currentValidation.pattern, 'i')
         : Digit.Utils.getPattern('MobileNo');
 
       // Check length
       if (mobileNum.length < minLength || mobileNum.length > maxLength) {
         setShowToast({
           key: true,
-          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
         });
         return;
       }
@@ -233,7 +245,7 @@ const EditForm = ({ tenantId, data }) => {
       if (!mobileNum.match(pattern)) {
         setShowToast({
           key: true,
-          label: validationConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
         });
         return;
       }
@@ -283,6 +295,7 @@ const EditForm = ({ tenantId, data }) => {
     requestdata.user.gender = input?.SelectEmployeeGender?.gender.code;
     requestdata.user.dob = Date.parse(input?.SelectDateofBirthEmployment?.dob);
     requestdata.user.mobileNumber = input?.SelectEmployeePhoneNumber?.mobileNumber;
+    requestdata.user.countryCode = (input?.SelectEmployeePhoneNumber?.countryCode || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.prefix || "+91").replace("+", "");
     requestdata["user"]["name"] = input?.SelectEmployeeName?.employeeName;
     requestdata.user.correspondenceAddress = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
     requestdata.user.roles = roles.filter((role) => role && role.name);

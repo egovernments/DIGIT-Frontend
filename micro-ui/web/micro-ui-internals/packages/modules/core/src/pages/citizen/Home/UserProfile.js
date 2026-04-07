@@ -551,6 +551,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
             otherNames: userDetails?.name?.otherNames,
           },
           mobileNumber: mobileNumber,
+          countryCode: activePrefix,
           isDeleted: false,
           isSystemUser: true,
           isSystemUserActive: true,
@@ -585,6 +586,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         const requestData = {
           ...userInfo,
           name,
+          countryCode: activePrefix,
           gender: gender?.value,
           emailId: email,
           photo: profilePic,

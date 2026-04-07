@@ -42,15 +42,15 @@ const SelectMobileNumber = ({
   }, [defaultConfig]);
 
   // ── active rules from selected config ─────────────────────────────────────
-  const activeConfig   = selectedConfig || validationConfig || {};
-  const EMAIL_REGEX    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const rawPattern     = activeConfig?.pattern || "^[6-9][0-9]{9}$";
-  const mobilePattern  = useMemo(() => new RegExp(rawPattern), [rawPattern]);
-  const maxLength      = activeConfig?.maxLength || 10;
-  const prefix         = activeConfig?.prefix || "+91";
+  const activeConfig = selectedConfig || validationConfig || {};
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const rawPattern = activeConfig?.pattern || "^[6-9][0-9]{9}$";
+  const mobilePattern = useMemo(() => new RegExp(rawPattern), [rawPattern]);
+  const maxLength = activeConfig?.maxLength || 10;
+  const prefix = activeConfig?.prefix || "+91";
   const activeErrorMsg = activeConfig?.errorMessage || "ERR_INVALID_MOBILE_NUMBER";
 
-  const isEmailValid  = useMemo(() => EMAIL_REGEX.test(emailId), [emailId]);
+  const isEmailValid = useMemo(() => EMAIL_REGEX.test(emailId), [emailId]);
   const isMobileValid = useMemo(() => mobilePattern.test(mobileNumber || ""), [mobileNumber, mobilePattern]);
 
   // ── handlers ───────────────────────────────────────────────────────────────
@@ -66,7 +66,8 @@ const SelectMobileNumber = ({
       onSelect({ userName: emailId, whatsappConsent });
     } else {
       if (!isMobileValid) { setError(t(activeErrorMsg)); return; }
-      onSelect({ mobileNumber, whatsappConsent });
+      const prefixStr = selectedConfig?.prefix || prefix;
+      onSelect({ mobileNumber, countryCode: prefixStr, whatsappConsent });
     }
   };
 

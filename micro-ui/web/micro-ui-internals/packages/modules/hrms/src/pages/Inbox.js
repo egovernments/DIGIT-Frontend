@@ -49,6 +49,16 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
   const handleFilterChange = (filterParam) => {
     let keys_to_delete = filterParam.delete;
     let _new = { ...searchParams, ...filterParam };
+
+    // Inject countryCode safely when phone is searched
+    // Remove the "+" so it isn't encoded to %2B over the query parameters
+    if (_new.phone) {
+      const prefixStr = selectedMobileConfig?.prefix || "+91";
+      _new.countryCode = prefixStr.replace("+", "");
+    } else {
+      delete _new.countryCode;
+    }
+
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     filterParam.delete;
     delete _new.delete;
@@ -73,21 +83,44 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
-        const rules = validationData?.rules;
-        const attributes = validationData?.attributes;
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true,
+        }));
+        
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
         return {
-          prefix: attributes?.prefix || "+91",
-          pattern: rules?.pattern || "^[6-9][0-9]{9}$",
-          maxLength: rules?.maxLength || 10,
-          minLength: rules?.minLength || 10,
-          errorMessage: rules?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID",
+          mobileConfigs,
+          defaultConfig: defaultItem,
+          prefix: defaultItem?.prefix || "+91",
+          pattern: defaultItem?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: defaultItem?.maxLength || 10,
+          minLength: defaultItem?.minLength || 10,
+          errorMessage: defaultItem?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID",
         };
       },
       staleTime: 300000,
       enabled: !!stateId,
     }
   );
+
+  const [selectedMobileConfig, setSelectedMobileConfig] = useState(null);
+
+  useEffect(() => {
+    if (validationConfig?.defaultConfig && !selectedMobileConfig) {
+      setSelectedMobileConfig(validationConfig.defaultConfig);
+    }
+  }, [validationConfig]);
+
+  const handlePrefixChange = (e) => {
+    const chosen = validationConfig?.mobileConfigs?.find((c) => c.prefix === e.target.value);
+    if (chosen) setSelectedMobileConfig(chosen);
+  };
 
   const getSearchFields = () => {
     return [
@@ -98,10 +131,34 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
       {
         label: t("HR_MOB_NO_LABEL"),
         name: "phone",
-        maxlength: validationConfig?.maxLength || 10,
-        pattern: validationConfig?.pattern || "[6-9][0-9]{9}",
-        title: t(validationConfig?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-        componentInFront: validationConfig?.prefix || "+91",
+        maxlength: selectedMobileConfig?.maxLength || 10,
+        pattern: selectedMobileConfig?.pattern || ".[0-9]{9}",
+        title: t(selectedMobileConfig?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        componentInFront: validationConfig?.mobileConfigs && validationConfig?.mobileConfigs?.length > 1 ? (
+          <select
+            value={selectedMobileConfig?.prefix || "+91"}
+            onChange={handlePrefixChange}
+            style={{
+              border: "none",
+              padding: "0 8px",
+              fontSize: "16px",
+              backgroundColor: "transparent",
+              cursor: "pointer",
+              outline: "none",
+              color: "#0B0C0C",
+              fontWeight: "500",
+              appearance: "auto"
+            }}
+          >
+            {validationConfig?.mobileConfigs?.map((c) => (
+              <option key={c.prefix} value={c.prefix}>
+                {c.prefix}
+              </option>
+            ))}
+          </select>
+        ) : (
+          selectedMobileConfig?.prefix || "+91"
+        ),
       },
       {
         label: t("HR_EMPLOYEE_ID_LABEL"),
