@@ -7,11 +7,12 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { Card, NoResultsFound, Loader, Toast, Tab } from "@egovernments/digit-ui-components";
+import { Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
 import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
+import AlertPopUp from "../../components/alertPopUp";
 
 const ManageBills = () => {
   const { t } = useTranslation();
@@ -20,6 +21,7 @@ const ManageBills = () => {
   const [showToast, setShowToast] = useState(null);
   const [selectedBills, setSelectedBills] = useState([]);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
+  const [activePopUpAction, setActivePopUpAction] = useState(null);
 
   // Role-based config
   const activeRole = getManageBillsRole();
@@ -225,11 +227,10 @@ const ManageBills = () => {
 
     switch (action) {
       case "VERIFY":
-        Digit.SessionStorage.set("selectedBillsForVerification", selectedBills);
-        history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`);
-        break;
       case "SEND_FOR_REVIEW":
       case "SEND_FOR_APPROVAL":
+        setActivePopUpAction(action);
+        break;
       case "INITIATE_PAYMENT":
       case "RETRY_PAYMENT":
         // Mock — placeholder for future implementation
@@ -271,13 +272,27 @@ const ManageBills = () => {
 
   const currentCTA = roleConfig.tabCTAs?.[activeLink.code];
 
+  const projectName = project?.[0]?.name || "";
+
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>
-        <span style={{ color: "#0B4B66" }}>{t(roleConfig.headerLabel)}</span>
-      </Header>
-
-      <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
+      <MyBillsSearch
+        onSubmit={onSubmit}
+        onClear={onClear}
+        headerContent={
+          <>
+            {projectName && (
+              <Tag label={t(projectName)} type="default" style={{ marginBottom: "0.5rem" }} />
+            )}
+            <Header styles={{ fontSize: "32px", marginBottom: "0.5rem" }}>
+              <span style={{ color: "#0B4B66" }}>{t(roleConfig.headerLabel)}</span>
+            </Header>
+            <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5", marginBottom: "0.5rem" }}>
+              {t("HCM_AM_MANAGE_BILLS_DESCRIPTION")}
+            </p>
+          </>
+        }
+      />
 
       <Card>
         <Tab
@@ -358,6 +373,42 @@ const ManageBills = () => {
           />
         )}
       </ActionBar>
+
+      {activePopUpAction && (() => {
+        const popUpConfig = {
+          VERIFY: {
+            heading: "HCM_AM_CONFIRM_BILL_VERIFICATION",
+            message: "HCM_AM_CONFIRM_VERIFY_MESSAGE",
+            success: "HCM_AM_BILLS_VERIFIED_SUCCESS",
+          },
+          SEND_FOR_REVIEW: {
+            heading: "HCM_AM_CONFIRM_SEND_FOR_REVIEW",
+            message: "HCM_AM_CONFIRM_SEND_FOR_REVIEW_MESSAGE",
+            success: "HCM_AM_SEND_FOR_REVIEW_SUCCESS",
+          },
+          SEND_FOR_APPROVAL: {
+            heading: "HCM_AM_CONFIRM_SEND_FOR_APPROVAL",
+            message: "HCM_AM_CONFIRM_SEND_FOR_APPROVAL_MESSAGE",
+            success: "HCM_AM_SEND_FOR_APPROVAL_SUCCESS",
+          },
+        };
+        const config = popUpConfig[activePopUpAction];
+        if (!config) return null;
+        return (
+          <AlertPopUp
+            onClose={() => setActivePopUpAction(null)}
+            alertHeading={t(config.heading)}
+            alertMessage={t(config.message, { count: selectedBills.length })}
+            submitLabel={t("HCM_AM_CONFIRM")}
+            cancelLabel={t("HCM_AM_CANCEL")}
+            onPrimaryAction={() => {
+              setActivePopUpAction(null);
+              // TODO: API integration
+              setShowToast({ key: "success", label: t(config.success), transitionTime: 3000 });
+            }}
+          />
+        );
+      })()}
     </React.Fragment>
   );
 };

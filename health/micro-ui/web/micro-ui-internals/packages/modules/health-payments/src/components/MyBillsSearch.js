@@ -11,7 +11,7 @@ import { billTypeOptions } from "../utils/constants";
  * @param {function} onClear - Callback function when the search is cleared.
  * @returns {JSX.Element} The JSX content for the search component.
  */
-const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
+const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerContent = null }) => {
     const { t } = useTranslation();
 
   const [isDisabled, setIsDisabled] = useState(false);
@@ -57,6 +57,11 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
 
   return (
     <Card variant="search" style={{ marginBottom: "1.5rem", alignItems: "center" }}>
+      {headerContent && (
+        <div style={{ width: "100%", gridColumn: "1 / -1" }}>
+          {headerContent}
+        </div>
+      )}
       <div style={{ width: "80%" }}>
         <TextBlock body={`${t("HCM_AM_BILL_ID")}`}></TextBlock>
         <TextInput

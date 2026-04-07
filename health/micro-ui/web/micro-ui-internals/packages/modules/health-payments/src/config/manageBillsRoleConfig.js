@@ -39,11 +39,11 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     },
     selectableTabs: ["NOT_VERIFIED", "PARTIALLY_VERIFIED", "VERIFIED"],
     tabColumns: {
-      NOT_VERIFIED: ["billId", "source", "registers", "payees", "totalAmount", "download"],
-      VERIFICATION_IN_PROGRESS: ["billId", "payees", "pending", "verificationFailed", "verified", "download"],
-      PARTIALLY_VERIFIED: ["billId", "payees", "failures", "download", "editBill"],
-      VERIFIED: ["billId", "totalAmount", "payees", "download"],
-      SENT_FOR_REVIEW: ["billId", "source", "registers", "payees", "totalAmount", "download"],
+      NOT_VERIFIED: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
+      VERIFICATION_IN_PROGRESS: ["billId", "billDate", "payees", "pending", "verificationFailed", "verified", "download"],
+      PARTIALLY_VERIFIED: ["billId", "billDate", "payees", "failures", "download", "editBill"],
+      VERIFIED: ["billId", "billDate", "totalAmount", "payees", "download"],
+      SENT_FOR_REVIEW: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
     },
     tabCTAs: {
       NOT_VERIFIED: { label: "HCM_AM_VERIFY_BILLS", action: "VERIFY" },
@@ -79,8 +79,8 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     },
     selectableTabs: ["PENDING_BILLS"],
     tabColumns: {
-      PENDING_BILLS: ["billId", "source", "registers", "payees", "totalAmount", "download", "editBill"],
-      SENT_FOR_APPROVAL: ["billId", "source", "registers", "payees", "totalAmount", "download"],
+      PENDING_BILLS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download", "editBill"],
+      SENT_FOR_APPROVAL: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
     },
     tabCTAs: {
       PENDING_BILLS: { label: "HCM_AM_SEND_FOR_APPROVAL", action: "SEND_FOR_APPROVAL" },
@@ -112,9 +112,9 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     },
     selectableTabs: ["PAYMENT_NOT_INITIATED", "PARTIALLY_PAID_FAILED", "PAID"],
     tabColumns: {
-      PAYMENT_NOT_INITIATED: ["billId", "source", "payees", "totalAmount", "download"],
+      PAYMENT_NOT_INITIATED: ["billId", "billDate", "source", "payees", "totalAmount", "download"],
       PAYMENT_IN_PROGRESS: ["billId", "billDate", "source", "payees", "totalAmount", "amountPaid", "pendingPayment", "failedPayment", "paidCount", "download"],
-      PARTIALLY_PAID_FAILED: ["billId", "source", "payees", "failedPayment", "totalAmount", "amountPaid", "download"],
+      PARTIALLY_PAID_FAILED: ["billId", "billDate", "source", "payees", "failedPayment", "totalAmount", "amountPaid", "download"],
       PAID: ["billId", "billDate", "source", "payees", "totalAmount", "download"],
     },
     tabCTAs: {
@@ -149,8 +149,8 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     },
     selectableTabs: ["PENDING_BILLS"],
     tabColumns: {
-      PENDING_BILLS: ["billId", "source", "payees", "totalAmount", "download"],
-      GENERATED_ADVISORIES: ["billId", "source", "payees", "totalAmount", "download", "downloadAdvisory"],
+      PENDING_BILLS: ["billId", "billDate", "source", "payees", "totalAmount", "download"],
+      GENERATED_ADVISORIES: ["billId", "billDate", "source", "payees", "totalAmount", "download", "downloadAdvisory"],
     },
     tabCTAs: {
       PENDING_BILLS: { label: "HCM_AM_GENERATE_PAYMENT_ADVISORY", action: "GENERATE_ADVISORY" },

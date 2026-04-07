@@ -93,6 +93,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [isReviewerEdit, setIsReviewerEdit] = useState(false);
   const [openSendForApprovalPopUp, setOpenSendForApprovalPopUp] = useState(false);
+  const [openSendForReviewPopUp, setOpenSendForReviewPopUp] = useState(false);
+  const [openSaveChangesPopUp, setOpenSaveChangesPopUp] = useState(false);
   // --------------------
 // Report (PDF / EXCEL)
 // --------------------
@@ -1252,7 +1254,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               {activeRole === "PAYMENT_REVIEWER" && (
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem", gap: "1rem" }}>
                   <Button
-                    variation={isReviewerEdit ? "secondary" : "primary"}
+                    variation="secondary"
                     label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
                     icon={isReviewerEdit ? "Close" : "Edit"}
                     onClick={() => setIsReviewerEdit((prev) => !prev)}
@@ -1261,7 +1263,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     <Button
                       variation="secondary"
                       label={t("HCM_AM_EDIT_ON_EXCEL")}
-                      icon="FileDownload"
+                      icon="TableView"
                       onClick={() => history.push(
                         `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
                         { billID, billData }
@@ -1390,9 +1392,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
             label={t(`HCM_AM_SEND_FOR_REVIEW`)}
-            onClick={() => {
-              setShowToast({ key: "info", label: t("HCM_AM_SEND_FOR_REVIEW_PLACEHOLDER"), transitionTime: 3000 });
-            }}
+            onClick={() => setOpenSendForReviewPopUp(true)}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
@@ -1427,11 +1427,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
             label={t(`HCM_AM_SAVE_CHANGES`)}
-            onClick={() => {
-              // Mock — placeholder for future implementation
-              setShowToast({ key: "info", label: t("HCM_AM_SAVE_CHANGES_PLACEHOLDER"), transitionTime: 3000 });
-              setIsReviewerEdit(false);
-            }}
+            onClick={() => setOpenSaveChangesPopUp(true)}
             style={{ minWidth: "14rem" }}
             type="button"
             variation="primary"
@@ -1505,6 +1501,31 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         onPrimaryAction={() => {
           triggerGeneratePayment(billData, tableData);
           setOpenApprovePaymentAlertPopUp(false);
+        }}
+      />}
+      {openSendForReviewPopUp && <AlertPopUp
+        onClose={() => setOpenSendForReviewPopUp(false)}
+        alertHeading={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW")}
+        alertMessage={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW_BILL_MESSAGE")}
+        submitLabel={t("HCM_AM_CONFIRM")}
+        cancelLabel={t("HCM_AM_CANCEL")}
+        onPrimaryAction={() => {
+          setOpenSendForReviewPopUp(false);
+          // TODO: API integration for send for review
+          setShowToast({ key: "success", label: t("HCM_AM_SEND_FOR_REVIEW_SUCCESS"), transitionTime: 3000 });
+        }}
+      />}
+      {openSaveChangesPopUp && <AlertPopUp
+        onClose={() => setOpenSaveChangesPopUp(false)}
+        alertHeading={t("HCM_AM_CONFIRM_SAVE_CHANGES")}
+        alertMessage={t("HCM_AM_CONFIRM_SAVE_CHANGES_MESSAGE")}
+        submitLabel={t("HCM_AM_CONFIRM")}
+        cancelLabel={t("HCM_AM_CANCEL")}
+        onPrimaryAction={() => {
+          setOpenSaveChangesPopUp(false);
+          // TODO: API integration for saving rate changes
+          setIsReviewerEdit(false);
+          setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
         }}
       />}
       <div style={{
