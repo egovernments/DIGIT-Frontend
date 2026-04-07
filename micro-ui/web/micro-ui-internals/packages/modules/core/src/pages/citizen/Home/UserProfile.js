@@ -16,7 +16,7 @@ import {
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
 import { CameraIcon, ToggleSwitch } from "@egovernments/digit-ui-react-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
@@ -239,16 +239,26 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
-        const rules = validationData?.rules;
-        const attributes = validationData?.attributes;
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true,
+        }));
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
+
         return {
+          mobileConfigs,
+          defaultConfig: defaultItem,
           UserProfileValidationConfig: [
             {
-              mobileNumber: rules?.pattern,
+              mobileNumber: defaultItem?.pattern,
             },
           ],
-          prefix: attributes?.prefix || "+91",
+          prefix: defaultItem?.prefix || "+91",
         };
       },
       enabled: !!stateLvlTenantId,
@@ -264,6 +274,29 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       setValidationConfig((prev) => ({ ...prev, ...updatedValidationConfig }));
     }
   }, [mdmsValidationData]);
+
+  const mobileConfigs = mdmsValidationData?.mobileConfigs || [];
+  const defaultOption = mdmsValidationData?.defaultConfig || {};
+  const [selectedMobileConfig, setSelectedMobileConfig] = useState(defaultOption);
+
+  useEffect(() => {
+    if (mdmsValidationData?.defaultConfig && !selectedMobileConfig?.prefix) {
+      setSelectedMobileConfig(mdmsValidationData.defaultConfig);
+    }
+  }, [mdmsValidationData?.defaultConfig]);
+
+  const activePatternRaw = selectedMobileConfig?.pattern || "^[6-9][0-9]{9}$";
+  const activeMobilePattern = useMemo(() => new RegExp(activePatternRaw), [activePatternRaw]);
+  const activeMaxLength = selectedMobileConfig?.maxLength || 10;
+  const activePrefix = selectedMobileConfig?.prefix || "+91";
+  const activeErrorMsg = selectedMobileConfig?.errorMessage || "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID";
+
+  const handlePrefixChange = (e) => {
+    const chosen = mobileConfigs.find((c) => c.prefix === e.target.value) || defaultOption;
+    setSelectedMobileConfig(chosen);
+    setMobileNo("");
+    setErrors({ ...errors, mobileNumber: null });
+  };
 
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
@@ -370,15 +403,17 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     }
   };
 
-  const setUserMobileNumber = (value) => {
+  const setUserMobileNumber = (raw) => {
+    const value = raw.replace(/\D/g, "");
+    if (value.length > activeMaxLength) return;
     setMobileNo(value);
 
-    if (userType === "employee" && !validationConfig?.mobileNumber?.test(value)) {
+    if (userType === "employee" && !activeMobilePattern.test(value)) {
       setErrors({
         ...errors,
         mobileNumber: {
           type: "pattern",
-          message: "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID",
+          message: activeErrorMsg,
         },
       });
     } else {
@@ -457,10 +492,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         });
       }
 
-      if (userType === "employee" && !validationConfig?.mobileNumber.test(mobileNumber)) {
+      if (userType === "employee" && !activeMobilePattern.test(mobileNumber)) {
         throw JSON.stringify({
           type: "error",
-          message: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
+          message: t(activeErrorMsg),
         });
       }
 
@@ -999,22 +1034,96 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               <LabelFieldPair style={{ display: "flex" }}>
                 <CardLabel className="profile-label-margin" style={{ width: "300px" }}>{`${t("CORE_COMMON_PROFILE_MOBILE_NUMBER")}*`}</CardLabel>
                 <div style={{ width: "100%" }}>
-                  <MobileNumber
-                    value={mobileNumber}
-                    style={{ width: "100%" }}
-                    name="mobileNumber"
-                    placeholder="Enter a valid Mobile No."
-                    onChange={(value) => setUserMobileNumber(value)}
-                    disable={Digit.Utils.getMultiRootTenant() ? false : true}
-                    {...{
-                      required: true,
-                      pattern:
-                        mdmsValidationData?.UserProfileValidationConfig?.[0]?.mobileNumber ||
-                        defaultValidationConfig?.UserProfileValidationConfig?.[0]?.mobileNumber,
-                      type: "tel",
-                      title: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      border: errors?.mobileNumber ? "2px solid #d4351c" : "1px solid #464646",
+                      overflow: "hidden",
+                      backgroundColor: "#FFFFFF",
+                      boxSizing: "border-box",
+                      height: "2.5rem",
+                      width: "100%",
+                      maxWidth: "100%",
                     }}
-                  />
+                  >
+                    {mobileConfigs.length > 1 ? (
+                      <select
+                        value={activePrefix}
+                        onChange={handlePrefixChange}
+                        disabled={Digit.Utils.getMultiRootTenant() ? false : true}
+                        style={{
+                          border: "none",
+                          borderRight: errors?.mobileNumber ? "2px solid #d4351c" : "1px solid #464646",
+                          padding: "0 8px",
+                          fontSize: "16px",
+                          backgroundColor: "#EEEEEE",
+                          cursor: !Digit.Utils.getMultiRootTenant() ? "not-allowed" : "pointer",
+                          outline: "none",
+                          color: "#0B0C0C",
+                          fontWeight: "500",
+                          minWidth: "75px",
+                          height: "100%",
+                          appearance: "auto",
+                        }}
+                      >
+                        {mobileConfigs.map((c) => (
+                          <option key={c.prefix} value={c.prefix}>
+                            {c.prefix}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span
+                        style={{
+                          padding: "0 10px",
+                          fontSize: "16px",
+                          fontWeight: "500",
+                          color: "#0B0C0C",
+                          borderRight: errors?.mobileNumber ? "2px solid #d4351c" : "1px solid #464646",
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          backgroundColor: "#EEEEEE",
+                        }}
+                      >
+                        {activePrefix}
+                      </span>
+                    )}
+
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={mobileNumber || ""}
+                      onChange={(e) => setUserMobileNumber(e.target.value)}
+                      placeholder="Enter a valid Mobile No."
+                      maxLength={activeMaxLength}
+                      disabled={Digit.Utils.getMultiRootTenant() ? false : true}
+                      style={{
+                        flex: 1,
+                        border: "none",
+                        padding: "0 12px",
+                        fontSize: "16px",
+                        outline: "none",
+                        color: "#0B0C0C",
+                        backgroundColor: "transparent",
+                        height: "100%",
+                        width: "100%",
+                        minWidth: "0",
+                        cursor: !Digit.Utils.getMultiRootTenant() ? "not-allowed" : "text",
+                      }}
+                    />
+                    <span
+                      style={{
+                        padding: "0 8px",
+                        fontSize: "12px",
+                        color: "#6f777b",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {(mobileNumber || "").length}/{activeMaxLength}
+                    </span>
+                  </div>
                   {errors?.mobileNumber && (
                     <ErrorMessage
                       message={t(errors?.mobileNumber?.message)}
