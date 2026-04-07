@@ -124,9 +124,9 @@ const MapUsersToRegistersScreen = () => {
   const [appliedFilters, setAppliedFilters] = useState({ registerId: "", officer: "" });
 
   const isSearchDisabled =
-    (registerIdFilter.length === 0 && officerFilter.length === 0) ||
-    (registerIdFilter.length > 0 && registerIdFilter.length < 3) ||
-    (officerFilter.length > 0 && officerFilter.length < 3);
+    (registerIdFilter.length === 0 && officerFilter.length === 0);
+    // (registerIdFilter.length > 0 && registerIdFilter.length < 3) ||
+    // (officerFilter.length > 0 && officerFilter.length < 3);
 
   // Fetch attendance registers only when register creation is completed
   const attendanceParams = {
@@ -336,17 +336,17 @@ const MapUsersToRegistersScreen = () => {
       {/* ── Search Card (contains page heading + filters) ── */}
       <Card style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
         {/* Campaign chip + users alert */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
           {campaignName && (
             <TagComponent campaignName={campaignName} />
           )}
         </div>
 
         {/* Page heading */}
-        <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "1.5rem", lineHeight: "1.2" }}>
+        <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "0.25rem", lineHeight: "1.2" }}>
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_HEADING)}
         </div>
-        <p style={{ fontSize: "0.875rem", color: "#505a5f", margin: "0 0 1.5rem 0" }}>
+        <p style={{ fontSize: "0.875rem", color: "#505a5f", margin: "0 0 0.5rem 0" }}>
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_DESC)}
         </p>
 
@@ -379,7 +379,8 @@ const MapUsersToRegistersScreen = () => {
             >
               {t(I18N_KEYS.COMMON.CLEAR_ALL)}
             </span>
-            <span title={isSearchDisabled ? t("HCM_MIN_3_CHARS_REQUIRED") : undefined} style={{ display: "inline-block" }}>
+            {/* <span title={isSearchDisabled ? t("HCM_MIN_3_CHARS_REQUIRED") : undefined} style={{ display: "inline-block" }}> */}
+            <span style={{ display: "inline-block" }}>
               <Button
                 label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
                 variation="secondary"
