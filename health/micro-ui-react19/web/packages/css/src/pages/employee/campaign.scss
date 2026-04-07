@@ -1371,6 +1371,16 @@
   }
 }
 
-.action-bar-wrap.actionBarLeft {
-  text-align: left !important;
+.map-users-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: 2.5rem;
+  padding: 1rem 2rem;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.16);
+  display: flex;
+  justify-content: flex-start;
+  z-index: 500;
 }

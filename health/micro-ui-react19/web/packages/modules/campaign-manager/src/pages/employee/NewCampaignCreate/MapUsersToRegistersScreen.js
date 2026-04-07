@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Button, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
+import TagComponent from "../../../components/TagComponent";
 import DataTable from "react-data-table-component";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
@@ -331,28 +332,26 @@ const MapUsersToRegistersScreen = () => {
     );
 
   return (
-    <div>
+    <div style={{ paddingBottom: "4.5rem" }}>
       {/* ── Search Card (contains page heading + filters) ── */}
       <Card style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
         {/* Campaign chip + users alert */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
           {campaignName && (
-            <span style={{ display: "inline-block", border: "1px solid #adb5bd", borderRadius: "4px", padding: "3px 10px", fontSize: "0.75rem", color: "#505a5f", background: "#f3f3f3" }}>
-              {campaignName}
-            </span>
+            <TagComponent campaignName={campaignName} />
           )}
         </div>
 
         {/* Page heading */}
-        <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "0.25rem", lineHeight: "1.2" }}>
+        <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "1.5rem", lineHeight: "1.2" }}>
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_HEADING)}
         </div>
-        <p style={{ fontSize: "0.875rem", color: "#505a5f", margin: "0 0 1.25rem 0" }}>
+        <p style={{ fontSize: "0.875rem", color: "#505a5f", margin: "0 0 1.5rem 0" }}>
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_DESC)}
         </p>
 
         {/* Search filters */}
-        <div style={{ display: "flex", gap: "1.25rem", alignItems: "flex-end", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-end", flexWrap: "wrap" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "210px" }}>
             <label style={labelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)}</label>
             <input
@@ -395,7 +394,7 @@ const MapUsersToRegistersScreen = () => {
       </Card>
 
       {/* ── Registers Table Card ── */}
-      <Card style={{ padding: "1.25rem", overflow: "hidden" }}>
+      <Card style={{ padding: "1.5rem", overflow: "hidden" }}>
         <DataTable
           columns={columns}
           data={filteredRegisters}
@@ -425,11 +424,12 @@ const MapUsersToRegistersScreen = () => {
         />
       </Card>
 
-      <div style={{ marginTop: "2rem" }}>
+      <div className="map-users-footer">
         <Button
           label={t(I18N_KEYS.COMMON.HCM_BACK)}
           variation="secondary"
           icon="ArrowBack"
+          type="button"
           onClick={handleBack}
         />
       </div>
