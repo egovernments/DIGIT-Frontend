@@ -11,8 +11,8 @@ import { billTypeOptions } from "../utils/constants";
  * @param {function} onClear - Callback function when the search is cleared.
  * @returns {JSX.Element} The JSX content for the search component.
  */
-const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
-  const { t } = useTranslation();
+const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
+    const { t } = useTranslation();
 
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -31,10 +31,13 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
     setDateRange(data.range);
   };
 
-  const handleSearch = (data) => {
-    // Check if startDate and endDate are the same
-    const isSameDateTime =
-      dateRange.startDate && dateRange.endDate && new Date(dateRange.startDate).getTime() === new Date(dateRange.endDate).getTime();
+    const handleSearch = (data) => {
+
+        // Check if startDate and endDate are the same
+        const isSameDateTime =
+            dateRange.startDate &&
+            dateRange.endDate &&
+            new Date(dateRange.startDate).getTime() === new Date(dateRange.endDate).getTime();
 
     const finalDateRange = isSameDateTime
       ? { startDate: "", endDate: "", title: "" } // Empty dateRange if start and end are the same
@@ -73,7 +76,7 @@ const MyBillsSearch = ({ onSubmit = () => {}, onClear = () => {} }) => {
           title={t("HCM_AM_SELECTE_DATA_RANGE")}
           epochStartDate={new Date().getTime()}
           epochEndDate={new Date().getTime()}
-          disabled={true}
+          disabled={false}
         />
       </div>
       <div style={{ maxWidth: "100%", width: "100%" }}>

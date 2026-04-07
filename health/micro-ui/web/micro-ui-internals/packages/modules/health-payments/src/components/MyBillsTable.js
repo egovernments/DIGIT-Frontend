@@ -19,9 +19,10 @@ import { defaultPaginationValues } from "../utils/constants";
  */
 
 const MyBillsTable = ({ ...props }) => {
-  const { t } = useTranslation();
-  const [showToast, setShowToast] = useState(null);
-  const project = Digit?.SessionStorage.get("staffProjects");
+    const { t } = useTranslation();
+    const [showToast, setShowToast] = useState(null);
+    const project = Digit?.SessionStorage.get("staffProjects");
+    const selectedProject = Digit?.SessionStorage.get("selectedProject");
 
   const columns = useMemo(() => {
     const baseColumns = [
@@ -35,6 +36,7 @@ const MyBillsTable = ({ ...props }) => {
                 whiteSpace: "normal", // allow wrapping
                 wordBreak: "break-word", // break long words if needed
                 textAlign: "start",
+                lineHeight: "1.4",
               }}
               title={t(row?.billNumber) || t("NA")}
             >
@@ -100,19 +102,19 @@ const MyBillsTable = ({ ...props }) => {
         },
       },
       // INFO:: no of registers commented
-      // {
-      //   name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
-      //   selector: (row) => {
-      //     return (
-      //       <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-      //         {t(row?.additionalDetails?.noOfRegisters || "0")}
-      //       </div>
-      //     );
-      //   },
-      //   style: {
-      //     justifyContent: "flex-end",
-      //   },
-      // },
+       {
+         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
+         selector: (row) => {
+           return (
+             <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+               {t(row?.additionalDetails?.noOfRegisters || "0")}
+             </div>
+           );
+         },
+         style: {
+           justifyContent: "flex-end",
+         },
+       },
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NUMBER_OF_WORKERS")}</div>,
         selector: (row) => {
@@ -233,49 +235,56 @@ const MyBillsTable = ({ ...props }) => {
       },
     ];
 
-    return baseColumns;
-  }, [props.data, t]);
+        return baseColumns;
+    }, [props.data, t]);
 
-  const handlePageChange = (page, totalRows) => {
-    props?.handlePageChange(page, totalRows);
-  };
+    const handlePageChange = (page, totalRows) => {
+        props?.handlePageChange(page, totalRows);
+    };
 
-  const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
-    props?.handlePerRowsChange(currentRowsPerPage, currentPage);
-  };
+    const handlePerRowsChange = async (currentRowsPerPage, currentPage) => {
+        props?.handlePerRowsChange(currentRowsPerPage, currentPage);
+    };
 
-  return (
-    <>
-      <DataTable
-        className="search-component-table"
-        columns={columns}
-        data={props.data}
-        pagination
-        paginationServer
-        customStyles={tableCustomStyle(false)}
-        paginationDefaultPage={props?.currentPage}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
-        paginationTotalRows={props?.totalCount}
-        paginationPerPage={props?.rowsPerPage}
-        sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-        paginationRowsPerPageOptions={defaultPaginationValues}
-        fixedHeader={true}
-        fixedHeaderScrollHeight={"70vh"}
-        paginationComponentOptions={getCustomPaginationOptions(t)}
-      />
-      {showToast && (
-        <Toast
-          style={{ zIndex: 10001 }}
-          label={showToast.label}
-          type={showToast.key}
-          // error={showToast.key === "error"}
-          transitionTime={showToast.transitionTime}
-          onClose={() => setShowToast(null)}
-        />
-      )}
-    </>
-  );
+    const handleSelectedRowsChange = ({ selectedRows,selectedCount }) => {
+        props?.onSelectedCountChange?.(selectedCount);
+        props?.onSelectionChange(selectedRows);
+      };
+
+    return (
+        <>
+            <DataTable
+            className="search-component-table"
+                columns={columns}
+                data={props.data}
+                pagination
+                paginationServer
+                customStyles={tableCustomStyle(false)}
+                paginationDefaultPage={props?.currentPage}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handlePerRowsChange}
+                paginationTotalRows={props?.totalCount}
+                paginationPerPage={props?.rowsPerPage}
+                sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                paginationRowsPerPageOptions={defaultPaginationValues}
+                fixedHeader={true}
+                onSelectedRowsChange={handleSelectedRowsChange}
+                selectableRows={props?.isSelectableRows}
+                fixedHeaderScrollHeight={"70vh"}
+                paginationComponentOptions={getCustomPaginationOptions(t)}
+            />
+            {showToast && (
+                <Toast
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    // error={showToast.key === "error"}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
+                />
+            )}
+        </>
+    );
 };
 
 export default MyBillsTable;
