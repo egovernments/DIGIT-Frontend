@@ -56,37 +56,52 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   // Get stateId and determine module name based on multiroot tenant
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const stateId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
-  const moduleName = isMultiRootTenant ? (Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig") : "commonUiConfig";
-  const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
+  const moduleName = isMultiRootTenant ? (Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig") : "common-masters";
+  console.log(moduleName, "moduleName");
+
+  const { data: _validationData } = Digit.Hooks.useCustomMDMS(
     stateId,
     moduleName,
     [{ name: "UserValidation" }],
     {
       select: (data) => {
-        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
-        const rules = validationData?.rules;
-        const attributes = validationData?.attributes;
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        // Prefer the item flagged as default; fall back to first item
+        const defaultItem = allItems.find((x) => x.default === true) || allItems[0];
+        const mapItem = (item) => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          allowedStartingCharacters: item?.rules?.allowedStartingCharacters,
+          fieldType: item?.fieldType,
+          isDefault: item?.default === true,
+        });
         return {
-          prefix: attributes?.prefix,
-          pattern: rules?.pattern,
-          maxLength: rules?.maxLength,
-          minLength: rules?.minLength,
+          allConfigs: allItems.map(mapItem),
+          defaultConfig: mapItem(defaultItem),
         };
       },
       staleTime: 300000,
       enabled: !!stateId,
     }
   );
+  // Flatten for easy consumption by child components
+  const validationConfig = _validationData?.defaultConfig;
+  const allValidationConfigs = _validationData?.allConfigs || [];
+
+  const userConsentModule = isMultiRootTenant ? (Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig") : "commonUiConfig";
 
   // Check if user preferences are enabled from MDMS
   const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
     stateId,
-    moduleName,
+    userConsentModule,
     [{ name: "UserPreferencesConfig" }],
     {
-      select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+      select: (data) => data?.[userConsentModule]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
     },
-    { schemaCode: `${moduleName}.UserPreferencesConfig` }
+    { schemaCode: `${userConsentModule}.UserPreferencesConfig` }
   );
 
   useEffect(() => {
@@ -473,6 +488,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               showRegisterLink={isUserRegistered && !location.state?.role}
               t={t}
               validationConfig={validationConfig}
+              allValidationConfigs={allValidationConfigs}
               enableUserPreferences={enableUserPreferences}
             />
           </Route>
