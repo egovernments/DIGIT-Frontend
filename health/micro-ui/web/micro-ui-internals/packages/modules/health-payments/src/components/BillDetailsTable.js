@@ -8,7 +8,7 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
 import { useHistory } from "react-router-dom";
-import EditWorkerDetailsPopUp from "./editWorkerDetailsPopUp ";
+import EditWorkerDetailsPopUp from "./editWorkerDetailsPopUp";
 
 
 const BillDetailsTable = ({ ...props }) => {
