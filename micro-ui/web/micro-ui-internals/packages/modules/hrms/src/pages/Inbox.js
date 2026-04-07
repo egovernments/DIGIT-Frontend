@@ -33,7 +33,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     // setTotalReacords(res?.EmployeCount?.totalEmployee);
   }, [res]);
 
-  useEffect(() => {}, [hookLoading, rest]);
+  useEffect(() => { }, [hookLoading, rest]);
 
   useEffect(() => {
     setPageOffset(0);
@@ -50,6 +50,16 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
   const handleFilterChange = (filterParam) => {
     let keys_to_delete = filterParam.delete;
     let _new = { ...searchParams, ...filterParam };
+
+    // Inject countryCode safely when phone is searched
+    // Remove the "+" so it isn't encoded to %2B over the query parameters
+    if (_new.phone) {
+      const prefixStr = selectedMobileConfig?.prefix || "+91";
+      _new.countryCode = prefixStr;
+    } else {
+      delete _new.countryCode;
+    }
+
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     filterParam.delete;
     delete _new.delete;
@@ -65,6 +75,54 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     setPageSize(Number(e.target.value));
   };
 
+  // Fetch mobile validation config from MDMS
+  const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getCurrentTenantId() : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit.Utils.getMultiRootTenant() ? "common-masters" : "commonUiConfig";
+  const { data: validationConfig } = Digit.Hooks.useCustomMDMS(
+    stateId,
+    moduleName,
+    [{ name: "UserValidation" }],
+    {
+      select: (data) => {
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true,
+        }));
+
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
+        return {
+          mobileConfigs,
+          defaultConfig: defaultItem,
+          prefix: defaultItem?.prefix || "+91",
+          pattern: defaultItem?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: defaultItem?.maxLength || 10,
+          minLength: defaultItem?.minLength || 10,
+          errorMessage: defaultItem?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID",
+        };
+      },
+      staleTime: 300000,
+      enabled: !!stateId,
+    }
+  );
+
+  const [selectedMobileConfig, setSelectedMobileConfig] = useState(null);
+
+  useEffect(() => {
+    if (validationConfig?.defaultConfig && !selectedMobileConfig) {
+      setSelectedMobileConfig(validationConfig.defaultConfig);
+    }
+  }, [validationConfig]);
+
+  const handlePrefixChange = (e) => {
+    const chosen = validationConfig?.mobileConfigs?.find((c) => c.prefix === e.target.value);
+    if (chosen) setSelectedMobileConfig(chosen);
+  };
+
   const getSearchFields = () => {
     return [
       {
@@ -74,10 +132,51 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
       {
         label: t("HR_MOB_NO_LABEL"),
         name: "phone",
-        maxlength: 10,
-        pattern: "[6-9][0-9]{9}",
-        title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-        componentInFront: "+91",
+        maxlength: selectedMobileConfig?.maxLength || 10,
+        pattern: selectedMobileConfig?.pattern || ".[0-9]{9}",
+        title: t(selectedMobileConfig?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        componentInFront: (validationConfig?.mobileConfigs?.length > 0) ? (
+          <div className="citizen-card-input--front" style={{
+            position: "relative", display: "flex", alignItems: "center", height: "100%", marginLeft: "-1px"
+          }}>
+            <select
+              value={selectedMobileConfig?.prefix || "+91"}
+              onChange={handlePrefixChange}
+              style={{
+                border: "none",
+                padding: "0 30px 0 12px",
+                fontSize: "16px",
+                backgroundColor: "transparent",
+                cursor: "pointer",
+                outline: "none",
+                color: "#333",
+                fontWeight: "600",
+                minWidth: "90px",
+                width: "100%",
+                appearance: "none",
+                height: "100%",
+                zIndex: 1,
+                display: "block",
+                boxSizing: "border-box",
+              }}
+            >
+              {validationConfig?.mobileConfigs?.map((c) => (
+                <option key={c.prefix} value={c.prefix}>
+                  {c.prefix}
+                </option>
+              ))}
+            </select>
+            <div style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0 }}>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="#333" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        ) : (
+          <div className="citizen-card-input--front" style={{ padding: "0 12px", fontSize: "16px", fontWeight: "600", color: "#333", display: "flex", alignItems: "center", height: "100%", minWidth: "90px", marginLeft: "-1px" }}>
+            {selectedMobileConfig?.prefix || "+91"}
+          </div>
+        ),
       },
       {
         label: t("HR_EMPLOYEE_ID_LABEL"),
@@ -114,7 +213,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
           searchParams={searchParams}
           sortParams={sortParams}
           totalRecords={totalRecords}
-          linkPrefix={ `/${window?.contextPath}/employee/hrms/details/`}
+          linkPrefix={`/${window?.contextPath}/employee/hrms/details/`}
           filterComponent={filterComponent}
         />
         // <div></div>

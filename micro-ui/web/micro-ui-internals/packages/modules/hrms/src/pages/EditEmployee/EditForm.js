@@ -14,7 +14,7 @@ const EditForm = ({ tenantId, data }) => {
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
-  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
@@ -25,6 +25,44 @@ const EditForm = ({ tenantId, data }) => {
     retry: false,
     enable: false,
   });
+
+  // Fetch mobile validation config from MDMS
+  // Fetch mobile validation config from MDMS
+  const stateLvlTenantId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getCurrentTenantId() : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit.Utils.getMultiRootTenant() ? "common-masters" : "commonUiConfig";
+  const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
+    {
+      select: (data) => {
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true,
+        }));
+
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
+        return {
+          mobileConfigs,
+          defaultConfig: defaultItem,
+          prefix: defaultItem?.prefix || "+91",
+          pattern: defaultItem?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: defaultItem?.maxLength || 10,
+          minLength: defaultItem?.minLength || 10,
+          errorMessage: defaultItem?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+        };
+      },
+      staleTime: 300000,
+      enabled: !!stateLvlTenantId,
+    }
+  );
+
+
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
@@ -36,7 +74,14 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern("MobileNo"))) {
+    const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+    const maxLength = currentValidation?.maxLength || 10;
+    const minLength = currentValidation?.minLength || 10;
+    const pattern = currentValidation?.pattern
+      ? new RegExp(currentValidation.pattern, 'i')
+      : Digit.Utils.getPattern('MobileNo');
+
+    if (mobileNumber && mobileNumber.length >= minLength && mobileNumber.length <= maxLength && mobileNumber.match(pattern)) {
       setShowToast(null);
       if (data.user.mobileNumber == mobileNumber) {
         setPhonecheck(true);
@@ -83,7 +128,7 @@ const EditForm = ({ tenantId, data }) => {
         },
         boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
         boundary: { code: ele.boundary },
-        roles: isMultiRootTenant?data?.user?.roles:data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
+        roles: Digit.Utils.getMultiRootTenant() ? data?.user?.roles : data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
     Assignments: data?.assignments.map((ele, index) => {
@@ -166,6 +211,37 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
+    // Validate mobile number before submission
+    const mobileNum = input?.SelectEmployeePhoneNumber?.mobileNumber;
+
+    if (mobileNum) {
+      // Get validation parameters from MDMS or use defaults
+      const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+      const maxLength = currentValidation?.maxLength || 10;
+      const minLength = currentValidation?.minLength || 10;
+      const pattern = currentValidation?.pattern
+        ? new RegExp(currentValidation.pattern, 'i')
+        : Digit.Utils.getPattern('MobileNo');
+
+      // Check length
+      if (mobileNum.length < minLength || mobileNum.length > maxLength) {
+        setShowToast({
+          key: true,
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+
+      // Check pattern
+      if (!mobileNum.match(pattern)) {
+        setShowToast({
+          key: true,
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+    }
+
     // if (input.Jurisdictions.filter((juris) => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
     //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
     //   return;
@@ -191,10 +267,10 @@ const EditForm = ({ tenantId, data }) => {
     }
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        if(isMultiRootTenant){
+        if (Digit.Utils.getMultiRootTenant()) {
           item["tenantId"] = tenantId;
         }
-        else{
+        else {
           item["tenantId"] = ele.boundary;
         }
         return item;
@@ -210,6 +286,7 @@ const EditForm = ({ tenantId, data }) => {
     requestdata.user.gender = input?.SelectEmployeeGender?.gender.code;
     requestdata.user.dob = Date.parse(input?.SelectDateofBirthEmployment?.dob);
     requestdata.user.mobileNumber = input?.SelectEmployeePhoneNumber?.mobileNumber;
+    requestdata.user.countryCode = (input?.SelectEmployeePhoneNumber?.countryCode || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.prefix || "+91");
     requestdata["user"]["name"] = input?.SelectEmployeeName?.employeeName;
     requestdata.user.correspondenceAddress = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
     requestdata.user.roles = roles.filter((role) => role && role.name);
