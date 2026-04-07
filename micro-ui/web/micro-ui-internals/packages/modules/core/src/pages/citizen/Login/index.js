@@ -180,7 +180,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     }
 
     try {
-      // Check if WhatsApp channel is enabled from config-service
+      // Check if WhatsApp channel is enabled from config-service.
+      // NOTE: Digit.UserService.setUser() must be called BEFORE this function
+      // so that Request.js picks up the new access_token via getUser().
       const configResponse = await Digit.CustomService.getResponse({
         url: "/config-service/config/v1/_search",
         body: {
@@ -402,6 +404,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           info.tenantId = Digit.ULBService.getStateId();
         }
 
+        // Set user in UserService FIRST so that Request.js reads the NEW
+        // access_token via Digit.UserService.getUser() during saveUserPreferences.
+        Digit.UserService.setUser({ info, ...tokens });
+
         // Save user preferences (consent + language) after successful authentication
         await saveUserPreferences(info, stateCode);
 
@@ -420,6 +426,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
           info.tenantId = Digit.ULBService.getStateId();
         }
+
+        // Set user in UserService FIRST so that Request.js reads the NEW
+        // access_token via Digit.UserService.getUser() during saveUserPreferences.
+        Digit.UserService.setUser({ info, ...tokens });
 
         // Save user preferences (consent + language) after successful registration
         await saveUserPreferences(info, stateCode);
