@@ -1,5 +1,5 @@
 import React from "react";
-import { UnMaskComponent } from "..";
+import UnMaskComponent from "./UnMaskComponent";
 
 export const LastRow = (props) => {
   return (
@@ -58,7 +58,7 @@ export const Row = (props) => {
       <h2 style={labelStyle}>{props.label}{props?.isMandotary && '*'}</h2>
       <div className="value" style={valueStyle}>
         {
-          props?.isValueLink ? (<p className="status-value-link" onClick={props?.navigateLinkHandler}>{value}</p>) : <p>{value}</p> 
+          props?.isValueLink ? (<p className="status-value-link" onClick={props?.navigateLinkHandler}>{value}</p>) : <p>{value}</p>
         }
         {props?.privacy && (
           <span style={{ display: "inline-flex", width: "fit-content", marginLeft: "10px" }}>

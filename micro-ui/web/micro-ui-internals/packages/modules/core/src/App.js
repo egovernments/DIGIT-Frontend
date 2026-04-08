@@ -10,7 +10,7 @@ import DummyLoaderScreen from "./components/DummyLoader";
 import SignUpV2 from "./pages/employee/SignUp-v2";
 import LoginV2 from "./pages/employee/Login-v2";
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen",allowedUserTypes=["citizen","employee"] }) => {
+export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes = ["citizen", "employee"] }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -74,13 +74,13 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   };
   return (
     <Switch>
-     {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/employee`}>
+      {allowedUserTypes?.some(userType => userType == "employee") && <Route path={`/${window?.contextPath}/employee`}>
         <EmployeeApp {...commonProps} />
       </Route>}
-      {allowedUserTypes?.some(userType=>userType=="citizen")&& <Route path={`/${window?.contextPath}/citizen`}>
+      {allowedUserTypes?.some(userType => userType == "citizen") && <Route path={`/${window?.contextPath}/citizen`}>
         <CitizenApp {...commonProps} />
       </Route>}
-      {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/no-top-bar/employee`}>
+      {allowedUserTypes?.some(userType => userType == "employee") && <Route path={`/${window?.contextPath}/no-top-bar/employee`}>
         <EmployeeApp  {...commonProps} noTopBar={true} />
       </Route>}
       <Route>
@@ -90,7 +90,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   );
 };
 
-export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" ,allowedUserTypes}) => {
+export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes }) => {
   // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};

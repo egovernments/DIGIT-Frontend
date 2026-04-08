@@ -17,14 +17,14 @@ import LoginSignupSelector from "./components/LoginSignupSelector";
 import ForgotOrganizationTooltip from "./components/ForgotOrganizationTooltip";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 
-const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding,allowedUserTypes }) => {
-  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding, allowedUserTypes }) => {
+  const { isLoading, data: initData = {} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
-  const data=getStore(initData, moduleReducers(initData)) || {};
+  const data = getStore(initData, moduleReducers(initData)) || {};
   const i18n = getI18n();
-  if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
+  if (!Digit.ComponentRegistryService.getComponent("PrivacyComponent")) {
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
   return (
@@ -82,7 +82,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
  *   moduleReducers={moduleReducers}
  * />
  */
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding,allowedUserTypes }) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding, allowedUserTypes }) => {
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
@@ -144,7 +144,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}  allowedUserTypes={allowedUserTypes} />
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} allowedUserTypes={allowedUserTypes} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>

@@ -191,6 +191,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             tenantId: stateCode,
           },
         },
+        headers: {
+          "auth-token": Digit.UserService.getUser()?.access_token,
+        },
         useCache: false,
         method: "POST",
         userService: false,
@@ -204,13 +207,53 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         return null;
       }
 
-      // Get preferred language from multiple sources
-      const preferredLanguage =
+      // Get preferred language from multiple sources as a fallback
+      let finalPreferredLanguage =
         Digit.StoreData.getCurrentLanguage() ||
         localStorage.getItem("locale") ||
         localStorage.getItem("Citizen.locale") ||
         JSON.parse(sessionStorage.getItem("Digit.initData") || "{}")?.value?.selectedLanguage ||
         "en_IN";
+
+      // Fetch existing preferences to prevent overwriting the preferred language
+      try {
+        console.log("Fetching existing user preferences for user:", userInfo?.uuid, "tenantId:", tenantId);
+
+        const searchPreferenceResponse = await Digit.CustomService.getResponse({
+          url: "/user-preference/v1/_search",
+          body: {
+            criteria: {
+              userId: userInfo?.uuid,
+              tenantId: tenantId,
+              preferenceCode: "USER_NOTIFICATION_PREFERENCES",
+            },
+          },
+          headers: {
+            "auth-token": Digit.UserService.getUser()?.access_token,
+          },
+          useCache: false,
+          method: "POST",
+          userService: true,
+        });
+
+        console.log("API RAW RESPONSE for /user-preference/v1/_search:", searchPreferenceResponse);
+
+        if (searchPreferenceResponse?.preferences?.length > 0) {
+          const existingPref = searchPreferenceResponse.preferences[0];
+          console.log("Found existing preference:", existingPref);
+
+          if (existingPref?.payload?.preferredLanguage) {
+            finalPreferredLanguage = existingPref.payload.preferredLanguage;
+            console.log("Overriding local language with backend language:", finalPreferredLanguage);
+          } else {
+            console.log("Backend preference found, but preferredLanguage was empty/missing.");
+          }
+        } else {
+          console.log("No existing preferences found in backend for this user. Falling back to:", finalPreferredLanguage);
+        }
+      } catch (searchErr) {
+        console.error("Error fetching existing user preferences API details:", searchErr?.response?.data || searchErr);
+      }
 
       const consentPayload = {
         SMS: { scope: "GLOBAL", status: "REVOKED" },
@@ -227,9 +270,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             preferenceCode: "USER_NOTIFICATION_PREFERENCES",
             payload: {
               consent: consentPayload,
-              preferredLanguage: preferredLanguage,
+              preferredLanguage: finalPreferredLanguage,
             },
           },
+        },
+        headers: {
+          "auth-token": Digit.UserService.getUser()?.access_token,
         },
         useCache: false,
         method: "POST",
@@ -407,6 +453,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         // Set user in UserService FIRST so that Request.js reads the NEW
         // access_token via Digit.UserService.getUser() during saveUserPreferences.
         Digit.UserService.setUser({ info, ...tokens });
+        setCitizenDetail(info, tokens?.access_token, stateCode);
+
+        // Wait for token to be available in backend caches to prevent InvalidAccessTokenException
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         // Save user preferences (consent + language) after successful authentication
         await saveUserPreferences(info, stateCode);
@@ -430,6 +480,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         // Set user in UserService FIRST so that Request.js reads the NEW
         // access_token via Digit.UserService.getUser() during saveUserPreferences.
         Digit.UserService.setUser({ info, ...tokens });
+        setCitizenDetail(info, tokens?.access_token, stateCode);
+
+        // Wait for token to be available in backend caches to prevent InvalidAccessTokenException
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         // Save user preferences (consent + language) after successful registration
         await saveUserPreferences(info, stateCode);

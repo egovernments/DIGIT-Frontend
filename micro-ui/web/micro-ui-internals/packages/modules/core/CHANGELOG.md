@@ -1,4 +1,10 @@
 # Changelog
+## [1.9.20-cms]  [09-APR-2026]
+- **Fix**: Resolved intermittent authentication failures in the citizen login preference save flow.
+  - Ensured fresh `authToken` is passed directly to `config-service` and `user-preference` APIs immediately after login.
+  - Manually injected `RequestInfo` in API request bodies to bypass stale global state.
+  - Aligned `userService` configuration to `true` for authenticated consent-related calls.
+
 ## [1.9.19-cms]  [07-APR-2026]
 - **Default Landing Page**: Added default landing page validation configuration for mobile number in citizen and employee
 ## [1.9.18-cms]  [29-MAR-2026]
