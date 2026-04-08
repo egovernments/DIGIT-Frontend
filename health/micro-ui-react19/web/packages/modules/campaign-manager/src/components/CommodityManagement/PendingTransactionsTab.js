@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Button, Toast, PopUp, TextArea } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
@@ -22,6 +22,9 @@ const PendingTransactionsTab = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [showToast, setShowToast] = useState(null);
   const [updatingIds, setUpdatingIds] = useState(new Set());
+  const [acceptPopup, setAcceptPopup] = useState(null); // { stockId }
+  const [rejectPopup, setRejectPopup] = useState(null); // { stockId }
+  const [rejectComment, setRejectComment] = useState("");
 
   // Get user's staff project from context
   const { projects: contextProjects } = useCommodityProject();
@@ -210,7 +213,7 @@ const PendingTransactionsTab = ({
 
   // Accept or Reject a pending return transaction
   const handleAction = useCallback(
-    async (stockId, action) => {
+    async (stockId, action, comments) => {
       if (updatingIds.has(stockId)) return;
       setUpdatingIds((prev) => new Set(prev).add(stockId));
 
@@ -235,7 +238,7 @@ const PendingTransactionsTab = ({
 
         // Step 2: Update the status in additionalFields from IN_TRANSIT to ACCEPTED/REJECTED
         const newStatus = action === "accept" ? "ACCEPTED" : "REJECTED";
-        const updatedFields = (stockObject.additionalFields?.fields || []).map(
+        let updatedFields = (stockObject.additionalFields?.fields || []).map(
           (field) => {
             if (field.key === "status") {
               return { ...field, value: newStatus };
@@ -243,6 +246,18 @@ const PendingTransactionsTab = ({
             return field;
           }
         );
+
+        // Step 2b: Add comments to additionalFields if provided
+        if (comments?.trim()) {
+          const hasComments = updatedFields.some((f) => f.key === "comments");
+          if (hasComments) {
+            updatedFields = updatedFields.map((f) =>
+              f.key === "comments" ? { ...f, value: comments.trim() } : f
+            );
+          } else {
+            updatedFields.push({ key: "comments", value: comments.trim() });
+          }
+        }
 
         const updatedStock = {
           ...stockObject,
@@ -289,6 +304,32 @@ const PendingTransactionsTab = ({
     },
     [tenantId, t, updatingIds, refetchStockData]
   );
+
+  // Open accept confirmation popup
+  const handleAcceptClick = useCallback((stockId) => {
+    setAcceptPopup({ stockId });
+  }, []);
+
+  // Confirm acceptance
+  const handleAcceptConfirm = useCallback(() => {
+    if (!acceptPopup?.stockId) return;
+    handleAction(acceptPopup.stockId, "accept");
+    setAcceptPopup(null);
+  }, [acceptPopup, handleAction]);
+
+  // Open reject popup
+  const handleRejectClick = useCallback((stockId) => {
+    setRejectComment("");
+    setRejectPopup({ stockId });
+  }, []);
+
+  // Confirm rejection with mandatory comments
+  const handleRejectConfirm = useCallback(() => {
+    if (!rejectPopup?.stockId || !rejectComment.trim()) return;
+    handleAction(rejectPopup.stockId, "reject", rejectComment);
+    setRejectPopup(null);
+    setRejectComment("");
+  }, [rejectPopup, rejectComment, handleAction]);
 
   const columns = [
     { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: true },
@@ -358,7 +399,7 @@ const PendingTransactionsTab = ({
             type="button"
             variation="primary"
             label={isUpdating ? t("HCM_UPDATING") : t("HCM_ACCEPT")}
-            onClick={() => handleAction(row.stockId, "accept")}
+            onClick={() => handleAcceptClick(row.stockId)}
             isDisabled={isUpdating}
             size="small"
           />
@@ -366,7 +407,7 @@ const PendingTransactionsTab = ({
             type="button"
             variation="secondary"
             label={isUpdating ? t("HCM_UPDATING") : t("HCM_REJECT")}
-            onClick={() => handleAction(row.stockId, "reject")}
+            onClick={() => handleRejectClick(row.stockId)}
             isDisabled={isUpdating}
             size="small"
           />
@@ -415,6 +456,89 @@ const PendingTransactionsTab = ({
           headerClassName=""
         />
       </GenericChart>
+
+      {acceptPopup && (
+        <PopUp
+          type="alert"
+          alertHeading={t("HCM_ACCEPT_RETURN")}
+          alertMessage={t("HCM_CONFIRM_ACCEPT_MESSAGE")}
+          children={[]}
+          onClose={() => setAcceptPopup(null)}
+          onOverlayClick={() => setAcceptPopup(null)}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="cancel"
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t("HCM_CANCEL")}
+              onClick={() => setAcceptPopup(null)}
+            />,
+            <Button
+              key="confirm"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t("HCM_CONFIRM_ACCEPT")}
+              onClick={handleAcceptConfirm}
+            />,
+          ]}
+          style={{ maxWidth: "500px" }}
+        />
+      )}
+
+      {rejectPopup && (
+        <PopUp
+          type="default"
+          heading={t("HCM_REJECT_RETURN")}
+          children={[]}
+          onClose={() => {
+            setRejectPopup(null);
+            setRejectComment("");
+          }}
+          onOverlayClick={() => {
+            setRejectPopup(null);
+            setRejectComment("");
+          }}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="cancel"
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t("HCM_CANCEL")}
+              onClick={() => {
+                setRejectPopup(null);
+                setRejectComment("");
+              }}
+            />,
+            <Button
+              key="reject"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t("HCM_CONFIRM_REJECT")}
+              onClick={handleRejectConfirm}
+              isDisabled={!rejectComment.trim()}
+            />,
+          ]}
+          style={{ maxWidth: "500px" }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <label style={{ fontWeight: 700, fontSize: "1rem" }}>
+              {t("HCM_COMMENTS")} <span style={{ color: "#B91900" }}>*</span>
+            </label>
+            <TextArea
+              value={rejectComment}
+              onChange={(e) => setRejectComment(e.target.value)}
+              placeholder={t("HCM_ENTER_COMMENTS")}
+              style={{ maxWidth: "100%", minHeight: "100px" }}
+            />
+          </div>
+        </PopUp>
+      )}
 
       {showToast && (
         <Toast
