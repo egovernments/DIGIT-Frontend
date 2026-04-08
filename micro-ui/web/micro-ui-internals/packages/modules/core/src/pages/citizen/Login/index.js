@@ -188,11 +188,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     try {
       setIsOtpValid(true);
       setCanSubmitOtp(false);
-      const { mobileNumber, otp, name } = params;
+      const { mobileNumber, otp, name, countryCode } = params;
       if (isUserRegistered) {
         const requestData = {
           username: mobileNumber,
           password: otp,
+          countryCode,
           tenantId: stateCode,
           userType: getUserType(),
         };
@@ -216,6 +217,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           name,
           username: mobileNumber,
           otpReference: otp,
+          countryCode,
           tenantId: stateCode,
         };
 
@@ -234,9 +236,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   };
 
   const resendOtp = async () => {
-    const { mobileNumber } = params;
+    const { mobileNumber, countryCode } = params;
     const data = {
       mobileNumber,
+      countryCode,
       tenantId: stateCode,
       userType: getUserType(),
     };
@@ -289,7 +292,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     <div className="citizen-form-wrapper">
       <Switch>
         <AppContainer>
-          {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()}/>}
+          {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()} />}
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}

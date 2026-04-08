@@ -25,9 +25,10 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
           errorMessage: item.rules?.errorMessage || "CS_COMMON_MOBILE_ERROR",
           allowedStartingCharacters: item.rules?.allowedStartingCharacters,
           isActive: item.isActive,
+          isDefault: item.default === true || String(item.default).toLowerCase() === "true",
         }));
 
-        const defaultConfig = allConfigs[0] || {
+        const defaultConfig = allConfigs.find((config) => config.isDefault) || allConfigs[0] || {
           prefix: "+91",
           pattern: "^[6-9][0-9]{9}$",
           maxLength: 10,
@@ -122,7 +123,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
     }
 
     setError("");
-    onSelect({ mobileNumber, prefix: selectedPrefix });
+    onSelect({ mobileNumber, prefix: selectedPrefix, countryCode: selectedPrefix });
   };
 
   const isMobileValid = mobileNumber.length >= minLength && mobileNumber.length <= maxLength;
