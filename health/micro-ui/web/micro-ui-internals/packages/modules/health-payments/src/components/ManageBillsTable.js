@@ -43,7 +43,7 @@ const buildColumnRegistry = (t, history, props, setShowToast) => {
                     {t("HCM_AM_ATTENDANCE")}
                 </div>
             ),
-            style: { justifyContent: "flex-start" },
+            style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
         },
 
         registers: {

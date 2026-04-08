@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import MyBillsSearch from "../../components/MyBillsSearch";
@@ -282,7 +282,7 @@ const ManageBills = () => {
         headerContent={
           <>
             {projectName && (
-              <Tag label={t(projectName)} type="default" style={{ marginBottom: "0.5rem" }} />
+              <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "0.5rem" }} />
             )}
             <Header styles={{ fontSize: "32px", marginBottom: "0.5rem" }}>
               <span style={{ color: "#0B4B66" }}>{t(roleConfig.headerLabel)}</span>
