@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { PrivacyMaskIcon } from "..";
+import { PrivacyMaskIcon } from "./svgindex";
 
 /**
  * Custom Component to demask the masked values.
