@@ -940,6 +940,7 @@
 .update-boundary-header {
   color: var(--digitv2-lightTheme-primary-2);
   font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  white-space: nowrap;
 }
 .select-boundary {
   color: var(--digitv2-lightTheme-primary-2) !important;
@@ -1368,4 +1369,18 @@
       width: 100% !important;
     }
   }
+}
+
+.map-users-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: 2.5rem;
+  padding: 1rem 2rem;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.16);
+  display: flex;
+  justify-content: flex-start;
+  z-index: 500;
 }
