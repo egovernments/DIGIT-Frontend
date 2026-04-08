@@ -789,7 +789,7 @@ const NewShipmentPopup = ({
         ws.addRow(row);
       });
 
-      const dataRowCount = Math.max(selectedFacilities.length, 100);
+      const dataRowCount = selectedFacilities.length;
 
       // --- Options sheet (hidden) — 4 columns: From Codes, From Names, To Codes, To Names ---
       const optionsWs = wb.addWorksheet("Options", { state: "hidden" });
@@ -811,70 +811,13 @@ const NewShipmentPopup = ({
       const toCodeColIdx = stockHeaders.indexOf("To (Facility Code)");
       const toNameColIdx = stockHeaders.indexOf("To (Facility Name)");
 
-      // From Facility Name dropdown (Options column B = names)
-      if (fromNameColIdx >= 0 && fromFacNames.length > 0) {
-        const nameCol = colLetter(fromNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${nameCol}${r}`).dataValidation = {
-            type: "list",
-            allowBlank: true,
-            formulae: [`Options!$B$2:$B$${fromFacNames.length + 1}`],
-            showErrorMessage: true,
-            errorTitle: "Invalid facility",
-            error: "Please select a valid From Facility Name",
-          };
-        }
-      }
-
-      // From Facility Code auto-fill via INDEX/MATCH from name
-      if (fromCodeColIdx >= 0 && fromNameColIdx >= 0 && fromFacIds.length > 0) {
-        const codeCol = colLetter(fromCodeColIdx + 1);
-        const nameCol = colLetter(fromNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${codeCol}${r}`).value = {
-            formula: `IFERROR(INDEX(Options!$A$2:$A$${fromFacIds.length + 1},MATCH(${nameCol}${r},Options!$B$2:$B$${fromFacNames.length + 1},0)),"")`,
-          };
-        }
-      }
-
-      // To Facility Name dropdown (Options column D = names)
-      if (toNameColIdx >= 0 && toFacNames.length > 0) {
-        const nameCol = colLetter(toNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${nameCol}${r}`).dataValidation = {
-            type: "list",
-            allowBlank: true,
-            formulae: [`Options!$D$2:$D$${toFacNames.length + 1}`],
-            showErrorMessage: true,
-            errorTitle: "Invalid facility",
-            error: "Please select a valid To Facility Name",
-          };
-        }
-      }
-
-      // To Facility Code auto-fill via INDEX/MATCH from name
-      if (toCodeColIdx >= 0 && toNameColIdx >= 0 && toFacIds.length > 0) {
-        const codeCol = colLetter(toCodeColIdx + 1);
-        const nameCol = colLetter(toNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${codeCol}${r}`).value = {
-            formula: `IFERROR(INDEX(Options!$C$2:$C$${toFacIds.length + 1},MATCH(${nameCol}${r},Options!$D$2:$D$${toFacNames.length + 1},0)),"")`,
-          };
-        }
-      }
-
       // --- Lock cells & protect sheet ---
-      // Unlock: Facility Name + Facility Code columns + product quantity cells
+      // Only unlock product quantity cells — all other columns (boundary, facility, campaign) are locked
       const firstProductCol = boundaryHeaders.length + 6 + 1; // 1-based col index (6 fixed: CampaignNumber, ProjectName, FromCode, FromName, ToCode, ToName)
       const lastProductCol = firstProductCol + productVariants.length - 1;
 
       for (let r = 3; r <= dataRowCount + 2; r++) {
-        // Unlock facility name and code columns
-        if (fromCodeColIdx >= 0) ws.getCell(r, fromCodeColIdx + 1).protection = { locked: false };
-        if (fromNameColIdx >= 0) ws.getCell(r, fromNameColIdx + 1).protection = { locked: false };
-        if (toCodeColIdx >= 0) ws.getCell(r, toCodeColIdx + 1).protection = { locked: false };
-        if (toNameColIdx >= 0) ws.getCell(r, toNameColIdx + 1).protection = { locked: false };
-        // Unlock product quantity cells
+        // Unlock only product quantity cells for each selected facility row
         for (let c = firstProductCol; c <= lastProductCol; c++) {
           ws.getCell(r, c).protection = { locked: false };
         }
@@ -901,17 +844,15 @@ const NewShipmentPopup = ({
       const readmeLines = [
         "Instructions",
         "",
-        "1. Product quantity columns and facility columns are editable — all other columns are locked.",
-        "2. Select a facility name from the dropdown in the Facility Name columns; the Facility Code will auto-fill.",
-        "3. Boundary and Project Name columns have been pre-filled based on your selection and cannot be modified.",
+        "1. Only the product quantity columns are editable — all other columns are locked.",
+        "2. Each row corresponds to a selected facility. Do NOT add or delete rows.",
+        "3. Boundary, Campaign Number, Project Name, and Facility columns are pre-filled and cannot be modified.",
         "4. 'From' is the source warehouse and 'To' is the destination facility.",
-        "5. Each row represents one shipment between a From and To facility pair.",
-        "6. Enter a whole number (0 or greater) for each product quantity.",
-        "7. Leave a product quantity empty or 0 to skip that product for the row.",
-        "8. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
-        "9. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
-        "10. Do NOT add new rows — only the pre-filled rows will be processed on upload.",
-        "11. Save the file and upload it back on the stock upload screen.",
+        "5. Enter a whole number (0 or greater) for each product quantity.",
+        "6. Leave a product quantity empty or 0 to skip that product for the row.",
+        "7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
+        "8. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
+        "9. Save the file and upload it back on the stock upload screen.",
       ];
       readmeLines.forEach((line) => readmeWs.addRow([line]));
       readmeWs.getColumn(1).width = 80;
@@ -1063,6 +1004,19 @@ const NewShipmentPopup = ({
       // --- Upload validations ---
       // Validate against the specific facilities selected in the popup, not all available
       const errors = [];
+
+      // Filter out completely empty rows (template may have trailing blanks)
+      const nonEmptyDataRows = dataRows.filter((row) => {
+        const hasAnyValue = row.some((cell) => cell !== undefined && cell !== null && cell !== "");
+        return hasAnyValue;
+      });
+
+      // Ensure uploaded rows don't exceed the number of selected facilities
+      if (nonEmptyDataRows.length > selectedFacilityIds.size) {
+        errors.push(
+          `File contains ${nonEmptyDataRows.length} data rows but only ${selectedFacilityIds.size} facilities were selected. Do not add extra rows.`
+        );
+      }
 
       dataRows.forEach((row, rowIdx) => {
         const rowNum = rowIdx + 3; // Excel row number
