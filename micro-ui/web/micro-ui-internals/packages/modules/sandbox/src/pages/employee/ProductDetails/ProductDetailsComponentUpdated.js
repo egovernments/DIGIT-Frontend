@@ -27,20 +27,20 @@ const Breadcrumb = ({ path }) => {
     const redirectPath = `/${window?.contextPath}/employee/sandbox/productPage`;
 
     const handleContinue = (e) => {
-      e.preventDefault();
-      history.push(redirectPath); // client-side navigate
+        e.preventDefault();
+        history.push(redirectPath); // client-side navigate
     };
 
     return (
-      <div style={{ width: "100%", backgroundColor: "#e4edf1", padding: "2rem 2rem 2rem 4rem" }}>
-        <nav className="nav-breadcrumb">
-          <a href={redirectPath} onClick={handleContinue}>{t("SANDBOX_PRODUCTS")}</a>
-          <span className="separator">/</span>
-          <span className="current">{path}</span>
-        </nav>
-      </div>
+        <div style={{ width: "100%", backgroundColor: "#e4edf1", padding: "2rem 2rem 2rem 4rem" }}>
+            <nav className="nav-breadcrumb">
+                <a href={redirectPath} onClick={handleContinue}>{t("SANDBOX_PRODUCTS")}</a>
+                <span className="separator">/</span>
+                <span className="current">{path}</span>
+            </nav>
+        </div>
     );
-  };
+};
 
 const HeroSection = ({ title, headline, img, t, onExploreClick }) => (
     <div style={{
@@ -173,93 +173,93 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => {
     const userType = getUserType(role);
 
     return (
-    <div className="cs-left">
-        <h2 className="cs-title">{role}</h2>
-        {cards.map(({ icon, text }, idx) => {
-            const IconComponent = iconMap[icon];
-            const isOBPSStakeholderFeature2 = module === 'OBPS' && text === t('OBPS_STAKEHOLDER_FEATURE2');
+        <div className="cs-left">
+            <h2 className="cs-title">{role}</h2>
+            {cards.map(({ icon, text }, idx) => {
+                const IconComponent = iconMap[icon];
+                const isOBPSStakeholderFeature2 = module === 'OBPS' && text === t('OBPS_STAKEHOLDER_FEATURE2');
 
-            return (
-                <div key={idx} className="cs-card" style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    minHeight: '44px'
-                }}>
-                    <div style={{
-                        width: '20px',
-                        minWidth: '20px',
-                        height: '20px',
-                        marginRight: '12px',
-                        flexShrink: 0,
-                        marginTop: '0px'
-                    }}>
-                        <IconComponent className="cs-icon" style={{ width: '20px', height: '20px' }} />
-                    </div>
-                    <div style={{
-                        flex: 1,
+                return (
+                    <div key={idx} className="cs-card" style={{
                         display: 'flex',
-                        flexWrap: 'wrap',
                         alignItems: 'center',
-                        minHeight: '20px'
+                        minHeight: '44px'
                     }}>
-                        <span style={{ wordBreak: 'break-word', lineHeight: '1.4' }}>
-                            {text}
-                        </span>
-                        {isOBPSStakeholderFeature2 && permalink && (
-                            <a
-                                href={permalink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    marginLeft: '8px',
-                                    color: '#C84C0E',
-                                    textDecoration: 'underline',
-                                    fontWeight: 'bold',
-                                    whiteSpace: 'nowrap'
-                                }}
-                            >
-                                (Link)
-                            </a>
-                        )}
+                        <div style={{
+                            width: '20px',
+                            minWidth: '20px',
+                            height: '20px',
+                            marginRight: '12px',
+                            flexShrink: 0,
+                            marginTop: '0px'
+                        }}>
+                            <IconComponent className="cs-icon" style={{ width: '20px', height: '20px' }} />
+                        </div>
+                        <div style={{
+                            flex: 1,
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            minHeight: '20px'
+                        }}>
+                            <span style={{ wordBreak: 'break-word', lineHeight: '1.4' }}>
+                                {text}
+                            </span>
+                            {isOBPSStakeholderFeature2 && permalink && (
+                                <a
+                                    href={permalink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        marginLeft: '8px',
+                                        color: '#C84C0E',
+                                        textDecoration: 'underline',
+                                        fontWeight: 'bold',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                >
+                                    (Link)
+                                </a>
+                            )}
+                        </div>
                     </div>
-                </div>
-            );
-        })}
-        <button
-            onClick={() => {
-                try {
-                    if (config.isExternal) {
-                        // Handle external URLs - append from=sandbox, module, and userType parameters
-                        const separator = config?.action?.includes('?') ? '&' : '?';
-                        const externalUrl = config?.action + `${separator}from=sandbox&module=${module}&userType=${userType}`;
-                        window.open(externalUrl, "_blank");
-                    } else {
-                        handleButtonClick(config?.action, module, userType);
+                );
+            })}
+            <button
+                onClick={() => {
+                    try {
+                        if (config.isExternal) {
+                            // Handle external URLs - append from=sandbox, module, and userType parameters
+                            const separator = config?.action?.includes('?') ? '&' : '?';
+                            const externalUrl = config?.action + `${separator}from=sandbox&module=${module}&userType=${userType}&locale=${JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage()}`;
+                            window.open(externalUrl, "_blank");
+                        } else {
+                            handleButtonClick(config?.action, module, userType);
+                        }
+                    } catch (error) {
+                        console.error("Error navigating to URL:", error);
                     }
-                } catch (error) {
-                    console.error("Error navigating to URL:", error);
-                }
-            }}
-            className="cs-button"
-            style={{
-                background: '#C84C0E',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                marginTop: '20px',
-                padding: '8px 12px',
-                fontSize: '15px'
-            }}
-            onMouseEnter={(e) => {
-                e.target.style.background = '#B03A08';
-            }}
-            onMouseLeave={(e) => {
-                e.target.style.background = '#C84C0E';
-            }}> {t(config.title)} ➔</button>
-    </div>
+                }}
+                className="cs-button"
+                style={{
+                    background: '#C84C0E',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    marginTop: '20px',
+                    padding: '8px 12px',
+                    fontSize: '15px'
+                }}
+                onMouseEnter={(e) => {
+                    e.target.style.background = '#B03A08';
+                }}
+                onMouseLeave={(e) => {
+                    e.target.style.background = '#C84C0E';
+                }}> {t(config.title)} ➔</button>
+        </div>
     );
 };
 
@@ -309,7 +309,7 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
             : stakeholderWTLink;
 
     const getTabs = () => {
-       
+
         const allTabs = [
             {
                 id: 'stakeholder',
@@ -328,7 +328,7 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
             }
         ];
 
-       
+
         let visibleTabs = allTabs.filter(tab => tab.show);
 
         if (module === "OBPS") {
@@ -428,11 +428,11 @@ const handleButtonClick = (action, module, userType) => {
     // Check if action is a full URL or relative path
     const isFullUrl = action?.startsWith('http://') || action?.startsWith('https://');
     const baseUrl = isFullUrl ? action : '/' + window.contextPath + action;
-    
+
     // Append from=sandbox, module, and userType parameters
     const separator = baseUrl.includes('?') ? '&' : '?';
     const url = baseUrl + `${separator}from=sandbox&module=${module}&userType=${userType}`;
-    
+
     window.open(url, "_blank");
 };
 
@@ -476,33 +476,33 @@ function getPermalinkByType(config, type) {
 
 const ProductDetailsComponentUpdated = ({ config, module }) => {
 
-    console.log(`*** LOG ***`,config);
+    console.log(`*** LOG ***`, config);
 
     const { t } = useTranslation();
     const experienceSectionRef = useRef(null);
-    
+
     const scrollToExperience = () => {
         if (experienceSectionRef.current) {
             const element = experienceSectionRef.current;
             const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
             const offsetPosition = elementPosition - (window.innerHeight * 0.05); // 5% above
-            
+
             window.scrollTo({
                 top: offsetPosition,
                 behavior: 'smooth'
             });
         }
     };
-    
+
     const getInitialActiveTab = (currentModule) => {
-    if (currentModule === "OBPS") {
-        return "stakeholder";
-    }
-    if (currentModule === "Finance") {
-        return "employee";
-    }
-    
-    return "citizen";
+        if (currentModule === "OBPS") {
+            return "stakeholder";
+        }
+        if (currentModule === "Finance") {
+            return "employee";
+        }
+
+        return "citizen";
     };
 
     const [activeTab, setActiveTab] = useState(getInitialActiveTab(module));
