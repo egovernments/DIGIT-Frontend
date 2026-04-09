@@ -1,5 +1,6 @@
 
 ## [1.8.11] [28-October-2025]
+## "@egovernments/digit-ui-components": "0.2.3", Added
 
 ### New Features:
 - **Shared Component Updates**: 
