@@ -420,7 +420,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       if (displayName || loginName) {
         return (
           <div>
-            <div>{maskName(displayName || loginName)}</div>
+            <div>{displayName || maskName(loginName)}</div>
             {displayName && loginName && (
               <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{maskName(loginName)}</div>
             )}
