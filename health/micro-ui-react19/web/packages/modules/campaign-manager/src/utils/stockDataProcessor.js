@@ -137,12 +137,12 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
     } else if (stockEntryType === "LESS") {
       commodityMap[productName].totalReceived -= qty;
     } else if (stockEntryType === "ISSUED") {
-      if (status === "ACCEPTED") {
+      if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+        // ACCEPTED or IN_TRANSIT: stock has physically left the facility
         commodityMap[productName].totalIssued += qty;
       } else if (status === "REJECTED") {
         commodityMap[productName].totalRejected += qty;
       }
-      // IN_TRANSIT: not counted in commodity summary
     } else if (stockEntryType === "RETURNED") {
       if (status === "ACCEPTED") {
         commodityMap[productName].totalReturned += qty;

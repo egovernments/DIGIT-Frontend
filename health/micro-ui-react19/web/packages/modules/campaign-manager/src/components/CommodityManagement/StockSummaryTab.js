@@ -176,13 +176,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         }
       } else if (stockEntryType === "ISSUED") {
         const status = stock.status || "";
-        if (status === "ACCEPTED") {
-          // Confirmed dispatch → counts as issued for sender
+        if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+          // ACCEPTED or IN_TRANSIT: stock has physically left sender, counts as issued
           if (userFacilityIds.has(stock.senderId)) {
             commodityMap[productName].totalIssued += qty;
           }
-          // Accepted by receiver → counts as received for receiver
-          if (userFacilityIds.has(stock.receiverId)) {
+          // Only ACCEPTED counts as received for receiver (confirmation required)
+          if (status === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
             commodityMap[productName].totalReceived += qty;
           }
         } else if (status === "REJECTED") {
@@ -191,7 +191,6 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             commodityMap[productName].totalRejected += qty;
           }
         }
-        // IN_TRANSIT or other: not counted in summary yet
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
         if (retStatus === "ACCEPTED") {
