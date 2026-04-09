@@ -817,24 +817,26 @@ const NewShipmentPopup = ({
       const lastProductCol = firstProductCol + productVariants.length - 1;
 
       for (let r = 3; r <= dataRowCount + 2; r++) {
-        // Unlock only product quantity cells for each selected facility row
-        for (let c = firstProductCol; c <= lastProductCol; c++) {
-          ws.getCell(r, c).protection = { locked: false };
-        }
-      }
-
-      // --- Quantity validation on product cells ---
-      for (let r = 3; r <= dataRowCount + 2; r++) {
         for (let c = firstProductCol; c <= lastProductCol; c++) {
           const cell = ws.getCell(r, c);
+          // Unlock for editing
+          cell.protection = { locked: false };
+          // Force numeric format so Excel rejects non-numeric input
+          cell.numFmt = '0';
+          cell.value = null;
+          // Data validation: only whole numbers >= 0
           cell.dataValidation = {
             type: 'whole',
             operator: 'greaterThanOrEqual',
             formulae: [0],
             allowBlank: true,
+            showInputMessage: true,
+            promptTitle: 'Quantity',
+            prompt: 'Enter a numeric value (whole number, 0 or greater)',
             showErrorMessage: true,
+            errorStyle: 'stop',
             errorTitle: 'Invalid quantity',
-            error: 'Please enter a whole number (0 or greater)',
+            error: 'Only numeric values are allowed. Please enter a whole number (0 or greater).',
           };
         }
       }

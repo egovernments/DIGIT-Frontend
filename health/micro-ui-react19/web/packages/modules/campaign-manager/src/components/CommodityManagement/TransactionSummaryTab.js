@@ -364,15 +364,15 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   );
 
   const columns = [
-  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px",sortable: true },
-  { label: t("HCM_CREATION_DATE"), key: "creationDate", grow: 1.5, minWidth: "200px",sortable: true },
-  { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px",sortable: true },
-  { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px",sortable: true },
-  { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1 ,sortable: true},
-  { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px",sortable: true },
-  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8 ,sortable: true},
-  { label: t("HCM_QUANTITY"), key: "quantity", grow: 0.6, minWidth: "100px", sortable: true },
-  { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1,sortable: true },
+  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: false },
+  { label: t("HCM_CREATION_DATE"), key: "creationDate", sortKey: "createdTime", sortType: "numeric", grow: 1.5, minWidth: "200px", sortable: true },
+  { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px", sortable: false },
+  { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px", sortable: false },
+  { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1, sortable: false },
+  { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px", sortable: false },
+  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: false },
+  { label: t("HCM_QUANTITY"), key: "quantity", sortType: "numeric", grow: 0.6, minWidth: "100px", sortable: true },
+  { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1, sortable: false },
 ];
 
   // Helper to map status to CSS class
@@ -407,15 +407,22 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       </div>
     ),
     createdBy: (row) => {
+      const maskName = (name) => {
+        if (!name) return "";
+        if (name.length >= 4) return "****" + name.slice(-4);
+        if (name.length >= 2) return "**" + name.slice(-2);
+        return name;
+      };
+
       const displayName = row?.nameOfUser || "";
       const loginName = row?.userName || "";
 
       if (displayName || loginName) {
         return (
           <div>
-            <div>{displayName || loginName}</div>
+            <div>{maskName(displayName || loginName)}</div>
             {displayName && loginName && (
-              <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{loginName}</div>
+              <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{maskName(loginName)}</div>
             )}
           </div>
         );
@@ -569,6 +576,8 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           excelFileName="transaction_summary"
           className=""
           headerClassName=""
+          defaultSortField="creationDate"
+          defaultSortAsc={false}
         />
       </GenericChart>
 

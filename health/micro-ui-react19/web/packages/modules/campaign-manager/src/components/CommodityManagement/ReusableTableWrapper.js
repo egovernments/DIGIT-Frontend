@@ -31,11 +31,17 @@ const ReusableTableWrapper = ({
   enableExcelDownload = true,
   excelFileName = "table_data",
   excelButtonText = "Download Excel",
+  defaultSortField = null,
+  defaultSortAsc = true,
 }) => {
   const { t } = useTranslation();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(paginationPerPage);
+  const [sortState, setSortState] = useState({
+    columnKey: defaultSortField,
+    direction: defaultSortAsc ? "asc" : "desc",
+  });
 
   useEffect(() => {
     setCurrentPage(1);
@@ -45,14 +51,41 @@ const ReusableTableWrapper = ({
     setPerPage(paginationPerPage);
   }, [paginationPerPage]);
 
+  // Build column config lookup for sort metadata (sortKey, sortType)
+  const columnMap = useMemo(() => {
+    const map = {};
+    columns.forEach((col) => {
+      map[col.key] = col;
+    });
+    return map;
+  }, [columns]);
+
+  // Sort full dataset before pagination when manualPagination is active
+  const sortedData = useMemo(() => {
+    if (!manualPagination || !sortState.columnKey || !data?.length) return data;
+    const colConfig = columnMap[sortState.columnKey];
+    if (!colConfig) return data;
+    const sortKey = colConfig.sortKey || colConfig.key;
+    const sortType = colConfig.sortType || "string";
+    const dir = sortState.direction === "asc" ? 1 : -1;
+    return [...data].sort((a, b) => {
+      const aVal = a[sortKey];
+      const bVal = b[sortKey];
+      if (sortType === "numeric") {
+        return dir * ((Number(aVal) || 0) - (Number(bVal) || 0));
+      }
+      return dir * String(aVal || "").localeCompare(String(bVal || ""));
+    });
+  }, [data, sortState, manualPagination, columnMap]);
+
   const paginatedData = useMemo(() => {
-    if (!manualPagination || !pagination || !data) {
-      return data;
-    }
+    if (!manualPagination || !pagination) return data;
+    const sourceData = sortedData || data;
+    if (!sourceData) return data;
     const startIndex = (currentPage - 1) * perPage;
     const endIndex = startIndex + perPage;
-    return data.slice(startIndex, endIndex);
-  }, [data, currentPage, perPage, manualPagination, pagination]);
+    return sourceData.slice(startIndex, endIndex);
+  }, [data, sortedData, currentPage, perPage, manualPagination, pagination]);
 
   const handlePageChange = (page) => {
     if (manualPagination) {
@@ -70,6 +103,13 @@ const ReusableTableWrapper = ({
     }
     if (onChangeRowsPerPage) {
       onChangeRowsPerPage(newPerPage, page);
+    }
+  };
+
+  const handleSort = (column, sortDirection) => {
+    if (manualPagination) {
+      setSortState({ columnKey: column.id, direction: sortDirection });
+      setCurrentPage(1);
     }
   };
 
@@ -107,6 +147,7 @@ const ReusableTableWrapper = ({
   };
 
   const tableColumns = columns.map((column) => ({
+    id: column.key,
     name: column.label,
     selector: (row) => {
       if (getNestedValue) {
@@ -178,6 +219,10 @@ const ReusableTableWrapper = ({
             paginationRowsPerPageOptions={paginationRowsPerPageOptions}
             onChangePage={handlePageChange}
             onChangeRowsPerPage={handlePerRowsChange}
+            sortServer={manualPagination}
+            onSort={handleSort}
+            defaultSortFieldId={defaultSortField}
+            defaultSortAsc={defaultSortAsc}
             customStyles={customStyles || tableCustomStyle}
             progressPending={isLoading}
             progressComponent={progressComponent || <Loader />}
