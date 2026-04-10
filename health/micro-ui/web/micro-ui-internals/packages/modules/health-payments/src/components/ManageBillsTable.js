@@ -6,310 +6,332 @@ import { downloadFileWithName, getCustomPaginationOptions, formatTimestampToDate
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
-
+import SendForApprovalPopUp from "./SendForApprovalPopUp"; 
 /**
  * Column builder registry.
  * Each key maps to a function: (t, history, props, setShowToast) => react-data-table column definition.
  */
-const buildColumnRegistry = (t, history, props, setShowToast) => {
-    const colHeader = (label) => (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{label}</div>
-    );
 
-    return {
-        billId: {
-            name: colHeader(t("HCM_AM_BILL_ID")),
-            selector: (row) => (
-                <div
-                    className="ellipsis-cell"
-                    style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
-                    title={row?.billNumber || t("NA")}
-                    onClick={() => {
-                        history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
-                            billID: row.billNumber,
-                        });
-                    }}
-                >
-                    {row?.billNumber || t("NA")}
-                </div>
-            ),
-            style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
-        },
-
-        source: {
-            name: colHeader(t("HCM_AM_SOURCE")),
-            selector: () => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {t("HCM_AM_ATTENDANCE")}
-                </div>
-            ),
-            style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        registers: {
-            name: colHeader(t("HCM_AM_NO_OF_REGISTERS")),
-            selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.additionalDetails?.noOfRegisters || "0"}
-                </div>
-            ),
-            style: { justifyContent: "flex-end" },
-        },
-
-        payees: {
-            name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES")),
-            selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.billDetails?.length || "0"}
-                </div>
-            ),
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        totalAmount: {
-            name: colHeader(t("HCM_AM_TOTAL_AMOUNT")),
-            selector: (row) => {
-                const total = row?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
-                return (
-                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {total}
-                    </div>
-                );
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        download: {
-            name: t("HCM_AM_DOWNLOAD_BILL"),
-            selector: (row, index) => {
-                const reportDetails = row?.additionalDetails?.reportDetails;
-                const billId = row?.billNumber;
-                const isLastRow = index === props.totalCount - 1;
-
-                return reportDetails?.status === "COMPLETED" ? (
-                    <Button
-                        className="custom-class"
-                        iconFill=""
-                        size="medium"
-                        icon="FileDownload"
-                        isSuffix
-                        label={t("HCM_AM_DOWNLOAD_BILLS")}
-                        title={t("HCM_AM_DOWNLOAD_BILLS")}
-                        showBottom={isLastRow && props.data.length !== 1 ? false : true}
-                        onOptionSelect={(value) => {
-                            if (value.code === "HCM_AM_PDF") {
-                                if (reportDetails?.pdfReportId) {
-                                    downloadFileWithName({ fileStoreId: reportDetails.pdfReportId, customName: `${billId}`, type: "pdf" });
-                                } else {
-                                    setShowToast({ key: "error", label: t("HCM_AM_PDF_GENERATION_FAILED"), transitionTime: 3000 });
-                                }
-                            } else if (value.code === "HCM_AM_EXCEL") {
-                                if (reportDetails?.excelReportId) {
-                                    downloadFileWithName({ fileStoreId: reportDetails.excelReportId, customName: `${billId}`, type: "excel" });
-                                } else {
-                                    setShowToast({ key: "error", label: t("HCM_AM_EXCEL_GENERATION_FAILED"), transitionTime: 3000 });
-                                }
-                            }
-                        }}
-                        options={[
-                            { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
-                            { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
-                        ]}
-                        optionsKey="name"
-                        style={{ minWidth: "13rem" }}
-                        type="actionButton"
-                        variation="secondary"
-                    />
-                ) : (
-                    <div>
-                        <Tag
-                            {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                            label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
-                            showIcon={true}
-                            {...(reportDetails?.status === "FAILED" && { type: "error" })}
-                        />
-                    </div>
-                );
-            },
-            width: "300px",
-            style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
-        },
-
-        downloadAdvisory: {
-            name: t("HCM_AM_DOWNLOAD_ADVISORY"),
-            selector: (row, index) => {
-                const reportDetails = row?.additionalDetails?.reportDetails;
-                const billId = row?.billNumber;
-                const isLastRow = index === props.totalCount - 1;
-
-                return reportDetails?.status === "COMPLETED" ? (
-                    <Button
-                        className="custom-class"
-                        iconFill=""
-                        size="medium"
-                        icon="FileDownload"
-                        isSuffix
-                        label={t("HCM_AM_DOWNLOAD_ADVISORY")}
-                        title={t("HCM_AM_DOWNLOAD_ADVISORY")}
-                        showBottom={isLastRow && props.data.length !== 1 ? false : true}
-                        onOptionSelect={(value) => {
-                            if (value.code === "HCM_AM_PDF") {
-                                if (reportDetails?.pdfReportId) {
-                                    downloadFileWithName({ fileStoreId: reportDetails.pdfReportId, customName: `advisory_${billId}`, type: "pdf" });
-                                } else {
-                                    setShowToast({ key: "error", label: t("HCM_AM_PDF_GENERATION_FAILED"), transitionTime: 3000 });
-                                }
-                            } else if (value.code === "HCM_AM_EXCEL") {
-                                if (reportDetails?.excelReportId) {
-                                    downloadFileWithName({ fileStoreId: reportDetails.excelReportId, customName: `advisory_${billId}`, type: "excel" });
-                                } else {
-                                    setShowToast({ key: "error", label: t("HCM_AM_EXCEL_GENERATION_FAILED"), transitionTime: 3000 });
-                                }
-                            }
-                        }}
-                        options={[
-                            { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
-                            { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
-                        ]}
-                        optionsKey="name"
-                        style={{ minWidth: "13rem" }}
-                        type="actionButton"
-                        variation="secondary"
-                    />
-                ) : (
-                    <div>
-                        <Tag
-                            {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                            label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
-                            showIcon={true}
-                            {...(reportDetails?.status === "FAILED" && { type: "error" })}
-                        />
-                    </div>
-                );
-            },
-            width: "300px",
-            style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
-        },
-
-        // ── Status count columns (verification) ──────────────────────────
-        pending: {
-            name: colHeader(t("HCM_AM_PENDING")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => d?.status === "PENDING_VERIFICATION")?.length || 0;
-                return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        verificationFailed: {
-            name: colHeader(t("HCM_AM_VERIFICATION_FAILED")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
-                return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        verified: {
-            name: colHeader(t("HCM_AM_VERIFIED")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => ["VERIFIED", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
-                return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        failures: {
-            name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
-                return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        editBill: {
-            name: t("HCM_AM_EDIT_BILL"),
-            selector: (row) => (
-                <Button
-                    variation="secondary"
-                    size="medium"
-                    label={t("HCM_AM_EDIT_BILL")}
-                    onClick={() => {
-                        history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`, {
-                            billID: row.billNumber,
-                        });
-                    }}
-                />
-            ),
-            width: "160px",
-            style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
-        },
-
-        // ── Payment approver columns ──────────────────────────────────────
-        billDate: {
-            name: colHeader(t("HCM_AM_BILL_DATE")),
-            selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.billDate ? formatTimestampToDate(row.billDate) : t("NA")}
-                </div>
-            ),
-            style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        amountPaid: {
-            name: colHeader(t("HCM_AM_AMOUNT_PAID")),
-            selector: (row) => {
-                const paid = row?.billDetails?.filter((d) => d?.status === "PAID")?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
-                return (
-                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {paid}
-                    </div>
-                );
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        pendingPayment: {
-            name: colHeader(t("HCM_AM_PENDING")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => !["PAID", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
-                return <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        failedPayment: {
-            name: colHeader(t("HCM_AM_FAILED")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => d?.status === "PAYMENT_FAILED")?.length || 0;
-                return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-
-        paidCount: {
-            name: colHeader(t("HCM_AM_PAID")),
-            selector: (row) => {
-                const count = row?.billDetails?.filter((d) => d?.status === "PAID")?.length || 0;
-                return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
-            },
-            style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
-        },
-    };
-};
 
 const ManageBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [showToast, setShowToast] = useState(null);
-
+    const [showApprovalPopup, setShowApprovalPopup] = useState(false);
+    const [selectedBill, setSelectedBill] = useState(null);
     const handleSelectedRowsChange = ({ selectedRows }) => {
         props?.onSelectionChange?.(selectedRows);
     };
 
+    const buildColumnRegistry = (t, history, props, setShowToast, activeTabCode) => {
+        const colHeader = (label) => (
+            <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{label}</div>
+        );
+    
+        return {
+            billId: {
+                name: colHeader(t("HCM_AM_BILL_ID")),
+                selector: (row) => (
+                    <div
+                        className="ellipsis-cell"
+                        style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
+                        title={row?.billNumber || t("NA")}
+                        onClick={() => {
+                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
+                                billID: row.billNumber,
+                                activeTabCode: activeTabCode,
+                            });
+                        }}
+                    >
+                        {row?.billNumber || t("NA")}
+                    </div>
+                ),
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+            },
+    
+            source: {
+                name: colHeader(t("HCM_AM_SOURCE")),
+                selector: () => (
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                        {t("HCM_AM_ATTENDANCE")}
+                    </div>
+                ),
+                style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            registers: {
+                name: colHeader(t("HCM_AM_NO_OF_REGISTERS")),
+                selector: (row) => (
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                        {row?.additionalDetails?.noOfRegisters || "0"}
+                    </div>
+                ),
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            payees: {
+                name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES")),
+                selector: (row) => (
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                        {row?.billDetails?.length || "0"}
+                    </div>
+                ),
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            totalAmount: {
+                name: colHeader(t("HCM_AM_TOTAL_AMOUNT")),
+                selector: (row) => {
+                    const total = row?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
+                    return (
+                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                            {total}
+                        </div>
+                    );
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            download: {
+                name: t("HCM_AM_DOWNLOAD_BILL"),
+                selector: (row, index) => {
+                    const reportDetails = row?.additionalDetails?.reportDetails;
+                    const billId = row?.billNumber;
+                    const isLastRow = index === props.totalCount - 1;
+    
+                    return reportDetails?.status === "COMPLETED" ? (
+                        <Button
+                            className="custom-class"
+                            iconFill=""
+                            size="medium"
+                            icon="FileDownload"
+                            isSuffix
+                            label={t("HCM_AM_DOWNLOAD_BILLS")}
+                            title={t("HCM_AM_DOWNLOAD_BILLS")}
+                            showBottom={isLastRow && props.data.length !== 1 ? false : true}
+                            onOptionSelect={(value) => {
+                                if (value.code === "HCM_AM_PDF") {
+                                    if (reportDetails?.pdfReportId) {
+                                        downloadFileWithName({ fileStoreId: reportDetails.pdfReportId, customName: `${billId}`, type: "pdf" });
+                                    } else {
+                                        setShowToast({ key: "error", label: t("HCM_AM_PDF_GENERATION_FAILED"), transitionTime: 3000 });
+                                    }
+                                } else if (value.code === "HCM_AM_EXCEL") {
+                                    if (reportDetails?.excelReportId) {
+                                        downloadFileWithName({ fileStoreId: reportDetails.excelReportId, customName: `${billId}`, type: "excel" });
+                                    } else {
+                                        setShowToast({ key: "error", label: t("HCM_AM_EXCEL_GENERATION_FAILED"), transitionTime: 3000 });
+                                    }
+                                }
+                            }}
+                            options={[
+                                { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
+                                { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
+                            ]}
+                            optionsKey="name"
+                            style={{ minWidth: "13rem" }}
+                            type="actionButton"
+                            variation="secondary"
+                        />
+                    ) : (
+                        <div>
+                            <Tag
+                                {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
+                                label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                                showIcon={true}
+                                {...(reportDetails?.status === "FAILED" && { type: "error" })}
+                            />
+                        </div>
+                    );
+                },
+                width: "200px",
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+            },
+    
+            sendForApproval: {
+                name: t("HCM_AM_SEND_FOR_APPROVAL"),
+                selector: (row) => (
+                    <Button
+                        variation="secondary"
+                        size="medium"
+                        label={t("HCM_AM_SEND_FOR_APPROVAL")}
+                        onClick={() => {
+                            setSelectedBill(row); // Set the selected bill details
+                            setShowApprovalPopup(true); // Show the popup
+                        }}
+                    />
+                ),
+                width: "200px",
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+            },
+    
+            downloadAdvisory: {
+                name: t("HCM_AM_DOWNLOAD_ADVISORY"),
+                selector: (row, index) => {
+                    const reportDetails = row?.additionalDetails?.reportDetails;
+                    const billId = row?.billNumber;
+                    const isLastRow = index === props.totalCount - 1;
+    
+                    return reportDetails?.status === "COMPLETED" ? (
+                        <Button
+                            className="custom-class"
+                            iconFill=""
+                            size="medium"
+                            icon="FileDownload"
+                            isSuffix
+                            label={t("HCM_AM_DOWNLOAD_ADVISORY")}
+                            title={t("HCM_AM_DOWNLOAD_ADVISORY")}
+                            showBottom={isLastRow && props.data.length !== 1 ? false : true}
+                            onOptionSelect={(value) => {
+                                if (value.code === "HCM_AM_PDF") {
+                                    if (reportDetails?.pdfReportId) {
+                                        downloadFileWithName({ fileStoreId: reportDetails.pdfReportId, customName: `advisory_${billId}`, type: "pdf" });
+                                    } else {
+                                        setShowToast({ key: "error", label: t("HCM_AM_PDF_GENERATION_FAILED"), transitionTime: 3000 });
+                                    }
+                                } else if (value.code === "HCM_AM_EXCEL") {
+                                    if (reportDetails?.excelReportId) {
+                                        downloadFileWithName({ fileStoreId: reportDetails.excelReportId, customName: `advisory_${billId}`, type: "excel" });
+                                    } else {
+                                        setShowToast({ key: "error", label: t("HCM_AM_EXCEL_GENERATION_FAILED"), transitionTime: 3000 });
+                                    }
+                                }
+                            }}
+                            options={[
+                                { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
+                                { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
+                            ]}
+                            optionsKey="name"
+                            style={{ minWidth: "13rem" }}
+                            type="actionButton"
+                            variation="secondary"
+                        />
+                    ) : (
+                        <div>
+                            <Tag
+                                {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
+                                label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                                showIcon={true}
+                                {...(reportDetails?.status === "FAILED" && { type: "error" })}
+                            />
+                        </div>
+                    );
+                },
+                width: "300px",
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+            },
+    
+            // ── Status count columns (verification) ──────────────────────────
+            pending: {
+                name: colHeader(t("HCM_AM_PENDING")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => d?.status === "PENDING_VERIFICATION")?.length || 0;
+                    return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            verificationFailed: {
+                name: colHeader(t("HCM_AM_VERIFICATION_FAILED")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
+                    return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            verified: {
+                name: colHeader(t("HCM_AM_VERIFIED")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => ["VERIFIED", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
+                    return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            failures: {
+                name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
+                    return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            editBill: {
+                name: t("HCM_AM_EDIT_BILL"),
+                selector: (row) => (
+                    <Button
+                        variation="secondary"
+                        size="medium"
+                        label={t("HCM_AM_EDIT_BILL")}
+                        onClick={() => {
+                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
+                                billID: row.billNumber,
+                                activeTabCode: activeTabCode,
+                            });
+                        }}
+                    />
+                ),
+                width: "160px",
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+            },
+    
+            // ── Payment approver columns ──────────────────────────────────────
+            billDate: {
+                name: colHeader(t("HCM_AM_BILL_DATE")),
+                selector: (row) => (
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                        {row?.billDate ? formatTimestampToDate(row.billDate) : t("NA")}
+                    </div>
+                ),
+                style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            amountPaid: {
+                name: colHeader(t("HCM_AM_AMOUNT_PAID")),
+                selector: (row) => {
+                    const paid = row?.billDetails?.filter((d) => d?.status === "PAID")?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
+                    return (
+                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                            {paid}
+                        </div>
+                    );
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            pendingPayment: {
+                name: colHeader(t("HCM_AM_PENDING")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => !["PAID", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
+                    return <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            failedPayment: {
+                name: colHeader(t("HCM_AM_FAILED")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => d?.status === "PAYMENT_FAILED")?.length || 0;
+                    return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+    
+            paidCount: {
+                name: colHeader(t("HCM_AM_PAID")),
+                selector: (row) => {
+                    const count = row?.billDetails?.filter((d) => d?.status === "PAID")?.length || 0;
+                    return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
+                },
+                style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
+            },
+        };
+    };
+
     const columns = useMemo(() => {
-        const registry = buildColumnRegistry(t, history, props, setShowToast);
+        const registry = buildColumnRegistry(t, history, props, setShowToast, props.activeTabCode);
 
         // Config-driven: use columnKeys if provided
         if (props.columnKeys && Array.isArray(props.columnKeys)) {
@@ -377,6 +399,18 @@ const ManageBillsTable = ({ ...props }) => {
                     onClose={() => setShowToast(null)}
                 />
             )}
+
+{showApprovalPopup && (
+    <SendForApprovalPopUp
+        billDetails={selectedBill} // Pass the selected bill details
+        onClose={() => setShowApprovalPopup(false)} // Close the popup
+        onSubmit={(data) => {
+            // Handle the submission logic here
+            console.log("Submitted data:", data);
+            setShowApprovalPopup(false); // Close the popup after submission
+        }}
+    />
+)}
         </>
     );
 };

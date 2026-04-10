@@ -77,13 +77,13 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       PENDING_BILLS: ["SENT_FOR_REVIEW"],
       SENT_FOR_APPROVAL: ["SENT_FOR_APPROVAL"],
     },
-    selectableTabs: ["PENDING_BILLS"],
+    selectableTabs: [],
     tabColumns: {
-      PENDING_BILLS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download", "editBill"],
+      PENDING_BILLS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "editBill", "download", "sendForApproval"],
       SENT_FOR_APPROVAL: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
     },
     tabCTAs: {
-      PENDING_BILLS: { label: "HCM_AM_SEND_FOR_APPROVAL", action: "SEND_FOR_APPROVAL" },
+      // PENDING_BILLS: { label: "HCM_AM_SEND_FOR_APPROVAL", action: "SEND_FOR_APPROVAL" },
     },
     billDetailViewMap: {
       SENT_FOR_REVIEW: "REVIEWER_PENDING_VIEW",
@@ -141,7 +141,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     headerLabel: "HCM_AM_APPROVE_PAYMENTS",
     tabs: [
       { code: "PENDING_BILLS", name: "HCM_AM_PENDING_BILLS" },
-      { code: "GENERATED_ADVISORIES", name: "HCM_AM_GENERATED_ADVISORIES" },
+      { code: "GENERATED_ADVISORIES", name: "HCM_AM_GENERATED_PAYMENT_ADVISORY" },
     ],
     tabStatusMap: {
       PENDING_BILLS: ["SENT_FOR_APPROVAL"],
