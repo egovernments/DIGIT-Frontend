@@ -66,7 +66,7 @@ const VIEW_SUB_TABS = {
 const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
   const billID = location.state?.billID;
-  console.log("billID", billID);
+  const activeTabCode = location.state?.activeTabCode;
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -836,11 +836,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
 
-  // TODO: Remove forced view after testing — revert to role-config-based resolution
-  const currentView = "REVIEWER_PENDING_VIEW";
-  // const currentView = roleConfig?.billDetailViewMap?.[billData?.status]
-  //   || BILL_STATUS_VIEW[billData?.status]
-  //   || "NOT_VERIFIED_VIEW";
+  // Resolve view: use actual bill status first, fall back to the tab the user navigated from
+  const tabDerivedStatus = activeTabCode && roleConfig?.tabStatusMap?.[activeTabCode]?.[0];
+  const currentView = roleConfig?.billDetailViewMap?.[billData?.status]
+    || (tabDerivedStatus && roleConfig?.billDetailViewMap?.[tabDerivedStatus])
+    || BILL_STATUS_VIEW[billData?.status]
+    || "NOT_VERIFIED_VIEW";
 
   // Resolve status display label using role config or fallback
   const statusDisplayLabel = roleConfig?.statusDisplayMap?.[billData?.status]
@@ -964,6 +965,30 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //     }
 //   };
 
+const renderActionBar = (ctaButton) => (
+  <ActionBar
+    style={{
+      display: "flex",
+      alignItems: "center",
+      width: "100%",
+    }}
+  >
+    {/* LEFT: Back */}
+    <Button
+      variation="secondary"
+      label={t("HCM_AM_BACK")}
+      icon="ArrowBack"
+      onClick={() => history.goBack()}
+      style={{ flexShrink: 0, minWidth: "14rem" }}
+    />
+
+    {/* Spacer */}
+    <div style={{ flex: 1 }} />
+
+    {/* RIGHT: CTA */}
+    {ctaButton}
+  </ActionBar>
+);
 
   return (
     <React.Fragment>
@@ -971,11 +996,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
           {editBillDetails
             ? t('HCM_AM_EDIT_BILL')
-            : t(roleConfig?.headerLabel || 'HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')
+            : t('HCM_AM_VIEW_BILL')
           }
         </Header>
-        {!VIEWS_WITH_SUB_TABS.includes(currentView) && (
-        <>
         {/* Summary cards row */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
           {[
@@ -1008,6 +1031,36 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         </div>
 
         <Card type="primary" className="bottom-gap-card-payment">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <span style={{ fontSize: "18px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              {["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) && (
+                <Button
+                  variation="secondary"
+                  label={t("HCM_AM_DOWNLOAD_JUSTIFICATION")}
+                  icon="FileDownload"
+                  isSuffix
+                  size="medium"
+                  onClick={() => {
+                    const doc = billData?.additionalDetails?.supportingDocs?.[0];
+                    if (doc?.filestoreId) {
+                      downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
+                    } else {
+                      setShowToast({ key: "error", label: t("HCM_AM_NO_JUSTIFICATION_FOUND"), transitionTime: 3000 });
+                    }
+                  }}
+                />
+              )}
+              <Button
+                variation="secondary"
+                label={t("HCM_AM_VIEW_REGISTERS")}
+                icon="OpenInNew"
+                isSuffix
+                size="medium"
+                onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`)}
+              />
+            </div>
+          </div>
           {isBillLoading || isFetching ? (
             <Loader />
           ) : (
@@ -1205,8 +1258,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             </>
           )}
         </Card>
-        </>
-        )}
 
         {/* Tabs: for views that have sub-tabs (partially verified, edit, partially paid) */}
         {VIEWS_WITH_SUB_TABS.includes(currentView) && VIEW_SUB_TABS[currentView] && (
@@ -1251,7 +1302,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           ) : (
             <Fragment>
               {/* TODO: Restore status check: activeRole === "PAYMENT_REVIEWER" && billData?.status === "SENT_FOR_REVIEW" */}
-              {activeRole === "PAYMENT_REVIEWER" && (
+              {activeRole === "PAYMENT_REVIEWER" && ["REVIEWER_PENDING_VIEW"].includes(currentView) && (
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem", gap: "1rem" }}>
                   <Button
                     variation="secondary"
@@ -1329,29 +1380,26 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         }}
       />}
       {/* Action bar based on currentView */}
-      {currentView === "NOT_VERIFIED_VIEW" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_VERIFY`)}
-            onClick={() => setOpenVerifyAlertPopUp(true)}
-            style={{ minWidth: "14rem" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
-      {currentView === "VERIFIED_VIEW" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_GENERATE_PAYMENT`)}
-            title={t(`HCM_AM_GENERATE_PAYMENT`)}
-            onClick={() => setOpenApprovePaymentAlertPopUp(true)}
-            style={{ minWidth: "14rem" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
+      {currentView === "NOT_VERIFIED_VIEW" &&
+  renderActionBar(
+    <Button
+      label={t(`HCM_AM_VERIFY`)}
+      onClick={() => setOpenVerifyAlertPopUp(true)}
+      style={{ minWidth: "14rem" }}
+      type="button"
+      variation="primary"
+    />
+  )}
+      {currentView === "VERIFIED_VIEW" &&
+  renderActionBar(
+    <Button
+      label={t(`HCM_AM_GENERATE_PAYMENT`)}
+      onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+      style={{ minWidth: "14rem" }}
+      type="button"
+      variation="primary"
+    />
+  )}
       {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
@@ -1412,7 +1460,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       )}
 
       {/* ── Reviewer role-specific views ── */}
-      {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit && (
+      {/* {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit && (
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
             label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
@@ -1422,7 +1470,17 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             variation="primary"
           />
         </ActionBar>
-      )}
+      )} */}
+      {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit &&
+  renderActionBar(
+    <Button
+      label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
+      onClick={() => setOpenSendForApprovalPopUp(true)}
+      style={{ minWidth: "14rem" }}
+      type="button"
+      variation="primary"
+    />
+  )}
       {currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit && (
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
