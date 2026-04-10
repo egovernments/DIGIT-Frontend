@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown, PopUp, Chip } from "@egovernments/digit-ui-components";
+import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown, PopUp, Chip,TooltipWrapper } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
 import FilterContext from "../FilterContext";
@@ -205,14 +205,25 @@ const UserActivitySummaryTable = ({ data }) => {
     XLSX.writeFile(wb, `user-activity-tracking-${new Date().toISOString().slice(0, 10)}.xlsx`);
   }, [filteredData]);
 
+  const ellipsisStyle = {
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      display: "block",
+  };
+
   // Table columns
   const columns = [
     {
       name: t("USER_ACTIVITY_USER"),
       cell: (row) => (
-        <div>
-          <div style={{ fontWeight: 600, color: "#0B4B66" }}>{row.userName}</div>
-          <div style={{ fontSize: "12px", color: "#787878" }}>{row.userId}</div>
+        <div style={{display:"flex",flexDirection:"column",gap:'4px'}}>
+          <TooltipWrapper header={row.userName} placement={"top"}>
+            <span style={{ ...ellipsisStyle, fontWeight: 600, color: "#0B4B66" }}>{row.userName}</span>
+          </TooltipWrapper>
+          <TooltipWrapper header={row.userId} placement={"top"}>
+            <span style={{ ...ellipsisStyle, fontSize: "12px", color: "#787878" }}>{row.userId}</span>
+          </TooltipWrapper>
         </div>
       ),
       sortable: true,
@@ -229,7 +240,11 @@ const UserActivitySummaryTable = ({ data }) => {
     },
     {
       name: t("USER_ACTIVITY_GEO_BOUNDARY"),
-      selector: (row) => row.geoBoundary,
+      cell: (row) => (
+        <TooltipWrapper header={row.geoBoundary} placement={"top"}>
+          <span style={ellipsisStyle}>{row.geoBoundary}</span>
+        </TooltipWrapper>
+      ),
       sortable: true,
       grow: 1.5,
       minWidth: "160px",
@@ -241,7 +256,14 @@ const UserActivitySummaryTable = ({ data }) => {
         return (
           <div>
             <div style={{ color: isWarning ? "#D4351C" : "#363636", fontWeight: isWarning ? 600 : 400 }}>
-              {isWarning && "\u26A0 "}{row.lastSync ? row.lastSync : t("NA")}
+              {isWarning && "\u26A0 "}
+              {row.lastSync ? (
+                <TooltipWrapper header={row.lastSync || t("NA")}>
+                  <span style={ellipsisStyle}>{row.lastSync || t("NA")}</span>
+                </TooltipWrapper>
+              ) : (
+                t("NA")
+              )}
             </div>
             {isWarning && <div style={{ fontSize: "11px", color: "#D4351C" }}>{t("SYNC_GAP")}</div>}
           </div>
@@ -323,6 +345,7 @@ const UserActivitySummaryTable = ({ data }) => {
               optionKey="name"
               selected={statusOptions.find((o) => o.code === statusFilter)}
               select={(val) => setStatusFilter(val.code)}
+              showToolTip={true}
             />
           </div>
           <div style={{ minWidth: "250px" }}>
@@ -332,6 +355,7 @@ const UserActivitySummaryTable = ({ data }) => {
               optionKey="name"
               selected={roleOptions.find((o) => o.code === roleFilter)}
               select={(val) => setRoleFilter(val.code)}
+              showToolTip={true}
             />
           </div>
           {/* Parent boundary shown as non-editable text field */}
