@@ -107,8 +107,8 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerConten
           />
         </div>
         <div style={{ display: "flex", alignItems: "flex-end", flexShrink: 0 }}>
-          <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="large" />
-          <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="large" />
+          <Button variation="teritiary" label={t(`HCM_AM_CLEAR`)} type="button" onClick={handleClear} size="medium" />
+          <Button variation="primary" label={t(`HCM_AM_SEARCH`)} type="button" onClick={handleSearch} size="medium" />
         </div>
       </div>
     </Card>

@@ -237,7 +237,7 @@ const BillDetailsTable = ({ ...props }) => {
         // --- Per-day rate columns (values divided by days worked) ---
 
         const perDayCol = {
-            name: colHeader(`${t("HCM_AM_WAGE_RATE")} (A)${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_WAGE_RATE")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                     {getPerDayValue(row?.perDay, row?.additionalDetails?.noOfDaysWorked)}
@@ -247,7 +247,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const foodCol = {
-            name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")} (B)${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                     {getPerDayValue(row?.food, row?.additionalDetails?.noOfDaysWorked)}
@@ -257,7 +257,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const travelCol = {
-            name: colHeader(`${t("HCM_AM_TRANSPORTATION")} (C)${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_TRANSPORTATION")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                     {getPerDayValue(row?.travel, row?.additionalDetails?.noOfDaysWorked)}
@@ -267,7 +267,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const miscCol = {
-            name: colHeader(`${t("HCM_AM_MISC")} (D)${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_MISC")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                     {getPerDayValue(row?.misc, row?.additionalDetails?.noOfDaysWorked)}
@@ -277,7 +277,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const feesCol = {
-            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} (G)${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
             selector: (row) => {
                 const total = Number(row?.totalAmount || 0);
                 const fee = Math.round((total * 3.5) / 100);
@@ -291,7 +291,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const totalCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
             selector: (row) => {
                 const total = Number(row?.totalAmount || 0);
                 const fee = Math.round((total * 3.5) / 100);

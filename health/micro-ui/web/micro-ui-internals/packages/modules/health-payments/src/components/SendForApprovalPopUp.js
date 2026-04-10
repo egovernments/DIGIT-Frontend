@@ -62,7 +62,6 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
           <div key="upload-section">
             <div className="comment-label">
               {t("HCM_AM_UPLOAD_JUSTIFICATION")}
-              <span style={{ color: "#505A5F", fontWeight: 400 }}> ({t("HCM_AM_OPTIONAL")})</span>
             </div>
             <BulkUpload
               onSubmit={handleUpload}
@@ -74,7 +73,6 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
           <div key="comment-section" style={{ marginTop: "1rem" }}>
             <div className="comment-label">
               {t("HCM_AM_COMMENTS")}
-              <span style={{ color: "#505A5F", fontWeight: 400 }}> ({t("HCM_AM_OPTIONAL")})</span>
             </div>
             <TextArea
               style={{ maxWidth: "100%" }}

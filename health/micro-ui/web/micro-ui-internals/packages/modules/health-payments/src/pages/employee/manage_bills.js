@@ -285,7 +285,7 @@ const ManageBills = () => {
               <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "0.5rem" }} />
             )}
             <Header styles={{ fontSize: "32px", marginBottom: "0.5rem" }}>
-              <span style={{ color: "#0B4B66" }}>{t(roleConfig.headerLabel)}</span>
+              <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
             </Header>
             <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5", marginBottom: "0.5rem" }}>
               {t("HCM_AM_MANAGE_BILLS_DESCRIPTION")}
@@ -341,8 +341,9 @@ const ManageBills = () => {
             handlePerRowsChange={handlePerRowsChange}
             onSelectionChange={setSelectedBills}
             clearSelectedRows={clearSelectedRows}
-            columnKeys={roleConfig.tabColumns[activeLink.code]}
-            isSelectable={roleConfig.selectableTabs.includes(activeLink.code)}
+            columnKeys={roleConfig?.tabColumns[activeLink.code]}
+            isSelectable={roleConfig?.selectableTabs?.includes(activeLink.code)}
+            activeTabCode={activeLink.code}
           />
         )}
       </Card>
@@ -363,6 +364,11 @@ const ManageBills = () => {
           label={t("HCM_AM_BACK")}
           icon="ArrowBack"
           onClick={() => history.goBack()}
+          style={{
+            width: "15%",
+            whiteSpace: "normal",
+            marginLeft: "2rem", 
+          }}
         />
         {currentCTA && (
           <Button
@@ -370,6 +376,11 @@ const ManageBills = () => {
             label={t(currentCTA.label)}
             isDisabled={selectedBills.length === 0}
             onClick={() => handleCTAAction(currentCTA.action)}
+            style={{
+              width: "15%",
+              whiteSpace: "normal",
+              marginRight: "2rem", 
+            }}
           />
         )}
       </ActionBar>
