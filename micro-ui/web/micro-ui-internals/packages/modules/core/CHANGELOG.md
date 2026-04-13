@@ -1,4 +1,10 @@
 # Changelog
+## [1.9.21-cms]  [13-APR-2026]
+- **Fix**: Updated citizen OTP preference save flow to change preferred language only when the user explicitly changes language locally.
+  - Added a lightweight local language-change flag across citizen language selectors.
+  - Preserved backend `preferredLanguage` during login when the user has not changed locale locally.
+  - Continued saving WhatsApp consent without altering unrelated preference behavior.
+
 ## [1.9.20-cms]  [09-APR-2026]
 - **Fix**: Resolved intermittent authentication failures in the citizen login preference save flow.
   - Ensured fresh `authToken` is passed directly to `config-service` and `user-preference` APIs immediately after login.

@@ -11,6 +11,7 @@ const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
 const DEFAULT_USER = "digit-user";
 let DEFAULT_REDIRECT_URL = `/${window?.contextPath || window?.globalConfigs?.getConfig("CONTEXT_PATH")}/citizen`;
+const LANGUAGE_CHANGE_KEY = "Citizen.locale.changed";
 
 /* set citizen details to enable backward compatiable */
 const setCitizenDetail = (userObject, token, tenantId) => {
@@ -207,18 +208,18 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         return null;
       }
 
-      // Get preferred language from multiple sources as a fallback
-      let finalPreferredLanguage =
+      // Give priority to the currently selected local/app language
+      const selectedLocalLanguage =
         Digit.StoreData.getCurrentLanguage() ||
         localStorage.getItem("locale") ||
         localStorage.getItem("Citizen.locale") ||
-        JSON.parse(sessionStorage.getItem("Digit.initData") || "{}")?.value?.selectedLanguage ||
-        "en_IN";
+        JSON.parse(sessionStorage.getItem("Digit.initData") || "{}")?.value?.selectedLanguage;
+
+      const isLocalLanguageChanged = sessionStorage.getItem(LANGUAGE_CHANGE_KEY) === "true";
+      let finalPreferredLanguage = selectedLocalLanguage || "en_IN";
 
       // Fetch existing preferences to prevent overwriting the preferred language
       try {
-        console.log("Fetching existing user preferences for user:", userInfo?.uuid, "tenantId:", tenantId);
-
         const searchPreferenceResponse = await Digit.CustomService.getResponse({
           url: "/user-preference/v1/_search",
           body: {
@@ -236,20 +237,14 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           userService: true,
         });
 
-        console.log("API RAW RESPONSE for /user-preference/v1/_search:", searchPreferenceResponse);
-
         if (searchPreferenceResponse?.preferences?.length > 0) {
           const existingPref = searchPreferenceResponse.preferences[0];
-          console.log("Found existing preference:", existingPref);
 
-          if (existingPref?.payload?.preferredLanguage) {
+          if (isLocalLanguageChanged && selectedLocalLanguage) {
+            finalPreferredLanguage = selectedLocalLanguage;
+          } else if (existingPref?.payload?.preferredLanguage) {
             finalPreferredLanguage = existingPref.payload.preferredLanguage;
-            console.log("Overriding local language with backend language:", finalPreferredLanguage);
-          } else {
-            console.log("Backend preference found, but preferredLanguage was empty/missing.");
           }
-        } else {
-          console.log("No existing preferences found in backend for this user. Falling back to:", finalPreferredLanguage);
         }
       } catch (searchErr) {
         console.error("Error fetching existing user preferences API details:", searchErr?.response?.data || searchErr);
@@ -281,6 +276,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         method: "POST",
         userService: false,
       });
+      sessionStorage.removeItem(LANGUAGE_CHANGE_KEY);
       return response;
     } catch (error) {
       console.error("Error saving user preferences:", error);

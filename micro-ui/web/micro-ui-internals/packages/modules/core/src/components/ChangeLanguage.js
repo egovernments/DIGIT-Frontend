@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 
 const ChangeLanguage = (prop) => {
+  const LANGUAGE_CHANGE_KEY = "Citizen.locale.changed";
   const isDropdown = prop.dropdown || false;
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
@@ -13,6 +14,7 @@ const ChangeLanguage = (prop) => {
   const [selected, setselected] = useState(selectedLanguage);
   const handleChangeLanguage = (language) => {
     setselected(language.value);
+    sessionStorage.setItem(LANGUAGE_CHANGE_KEY, "true");
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 

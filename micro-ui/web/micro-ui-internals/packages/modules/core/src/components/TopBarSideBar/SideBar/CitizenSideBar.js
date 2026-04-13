@@ -161,6 +161,7 @@ export const CitizenSideBar = ({
 
   const handleChangeLanguage = (language) => {
     setselected(language.value);
+    sessionStorage.setItem("Citizen.locale.changed", "true");
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 

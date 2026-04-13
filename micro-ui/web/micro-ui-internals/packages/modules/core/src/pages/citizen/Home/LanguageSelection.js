@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 const LanguageSelection = () => {
+  const LANGUAGE_CHANGE_KEY = "Citizen.locale.changed";
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -23,7 +24,10 @@ const LanguageSelection = () => {
       options: languages,
       optionsKey: "label",
       additionalWrapperClass: "reverse-radio-selection-wrapper",
-      onSelect: (language) => Digit.LocalizationService.changeLanguage(language.value, stateInfo.code),
+      onSelect: (language) => {
+        sessionStorage.setItem(LANGUAGE_CHANGE_KEY, "true");
+        Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
+      },
       selectedOption: languages?.filter((i) => i.value === selectedLanguage)[0],
     }),
     [selectedLanguage, languages]
