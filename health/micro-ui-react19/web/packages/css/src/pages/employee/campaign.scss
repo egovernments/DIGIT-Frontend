@@ -1264,16 +1264,16 @@
 }
 .reports-configuration {
   &__heading {
-  font-family: var(--digitv2-fontFamily-rc);
-  font-weight: var(--digitv2-fontWeight-bold);
-  font-style: Bold;
-  font-size: var(--digitv2-fontSize-heading-xl-desktop);
-  color: var(--digitv2-lightTheme-primary-2) !important;
+    font-family: var(--digitv2-fontFamily-rc);
+    font-weight: var(--digitv2-fontWeight-bold);
+    font-style: Bold;
+    font-size: var(--digitv2-fontSize-heading-xl-desktop);
+    color: var(--digitv2-lightTheme-primary-2) !important;
   }
 
   &__description {
-      margin: 0rem;
-  color: var(--digitv2-lightTheme-text-color-secondary);
+    margin: 0rem;
+    color: var(--digitv2-lightTheme-text-color-secondary);
   }
 
   &__count {

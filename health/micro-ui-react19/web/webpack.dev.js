@@ -89,7 +89,7 @@ module.exports = merge(common, {
           "/stock/v1",
           "/attendance"
         ],
-        target: process.env.REACT_APP_PROXY_URL || "https://bauchi-hcm-uat.digit.org" || "https://unified-uat.digit.org",
+        target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
         changeOrigin: true,
         secure: false,
       },

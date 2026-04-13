@@ -13,7 +13,7 @@ const assetsProxy = createProxyMiddleware({
   secure: false,
 });
 const kibanaProxy = createProxyMiddleware({
-  target: process.env.REACT_APP_PROXY_KIBANA || "https://mc-nigeria-uat.digit.org",
+  target: process.env.REACT_APP_PROXY_KIBANA,
   changeOrigin: true,
   secure: false,
 });
@@ -115,7 +115,6 @@ module.exports = function (app) {
     "/filestore/v1/files/id",
     "/attendance/v1/_search",
     "/health-project/staff/v1/_search",
-    "/project/staff/v1/_search",
     "/health-project/v1/_search",
     "/health-individual",
     "/health-hrms/employees",

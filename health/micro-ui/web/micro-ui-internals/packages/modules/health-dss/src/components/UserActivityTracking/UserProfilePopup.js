@@ -3,10 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp,TooltipWrapper} from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
-// import { MAX_SYNC_GAP_HOURS } from "./dummyData";
 
-// const getSyncGapHours = (timestamp) => (Date.now() - new Date(timestamp).getTime()) / (1000 * 60 * 60);
-// const isOnline = (timestamp) => getSyncGapHours(timestamp) <= MAX_SYNC_GAP_HOURS;
 var formatTime = function (timestamp) {
   if (!timestamp) return "-";
   var d = new Date(timestamp);
