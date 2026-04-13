@@ -13,7 +13,7 @@ const assetsProxy = createProxyMiddleware({
   secure: false,
 });
 const kibanaProxy = createProxyMiddleware({
-  target: process.env.REACT_APP_PROXY_KIBANA,
+  target: process.env.REACT_APP_PROXY_KIBANA || "https://mc-nigeria-uat.digit.org",
   changeOrigin: true,
   secure: false,
 });
