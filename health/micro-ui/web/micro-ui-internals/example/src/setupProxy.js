@@ -129,7 +129,9 @@ module.exports = function (app) {
     // payment v2
     "/health-expense-calculator/billing-config/v1/_search",
     "/health-expense-calculator/billing-config/v1/_create",
-    "/health-expense-calculator/billing-config/v1/_update"
+    "/health-expense-calculator/billing-config/v1/_update",
+    //go_deep
+    "/health-expense/bill/v1/_bulkupdate",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

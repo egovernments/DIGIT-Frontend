@@ -38,10 +38,20 @@ const BillDetailsTable = ({ ...props }) => {
         return Math.round(finalAmount);
     };
 
-    const getPerDayValue = (total, days) => {
-        const d = Number(days);
-        if (!d || d === 0) return total != null ? total : 0;
-        return Math.round((Number(total || 0) / d) * 100) / 100;
+    const displayPerDayRate = (val) => {
+        const n = Number(val);
+        if (val === "" || val == null || Number.isNaN(n)) return 0;
+        return Math.round(n * 100) / 100;
+    };
+
+    const FEE_PERCENT = 3.5;
+    const reviewerLineSubtotal = (row) => {
+        const wage = Number(row?.perDay || 0);
+        const food = Number(row?.food || 0);
+        const travel = Number(row?.travel || 0);
+        const misc = Number(row?.misc || 0);
+        const days = Number(row?.additionalDetails?.attendance || 0);
+        return Math.round((wage + food + travel + misc) * days);
     };
 
     const handleReviewerCellChange = (rowId, field, value) => {
@@ -208,7 +218,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.additionalDetails?.noOfDaysWorked != null ? row.additionalDetails.noOfDaysWorked : t("NA")}
+                    {row?.additionalDetails?.attendance != null ? row.additionalDetails.attendance : t("NA")}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -240,7 +250,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_WAGE_RATE")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {getPerDayValue(row?.perDay, row?.additionalDetails?.noOfDaysWorked)}
+                    {displayPerDayRate(row?.perDay)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -250,7 +260,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {getPerDayValue(row?.food, row?.additionalDetails?.noOfDaysWorked)}
+                    {displayPerDayRate(row?.food)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -260,7 +270,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_TRANSPORTATION")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {getPerDayValue(row?.travel, row?.additionalDetails?.noOfDaysWorked)}
+                    {displayPerDayRate(row?.travel)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -270,7 +280,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_MISC")} ${currencySuffix}`),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {getPerDayValue(row?.misc, row?.additionalDetails?.noOfDaysWorked)}
+                    {displayPerDayRate(row?.misc)}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -280,7 +290,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
             selector: (row) => {
                 const total = Number(row?.totalAmount || 0);
-                const fee = Math.round((total * 3.5) / 100);
+                const fee = Math.round((total * FEE_PERCENT) / 100);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {fee}
@@ -294,7 +304,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
             selector: (row) => {
                 const total = Number(row?.totalAmount || 0);
-                const fee = Math.round((total * 3.5) / 100);
+                const fee = Math.round((total * FEE_PERCENT) / 100);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {total + fee}
@@ -370,7 +380,17 @@ const BillDetailsTable = ({ ...props }) => {
 
         const reviewerMiscCol = {
             name: colHeader(`${t("HCM_AM_MISC")}${currencySuffix}`),
-            selector: (row) => editableCell(row, "misc"),
+            selector: (row) => {
+                const miscLocked = row?.ratesFromPayables && !row?.hasMiscPayable;
+                if (miscLocked) {
+                    return (
+                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                            {displayPerDayRate(row?.misc)}
+                        </div>
+                    );
+                }
+                return editableCell(row, "misc");
+            },
             style: { justifyContent: "flex-end" },
             minWidth: "130px",
         };
@@ -381,19 +401,19 @@ const BillDetailsTable = ({ ...props }) => {
                 if (!isReviewerEdit) {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {row?.additionalDetails?.noOfDaysWorked != null ? row.additionalDetails.noOfDaysWorked : t("NA")}
+                            {row?.additionalDetails?.attendance != null ? row.additionalDetails.attendance : t("NA")}
                         </div>
                     );
                 }
                 return (
                     <input
                         type="number"
-                        value={row?.additionalDetails?.noOfDaysWorked != null ? row.additionalDetails.noOfDaysWorked : ""}
+                        value={row?.additionalDetails?.attendance != null ? row.additionalDetails.attendance : ""}
                         onChange={(e) => {
                             const val = e.target.value === "" ? "" : Number(e.target.value);
                             const updatedData = tableData.map((r) =>
                                 r.id === row.id
-                                    ? { ...r, additionalDetails: { ...r.additionalDetails, noOfDaysWorked: val } }
+                                    ? { ...r, additionalDetails: { ...r.additionalDetails, attendance: val } }
                                     : r
                             );
                             setTableData(updatedData);
@@ -419,7 +439,15 @@ const BillDetailsTable = ({ ...props }) => {
 
         const reviewerFeesCol = {
             name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")}${currencySuffix}`),
-            selector: (row) => editableCell(row, "fees"),
+            selector: (row) => {
+                const subtotal = reviewerLineSubtotal(row);
+                const fee = Math.round((subtotal * FEE_PERCENT) / 100);
+                return (
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                        {fee}
+                    </div>
+                );
+            },
             style: { justifyContent: "flex-end" },
             minWidth: "130px",
         };
@@ -427,16 +455,11 @@ const BillDetailsTable = ({ ...props }) => {
         const reviewerTotalCol = {
             name: colHeader(`${t("HCM_AM_TOTAL")}${currencySuffix}`),
             selector: (row) => {
-                const wage = Number(row?.perDay || 0);
-                const food = Number(row?.food || 0);
-                const travel = Number(row?.travel || 0);
-                const misc = Number(row?.misc || 0);
-                const days = Number(row?.additionalDetails?.noOfDaysWorked || 0);
-                const fees = Number(row?.fees || 0);
-                const total = (wage + food + travel + misc) * days + fees;
+                const subtotal = reviewerLineSubtotal(row);
+                const fee = Math.round((subtotal * FEE_PERCENT) / 100);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontWeight: "bold" }}>
-                        {total}
+                        {subtotal + fee}
                     </div>
                 );
             },

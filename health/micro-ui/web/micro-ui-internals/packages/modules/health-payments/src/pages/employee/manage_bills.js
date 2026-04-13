@@ -135,6 +135,53 @@ const ManageBills = () => {
     setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   };
 
+  const bulkUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
+  });
+
+  const triggerBulkUpdateBills = async (bills, action) => {
+    try {
+      await bulkUpdateMutation.mutateAsync(
+        {
+          body: {
+            bills: bills,
+            workflow: {
+              action: action, // VERIFY / SEND_FOR_REVIEW / etc
+              comments: `Bulk ${action} triggered`,
+              assignes: [],
+            },
+          },
+        },
+        {
+          onSuccess: async () => {
+            setShowToast({
+              key: "success",
+              label: t(`HCM_AM_${action}_SUCCESS`),
+              transitionTime: 3000,
+            });
+  
+            // Refresh table
+            refetchBill();
+  
+            // Clear selection
+            setSelectedBills([]);
+            setClearSelectedRows((prev) => !prev);
+          },
+          onError: (error) => {
+            console.error("Bulk update failed:", error);
+            setShowToast({
+              key: "error",
+              label: t("HCM_AM_ACTION_FAILED"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Mutation error:", err);
+    }
+  };
+
   // Fetch billing config and periods
   const fetchBillingPeriods = useCallback(
     async (projectId) => {
@@ -412,8 +459,22 @@ const ManageBills = () => {
             alertMessage={t(config.message, { count: selectedBills.length })}
             submitLabel={t("HCM_AM_CONFIRM")}
             cancelLabel={t("HCM_AM_CANCEL")}
-            onPrimaryAction={() => {
+            onPrimaryAction={async () => {
+              const validBills = selectedBills.filter((bill) =>
+                bill?.billDetails?.some((d) => d.status === "PENDING_VERIFICATION")
+              );
+            
+              if (validBills.length === 0) {
+                setShowToast({
+                  key: "error",
+                  label: t("HCM_AM_NO_VALID_BILLS"),
+                  transitionTime: 3000,
+                });
+                return;
+              }
+
               setActivePopUpAction(null);
+              await triggerBulkUpdateBills(validBills, activePopUpAction);
               // TODO: API integration
               setShowToast({ key: "success", label: t(config.success), transitionTime: 3000 });
             }}

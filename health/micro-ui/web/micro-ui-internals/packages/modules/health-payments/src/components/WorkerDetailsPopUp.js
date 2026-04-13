@@ -57,7 +57,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
 
     const readOnlyFields = [
         { label: t("HCM_AM_ROLE"), value: t(row?.role) },
-        { label: t("HCM_AM_NUMBER_OF_DAYS"), value: row?.additionalDetails?.noOfDaysWorked },
+        { label: t("HCM_AM_NUMBER_OF_DAYS"), value: row?.additionalDetails?.attendance },
         { label: t("HCM_AM_WAGE"), value: row?.wage },
         { label: t("HCM_AM_TOTAL_AMOUNT"), value: row?.totalAmount },
     ];

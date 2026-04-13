@@ -8,7 +8,16 @@ import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
 import _, { set } from "lodash";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
-import { downloadFileWithName, formatTimestampToDate,formatTimestampToDateTime } from "../../utils";
+import {
+  downloadFileWithName,
+  formatTimestampToDate,
+  formatTimestampToDateTime,
+  getPayableAmount,
+  hasPayableHead,
+  perDayFromPayable,
+  sumPayableAmounts,
+  applyPerDayToPayables,
+} from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
@@ -246,21 +255,62 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         (rate) => rate?.skillCode === matchedSkill?.type);
 
       const rateBreakup = rateObj?.rateBreakup || {};
-      const wage =
-        (rateBreakup.FOOD || 0) +
-        (rateBreakup.TRAVEL || 0) +
-        (rateBreakup.PER_DAY || 0);
+      const savedRb = billDetail?.additionalDetails?.reviewerRateBreakup || {};
+      const attendance = billDetail?.additionalDetails?.attendance;
+      const payableItems = (billDetail?.payableLineItems || []).filter(
+        (p) => p?.type === "PAYABLE"
+      );
+      const usePayables = payableItems.length > 0;
+
+      let perDay;
+      let food;
+      let travel;
+      let misc;
+      let wage;
+      const hasMiscPayable = hasPayableHead(billDetail?.payableLineItems, "MISC");
+
+      let ratesFromPayables = false;
+      if (usePayables) {
+        ratesFromPayables = true;
+        const pl = billDetail.payableLineItems;
+        perDay = perDayFromPayable(getPayableAmount(pl, "PER_DAY"), attendance);
+        food = perDayFromPayable(getPayableAmount(pl, "FOOD"), attendance);
+        travel = perDayFromPayable(getPayableAmount(pl, "TRAVEL"), attendance);
+        misc = hasMiscPayable
+          ? perDayFromPayable(getPayableAmount(pl, "MISC"), attendance)
+          : 0;
+        wage = perDay + food + travel + misc;
+      } else {
+        wage =
+          (rateBreakup.FOOD || 0) +
+          (rateBreakup.TRAVEL || 0) +
+          (rateBreakup.PER_DAY || 0);
+        perDay =
+          savedRb.PER_DAY != null
+            ? Number(savedRb.PER_DAY)
+            : rateBreakup.PER_DAY || 0;
+        food =
+          savedRb.FOOD != null ? Number(savedRb.FOOD) : rateBreakup.FOOD || 0;
+        travel =
+          savedRb.TRAVEL != null
+            ? Number(savedRb.TRAVEL)
+            : rateBreakup.TRAVEL || 0;
+        misc = savedRb.MISC != null ? Number(savedRb.MISC) : 0;
+      }
+
       return {
         ...billDetail,
         givenName: individual?.name?.givenName,
         mobileNumber: individual?.mobileNumber,
         userId: individual?.userDetails?.username,
         role: matchedSkill?.type,
-        wage: wage,
-        perDay: rateBreakup.PER_DAY || 0,
-        food: rateBreakup.FOOD || 0,
-        travel: rateBreakup.TRAVEL || 0,
-        misc: 0,
+        wage,
+        perDay,
+        food,
+        travel,
+        misc,
+        hasMiscPayable,
+        ratesFromPayables,
         payeeName: "\u2014",
       };
     });
@@ -325,6 +375,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${expenseContextPath}/v1/bill/details/status/_update`,
   });
+  const bulkUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
+  });
   const updateBillDetailWorkflow = async (bill, selectedRows, wfAction) => {
     try {
       await updateBillDetailMutation.mutateAsync(
@@ -387,6 +440,134 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       });
     }
   }
+
+  const triggerUpdateBill = async (bill, action) => {
+    try {
+      await bulkUpdateMutation.mutateAsync(
+        {
+          body: {
+            bills: [bill],
+            workflow: {
+              action: action,
+              comments: `Bill ${action} triggered`,
+              assignes: [],
+            },
+          },
+        },
+        {
+          onSuccess: async () => {
+            setShowToast({
+              key: "success",
+              label: t(`HCM_AM_${action}_SUCCESS`),
+              transitionTime: 3000,
+            });
+            refetchBill();
+          },
+          onError: (error) => {
+            console.error("Bill update failed:", error);
+            setShowToast({
+              key: "error",
+              label: t("HCM_AM_ACTION_FAILED"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Mutation error:", err);
+    }
+  };
+
+  const saveReviewerRateChanges = async () => {//todo check
+    const originalById = Object.fromEntries((billData?.billDetails || []).map((d) => [d.id, d]));
+    const billDetails = tableData.map((row) => {
+      const orig = originalById[row.id] || {};
+      const rates = {
+        PER_DAY: Number(row.perDay) || 0,
+        FOOD: Number(row.food) || 0,
+        TRAVEL: Number(row.travel) || 0,
+        MISC: Number(row.misc) || 0,
+      };
+      const days = Number(row?.additionalDetails?.attendance) || 0;
+      const origPayables = orig.payableLineItems;
+      let payableLineItems = origPayables;
+      let totalAmount;
+      if (Array.isArray(origPayables) && origPayables.length > 0) {
+        payableLineItems = applyPerDayToPayables(origPayables, rates, days);
+        totalAmount = sumPayableAmounts(payableLineItems);
+      } else {
+        totalAmount = Math.round(
+          (rates.PER_DAY + rates.FOOD + rates.TRAVEL + rates.MISC) * days
+        );
+      }
+      const {
+        givenName,
+        mobileNumber,
+        userId,
+        role,
+        wage,
+        payeeName,
+        perDay,
+        food,
+        travel,
+        misc,
+        fees,
+        hasMiscPayable,
+        ratesFromPayables,
+        ...rest
+      } = row;
+      const additionalDetails = _.omit(row.additionalDetails || {}, [
+        "reviewerRateBreakup",
+      ]);
+      return {
+        ...orig,
+        ...rest,
+        totalAmount,
+        payableLineItems,
+        additionalDetails,
+      };
+    });
+    const billTotalAmount = billDetails.reduce(
+      (s, d) => s + (Number(d.totalAmount) || 0),
+      0
+    );
+    const updatedBill = { ...billData, billDetails, totalAmount: billTotalAmount };
+    try {
+      await bulkUpdateMutation.mutateAsync(
+        {
+          body: {
+            bills: [updatedBill],
+            workflow: {
+              action: "UPDATE",
+              comments: "Reviewer updated worker rates",
+              assignes: [],
+            },
+          },
+        },
+        {
+          onSuccess: () => {
+            setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+            setIsReviewerEdit(false);
+            refetchBill();
+          },
+          onError: (error) => {
+            setShowToast({
+              key: "error",
+              label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Reviewer save failed:", err);
+      setShowToast({
+        key: "error",
+        label: err?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+        transitionTime: 3000,
+      });
+    }
+  };
 
   const getTaskStatusMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/health-expense/v1/task/_status`,
@@ -849,7 +1030,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     || billData?.status
     || "NA";
 
-  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading) {
+  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading || bulkUpdateMutation.isLoading) {
     console.log("Loading bill data or individual data...");
     return <Loader />
   }
@@ -1359,7 +1540,7 @@ const renderActionBar = (ctaButton) => (
           onClose={() => setOpenSendForApprovalPopUp(false)}
           onSubmit={({ comment, supportingDocs }) => {
             setOpenSendForApprovalPopUp(false);
-            // Mock — placeholder for future API call
+            triggerUpdateBill(billData, "SEND_FOR_APPROVAL");
             console.log("Send for approval:", { comment, supportingDocs, billID });
             setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
           }}
@@ -1524,14 +1705,14 @@ const renderActionBar = (ctaButton) => (
       {/* /* Alert Pop-Up for approve */}
       {openVerifyAlertPopUp && <AlertPopUp
         onClose={() => {
-          setOpenVerifyAlertPopUp(false);
+          setOpenVerifyAlertPopUp(false);//todo check
         }}
         alertHeading={t(`HCM_AM_ALERT_VERIFY_HEADING`)}
         alertMessage={t(`HCM_AM_ALERT_VERIFY_DESCRIPTION`)}
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerVerifyBill(billData, tableData);
+          triggerUpdateBill(billData, "VERIFY");
           setOpenVerifyAlertPopUp(false);
         }}
       />}
@@ -1569,8 +1750,8 @@ const renderActionBar = (ctaButton) => (
         cancelLabel={t("HCM_AM_CANCEL")}
         onPrimaryAction={() => {
           setOpenSendForReviewPopUp(false);
-          // TODO: API integration for send for review
-          setShowToast({ key: "success", label: t("HCM_AM_SEND_FOR_REVIEW_SUCCESS"), transitionTime: 3000 });
+          triggerUpdateBill(billData, "SEND_FOR_REVIEW");
+          // setShowToast({ key: "success", label: t("HCM_AM_SEND_FOR_REVIEW_SUCCESS"), transitionTime: 3000 });
         }}
       />}
       {openSaveChangesPopUp && <AlertPopUp
@@ -1581,9 +1762,7 @@ const renderActionBar = (ctaButton) => (
         cancelLabel={t("HCM_AM_CANCEL")}
         onPrimaryAction={() => {
           setOpenSaveChangesPopUp(false);
-          // TODO: API integration for saving rate changes
-          setIsReviewerEdit(false);
-          setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+          saveReviewerRateChanges();//todo check
         }}
       />}
       <div style={{

@@ -367,6 +367,62 @@ const ManageBillsTable = ({ ...props }) => {
         ? props.isSelectable
         : ["NOT_VERIFIED", "PARTIALLY_VERIFIED", "FULLY_VERIFIED"].includes(props?.activeTab || "NOT_VERIFIED");
 
+    
+        const sendForApprovalMutation = Digit.Hooks.useCustomAPIMutationHook({
+            url: `/health-expense/bill/v1/_bulkupdate`,
+          });  
+        
+          const triggerSendForApproval = async (bill, data) => {
+            try {
+              const updatedBill = {
+                ...bill,
+          
+                // merge into additionalDetails
+                additionalDetails: {
+                  ...(bill?.additionalDetails || {}),
+                  justificationDetails: {
+                    comment: data?.comment || null,
+                    justificationDoc: data?.supportingDocs || [],
+                  },
+                },
+              };
+          
+              await sendForApprovalMutation.mutateAsync(
+                {
+                  body: {
+                    bills: [updatedBill],
+                    workflow: {
+                      action: "SEND_FOR_APPROVAL",
+                      comments: "Sent for approval",
+                      assignes: [],
+                    },
+                  },
+                },
+                {
+                  onSuccess: () => {
+                    setShowToast({
+                      key: "success",
+                      label: t("HCM_AM_SEND_FOR_APPROVAL_SUCCESS"),
+                      transitionTime: 3000,
+                    });//TODO show success screen
+          
+                    setShowApprovalPopup(false);
+                  },
+                  onError: (err) => {
+                    console.error("Send for approval failed:", err);
+          
+                    setShowToast({
+                      key: "error",
+                      label: t("HCM_AM_ACTION_FAILED"),
+                      transitionTime: 3000,
+                    });
+                  },
+                }
+              );
+            } catch (e) {
+              console.error("Mutation error:", e);
+            }
+          };
     return (
         <>
             <DataTable
@@ -404,10 +460,10 @@ const ManageBillsTable = ({ ...props }) => {
     <SendForApprovalPopUp
         billDetails={selectedBill} // Pass the selected bill details
         onClose={() => setShowApprovalPopup(false)} // Close the popup
-        onSubmit={(data) => {
-            // Handle the submission logic here
+        onSubmit={async (data) => {
+            await triggerSendForApproval(selectedBill, data);
             console.log("Submitted data:", data);
-            setShowApprovalPopup(false); // Close the popup after submission
+            setShowApprovalPopup(false);
         }}
     />
 )}
