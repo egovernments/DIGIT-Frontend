@@ -1,4 +1,12 @@
 # Changelog
+## [1.9.22-cms]  [14-APR-2026]
+- **Refactor**: Simplified citizen login preferred language save flow.
+  - Removed the `/user-preference/v1/_search` pre-fetch call on OTP success — no longer fetches existing preferences before upsert.
+  - Removed `LANGUAGE_CHANGE_KEY` (`Citizen.locale.changed`) sessionStorage flag tracking from `Login/index.js`, `ChangeLanguage.js`, and citizen `LanguageSelection.js`.
+  - `saveUserPreferences` now directly reads the currently active language (`Digit.StoreData.getCurrentLanguage()` with localStorage fallbacks) and saves it via `_upsert`.
+  - Removed redundant `auth-token` header overrides from `CustomService.getResponse` calls inside `saveUserPreferences`.
+  - Removed debug `console.log(moduleName, "moduleName")`.
+
 ## [1.9.21-cms]  [13-APR-2026]
 - **Fix**: Updated citizen OTP preference save flow to change preferred language only when the user explicitly changes language locally.
   - Added a lightweight local language-change flag across citizen language selectors.

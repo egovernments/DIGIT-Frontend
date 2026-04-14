@@ -11,7 +11,6 @@ const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
 const DEFAULT_USER = "digit-user";
 let DEFAULT_REDIRECT_URL = `/${window?.contextPath || window?.globalConfigs?.getConfig("CONTEXT_PATH")}/citizen`;
-const LANGUAGE_CHANGE_KEY = "Citizen.locale.changed";
 
 /* set citizen details to enable backward compatiable */
 const setCitizenDetail = (userObject, token, tenantId) => {
@@ -58,7 +57,6 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const stateId = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
   const moduleName = isMultiRootTenant ? (Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig") : "common-masters";
-  console.log(moduleName, "moduleName");
 
   const { data: _validationData } = Digit.Hooks.useCustomMDMS(
     stateId,
@@ -172,18 +170,14 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     setWhatsappConsent(consent);
   };
 
-  // Function to save user preferences (WhatsApp consent + preferred language)
-  // Called AFTER OTP success
+  // Save WhatsApp consent + currently-selected language after OTP success.
+  // NOTE: Digit.UserService.setUser() must be called BEFORE this so that
+  // Request.js picks up the new access_token via getUser().
   const saveUserPreferences = async (userInfo, tenantId) => {
-    // Only save preferences if feature is enabled
-    if (!enableUserPreferences) {
-      return null;
-    }
+    if (!enableUserPreferences) return null;
 
     try {
-      // Check if WhatsApp channel is enabled from config-service.
-      // NOTE: Digit.UserService.setUser() must be called BEFORE this function
-      // so that Request.js picks up the new access_token via getUser().
+      // Check if WhatsApp channel is enabled from config-service
       const configResponse = await Digit.CustomService.getResponse({
         url: "/config-service/config/v1/_search",
         body: {
@@ -191,9 +185,6 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             schemaCode: "NotificationChannel",
             tenantId: stateCode,
           },
-        },
-        headers: {
-          "auth-token": Digit.UserService.getUser()?.access_token,
         },
         useCache: false,
         method: "POST",
@@ -203,52 +194,14 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       const whatsappChannel = configResponse?.configData?.find((item) => item.uniqueIdentifier === "WHATSAPP");
       const isWhatsAppEnabled = whatsappChannel?.data?.enabled === true;
 
-      // Only save if WhatsApp is enabled
-      if (!isWhatsAppEnabled) {
-        return null;
-      }
+      if (!isWhatsAppEnabled) return null;
 
-      // Give priority to the currently selected local/app language
-      const selectedLocalLanguage =
+      // Use the language currently active in the app — whatever the user selected
+      const preferredLanguage =
         Digit.StoreData.getCurrentLanguage() ||
         localStorage.getItem("locale") ||
         localStorage.getItem("Citizen.locale") ||
-        JSON.parse(sessionStorage.getItem("Digit.initData") || "{}")?.value?.selectedLanguage;
-
-      const isLocalLanguageChanged = sessionStorage.getItem(LANGUAGE_CHANGE_KEY) === "true";
-      let finalPreferredLanguage = selectedLocalLanguage || "en_IN";
-
-      // Fetch existing preferences to prevent overwriting the preferred language
-      try {
-        const searchPreferenceResponse = await Digit.CustomService.getResponse({
-          url: "/user-preference/v1/_search",
-          body: {
-            criteria: {
-              userId: userInfo?.uuid,
-              tenantId: tenantId,
-              preferenceCode: "USER_NOTIFICATION_PREFERENCES",
-            },
-          },
-          headers: {
-            "auth-token": Digit.UserService.getUser()?.access_token,
-          },
-          useCache: false,
-          method: "POST",
-          userService: true,
-        });
-
-        if (searchPreferenceResponse?.preferences?.length > 0) {
-          const existingPref = searchPreferenceResponse.preferences[0];
-
-          if (isLocalLanguageChanged && selectedLocalLanguage) {
-            finalPreferredLanguage = selectedLocalLanguage;
-          } else if (existingPref?.payload?.preferredLanguage) {
-            finalPreferredLanguage = existingPref.payload.preferredLanguage;
-          }
-        }
-      } catch (searchErr) {
-        console.error("Error fetching existing user preferences API details:", searchErr?.response?.data || searchErr);
-      }
+        "en_IN";
 
       const consentPayload = {
         SMS: { scope: "GLOBAL", status: "REVOKED" },
@@ -265,18 +218,14 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
             preferenceCode: "USER_NOTIFICATION_PREFERENCES",
             payload: {
               consent: consentPayload,
-              preferredLanguage: finalPreferredLanguage,
+              preferredLanguage: preferredLanguage,
             },
           },
-        },
-        headers: {
-          "auth-token": Digit.UserService.getUser()?.access_token,
         },
         useCache: false,
         method: "POST",
         userService: false,
       });
-      sessionStorage.removeItem(LANGUAGE_CHANGE_KEY);
       return response;
     } catch (error) {
       console.error("Error saving user preferences:", error);
