@@ -1540,7 +1540,17 @@ const renderActionBar = (ctaButton) => (
           onClose={() => setOpenSendForApprovalPopUp(false)}
           onSubmit={({ comment, supportingDocs }) => {
             setOpenSendForApprovalPopUp(false);
-            triggerUpdateBill(billData, "SEND_FOR_APPROVAL");
+            const updatedBill = {
+              ...billData,
+              additionalDetails: {
+                ...(billData?.additionalDetails || {}),
+                justificationDetails: {
+                  comment: comment?.trim?.() || null,
+                  justificationDoc: supportingDocs || [],
+                },
+              },
+            };
+            triggerUpdateBill(updatedBill, "SEND_FOR_APPROVAL");
             console.log("Send for approval:", { comment, supportingDocs, billID });
             setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
           }}

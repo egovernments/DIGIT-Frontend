@@ -44,8 +44,13 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
 
   const handleSave = () => {
     setShowToast(null);
+    const trimmedComment = comment.trim();
+    if (!uploadedFile?.length || !trimmedComment) {
+      setShowToast({ key: "error", label: t("HCM_AM_PLEASE_SELECT_MANDATORY_FIELDS") });
+      return;
+    }
     onSubmit({
-      comment: comment.trim() || null,
+      comment: trimmedComment,
       supportingDocs: uploadedFile,
     });
   };
@@ -103,6 +108,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             label={t("HCM_AM_SEND_FOR_APPROVAL")}
             title={t("HCM_AM_SEND_FOR_APPROVAL")}
             onClick={handleSave}
+            //isDisabled={!uploadedFile?.length || !comment.trim()}
           />,
         ]}
       />

@@ -446,7 +446,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     if (!kibanaMapConfig?.routePath) return null;
 
     const baseUrl = kibanaMapConfig.isOrigin
-      ? `https://mc-nigeria-uat.digit.org${kibanaMapConfig.routePath}`
+      ? `https://mc-nigeria-uat.digit.org${kibanaMapConfig.routePath}` //todo check base URL
       : kibanaMapConfig.routePath;
 
     const usernames = (attendeeUsernames || []).filter(Boolean);
