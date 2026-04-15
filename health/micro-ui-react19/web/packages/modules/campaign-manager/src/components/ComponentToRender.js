@@ -141,7 +141,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
         withoutLabel={field?.format === "checkbox" ? true : false}
         required={getFieldTypeFromMasterData2(field) === "custom" ? null : field?.required}
         type={fieldType}
-        value={field?.value === true ? "" : field?.value || ""}
+        value={"" }
         disabled={field?.readOnly || false}
         showToolTip={true}
       />
