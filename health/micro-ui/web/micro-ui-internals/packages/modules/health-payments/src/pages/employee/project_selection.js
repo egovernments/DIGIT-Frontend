@@ -74,6 +74,7 @@ const ProjectSelect = () => {
       const boundaryTypeOrder = AGGREGATION_LEVEL_OPTIONS.find((option) => option.code === selectedProject?.address?.boundaryType)?.order;
 
       if (boundaryTypeOrder) {
+        setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS.filter((option) => option.order >= boundaryTypeOrder));
       } else {
         setFilteredAggregationOptions(AGGREGATION_LEVEL_OPTIONS);
       }

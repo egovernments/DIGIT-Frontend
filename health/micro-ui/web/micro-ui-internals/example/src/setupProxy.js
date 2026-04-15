@@ -136,6 +136,8 @@ module.exports = function (app) {
     "/health-expense-calculator/billing-config/v1/_search",
     "/health-expense-calculator/billing-config/v1/_create",
     "/health-expense-calculator/billing-config/v1/_update",
+    //go_deep
+    "/health-expense/bill/v1/_bulkupdate",
     "/airflow-trigger-api"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));

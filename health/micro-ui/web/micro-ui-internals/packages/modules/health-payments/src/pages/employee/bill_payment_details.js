@@ -8,10 +8,64 @@ import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
 import _, { set } from "lodash";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
-import { downloadFileWithName, formatTimestampToDate,formatTimestampToDateTime } from "../../utils";
+import {
+  downloadFileWithName,
+  formatTimestampToDate,
+  formatTimestampToDateTime,
+  getPayableAmount,
+  hasPayableHead,
+  perDayFromPayable,
+  sumPayableAmounts,
+  applyPerDayToPayables,
+} from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
+import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
+import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
+import SendForApprovalPopUp from "../../components/SendForApprovalPopUp";
+
+// Fallback view map (used when role config is not available)
+const BILL_STATUS_VIEW = {
+  PENDING_VERIFICATION: "NOT_VERIFIED_VIEW",
+  VERIFICATION_IN_PROGRESS: "VERIFICATION_IN_PROGRESS_VIEW",
+  PARTIALLY_VERIFIED: "PARTIALLY_VERIFIED_VIEW",
+  FULLY_VERIFIED: "VERIFIED_VIEW",
+  SENT_FOR_REVIEW: "SENT_FOR_REVIEW_VIEW"
+};
+
+// Fallback status display map
+const STATUS_DISPLAY_MAP = {
+  PENDING_VERIFICATION: "HCM_AM_NOT_VERIFIED",
+  VERIFICATION_IN_PROGRESS: "HCM_AM_SENT_FOR_PAYMENT_REVIEW",
+  PARTIALLY_VERIFIED: "HCM_AM_PARTIALLY_VERIFIED",
+  FULLY_VERIFIED: "HCM_AM_VERIFIED",
+  SENT_FOR_REVIEW: "HCM_AM_SENT_FOR_PAYMENT_REVIEW",
+};
+
+// Views that show sub-tabs (similar to PARTIALLY_VERIFIED_VIEW and EDIT_VIEW)
+const VIEWS_WITH_SUB_TABS = [
+  "PARTIALLY_VERIFIED_VIEW",
+  "EDITOR_PARTIALLY_VERIFIED_VIEW",
+  "APPROVER_PARTIALLY_PAID_VIEW",
+];
+
+// Sub-tab config per view
+const VIEW_SUB_TABS = {
+  PARTIALLY_VERIFIED_VIEW: [
+    { code: "VERIFICATION_FAILED", name: "HCM_AM_VERIFICATION_FAILED", statusFilter: "VERIFICATION_FAILED" },
+    { code: "VERIFIED", name: "HCM_AM_VERIFIED", statusFilter: "VERIFIED" },
+  ],
+  EDITOR_PARTIALLY_VERIFIED_VIEW: [
+    { code: "VERIFICATION_FAILED", name: "HCM_AM_VERIFICATION_FAILED", statusFilter: "VERIFICATION_FAILED" },
+    { code: "VERIFIED", name: "HCM_AM_VERIFIED", statusFilter: "VERIFIED" },
+  ],
+  APPROVER_PARTIALLY_PAID_VIEW: [
+    { code: "FAILED", name: "HCM_AM_FAILED", statusFilter: "PAYMENT_FAILED" },
+    { code: "PAID", name: "HCM_AM_PAID", statusFilter: "PAID" },
+  ],
+};
+
 /**
  * @function BillPaymentDetails
  * @description This component is used to view attendance.
@@ -21,9 +75,13 @@ import "./loader_size.css";
 const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
   const billID = location.state?.billID;
-  console.log("billID", billID);
+  const activeTabCode = location.state?.activeTabCode;
   const { t } = useTranslation();
   const history = useHistory();
+
+  // Role-based config
+  const activeRole = getManageBillsRole();
+  const roleConfig = getManageBillsConfig();
   const [infoDescription, setInfoDescription] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
@@ -31,7 +89,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [billData, setBillData] = useState(null);
   const [paginatedData, setPaginatedData] = useState([]);
   const [openSendForEditPopUp, setOpenSendForEditPopUp] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [openVerifyAlertPopUp, setOpenVerifyAlertPopUp] = useState(false);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
@@ -43,7 +100,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isSelectionDisabledTransfer, setIsSelectionDisabledTransfer] = useState(false);
   const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
-  const [clearSelectedRows, setClearSelectedRows] = useState(false);
+  const [isReviewerEdit, setIsReviewerEdit] = useState(false);
+  const [openSendForApprovalPopUp, setOpenSendForApprovalPopUp] = useState(false);
+  const [openSendForReviewPopUp, setOpenSendForReviewPopUp] = useState(false);
+  const [openSaveChangesPopUp, setOpenSaveChangesPopUp] = useState(false);
   // --------------------
 // Report (PDF / EXCEL)
 // --------------------
@@ -195,17 +255,64 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         (rate) => rate?.skillCode === matchedSkill?.type);
 
       const rateBreakup = rateObj?.rateBreakup || {};
-      const wage =
-        (rateBreakup.FOOD || 0) +
-        (rateBreakup.TRAVEL || 0) +
-        (rateBreakup.PER_DAY || 0);
+      const savedRb = billDetail?.additionalDetails?.reviewerRateBreakup || {};
+      const attendance = billDetail?.additionalDetails?.attendance;
+      const payableItems = (billDetail?.payableLineItems || []).filter(
+        (p) => p?.type === "PAYABLE"
+      );
+      const usePayables = payableItems.length > 0;
+
+      let perDay;
+      let food;
+      let travel;
+      let misc;
+      let wage;
+      const hasMiscPayable = hasPayableHead(billDetail?.payableLineItems, "MISC");
+
+      let ratesFromPayables = false;
+      if (usePayables) {
+        ratesFromPayables = true;
+        const pl = billDetail.payableLineItems;
+        perDay = perDayFromPayable(getPayableAmount(pl, "PER_DAY"), attendance);
+        food = perDayFromPayable(getPayableAmount(pl, "FOOD"), attendance);
+        travel = perDayFromPayable(getPayableAmount(pl, "TRAVEL"), attendance);
+        misc = hasMiscPayable
+          ? perDayFromPayable(getPayableAmount(pl, "MISC"), attendance)
+          : 0;
+        wage = perDay + food + travel + misc;
+      } else {
+        wage =
+          (rateBreakup.FOOD || 0) +
+          (rateBreakup.TRAVEL || 0) +
+          (rateBreakup.PER_DAY || 0);
+        perDay =
+          savedRb.PER_DAY != null
+            ? Number(savedRb.PER_DAY)
+            : rateBreakup.PER_DAY || 0;
+        food =
+          savedRb.FOOD != null ? Number(savedRb.FOOD) : rateBreakup.FOOD || 0;
+        travel =
+          savedRb.TRAVEL != null
+            ? Number(savedRb.TRAVEL)
+            : rateBreakup.TRAVEL || 0;
+        misc = savedRb.MISC != null ? Number(savedRb.MISC) : 0;
+      }
+
       return {
         ...billDetail,
         givenName: individual?.name?.givenName,
         mobileNumber: individual?.mobileNumber,
         userId: individual?.userDetails?.username,
         role: matchedSkill?.type,
-        wage: wage,
+        wage,
+        perDay,
+        food,
+        travel,
+        misc,
+        hasMiscPayable,
+        ratesFromPayables,
+        payeeName: billDetail?.payeeName || "\u2014",
+        payeePhoneNumber: billDetail?.payeePhoneNumber,
       };
     });
   }
@@ -254,8 +361,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
     }
     catch (error) {
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
             console.error("Error updating individuals:", error);
       setShowToast({
         key: "error",
@@ -269,6 +375,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   }
   const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${expenseContextPath}/v1/bill/details/status/_update`,
+  });
+  const bulkUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
   });
   const updateBillDetailWorkflow = async (bill, selectedRows, wfAction) => {
     try {
@@ -288,8 +397,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async () => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);            
+            // Selection cleared (no-op — row selection removed)
             setShowToast({
               key: "success",
               label: t(`HCM_AM_SELECTED_BILL_DETAILS_${wfAction}_SUCCESS`), //TODO UPDATE TOAST MSG
@@ -312,8 +420,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             }
           },
           onError: (error) => {
-            setSelectedRows([]);  
-            setClearSelectedRows(prev => !prev);      
+            // Selection cleared (no-op — row selection removed)
                 console.log("Error updating bill detail workflow:", error);
             setShowToast({
               key: "error",
@@ -326,8 +433,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       
     } catch (error) {
       console.log("Error updating bill detail workflow:", error);
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
        setShowToast({
         key: "error",
         label: t(`HCM_AM_BILL_DETAILS_${wfAction}_ERROR`), //TODO UPDATE TOAST MSG
@@ -335,6 +441,134 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       });
     }
   }
+
+  const triggerUpdateBill = async (bill, action) => {
+    try {
+      await bulkUpdateMutation.mutateAsync(
+        {
+          body: {
+            bills: [bill],
+            workflow: {
+              action: action,
+              comments: `Bill ${action} triggered`,
+              assignes: [],
+            },
+          },
+        },
+        {
+          onSuccess: async () => {
+            setShowToast({
+              key: "success",
+              label: t(`HCM_AM_${action}_SUCCESS`),
+              transitionTime: 3000,
+            });
+            refetchBill();
+          },
+          onError: (error) => {
+            console.error("Bill update failed:", error);
+            setShowToast({
+              key: "error",
+              label: t("HCM_AM_ACTION_FAILED"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Mutation error:", err);
+    }
+  };
+
+  const saveReviewerRateChanges = async () => {//todo check
+    const originalById = Object.fromEntries((billData?.billDetails || []).map((d) => [d.id, d]));
+    const billDetails = tableData.map((row) => {
+      const orig = originalById[row.id] || {};
+      const rates = {
+        PER_DAY: Number(row.perDay) || 0,
+        FOOD: Number(row.food) || 0,
+        TRAVEL: Number(row.travel) || 0,
+        MISC: Number(row.misc) || 0,
+      };
+      const days = Number(row?.additionalDetails?.attendance) || 0;
+      const origPayables = orig.payableLineItems;
+      let payableLineItems = origPayables;
+      let totalAmount;
+      if (Array.isArray(origPayables) && origPayables.length > 0) {
+        payableLineItems = applyPerDayToPayables(origPayables, rates, days);
+        totalAmount = sumPayableAmounts(payableLineItems);
+      } else {
+        totalAmount = Math.round(
+          (rates.PER_DAY + rates.FOOD + rates.TRAVEL + rates.MISC) * days
+        );
+      }
+      const {
+        givenName,
+        mobileNumber,
+        userId,
+        role,
+        wage,
+        payeeName,
+        perDay,
+        food,
+        travel,
+        misc,
+        fees,
+        hasMiscPayable,
+        ratesFromPayables,
+        ...rest
+      } = row;
+      const additionalDetails = _.omit(row.additionalDetails || {}, [
+        "reviewerRateBreakup",
+      ]);
+      return {
+        ...orig,
+        ...rest,
+        totalAmount,
+        payableLineItems,
+        additionalDetails,
+      };
+    });
+    const billTotalAmount = billDetails.reduce(
+      (s, d) => s + (Number(d.totalAmount) || 0),
+      0
+    );
+    const updatedBill = { ...billData, billDetails, totalAmount: billTotalAmount };
+    try {
+      await bulkUpdateMutation.mutateAsync(
+        {
+          body: {
+            bills: [updatedBill],
+            workflow: {
+              action: "",
+              comments: "Reviewer updated worker rates",
+              assignes: [],
+            },
+          },
+        },
+        {
+          onSuccess: () => {
+            setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+            setIsReviewerEdit(false);
+            refetchBill();
+          },
+          onError: (error) => {
+            setShowToast({
+              key: "error",
+              label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Reviewer save failed:", err);
+      setShowToast({
+        key: "error",
+        label: err?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+        transitionTime: 3000,
+      });
+    }
+  };
 
   const getTaskStatusMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/health-expense/v1/task/_status`,
@@ -356,8 +590,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async (verifyResponse) => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             console.log("Verify Response", verifyResponse);
             const taskId = verifyResponse?.taskId;
             if (!taskId) {
@@ -419,8 +652,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           },
           onError: (error) => {
             setIsLoading(false);
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             setShowToast({
               key: "error",
               label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),//TODO UPDATE TOAST MSG
@@ -431,8 +663,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
     } catch (error) {
       setIsLoading(false);
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
       setShowToast({
         key: "error",
         label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),//TODO UPDATE TOAST MSG
@@ -459,8 +690,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async (paymentResponse) => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             console.log("Payment Response", paymentResponse);
             const taskId = paymentResponse?.taskId;
             if (!taskId) {
@@ -520,8 +750,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             pollStatus();
           },
           onError: (error) => {
-            setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
+            // Selection cleared (no-op — row selection removed)
             setIsLoading(false);
             setShowToast({
               key: "error",
@@ -533,8 +762,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
     } catch (error) {
       setIsLoading(false);
-      setSelectedRows([]);
-      setClearSelectedRows(prev => !prev);
+      // Selection cleared (no-op — row selection removed)
       setShowToast({
         key: "error",
         label: t("HCM_AM_PAYMENT_GENERATION_EXCEPTION"),//TODO UPDATE TOAST MSG
@@ -721,9 +949,20 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     setPaginatedData(slicedData);
   }, [tableData, currentPage, rowsPerPage]);
   useEffect(() => {
-    setSelectedRows([]);
-    setClearSelectedRows(prev => !prev);
+    // Reset reviewer edit mode on tab change
+    setIsReviewerEdit(false);
   }, [activeLink])
+  useEffect(() => {
+    if (!billData) return;
+    if (editBillDetails) {
+      setActiveLink({ code: "PENDING_FOR_EDIT", name: t("HCM_AM_PENDING_FOR_EDIT") });
+    } else if (billData?.status === "PARTIALLY_VERIFIED") {
+      setActiveLink({ code: "VERIFICATION_FAILED", name: t("HCM_AM_VERIFICATION_FAILED") });
+    } else if (billData?.status === "PARTIALLY_PAID" && activeRole === MANAGE_BILLS_ROLES.PAYMENT_APPROVER) {
+      setActiveLink({ code: "FAILED", name: t("HCM_AM_FAILED") });
+    }
+  }, [billData?.status]);
+
   useEffect(() => {
     if (billData && AllIndividualsData) {
       const enriched = addIndividualDetailsToBillDetails(
@@ -731,30 +970,41 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         AllIndividualsData,
         workerRatesData
       );
-      const statusMap = {
-        VERIFICATION_FAILED: ["VERIFICATION_FAILED"], //send for edit action
-        PAYMENT_FAILED: ["PAYMENT_FAILED"],
-        VERIFIED: ["VERIFIED"], //generate payment action
-        PAYMENT_GENERATED: ["PAID"],
-        NOT_VERIFIED: ["PENDING_VERIFICATION", "EDITED","PENDING_EDIT"], //verify action
-        PENDING_FOR_EDIT: ["PENDING_EDIT"], //EDIT action
-        EDITED: ["EDITED"]
-      };
-      const filtered = enriched.filter((item) =>
-        statusMap[activeLink.code]?.includes(item.status)
-      );
-      console.log("Filtered Data:", filtered);
-      setTableData(filtered || []);
-        const counts = {};
-    Object.keys(statusMap).forEach((key) => {
-      counts[key] = enriched.filter((item) =>
-        statusMap[key]?.includes(item.status)
-      ).length;
-    });
 
-    setTabCounts(counts);
+      const view = editBillDetails
+        ? "EDIT_VIEW"
+        : roleConfig?.billDetailViewMap?.[billData?.status]
+          || BILL_STATUS_VIEW[billData?.status]
+          || "NOT_VERIFIED_VIEW";
+
+      // TODO check: Re-enable sub-tab filtering after testing
+      // if (VIEW_SUB_TABS[view]) {
+      //   const activeSubTab = VIEW_SUB_TABS[view].find((st) => st.code === activeLink?.code);
+      //   if (activeSubTab) {
+      //     const filtered = enriched.filter((item) => item.status === activeSubTab.statusFilter);
+      //     setTableData(filtered || []);
+      //   } else {
+      //     const firstSubTab = VIEW_SUB_TABS[view][0];
+      //     const filtered = enriched.filter((item) => item.status === firstSubTab.statusFilter);
+      //     setTableData(filtered || []);
+      //   }
+      // } else {
+      //   setTableData(enriched || []);
+      // }
+      setTableData(enriched || []);// todo remove after testing 
+
+      const counts = {
+        VERIFICATION_FAILED: enriched.filter((item) => item.status === "VERIFICATION_FAILED").length,
+        VERIFIED: enriched.filter((item) => item.status === "VERIFIED").length,
+        PENDING_FOR_EDIT: enriched.filter((item) => item.status === "PENDING_EDIT").length,
+        EDITED: enriched.filter((item) => item.status === "EDITED").length,
+        // Approver sub-tab counts
+        FAILED: enriched.filter((item) => item.status === "PAYMENT_FAILED").length,
+        PAID: enriched.filter((item) => item.status === "PAID").length,
+      };
+      setTabCounts(counts);
     }
-  }, [AllIndividualsData, billData, activeLink]);
+  }, [AllIndividualsData, billData, activeLink, isReviewerEdit]);
 
   
   const renderLabelPair = (heading, text, style) => (
@@ -768,7 +1018,20 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
 
-  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading) {
+  // Resolve view: use actual bill status first, fall back to the tab the user navigated from
+  const tabDerivedStatus = activeTabCode && roleConfig?.tabStatusMap?.[activeTabCode]?.[0];
+  const currentView = roleConfig?.billDetailViewMap?.[billData?.status]
+    || (tabDerivedStatus && roleConfig?.billDetailViewMap?.[tabDerivedStatus])
+    || BILL_STATUS_VIEW[billData?.status]
+    || "NOT_VERIFIED_VIEW";
+
+  // Resolve status display label using role config or fallback
+  const statusDisplayLabel = roleConfig?.statusDisplayMap?.[billData?.status]
+    || STATUS_DISPLAY_MAP[billData?.status]
+    || billData?.status
+    || "NA";
+
+  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading || bulkUpdateMutation.isLoading) {
     console.log("Loading bill data or individual data...");
     return <Loader />
   }
@@ -884,22 +1147,110 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //     }
 //   };
 
+const renderActionBar = (ctaButton) => (
+  <ActionBar
+    style={{
+      display: "flex",
+      alignItems: "center",
+      width: "100%",
+    }}
+  >
+    {/* LEFT: Back */}
+    <Button
+      variation="secondary"
+      label={t("HCM_AM_BACK")}
+      icon="ArrowBack"
+      onClick={() => history.goBack()}
+      style={{ flexShrink: 0, minWidth: "14rem" }}
+    />
+
+    {/* Spacer */}
+    <div style={{ flex: 1 }} />
+
+    {/* RIGHT: CTA */}
+    {ctaButton}
+  </ActionBar>
+);
 
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editBillDetails ? t('HCM_AM_EDIT_BILL') : t('HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')}
+          {editBillDetails
+            ? t('HCM_AM_EDIT_BILL')
+            : t('HCM_AM_VIEW_BILL')
+          }
         </Header>
+        {/* Summary cards row */}
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+          {[
+            {
+              label: t("HCM_AM_BILL_AMOUNT"),
+              value: billData?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || t("NA"),
+            },
+            {
+              label: t("HCM_AM_NUMBER_OF_WORKERS"),
+              value: billData?.billDetails?.length || t("NA"),
+            },
+            {
+              label: t("HCM_AM_NO_OF_REGISTERS"),
+              value: billData?.additionalDetails?.noOfRegisters || t("NA"),
+            },
+          ].map((item, idx) => (
+            <Card
+              key={idx}
+              type="primary"
+              style={{ flex: 1, textAlign: "center", padding: "1rem" }}
+            >
+              <div style={{ fontSize: "13px", color: "#787878", marginBottom: "0.4rem" }}>
+                {item.label}
+              </div>
+              <div style={{ fontSize: "22px", fontWeight: "700", color: "#0B4B66" }}>
+                {item.value}
+              </div>
+            </Card>
+          ))}
+        </div>
+
         <Card type="primary" className="bottom-gap-card-payment">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <span style={{ fontSize: "18px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              {["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) && (
+                <Button
+                  variation="secondary"
+                  label={t("HCM_AM_DOWNLOAD_JUSTIFICATION")}
+                  icon="FileDownload"
+                  isSuffix
+                  size="medium"
+                  onClick={() => {
+                    const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.supportingDocs?.[0];
+                    if (doc?.filestoreId) {
+                      downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
+                    } else {
+                      setShowToast({ key: "error", label: t("HCM_AM_NO_JUSTIFICATION_FOUND"), transitionTime: 3000 });
+                    }
+                  }}
+                />
+              )}
+              <Button
+                variation="secondary"
+                label={t("HCM_AM_VIEW_REGISTERS")}
+                icon="OpenInNew"
+                isSuffix
+                size="medium"
+                onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`)}
+              />
+            </div>
+          </div>
           {isBillLoading || isFetching ? (
             <Loader />
           ) : (
             <>
               {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"), { color: "#C84C0E" })}
               {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
-              {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
-              {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
+              {/* {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))} */}
+              {/* {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))} */}
               {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
               {renderLabelPair(
                 'HCM_AM_STATUS',
@@ -920,7 +1271,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     textAlign: "center",
                   }}
                 >
-                  {t(billData?.status || "NA")}
+                  {t(statusDisplayLabel)}
                 </span>
               )}
 
@@ -1090,72 +1441,41 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           )}
         </Card>
 
-        {
-          (
+        {/* Tabs: for views that have sub-tabs (partially verified, edit, partially paid) */}
+        {VIEWS_WITH_SUB_TABS.includes(currentView) && VIEW_SUB_TABS[currentView] && (
             <Tab
               activeLink={activeLink?.code}
               configItemKey="code"
               configDisplayKey="name"
               itemStyle={{
-                  flex: "1 1 auto",        
-                  textAlign: "center",     
-                  overflow: "hidden",     
-                  whiteSpace: "nowrap",   
+                  flex: "1 1 auto",
+                  textAlign: "center",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                   minWidth: "240px"
               }}
-              configNavItems={!editBillDetails ? [
-                {
-        code: "NOT_VERIFIED",
-        name: `${t("HCM_AM_NOT_VERIFIED")} (${tabCounts["NOT_VERIFIED"] || 0})`,
-      },
-      {
-        code: "VERIFICATION_FAILED",
-        name: `${t("HCM_AM_VERIFICATION_FAILED")} (${tabCounts["VERIFICATION_FAILED"] || 0})`,
-      },
-      {
-        code: "VERIFIED",
-        name: `${t("HCM_AM_VERIFIED")} (${tabCounts["VERIFIED"] || 0})`,
-      },
-      {
-        code: "PAYMENT_GENERATED",
-        name: `${t("HCM_AM_PAYMENT_GENERATED")} (${tabCounts["PAYMENT_GENERATED"] || 0})`,
-      },
-      {
-        code: "PAYMENT_FAILED",
-        name: `${t("HCM_AM_PAYMENT_FAILED")} (${tabCounts["PAYMENT_FAILED"] || 0})`,
-      },
-    ]
-  : [
-      {
-        code: "PENDING_FOR_EDIT",
-        name: `${t("HCM_AM_PENDING_FOR_EDIT")} (${tabCounts["PENDING_FOR_EDIT"] || 0})`,
-      },
-      {
-        code: "EDITED",
-        name: `${t("HCM_AM_EDITED")} (${tabCounts["EDITED"] || 0})`,
-      },
-                ]}
+              configNavItems={VIEW_SUB_TABS[currentView].map((subTab) => ({
+                code: subTab.code,
+                name: `${t(subTab.name)} (${tabCounts[subTab.code] || 0})`,
+              }))}
               navStyles={{
                   display: "flex",
                   width: "100%",
-                }}
+              }}
               onTabClick={(e) => {
-                setLimitAndOffset((prev) => {
-                  return {
+                setLimitAndOffset((prev) => ({
                     limit: prev.limit,
                     offset: 0,
-                  };
-                });
+                }));
                 setCurrentPage(1);
-                setActiveLink(e);                
+                setActiveLink(e);
               }}
               setActiveLink={setActiveLink}
               showNav={true}
-              style={{ width: "100%" }} 
+              style={{ width: "100%" }}
             />
-          )
-        }
+        )}
         <Card style={{ width: "100%", }}>
           {isBillLoading || isFetching ? (
             <Loader />
@@ -1163,20 +1483,40 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
             <Fragment>
+              {/* TODO: Restore status check: activeRole === "PAYMENT_REVIEWER" && billData?.status === "SENT_FOR_REVIEW" */}
+              {activeRole === "PAYMENT_REVIEWER" && ["REVIEWER_PENDING_VIEW"].includes(currentView) && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem", gap: "1rem" }}>
+                  <Button
+                    variation="secondary"
+                    label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
+                    icon={isReviewerEdit ? "Close" : "Edit"}
+                    onClick={() => setIsReviewerEdit((prev) => !prev)}
+                  />
+                  {!isReviewerEdit && (
+                    <Button
+                      variation="secondary"
+                      label={t("HCM_AM_EDIT_ON_EXCEL")}
+                      icon="TableView"
+                      onClick={() => history.push(
+                        `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
+                        { billID, billData }
+                      )}
+                    />
+                  )}
+                </div>
+              )}
               <BillDetailsTable
                 style={{ width: "100%", }}
                 data={paginatedData} totalCount={tableData.length}
-                selectableRows={!["PAYMENT_GENERATED", "EDITED"].includes(activeLink?.code)}
                 status={activeLink?.code}
-                editBill={editBillDetails}
-                clearSelectedRows={clearSelectedRows}
-                onSelectionChange={setSelectedRows}
-                selectedBills={selectedRows}
-                isSelectionDisabledTransfer={isSelectionDisabledTransfer}
-                isSelectionDisabledVerify={isSelectionDisabledVerify}
+                billStatus={billData?.status}
+                subTab={VIEWS_WITH_SUB_TABS.includes(currentView) ? activeLink?.code : null}
+                role={activeRole}
+                isReviewerEdit={isReviewerEdit}
+                onRowChange={(updatedRow) => setTableData((prev) => prev.map((r) => r.id === updatedRow.id ? updatedRow : r))}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
-                workerRatesData = {workerRatesData}
+                workerRatesData={workerRatesData}
               />
             </Fragment>
           )}
@@ -1196,6 +1536,28 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
     
+      {openSendForApprovalPopUp && (
+        <SendForApprovalPopUp
+          onClose={() => setOpenSendForApprovalPopUp(false)}
+          onSubmit={({ comment, supportingDocs }) => {
+            setOpenSendForApprovalPopUp(false);
+            const updatedBill = {
+              ...billData,
+              additionalDetails: {
+                ...(billData?.additionalDetails || {}),
+                justificationDetails: {
+                  comment: comment?.trim?.() || null,
+                  justificationDoc: supportingDocs || [],
+                },
+              },
+            };
+            triggerUpdateBill(updatedBill, "SEND_FOR_APPROVAL");
+            console.log("Send for approval:", { comment, supportingDocs, billID });
+            setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
+          }}
+        />
+      )}
+
         {openSendForEditPopUp && <AlertPopUp
         onClose={() => {
           setOpenSendForEditPopUp(false);
@@ -1205,152 +1567,163 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
+          updateBillDetailWorkflow(billData, tableData, "SEND_FOR_EDIT");
           setOpenSendForEditPopUp(false);
         }}
       />}
-      {/* action bar for bill generation*/}
-      {/* {showGenerateBillAction && BillData?.bills?.length === 0 && */}
-      {activeLink?.code !== "PAYMENT_GENERATED" && (
-        <ActionBar
-          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
-        >
-          {!editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
-              [
-                <Button
-                  className="custom-class"
-                  iconFill=""
-                  label={t(`HCM_AM_VERIFY`)}
-                  menuStyles={{
-                    bottom: "40px",
-                  }}
-                  optionsKey="name"
-                  onClick={() => {
-                    setOpenVerifyAlertPopUp(true);
-                  }}
-                  size=""
-                  style={{ minWidth: "14rem" }}
-                  title=""
-                  type="button"
-                  variation="primary"
-                  isDisabled={selectedRows.length === 0}
-
-                />
-              ] :
-              !editBillDetails && activeLink?.code === 'VERIFICATION_FAILED' ?
-                [
-                  <Button
-                    className="custom-class"
-                    icon="Arrow"
-                    label={t(`HCM_AM_SEND_FOR_EDIT`)}
-                    menuStyles={{
-                      bottom: "40px",
-                    }}
-                    onClick={() => {
-                      // triggerSearchHrmsUsers();
-                      setOpenSendForEditPopUp(true);
-                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
-                    }}
-                    optionsKey="name"
-                    size=""
-                    style={{ minWidth: "14rem" }}
-                    title=""
-                    type="button"
-                    // variation="secondary"
-                    variation="primary"
-                    isDisabled={
-                      // billData?.status === "PENDING_VERIFICATION" ||
-                      selectedRows.length === 0}
-                  />
-                ] :
-                editBillDetails && activeLink?.code === 'PENDING_FOR_EDIT' ?
-                  [
-                    <Button
-                      className="custom-class"
-                      icon="Arrow"
-                      label={t(`HCM_AM_SAVE_CHANGES_AND_FORWARD`)}
-                      menuStyles={{
-                        bottom: "40px",
-                      }}
-                      onClick={() => {
-                        //TODO: add alert popup
-                        setOpenEditAlertPopUp(true);
-                        // triggerIndividualBulkUpdate(AllIndividualsData,selectedRows, billData);
-                        // setOpenSendForEditPopUp(true);
-                      }}
-                      optionsKey="name"
-                      size=""
-                      style={{ minWidth: "14rem" }}
-                      title=""
-                      type="button"
-                      variation="primary"
-                      isDisabled={selectedRows.length === 0}
-
-                    />
-                  ]
-                  : !editBillDetails && activeLink?.code === 'VERIFIED' ? [
-                    <Button
-                      label={t(`HCM_AM_GENERATE_PAYMENT`)}
-                      title={t(`HCM_AM_GENERATE_PAYMENT`)}
-                      onClick={() => {
-                        setOpenApprovePaymentAlertPopUp(true);
-                      }}
-                      style={{ minWidth: "14rem" }}
-                      type="button"
-                      variation="primary"
-                      isDisabled={selectedRows.length === 0}
-                    // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-                    />
-                  ]
-                   : !editBillDetails && activeLink?.code === 'PAYMENT_FAILED' ? [
-                    <Button
-                    className="custom-class"
-                    icon="Arrowback"
-                    label={t(`HCM_AM_SEND_FOR_EDIT`)}
-                    menuStyles={{
-                      bottom: "40px",
-                    }}
-                    onClick={() => {
-                      setOpenSendForEditPopUp(true);
-                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
-                    }}
-                    optionsKey="name"
-                    size=""
-                    style={{ minWidth: "14rem" }}
-                    title=""
-                    type="button"
-                    variation="secondary"
-
-                    isDisabled={selectedRows.length === 0}
-                  />,
-                    <Button
-                      label={t(`HCM_AM_GENERATE_PAYMENT`)} //TODO : change to RETRY PAYMENT
-                      title={t(`HCM_AM_GENERATE_PAYMENT`)}
-                      onClick={() => {
-                        setOpenApprovePaymentAlertPopUp(true);
-                      }}
-                      style={{ minWidth: "14rem" }}
-                      type="button"
-                      variation="primary"
-                      isDisabled={selectedRows.length === 0}
-                    // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-                    />
-                  ]
-                    : null
-          }
+      {/* Action bar based on currentView */}
+      {currentView === "NOT_VERIFIED_VIEW" &&
+  renderActionBar(
+    <Button
+      label={t(`HCM_AM_VERIFY`)}
+      onClick={() => setOpenVerifyAlertPopUp(true)}
+      style={{ minWidth: "14rem" }}
+      type="button"
+      variation="primary"
+    />
+  )}
+      {currentView === "VERIFIED_VIEW" &&
+  renderActionBar(
+    <Button
+      label={t(`HCM_AM_GENERATE_PAYMENT`)}
+      onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+      style={{ minWidth: "14rem" }}
+      type="button"
+      variation="primary"
+    />
+  )}
+      {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SEND_FOR_EDIT`)}
+            onClick={() => setOpenSendForEditPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
         </ActionBar>
       )}
+      {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFIED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_GENERATE_PAYMENT`)}
+            title={t(`HCM_AM_GENERATE_PAYMENT`)}
+            onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+
+      {/* ── Editor role-specific views (new config-driven) ── */}
+      {currentView === "EDITOR_NOT_VERIFIED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_VERIFY`)}
+            onClick={() => setOpenVerifyAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+      {currentView === "EDITOR_VERIFIED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SEND_FOR_REVIEW`)}
+            onClick={() => setOpenSendForReviewPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+      {currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_VERIFY`)}
+            onClick={() => setOpenVerifyAlertPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+
+      {/* ── Reviewer role-specific views ── */}
+      {/* {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
+            onClick={() => setOpenSendForApprovalPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )} */}
+      {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit &&
+  renderActionBar(
+    <Button
+      label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
+      onClick={() => setOpenSendForApprovalPopUp(true)}
+      style={{ minWidth: "14rem" }}
+      type="button"
+      variation="primary"
+    />
+  )}
+      {currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_SAVE_CHANGES`)}
+            onClick={() => setOpenSaveChangesPopUp(true)}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+
+      {/* ── Approver role-specific views ── */}
+      {currentView === "APPROVER_NOT_INITIATED_VIEW" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_INITIATE_PAYMENT`)}
+            onClick={() => {
+              setShowToast({ key: "info", label: t("HCM_AM_INITIATE_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+      {currentView === "APPROVER_PARTIALLY_PAID_VIEW" && activeLink?.code === "FAILED" && (
+        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+          <Button
+            label={t(`HCM_AM_RETRY_PAYMENT`)}
+            onClick={() => {
+              setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+          />
+        </ActionBar>
+      )}
+
       {/* /* Alert Pop-Up for approve */}
       {openVerifyAlertPopUp && <AlertPopUp
         onClose={() => {
-          setOpenVerifyAlertPopUp(false);
+          setOpenVerifyAlertPopUp(false);//todo check
         }}
         alertHeading={t(`HCM_AM_ALERT_VERIFY_HEADING`)}
         alertMessage={t(`HCM_AM_ALERT_VERIFY_DESCRIPTION`)}
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerVerifyBill(billData, selectedRows);
+          triggerUpdateBill(billData, "VERIFY");
           setOpenVerifyAlertPopUp(false);
         }}
       />}
@@ -1363,7 +1736,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerIndividualBulkUpdate(AllIndividualsData, selectedRows, billData);
+          triggerIndividualBulkUpdate(AllIndividualsData, tableData, billData);
           setOpenEditAlertPopUp(false);
         }}
       />}
@@ -1376,8 +1749,31 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
-          triggerGeneratePayment(billData, selectedRows);
+          triggerGeneratePayment(billData, tableData);
           setOpenApprovePaymentAlertPopUp(false);
+        }}
+      />}
+      {openSendForReviewPopUp && <AlertPopUp
+        onClose={() => setOpenSendForReviewPopUp(false)}
+        alertHeading={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW")}
+        alertMessage={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW_BILL_MESSAGE")}
+        submitLabel={t("HCM_AM_CONFIRM")}
+        cancelLabel={t("HCM_AM_CANCEL")}
+        onPrimaryAction={() => {
+          setOpenSendForReviewPopUp(false);
+          triggerUpdateBill(billData, "SEND_FOR_REVIEW");
+          // setShowToast({ key: "success", label: t("HCM_AM_SEND_FOR_REVIEW_SUCCESS"), transitionTime: 3000 });
+        }}
+      />}
+      {openSaveChangesPopUp && <AlertPopUp
+        onClose={() => setOpenSaveChangesPopUp(false)}
+        alertHeading={t("HCM_AM_CONFIRM_SAVE_CHANGES")}
+        alertMessage={t("HCM_AM_CONFIRM_SAVE_CHANGES_MESSAGE")}
+        submitLabel={t("HCM_AM_CONFIRM")}
+        cancelLabel={t("HCM_AM_CANCEL")}
+        onPrimaryAction={() => {
+          setOpenSaveChangesPopUp(false);
+          saveReviewerRateChanges();//todo check
         }}
       />}
       <div style={{

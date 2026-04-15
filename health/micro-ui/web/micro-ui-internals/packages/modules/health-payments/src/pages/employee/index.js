@@ -16,6 +16,8 @@ import PaymentSetUpPage from "./payment_setup";
 import UploadAndFetchBillsCard from "./upload_and_fetch_bills";
 import VerifyAndGeneratePayments from "./verify_generate_payements";
 import BillPaymentDetails from "./bill_payment_details";
+import ManageBills from "./manage_bills";
+import EditBillOnExcel from "./EditBillOnExcel";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -78,6 +80,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
         <PrivateRoute path={`${path}/generate-bill`} component={() => <BillInbox />} />
+        <PrivateRoute path={`${path}/manage-bills`} component={() => <ManageBills />} />
         <PrivateRoute path={`${path}/my-bills`} component={() => <MyBills />} />
         <PrivateRoute path={`${path}/verify-bills`} component={() => <UploadAndFetchBillsCard />} />
         <PrivateRoute path={`${path}/verify-and-generate-payments`} component={() => <VerifyAndGeneratePayments />} />
@@ -85,6 +88,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/edit-bill-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/view-bill-payment-details`} component={() => <BillPaymentDetails />} />
         <PrivateRoute path={`${path}/edit-bill-payment-details`} component={() => <BillPaymentDetails editBillDetails={true} />} />
+        <PrivateRoute path={`${path}/edit-bill-on-excel`} component={() => <EditBillOnExcel />} />
         <PrivateRoute path={`${path}/project-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/project-and-aggregation-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/payment-setup`} component={() => <PaymentSetUpPage />} />
