@@ -194,6 +194,16 @@ const BillDetailsTable = ({ ...props }) => {
             minWidth: "140px",
         };
 
+        const payeePhoneCol = {
+            name: colHeader(t("HCM_AM_PAYEE_PHONE_NUMBER")),
+            selector: (row) => (
+                <span className="ellipsis-cell" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
+                    {row?.payeePhoneNumber || t("NA")}
+                </span>
+            ),
+            minWidth: "160px",
+        };
+
         const roleCol = {
             name: colHeader(t("HCM_AM_ROLE")),
             selector: (row) => (
@@ -208,7 +218,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(t("HCM_AM_MNO_NAME")),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
-                    {row?.operator || t("MTN")}
+                    {row?.paymentProvider || t("BANK")}
                 </span>
             ),
             style: { justifyContent: "start" },
@@ -471,31 +481,31 @@ const BillDetailsTable = ({ ...props }) => {
 
         // Reviewer view (SENT_FOR_REVIEW / SENT_FOR_APPROVAL)
         if (props?.role === "PAYMENT_REVIEWER") {
-            return [userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, roleCol,
+            return [userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, payeePhoneCol, roleCol,
                 reviewerWageCol, reviewerFoodCol, reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol];
         }
 
         // Partially Verified with sub-tabs
         if (billStatus === "PARTIALLY_VERIFIED") {
             if (subTab === "VERIFICATION_FAILED") {
-                return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, roleCol, daysCol, wageCol, totalAmountCol, reasonCol, actionCol];
+                return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol, reasonCol, actionCol];
             }
             // VERIFIED sub-tab
-            return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, roleCol, daysCol, wageCol, totalAmountCol];
+            return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol];
         }
 
         // Approver: Partially Paid with sub-tabs (Failed / Paid)
         if (billStatus === "PARTIALLY_PAID") {
             if (subTab === "FAILED") {
-                return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol];
+                return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol];
             }
             // PAID sub-tab
-            return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
+            return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
         }
 
         // Standard view for PENDING_VERIFICATION, VERIFICATION_IN_PROGRESS, FULLY_VERIFIED, SENT_FOR_REVIEW,
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
-        return [userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
+        return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
 
     }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit]);
 

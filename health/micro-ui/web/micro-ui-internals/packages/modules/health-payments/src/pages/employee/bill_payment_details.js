@@ -311,7 +311,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         misc,
         hasMiscPayable,
         ratesFromPayables,
-        payeeName: "\u2014",
+        payeeName: billDetail?.payeeName || "\u2014",
+        payeePhoneNumber: billDetail?.payeePhoneNumber,
       };
     });
   }
@@ -538,7 +539,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           body: {
             bills: [updatedBill],
             workflow: {
-              action: "UPDATE",
+              action: "",
               comments: "Reviewer updated worker rates",
               assignes: [],
             },
@@ -1223,7 +1224,7 @@ const renderActionBar = (ctaButton) => (
                   isSuffix
                   size="medium"
                   onClick={() => {
-                    const doc = billData?.additionalDetails?.supportingDocs?.[0];
+                    const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.supportingDocs?.[0];
                     if (doc?.filestoreId) {
                       downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
                     } else {

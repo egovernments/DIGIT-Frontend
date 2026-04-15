@@ -5,21 +5,21 @@ import { PopUp, Button, TextInput, Toast } from "@egovernments/digit-ui-componen
 /**
  * WorkerDetailsPopUp
  * Opens when clicking on a worker's username in the bill details table.
- * Editable fields: name, mobile number, payment MNO (operator/provider)
+ * Editable fields: payee name, payee mobile number
  * Read-only fields: role, no. of days, wage, amount
  */
 const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
     const { t } = useTranslation();
-    const [name, setName] = useState(row?.givenName || "");
-    const [mobileNumber, setMobileNumber] = useState(row?.mobileNumber || "");
-    const [operator, setOperator] = useState(row?.operator || "MTN");
+    const [payeeName, setPayeeName] = useState(row?.payeeName || "");
+    const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payeePhoneNumber || "");
+    const [operator] = useState(row?.paymentProvider || "BANK");
     const [showToast, setShowToast] = useState(null);
 
     const handleSave = () => {
-        const trimmedName = name.trim();
-        const trimmedMobile = mobileNumber.trim();
+        const trimmedPayeeName = payeeName.trim();
+        const trimmedPayeeMobile = payeeMobileNumber.trim();
 
-        if (!trimmedName) {
+        if (!trimmedPayeeName) {
             setShowToast({
                 key: "error",
                 label: t("HCM_AM_INVALID_NAME_ERROR_TOAST_MESSAGE") || "Please enter a valid name.",
@@ -28,7 +28,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
             return;
         }
         const mobileRegex = /^[0-9]{8}$/;
-        if (!mobileRegex.test(trimmedMobile)) {
+        if (!mobileRegex.test(trimmedPayeeMobile)) {
             setShowToast({
                 key: "error",
                 label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 8-digit mobile number.",
@@ -37,7 +37,10 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
             return;
         }
         setShowToast(null);
-        onSubmit({ givenName: trimmedName, mobileNumber: trimmedMobile, operator: operator.trim() });
+        onSubmit({
+            payeeName: trimmedPayeeName,
+            payeePhoneNumber: trimmedPayeeMobile,
+        });
     };
 
     const labelStyle = { fontWeight: "600", fontSize: "14px", marginBottom: "4px", color: "#0B0C0C" };
@@ -52,6 +55,13 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
             />
+        </div>
+    );
+
+    const renderReadOnlyInput = (label, value) => (
+        <div style={{ marginBottom: "1rem" }}>
+            <div style={labelStyle}>{label}</div>
+            <TextInput style={{ width: "100%" }} value={value} disabled />
         </div>
     );
 
@@ -70,9 +80,9 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
                 heading={t("HCM_AM_EDIT_WORKER_DETAILS_LABEL")}
                 children={[
                     <div key="worker-detail-fields" style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                        {renderEditable(t("HCM_AM_WORKER_NAME"), name, setName, true)}
-                        {renderEditable(t("HCM_AM_MOBILE_NUMBER"), mobileNumber, setMobileNumber, true)}
-                        {renderEditable(t("HCM_AM_MNO_NAME"), operator, setOperator, false)}
+                        {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setPayeeName, true)}
+                        {renderEditable(t("HCM_AM_MOBILE_NUMBER"), payeeMobileNumber, setPayeeMobileNumber, true)}
+                        {renderReadOnlyInput(t("HCM_AM_MNO_NAME"), operator)}
 
                         {/* Read-only card */}
                         <div style={{
