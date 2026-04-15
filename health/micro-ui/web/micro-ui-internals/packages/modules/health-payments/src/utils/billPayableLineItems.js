@@ -46,7 +46,8 @@ export function applyPerDayToPayables(originalPayables, rates, days) {
     ) {
       return item;
     }
-    const perDay = rateByHead[item.headCode] ?? 0;
+    const perDay =
+      rateByHead[item.headCode] == null ? 0 : rateByHead[item.headCode];
     return { ...item, amount: Math.round(perDay * d) };
   });
 }
