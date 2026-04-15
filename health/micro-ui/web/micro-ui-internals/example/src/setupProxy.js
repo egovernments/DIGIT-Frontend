@@ -12,6 +12,11 @@ const assetsProxy = createProxyMiddleware({
   changeOrigin: true,
   secure: false,
 });
+const kibanaProxy = createProxyMiddleware({
+  target: process.env.REACT_APP_PROXY_KIBANA || "https://mc-nigeria-uat.digit.org",
+  changeOrigin: true,
+  secure: false,
+});
 const mdmsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "http://localhost:8080",
   changeOrigin: true,
@@ -19,6 +24,7 @@ const mdmsProxy = createProxyMiddleware({
 });
 module.exports = function (app) {
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
+  ["/kibana","/kibana-upgrade"].forEach((location) => app.use(location, kibanaProxy));
   [
     "/access/v1/actions/mdms",
     "/egov-mdms-service",
@@ -132,6 +138,7 @@ module.exports = function (app) {
     "/health-expense-calculator/billing-config/v1/_update",
     //go_deep
     "/health-expense/bill/v1/_bulkupdate",
+    "/airflow-trigger-api"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
