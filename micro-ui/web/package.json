@@ -46,7 +46,7 @@
     "@egovernments/digit-ui-module-core": "2.0.0-dev-15",
     "@egovernments/digit-ui-react-components": "2.0.0-dev-05",
     "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
-    "@egovernments/digit-ui-components": "2.0.0-dev-39",
+    "@egovernments/digit-ui-components": "2.0.0-dev-45",
     "@egovernments/digit-ui-module-workbench": "2.0.0-dev-06",
     "@egovernments/digit-ui-module-public-services": "0.0.1",
     "@egovernments/digit-ui-module-service-designer": "0.0.1",
