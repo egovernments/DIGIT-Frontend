@@ -102,7 +102,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           page: page.page,
           type: page.type || "object",
           order: page.order !== undefined ? page.order : pageIndex + 1,
-          footer: transformActionLabelToFooter(page.actionLabel, page.navigateTo),
+          footer: transformActionLabelToFooter(page.actionLabel, page.navigateTo, page.secondaryActionLabel),
           heading: page.label,
           project: project,
           version: version,
@@ -113,6 +113,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           submitCondition: page.submitCondition || null,
           description: page.description,
           showAlertPopUp: page.showAlertPopUp,
+          showSecondaryAlertPopUp: page.showSecondaryAlertPopUp,
           conditionalNavigateTo: conditionalNavigateTo,
           conditionalNavigationProperties: conditionalNavigationProperties,
           showTabView: page?.multiEntityConfig !== null && page?.multiEntityConfig !== undefined ? Object.keys(page?.multiEntityConfig)?.length > 0 ? true : false : false,
@@ -320,10 +321,10 @@ const transformPropertiesToFields = (properties) => {
 /**
  * Transform actionLabel to footer format
  */
-const transformActionLabelToFooter = (actionLabel, navigateTo) => {
+const transformActionLabelToFooter = (actionLabel, navigateTo, secondaryActionLabel) => {
   if (!actionLabel) return [];
 
-  return [
+  const footer = [
     {
       label: actionLabel,
       format: "button",
@@ -343,6 +344,29 @@ const transformActionLabelToFooter = (actionLabel, navigateTo) => {
       },
     },
   ];
+
+  if (secondaryActionLabel) {
+    footer.push({
+      label: secondaryActionLabel,
+      format: "button",
+      onAction: navigateTo
+        ? [
+            {
+              actionType: "NAVIGATION",
+              properties: navigateTo,
+            },
+          ]
+        : [],
+      properties: {
+        size: "large",
+        type: "secondary",
+        mainAxisSize: "max",
+        mainAxisAlignment: "center",
+      },
+    });
+  }
+
+  return footer;
 };
 
 /**
