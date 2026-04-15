@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp } from "@egovernments/digit-ui-components";
+import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp,TooltipWrapper} from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
 // import { MAX_SYNC_GAP_HOURS } from "./dummyData";
@@ -295,6 +295,13 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     XLSX.writeFile(wb, `activity-log-${user.userId}-${new Date().toISOString().slice(0, 10)}.xlsx`);
   }, [filteredLog, user.userId]);
 
+  const ellipsisStyle = {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "block",
+  };
+
   const columns = useMemo(() => [
     {
       name: t("TIMESTAMP"),
@@ -307,6 +314,11 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     {
       name: t("ACTION_TYPE"),
       selector: (row) => row.actionType,
+      cell: (row) => (
+          <TooltipWrapper header={row.actionType}>
+            <span style={ellipsisStyle}>{row.actionType}</span>
+          </TooltipWrapper>
+        ),
       sortable: true,
       minWidth: "140px",
       grow: 1,
@@ -314,16 +326,16 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     {
       name: t("DETAIL"),
       cell: (row) => (
-        <span style={{ color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>
-          {row.detail}
-        </span>
+        <TooltipWrapper header={row.detail}>
+            <span style={{ ...ellipsisStyle, color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>{row.detail}</span>
+        </TooltipWrapper>
       ),
       grow: 1.75,
       minWidth: "180px",
     },
     {
       name: t("OUTCOME"),
-      cell: (row) => <Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : row.outcome.toUpperCase() !== "FAILURE" ? "warning" : "error"} showIcon={true} />,
+      cell: (row) => (<Tag label={row.outcome} type={row.outcome.toUpperCase() === "SUCCESS" ? "success" : row.outcome.toUpperCase() !== "FAILURE" ? "warning" : "error"} showIcon={true} />),
       sortable: true,
       minWidth: "190px",
       grow: 1.25,
@@ -361,10 +373,12 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             {initials}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-start",justifyContent:"center" }}>
-            <span style={{ color: "#0b4b66" }}>{user.userName}</span>
+            <div style={{ display: "flex", flexDirection: "row", gap: "12px", alignItems: "center",justifyContent:"center" }}>
+              <span style={{ color: "#0b4b66" }}>{user.userName}</span>
+              <Tag label={online ? t("ONLINE") : t("OFFLINE")} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
+            </div>
             <span style={{ color: "#787878", fontSize: "14px" }}>{`${user.userId} · ${t("HCM_ROLE_" + (user.role || "").toUpperCase())} · ${user.geoBoundary}`}</span>
           </div>
-          <Tag label={online ? t("ONLINE") : t("OFFLINE")} type={online ? "success" : "error"} showIcon={true} className={"user-profile-popup-tag"} stroke={true}/>
         </div>
       }
       style={{ width: "75vw", maxWidth: "75vw", maxHeight: "90vh" }}
@@ -408,6 +422,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             optionKey="name"
             selected={actionTypeOptions.find((o) => o.code === actionTypeFilter)}
             select={(val) => setActionTypeFilter(val.code)}
+            showToolTip={true}
           />
         </div>
         <div style={{ minWidth: "200px" }}>
@@ -417,6 +432,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             optionKey="name"
             selected={outcomeOptions.find((o) => o.code === outcomeFilter)}
             select={(val) => setOutcomeFilter(val.code)}
+            showToolTip={true}
           />
         </div>
         <div style={{ minWidth: "200px" }}>
@@ -430,6 +446,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
             optionKey="name"
             selected={{ name: t("FILTER_" + timeFilter), code: timeFilter }}
             select={(val) => setTimeFilter(val.code)}
+            showToolTip={true}
           />
         </div>
         <div style={{ minWidth: "200px" }}>
