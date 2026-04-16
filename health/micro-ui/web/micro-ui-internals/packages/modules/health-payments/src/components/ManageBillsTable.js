@@ -368,8 +368,9 @@ const ManageBillsTable = ({ ...props }) => {
         : ["NOT_VERIFIED", "PARTIALLY_VERIFIED", "FULLY_VERIFIED"].includes(props?.activeTab || "NOT_VERIFIED");
 
     
+        const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
         const sendForApprovalMutation = Digit.Hooks.useCustomAPIMutationHook({
-            url: `/health-expense/bill/v1/_bulkupdate`,
+            url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
           });  
         
           const triggerSendForApproval = async (bill, data) => {

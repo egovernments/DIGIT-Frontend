@@ -61,7 +61,7 @@ const ManageBills = () => {
         tenantId: tenantId,
         referenceIds: project?.map((p) => p?.id) || [],
         // TODO: Re-enable status filter after testing
-        // status: roleConfig?.tabStatusMap?.[activeLink.code]?.[0] || null,
+        status: roleConfig?.tabStatusMap?.[activeLink.code]?.[0] || null,
         ...(billID ? { billNumbers: [billID] } : {}),
         ...(dateRange.startDate && dateRange.endDate
           ? {
@@ -136,7 +136,7 @@ const ManageBills = () => {
   };
 
   const bulkUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
+    url: `/${expenseContextPath}/bill/v1/_bulkupdatestatus`,
   });
 
   const triggerBulkUpdateBills = async (bills, action) => {
@@ -144,7 +144,10 @@ const ManageBills = () => {
       await bulkUpdateMutation.mutateAsync(
         {
           body: {
-            bills: bills,
+            // RequestInfo: Digit.Utils.getRequestInfo(),
+            billIds: (bills || []).map((b) => b?.id).filter(Boolean),
+            status: "ACTIVE",
+            tenantId: tenantId,
             workflow: {
               action: action, // VERIFY / SEND_FOR_REVIEW / etc
               comments: `Bulk ${action} triggered`,
@@ -475,8 +478,6 @@ const ManageBills = () => {
 
               setActivePopUpAction(null);
               await triggerBulkUpdateBills(validBills, activePopUpAction);
-              // TODO: API integration
-              setShowToast({ key: "success", label: t(config.success), transitionTime: 3000 });
             }}
           />
         );

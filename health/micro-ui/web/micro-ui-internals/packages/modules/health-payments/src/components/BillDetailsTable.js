@@ -23,6 +23,13 @@ const BillDetailsTable = ({ ...props }) => {
     const billStatus = props?.billStatus;
     const subTab = props?.subTab;
     const isReviewerEdit = props?.isReviewerEdit;
+    const tenantId = props?.tenantId || Digit.ULBService.getCurrentTenantId();
+    const billId = props?.billId;
+    const expenseContextPath = props?.expenseContextPath || "health-expense";
+
+    const billDetailUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/${expenseContextPath}/bill/v1/billdetails/_update`,
+    });
 
     useEffect(() => {
         setTableData(props?.data || []);
@@ -44,19 +51,36 @@ const BillDetailsTable = ({ ...props }) => {
         return Math.round(n * 100) / 100;
     };
 
-    const FEE_PERCENT = 3.5;
+    const getFeePercent = (row) => {
+        const n = Number(row?.additionalDetails?.feePercent);
+        return Number.isFinite(n) ? n : null;
+    };
     const reviewerLineSubtotal = (row) => {
         const wage = Number(row?.perDay || 0);
         const food = Number(row?.food || 0);
         const travel = Number(row?.travel || 0);
         const misc = Number(row?.misc || 0);
-        const days = Number(row?.additionalDetails?.attendance || 0);
+        const days = Number(row?.totalAttendance || 0);
         return Math.round((wage + food + travel + misc) * days);
     };
 
     const handleReviewerCellChange = (rowId, field, value) => {
         const updatedData = tableData.map((row) =>
             row.id === rowId ? { ...row, [field]: value === "" ? "" : Number(value) } : row
+        );
+        setTableData(updatedData);
+        if (props?.onRowChange) {
+            const updatedRow = updatedData.find((r) => r.id === rowId);
+            if (updatedRow) props.onRowChange(updatedRow);
+        }
+    };
+
+    const handleReviewerAdditionalDetailsChange = (rowId, field, value) => {//todo check
+        const nextValue = value === "" ? "" : Number(value);
+        const updatedData = tableData.map((row) =>
+            row.id === rowId
+                ? { ...row, additionalDetails: { ...(row.additionalDetails || {}), [field]: nextValue } }
+                : row
         );
         setTableData(updatedData);
         if (props?.onRowChange) {
@@ -218,7 +242,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(t("HCM_AM_MNO_NAME")),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
-                    {row?.paymentProvider || t("BANK")}
+                    {row?.payee?.paymentProvider || t("BANK")}
                 </span>
             ),
             style: { justifyContent: "start" },
@@ -228,7 +252,7 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.additionalDetails?.attendance != null ? row.additionalDetails.attendance : t("NA")}
+                    {row?.totalAttendance != null ? row.totalAttendance : t("NA")}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
@@ -299,11 +323,10 @@ const BillDetailsTable = ({ ...props }) => {
         const feesCol = {
             name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
             selector: (row) => {
-                const total = Number(row?.totalAmount || 0);
-                const fee = Math.round((total * FEE_PERCENT) / 100);
+                const percent = getFeePercent(row);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {fee}
+                        {percent == null ? "\u2014" : `${percent}%`}
                     </div>
                 );
             },
@@ -314,7 +337,8 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
             selector: (row) => {
                 const total = Number(row?.totalAmount || 0);
-                const fee = Math.round((total * FEE_PERCENT) / 100);
+                const percent = getFeePercent(row);
+                const fee = percent == null ? 0 : Math.round((total * percent) / 100);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {total + fee}
@@ -411,19 +435,19 @@ const BillDetailsTable = ({ ...props }) => {
                 if (!isReviewerEdit) {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {row?.additionalDetails?.attendance != null ? row.additionalDetails.attendance : t("NA")}
+                            {row?.totalAttendance != null ? row.totalAttendance : t("NA")}
                         </div>
                     );
                 }
                 return (
                     <input
                         type="number"
-                        value={row?.additionalDetails?.attendance != null ? row.additionalDetails.attendance : ""}
+                        value={row?.totalAttendance != null ? row.totalAttendance : ""}
                         onChange={(e) => {
                             const val = e.target.value === "" ? "" : Number(e.target.value);
                             const updatedData = tableData.map((r) =>
                                 r.id === row.id
-                                    ? { ...r, additionalDetails: { ...r.additionalDetails, attendance: val } }
+                                    ? { ...r, totalAttendance: val, additionalDetails: { ...r.additionalDetails, attendance: val } }
                                     : r
                             );
                             setTableData(updatedData);
@@ -448,13 +472,29 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const reviewerFeesCol = {
-            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
             selector: (row) => {
-                const subtotal = reviewerLineSubtotal(row);
-                const fee = Math.round((subtotal * FEE_PERCENT) / 100);
+                const percent = getFeePercent(row);
+                if (isReviewerEdit) {
+                    return (
+                        <input
+                            type="number"
+                            value={row?.additionalDetails?.feePercent != null ? row.additionalDetails.feePercent : ""}
+                            onChange={(e) => handleReviewerAdditionalDetailsChange(row.id, "feePercent", e.target.value)}
+                            style={{
+                                width: "70px",
+                                padding: "4px 6px",
+                                border: "1px solid #B1B4B6",
+                                borderRadius: "4px",
+                                fontSize: "14px",
+                                textAlign: "right",
+                            }}
+                        />
+                    );
+                }
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {fee}
+                        {percent == null ? "\u2014" : `${percent}%`}
                     </div>
                 );
             },
@@ -463,10 +503,11 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const reviewerTotalCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
             selector: (row) => {
                 const subtotal = reviewerLineSubtotal(row);
-                const fee = Math.round((subtotal * FEE_PERCENT) / 100);
+                const percent = getFeePercent(row);
+                const fee = percent == null ? 0 : Math.round((subtotal * percent) / 100);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontWeight: "bold" }}>
                         {subtotal + fee}
@@ -517,12 +558,82 @@ const BillDetailsTable = ({ ...props }) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
 
-    const handleMultiFieldUpdate = (updatedFields) => {
-        const updatedData = tableData.map((row) =>
-            row.id === selectedRow?.id ? { ...row, ...updatedFields } : row
-        );
-        setTableData(updatedData);
-        setSelectedRow(null);
+    const handleMultiFieldUpdate = async (updatedFields) => {
+        if (billDetailUpdateMutation?.isLoading) return;
+        if (!billId) {
+            setShowToast({ key: "error", label: t("HCM_AM_BILL_NOT_FOUND"), transitionTime: 3000 });
+            return;
+        }
+        if (!tenantId) {
+            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            return;
+        }
+        if (!selectedRow?.id) {
+            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            return;
+        }
+
+        const existingPayee = selectedRow?.payee || {};
+        const payeeIdentifier = existingPayee?.identifier || selectedRow?.payee?.identifier;
+
+        const nextPayee = {
+            ...existingPayee,
+            tenantId: existingPayee?.tenantId || tenantId,
+            ...(existingPayee?.type ? { type: existingPayee.type } : {}),
+            ...(payeeIdentifier ? { identifier: payeeIdentifier } : {}),
+            paymentProvider: existingPayee?.paymentProvider || t("NA"),
+            payeeName: updatedFields?.payeeName,
+            payeePhoneNumber: updatedFields?.payeePhoneNumber,
+        };
+
+        try {
+            await billDetailUpdateMutation.mutateAsync(
+                {
+                    body: {
+                        // RequestInfo: Digit.Utils.getRequestInfo(),
+                        billId,
+                        tenantId,
+                        billDetails: [
+                            {
+                                id: selectedRow.id,
+                                payee: nextPayee,
+                            },
+                        ],
+                    },
+                },
+                {
+                    onSuccess: () => {
+                        const updatedData = tableData.map((row) =>
+                            row.id === selectedRow?.id
+                                ? {
+                                    ...row,
+                                    ...updatedFields,
+                                    payee: nextPayee,
+                                    payeeName: updatedFields?.payeeName,
+                                    payeePhoneNumber: updatedFields?.payeePhoneNumber,
+                                }
+                                : row
+                        );
+                        setTableData(updatedData);
+                        setSelectedRow(null);
+                        setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+                    },
+                    onError: (error) => {
+                        setShowToast({
+                            key: "error",
+                            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+                            transitionTime: 3000,
+                        });
+                    },
+                }
+            );
+        } catch (e) {
+            setShowToast({
+                key: "error",
+                label: e?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+                transitionTime: 3000,
+            });
+        }
     };
 
     return (
@@ -551,6 +662,7 @@ const BillDetailsTable = ({ ...props }) => {
                     row={selectedRow}
                     onClose={() => setSelectedRow(null)}
                     onSubmit={handleMultiFieldUpdate}
+                    isSaving={billDetailUpdateMutation?.isLoading}
                 />
             )}
             {showToast && (

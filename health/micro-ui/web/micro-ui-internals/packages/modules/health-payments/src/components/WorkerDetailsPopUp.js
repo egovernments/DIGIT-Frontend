@@ -8,11 +8,11 @@ import { PopUp, Button, TextInput, Toast } from "@egovernments/digit-ui-componen
  * Editable fields: payee name, payee mobile number
  * Read-only fields: role, no. of days, wage, amount
  */
-const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
+const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false }) => {
     const { t } = useTranslation();
-    const [payeeName, setPayeeName] = useState(row?.payeeName || "");
-    const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payeePhoneNumber || "");
-    const [operator] = useState(row?.paymentProvider || "BANK");
+    const [payeeName, setPayeeName] = useState(row?.payee?.payeeName || "");
+    const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payee?.payeePhoneNumber || "");
+    const [operator] = useState(row?.payee?.paymentProvider || "BANK");
     const [showToast, setShowToast] = useState(null);
 
     const handleSave = () => {
@@ -27,7 +27,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
             });
             return;
         }
-        const mobileRegex = /^[0-9]{8}$/;
+        const mobileRegex = /^[0-9]{10}$/;
         if (!mobileRegex.test(trimmedPayeeMobile)) {
             setShowToast({
                 key: "error",
@@ -67,7 +67,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
 
     const readOnlyFields = [
         { label: t("HCM_AM_ROLE"), value: t(row?.role) },
-        { label: t("HCM_AM_NUMBER_OF_DAYS"), value: row?.additionalDetails?.attendance },
+        { label: t("HCM_AM_NUMBER_OF_DAYS"), value: row?.totalAttendance },
         { label: t("HCM_AM_WAGE"), value: row?.wage },
         { label: t("HCM_AM_TOTAL_AMOUNT"), value: row?.totalAmount },
     ];
@@ -127,6 +127,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row }) => {
                             label={t("HCM_AM_APPROVE")}
                             title={t("HCM_AM_APPROVE")}
                             onClick={handleSave}
+                            isDisabled={isSaving}
                         />
                     </div>,
                 ]}

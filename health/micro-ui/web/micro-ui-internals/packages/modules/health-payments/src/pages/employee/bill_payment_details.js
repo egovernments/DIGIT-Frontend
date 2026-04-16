@@ -256,7 +256,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
       const rateBreakup = rateObj?.rateBreakup || {};
       const savedRb = billDetail?.additionalDetails?.reviewerRateBreakup || {};
-      const attendance = billDetail?.additionalDetails?.attendance;
+      const attendance = billDetail?.totalAttendance;
       const payableItems = (billDetail?.payableLineItems || []).filter(
         (p) => p?.type === "PAYABLE"
       );
@@ -270,7 +270,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       const hasMiscPayable = hasPayableHead(billDetail?.payableLineItems, "MISC");
 
       let ratesFromPayables = false;
-      if (usePayables) {
+      if (usePayables) { //todo check
         ratesFromPayables = true;
         const pl = billDetail.payableLineItems;
         perDay = perDayFromPayable(getPayableAmount(pl, "PER_DAY"), attendance);
@@ -311,8 +311,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         misc,
         hasMiscPayable,
         ratesFromPayables,
-        payeeName: billDetail?.payeeName || "\u2014",
-        payeePhoneNumber: billDetail?.payeePhoneNumber,
+        payeeName: billDetail?.payee?.payeeName || "\u2014",
+        payeePhoneNumber: billDetail?.payee?.payeePhoneNumber,
       };
     });
   }
@@ -377,6 +377,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     url: `/${expenseContextPath}/v1/bill/details/status/_update`,
   });
   const bulkUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/_bulkupdatestatus`,
+  });
+  const bulkUpdateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
   });
   const updateBillDetailWorkflow = async (bill, selectedRows, wfAction) => {
@@ -447,6 +450,44 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       await bulkUpdateMutation.mutateAsync(
         {
           body: {
+            billIds: [bill?.id].filter(Boolean),
+            status: "ACTIVE",
+            workflow: {
+              action: action,
+              comments: `Bill ${action} triggered`,
+              assignes: [],
+            },
+          },
+        },
+        {
+          onSuccess: async () => {
+            setShowToast({
+              key: "success",
+              label: t(`HCM_AM_${action}_SUCCESS`),
+              transitionTime: 3000,
+            });
+            refetchBill();
+          },
+          onError: (error) => {
+            console.error("Bill update failed:", error);
+            setShowToast({
+              key: "error",
+              label: t("HCM_AM_ACTION_FAILED"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Mutation error:", err);
+    }
+  };
+
+  const triggerUpdateBillWithPayload = async (bill, action) => {
+    try {
+      await bulkUpdateBillMutation.mutateAsync(
+        {
+          body: {
             bills: [bill],
             workflow: {
               action: action,
@@ -489,7 +530,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         TRAVEL: Number(row.travel) || 0,
         MISC: Number(row.misc) || 0,
       };
-      const days = Number(row?.additionalDetails?.attendance) || 0;
+      const days = Number(row?.totalAttendance) || 0;
       const origPayables = orig.payableLineItems;
       let payableLineItems = origPayables;
       let totalAmount;
@@ -534,7 +575,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     );
     const updatedBill = { ...billData, billDetails, totalAmount: billTotalAmount };
     try {
-      await bulkUpdateMutation.mutateAsync(
+      await bulkUpdateBillMutation.mutateAsync(
         {
           body: {
             bills: [updatedBill],
@@ -880,62 +921,62 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       setBillData(bill);
       fetchIndividualIds(bill);
       const billId = bill?.id;
+      //Commenting out polling for task - MTN integration
+      // if (!editBillDetails) {
+      //   try {
+      //     const res = await getTaskStatusMutation.mutateAsync({
+      //       body: {
+      //         task: {
+      //           billId: billId,
+      //           type: "Transfer",
+      //         }
+      //       },
+      //     });
+      //     console.log("Task status response for billId:", billId, res);
 
-      if (!editBillDetails) {
-        try {
-          const res = await getTaskStatusMutation.mutateAsync({
-            body: {
-              task: {
-                billId: billId,
-                type: "Transfer",
-              }
-            },
-          });
-          console.log("Task status response for billId:", billId, res);
+      //     if (res?.task?.status === "IN_PROGRESS") {
+      //       if (res?.task?.type === "Transfer") {
+      //         setIsSelectionDisabledTransfer(true);
+      //         console.log("Polling started for billId:", billId);
+      //         pollTaskUntilDone(billId, "Transfer", res);
+      //       }
+      //     } else {
+      //       console.log("inside else 2")
+      //       setIsSelectionDisabledTransfer(false);
+      //     }
+      //   } catch (e) {
+      //     console.warn("Task status check failed for", billId, e);
+      //     setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+      //   };
 
-          if (res?.task?.status === "IN_PROGRESS") {
-            if (res?.task?.type === "Transfer") {
-              setIsSelectionDisabledTransfer(true);
-              console.log("Polling started for billId:", billId);
-              pollTaskUntilDone(billId, "Transfer", res);
-            }
-          } else {
-            console.log("inside else 2")
-            setIsSelectionDisabledTransfer(false);
-          }
-        } catch (e) {
-          console.warn("Task status check failed for", billId, e);
-          setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
-        };
+      //   //Verify polling
+      //   try {
+      //     const res = await getTaskStatusMutation.mutateAsync({
+      //       body: {
+      //         task: {
+      //           billId: billId,
+      //           type: "Verify",
+      //         }
+      //       },
+      //     });
+      //     console.log("Task status response for billId:", billId, res);
 
-        //Verify polling
-        try {
-          const res = await getTaskStatusMutation.mutateAsync({
-            body: {
-              task: {
-                billId: billId,
-                type: "Verify",
-              }
-            },
-          });
-          console.log("Task status response for billId:", billId, res);
-
-          if (res?.task?.status === "IN_PROGRESS") {
-            if (res?.task?.type === "Verify") {
-              setIsSelectionDisabledVerify(true);
-              console.log("Polling started for billId:", billId);
-              pollTaskUntilDone(billId, "Verify", res);
-            }
-          } else {
-            console.log("inside else 2")
-            setIsSelectionDisabledVerify(false);
-          }
-        } catch (e) {
-          console.warn("Task status check failed for", billId, e);
-          setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
-        };
-        // fetchReports(billId);
-      }
+      //     if (res?.task?.status === "IN_PROGRESS") {
+      //       if (res?.task?.type === "Verify") {
+      //         setIsSelectionDisabledVerify(true);
+      //         console.log("Polling started for billId:", billId);
+      //         pollTaskUntilDone(billId, "Verify", res);
+      //       }
+      //     } else {
+      //       console.log("inside else 2")
+      //       setIsSelectionDisabledVerify(false);
+      //     }
+      //   } catch (e) {
+      //     console.warn("Task status check failed for", billId, e);
+      //     setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+      //   };
+      //   // fetchReports(billId);
+      // }
     }
   }, [BillData, editBillDetails]);
 
@@ -977,21 +1018,19 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           || BILL_STATUS_VIEW[billData?.status]
           || "NOT_VERIFIED_VIEW";
 
-      // TODO check: Re-enable sub-tab filtering after testing
-      // if (VIEW_SUB_TABS[view]) {
-      //   const activeSubTab = VIEW_SUB_TABS[view].find((st) => st.code === activeLink?.code);
-      //   if (activeSubTab) {
-      //     const filtered = enriched.filter((item) => item.status === activeSubTab.statusFilter);
-      //     setTableData(filtered || []);
-      //   } else {
-      //     const firstSubTab = VIEW_SUB_TABS[view][0];
-      //     const filtered = enriched.filter((item) => item.status === firstSubTab.statusFilter);
-      //     setTableData(filtered || []);
-      //   }
-      // } else {
-      //   setTableData(enriched || []);
-      // }
-      setTableData(enriched || []);// todo remove after testing 
+      if (VIEW_SUB_TABS[view]) {
+        const activeSubTab = VIEW_SUB_TABS[view].find((st) => st.code === activeLink?.code);
+        if (activeSubTab) {
+          const filtered = enriched.filter((item) => item.status === activeSubTab.statusFilter);
+          setTableData(filtered || []);
+        } else {
+          const firstSubTab = VIEW_SUB_TABS[view][0];
+          const filtered = enriched.filter((item) => item.status === firstSubTab.statusFilter);
+          setTableData(filtered || []);
+        }
+      } else {
+        setTableData(enriched || []);
+      }
 
       const counts = {
         VERIFICATION_FAILED: enriched.filter((item) => item.status === "VERIFICATION_FAILED").length,
@@ -1517,6 +1556,9 @@ const renderActionBar = (ctaButton) => (
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
                 workerRatesData={workerRatesData}
+                billId={billData?.id}
+                tenantId={tenantId}
+                expenseContextPath={expenseContextPath}
               />
             </Fragment>
           )}
@@ -1551,7 +1593,7 @@ const renderActionBar = (ctaButton) => (
                 },
               },
             };
-            triggerUpdateBill(updatedBill, "SEND_FOR_APPROVAL");
+            triggerUpdateBillWithPayload(updatedBill, "SEND_FOR_APPROVAL");
             console.log("Send for approval:", { comment, supportingDocs, billID });
             setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
           }}
@@ -1740,7 +1782,7 @@ const renderActionBar = (ctaButton) => (
           setOpenEditAlertPopUp(false);
         }}
       />}
-      {openApprovePaymentAlertPopUp && <AlertPopUp
+      {/* {openApprovePaymentAlertPopUp && <AlertPopUp
         onClose={() => {
           setOpenApprovePaymentAlertPopUp(false);
         }}
@@ -1752,7 +1794,7 @@ const renderActionBar = (ctaButton) => (
           triggerGeneratePayment(billData, tableData);
           setOpenApprovePaymentAlertPopUp(false);
         }}
-      />}
+      />} */}
       {openSendForReviewPopUp && <AlertPopUp
         onClose={() => setOpenSendForReviewPopUp(false)}
         alertHeading={t("HCM_AM_CONFIRM_SEND_FOR_REVIEW")}
