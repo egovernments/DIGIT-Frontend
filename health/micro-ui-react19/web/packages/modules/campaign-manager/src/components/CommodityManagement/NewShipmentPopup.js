@@ -622,17 +622,18 @@ const NewShipmentPopup = ({
         }
       } else if (entryType === "RETURNED") {
         const retStatus = record.status || "";
-        if (retStatus === "ACCEPTED") {
-          // Return confirmed: returner loses stock, original sender gains it back
+        if (retStatus === "REJECTED") {
+          // Return rejected by receiver, stock stays with returner, net zero
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock has physically left the returner
           if (senderId === fromFacilityId) {
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
           }
-          if (receiverId === fromFacilityId) {
+          // Only ACCEPTED: receiver (original sender) gains stock back
+          if (retStatus === "ACCEPTED" && receiverId === fromFacilityId) {
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
           }
         }
-        // IN_TRANSIT: return initiated but not confirmed, no stock movement
-        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;
