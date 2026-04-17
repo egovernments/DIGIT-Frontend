@@ -186,23 +186,25 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             commodityMap[productName].totalReceived += qty;
           }
         } else if (status === "REJECTED") {
-          // Rejected dispatch → stock came back to sender
+          // Rejected dispatch → sender's stock came back
           if (userFacilityIds.has(stock.senderId)) {
+            commodityMap[productName].totalRejected += qty;
+          }
+          // Receiver rejected incoming stock → also shows as rejected for them
+          if (userFacilityIds.has(stock.receiverId)) {
             commodityMap[productName].totalRejected += qty;
           }
         }
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
         if (retStatus === "ACCEPTED" || retStatus === "IN_TRANSIT") {
-          // ACCEPTED or IN_TRANSIT: stock has physically left the returner
+          // Sender initiated the return → counts as their Total Returned (stock left)
           if (userFacilityIds.has(stock.senderId)) {
-            commodityMap[productName].totalIssued += qty;
-            // Sender initiated the return → counts towards their Total Returned
             commodityMap[productName].totalReturned += qty;
           }
-          // ACCEPTED: receiver (original sender) also gets stock back
+          // ACCEPTED: receiver gets stock back → counts as received (not returned)
           if (retStatus === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
-            commodityMap[productName].totalReturned += qty;
+            commodityMap[productName].totalReceived += qty;
           }
         }
         // REJECTED: return rejected, stock stays with returner, no commodity impact
@@ -210,7 +212,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
-      balance: c.totalReceived - Math.max(0, c.totalIssued - c.totalReturned - c.totalRejected),
+      balance: c.totalReceived - c.totalIssued - c.totalReturned,
     }));
   }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
 
