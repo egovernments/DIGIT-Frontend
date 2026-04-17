@@ -542,13 +542,13 @@ const NewShipmentPopup = ({
         visualizationType: "metric",
         queryType: "",
         requestDate: { startDate: 0, endDate: Date.now(), interval: "day", title: "home" },
-        filters: { campaignId: campaignId || "", facilityId: fromFacilityId || "" },
+        filters: { campaignNumber: campaignNumber || "", facilityId: fromFacilityId || "" },
         aggregationFactors: null,
       },
       headers: { tenantId: tenantId || "" },
     },
     config: {
-      enabled: !isTopLevel && !!tenantId && !!campaignId && !!fromFacilityId,
+      enabled: !isTopLevel && !!tenantId && !!campaignNumber && !!fromFacilityId,
       select: (data) => {
         // Combine results from both queries and dedup by record id
         const r1 = data?.responseData?.customData?.rawResponse?.facilityStockTransformer || [];
@@ -564,8 +564,8 @@ const NewShipmentPopup = ({
         return combined;
       },
     },
-    changeQueryName: `stockBalance_shipment_${campaignId}_${fromFacilityId}`,
-  }), [tenantId, campaignId, isTopLevel, fromFacilityId]);
+    changeQueryName: `stockBalance_shipment_${campaignNumber}_${fromFacilityId}`,
+  }), [tenantId, campaignNumber, isTopLevel, fromFacilityId]);
 
   const { data: stockRecords } = Digit.Hooks.useCustomAPIHook(stockBalanceCriteria);
 
@@ -824,19 +824,19 @@ const NewShipmentPopup = ({
           // Force numeric format so Excel rejects non-numeric input
           cell.numFmt = '0';
           cell.value = null;
-          // Data validation: only whole numbers >= 0
+          // Data validation: only whole numbers >= 0 and <= 10,000,000
           cell.dataValidation = {
             type: 'whole',
-            operator: 'greaterThanOrEqual',
-            formulae: [0],
+            operator: 'between',
+            formulae: [0, 10000000],
             allowBlank: true,
             showInputMessage: true,
             promptTitle: 'Quantity',
-            prompt: 'Enter a numeric value (whole number, 0 or greater)',
+            prompt: 'Enter a whole number between 0 and 10,000,000',
             showErrorMessage: true,
             errorStyle: 'stop',
             errorTitle: 'Invalid quantity',
-            error: 'Only numeric values are allowed. Please enter a whole number (0 or greater).',
+            error: 'Quantity must be a whole number between 0 and 10,000,000.',
           };
         }
       }
@@ -1055,6 +1055,8 @@ const NewShipmentPopup = ({
             const num = Number(val);
             if (!Number.isFinite(num) || num < 0 || !Number.isInteger(num)) {
               errors.push(`Row ${rowNum}: "${name}" must be a whole number >= 0`);
+            } else if (num > 10000000) {
+              errors.push(`Row ${rowNum}: "${name}" quantity (${num}) exceeds maximum allowed (10,000,000)`);
             }
           }
         });

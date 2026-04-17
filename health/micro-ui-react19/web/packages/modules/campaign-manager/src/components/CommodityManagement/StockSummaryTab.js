@@ -201,6 +201,12 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           // Sender (the one returning) loses stock
           if (userFacilityIds.has(stock.senderId)) {
             commodityMap[productName].totalIssued += qty;
+            // Sender initiated the return → counts towards their Total Returned
+            commodityMap[productName].totalReturned += qty;
+          }
+          // ACCEPTED: receiver (original sender) also gets stock back
+          if (retStatus === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
+            commodityMap[productName].totalReturned += qty;
           }
         }
         // IN_TRANSIT: return not confirmed yet, don't count in commodity

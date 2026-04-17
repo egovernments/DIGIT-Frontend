@@ -33,18 +33,18 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
             interval: "day",
             title: "home",
           },
-          filters: { campaignId: campaignId || "" },
+          filters: { campaignNumber: campaignNumber || "" },
           aggregationFactors: null,
         },
         headers: { tenantId: tenantId || "" },
       },
       config: {
-        enabled: enabled && !!tenantId && !!campaignId,
+        enabled: enabled && !!tenantId && !!campaignNumber,
         select: (data) => data?.responseData?.customData?.rawResponse?.stockBalanceTransformer || [],
       },
-      changeQueryName: `stockSummary_${campaignId}_${startDate}_${endDate}`,
+      changeQueryName: `stockSummary_${campaignNumber}_${startDate}_${endDate}`,
     };
-  }, [tenantId, dateRange, campaignId, enabled]);
+  }, [tenantId, dateRange, campaignNumber, enabled]);
 
   const { data: rawRecords, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
@@ -95,7 +95,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
   }, [rawRecords]);
 
   // Return error as null when loading or when there's no explicit error from the hook
-  const error = (!isLoading && enabled && !!tenantId && !!campaignId && rawRecords === undefined) ? new Error("getChartV2 stock request failed") : null;
+  const error = (!isLoading && enabled && !!tenantId && !!campaignNumber && rawRecords === undefined) ? new Error("getChartV2 stock request failed") : null;
 
   return {
     data: stockData,
