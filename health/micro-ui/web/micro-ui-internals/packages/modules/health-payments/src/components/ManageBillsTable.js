@@ -392,6 +392,7 @@ const ManageBillsTable = ({ ...props }) => {
                 {
                   body: {
                     bills: [updatedBill],
+                    tenantId: Digit.ULBService.getCurrentTenantId(),//todo check
                     workflow: {
                       action: "SEND_FOR_APPROVAL",
                       comments: "Sent for approval",
@@ -414,7 +415,7 @@ const ManageBillsTable = ({ ...props }) => {
           
                     setShowToast({
                       key: "error",
-                      label: t("HCM_AM_ACTION_FAILED"),
+                      label: t("HCM_AM_SOMETHING_WENT_WRONG"),
                       transitionTime: 3000,
                     });
                   },
