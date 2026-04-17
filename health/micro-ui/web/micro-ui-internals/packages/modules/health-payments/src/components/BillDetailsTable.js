@@ -23,6 +23,7 @@ const BillDetailsTable = ({ ...props }) => {
     const billStatus = props?.billStatus;
     const subTab = props?.subTab;
     const isReviewerEdit = props?.isReviewerEdit;
+    const hasTriedSave = props?.hasTriedSave;
     const tenantId = props?.tenantId || Digit.ULBService.getCurrentTenantId();
     const billId = props?.billId;
     const expenseContextPath = props?.expenseContextPath || "health-expense";
@@ -64,9 +65,25 @@ const BillDetailsTable = ({ ...props }) => {
         return Math.round((wage + food + travel + misc) * days);
     };
 
+    const normalizeNonNegativeInt = (raw) => {
+        if (raw === "") return "";
+        const n = Number(raw);
+        if (!Number.isFinite(n)) return "";
+        return Math.max(0, Math.trunc(n));
+    };
+
+    const normalizeFeePercent = (raw) => {
+        if (raw === "") return "";
+        const n = Number(raw);
+        if (!Number.isFinite(n)) return "";
+        const clamped = Math.min(100, Math.max(0, n));
+        return Math.round(clamped * 10) / 10;
+    };
+
     const handleReviewerCellChange = (rowId, field, value) => {
+        const normalizedValue = normalizeNonNegativeInt(value);
         const updatedData = tableData.map((row) =>
-            row.id === rowId ? { ...row, [field]: value === "" ? "" : Number(value) } : row
+            row.id === rowId ? { ...row, [field]: normalizedValue } : row
         );
         setTableData(updatedData);
         if (props?.onRowChange) {
@@ -76,7 +93,7 @@ const BillDetailsTable = ({ ...props }) => {
     };
 
     const handleReviewerAdditionalDetailsChange = (rowId, field, value) => {//todo check
-        const nextValue = value === "" ? "" : Number(value);
+        const nextValue = field === "feePercent" ? normalizeFeePercent(value) : value === "" ? "" : Number(value);
         const updatedData = tableData.map((row) =>
             row.id === rowId
                 ? { ...row, additionalDetails: { ...(row.additionalDetails || {}), [field]: nextValue } }
@@ -105,6 +122,7 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             );
         }
+        const isEmpty = hasTriedSave && row?.[field] === "";
         return (
             <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
                 {withDollar && <span style={{ fontSize: "14px", color: "#505A5F" }}>$</span>}
@@ -112,10 +130,12 @@ const BillDetailsTable = ({ ...props }) => {
                     type="number"
                     value={row?.[field] != null ? row[field] : ""}
                     onChange={(e) => handleReviewerCellChange(row.id, field, e.target.value)}
+                    min={0}
+                    step={1}
                     style={{
                         width: "70px",
                         padding: "4px 6px",
-                        border: "1px solid #B1B4B6",
+                        border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
                         borderRadius: "4px",
                         fontSize: "14px",
                         textAlign: "right",
@@ -131,12 +151,12 @@ const BillDetailsTable = ({ ...props }) => {
         const userIdCol = {
             name: colHeader(t("HCM_AM_WORKER_ID")),
             selector: (row) => {
-                const showErrorPayments = row?.status === "PAYMENT_FAILED";
-                const showErrorNotProcessed =
-                    (row?.status === "PENDING_VERIFICATION" ||
-                     row?.status === "VERIFICATION_FAILED" ||
-                     row?.status === "EDITED") &&
-                    row?.additionalDetails?.errorDetails?.reasonForFailure === "MTN_SERVICE_EXCEPTION";
+                // const showErrorPayments = row?.status === "PAYMENT_FAILED";
+                // const showErrorNotProcessed =
+                //     (row?.status === "PENDING_VERIFICATION" ||
+                //      row?.status === "VERIFICATION_FAILED" ||
+                //      row?.status === "EDITED") &&
+                //     row?.additionalDetails?.errorDetails?.reasonForFailure === "MTN_SERVICE_EXCEPTION";
                 return (
                     <div className="ellipsis-cell" style={{ display: "flex", alignItems: "center", minWidth: 0, maxWidth: "100%" }}>
                         <span
@@ -151,7 +171,7 @@ const BillDetailsTable = ({ ...props }) => {
                         >
                             {t(row?.userId) || t("NA")}
                         </span>
-                        {(showErrorPayments || showErrorNotProcessed) && (
+                        {/* {(showErrorPayments || showErrorNotProcessed) && (
                             <TooltipWrapper
                                 arrow
                                 content={
@@ -178,7 +198,7 @@ const BillDetailsTable = ({ ...props }) => {
                                     />
                                 </span>
                             </TooltipWrapper>
-                        )}
+                        )} */}
                     </div>
                 );
             },
@@ -337,11 +357,12 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
             selector: (row) => {
                 const total = Number(row?.totalAmount || 0);
-                const percent = getFeePercent(row);
-                const fee = percent == null ? 0 : Math.round((total * percent) / 100);
+                // const percent = getFeePercent(row);
+                // const fee = percent == null ? 0 : Math.round((total * percent) / 100);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {total + fee}
+                        {/* {total + fee} */}
+                        {total}
                     </div>
                 );
             },
@@ -368,7 +389,7 @@ const BillDetailsTable = ({ ...props }) => {
                 <Button
                     variation="secondary"
                     size="small"
-                    label={t("HCM_AM_RESOLVE")}
+                    label={t("HCM_AM_IGNORE_ERROR")}
                     onClick={() => { /* placeholder */ }}
                 />
             ),
@@ -439,12 +460,13 @@ const BillDetailsTable = ({ ...props }) => {
                         </div>
                     );
                 }
+                const isEmpty = hasTriedSave && row?.totalAttendance === "";
                 return (
                     <input
                         type="number"
                         value={row?.totalAttendance != null ? row.totalAttendance : ""}
                         onChange={(e) => {
-                            const val = e.target.value === "" ? "" : Number(e.target.value);
+                            const val = normalizeNonNegativeInt(e.target.value);
                             const updatedData = tableData.map((r) =>
                                 r.id === row.id
                                     ? { ...r, totalAttendance: val, additionalDetails: { ...r.additionalDetails, attendance: val } }
@@ -456,10 +478,12 @@ const BillDetailsTable = ({ ...props }) => {
                                 if (updatedRow) props.onRowChange(updatedRow);
                             }
                         }}
+                        min={0}
+                        step={1}
                         style={{
                             width: "70px",
                             padding: "4px 6px",
-                            border: "1px solid #B1B4B6",
+                            border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
                             borderRadius: "4px",
                             fontSize: "14px",
                             textAlign: "right",
@@ -476,15 +500,19 @@ const BillDetailsTable = ({ ...props }) => {
             selector: (row) => {
                 const percent = getFeePercent(row);
                 if (isReviewerEdit) {
+                    const isEmpty = hasTriedSave && row?.additionalDetails?.feePercent === "";
                     return (
                         <input
                             type="number"
                             value={row?.additionalDetails?.feePercent != null ? row.additionalDetails.feePercent : ""}
                             onChange={(e) => handleReviewerAdditionalDetailsChange(row.id, "feePercent", e.target.value)}
+                            min={0}
+                            max={100}
+                            step={0.1}
                             style={{
                                 width: "70px",
                                 padding: "4px 6px",
-                                border: "1px solid #B1B4B6",
+                                border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
                                 borderRadius: "4px",
                                 fontSize: "14px",
                                 textAlign: "right",
@@ -572,6 +600,11 @@ const BillDetailsTable = ({ ...props }) => {
             setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
             return;
         }
+        const isEditable = ["PENDING_VERIFICATION", "VERIFICATION_FAILED"].includes(selectedRow?.status);
+        if (!isEditable) {
+            setShowToast({ key: "error", label: t("HCM_AM_EDIT_NOT_ALLOWED_FOR_STATUS") || t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            return;
+        }
 
         const existingPayee = selectedRow?.payee || {};
         const payeeIdentifier = existingPayee?.identifier || selectedRow?.payee?.identifier;
@@ -617,11 +650,12 @@ const BillDetailsTable = ({ ...props }) => {
                         setTableData(updatedData);
                         setSelectedRow(null);
                         setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
+                        props?.onRefetchBill?.();
                     },
                     onError: (error) => {
                         setShowToast({
                             key: "error",
-                            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+                            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
                             transitionTime: 3000,
                         });
                     },
@@ -630,7 +664,7 @@ const BillDetailsTable = ({ ...props }) => {
         } catch (e) {
             setShowToast({
                 key: "error",
-                label: e?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+                label: e?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
                 transitionTime: 3000,
             });
         }
@@ -663,6 +697,7 @@ const BillDetailsTable = ({ ...props }) => {
                     onClose={() => setSelectedRow(null)}
                     onSubmit={handleMultiFieldUpdate}
                     isSaving={billDetailUpdateMutation?.isLoading}
+                    isEditable={["PENDING_VERIFICATION", "VERIFICATION_FAILED"].includes(selectedRow?.status)}
                 />
             )}
             {showToast && (
