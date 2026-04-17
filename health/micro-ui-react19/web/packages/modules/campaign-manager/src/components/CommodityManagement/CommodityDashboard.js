@@ -126,7 +126,7 @@ const CommodityDashboard = () => {
   const { totalManagers, syncedManagers, syncRate, isLoading: syncLoading } = useWarehouseManagerSync({
     enabled: useKibanaFlag,
     dateRange: effectiveDateRange,
-    campaignId,
+    campaignNumber,
   });
 
   // Override stockSummary.dataSyncStats with real ES data when available

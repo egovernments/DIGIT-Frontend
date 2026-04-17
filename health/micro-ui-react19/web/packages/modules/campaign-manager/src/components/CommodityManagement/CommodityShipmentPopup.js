@@ -172,8 +172,10 @@ const CommodityShipmentPopup = ({
     const qty = parseInt(quantity, 10);
     if (!qty || qty <= 0) {
       newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_MUST_BE_POSITIVE);
+    } else if (qty > 10000000) {
+      newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_MAX) || "Quantity cannot exceed 10,000,000";
     }
-    if (!isTopLevel && selectedCommodity && qty > 0) {
+    if (!isTopLevel && selectedCommodity && qty > 0 && qty <= 10000000) {
       const available = warehouseStock[selectedCommodity.productVariantId] || 0;
       if (qty > available) {
         newErrors.quantity = `${t(
@@ -225,7 +227,9 @@ const CommodityShipmentPopup = ({
     let effectiveItems = shipmentItems;
     if (selectedCommodity && quantity) {
       const qty = parseInt(quantity, 10);
-      if (qty > 0 && !shipmentItems.some((item) => item.productVariantId === selectedCommodity.productVariantId)) {
+      if (qty > 10000000) {
+        newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_MAX) || "Quantity cannot exceed 10,000,000";
+      } else if (qty > 0 && !shipmentItems.some((item) => item.productVariantId === selectedCommodity.productVariantId)) {
         const available = warehouseStock[selectedCommodity.productVariantId] || 0;
         if (!isTopLevel && available > 0 && qty > available) {
           newErrors.quantity = `${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
@@ -504,6 +508,7 @@ const CommodityShipmentPopup = ({
                 }}
                 placeholder="0"
                 min="1"
+                max="10000000"
               />
               {errors.quantity && (
                 <ErrorMessage message={errors.quantity} showIcon={true} />
