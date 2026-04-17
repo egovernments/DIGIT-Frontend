@@ -79,6 +79,39 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
+  const workflowSuccessNavConfig = {
+    VERIFY: {
+      route: `/${window.contextPath}/employee/payments/verify-success`,
+      messageKey: "HCM_AM_VERIFY_SUCCESS",
+      descriptionKey: "HCM_AM_VERIFY_SUCCESS_DESCRIPTION",
+    },
+    SEND_FOR_REVIEW: {
+      route: `/${window.contextPath}/employee/payments/send-for-review-success`,
+      messageKey: "HCM_AM_SEND_FOR_REVIEW_SUCCESS",
+      descriptionKey: "HCM_AM_SEND_FOR_REVIEW_SUCCESS_DESCRIPTION",
+    },
+    SEND_FOR_APPROVAL: {
+      route: `/${window.contextPath}/employee/payments/send-for-approval-success`,
+      messageKey: "HCM_AM_SEND_FOR_APPROVAL_SUCCESS",
+      descriptionKey: "HCM_AM_SEND_FOR_APPROVAL_SUCCESS_DESCRIPTION",
+    },
+  };
+
+  const navigateToWorkflowSuccess = (action, billNumber) => {
+    const config = workflowSuccessNavConfig?.[action];
+    if (!config?.route) return false;
+    history.push(config.route, {
+      state: "success",
+      info: "HCM_AM_BILL_NUMBER",
+      fileName: billNumber || "NA",
+      message: config.messageKey,
+      description: `<p>${t(config.descriptionKey || config.messageKey)}</p>`,
+      back: "GO_BACK_TO_HOME",
+      backlink: `/${window.contextPath}/employee`,
+    });
+    return true;
+  };
+
   // Role-based config
   const activeRole = getManageBillsRole();
   const roleConfig = getManageBillsConfig();
@@ -101,6 +134,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [isReviewerEdit, setIsReviewerEdit] = useState(false);
+  const [hasTriedSaveReviewer, setHasTriedSaveReviewer] = useState(false);
   const [openSendForApprovalPopUp, setOpenSendForApprovalPopUp] = useState(false);
   const [openSendForReviewPopUp, setOpenSendForReviewPopUp] = useState(false);
   const [openSaveChangesPopUp, setOpenSaveChangesPopUp] = useState(false);
@@ -120,19 +154,13 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 // });
 
   // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
-  const [limitAndOffset, setLimitAndOffset] = useState({
-    limit: rowsPerPage,
-    offset: (currentPage - 1) * rowsPerPage,
-  });
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
-    setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
   };
 
   const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
     setRowsPerPage(currentRowsPerPage);
     setCurrentPage(1);
-    setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   }
   const [activeLink, setActiveLink] = useState({
     code: editBillDetails ? "PENDING_FOR_EDIT" : "NOT_VERIFIED",
@@ -161,10 +189,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         tenantId: tenantId,
         referenceIds: project?.map(p => p?.id) || [],
         ...(billID ? { billNumbers: [billID] } : {}),
-        pagination: {
-          limit: limitAndOffset.limit,
-          offset: limitAndOffset.offset
-        }
       }
     },
     config: {
@@ -452,6 +476,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           body: {
             billIds: [bill?.id].filter(Boolean),
             status: "ACTIVE",
+            tenantId: tenantId,
             workflow: {
               action: action,
               comments: `Bill ${action} triggered`,
@@ -466,13 +491,14 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               label: t(`HCM_AM_${action}_SUCCESS`),
               transitionTime: 3000,
             });
-            refetchBill();
+            const didNavigate = navigateToWorkflowSuccess(action, bill?.billNumber);
+            if (!didNavigate) refetchBill();
           },
           onError: (error) => {
             console.error("Bill update failed:", error);
             setShowToast({
               key: "error",
-              label: t("HCM_AM_ACTION_FAILED"),
+              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
               transitionTime: 3000,
             });
           },
@@ -503,13 +529,14 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               label: t(`HCM_AM_${action}_SUCCESS`),
               transitionTime: 3000,
             });
-            refetchBill();
+            const didNavigate = navigateToWorkflowSuccess(action, bill?.billNumber);
+            if (!didNavigate) refetchBill();
           },
           onError: (error) => {
             console.error("Bill update failed:", error);
             setShowToast({
               key: "error",
-              label: t("HCM_AM_ACTION_FAILED"),
+              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
               transitionTime: 3000,
             });
           },
@@ -595,7 +622,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           onError: (error) => {
             setShowToast({
               key: "error",
-              label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+              label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
               transitionTime: 3000,
             });
           },
@@ -605,7 +632,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       console.error("Reviewer save failed:", err);
       setShowToast({
         key: "error",
-        label: err?.response?.data?.Errors?.[0]?.message || t("HCM_AM_ACTION_FAILED"),
+        label: err?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
         transitionTime: 3000,
       });
     }
@@ -1503,10 +1530,6 @@ const renderActionBar = (ctaButton) => (
                   width: "100%",
               }}
               onTabClick={(e) => {
-                setLimitAndOffset((prev) => ({
-                    limit: prev.limit,
-                    offset: 0,
-                }));
                 setCurrentPage(1);
                 setActiveLink(e);
               }}
@@ -1529,7 +1552,10 @@ const renderActionBar = (ctaButton) => (
                     variation="secondary"
                     label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
                     icon={isReviewerEdit ? "Close" : "Edit"}
-                    onClick={() => setIsReviewerEdit((prev) => !prev)}
+                    onClick={() => {
+                      setHasTriedSaveReviewer(false);
+                      setIsReviewerEdit((prev) => !prev);
+                    }}
                   />
                   {!isReviewerEdit && (
                     <Button
@@ -1552,7 +1578,9 @@ const renderActionBar = (ctaButton) => (
                 subTab={VIEWS_WITH_SUB_TABS.includes(currentView) ? activeLink?.code : null}
                 role={activeRole}
                 isReviewerEdit={isReviewerEdit}
+                hasTriedSave={hasTriedSaveReviewer}
                 onRowChange={(updatedRow) => setTableData((prev) => prev.map((r) => r.id === updatedRow.id ? updatedRow : r))}
+                onRefetchBill={refetchBill}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
                 workerRatesData={workerRatesData}
@@ -1815,6 +1843,19 @@ const renderActionBar = (ctaButton) => (
         cancelLabel={t("HCM_AM_CANCEL")}
         onPrimaryAction={() => {
           setOpenSaveChangesPopUp(false);
+          setHasTriedSaveReviewer(true);
+          const hasEmpty = (tableData || []).some((row) =>
+            row?.perDay === "" ||
+            row?.food === "" ||
+            row?.travel === "" ||
+            row?.misc === "" ||
+            row?.totalAttendance === "" ||
+            row?.additionalDetails?.feePercent === ""//todo check
+          );
+          if (hasEmpty) {
+            setShowToast({ key: "error", label: t("HCM_AM_PLEASE_FILL_REQUIRED_FIELDS") || t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            return;
+          }
           saveReviewerRateChanges();//todo check
         }}
       />}

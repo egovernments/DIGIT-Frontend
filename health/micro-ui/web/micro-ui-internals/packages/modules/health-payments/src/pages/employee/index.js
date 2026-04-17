@@ -86,6 +86,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/verify-and-generate-payments`} component={() => <VerifyAndGeneratePayments />} />
         <PrivateRoute path={`${path}/edit-bills`} component={() => <VerifyAndGeneratePayments editBills={true} />} />
         <PrivateRoute path={`${path}/edit-bill-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/verify-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/send-for-review-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/send-for-approval-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/view-bill-payment-details`} component={() => <BillPaymentDetails />} />
         <PrivateRoute path={`${path}/edit-bill-payment-details`} component={() => <BillPaymentDetails editBillDetails={true} />} />
         <PrivateRoute path={`${path}/edit-bill-on-excel`} component={() => <EditBillOnExcel />} />
