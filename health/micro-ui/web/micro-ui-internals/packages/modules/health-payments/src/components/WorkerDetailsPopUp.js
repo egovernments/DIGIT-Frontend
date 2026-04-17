@@ -8,7 +8,7 @@ import { PopUp, Button, TextInput, Toast } from "@egovernments/digit-ui-componen
  * Editable fields: payee name, payee mobile number
  * Read-only fields: role, no. of days, wage, amount
  */
-const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false }) => {
+const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditable = true }) => {
     const { t } = useTranslation();
     const [payeeName, setPayeeName] = useState(row?.payee?.payeeName || "");
     const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payee?.payeePhoneNumber || "");
@@ -16,6 +16,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false }) => {
     const [showToast, setShowToast] = useState(null);
 
     const handleSave = () => {
+        if (!isEditable) return;
         const trimmedPayeeName = payeeName.trim();
         const trimmedPayeeMobile = payeeMobileNumber.trim();
 
@@ -54,6 +55,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false }) => {
                 style={{ width: "100%" }}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
+                disabled={!isEditable}
             />
         </div>
     );
@@ -127,7 +129,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false }) => {
                             label={t("HCM_AM_APPROVE")}
                             title={t("HCM_AM_APPROVE")}
                             onClick={handleSave}
-                            isDisabled={isSaving}
+                            isDisabled={!isEditable || isSaving}
                         />
                     </div>,
                 ]}
