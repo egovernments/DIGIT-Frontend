@@ -174,7 +174,7 @@ const ManageBills = () => {
             console.error("Bulk update failed:", error);
             setShowToast({
               key: "error",
-              label: t("HCM_AM_ACTION_FAILED"),
+              label: t("HCM_AM_SOMETHING_WENT_WRONG"),
               transitionTime: 3000,
             });
           },
@@ -344,8 +344,7 @@ const ManageBills = () => {
         }
       />
 
-      <Card>
-        <Tab
+          <Tab
           activeLink={activeLink?.code}
           configItemKey="code"
           configDisplayKey="name"
@@ -376,6 +375,8 @@ const ManageBills = () => {
           showNav={true}
           style={{ width: "100%" }}
         />
+
+      <Card>      
 
         {isFetching ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
