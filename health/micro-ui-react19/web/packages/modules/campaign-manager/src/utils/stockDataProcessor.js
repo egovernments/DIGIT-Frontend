@@ -146,8 +146,6 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
     } else if (stockEntryType === "RETURNED") {
       if (status === "ACCEPTED" || status === "IN_TRANSIT") {
         // ACCEPTED or IN_TRANSIT: stock has physically left the returner
-        commodityMap[productName].totalIssued += qty;
-        // Counts as returned (including in-transit returns)
         commodityMap[productName].totalReturned += qty;
       }
       // IN_TRANSIT: return not confirmed yet, don't count in commodity
@@ -169,7 +167,7 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
 
   const commoditySummaries = Object.values(commodityMap).map((c) => ({
     ...c,
-    balance: c.totalReceived - Math.max(0, c.totalIssued - c.totalReturned - c.totalRejected),
+    balance: c.totalReceived - c.totalIssued - c.totalReturned,
   }));
 
   const totalFacilities = facilitySet.size;
