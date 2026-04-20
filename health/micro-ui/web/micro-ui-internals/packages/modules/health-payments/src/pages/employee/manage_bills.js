@@ -12,6 +12,7 @@ import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
+import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import AlertPopUp from "../../components/alertPopUp";
 
 const ManageBills = () => {
@@ -43,6 +44,7 @@ const ManageBills = () => {
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [totalCount, setTotalCount] = useState(0);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+  const [isBillReportLoading, setIsBillReportLoading] = useState(false);
 
   // Tab state — initialize from role config
   const firstTab = roleConfig?.tabs?.[0];
@@ -54,42 +56,40 @@ const ManageBills = () => {
   const project = Digit?.SessionStorage.get("staffProjects");
   const projectPeriods = Digit.SessionStorage.get("projectPeriods");
 
+  const baseBillCriteria = {
+    tenantId: tenantId,
+    referenceIds: project?.map((p) => p?.id) || [],
+    ...(billID ? { billNumbers: [billID] } : {}),
+    ...(dateRange.startDate && dateRange.endDate
+      ? {
+          fromDate: new Date(dateRange.startDate).getTime(),
+          toDate: new Date(dateRange.endDate).getTime(),
+        }
+      : {}),
+    pagination: {
+      limit: limitAndOffset.limit,
+      offset: limitAndOffset.offset,
+    },
+    billingPeriodIds:
+      periodType && periodType?.code === "FINAL_AGGREGATE"
+        ? []
+        : periodType && periodType?.code === "INTERMEDIATE" && dateRange.startDate === "" && dateRange.endDate === ""
+        ? (projectPeriods || []).map((x) => x?.id)
+        : dateRange.startDate === "" && dateRange.endDate === ""
+        ? []
+        : findAllOverlappingPeriods(
+            dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
+            dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
+          ).map((x) => x?.id),
+    ...(periodType && periodType?.code === "FINAL_AGGREGATE" ? { billingType: periodType?.code } : {}),
+  };
+
   const BillSearchCri = {
     url: `/${expenseContextPath}/bill/v1/_search`,
     body: {
       billCriteria: {
-        tenantId: tenantId,
-        referenceIds: project?.map((p) => p?.id) || [],
-        // TODO: Re-enable status filter after testing
+        ...baseBillCriteria,
         status: roleConfig?.tabStatusMap?.[activeLink.code]?.[0] || null,
-        ...(billID ? { billNumbers: [billID] } : {}),
-        ...(dateRange.startDate && dateRange.endDate
-          ? {
-              fromDate: new Date(dateRange.startDate).getTime(),
-              toDate: new Date(dateRange.endDate).getTime(),
-            }
-          : {}),
-        pagination: {
-          limit: limitAndOffset.limit,
-          offset: limitAndOffset.offset,
-        },
-        billingPeriodIds:
-          periodType && periodType?.code === "FINAL_AGGREGATE"
-            ? []
-            : periodType &&
-              periodType?.code === "INTERMEDIATE" &&
-              dateRange.startDate === "" &&
-              dateRange.endDate === ""
-            ? (projectPeriods || []).map((x) => x?.id)
-            : dateRange.startDate === "" && dateRange.endDate === ""
-            ? []
-            : findAllOverlappingPeriods(
-                dateRange?.startDate && dateRange.startDate !== "" ? dateRange.startDate : new Date().getTime(),
-                dateRange?.endDate && dateRange.endDate !== "" ? dateRange.endDate : new Date().getTime()
-              ).map((x) => x?.id),
-        ...(periodType && periodType?.code === "FINAL_AGGREGATE"
-          ? { billingType: periodType?.code }
-          : {}),
       },
     },
     config: {
@@ -99,6 +99,29 @@ const ManageBills = () => {
   };
 
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+
+  const { status: _ignoredStatus, ...billCriteriaWithoutStatus } = BillSearchCri?.body?.billCriteria || {};
+  const BillStatusCountCri = {
+    url: `/${expenseContextPath}/bill/v1/_search`,
+    body: {
+      billCriteria: {
+        ...billCriteriaWithoutStatus,
+        pagination: { limit: 1, offset: 0 },
+      },
+    },
+    config: {
+      enabled: project ? true : false,
+      select: (data) => data,
+    },
+  };
+
+  const { data: BillCountData } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
+  const statusCount = BillCountData?.statusCount || {};
+
+  const getTabCount = (tabCode) => {
+    const status = roleConfig?.tabStatusMap?.[tabCode]?.[0];
+    return Number(statusCount?.[status]) || 0;
+  };
 
   const reqMdmsCriteria = {
     url: `/${mdms_context_path}/v1/_search`,
@@ -137,6 +160,14 @@ const ManageBills = () => {
 
   const bulkUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${expenseContextPath}/bill/v1/_bulkupdatestatus`,
+  });
+
+  const generateAdvisoryMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/report/generate`,
+  });
+
+  const billReportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/report/_search`,
   });
 
   const triggerBulkUpdateBills = async (bills, action) => {
@@ -183,6 +214,22 @@ const ManageBills = () => {
     } catch (err) {
       console.error("Mutation error:", err);
     }
+  };
+
+  const triggerGenerateAdvisory = async (bills) => {
+    const billIds = (bills || []).map((b) => b?.id).filter(Boolean);
+    if (billIds.length === 0) return;
+
+    const bulkPayload = {
+      RequestInfo: Digit.Utils.getRequestInfo(),
+      billReport: {
+        billIds,
+        tenantId,
+        type: "PAYMENT_ADVISORY_EXCEL",
+      },
+    };
+
+    await generateAdvisoryMutation.mutateAsync({ body: bulkPayload });
   };
 
   // Fetch billing config and periods
@@ -233,14 +280,86 @@ const ManageBills = () => {
     }
   }, [fetchBillingPeriods]);
 
-  // When BillData changes, update table data
+  // When BillData changes, update table data (and apply advisory filters for approver bank tabs)
   useEffect(() => {
-    if (BillData) {
+    const apply = async () => {
+      if (!BillData) return;
       const bills = BillData.bills || [];
-      setTableData(bills);
-      setTotalCount(BillData?.pagination?.totalCount || bills.length);
-    }
-  }, [BillData]);
+
+      const isApproverBank = activeRole === MANAGE_BILLS_ROLES.PAYMENT_APPROVER_BANK;
+      const isAdvisoryTab = isApproverBank && ["PENDING_BILLS", "GENERATED_ADVISORIES"].includes(activeLink?.code);
+      if (!isAdvisoryTab) {
+        setTableData(bills);
+        setTotalCount(BillData?.pagination?.totalCount || bills.length);
+        return;
+      }
+
+      const billIds = bills.map((b) => b?.id).filter(Boolean);
+      if (billIds.length === 0) {
+        setTableData([]);
+        setTotalCount(0);
+        return;
+      }
+
+      setIsBillReportLoading(true);
+      try {
+        const res = await billReportSearchMutation.mutateAsync({
+          body: {
+            RequestInfo: Digit.Utils.getRequestInfo(),
+            searchCriteria: {
+              tenantId,
+              billIds,
+              type: "PAYMENT_ADVISORY_EXCEL",
+            },
+          },
+        });
+
+        const reports = res?.billReports || [];
+        const reportByBillId = reports.reduce((acc, r) => {
+          const id = r?.billId;
+          if (id) acc[id] = r;
+          return acc;
+        }, {});
+
+        const filtered = bills
+          .map((b) => {
+            const r = reportByBillId[b?.id];
+
+            // Tab 1: show bills where advisory is NOT present, plus FAILED (retryable)
+            if (activeLink?.code === "PENDING_BILLS") {
+              if (!r) return b;
+              if (r?.status === "FAILED") return { ...b, advisoryReport: r };
+              // exclude INITIATED and GENERATED
+              return null;
+            }
+
+            // Tab 2: show bills where advisory is present (INITIATED/GENERATED/FAILED)
+            if (activeLink?.code === "GENERATED_ADVISORIES") {
+              if (!r) return null;
+              return { ...b, advisoryReport: r };
+            }
+
+            return b;
+          })
+          .filter(Boolean);
+
+        setTableData(filtered);
+        setTotalCount(filtered.length);
+      } catch (error) {
+        setTableData([]);
+        setTotalCount(0);
+        setShowToast({
+          key: "error",
+          label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+          transitionTime: 5000,
+        });
+      } finally {
+        setIsBillReportLoading(false);
+      }
+    };
+
+    apply();
+  }, [BillData, activeLink?.code]);
 
   // Refetch on filter change
   useEffect(() => {
@@ -271,8 +390,7 @@ const ManageBills = () => {
     setPeriodType(null);
   };
 
-  // Handle CTA action (mock for now — real implementation later)
-  const handleCTAAction = (action) => {
+  const handleCTAAction = async (action) => {
     if (!selectedBills || selectedBills.length === 0) return;
 
     switch (action) {
@@ -291,8 +409,19 @@ const ManageBills = () => {
         setShowToast({ key: "info", label: t("HCM_AM_DOWNLOAD_TXN_HISTORY_PLACEHOLDER"), transitionTime: 3000 });
         break;
       case "GENERATE_ADVISORY":
-        // Mock — placeholder for future implementation
-        setShowToast({ key: "info", label: t("HCM_AM_GENERATE_ADVISORY_PLACEHOLDER"), transitionTime: 3000 });
+        try {
+          await triggerGenerateAdvisory(selectedBills);
+          setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+          refetchBill();
+          setSelectedBills([]);
+          setClearSelectedRows((prev) => !prev);
+        } catch (error) {
+          setShowToast({
+            key: "error",
+            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+            transitionTime: 5000,
+          });
+        }
         break;
       case "DOWNLOAD_ADVISORY":
         // Mock — placeholder for future implementation
@@ -358,7 +487,7 @@ const ManageBills = () => {
           }}
           configNavItems={roleConfig.tabs.map((tab) => ({
             code: tab.code,
-            name: t(tab.name),
+            name: `${t(tab.name)} (${getTabCount(tab.code)})`,
           }))}
           navStyles={{
             display: "flex",
@@ -378,7 +507,7 @@ const ManageBills = () => {
 
       <Card>      
 
-        {isFetching ? (
+        {isFetching || isBillReportLoading ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
         ) : tableData.length === 0 ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
@@ -464,21 +593,10 @@ const ManageBills = () => {
             submitLabel={t("HCM_AM_CONFIRM")}
             cancelLabel={t("HCM_AM_CANCEL")}
             onPrimaryAction={async () => {
-              const validBills = selectedBills.filter((bill) =>
-                bill?.billDetails?.some((d) => d.status === "PENDING_VERIFICATION")
-              );
-            
-              if (validBills.length === 0) {
-                setShowToast({
-                  key: "error",
-                  label: t("HCM_AM_NO_VALID_BILLS"),
-                  transitionTime: 3000,
-                });
-                return;
-              }
-
+              if (!selectedBills?.length) return;
+              const action = activePopUpAction;
               setActivePopUpAction(null);
-              await triggerBulkUpdateBills(validBills, activePopUpAction);
+              await triggerBulkUpdateBills(selectedBills, action);
             }}
           />
         );

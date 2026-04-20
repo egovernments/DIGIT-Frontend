@@ -40,6 +40,7 @@ const ManageBillsTable = ({ ...props }) => {
                             history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
                                 billID: row.billNumber,
                                 activeTabCode: activeTabCode,
+                                advisoryReport: row?.advisoryReport || null,
                             });
                         }}
                     >
@@ -168,11 +169,11 @@ const ManageBillsTable = ({ ...props }) => {
             downloadAdvisory: {
                 name: t("HCM_AM_DOWNLOAD_ADVISORY"),
                 selector: (row, index) => {
-                    const reportDetails = row?.additionalDetails?.reportDetails;
+                    const advisoryReport = row?.advisoryReport;
                     const billId = row?.billNumber;
                     const isLastRow = index === props.totalCount - 1;
     
-                    return reportDetails?.status === "COMPLETED" ? (
+                    return advisoryReport?.status === "GENERATED" && advisoryReport?.fileStoreId ? (
                         <Button
                             className="custom-class"
                             iconFill=""
@@ -183,23 +184,12 @@ const ManageBillsTable = ({ ...props }) => {
                             title={t("HCM_AM_DOWNLOAD_ADVISORY")}
                             showBottom={isLastRow && props.data.length !== 1 ? false : true}
                             onOptionSelect={(value) => {
-                                if (value.code === "HCM_AM_PDF") {
-                                    if (reportDetails?.pdfReportId) {
-                                        downloadFileWithName({ fileStoreId: reportDetails.pdfReportId, customName: `advisory_${billId}`, type: "pdf" });
-                                    } else {
-                                        setShowToast({ key: "error", label: t("HCM_AM_PDF_GENERATION_FAILED"), transitionTime: 3000 });
-                                    }
-                                } else if (value.code === "HCM_AM_EXCEL") {
-                                    if (reportDetails?.excelReportId) {
-                                        downloadFileWithName({ fileStoreId: reportDetails.excelReportId, customName: `advisory_${billId}`, type: "excel" });
-                                    } else {
-                                        setShowToast({ key: "error", label: t("HCM_AM_EXCEL_GENERATION_FAILED"), transitionTime: 3000 });
-                                    }
-                                }
+                                if (value.code === "HCM_AM_EXCEL") {
+                                    downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `advisory_${billId}`, type: "excel" });
+                                } 
                             }}
                             options={[
                                 { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
-                                { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
                             ]}
                             optionsKey="name"
                             style={{ minWidth: "13rem" }}
@@ -209,10 +199,10 @@ const ManageBillsTable = ({ ...props }) => {
                     ) : (
                         <div>
                             <Tag
-                                {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                                label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                                {...(advisoryReport?.status !== "FAILED" && { icon: "Info" })}
+                                label={advisoryReport?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
                                 showIcon={true}
-                                {...(reportDetails?.status === "FAILED" && { type: "error" })}
+                                {...(advisoryReport?.status === "FAILED" && { type: "error" })}
                             />
                         </div>
                     );

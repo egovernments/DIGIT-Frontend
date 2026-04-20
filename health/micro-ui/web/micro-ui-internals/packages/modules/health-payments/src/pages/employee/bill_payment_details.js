@@ -76,6 +76,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
   const billID = location.state?.billID;
   const activeTabCode = location.state?.activeTabCode;
+  const advisoryReportFromNav = location.state?.advisoryReport;
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -744,6 +745,88 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     url: `/health-expense/v1/payment/_transfer`,
   });
 
+  const generateAdvisoryMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/report/generate`,
+  });
+
+  const billReportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/report/_search`,
+  });
+
+  const triggerGenerateAdvisoryForBill = async () => {
+    const billId = billData?.id;
+    if (!billId) return;
+
+    try {
+      await generateAdvisoryMutation.mutateAsync({
+        body: {
+          RequestInfo: Digit.Utils.getRequestInfo(),
+          billReport: {
+            billIds: [billId],
+            tenantId,
+            type: "PAYMENT_ADVISORY_EXCEL",
+          },
+        },
+      });
+
+      setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+      refetchBill();
+    } catch (error) {
+      setShowToast({
+        key: "error",
+        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_SOMETHING_WENT_WRONG"),
+        transitionTime: 5000,
+      });
+    }
+  };
+
+  const triggerDownloadAdvisoryForBill = async () => {
+    const billId = billData?.id;
+    const billNumber = billData?.billNumber || billID;
+    if (!billId) return;
+
+    if (advisoryReportFromNav?.status === "GENERATED" && advisoryReportFromNav?.fileStoreId) {
+      downloadFileWithName({
+        fileStoreId: advisoryReportFromNav.fileStoreId,
+        customName: `advisory_${billNumber || "bill"}`,
+        type: "excel",
+      });
+      return;
+    }
+
+    try {
+      const res = await billReportSearchMutation.mutateAsync({
+        body: {
+          RequestInfo: Digit.Utils.getRequestInfo(),
+          searchCriteria: {
+            tenantId,
+            billIds: [billId],
+            type: "PAYMENT_ADVISORY_EXCEL",
+          },
+        },
+      });
+
+      const report = (res?.billReports || []).find((r) => r?.billId === billId && r?.status === "GENERATED" && r?.fileStoreId);
+      const fileStoreId = report?.fileStoreId;
+      if (!fileStoreId) {
+        setShowToast({ key: "error", label: t("HCM_AM_REPORT_DOWNLOAD_FAILED"), transitionTime: 3000 });
+        return;
+      }
+
+      downloadFileWithName({
+        fileStoreId,
+        customName: `advisory_${billNumber || "bill"}`,
+        type: "excel",
+      });
+    } catch (error) {
+      setShowToast({
+        key: "error",
+        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_REPORT_DOWNLOAD_FAILED"),
+        transitionTime: 3000,
+      });
+    }
+  };
+
   const triggerGeneratePayment = async (bill, billDetails) => {
     console.log("triggerGeneratePayment", bill);
     try {
@@ -1307,6 +1390,16 @@ const renderActionBar = (ctaButton) => (
                 size="medium"
                 onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`)}
               />
+              {activeTabCode === "GENERATED_ADVISORIES" && (
+                <Button
+                  variation="secondary"
+                  label={t("HCM_AM_DOWNLOAD_ADVISORY")}
+                  icon="FileDownload"
+                  isSuffix
+                  size="medium"
+                  onClick={triggerDownloadAdvisoryForBill}
+                />
+              )}
             </div>
           </div>
           {isBillLoading || isFetching ? (
@@ -1759,9 +1852,9 @@ const renderActionBar = (ctaButton) => (
       {currentView === "APPROVER_NOT_INITIATED_VIEW" && (
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
-            label={t(`HCM_AM_INITIATE_PAYMENT`)}
+            label={t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}
             onClick={() => {
-              setShowToast({ key: "info", label: t("HCM_AM_INITIATE_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
+              triggerGenerateAdvisoryForBill();
             }}
             style={{ minWidth: "14rem" }}
             type="button"

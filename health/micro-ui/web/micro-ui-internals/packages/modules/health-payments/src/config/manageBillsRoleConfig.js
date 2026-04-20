@@ -145,7 +145,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     ],
     tabStatusMap: {
       PENDING_BILLS: ["REVIEWED"],
-      GENERATED_ADVISORIES: ["FULLY_PAID"],//todo check correct status
+      GENERATED_ADVISORIES: ["REVIEWED"],
     },
     selectableTabs: ["PENDING_BILLS"],
     tabColumns: {
