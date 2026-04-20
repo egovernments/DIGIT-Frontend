@@ -17,7 +17,7 @@ const InboxLinks = ({ parentRoute, businessService, allLinks, headerText }) => {
   const GetLogo = () => (
     <div className="header">
       <span className="logo">
-        <PersonIcon />
+        <PersonIcon fill="#c84c0e" />
       </span>{" "}
       <span className="text">{t(headerText)}</span>
     </div>

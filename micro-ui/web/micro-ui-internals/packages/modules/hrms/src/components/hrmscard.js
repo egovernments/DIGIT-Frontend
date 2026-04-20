@@ -24,7 +24,7 @@ const HRMSCard = () => {
   propsForSandbox = propsForSandbox.filter((link) => (link?.roles ? Digit.Utils.didEmployeeHasAtleastOneRole(link.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <PersonIcon />,
+    Icon: "PersonIcon",
     moduleName: t("ACTION_TEST_HRMS"),
     kpis: [
       {

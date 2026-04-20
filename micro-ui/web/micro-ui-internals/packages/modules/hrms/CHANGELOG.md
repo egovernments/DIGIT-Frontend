@@ -1,3 +1,12 @@
+## [1.9.6] [20-April-2026]
+### 🔧 Bug Fixes & UI Improvements:
+- **Inbox Pagination**: Fixed pagination flow where changing "Rows per page" didn't reset the offset, preventing out-of-bounds queries.
+- **Cache Invalidation**: Added query invalidation for `HRMS_SEARCH` and `HRMS_COUNT` on employee edit and status actions to prevent displaying stale cached data inside the inbox.
+- **File Upload Security**: Hard-restricted file uploads during employee activation/deactivation strictly to `image/jpeg`, `image/png`, and `application/pdf`.
+- **Active Assignment Display**: Updated the inbox UI to distinctly prioritize and display the employee's currently active department and designation (`isCurrentAssignment: true`).
+- **UX Improvements**: Added visual Loader components and synchronized React Router `history.replace` navigation exclusively upon successful API mutation completion.
+- **Module Icon Rendering**: Repaired the vanishing HRMS Module icon issue on Production environments by upgrading the component configurations to pass absolute svg strings and deploying native `fill="#c84c0e"` overrides within the `react-components` SVG payload.
+
 ## [1.9.5] [07-April-2026]
 ### 🔄 Search & Validation Update:
 - **Inbox Search**: Updated `Inbox.js` to fetch mobile number validation rules from `UserValidation` MDMS master, ensuring consistency with 'Create' and 'Edit' flows.
