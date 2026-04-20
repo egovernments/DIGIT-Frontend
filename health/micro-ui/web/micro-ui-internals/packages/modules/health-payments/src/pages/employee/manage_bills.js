@@ -228,7 +228,6 @@ const ManageBills = () => {
     if (billIds.length === 0) return;
 
     const bulkPayload = {
-      // RequestInfo: Digit.Utils.getRequestInfo(),
       billReport: {
         billIds,
         tenantId,
@@ -313,7 +312,6 @@ const ManageBills = () => {
       try {
         const res = await billReportSearchMutation.mutateAsync({
           body: {
-            // RequestInfo: Digit.Utils.getRequestInfo(),
             searchCriteria: {
               tenantId,
               billIds,
