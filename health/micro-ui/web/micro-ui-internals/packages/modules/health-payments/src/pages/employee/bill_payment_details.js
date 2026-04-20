@@ -407,6 +407,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const bulkUpdateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${expenseContextPath}/bill/v1/_update`,
   });
+  const billDetailPartialUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/billdetails/_update`,
+  });
   const updateBillDetailWorkflow = async (bill, selectedRows, wfAction) => {
     try {
       await updateBillDetailMutation.mutateAsync(
@@ -549,6 +552,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   };
 
   const saveReviewerRateChanges = async () => {//todo check
+    if (billDetailPartialUpdateMutation?.isLoading) return;
+    if (!billData?.id || !tenantId) {
+      setShowToast({
+        key: "error",
+        label: t("HCM_AM_SOMETHING_WENT_WRONG"),
+        transitionTime: 3000,
+      });
+      return;
+    }
     const originalById = Object.fromEntries((billData?.billDetails || []).map((d) => [d.id, d]));
     const billDetails = tableData.map((row) => {
       const orig = originalById[row.id] || {};
@@ -593,25 +605,24 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         ...orig,
         ...rest,
         totalAmount,
+        totalAttendance: days,
         payableLineItems,
         additionalDetails,
       };
     });
-    const billTotalAmount = billDetails.reduce(
-      (s, d) => s + (Number(d.totalAmount) || 0),
-      0
-    );
-    const updatedBill = { ...billData, billDetails, totalAmount: billTotalAmount };
+    const partialBillDetails = billDetails.map((d) => ({
+      id: d?.id,
+      totalAmount: Number(d?.totalAmount) || 0,
+      totalAttendance: Number(d?.totalAttendance) || 0,
+      payableLineItems: d?.payableLineItems,
+    }));
     try {
-      await bulkUpdateBillMutation.mutateAsync(
+      await billDetailPartialUpdateMutation.mutateAsync(
         {
           body: {
-            bills: [updatedBill],
-            workflow: {
-              action: "",
-              comments: "Reviewer updated worker rates",
-              assignes: [],
-            },
+            billId: billData.id,
+            tenantId,
+            billDetails: partialBillDetails,
           },
         },
         {
@@ -1180,7 +1191,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     || billData?.status
     || "NA";
 
-  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading || bulkUpdateMutation.isLoading) {
+  if (
+    isBillLoading ||
+    isAllIndividualsLoading ||
+    isLoading ||
+    isFetching ||
+    updateBillDetailMutation.isLoading ||
+    bulkUpdateMutation.isLoading ||
+    billDetailPartialUpdateMutation.isLoading
+  ) {
     console.log("Loading bill data or individual data...");
     return <Loader />
   }
