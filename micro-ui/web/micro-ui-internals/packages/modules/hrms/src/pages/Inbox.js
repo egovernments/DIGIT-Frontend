@@ -6,13 +6,12 @@ import MobileInbox from "../components/inbox/MobileInbox";
 
 const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filterComponent, isInbox }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading: isLoading, Errors, data: res } = Digit.Hooks.hrms.useHRMSCount(tenantId);
 
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
-  const [totalRecords, setTotalReacords] = useState(undefined);
+  const [totalRecords, setTotalRecords] = useState(undefined);
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
   });
@@ -29,9 +28,13 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     isupdate
   );
 
+  const { isLoading: isCountLoading, Errors, data: countRes } = Digit.Hooks.hrms.useHRMSCount(tenantId, {}, searchParams);
+
   useEffect(() => {
-    // setTotalReacords(res?.EmployeCount?.totalEmployee);
-  }, [res]);
+    if (countRes) {
+      setTotalRecords(countRes?.EmployeCount?.totalEmployee);
+    }
+  }, [countRes]);
 
 
   useEffect(() => {
@@ -167,7 +170,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     ];
   };
 
-  if (isLoading) {
+  if (hookLoading || isCountLoading) {
     return <Loader />;
   }
 
