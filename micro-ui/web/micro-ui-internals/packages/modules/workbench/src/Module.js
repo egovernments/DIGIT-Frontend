@@ -14,8 +14,8 @@ import * as parsingUtils from "../src/utils/ParsingUtils"
 import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  
-  const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
+
+  const moduleCode = ["workbench", "mdms", "schema", "hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
@@ -27,7 +27,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
     modulePrefix
   });
   if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"} />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return <TourProvider>
@@ -41,7 +41,6 @@ const componentsToRegister = {
   DigitJSONForm,
   LevelCards,
   DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
-  HRMSCard ,// Overridden the HRMS card as per workbench
   CustomSwitch
 };
 
@@ -84,18 +83,18 @@ const setupLibraries = (Library, service, method) => {
 /* To Overide any existing config/middlewares  we need to use similar method */
 const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  setupLibraries("Utils","parsingUtils",{...window?.Digit?.Utils?.parsingUtils,...parsingUtils})
+  setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils })
 };
 
 
- const initWorkbenchComponents = () => {
+const initWorkbenchComponents = () => {
   overrideHooks();
   updateCustomConfigs();
-  
+
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };
 
-export {initWorkbenchComponents, DigitJSONForm};
+export { initWorkbenchComponents, DigitJSONForm };
 

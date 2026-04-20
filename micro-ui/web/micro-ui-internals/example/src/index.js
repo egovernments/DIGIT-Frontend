@@ -53,7 +53,7 @@ const initTokens = (stateCode) => {
   if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
 };
 
-const initDigitUI = async() => {
+const initDigitUI = async () => {
   const { DigitUI, initCoreComponents } = await import("@egovernments/digit-ui-module-core");
   const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
 
@@ -79,7 +79,7 @@ const initDigitUI = async() => {
 
   window?.Digit.ComponentRegistryService.setupRegistry({
     ...overrideComponents,
-  
+
   });
   initCoreComponents();
   initDSSComponents();
@@ -101,7 +101,7 @@ const initDigitUI = async() => {
       stateCode={stateCode}
       enabledModules={enabledModules}
       defaultLanding="employee"
-      allowedUserTypes={["employee","citizen"]}
+      allowedUserTypes={["employee", "citizen"]}
       moduleReducers={moduleReducers}
     />,
     document.getElementById("root")
