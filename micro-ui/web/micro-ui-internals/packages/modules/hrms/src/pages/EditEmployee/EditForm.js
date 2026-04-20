@@ -2,12 +2,14 @@ import { FormComposer, Toast, Loader } from "@egovernments/digit-ui-react-compon
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { newConfig } from "../../components/config/config";
 import { convertEpochToDate } from "../../components/Utils";
 
 const EditForm = ({ tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const queryClient = useQueryClient();
   const [canSubmit, setSubmitValve] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const [mobileNumber, setMobileNumber] = useState(null);
@@ -316,6 +318,8 @@ const EditForm = ({ tenantId, data }) => {
           });
         },
         onSuccess: async (data) => {
+          queryClient.invalidateQueries("HRMS_SEARCH");
+          queryClient.invalidateQueries("HRMS_COUNT");
           navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
         },
       }

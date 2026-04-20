@@ -75,6 +75,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
 
   const handlePageSizeChange = (e) => {
     setPageSize(Number(e.target.value));
+    setPageOffset(0);
   };
 
   // Fetch mobile validation config from MDMS
@@ -95,7 +96,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
           errorMessage: item?.rules?.errorMessage,
           isDefault: item?.default === true,
         }));
-        
+
         const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
         return {
           mobileConfigs,
