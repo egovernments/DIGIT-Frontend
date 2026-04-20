@@ -405,7 +405,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     url: `/${expenseContextPath}/bill/v1/_bulkupdatestatus`,
   });
   const bulkUpdateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
+    url: `/${expenseContextPath}/bill/v1/_update`,
   });
   const updateBillDetailWorkflow = async (bill, selectedRows, wfAction) => {
     try {
@@ -515,7 +515,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       await bulkUpdateBillMutation.mutateAsync(
         {
           body: {
-            bills: [bill],
+            bill,
             workflow: {
               action: action,
               comments: `Bill ${action} triggered`,

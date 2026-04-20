@@ -68,6 +68,9 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             <div className="comment-label">
               {t("HCM_AM_UPLOAD_JUSTIFICATION")}
             </div>
+            <div className="comment-label">
+              {t("HCM_AM_UPLOAD_BILL_OR_DOC")}
+            </div>
             <BulkUpload
               onSubmit={handleUpload}
               fileData={uploadedFile}

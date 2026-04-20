@@ -360,7 +360,7 @@ const ManageBillsTable = ({ ...props }) => {
     
         const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
         const sendForApprovalMutation = Digit.Hooks.useCustomAPIMutationHook({
-            url: `/${expenseContextPath}/bill/v1/_bulkupdate`,
+            url: `/${expenseContextPath}/bill/v1/_update`,
           });  
         
           const triggerSendForApproval = async (bill, data) => {
@@ -381,8 +381,7 @@ const ManageBillsTable = ({ ...props }) => {
               await sendForApprovalMutation.mutateAsync(
                 {
                   body: {
-                    bills: [updatedBill],
-                    tenantId: Digit.ULBService.getCurrentTenantId(),//todo check
+                    bill: updatedBill,
                     workflow: {
                       action: "SEND_FOR_APPROVAL",
                       comments: "Sent for approval",
