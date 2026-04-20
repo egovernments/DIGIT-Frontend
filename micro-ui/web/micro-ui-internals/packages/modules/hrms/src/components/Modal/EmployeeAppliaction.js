@@ -22,7 +22,7 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
             label: t("HR_ORDER_NO"),
             type: "text",
             populators: {
-             name: "orderNo",
+              name: "orderNo",
             },
           },
 
@@ -30,7 +30,7 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
             label: t("HR_EFFECTIVE_DATE"),
             type: "date",
             isMandatory: true,
-            disable:true,   /* Disabled date and set defaultvalue */
+            disable: true,   /* Disabled date and set defaultvalue */
             populators: {
               error: t("HR_EFFECTIVE_DATE_INVALID"),
               name: "effectiveFrom",
@@ -45,7 +45,8 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
               <div style={{ marginBottom: "2rem" }}>
                 <span>{t("TL_APPROVAL_UPLOAD_SUBHEAD")}</span>
                 <UploadFile
-                id={"hrms-deactivation-doc"}
+                  id={"hrms-deactivation-doc"}
+                  accept="image/jpeg,image/png,application/pdf,.jpg,.jpeg,.png,.pdf"
                   onUpload={selectFile}
                   onDelete={() => {
                     setUploadedFile(null);

@@ -1,16 +1,19 @@
-import { FormComposer, Loader, Modal } from "@egovernments/digit-ui-react-components";
+import { FormComposer, Loader, Modal, Toast } from "@egovernments/digit-ui-react-components";
 import set from "lodash/set";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { configEmployeeActiveApplication } from "./Modal/EmployeeActivation";
 import { configEmployeeApplication } from "./Modal/EmployeeAppliaction";
 
 const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applicationData, billData }) => {
   const history = useHistory();
+  const queryClient = useQueryClient();
   const [config, setConfig] = useState({});
   const [file, setFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
+  const [showToast, setShowToast] = useState(null);
   const [Reasons, setReasons] = useState([]);
   const [selectedReason, selecteReason] = useState("");
   const tenant = Digit.ULBService.getStateId() || tenantId?.split(".")?.[0];
@@ -91,7 +94,9 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     (async () => {
       setError(null);
       if (file) {
-        if (file.size >= 5242880) {
+        if (!file.type.match(/image\/jpeg|image\/png|application\/pdf/)) {
+          setError(t("HRMS_INVALID_UPLOAD_FILE_TYPE"));
+        } else if (file.size >= 5242880) {
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
@@ -143,11 +148,12 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             });
           },
           onSuccess: async (data) => {
-            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+            queryClient.invalidateQueries("HRMS_SEARCH");
+            queryClient.invalidateQueries("HRMS_COUNT");
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees: data?.Employees || Employees, key: "UPDATE", action: "DEACTIVATION" });
           },
         }
       );
-      history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "DEACTIVATION" });
     } else {
       if (file) {
         let documents = {
@@ -176,27 +182,40 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             });
           },
           onSuccess: async (data) => {
-            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+            queryClient.invalidateQueries("HRMS_SEARCH");
+            queryClient.invalidateQueries("HRMS_COUNT");
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees: data?.Employees || Employees, key: "UPDATE", action: "ACTIVATION" });
           },
         }
       );
-
-      history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "ACTIVATION" });
     }
   }
 
+  if (mutationUpdate.isLoading) {
+    return <Loader />;
+  }
+
   return action && config?.form ? (
-    <Modal
-      headerBarMain={<Heading label={t(config?.label?.heading)} />}
-      headerBarEnd={<CloseBtn onClick={closeModal} />}
-      actionCancelOnSubmit={closeModal}
-      actionSaveLabel={t(config?.label?.submit)}
-      actionSaveOnSubmit={() => { }}
-      formId="modal-action"
-      isDisabled={!selectedReason}
-    >
-      <FormComposer config={config?.form} noBoxShadow inline disabled={true} childrenAtTheBottom onSubmit={submit} formId="modal-action" />
-    </Modal>
+    <React.Fragment>
+      <Modal
+        headerBarMain={<Heading label={t(config?.label?.heading)} />}
+        headerBarEnd={<CloseBtn onClick={closeModal} />}
+        actionCancelOnSubmit={closeModal}
+        actionSaveLabel={t(config?.label?.submit)}
+        actionSaveOnSubmit={() => { }}
+        formId="modal-action"
+        isDisabled={!selectedReason}
+      >
+        <FormComposer config={config?.form} noBoxShadow inline disabled={true} childrenAtTheBottom onSubmit={submit} formId="modal-action" />
+      </Modal>
+      {showToast && (
+        <Toast
+          error={showToast.key === "error"}
+          label={t(showToast.label)}
+          onClose={() => setShowToast(null)}
+        />
+      )}
+    </React.Fragment>
   ) : (
     <Loader />
   );

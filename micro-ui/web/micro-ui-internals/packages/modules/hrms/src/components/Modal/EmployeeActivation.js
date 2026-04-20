@@ -47,7 +47,7 @@ export const configEmployeeActiveApplication = ({ t, action, selectFile, uploade
                 <span>{t("TL_APPROVAL_UPLOAD_SUBHEAD")}</span>
                 <UploadFile
                   id={"hrms-activation-doc"}
-                  accept="image/*, .pdf, .png, .jpeg"
+                  accept="image/jpeg,image/png,application/pdf,.jpg,.jpeg,.png,.pdf"
                   onUpload={selectFile}
                   onDelete={() => {
                     setUploadedFile(null);
