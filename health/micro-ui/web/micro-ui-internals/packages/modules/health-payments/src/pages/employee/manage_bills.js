@@ -123,6 +123,13 @@ const ManageBills = () => {
     return Number(statusCount?.[status]) || 0;
   };
 
+  const getTabLabel = (tab) => {
+    const hideCount =
+      activeRole === MANAGE_BILLS_ROLES.PAYMENT_APPROVER_BANK && ["PENDING_BILLS", "GENERATED_ADVISORIES"].includes(tab?.code);
+
+    return hideCount ? t(tab.name) : `${t(tab.name)} (${getTabCount(tab.code)})`;
+  };
+
   const reqMdmsCriteria = {
     url: `/${mdms_context_path}/v1/_search`,
     body: {
@@ -163,7 +170,7 @@ const ManageBills = () => {
   });
 
   const generateAdvisoryMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/${expenseContextPath}/bill/v1/report/generate`,
+    url: `/${expenseContextPath}/bill/v1/report/_generate`,
   });
 
   const billReportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -221,7 +228,7 @@ const ManageBills = () => {
     if (billIds.length === 0) return;
 
     const bulkPayload = {
-      RequestInfo: Digit.Utils.getRequestInfo(),
+      // RequestInfo: Digit.Utils.getRequestInfo(),
       billReport: {
         billIds,
         tenantId,
@@ -302,10 +309,11 @@ const ManageBills = () => {
       }
 
       setIsBillReportLoading(true);
+      console.log("Fetching advisory reports for bills:", billIds);
       try {
         const res = await billReportSearchMutation.mutateAsync({
           body: {
-            RequestInfo: Digit.Utils.getRequestInfo(),
+            // RequestInfo: Digit.Utils.getRequestInfo(),
             searchCriteria: {
               tenantId,
               billIds,
@@ -487,7 +495,7 @@ const ManageBills = () => {
           }}
           configNavItems={roleConfig.tabs.map((tab) => ({
             code: tab.code,
-            name: `${t(tab.name)} (${getTabCount(tab.code)})`,
+            name: getTabLabel(tab),
           }))}
           navStyles={{
             display: "flex",

@@ -71,16 +71,19 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     headerLabel: "HCM_AM_REVIEW_BILLS",
     tabs: [
       { code: "PENDING_BILLS", name: "HCM_AM_PENDING_BILLS" },
+      { code: "REVIEW_IN_PROGRESS", name: "HCM_AM_REVIEW_IN_PROGRESS" },
       { code: "SENT_FOR_APPROVAL", name: "HCM_AM_SENT_FOR_APPROVAL" },
     ],
     tabStatusMap: {
       PENDING_BILLS: ["UNDER_REVIEW"],
       SENT_FOR_APPROVAL: ["REVIEWED"],
+      REVIEW_IN_PROGRESS: ["REVIEW_IN_PROGRESS"],
     },
     selectableTabs: [],
     tabColumns: {
       PENDING_BILLS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "editBill", "download", "sendForApproval"],
       SENT_FOR_APPROVAL: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
+      REVIEW_IN_PROGRESS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
     },
     tabCTAs: {
       // PENDING_BILLS: { label: "HCM_AM_SEND_FOR_APPROVAL", action: "SEND_FOR_APPROVAL" },
@@ -88,10 +91,12 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     billDetailViewMap: {
       UNDER_REVIEW: "REVIEWER_PENDING_VIEW",
       REVIEWED: "REVIEWER_SENT_FOR_APPROVAL_VIEW",
+      REVIEW_IN_PROGRESS: "REVIEWER_SENT_FOR_APPROVAL_VIEW",
     },
     statusDisplayMap: {
       UNDER_REVIEW: "HCM_AM_PENDING_REVIEW",
       REVIEWED: "HCM_AM_REVIEWED",
+      REVIEW_IN_PROGRESS: "HCM_AM_REVIEW_IN_PROGRESS",
     },
   },
 

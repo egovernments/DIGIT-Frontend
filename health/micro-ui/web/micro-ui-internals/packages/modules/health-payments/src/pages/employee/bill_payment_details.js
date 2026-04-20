@@ -799,7 +799,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     if (advisoryReportFromNav?.status === "GENERATED" && advisoryReportFromNav?.fileStoreId) {
       downloadFileWithName({
         fileStoreId: advisoryReportFromNav.fileStoreId,
-        customName: `advisory_${billNumber || "bill"}`,
+        customName: `Payment_Advisory_${billNumber || "bill"}`,
         type: "excel",
       });
       return;
@@ -1392,7 +1392,7 @@ const renderActionBar = (ctaButton) => (
                   isSuffix
                   size="medium"
                   onClick={() => {
-                    const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.supportingDocs?.[0];
+                    const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.[0];
                     if (doc?.filestoreId) {
                       downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
                     } else {

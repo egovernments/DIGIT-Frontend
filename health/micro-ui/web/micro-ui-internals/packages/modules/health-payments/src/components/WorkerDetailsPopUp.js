@@ -83,7 +83,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                 children={[
                     <div key="worker-detail-fields" style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                         {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setPayeeName, true)}
-                        {renderEditable(t("HCM_AM_MOBILE_NUMBER"), payeeMobileNumber, setPayeeMobileNumber, true)}
+                        {renderEditable(t("HCM_AM_PAYEE_PHONE_NUMBER"), payeeMobileNumber, setPayeeMobileNumber, true)}
                         {renderReadOnlyInput(t("HCM_AM_MNO_NAME"), operator)}
 
                         {/* Read-only card */}

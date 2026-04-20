@@ -139,6 +139,8 @@ module.exports = function (app) {
     //go_deep
     "/health-expense/bill/v1/_bulkupdate",
     "/health-expense/bill/v1/_bulkupdatestatus",
+    "/health-expense/bill/v1/report/_generate",
+    "/health-expense/bill/v1/report/_search",
     "/health-expense/bill/v1/billdetails/_update",
     "/airflow-trigger-api"
   ].forEach((location) => app.use(location, createProxy));

@@ -182,18 +182,12 @@ const ManageBillsTable = ({ ...props }) => {
                             isSuffix
                             label={t("HCM_AM_DOWNLOAD_ADVISORY")}
                             title={t("HCM_AM_DOWNLOAD_ADVISORY")}
-                            showBottom={isLastRow && props.data.length !== 1 ? false : true}
-                            onOptionSelect={(value) => {
-                                if (value.code === "HCM_AM_EXCEL") {
-                                    downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `advisory_${billId}`, type: "excel" });
-                                } 
+                            onClick={() => {
+                                downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `Payment_Advisory_${billId}`, type: "excel" });
                             }}
-                            options={[
-                                { code: "HCM_AM_EXCEL", name: t("HCM_AM_EXCEL") },
-                            ]}
-                            optionsKey="name"
+                            // showBottom={isLas    tRow && props.data.length !== 1 ? false : true}                            
                             style={{ minWidth: "13rem" }}
-                            type="actionButton"
+                            // type="actionButton"
                             variation="secondary"
                         />
                     ) : (
