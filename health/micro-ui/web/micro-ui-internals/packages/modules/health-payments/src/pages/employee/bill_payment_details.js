@@ -1340,6 +1340,28 @@ const renderActionBar = (ctaButton) => (
   </ActionBar>
 );
 
+  const downloadOptions = [
+    ...((["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) || activeTabCode === "GENERATED_ADVISORIES")
+      ? [{ code: "JUSTIFICATION", name: t("HCM_AM_DOWNLOAD_JUSTIFICATION") }]
+      : []),
+    ...(activeTabCode === "GENERATED_ADVISORIES" ? [{ code: "ADVISORY", name: t("HCM_AM_DOWNLOAD_ADVISORY") }] : []),
+  ];
+
+  const handleDownloadSelect = (option) => {
+    if (option?.code === "JUSTIFICATION") {
+      const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.[0];
+      if (doc?.filestoreId) {
+        downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
+      } else {
+        setShowToast({ key: "error", label: t("HCM_AM_NO_JUSTIFICATION_FOUND"), transitionTime: 3000 });
+      }
+      return;
+    }
+    if (option?.code === "ADVISORY") {
+      triggerDownloadAdvisoryForBill();
+    }
+  };
+
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
@@ -1384,41 +1406,28 @@ const renderActionBar = (ctaButton) => (
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
             <span style={{ fontSize: "18px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-              {["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) && (
+              {downloadOptions.length > 0 && (
                 <Button
-                  variation="secondary"
-                  label={t("HCM_AM_DOWNLOAD_JUSTIFICATION")}
-                  icon="FileDownload"
+                  icon="ArrowDropDown"
                   isSuffix
-                  size="medium"
-                  onClick={() => {
-                    const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.[0];
-                    if (doc?.filestoreId) {
-                      downloadFileWithName({ fileStoreId: doc.filestoreId, customName: doc.filename || "justification", type: "excel" });
-                    } else {
-                      setShowToast({ key: "error", label: t("HCM_AM_NO_JUSTIFICATION_FOUND"), transitionTime: 3000 });
-                    }
-                  }}
+                  label={t("HCM_AM_DOWNLOAD")}
+                  variation="secondary"
+                  type="actionButton"
+                  options={downloadOptions}
+                  optionsKey="name"
+                  onOptionSelect={handleDownloadSelect}
+                  style={{ minWidth: "12rem" }}
+                  showBottom={true}
                 />
               )}
               <Button
                 variation="secondary"
                 label={t("HCM_AM_VIEW_REGISTERS")}
-                icon="OpenInNew"
+                // icon="OpenInNew"
                 isSuffix
                 size="medium"
                 onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`)}
               />
-              {activeTabCode === "GENERATED_ADVISORIES" && (
-                <Button
-                  variation="secondary"
-                  label={t("HCM_AM_DOWNLOAD_ADVISORY")}
-                  icon="FileDownload"
-                  isSuffix
-                  size="medium"
-                  onClick={triggerDownloadAdvisoryForBill}
-                />
-              )}
             </div>
           </div>
           {isBillLoading || isFetching ? (
@@ -1452,6 +1461,9 @@ const renderActionBar = (ctaButton) => (
                   {t(statusDisplayLabel)}
                 </span>
               )}
+              {activeTabCode === "GENERATED_ADVISORIES" && billData?.additionalDetails?.justificationDetails?.comment
+                ? renderLabelPair("HCM_AM_PAYMENT_REVIEWER_COMMENTS", billData?.additionalDetails?.justificationDetails?.comment, { whiteSpace: "pre-wrap" })
+                : null}
 
  {/* uncomment this block to show report generation and download section               */}
 {/* <div>
