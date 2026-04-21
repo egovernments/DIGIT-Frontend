@@ -239,14 +239,30 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     }
   };
 
-  const renderHeader = (plot) => {
-    const shouldHideDenomination = response?.responseData?.hideHeaderDenomination;
-
-    const code = `DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`;
-    if (plot?.symbol === "amount" && !shouldHideDenomination) {
-      return `${t(code)} ${renderUnits(value?.denomination)}`;
+  const getPlotColumnIdAndParts = (plotName) => {
+    const columnId = typeof plotName === "string" ? plotName.replace(/\./g, " ") : "";
+    if (!columnId) return { columnId: "", parts: [] };
+    if (columnId.includes("|")) {
+      const parts = columnId.split("|").map((s) => s.trim()).filter(Boolean);
+      return { columnId, parts };
     }
-    return <div className="table-column-header">{t(code)}</div>;
+    return { columnId, parts: [plotName].filter(Boolean) };
+  };
+
+  const renderHeader = (plot, headerText) => {
+    const shouldHideDenomination = response?.responseData?.hideHeaderDenomination;
+    const code = `DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`;
+    const rawLabel = headerText != null && headerText !== "" ? headerText : t(code);
+    const label = typeof rawLabel === "string" ? rawLabel : String(rawLabel);
+    if (plot?.symbol === "amount" && !shouldHideDenomination) {
+      return (
+        <div className="table-column-header">
+          {label}
+          {` ${renderUnits(value?.denomination)}`}
+        </div>
+      );
+    }
+    return <div className="table-column-header">{label}</div>;
   };
 
   const getDrilldownCharts = (value, filterKey, label, filters = []) => {
@@ -349,17 +365,28 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     return columns?.plots
       ?.filter((plot) => plot?.name !== "TankCapacity")
       .map((plot, index) => {
-        const columnId = plot?.name?.replaceAll(".", " ");
-        const headerLocaleKey = `DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`;
-        const tooltipLocaleKey = `TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`;
-        const localizedHeader = t(headerLocaleKey);
+        const { columnId, parts } = getPlotColumnIdAndParts(plot?.name);
+        const isPipeComposite = parts.length > 1;
+        const lastSegment = isPipeComposite ? parts[parts.length - 1] : plot?.name;
+        const headerLocaleKey = `DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(lastSegment)}`;
+        const tooltipLocaleKey = `TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(lastSegment)}`;
+        const prefixParts = isPipeComposite ? parts.slice(0, -1) : [];
+        const compositeHeaderText = isPipeComposite
+          ? [...prefixParts.map((p) => t(p)), t(headerLocaleKey)].join(" | ")
+          : null;
+        const compositeTooltipText = isPipeComposite
+          ? [...prefixParts.map((p) => t(p)), t(tooltipLocaleKey)].join(" | ")
+          : null;
+        const localizedHeader = t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`);
+        const tooltipDisplay = isPipeComposite ? compositeTooltipText : t(tooltipLocaleKey);
+        const drilldownHeaderLabel = isPipeComposite ? compositeHeaderText : t(headerLocaleKey);
 
         return {
           name: (
             <span className="tooltip" data-tip="React-tooltip" data-for={`jk-table-${chartId}-${index}`} color="#OBOCOC">
-              {renderHeader(plot)}
+              {renderHeader(plot, compositeHeaderText)}
               <ReactTooltip textColor="#fff" backgroundColor="#555" place="bottom" type="info" effect="solid" id={`jk-table-${chartId}-${index}`}>
-                {t(tooltipLocaleKey)}
+                {typeof tooltipDisplay === "string" ? tooltipDisplay : String(tooltipDisplay)}
               </ReactTooltip>
             </span>
           ),
@@ -392,7 +419,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
                     getDrilldownCharts(
                       cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
                       filter?.key,
-                      t(headerLocaleKey),
+                      drilldownHeaderLabel,
                       response?.responseData?.filter
                     )
                   }
@@ -439,7 +466,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           id: columnId,
           symbol: plot?.symbol,
           // keeping as-is for any other consumers of this object
-          nameText: t(tooltipLocaleKey),
+          nameText: typeof tooltipDisplay === "string" ? tooltipDisplay : String(tooltipDisplay),
           width:plot?.name==="S.N." ? "100px" : "300px",
         };
       });
