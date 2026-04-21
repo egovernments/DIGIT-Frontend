@@ -95,6 +95,7 @@ const ManageBills = () => {
     config: {
       enabled: project ? true : false,
       select: (data) => data,
+      changeQueryName: "manageBillsList",
     },
   };
 
@@ -112,6 +113,7 @@ const ManageBills = () => {
     config: {
       enabled: project ? true : false,
       select: (data) => data,
+      changeQueryName: "manageBillsStatusCount",
     },
   };
 
