@@ -101,12 +101,11 @@ const ManageBills = () => {
 
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
-  const { status: _ignoredStatus, ...billCriteriaWithoutStatus } = BillSearchCri?.body?.billCriteria || {};
   const BillStatusCountCri = {
     url: `/${expenseContextPath}/bill/v1/_search`,
     body: {
       billCriteria: {
-        ...billCriteriaWithoutStatus,
+        ...baseBillCriteria,
         pagination: { limit: 1, offset: 0 },
       },
     },
