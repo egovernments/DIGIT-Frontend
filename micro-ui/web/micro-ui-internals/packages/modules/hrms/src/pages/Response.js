@@ -116,8 +116,9 @@
 // export default Response;
 
 import React, { useState, Fragment } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 import { Banner, Card, LinkLabel, AddFileFilled, ArrowLeftWhite, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { PanelCard } from "@egovernments/digit-ui-components";
 
@@ -130,6 +131,7 @@ const buttonStyle = {
 const Response = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const queryClient = useQueryClient();
   const queryStrings = Digit.Hooks.useQueryParams();
   const [isResponseSuccess, setIsResponseSuccess] = useState(
     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
@@ -139,6 +141,15 @@ const Response = () => {
   const navigate = (page) => {
     switch (page) {
       case "home": {
+        console.log("Navigate function called");
+        // Set random value to invalidate React-Query cache and trigger data refresh
+        const newUpdateValue = Math.floor(100000 + Math.random() * 900000);
+        console.log("Setting isupdate to:", newUpdateValue);
+        Digit.SessionStorage.set("isupdate", newUpdateValue);
+        // Invalidate all HRMS_SEARCH queries to force refetch
+        console.log("Invalidating HRMS_SEARCH queries");
+        queryClient.invalidateQueries("HRMS_SEARCH");
+        console.log("Navigating to home");
         history.push(`/${window.contextPath}/employee`);
       }
     }
@@ -163,9 +174,25 @@ const Response = () => {
         children={state?.showChildren ? children : []}
       />
       <ActionBar>
-        <Link to={`/${window.contextPath}/employee`}>
-          <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
-        </Link>
+        <SubmitBar 
+          label={t("CORE_COMMON_GO_TO_HOME")} 
+          onSubmit={() => {
+            console.log("Button clicked!");
+            alert("Button clicked! Check console for details.");
+            
+            // Set random value to invalidate React-Query cache and trigger data refresh
+            const newUpdateValue = Math.floor(100000 + Math.random() * 900000);
+            console.log("Setting isupdate to:", newUpdateValue);
+            Digit.SessionStorage.set("isupdate", newUpdateValue);
+            
+            // Invalidate all HRMS_SEARCH queries to force refetch
+            console.log("Invalidating HRMS_SEARCH queries");
+            queryClient.invalidateQueries("HRMS_SEARCH");
+            
+            console.log("Navigating to:", `/${window.contextPath}/employee`);
+            history.push(`/${window.contextPath}/employee`);
+          }}
+        />
       </ActionBar>
     </>
   );
