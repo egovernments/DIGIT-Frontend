@@ -1,7 +1,7 @@
 import MANAGE_BILLS_ROLE_CONFIG, { MANAGE_BILLS_ROLES } from "../config/manageBillsRoleConfig";
 
 // TODO: Wire isBank to MDMS/project config instead of hardcoding
-const isBank = true;
+export const isBank = true;
 
 /**
  * Determines the active manage-bills role for the current user.

@@ -1413,6 +1413,7 @@ const renderActionBar = (ctaButton) => (
                   label={t("HCM_AM_DOWNLOAD")}
                   variation="secondary"
                   type="actionButton"
+                  size="medium"
                   options={downloadOptions}
                   optionsKey="name"
                   onOptionSelect={handleDownloadSelect}
@@ -1426,6 +1427,7 @@ const renderActionBar = (ctaButton) => (
                 // icon="OpenInNew"
                 isSuffix
                 size="medium"
+                style={{ minWidth: "12rem" }}
                 onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`)}
               />
             </div>
@@ -1771,7 +1773,7 @@ const renderActionBar = (ctaButton) => (
     <Button
       label={t(`HCM_AM_VERIFY`)}
       onClick={() => setOpenVerifyAlertPopUp(true)}
-      style={{ minWidth: "14rem" }}
+      style={{ minWidth: "14rem", whiteSpace: "normal" }}
       type="button"
       variation="primary"
     />
@@ -1781,7 +1783,7 @@ const renderActionBar = (ctaButton) => (
     <Button
       label={t(`HCM_AM_GENERATE_PAYMENT`)}
       onClick={() => setOpenApprovePaymentAlertPopUp(true)}
-      style={{ minWidth: "14rem" }}
+      style={{ minWidth: "14rem", whiteSpace: "normal" }}
       type="button"
       variation="primary"
     />
@@ -1791,7 +1793,7 @@ const renderActionBar = (ctaButton) => (
           <Button
             label={t(`HCM_AM_SEND_FOR_EDIT`)}
             onClick={() => setOpenSendForEditPopUp(true)}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1803,7 +1805,7 @@ const renderActionBar = (ctaButton) => (
             label={t(`HCM_AM_GENERATE_PAYMENT`)}
             title={t(`HCM_AM_GENERATE_PAYMENT`)}
             onClick={() => setOpenApprovePaymentAlertPopUp(true)}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1816,7 +1818,7 @@ const renderActionBar = (ctaButton) => (
           <Button
             label={t(`HCM_AM_VERIFY`)}
             onClick={() => setOpenVerifyAlertPopUp(true)}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1827,7 +1829,7 @@ const renderActionBar = (ctaButton) => (
           <Button
             label={t(`HCM_AM_SEND_FOR_REVIEW`)}
             onClick={() => setOpenSendForReviewPopUp(true)}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1838,7 +1840,7 @@ const renderActionBar = (ctaButton) => (
           <Button
             label={t(`HCM_AM_VERIFY`)}
             onClick={() => setOpenVerifyAlertPopUp(true)}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1862,7 +1864,7 @@ const renderActionBar = (ctaButton) => (
     <Button
       label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
       onClick={() => setOpenSendForApprovalPopUp(true)}
-      style={{ minWidth: "14rem" }}
+      style={{ minWidth: "14rem", whiteSpace: "normal" }}
       type="button"
       variation="primary"
     />
@@ -1872,7 +1874,7 @@ const renderActionBar = (ctaButton) => (
           <Button
             label={t(`HCM_AM_SAVE_CHANGES`)}
             onClick={() => setOpenSaveChangesPopUp(true)}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1883,11 +1885,11 @@ const renderActionBar = (ctaButton) => (
       {currentView === "APPROVER_NOT_INITIATED_VIEW" && (
         <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
           <Button
-            label={t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}
+            label={<span style={{ whiteSpace: "normal" }}>{t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}</span>}
             onClick={() => {
               triggerGenerateAdvisoryForBill();
             }}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "20rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1900,7 +1902,7 @@ const renderActionBar = (ctaButton) => (
             onClick={() => {
               setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
             }}
-            style={{ minWidth: "14rem" }}
+            style={{ minWidth: "14rem", whiteSpace: "normal" }}
             type="button"
             variation="primary"
           />
@@ -1989,7 +1991,7 @@ const renderActionBar = (ctaButton) => (
       }}>
 
         <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
-          <div style={{ width: "100%", display: "flex", flexDirection: "row", height: "74vh", minHeight: "60vh" }}>
+          <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
 
 
             <div>

@@ -116,7 +116,7 @@ const ManageBills = () => {
     },
   };
 
-  const { data: BillCountData } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
+  const { data: BillCountData, refetch: refetchBillCount } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
   const statusCount = BillCountData?.statusCount || {};
 
   const getTabCount = (tabCode) => {
@@ -204,6 +204,7 @@ const ManageBills = () => {
   
             // Refresh table
             refetchBill();
+            refetchBillCount();
   
             // Clear selection
             setSelectedBills([]);
@@ -420,6 +421,7 @@ const ManageBills = () => {
           await triggerGenerateAdvisory(selectedBills);
           setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
           refetchBill();
+          refetchBillCount();
           setSelectedBills([]);
           setClearSelectedRows((prev) => !prev);
         } catch (error) {
@@ -506,6 +508,7 @@ const ManageBills = () => {
             setSelectedBills([]);
             setClearSelectedRows((prev) => !prev);
             setActiveLink(e);
+            refetchBillCount();
           }}
           setActiveLink={setActiveLink}
           showNav={true}
@@ -552,7 +555,8 @@ const ManageBills = () => {
           icon="ArrowBack"
           onClick={() => history.goBack()}
           style={{
-            width: "15%",
+            flexShrink: 0,
+            minWidth: "14rem",
             whiteSpace: "normal",
             marginLeft: "2rem", 
           }}
@@ -564,7 +568,8 @@ const ManageBills = () => {
             isDisabled={selectedBills.length === 0}
             onClick={() => handleCTAAction(currentCTA.action)}
             style={{
-              width: "15%",
+              flexShrink: 0,
+              minWidth: "14rem",
               whiteSpace: "normal",
               marginRight: "2rem", 
             }}

@@ -8,17 +8,23 @@ import { PopUp, Button, TextInput, Toast } from "@egovernments/digit-ui-componen
  * Editable fields: payee name, payee mobile number
  * Read-only fields: role, no. of days, wage, amount
  */
-const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditable = true }) => {
+const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditable = true, isBank = false }) => {
     const { t } = useTranslation();
     const [payeeName, setPayeeName] = useState(row?.payee?.payeeName || "");
     const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payee?.payeePhoneNumber || "");
     const [operator] = useState(row?.payee?.paymentProvider || "BANK");
+    const [bankAccount, setBankAccount] = useState(row?.payee?.bankAccount || "");
+    const [bankCode, setBankCode] = useState(row?.payee?.bankCode || "");
+    const [beneficiaryCode, setBeneficiaryCode] = useState(row?.payee?.beneficiaryCode || "");
     const [showToast, setShowToast] = useState(null);
 
     const handleSave = () => {
         if (!isEditable) return;
         const trimmedPayeeName = payeeName.trim();
         const trimmedPayeeMobile = payeeMobileNumber.trim();
+        const trimmedBankAccount = bankAccount.trim();
+        const trimmedBankCode = bankCode.trim();
+        const trimmedBeneficiaryCode = beneficiaryCode.trim();
 
         if (!trimmedPayeeName) {
             setShowToast({
@@ -41,6 +47,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         onSubmit({
             payeeName: trimmedPayeeName,
             payeePhoneNumber: trimmedPayeeMobile,
+            ...(isBank ? { bankAccount: trimmedBankAccount, bankCode: trimmedBankCode, beneficiaryCode: trimmedBeneficiaryCode } : {}),
         });
     };
 
@@ -85,6 +92,13 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                         {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setPayeeName, true)}
                         {renderEditable(t("HCM_AM_PAYEE_PHONE_NUMBER"), payeeMobileNumber, setPayeeMobileNumber, true)}
                         {renderReadOnlyInput(t("HCM_AM_MNO_NAME"), operator)}
+                        {isBank && (
+                            <>
+                                {renderEditable(t("HCM_AM_BANK_ACCOUNT"), bankAccount, setBankAccount, false)}
+                                {renderEditable(t("HCM_AM_BANK_CODE"), bankCode, setBankCode, false)}
+                                {renderEditable(t("HCM_AM_BENEFICIARY_CODE"), beneficiaryCode, setBeneficiaryCode, false)}
+                            </>
+                        )}
 
                         {/* Read-only card */}
                         <div style={{

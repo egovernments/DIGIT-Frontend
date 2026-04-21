@@ -47,6 +47,8 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.billNumber || t("NA")}
                     </div>
                 ),
+                grow: 2,
+                minWidth: "180px",
                 style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
@@ -57,6 +59,9 @@ const ManageBillsTable = ({ ...props }) => {
                         {t("HCM_AM_ATTENDANCE")}
                     </div>
                 ),
+                grow: 0,
+                minWidth: "130px",
+                maxWidth: "160px",
                 style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -77,6 +82,9 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.billDetails?.length || "0"}
                     </div>
                 ),
+                grow: 0,
+                minWidth: "120px",
+                maxWidth: "140px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -90,11 +98,14 @@ const ManageBillsTable = ({ ...props }) => {
                         </div>
                     );
                 },
+                grow: 0,
+                minWidth: "140px",
+                maxWidth: "170px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             download: {
-                name: t("HCM_AM_DOWNLOAD_BILL"),
+                name: colHeader(t("HCM_AM_DOWNLOAD_BILL")),
                 selector: (row, index) => {
                     const reportDetails = row?.additionalDetails?.reportDetails;
                     const billId = row?.billNumber;
@@ -130,7 +141,7 @@ const ManageBillsTable = ({ ...props }) => {
                                 { code: "HCM_AM_PDF", name: t("HCM_AM_PDF") },
                             ]}
                             optionsKey="name"
-                            style={{ minWidth: "13rem" }}
+                            style={{ minWidth: "10rem" }}
                             type="actionButton"
                             variation="secondary"
                         />
@@ -145,6 +156,7 @@ const ManageBillsTable = ({ ...props }) => {
                         </div>
                     );
                 },
+                grow: 0,
                 width: "200px",
                 style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
@@ -167,7 +179,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             downloadAdvisory: {
-                name: t("HCM_AM_DOWNLOAD_ADVISORY"),
+                name: colHeader(t("HCM_AM_DOWNLOAD_ADVISORY")),
                 selector: (row, index) => {
                     const advisoryReport = row?.advisoryReport;
                     const billId = row?.billNumber;
@@ -186,7 +198,7 @@ const ManageBillsTable = ({ ...props }) => {
                                 downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `Payment_Advisory_${billId}`, type: "excel" });
                             }}
                             // showBottom={isLas    tRow && props.data.length !== 1 ? false : true}                            
-                            style={{ minWidth: "13rem" }}
+                            style={{ minWidth: "10rem" }}
                             // type="actionButton"
                             variation="secondary"
                         />
@@ -201,7 +213,8 @@ const ManageBillsTable = ({ ...props }) => {
                         </div>
                     );
                 },
-                width: "300px",
+                grow: 0,
+                width: "260px",
                 style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
@@ -269,6 +282,9 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.billDate ? formatTimestampToDate(row.billDate) : t("NA")}
                     </div>
                 ),
+                grow: 0,
+                minWidth: "170px",
+                maxWidth: "200px",
                 style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
             },
     

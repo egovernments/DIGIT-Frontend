@@ -9,6 +9,7 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
 import { useHistory } from "react-router-dom";
 import WorkerDetailsPopUp from "./WorkerDetailsPopUp";
+import { isBank } from "../utils/roleUtils";
 
 
 const BillDetailsTable = ({ ...props }) => {
@@ -27,6 +28,7 @@ const BillDetailsTable = ({ ...props }) => {
     const tenantId = props?.tenantId || Digit.ULBService.getCurrentTenantId();
     const billId = props?.billId;
     const expenseContextPath = props?.expenseContextPath || "health-expense";
+    const isBankMode = isBank;
 
     const billDetailUpdateMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: `/${expenseContextPath}/bill/v1/billdetails/_update`,
@@ -266,6 +268,39 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             style: { justifyContent: "start" },
+        };
+
+        const bankAccountCol = {
+            name: colHeader(t("HCM_AM_BANK_ACCOUNT")),
+            selector: (row) => (
+                <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+                    {row?.payee?.bankAccount || "\u2014"}
+                </span>
+            ),
+            style: { justifyContent: "start" },
+            minWidth: "160px",
+        };
+
+        const bankCodeCol = {
+            name: colHeader(t("HCM_AM_BANK_CODE")),
+            selector: (row) => (
+                <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+                    {row?.payee?.bankCode || "\u2014"}
+                </span>
+            ),
+            style: { justifyContent: "start" },
+            minWidth: "140px",
+        };
+
+        const beneficiaryCodeCol = {
+            name: colHeader(t("HCM_AM_BENEFICIARY_CODE")),
+            selector: (row) => (
+                <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+                    {row?.payee?.beneficiaryCode || "\u2014"}
+                </span>
+            ),
+            style: { justifyContent: "start" },
+            minWidth: "160px",
         };
 
         const daysCol = {
@@ -554,6 +589,28 @@ const BillDetailsTable = ({ ...props }) => {
                 reviewerWageCol, reviewerFoodCol, reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol];
         }
 
+        // bank-mode view: show payee bank details
+        if (isBankMode) {
+            return [
+                userIdCol,
+                workerNameCol,
+                payeeNameCol,
+                payeePhoneCol,
+                operatorCol,
+                bankAccountCol,
+                bankCodeCol,
+                beneficiaryCodeCol,
+                roleCol,
+                perDayCol,
+                foodCol,
+                travelCol,
+                miscCol,
+                daysCol,
+                feesCol,
+                totalCol,
+            ];
+        }
+
         // Partially Verified with sub-tabs
         if (billStatus === "PARTIALLY_VERIFIED") {
             if (subTab === "VERIFICATION_FAILED") {
@@ -576,7 +633,7 @@ const BillDetailsTable = ({ ...props }) => {
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
         return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
 
-    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit]);
+    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -617,6 +674,9 @@ const BillDetailsTable = ({ ...props }) => {
             paymentProvider: existingPayee?.paymentProvider || t("NA"),
             payeeName: updatedFields?.payeeName,
             payeePhoneNumber: updatedFields?.payeePhoneNumber,
+            ...(updatedFields?.bankAccount !== undefined ? { bankAccount: updatedFields.bankAccount } : {}),
+            ...(updatedFields?.bankCode !== undefined ? { bankCode: updatedFields.bankCode } : {}),
+            ...(updatedFields?.beneficiaryCode !== undefined ? { beneficiaryCode: updatedFields.beneficiaryCode } : {}),
         };
 
         try {
@@ -698,6 +758,7 @@ const BillDetailsTable = ({ ...props }) => {
                     onSubmit={handleMultiFieldUpdate}
                     isSaving={billDetailUpdateMutation?.isLoading}
                     isEditable={["PENDING_VERIFICATION", "VERIFICATION_FAILED"].includes(selectedRow?.status)}
+                    isBank={isBankMode}
                 />
             )}
             {showToast && (
