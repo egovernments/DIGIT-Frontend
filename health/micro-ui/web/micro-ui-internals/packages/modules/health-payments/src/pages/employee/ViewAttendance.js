@@ -50,7 +50,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const paymentConfig = Digit?.SessionStorage.get("paymentsConfig");
-  const [disabledAction, setDisabledAction] = useState(fromCampaignSupervisor);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
@@ -69,6 +69,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showMapPopup, setShowMapPopup] = useState(false);
   const [hasMusterRoll, setHasMusterRoll] = useState(false);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
+
+  const handleGoBack = () => {
+    fromCampaignSupervisor
+      ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, { fromViewScreen: true })
+      : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+  };
 
   useEffect(() => {
     console.log("ViewAttendance params:", { registerNumber, boundaryCode, periodDurationInDays, fromCampaignSupervisor });
@@ -308,7 +314,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
             setTimeout(() => {
               setUpdateDisabled(false);
               history.push(
-                `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`
+                `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                { fromCampaignSupervisor }
               );
             }, 2000);
           },
@@ -816,6 +823,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           onPrimaryAction={() => {
             history.push(
               `/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`
+              , { fromCampaignSupervisor }
             );
           }}
         />
@@ -863,28 +871,24 @@ const ViewAttendance = ({ editAttendance = false }) => {
           className="mc_back"
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
             gap: "1rem",
           }}
         >
-          {disabledAction ? (
-            <Button
-              label={t(`HCM_AM_GO_BACK`)}
-              title={t(`HCM_AM_GO_BACK`)}
-              onClick={() => {
-                fromCampaignSupervisor
-                  ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
-                      fromViewScreen: true,
-                    })
-                  : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-              }}
-              type="button"
-              style={{ minWidth: "13rem" }}
-              variation="primary"
-              icon="ArrowBack"
-            />
+          <Button
+            label={t(`HCM_AM_GO_BACK`)}
+            title={t(`HCM_AM_GO_BACK`)}
+            onClick={handleGoBack}
+            type="button"
+            style={{ minWidth: "13rem" }}
+            variation="secondary"
+            icon="ArrowBack"
+          />
+
+          {disabledAction || fromCampaignSupervisor ? (
+            <div />
           ) : editAttendance ? (
             <Button
               label={t(`HCM_AM_SUBMIT_LABEL`)}

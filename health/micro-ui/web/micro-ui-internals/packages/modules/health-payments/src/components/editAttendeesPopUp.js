@@ -50,7 +50,7 @@ const EditAttendeePopUp = ({
     const labels = [
         "HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL",
         "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER",
-        "HCM_AM_BULK_EDIT_ATTENDEES_LABEL",
+        // "HCM_AM_BULK_EDIT_ATTENDEES_LABEL",
     ];
     const maxLabelLength = Math.max(...labels.map((label) => label.length));
     const labelWidth = `${maxLabelLength * 6}px`;
@@ -258,7 +258,7 @@ const EditAttendeePopUp = ({
      * -----------------------------
      */
     const closeBulkEditPopUp = () => {
-        setShowBulkEditPopUp(false);
+        // setShowBulkEditPopUp(false);
         setBulkEditFile(null);
         setBulkEditUploadedData(null);
         setBulkEditToast(null);
@@ -387,12 +387,12 @@ const EditAttendeePopUp = ({
                                         );
                                     }}
                                 />
-                                <div>{t(labels[2])}</div>
+                                {/* <div>{t(labels[2])}</div>
                                 <Button
                                     label={t("HCM_AM_BULK_EDIT")}
                                     variation="link"
                                     onClick={() => setShowBulkEditPopUp(true)}
-                                />
+                                /> */}
                             </div>
                         </div>
                     ),
