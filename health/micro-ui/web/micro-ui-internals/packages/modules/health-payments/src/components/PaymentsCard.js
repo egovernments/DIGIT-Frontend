@@ -41,7 +41,7 @@ const PaymentsCard = () => {
     generateLink("ATTENDANCE_REGISTERS", "project-selection"),
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
-    generateLink("CS_TITLE_MANAGE_BILLS", "manage-bills", ROLES.MANAGE_BILLS),//todo check role
+    generateLink("CS_TITLE_MANAGE_BILLS", "manage-bills-project-selection", ROLES.MANAGE_BILLS),//todo check role
     // generateLink("CS_TITLE_VERIFY_AND_GENERATE_PAYMENTS", "verify-bills", ROLES.BILLS),
     // generateLink("CS_TITLE_EDIT_BILLS", "edit-bills", ROLES.EDIT_BILLS),
   ];

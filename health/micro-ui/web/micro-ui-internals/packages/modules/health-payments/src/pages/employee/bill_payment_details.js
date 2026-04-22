@@ -1329,7 +1329,12 @@ const renderActionBar = (ctaButton) => (
       label={t("HCM_AM_BACK")}
       icon="ArrowBack"
       onClick={() => history.goBack()}
-      style={{ flexShrink: 0, minWidth: "14rem" }}
+      style={{
+        flexShrink: 0,
+        minWidth: "10rem",
+        whiteSpace: "normal",
+        marginLeft: "2rem", 
+      }}
     />
 
     {/* Spacer */}
@@ -1767,147 +1772,152 @@ const renderActionBar = (ctaButton) => (
           setOpenSendForEditPopUp(false);
         }}
       />}
-      {/* Action bar based on currentView */}
-      {currentView === "NOT_VERIFIED_VIEW" &&
-  renderActionBar(
-    <Button
-      label={t(`HCM_AM_VERIFY`)}
-      onClick={() => setOpenVerifyAlertPopUp(true)}
-      style={{ minWidth: "14rem", whiteSpace: "normal" }}
-      type="button"
-      variation="primary"
-    />
-  )}
-      {currentView === "VERIFIED_VIEW" &&
-  renderActionBar(
-    <Button
-      label={t(`HCM_AM_GENERATE_PAYMENT`)}
-      onClick={() => setOpenApprovePaymentAlertPopUp(true)}
-      style={{ minWidth: "14rem", whiteSpace: "normal" }}
-      type="button"
-      variation="primary"
-    />
-  )}
-      {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_SEND_FOR_EDIT`)}
-            onClick={() => setOpenSendForEditPopUp(true)}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
-      {currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFIED" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_GENERATE_PAYMENT`)}
-            title={t(`HCM_AM_GENERATE_PAYMENT`)}
-            onClick={() => setOpenApprovePaymentAlertPopUp(true)}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
+      {/* Footer action bar: show Back for all views except reviewer edit mode */}
+      {(() => {
+        const isReviewerEditView = currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit;
+        const ctaStyle = { minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" };
 
-      {/* ── Editor role-specific views (new config-driven) ── */}
-      {currentView === "EDITOR_NOT_VERIFIED_VIEW" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_VERIFY`)}
-            onClick={() => setOpenVerifyAlertPopUp(true)}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
-      {currentView === "EDITOR_VERIFIED_VIEW" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_SEND_FOR_REVIEW`)}
-            onClick={() => setOpenSendForReviewPopUp(true)}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
-      {currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_VERIFY`)}
-            onClick={() => setOpenVerifyAlertPopUp(true)}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
+        const ctaByView = () => {
+          if (currentView === "NOT_VERIFIED_VIEW") {
+            return (
+              <Button
+                label={t(`HCM_AM_VERIFY`)}
+                onClick={() => setOpenVerifyAlertPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
 
-      {/* ── Reviewer role-specific views ── */}
-      {/* {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
-            onClick={() => setOpenSendForApprovalPopUp(true)}
-            style={{ minWidth: "14rem" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )} */}
-      {currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit &&
-  renderActionBar(
-    <Button
-      label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
-      onClick={() => setOpenSendForApprovalPopUp(true)}
-      style={{ minWidth: "14rem", whiteSpace: "normal" }}
-      type="button"
-      variation="primary"
-    />
-  )}
-      {currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_SAVE_CHANGES`)}
-            onClick={() => setOpenSaveChangesPopUp(true)}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
+          if (currentView === "VERIFIED_VIEW") {
+            return (
+              <Button
+                label={t(`HCM_AM_GENERATE_PAYMENT`)}
+                onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
 
-      {/* ── Approver role-specific views ── */}
-      {currentView === "APPROVER_NOT_INITIATED_VIEW" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={<span style={{ whiteSpace: "normal" }}>{t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}</span>}
-            onClick={() => {
-              triggerGenerateAdvisoryForBill();
-            }}
-            style={{ minWidth: "20rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
-      {currentView === "APPROVER_PARTIALLY_PAID_VIEW" && activeLink?.code === "FAILED" && (
-        <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <Button
-            label={t(`HCM_AM_RETRY_PAYMENT`)}
-            onClick={() => {
-              setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 });
-            }}
-            style={{ minWidth: "14rem", whiteSpace: "normal" }}
-            type="button"
-            variation="primary"
-          />
-        </ActionBar>
-      )}
+          if (currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED") {
+            return (
+              <Button
+                label={t(`HCM_AM_SEND_FOR_EDIT`)}
+                onClick={() => setOpenSendForEditPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFIED") {
+            return (
+              <Button
+                label={t(`HCM_AM_GENERATE_PAYMENT`)}
+                title={t(`HCM_AM_GENERATE_PAYMENT`)}
+                onClick={() => setOpenApprovePaymentAlertPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "EDITOR_NOT_VERIFIED_VIEW") {
+            return (
+              <Button
+                label={t(`HCM_AM_VERIFY`)}
+                onClick={() => setOpenVerifyAlertPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "EDITOR_VERIFIED_VIEW") {
+            return (
+              <Button
+                label={t(`HCM_AM_SEND_FOR_REVIEW`)}
+                onClick={() => setOpenSendForReviewPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "EDITOR_PARTIALLY_VERIFIED_VIEW" && activeLink?.code === "VERIFICATION_FAILED") {
+            return (
+              <Button
+                label={t(`HCM_AM_VERIFY`)}
+                onClick={() => setOpenVerifyAlertPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "REVIEWER_PENDING_VIEW" && !isReviewerEdit) {
+            return (
+              <Button
+                label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
+                onClick={() => setOpenSendForApprovalPopUp(true)}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "APPROVER_NOT_INITIATED_VIEW") {
+            return (
+              <Button
+                label={<span style={{ whiteSpace: "normal" }}>{t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}</span>}
+                onClick={() => triggerGenerateAdvisoryForBill()}
+                style={{ ...ctaStyle, minWidth: "20rem" }}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          if (currentView === "APPROVER_PARTIALLY_PAID_VIEW" && activeLink?.code === "FAILED") {
+            return (
+              <Button
+                label={t(`HCM_AM_RETRY_PAYMENT`)}
+                onClick={() => setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 })}
+                style={ctaStyle}
+                type="button"
+                variation="primary"
+              />
+            );
+          }
+
+          return null;
+        };
+
+        if (isReviewerEditView) {
+          return (
+            <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
+              <Button
+                label={t(`HCM_AM_SAVE_CHANGES`)}
+                onClick={() => setOpenSaveChangesPopUp(true)}
+                style={{ minWidth: "14rem", whiteSpace: "normal" }}
+                type="button"
+                variation="primary"
+              />
+            </ActionBar>
+          );
+        }
+
+        return renderActionBar(ctaByView());
+      })()}
 
       {/* /* Alert Pop-Up for approve */}
       {openVerifyAlertPopUp && <AlertPopUp

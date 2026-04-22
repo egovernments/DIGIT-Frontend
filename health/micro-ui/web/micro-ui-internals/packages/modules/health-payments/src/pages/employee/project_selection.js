@@ -21,7 +21,7 @@ const useMediaQuery = (query) => {
   return matches;
 };
 
-const ProjectSelect = () => {
+const ProjectSelect = ({ nextScreen }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const history = useHistory();
@@ -51,6 +51,7 @@ const ProjectSelect = () => {
   };
 
   const billScreen = location.pathname.includes("project-and-aggregation-selection");
+  const manageBillsScreen = nextScreen === "manage-bills" || location.pathname.includes("manage-bills-project-selection");
 
   const [project, setProject] = useState([]);
   const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || null);
@@ -94,6 +95,7 @@ const ProjectSelect = () => {
         }
     }, []);
 
+
     // Handle project selection
     const handleProjectSelect = (value) => {
         if (value !== Digit.SessionStorage.get("selectedProject")) {
@@ -102,6 +104,8 @@ const ProjectSelect = () => {
             Digit.SessionStorage.del("selectedValues");
             Digit.SessionStorage.del("boundary");
             Digit.SessionStorage.del("paymentInbox");
+            // Digit.SessionStorage.del("projectPeriods");
+            // Digit.SessionStorage.del("selectedPeriod");
         }
         Digit.SessionStorage.set("selectedProject", value);
         setSelectedProject(value);
@@ -129,6 +133,13 @@ const ProjectSelect = () => {
             }
             Digit.SessionStorage.set("selectedProject", selectedProject);
             history.push(`/${window.contextPath}/employee/payments/generate-bill`);
+        } else if (manageBillsScreen) {
+            if (!selectedProject) {
+                setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
+                return;
+            }
+            Digit.SessionStorage.set("selectedProject", selectedProject);
+            history.push(`/${window.contextPath}/employee/payments/manage-bills`);
         } else {
             if (!selectedProject) {
                 setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
@@ -149,7 +160,11 @@ const ProjectSelect = () => {
             </span>
           </HeaderComponent>
           <div style={{ marginBottom: "0.5rem" }}>
-            {billScreen ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION") : t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION")}
+            {billScreen
+              ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION")
+              : manageBillsScreen
+              ? t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION_MANAGE_BILLS")
+              : t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION")}
           </div>
 
           {/* ------------ Project Dropdown ------------ */}

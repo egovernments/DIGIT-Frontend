@@ -53,12 +53,18 @@ const ManageBills = () => {
     name: t(firstTab?.name || "HCM_AM_NOT_VERIFIED"),
   });
 
-  const project = Digit?.SessionStorage.get("staffProjects");
+  const projects = Digit?.SessionStorage.get("staffProjects") || [];
+  const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || null);
   const projectPeriods = Digit.SessionStorage.get("projectPeriods");
+
+  useEffect(() => {
+    if (selectedProject?.id) return;
+    setShowToast((prev) => prev || { key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
+  }, [selectedProject?.id, t]);
 
   const baseBillCriteria = {
     tenantId: tenantId,
-    referenceIds: project?.map((p) => p?.id) || [],
+    referenceIds: selectedProject?.id ? [selectedProject?.id] : [],
     ...(billID ? { billNumbers: [billID] } : {}),
     ...(dateRange.startDate && dateRange.endDate
       ? {
@@ -93,7 +99,7 @@ const ManageBills = () => {
       },
     },
     config: {
-      enabled: project ? true : false,
+      enabled: selectedProject?.id ? true : false,
       select: (data) => data,
       changeQueryName: "manageBillsList",
     },
@@ -110,7 +116,7 @@ const ManageBills = () => {
       },
     },
     config: {
-      enabled: project ? true : false,
+      enabled: selectedProject?.id ? true : false,
       select: (data) => data,
       changeQueryName: "manageBillsStatusCount",
     },
@@ -282,11 +288,11 @@ const ManageBills = () => {
   useEffect(() => {
     const periodsCheck = Digit.SessionStorage.get("projectPeriods") || [];
     if (periodsCheck.length == 0) {
-      if (project?.[0]?.referenceID || project?.[0]?.id) {
-        fetchBillingPeriods(project?.[0]?.referenceID || project?.[0]?.id);
+      if (selectedProject?.referenceID || selectedProject?.id) {
+        fetchBillingPeriods(selectedProject?.referenceID || selectedProject?.id);
       }
     }
-  }, [fetchBillingPeriods]);
+  }, [fetchBillingPeriods, selectedProject?.id, selectedProject?.referenceID]);
 
   // When BillData changes, update table data (and apply advisory filters for approver bank tabs)
   useEffect(() => {
@@ -458,9 +464,31 @@ const ManageBills = () => {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
+  if (!selectedProject?.id) {
+    return (
+      <React.Fragment>
+        <Header styles={{ fontSize: "32px" }}>
+          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
+        </Header>
+        <Card>
+          <NoResultsFound text={t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY")} />
+        </Card>
+        {showToast && (
+          <Toast
+            style={{ zIndex: 10001 }}
+            label={showToast.label}
+            type={showToast.key}
+            transitionTime={showToast.transitionTime}
+            onClose={() => setShowToast(null)}
+          />
+        )}
+      </React.Fragment>
+    );
+  }
+
   const currentCTA = roleConfig.tabCTAs?.[activeLink.code];
 
-  const projectName = project?.[0]?.name || "";
+  const projectName = selectedProject?.name || "";
 
   return (
     <React.Fragment>
@@ -556,7 +584,7 @@ const ManageBills = () => {
           onClick={() => history.goBack()}
           style={{
             flexShrink: 0,
-            minWidth: "14rem",
+            minWidth: "10rem",
             whiteSpace: "normal",
             marginLeft: "2rem", 
           }}

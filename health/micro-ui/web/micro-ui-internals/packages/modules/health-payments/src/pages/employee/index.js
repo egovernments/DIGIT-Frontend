@@ -80,6 +80,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
         <PrivateRoute path={`${path}/generate-bill`} component={() => <BillInbox />} />
+        <PrivateRoute path={`${path}/manage-bills-project-selection`} component={() => <ProjectSelect nextScreen="manage-bills" />} />
         <PrivateRoute path={`${path}/manage-bills`} component={() => <ManageBills />} />
         <PrivateRoute path={`${path}/my-bills`} component={() => <MyBills />} />
         <PrivateRoute path={`${path}/verify-bills`} component={() => <UploadAndFetchBillsCard />} />
