@@ -633,7 +633,7 @@ const BillDetailsTable = ({ ...props }) => {
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
         return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
 
-    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode]);
+    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode, currencySuffix]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);

@@ -1164,7 +1164,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       };
       setTabCounts(counts);
     }
-  }, [AllIndividualsData, billData, activeLink, isReviewerEdit]);
+  }, [AllIndividualsData, billData, workerRatesData, activeLink, isReviewerEdit]);
 
   
   const renderLabelPair = (heading, text, style) => (
