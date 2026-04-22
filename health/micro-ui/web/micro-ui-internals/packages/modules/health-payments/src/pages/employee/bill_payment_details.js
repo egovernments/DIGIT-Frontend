@@ -136,6 +136,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [isReviewerEdit, setIsReviewerEdit] = useState(false);
   const [hasTriedSaveReviewer, setHasTriedSaveReviewer] = useState(false);
+  const [openReviewerEditWarningPopUp, setOpenReviewerEditWarningPopUp] = useState(false);
   const [openSendForApprovalPopUp, setOpenSendForApprovalPopUp] = useState(false);
   const [openSendForReviewPopUp, setOpenSendForReviewPopUp] = useState(false);
   const [openSaveChangesPopUp, setOpenSaveChangesPopUp] = useState(false);
@@ -1367,6 +1368,19 @@ const renderActionBar = (ctaButton) => (
     }
   };
 
+  const handleDownloadBill = () => {
+    const excelReportId = billData?.additionalDetails?.reportDetails?.excelReportId;
+    if (excelReportId) {
+      downloadFileWithName({
+        fileStoreId: excelReportId,
+        customName: billData?.billNumber || billID || "bill",
+        type: "excel",
+      });
+      return;
+    }
+    setShowToast({ key: "warning", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 3000 });
+  };
+
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
@@ -1684,8 +1698,12 @@ const renderActionBar = (ctaButton) => (
                     label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
                     icon={isReviewerEdit ? "Close" : "Edit"}
                     onClick={() => {
-                      setHasTriedSaveReviewer(false);
-                      setIsReviewerEdit((prev) => !prev);
+                      if (isReviewerEdit) {
+                        setHasTriedSaveReviewer(false);
+                        setIsReviewerEdit(false);
+                        return;
+                      }
+                      setOpenReviewerEditWarningPopUp(true);
                     }}
                   />
                   {!isReviewerEdit && (
@@ -1756,6 +1774,42 @@ const renderActionBar = (ctaButton) => (
             console.log("Send for approval:", { comment, supportingDocs, billID });
             setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
           }}
+        />
+      )}
+
+      {openReviewerEditWarningPopUp && (
+        <PopUp
+          style={{ width: "700px" }}
+          type="alert"
+          onClose={() => setOpenReviewerEditWarningPopUp(false)}
+          onOverlayClick={() => setOpenReviewerEditWarningPopUp(false)}
+          alertHeading={t(`HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES`)}
+          alertMessage={t(`HCM_AM_DOWNLOAD_BILL_BEFORE_MAKING_CHANGES_DESCRIPTION`)}
+          equalWidthButtons={true}
+          footerChildren={[
+            <Button
+              key="download-bill"
+              type="button"
+              size="large"
+              variation="secondary"
+              label={t(`HCM_AM_DOWNLOAD_BILL`)}
+              title={t(`HCM_AM_DOWNLOAD_BILL`)}
+              onClick={handleDownloadBill}
+            />,
+            <Button
+              key="continue-edit"
+              type="button"
+              size="large"
+              variation="primary"
+              label={t(`HCM_AM_CONTINUE_TO_EDIT`)}
+              title={t(`HCM_AM_CONTINUE_TO_EDIT`)}
+              onClick={() => {
+                setOpenReviewerEditWarningPopUp(false);
+                setHasTriedSaveReviewer(false);
+                setIsReviewerEdit(true);
+              }}
+            />,
+          ]}
         />
       )}
 
