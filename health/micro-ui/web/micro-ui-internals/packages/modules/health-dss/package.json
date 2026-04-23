@@ -44,7 +44,8 @@
     "react-data-table-component": "7.6.2",
     "dom-to-image": "2.6.0",
     "jspdf": "2.5.1",
-    "axios": "^1.6.8"
+    "axios": "^1.6.8",
+    "xlsx": "0.17.5"
   },
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
   "license": "MIT"
