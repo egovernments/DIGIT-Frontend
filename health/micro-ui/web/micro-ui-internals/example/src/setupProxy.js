@@ -142,6 +142,8 @@ module.exports = function (app) {
     "/health-expense/bill/v1/report/_generate",
     "/health-expense/bill/v1/report/_search",
     "/health-expense/bill/v1/billdetails/_update",
+    "/health-expense/bill/v1/billdetails/_generateTemplate",
+    "/health-expense/bill/v1/billdetails/_uploadTemplate",
     "/airflow-trigger-api"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));

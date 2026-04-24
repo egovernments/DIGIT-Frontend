@@ -19,19 +19,43 @@ const EditBillOnExcel = () => {
   const [isValidating, setIsValidating] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
   const [showToast, setShowToast] = useState(null);
+  const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
 
-  const handleDownload = useCallback(() => {
-    const excelReportId = billData?.additionalDetails?.reportDetails?.excelReportId;
-    if (excelReportId) {
+  const handleDownload = async () => {
+    try {
+      const res = await fetch(
+        `/${expenseContextPath}/bill/v1/billdetails/_generateTemplate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            RequestInfo: {
+              ...Digit.UserService.getUser(),
+            },
+            billId: billData?.id,
+            tenantId,
+          }),
+        }
+      );
+  
+      const blob = await res.blob();
+  
       downloadFileWithName({
-        fileStoreId: excelReportId,
-        customName: billData?.billNumber || billID || "bill",
+        blobData: blob,
+        customName: `Bill_Template_${billData?.billNumber}`,
         type: "excel",
       });
-    } else {
-      setShowToast({ key: "warning", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 3000 });
+  
+    } catch (err) {
+      console.error(err);
     }
-  }, [billData, billID, t]);
+  };
+
+  const uploadTemplateMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/${expenseContextPath}/bill/v1/billdetails/_uploadTemplate`,
+  });
 
   const handleUpload = useCallback(
     async (filesArray) => {
@@ -43,12 +67,12 @@ const EditBillOnExcel = () => {
         if (fileStoreId) {
           setUploadedFile([{ filestoreId: fileStoreId, filename: file.name }]);
           // Mock validation
-          setIsValidating(true);
-          setTimeout(() => {
-            setIsValidating(false);
-            setIsValidated(true);
-            setShowToast({ key: "success", label: t("HCM_AM_FILE_VALIDATED_SUCCESSFULLY"), transitionTime: 3000 });
-          }, 2000);
+          // setIsValidating(true);
+          // setTimeout(() => {
+          //   setIsValidating(false);
+          //   setIsValidated(true);
+          //   setShowToast({ key: "success", label: t("HCM_AM_FILE_VALIDATED_SUCCESSFULLY"), transitionTime: 3000 });
+          // }, 2000);
         }
       } catch (error) {
         console.error("File upload failed:", error);
@@ -73,13 +97,62 @@ const EditBillOnExcel = () => {
     []
   );
 
-  const handleSubmit = useCallback(() => {
-    // Mock submit — show success toast and navigate back
-    setShowToast({ key: "success", label: t("HCM_AM_BILL_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
-    setTimeout(() => {
-      history.goBack();
-    }, 1500);
-  }, [history, t]);
+  const handleSubmit = useCallback(async () => {
+    try {
+      const filestoreId = uploadedFile?.[0]?.filestoreId;
+  
+      if (!filestoreId) {
+        setShowToast({
+          key: "error",
+          label: t("HCM_AM_FILE_UPLOAD_REQUIRED"),
+          transitionTime: 3000,
+        });
+        return;
+      }
+  
+      await uploadTemplateMutation.mutateAsync(
+        {
+          body: {
+            billId: billData?.id,
+            tenantId,
+            filestoreId,
+          },
+        },
+        {
+          onSuccess: () => {
+            setShowToast({
+              key: "success",
+              label: t("HCM_AM_BILL_UPDATED_SUCCESSFULLY"),
+              transitionTime: 3000,
+            });
+  
+            setTimeout(() => {
+              history.goBack();
+            }, 1500);
+          },
+          onError: (error) => {
+            setShowToast({
+              key: "error",
+              label:
+                error?.response?.data?.Errors?.[0]?.message ||
+                t("HCM_AM_SOMETHING_WENT_WRONG"),
+              transitionTime: 3000,
+            });
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Upload template failed:", err);
+  
+      setShowToast({
+        key: "error",
+        label:
+          err?.response?.data?.Errors?.[0]?.message ||
+          t("HCM_AM_SOMETHING_WENT_WRONG"),
+        transitionTime: 3000,
+      });
+    }
+  }, [uploadedFile, billData, tenantId, t, history]);
 
   if (!billID) {
     return (
@@ -109,20 +182,20 @@ const EditBillOnExcel = () => {
           </span>
           <Button
             variation="secondary"
-            label={t("HCM_AM_DOWNLOAD_BILL")}
+            label={t("HCM_AM_DOWNLOAD_EXCEL_TO_EDIT")}
             icon="FileDownload"
             onClick={handleDownload}
           />
         </div>
 
-        <p style={{ fontWeight: 700, fontSize: "16px", marginBottom: "0.5rem" }}>
+        {/* <p style={{ fontWeight: 700, fontSize: "16px", marginBottom: "0.5rem" }}>
           {t("HCM_AM_UPLOAD_MODIFIED_BILL")}
         </p>
         {uploadedFile.length === 0 && (
           <p style={{ color: "#505A5F", marginBottom: "1rem" }}>
             {t("HCM_AM_UPLOAD_MODIFIED_BILL_INFO")}
           </p>
-        )}
+        )} */}
 
         <BulkUpload
           onSubmit={handleUpload}
@@ -153,12 +226,14 @@ const EditBillOnExcel = () => {
           variation="secondary"
           label={t("HCM_AM_BACK")}
           icon="ArrowBack"
+          style={{ minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
           onClick={() => history.goBack()}
         />
         <Button
           variation="primary"
           label={t("HCM_AM_SUBMIT")}
-          isDisabled={!isValidated}
+          style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" }}
+          isDisabled={uploadedFile.length === 0}
           onClick={handleSubmit}
         />
       </ActionBar>
