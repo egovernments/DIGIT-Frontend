@@ -12,7 +12,7 @@ export const getManageBillsRole = () => {
   // TODO: Remove CAMPAIGN_SUPERVISOR mappings before production
   const ROLE_PRIORITY = [
     { target: MANAGE_BILLS_ROLES.PAYMENT_APPROVER, check: ["PAYMENT_APPROVER"] },
-    { target: MANAGE_BILLS_ROLES.PAYMENT_REVIEWER, check: ["PAYMENT_REVIEWER", "CAMPAIGN_SUPERVISOR"] },
+    { target: MANAGE_BILLS_ROLES.PAYMENT_REVIEWER, check: ["PAYMENT_REVIEWER"] },
     { target: MANAGE_BILLS_ROLES.PAYMENT_EDITOR, check: ["PAYMENT_EDITOR"] },
   ];
 
