@@ -172,6 +172,7 @@ const ManageBillsTable = ({ ...props }) => {
                             setSelectedBill(row); // Set the selected bill details
                             setShowApprovalPopup(true); // Show the popup
                         }}
+                        isDisabled={row?.status == "REVIEW_IN_PROGRESS"}
                     />
                 ),
                 width: "200px",
@@ -424,6 +425,20 @@ const ManageBillsTable = ({ ...props }) => {
               console.error("Mutation error:", e);
             }
           };
+
+          const conditionalRowStyles = [
+            {
+              when: (row) =>
+                row.status === "SENDING_FOR_REVIEW" ||
+                row.status === "REVIEW_IN_PROGRESS",
+              style: {
+                opacity: 0.5,
+                // pointerEvents: "none",
+                backgroundColor: "#f5f5f5",
+              },
+            },
+          ];
+
     return (
         <>
             <DataTable
@@ -444,6 +459,10 @@ const ManageBillsTable = ({ ...props }) => {
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"70vh"}
                 selectableRows={isSelectable}
+                selectableRowDisabled={(row) =>
+                    row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
+                }
+                conditionalRowStyles={conditionalRowStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 paginationComponentOptions={getCustomPaginationOptions(t)}
             />
