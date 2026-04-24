@@ -116,7 +116,7 @@ const BillDetailsTable = ({ ...props }) => {
         </div>
     );
 
-    const editableCell = (row, field, withDollar = true) => {
+    const editableCell = (row, field, withDollar = false) => {
         if (!isReviewerEdit) {
             return (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
@@ -211,7 +211,7 @@ const BillDetailsTable = ({ ...props }) => {
         const workerNameCol = {
             name: colHeader(t("HCM_AM_WORKER_NAME")),
             selector: (row) => (
-                <span className="ellipsis-cell" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}
+                <span className="ellipsis-cell" style={{ fontSize: "14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}
                     title={row?.givenName || t("NA")}>
                     {row?.givenName || t("NA")}
                 </span>
@@ -233,7 +233,7 @@ const BillDetailsTable = ({ ...props }) => {
         const phoneCol = {
             name: colHeader(t("HCM_AM_MOBILE_NUMBER")),
             selector: (row) => (
-                <span className="ellipsis-cell" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
+                <span className="ellipsis-cell" style={{ fontSize: "14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
                     {row?.mobileNumber || t("NA")}
                 </span>
             ),
@@ -243,7 +243,7 @@ const BillDetailsTable = ({ ...props }) => {
         const payeePhoneCol = {
             name: colHeader(t("HCM_AM_PAYEE_PHONE_NUMBER")),
             selector: (row) => (
-                <span className="ellipsis-cell" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
+                <span className="ellipsis-cell" style={{fontSize: "14px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px", display: "inline-block" }}>
                     {row?.payeePhoneNumber || t("NA")}
                 </span>
             ),
@@ -306,7 +306,7 @@ const BillDetailsTable = ({ ...props }) => {
         const daysCol = {
             name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {row?.totalAttendance != null ? row.totalAttendance : t("NA")}
                 </div>
             ),
@@ -316,7 +316,7 @@ const BillDetailsTable = ({ ...props }) => {
         const wageCol = {
             name: colHeader(`${t("HCM_AM_WAGE")}${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {`${row.wage}`}
                 </div>
             ),
@@ -326,7 +326,7 @@ const BillDetailsTable = ({ ...props }) => {
         const totalAmountCol = {
             name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {`${row.totalAmount}`}
                 </div>
             ),
@@ -338,7 +338,7 @@ const BillDetailsTable = ({ ...props }) => {
         const perDayCol = {
             name: colHeader(`${t("HCM_AM_WAGE_RATE")} ${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem" ,fontSize: "14px"}}>
                     {displayPerDayRate(row?.perDay)}
                 </div>
             ),
@@ -348,7 +348,7 @@ const BillDetailsTable = ({ ...props }) => {
         const foodCol = {
             name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")} ${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
                     {displayPerDayRate(row?.food)}
                 </div>
             ),
@@ -358,7 +358,7 @@ const BillDetailsTable = ({ ...props }) => {
         const travelCol = {
             name: colHeader(`${t("HCM_AM_TRANSPORTATION")} ${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
                     {displayPerDayRate(row?.travel)}
                 </div>
             ),
@@ -368,7 +368,7 @@ const BillDetailsTable = ({ ...props }) => {
         const miscCol = {
             name: colHeader(`${t("HCM_AM_MISC")} ${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
                     {displayPerDayRate(row?.misc)}
                 </div>
             ),
@@ -380,7 +380,7 @@ const BillDetailsTable = ({ ...props }) => {
             selector: (row) => {
                 const percent = getFeePercent(row);
                 return (
-                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
                         {percent == null ? "\u2014" : `${percent}%`}
                     </div>
                 );
@@ -395,7 +395,7 @@ const BillDetailsTable = ({ ...props }) => {
                 // const percent = getFeePercent(row);
                 // const fee = percent == null ? 0 : Math.round((total * percent) / 100);
                 return (
-                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                    <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
                         {/* {total + fee} */}
                         {total}
                     </div>
@@ -534,27 +534,27 @@ const BillDetailsTable = ({ ...props }) => {
             name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
             selector: (row) => {
                 const percent = getFeePercent(row);
-                if (isReviewerEdit) {
-                    const isEmpty = hasTriedSave && row?.additionalDetails?.feePercent === "";
-                    return (
-                        <input
-                            type="number"
-                            value={row?.additionalDetails?.feePercent != null ? row.additionalDetails.feePercent : ""}
-                            onChange={(e) => handleReviewerAdditionalDetailsChange(row.id, "feePercent", e.target.value)}
-                            min={0}
-                            max={100}
-                            step={0.1}
-                            style={{
-                                width: "70px",
-                                padding: "4px 6px",
-                                border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
-                                borderRadius: "4px",
-                                fontSize: "14px",
-                                textAlign: "right",
-                            }}
-                        />
-                    );
-                }
+                // if (isReviewerEdit) {
+                //     const isEmpty = hasTriedSave && row?.additionalDetails?.feePercent === "";
+                //     return (
+                //         <input
+                //             type="number"
+                //             value={row?.additionalDetails?.feePercent != null ? row.additionalDetails.feePercent : ""}
+                //             onChange={(e) => handleReviewerAdditionalDetailsChange(row.id, "feePercent", e.target.value)}
+                //             min={0}
+                //             max={100}
+                //             step={0.1}
+                //             style={{
+                //                 width: "70px",
+                //                 padding: "4px 6px",
+                //                 border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
+                //                 borderRadius: "4px",
+                //                 fontSize: "14px",
+                //                 textAlign: "right",
+                //             }}
+                //         />
+                //     );
+                // } //TODO if fees is editale then uncomment
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {percent == null ? "\u2014" : `${percent}%`}
