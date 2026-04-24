@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, use, Fragment } from "react";
+import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
@@ -155,7 +155,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //   url: `/health-expense/v1/transactions/report/_generate`,
 // });
 
-  const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
+  // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
+  const workerRatesData = useMemo(() => {
+    return Digit?.SessionStorage.get("workerRatesData");
+  }, []);
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
   };
@@ -1380,6 +1383,7 @@ const downloadOptions = [
   };
 
   const handleDownloadBill = () => {
+    if(billData?.additionalDetails?.reportDetails?.status ==="COMPLETED"){
     const excelReportId = billData?.additionalDetails?.reportDetails?.excelReportId;
     if (excelReportId) {
       downloadFileWithName({
@@ -1389,8 +1393,14 @@ const downloadOptions = [
       });
       return;
     }
-    setShowToast({ key: "warning", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 3000 });
-  };
+    setShowToast({ key: "warning", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 5000 });
+  
+  } else if(billData?.additionalDetails?.reportDetails?.status ==="INITIATED"){
+    setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
+  } else {
+    setShowToast({ key: "error", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 5000 });
+   }
+};
   const currencySuffix = workerRatesData?.currency ? ` (${workerRatesData.currency})` : "";
   return (
     <React.Fragment>
@@ -1407,7 +1417,7 @@ const downloadOptions = [
             {
               label: t("HCM_AM_BILL_AMOUNT"),
               value: billData?.billDetails
-              ? `${billData.billDetails.reduce((sum, d) => sum + (d?.totalAmount || 0), 0)}${currencySuffix}`
+              ? `${billData?.totalAmount}${currencySuffix}`
               : t("NA"),
             },
             {
