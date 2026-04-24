@@ -13,8 +13,6 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
-import XLSX from "xlsx";
-import ExcelJS from "exceljs";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -726,6 +724,7 @@ const NewShipmentPopup = ({
   const handleDownloadTemplate = useCallback(async () => {
     setIsDownloading(true);
     try {
+      const ExcelJS = (await import("exceljs")).default;
       const { boundaryHeaders, stockHeaders } = getTemplateHeaders();
       const projectName = campaignName || "";
 
@@ -952,6 +951,7 @@ const NewShipmentPopup = ({
     }
     setIsSubmitting(true);
     try {
+      const XLSX = (await import("xlsx")).default;
       const file = uploadedFileData[0]?.file;
       if (!file) {
         setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
@@ -1126,6 +1126,7 @@ const NewShipmentPopup = ({
             quantity,
             referenceId: fromFacility?.projectId || projectId || campaignId,
             referenceIdType: "PROJECT",
+            campaignNumber: campaignNumber || "",
             transactionType: "DISPATCHED",
             senderType: "WAREHOUSE",
             senderId,
@@ -1143,6 +1144,7 @@ const NewShipmentPopup = ({
                 { key: "primaryRole", value: "SENDER" },
                 { key: "secondaryRole", value: "RECEIVER" },
                 { key: "status", value: "IN_TRANSIT" },
+                { key: "campaignNumber", value: campaignNumber || "" },
               ],
             },
             auditDetails: {
