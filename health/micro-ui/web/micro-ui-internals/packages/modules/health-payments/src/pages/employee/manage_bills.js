@@ -95,7 +95,7 @@ const ManageBills = () => {
     body: {
       billCriteria: {
         ...baseBillCriteria,
-        status: roleConfig?.tabStatusMap?.[activeLink.code]?.[0] || null,
+        status: roleConfig?.tabStatusMap?.[activeLink.code] || null,
       },
     },
     config: {
@@ -126,8 +126,11 @@ const ManageBills = () => {
   const statusCount = BillCountData?.statusCount || {};
 
   const getTabCount = (tabCode) => {
-    const status = roleConfig?.tabStatusMap?.[tabCode]?.[0];
-    return Number(statusCount?.[status]) || 0;
+    const statusList = roleConfig?.tabStatusMap?.[tabCode] || [];
+  
+    return statusList.reduce((sum, status) => {
+      return sum + (Number(statusCount?.[status]) || 0);
+    }, 0);
   };
 
   const getTabLabel = (tab) => {

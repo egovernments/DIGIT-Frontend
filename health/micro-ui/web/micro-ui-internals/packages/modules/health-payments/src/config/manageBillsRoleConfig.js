@@ -34,7 +34,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       NOT_VERIFIED: ["PENDING_VERIFICATION"],
       VERIFICATION_IN_PROGRESS: ["VERIFICATION_IN_PROGRESS"],
       PARTIALLY_VERIFIED: ["PARTIALLY_VERIFIED"],
-      VERIFIED: ["FULLY_VERIFIED"],
+      VERIFIED: ["FULLY_VERIFIED", "SENDING_FOR_REVIEW"],
       SENT_FOR_REVIEW: ["UNDER_REVIEW"],
     },
     selectableTabs: ["NOT_VERIFIED", "PARTIALLY_VERIFIED", "VERIFIED"],
@@ -55,6 +55,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       VERIFICATION_IN_PROGRESS: "EDITOR_VERIFICATION_IN_PROGRESS_VIEW",
       PARTIALLY_VERIFIED: "EDITOR_PARTIALLY_VERIFIED_VIEW",
       FULLY_VERIFIED: "EDITOR_VERIFIED_VIEW",
+      SENDING_FOR_REVIEW: "EDITOR_VERIFIED_VIEW",
       UNDER_REVIEW: "EDITOR_SENT_FOR_REVIEW_VIEW",
     },
     statusDisplayMap: {
@@ -62,6 +63,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       VERIFICATION_IN_PROGRESS: "HCM_AM_VERIFICATION_IN_PROGRESS",
       PARTIALLY_VERIFIED: "HCM_AM_PARTIALLY_VERIFIED",
       FULLY_VERIFIED: "HCM_AM_VERIFIED",
+      SENDING_FOR_REVIEW: "HCM_AM_SENDING_FOR_REVIEW",
       UNDER_REVIEW: "HCM_AM_SENT_FOR_REVIEW",
     },
   },
@@ -71,19 +73,18 @@ const MANAGE_BILLS_ROLE_CONFIG = {
     headerLabel: "HCM_AM_REVIEW_BILLS",
     tabs: [
       { code: "PENDING_BILLS", name: "HCM_AM_PENDING_BILLS" },
-      { code: "REVIEW_IN_PROGRESS", name: "HCM_AM_REVIEW_IN_PROGRESS" },
+      // { code: "REVIEW_IN_PROGRESS", name: "HCM_AM_REVIEW_IN_PROGRESS" },
       { code: "SENT_FOR_APPROVAL", name: "HCM_AM_SENT_FOR_APPROVAL" },
     ],
     tabStatusMap: {
-      PENDING_BILLS: ["UNDER_REVIEW"],
+      PENDING_BILLS: ["UNDER_REVIEW", "REVIEW_IN_PROGRESS"],
       SENT_FOR_APPROVAL: ["REVIEWED"],
-      REVIEW_IN_PROGRESS: ["REVIEW_IN_PROGRESS"],
     },
     selectableTabs: [],
     tabColumns: {
-      PENDING_BILLS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "editBill", "download", "sendForApproval"],
+      PENDING_BILLS: ["billId", "billDate", "source", "registers", "payees", "totalAmount",  "download", "sendForApproval"],//removed "editBill"
       SENT_FOR_APPROVAL: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
-      REVIEW_IN_PROGRESS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
+      // REVIEW_IN_PROGRESS: ["billId", "billDate", "source", "registers", "payees", "totalAmount", "download"],
     },
     tabCTAs: {
       // PENDING_BILLS: { label: "HCM_AM_SEND_FOR_APPROVAL", action: "SEND_FOR_APPROVAL" },
