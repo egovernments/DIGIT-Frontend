@@ -155,7 +155,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //   url: `/health-expense/v1/transactions/report/_generate`,
 // });
 
-  // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
+  const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
   };
@@ -213,32 +213,32 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   }
 
 
-  const reqMdmsCriteria = {
-    url: `/${mdms_context_path}/v1/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        moduleDetails: [
-          {
-            "moduleName": "HCM",
-            "masterDetails": [
-              {
-                "name": "WORKER_RATES"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    config: {
-      enabled: billData ? true : false,
-      select: (mdmsData) => {
-        const referenceCampaignId = billData?.referenceId?.split(".")?.[0];
-        return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
-      },
-    }
-  };
-  const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+  // const reqMdmsCriteria = {
+  //   url: `/${mdms_context_path}/v1/_search`,
+  //   body: {
+  //     MdmsCriteria: {
+  //       tenantId: tenantId,
+  //       moduleDetails: [
+  //         {
+  //           "moduleName": "HCM",
+  //           "masterDetails": [
+  //             {
+  //               "name": "WORKER_RATES"
+  //             }
+  //           ]
+  //         }
+  //       ]
+  //     }
+  //   },
+  //   config: {
+  //     enabled: billData ? true : false,
+  //     select: (mdmsData) => {
+  //       const referenceCampaignId = billData?.referenceId?.split(".")?.[0];
+  //       return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
+  //     },
+  //   }
+  // };
+  // const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
   console.log("workerRatesData", workerRatesData);
 
   
@@ -1021,12 +1021,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   // };
 
   
-  useEffect(() => {
-    return () => {
-      Object.values(transferPollTimers).forEach(clearTimeout);
-      Object.values(verifyPollTimers).forEach(clearTimeout);
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     Object.values(transferPollTimers).forEach(clearTimeout);
+  //     Object.values(verifyPollTimers).forEach(clearTimeout);
+  //   };
+  // }, []);
 
   useEffect(async () => {
     if (BillData) {
@@ -1346,14 +1346,25 @@ const renderActionBar = (ctaButton) => (
   </ActionBar>
 );
 
-  const downloadOptions = [
-    ...((["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) || activeTabCode === "GENERATED_ADVISORIES")
-      ? [{ code: "JUSTIFICATION", name: t("HCM_AM_DOWNLOAD_JUSTIFICATION") }]
-      : []),
-    ...(activeTabCode === "GENERATED_ADVISORIES" ? [{ code: "ADVISORY", name: t("HCM_AM_DOWNLOAD_ADVISORY") }] : []),
-  ];
+const downloadOptions = [
+  // Always available
+  { code: "BILL", name: t("HCM_AM_DOWNLOAD_BILL") },
+
+  // Conditional options
+  ...((["REVIEWER_SENT_FOR_APPROVAL_VIEW", "APPROVER_NOT_INITIATED_VIEW"].includes(currentView) || activeTabCode === "GENERATED_ADVISORIES")
+    ? [{ code: "JUSTIFICATION", name: t("HCM_AM_DOWNLOAD_JUSTIFICATION") }]
+    : []),
+
+  ...(activeTabCode === "GENERATED_ADVISORIES"
+    ? [{ code: "ADVISORY", name: t("HCM_AM_DOWNLOAD_ADVISORY") }]
+    : []),
+];
 
   const handleDownloadSelect = (option) => {
+    if (option?.code === "BILL") {
+      handleDownloadBill();
+      return;
+    }
     if (option?.code === "JUSTIFICATION") {
       const doc = billData?.additionalDetails?.justificationDetails?.justificationDoc?.[0];
       if (doc?.filestoreId) {
@@ -1380,7 +1391,7 @@ const renderActionBar = (ctaButton) => (
     }
     setShowToast({ key: "warning", label: t("HCM_AM_DOWNLOAD_NOT_AVAILABLE"), transitionTime: 3000 });
   };
-
+  const currencySuffix = workerRatesData?.currency ? ` (${workerRatesData.currency})` : "";
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
@@ -1395,7 +1406,9 @@ const renderActionBar = (ctaButton) => (
           {[
             {
               label: t("HCM_AM_BILL_AMOUNT"),
-              value: billData?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || t("NA"),
+              value: billData?.billDetails
+              ? `${billData.billDetails.reduce((sum, d) => sum + (d?.totalAmount || 0), 0)}${currencySuffix}`
+              : t("NA"),
             },
             {
               label: t("HCM_AM_NUMBER_OF_WORKERS"),
@@ -1447,7 +1460,7 @@ const renderActionBar = (ctaButton) => (
                 isSuffix
                 size="medium"
                 style={{ minWidth: "12rem" }}
-                onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`)}
+                onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`, { fromBill: true })}
               />
             </div>
           </div>
