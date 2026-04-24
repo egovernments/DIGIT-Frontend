@@ -43,7 +43,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   // State variables
   const { registerNumber, boundaryCode, periodDurationInDays } = Digit.Hooks.useQueryParams();
-  const { fromCampaignSupervisor } = location.state || false;
+  const { fromCampaignSupervisor, fromBill } = location.state || {};
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [attendanceDuration, setAttendanceDuration] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
@@ -73,7 +73,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const handleGoBack = () => {
     fromCampaignSupervisor
       ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, { fromViewScreen: true })
-      : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+      : history.push(
+          `/${window.contextPath}/employee/payments/registers-inbox`,
+          fromBill ? { fromBill: true } : undefined
+        );
   };
 
   useEffect(() => {
@@ -887,7 +890,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             icon="ArrowBack"
           />
 
-          {disabledAction || fromCampaignSupervisor ? (
+          {disabledAction || fromCampaignSupervisor || fromBill ? (
             <div />
           ) : editAttendance ? (
             <Button

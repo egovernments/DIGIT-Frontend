@@ -36,6 +36,7 @@ import AttendanceInboxComponent from "../../components/attendance_inbox/attendan
 const AttendanceInbox = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const fromBill = Boolean(location?.state?.fromBill);
 
   return (
     <div>
@@ -49,7 +50,7 @@ const AttendanceInbox = () => {
             height: "160px",
           }}
         >
-          <AttendanceInboxComponent></AttendanceInboxComponent>
+          <AttendanceInboxComponent fromBill={fromBill} />
         </div>
       }
     </div>
