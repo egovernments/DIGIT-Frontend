@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Card, Header, Button, Dropdown, Toast, HeaderComponent } from "@egovernments/digit-ui-components";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
+import { MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 
 /* --------------------------- Media Query Hook --------------------------- */
 const useMediaQuery = (query) => {
@@ -25,7 +26,7 @@ const ProjectSelect = ({ nextScreen }) => {
   const location = useLocation();
   const { t } = useTranslation();
   const history = useHistory();
-
+  const { role } = useParams();
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Responsive styles
@@ -52,6 +53,14 @@ const ProjectSelect = ({ nextScreen }) => {
 
   const billScreen = location.pathname.includes("project-and-aggregation-selection");
   const manageBillsScreen = nextScreen === "manage-bills" || location.pathname.includes("manage-bills-project-selection");
+
+  useEffect(() => {
+    if (!manageBillsScreen) return;
+    const normalizedRole = normalizeManageBillsRoleParam(role);
+    if (normalizedRole) {
+      Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, normalizedRole);
+    }
+  }, [manageBillsScreen, role]);
 
   const [project, setProject] = useState([]);
   const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || null);
@@ -138,8 +147,18 @@ const ProjectSelect = ({ nextScreen }) => {
                 setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });
                 return;
             }
+            const normalizedRoleFromParam = normalizeManageBillsRoleParam(role);
+            const storedRole = Digit.SessionStorage.get(MANAGE_BILLS_ROLE_STORAGE_KEY);
+            const normalizedRoleFromStorage = normalizeManageBillsRoleParam(storedRole);
+            const resolvedRole = normalizedRoleFromParam || normalizedRoleFromStorage;
+            if (!resolvedRole) {
+                setShowToast({ key: "error", label: t("HCM_AM_UNAUTHORIZED"), transitionTime: 3000 });
+                history.push(`/${window.contextPath}/employee`);
+                return;
+            }
+            Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, resolvedRole);
             Digit.SessionStorage.set("selectedProject", selectedProject);
-            history.push(`/${window.contextPath}/employee/payments/manage-bills`);
+            history.push(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`);
         } else {
             if (!selectedProject) {
                 setShowToast({ key: "error", label: t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY"), transitionTime: 3000 });

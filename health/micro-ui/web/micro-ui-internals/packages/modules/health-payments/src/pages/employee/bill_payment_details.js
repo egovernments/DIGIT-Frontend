@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
@@ -21,7 +21,7 @@ import {
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
 import "./loader_size.css";
-import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
+import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import SendForApprovalPopUp from "../../components/SendForApprovalPopUp";
 
@@ -79,6 +79,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const advisoryReportFromNav = location.state?.advisoryReport;
   const { t } = useTranslation();
   const history = useHistory();
+  const { role } = useParams(); // "reviewer" | "approver"
 
   const workflowSuccessNavConfig = {
     VERIFY: {
@@ -114,8 +115,23 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   };
 
   // Role-based config
-  const activeRole = getManageBillsRole();
-  const roleConfig = getManageBillsConfig();
+  const normalizedRoleFromParam = normalizeManageBillsRoleParam(role);
+  const normalizedRoleFromStorage = normalizeManageBillsRoleParam(Digit.SessionStorage.get(MANAGE_BILLS_ROLE_STORAGE_KEY));
+  const resolvedRole = normalizedRoleFromParam || normalizedRoleFromStorage;
+
+  useEffect(() => {
+    if (!resolvedRole) {
+      history.replace(`/${window.contextPath}/employee`);
+      return;
+    }
+    Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, resolvedRole);
+    if (!normalizedRoleFromParam) {
+      history.replace(`/${window.contextPath}/employee/payments/view-bill-payment-details/${resolvedRole}`, location.state);
+    }
+  }, [history, location.state, normalizedRoleFromParam, resolvedRole]);
+
+  const activeRole = getManageBillsRole(resolvedRole?.toUpperCase());
+  const roleConfig = getManageBillsConfig(resolvedRole?.toUpperCase());
   const [infoDescription, setInfoDescription] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);

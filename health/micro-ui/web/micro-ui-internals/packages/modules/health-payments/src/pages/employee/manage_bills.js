@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import ManageBillsTable from "../../components/ManageBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
@@ -11,13 +11,14 @@ import { Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/dig
 import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
-import { getManageBillsRole, getManageBillsConfig } from "../../utils/roleUtils";
+import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
 import AlertPopUp from "../../components/alertPopUp";
 
 const ManageBills = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const { role } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [selectedBills, setSelectedBills] = useState([]);
@@ -25,8 +26,23 @@ const ManageBills = () => {
   const [activePopUpAction, setActivePopUpAction] = useState(null);
 
   // Role-based config
-  const activeRole = getManageBillsRole();
-  const roleConfig = getManageBillsConfig();
+  const normalizedRoleFromParam = normalizeManageBillsRoleParam(role);
+  const normalizedRoleFromStorage = normalizeManageBillsRoleParam(Digit.SessionStorage.get(MANAGE_BILLS_ROLE_STORAGE_KEY));
+  const resolvedRole = normalizedRoleFromParam || normalizedRoleFromStorage;
+
+  useEffect(() => {
+    if (!resolvedRole) {
+      history.replace(`/${window.contextPath}/employee`);
+      return;
+    }
+    Digit.SessionStorage.set(MANAGE_BILLS_ROLE_STORAGE_KEY, resolvedRole);
+    if (!normalizedRoleFromParam) {
+      history.replace(`/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`);
+    }
+  }, [history, normalizedRoleFromParam, resolvedRole]);
+
+  const activeRole = getManageBillsRole(resolvedRole?.toUpperCase());
+  const roleConfig = getManageBillsConfig(resolvedRole?.toUpperCase());
 
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -565,6 +581,7 @@ const ManageBills = () => {
             columnKeys={roleConfig?.tabColumns[activeLink.code]}
             isSelectable={roleConfig?.selectableTabs?.includes(activeLink.code)}
             activeTabCode={activeLink.code}
+            role={resolvedRole}
           />
         )}
       </Card>

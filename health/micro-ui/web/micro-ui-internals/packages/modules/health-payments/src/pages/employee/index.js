@@ -80,8 +80,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
         <PrivateRoute path={`${path}/generate-bill`} component={() => <BillInbox />} />
-        <PrivateRoute path={`${path}/manage-bills-project-selection`} component={() => <ProjectSelect nextScreen="manage-bills" />} />
-        <PrivateRoute path={`${path}/manage-bills`} component={() => <ManageBills />} />
+        <PrivateRoute path={`${path}/manage-bills-project-selection/:role`} component={() => <ProjectSelect nextScreen="manage-bills" />} />
+        <PrivateRoute path={`${path}/manage-bills/:role`} component={() => <ManageBills />} />
         <PrivateRoute path={`${path}/my-bills`} component={() => <MyBills />} />
         <PrivateRoute path={`${path}/verify-bills`} component={() => <UploadAndFetchBillsCard />} />
         <PrivateRoute path={`${path}/verify-and-generate-payments`} component={() => <VerifyAndGeneratePayments />} />
@@ -90,7 +90,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/verify-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/send-for-review-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/send-for-approval-success`} component={() => <Response />} />
-        <PrivateRoute path={`${path}/view-bill-payment-details`} component={() => <BillPaymentDetails />} />
+        <PrivateRoute path={`${path}/view-bill-payment-details/:role`} component={() => <BillPaymentDetails />} />
         <PrivateRoute path={`${path}/edit-bill-payment-details`} component={() => <BillPaymentDetails editBillDetails={true} />} />
         <PrivateRoute path={`${path}/edit-bill-on-excel`} component={() => <EditBillOnExcel />} />
         <PrivateRoute path={`${path}/project-selection`} component={() => <ProjectSelect />} />

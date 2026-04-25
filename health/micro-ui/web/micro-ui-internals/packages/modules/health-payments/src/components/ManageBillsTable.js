@@ -16,6 +16,7 @@ import SendForApprovalPopUp from "./SendForApprovalPopUp";
 const ManageBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
+    const role = props?.role;
     const [showToast, setShowToast] = useState(null);
     const [showApprovalPopup, setShowApprovalPopup] = useState(false);
     const [selectedBill, setSelectedBill] = useState(null);
@@ -37,7 +38,7 @@ const ManageBillsTable = ({ ...props }) => {
                         style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
                         title={row?.billNumber || t("NA")}
                         onClick={() => {
-                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
+                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
                                 billID: row.billNumber,
                                 activeTabCode: activeTabCode,
                                 advisoryReport: row?.advisoryReport || null,
@@ -264,7 +265,7 @@ const ManageBillsTable = ({ ...props }) => {
                         size="medium"
                         label={t("HCM_AM_EDIT_BILL")}
                         onClick={() => {
-                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
+                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
                                 billID: row.billNumber,
                                 activeTabCode: activeTabCode,
                             });
