@@ -585,8 +585,9 @@ const BillDetailsTable = ({ ...props }) => {
 
         // Reviewer view (SENT_FOR_REVIEW / SENT_FOR_APPROVAL)
         if (props?.role === "PAYMENT_REVIEWER") {
-            return [userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, payeePhoneCol, roleCol,
-                reviewerWageCol, reviewerFoodCol, reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol];
+            return [userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, payeePhoneCol, operatorCol,
+                bankAccountCol, bankCodeCol,beneficiaryCodeCol, roleCol, reviewerWageCol, reviewerFoodCol,
+                reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol];
         }
 
         // bank-mode view: show payee bank details

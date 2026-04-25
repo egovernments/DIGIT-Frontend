@@ -25,7 +25,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         const trimmedBankAccount = bankAccount.trim();
         const trimmedBankCode = bankCode.trim();
         const trimmedBeneficiaryCode = beneficiaryCode.trim();
-
+        //todo add validations for bank fields
         if (!trimmedPayeeName) {
             setShowToast({
                 key: "error",
@@ -94,9 +94,9 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                         {renderReadOnlyInput(t("HCM_AM_MNO_NAME"), operator)}
                         {isBank && (
                             <>
-                                {renderEditable(t("HCM_AM_BANK_ACCOUNT"), bankAccount, setBankAccount, false)}
-                                {renderEditable(t("HCM_AM_BANK_CODE"), bankCode, setBankCode, false)}
-                                {renderEditable(t("HCM_AM_BENEFICIARY_CODE"), beneficiaryCode, setBeneficiaryCode, false)}
+                                {renderEditable(t("HCM_AM_BANK_ACCOUNT"), bankAccount, setBankAccount, true)}
+                                {renderEditable(t("HCM_AM_BANK_CODE"), bankCode, setBankCode, true)}
+                                {renderEditable(t("HCM_AM_BENEFICIARY_CODE"), beneficiaryCode, setBeneficiaryCode, true)}
                             </>
                         )}
 
