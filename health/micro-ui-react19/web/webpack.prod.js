@@ -40,6 +40,7 @@ module.exports = merge(common, {
   
   optimization: {
     minimize: true,
+    usedExports: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -83,6 +84,28 @@ module.exports = merge(common, {
           name: "digit-ui",
           priority: 35,
           reuseExistingChunk: true,
+          maxSize: 244000,
+        },
+        excel: {
+          test: /[\\/]node_modules[\\/](xlsx|exceljs)[\\/]/,
+          name: "excel-libs",
+          chunks: "async",
+          priority: 45,
+          enforce: true,
+        },
+        maps: {
+          test: /[\\/]node_modules[\\/](leaflet|proj4|geojson)[\\/]/,
+          name: "map-libs",
+          chunks: "async",
+          priority: 45,
+          enforce: true,
+        },
+        forms: {
+          test: /[\\/]node_modules[\\/](@rjsf|ajv)[\\/]/,
+          name: "form-libs",
+          chunks: "async",
+          priority: 43,
+          enforce: true,
         },
         vendors: {
           test: /[\\/]node_modules[\\/]/,

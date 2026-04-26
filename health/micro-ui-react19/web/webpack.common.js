@@ -74,7 +74,7 @@ module.exports = {
       "react-dom/client": path.resolve(__dirname, "node_modules/react-dom/client.js"),
       "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
       "react-query": require.resolve("@tanstack/react-query"),
-      // Add aliases for local packages to ensure proper resolution
+      "lodash": "lodash-es",
       "@egovernments/digit-ui-module-campaign-manager": path.resolve(__dirname, "packages/modules/campaign-manager/dist/main.js"),
       "@egovernments/digit-ui-health-css": path.resolve(__dirname, "packages/css/dist/index.css"),
     },
