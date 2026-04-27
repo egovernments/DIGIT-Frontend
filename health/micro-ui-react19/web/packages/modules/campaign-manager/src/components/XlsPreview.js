@@ -1,14 +1,11 @@
 import { PopUp, SVG, DownloadIcon } from "@egovernments/digit-ui-react-components";
-import React, { Suspense } from "react";
+import React from "react";
 import { Button, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
-const LazyDocViewerWithRenderers = React.lazy(() =>
-  import("@cyntler/react-doc-viewer").then((mod) => ({
-    default: (props) => <mod.default {...props} pluginRenderers={mod.DocViewerRenderers} />,
-  }))
-);
+const DocViewerWithRenderers = (props) => <DocViewer {...props} pluginRenderers={DocViewerRenderers} />;
 
 const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} }) => {
   return (
@@ -54,8 +51,7 @@ function XlsPreview({ file, ...props }) {
       </div>
       <style>{`#react-doc-viewer #proxy-renderer { display: flex; flex: 1; overflow-y: auto; } #react-doc-viewer #msdoc-renderer { width: 100%; height: 100%; }`}</style>
       <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
-        <Suspense fallback={<Loader />}>
-          <LazyDocViewerWithRenderers
+          <DocViewerWithRenderers
             style={{ height: "80vh", overflowY: "hidden" }}
             theme={{
               primary: PRIMARY_COLOR,
@@ -68,7 +64,6 @@ function XlsPreview({ file, ...props }) {
             }}
             documents={documents}
           />
-        </Suspense>
       </div>
     </PopUp>
   );
