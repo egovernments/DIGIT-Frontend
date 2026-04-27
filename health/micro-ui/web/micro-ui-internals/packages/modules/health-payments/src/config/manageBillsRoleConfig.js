@@ -159,7 +159,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       GENERATED_ADVISORIES: ["billId", "billDate", "source", "payees", "totalAmount", "download", "downloadAdvisory"],
     },
     tabCTAs: {
-      PENDING_BILLS: { label: "HCM_AM_GENERATE_PAYMENT_ADVISORY", action: "GENERATE_ADVISORY" },
+      PENDING_BILLS: { label: "HCM_AM_GENERATE_ADVISORY", action: "GENERATE_ADVISORY" },
     },
     billDetailViewMap: {
       REVIEWED: "APPROVER_NOT_INITIATED_VIEW",

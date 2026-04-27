@@ -108,8 +108,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       fileName: billNumber || "NA",
       message: config.messageKey,
       description: `<p>${t(config.descriptionKey || config.messageKey)}</p>`,
-      back: "GO_BACK_TO_HOME",
-      backlink: `/${window.contextPath}/employee`,
+      showFooter: false,
+      back: "HCM_AM_BACK",
+      backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
     });
     return true;
   };

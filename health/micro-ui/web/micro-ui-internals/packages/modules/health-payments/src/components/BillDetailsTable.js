@@ -690,7 +690,7 @@ const BillDetailsTable = ({ ...props }) => {
                         billDetails: [
                             {
                                 id: selectedRow.id,
-                                payee: nextPayee,
+                                payee: nextPayee, //todo
                             },
                         ],
                     },

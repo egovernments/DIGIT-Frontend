@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextInput } from "@egovernments/digit-ui-components";
 
@@ -21,7 +21,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     const validate = (trimmed) => {
         const e = {};
         const nameRe = /^[A-Za-z0-9 ]{1,100}$/;
-        if (!isBank && !nameRe.test(trimmed.payeeName)) {
+        if (!nameRe.test(trimmed.payeeName)) {
             e.payeeName = t("HCM_AM_INVALID_NAME_ERROR") || "Name must be alphanumeric and up to 100 characters.";
         }
         if (!isBank && !/^[0-9]{10}$/.test(trimmed.payeeMobile)) {

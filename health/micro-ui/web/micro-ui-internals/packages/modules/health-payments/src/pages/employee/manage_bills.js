@@ -617,7 +617,9 @@ const ManageBills = () => {
             onClick={() => handleCTAAction(currentCTA.action)}
             style={{
               flexShrink: 0,
+              width: "max-content",
               minWidth: "14rem",
+              maxWidth: "24rem",
               whiteSpace: "normal",
               marginRight: "2rem", 
             }}
