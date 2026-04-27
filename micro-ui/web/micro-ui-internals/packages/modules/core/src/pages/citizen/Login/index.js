@@ -254,7 +254,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     if (!enableUserPreferences) return;
     if (sessionStorage.getItem("whatsapp_popup_shown")) return;
 
-    const locale = JSON.parse(sessionStorage.getItem("Digit.initData"))?.value?.selectedLanguage || localStorage.getItem("locale") || "en_IN";
+    const locale = Digit.StoreData.getCurrentLanguage() || "en_IN";
 
     try {
       await Digit.CustomService.getResponse({
