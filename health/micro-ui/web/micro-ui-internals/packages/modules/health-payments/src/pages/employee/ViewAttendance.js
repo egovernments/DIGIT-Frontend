@@ -55,6 +55,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [updateDisabled, setUpdateDisabled] = useState(false);
+  const [isSaveAndApproveFlow, setIsSaveAndApproveFlow] = useState(false);
   const [triggerCreate, setTriggerCreate] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
   const [data, setData] = useState([]);
@@ -121,7 +122,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       );
       if (AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED") {
         setDisabledAction(true);
-      }
+      }//todo: check and add condition for campaign supervisor
 
       // commented the old code
       // if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
@@ -242,7 +243,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     url: `/${musterRollContextPath}/v1/_update`,
   });
 
-  const triggerMusterRollApprove = async () => {
+  const triggerMusterRollApprove = async ({ comment: overrideComment, supportingDocs: overrideSupportingDocs } = {}) => {
     try {
       await approveMutation.mutateAsync(
         {
@@ -253,12 +254,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
               billingPeriodId: selectedPeriod.id,
               additionalDetails: {
                 ...data?.[0]?.additionalDetails,
-                attendanceSupportingDocuments: supportingDocs
+                attendanceSupportingDocuments: overrideSupportingDocs || supportingDocs
               }
             },
             workflow: {
               action: "APPROVE",
-              comments: comment,
+              comments: (overrideComment !== undefined && overrideComment !== null) ? overrideComment : comment,
             },
           },
         },
@@ -289,7 +290,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   };
 
-  const triggerMusterRollUpdate = async () => {
+  const triggerMusterRollUpdate = async ({ skipRedirect = false } = {}) => {
     try {
       await updateMutation.mutateAsync(
         {
@@ -313,7 +314,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {
           onSuccess: (data) => {
             setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
-            // Delay the navigation for 3 seconds
+            if (skipRedirect) {
+              setUpdateDisabled(false);
+              return;
+            }
+
             setTimeout(() => {
               setUpdateDisabled(false);
               history.push(
@@ -331,6 +336,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
     } catch (error) {
       /// will show estimate data only
     }
+  };
+
+  const startSaveAndApprove = () => {
+    setIsSaveAndApproveFlow(true);
+    setOpenApproveCommentPopUp(true);
   };
 
   const triggerMusterRollCreate = async () => {
@@ -704,6 +714,22 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>
         <Card className="bottom-gap-card-payment">
+          {fromCampaignSupervisor && !editAttendance && !disabledAction && (
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.5rem" }}>
+              <Button
+                icon="Edit"
+                label={t("HCM_AM_EDIT_ATTENDANCE")}
+                title={t("HCM_AM_EDIT_ATTENDANCE")}
+                variation="secondary"
+                onClick={() => {
+                  history.push(
+                    `/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                    { fromCampaignSupervisor }
+                  );
+                }}
+              />
+            </div>
+          )}
           {/*  INFO:: commenting it as it is handled in edit register screen
           {<div className="card-heading" >
             <h2 className="card-heading-title"></h2>
@@ -852,6 +878,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       {openApproveCommentPopUp && (
         <ApproveCommentPopUp
           onClose={() => {
+            setIsSaveAndApproveFlow(false);
             setOpenApproveCommentPopUp(false);
           }}
           // onSubmit={(comment) => {
@@ -859,9 +886,22 @@ const ViewAttendance = ({ editAttendance = false }) => {
           //   setOpenApproveCommentPopUp(false);
           //   setOpenApproveAlertPopUp(true);
           // }}
-          onSubmit={({ comment, supportingDocs }) => {
+          onSubmit={async ({ comment, supportingDocs }) => {
             setComment(comment);
             setSupportingDocs(supportingDocs);
+
+            if (isSaveAndApproveFlow) {
+              setUpdateDisabled(true);
+              try {
+                await triggerMusterRollUpdate({ skipRedirect: true });
+                await triggerMusterRollApprove({ comment, supportingDocs });
+              } finally {
+                setIsSaveAndApproveFlow(false);
+                setOpenApproveCommentPopUp(false);
+              }
+              return;
+            }
+
             setOpenApproveCommentPopUp(false);
             setOpenApproveAlertPopUp(true);
           }}
@@ -880,18 +920,48 @@ const ViewAttendance = ({ editAttendance = false }) => {
             gap: "1rem",
           }}
         >
-          <Button
-            label={t(`HCM_AM_GO_BACK`)}
-            title={t(`HCM_AM_GO_BACK`)}
-            onClick={handleGoBack}
-            type="button"
-            style={{ minWidth: "13rem" }}
-            variation="secondary"
-            icon="ArrowBack"
-          />
+          {!(editAttendance && fromCampaignSupervisor) && (
+            <Button
+              label={t(`HCM_AM_GO_BACK`)}
+              title={t(`HCM_AM_GO_BACK`)}
+              onClick={handleGoBack}
+              type="button"
+              style={{ minWidth: "13rem" }}
+              variation="secondary"
+              icon="ArrowBack"
+            />
+          )}
 
-          {disabledAction || fromCampaignSupervisor || fromBill ? (
+          {disabledAction || fromBill ? (
             <div />
+          ) : editAttendance && fromCampaignSupervisor ? (
+            <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem" }}>
+              <Button
+                label={t("HCM_AM_CANCEL")}
+                title={t("HCM_AM_CANCEL")}
+                onClick={() => {
+                  history.push(
+                    `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                    { fromCampaignSupervisor }
+                  );
+                }}
+                style={{ minWidth: "10rem" }}
+                type="button"
+                variation="secondary"
+              />
+              <div style={{ flex: 1 }} />
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "15%" }}>
+                <Button
+                  label={`${t("HCM_AM_SAVE_CHANGES")} & ${t("HCM_AM_APPROVE")}`}
+                  title={`${t("HCM_AM_SAVE_CHANGES")} & ${t("HCM_AM_APPROVE")}`}
+                  onClick={startSaveAndApprove}
+                  style={{ minWidth: "14rem" }}
+                  type="button"
+                  variation="primary"
+                  isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
+                />
+              </div>
+            </div>
           ) : editAttendance ? (
             <Button
               label={t(`HCM_AM_SUBMIT_LABEL`)}
@@ -905,6 +975,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
               variation="primary"
               isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
             />
+          ) : fromCampaignSupervisor ? (
+            <div />
           ) : (
             <div
               style={{
