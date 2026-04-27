@@ -44,7 +44,7 @@ const CreateEmployee = () => {
           maxLength: item?.rules?.maxLength,
           minLength: item?.rules?.minLength,
           errorMessage: item?.rules?.errorMessage,
-          isDefault: item?.default === true,
+          isDefault: item?.default === true || String(item?.default).toLowerCase() === "true",
         }));
 
         const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
@@ -73,6 +73,16 @@ const CreateEmployee = () => {
     setMutationHappened(false);
     clearSuccessData();
     clearError();
+    // Reset stale country code so MDMS default is always used on fresh load
+    if (sessionFormData?.SelectEmployeePhoneNumber?.countryCode) {
+      setSessionFormData({
+        ...sessionFormData,
+        SelectEmployeePhoneNumber: {
+          ...sessionFormData.SelectEmployeePhoneNumber,
+          countryCode: undefined,
+        },
+      });
+    }
     return () => {
       if (window.location.pathname.includes("/hrms/create")) {
         return;

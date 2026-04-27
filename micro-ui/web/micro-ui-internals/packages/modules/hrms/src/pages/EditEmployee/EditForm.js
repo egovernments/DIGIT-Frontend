@@ -43,7 +43,7 @@ const EditForm = ({ tenantId, data }) => {
           maxLength: item?.rules?.maxLength,
           minLength: item?.rules?.minLength,
           errorMessage: item?.rules?.errorMessage,
-          isDefault: item?.default === true,
+          isDefault: item?.default === true || String(item?.default).toLowerCase() === "true",
         }));
 
         const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];

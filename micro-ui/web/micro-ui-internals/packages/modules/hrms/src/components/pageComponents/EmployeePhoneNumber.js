@@ -23,7 +23,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
           maxLength: item?.rules?.maxLength,
           minLength: item?.rules?.minLength,
           errorMessage: item?.rules?.errorMessage,
-          isDefault: item?.default === true,
+          isDefault: item?.default === true || String(item?.default).toLowerCase() === "true",
         }));
       },
       enabled: !!stateLvlTenantId,
@@ -83,17 +83,20 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
           <div className="field-container" style={{ width: isMobile ? "100%" : "50%", display: "block" }}>
             <div>
               <div
-                className={`field-container ${iserror ? "employee-card-input-error" : ""}`}
+                className="field-container"
                 style={{
                   display: "flex",
                   alignItems: "stretch",
-                  border: iserror ? "1px solid #d4351c" : "1px solid #464646",
                   borderRadius: "2px",
                   overflow: "hidden",
                   backgroundColor: "#FFFFFF",
                   height: "40px",
                   width: "100%",
                   marginTop: "8px",
+                  boxSizing: "border-box",
+                  ...(iserror
+                    ? { border: "1px solid #d4351c", outline: "none", boxShadow: "none" }
+                    : { border: "1px solid #464646" }),
                 }}
               >
                 <div className="citizen-card-input--front" style={{ position: "relative", display: "flex", alignItems: "center", borderRight: "1px solid #d1d1d1", paddingRight: "0px", marginRight: "0px" }}>
