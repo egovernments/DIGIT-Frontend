@@ -12,6 +12,11 @@ import Icon from "./Icon";
 
 const rowNamesToBeLocalised = ["Department", "", "Usage Type", "Ward", "Wards", "City Name", "Complaint Type", "Event Type"];
 
+const localizeIfExists = (t, key, fallback) => {
+  const translated = t(key);
+  return translated === key ? fallback : translated;
+};
+
 const InsightView = ({ rowValue, insight, t, shouldHideInsights }) => {
   return (
     <span>
@@ -158,7 +163,9 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
             cellValue = Math.round((cellValue + Number.EPSILON) * 100) / 100;
           }
           if (typeof cellValue === "string" && rowNamesToBeLocalised?.includes(row.name)) {
-            cellValue = t(`DSS_TB_` + Digit.Utils.locale.getTransformedLocale(cellValue));
+            const fallback = cellValue;
+            const localeKey = `DSS_TB_${Digit.Utils.locale.getTransformedLocale(cellValue)}`;
+            cellValue = localizeIfExists(t, localeKey, fallback);
           }
           if (row?.name?.toLowerCase().includes("days")) {
             cellValue = Math.floor(cellValue);
@@ -243,7 +250,10 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     const columnId = typeof plotName === "string" ? plotName.replace(/\./g, " ") : "";
     if (!columnId) return { columnId: "", parts: [] };
     if (columnId.includes("|")) {
-      const parts = columnId.split("|").map((s) => s.trim()).filter(Boolean);
+      const rawParts = columnId.split("|").map((s) => (s == null ? "" : String(s).trim()));
+      // Drop trailing empty segments so "A | " doesn't become "A | "
+      while (rawParts.length > 0 && rawParts[rawParts.length - 1] === "") rawParts.pop();
+      const parts = rawParts.filter(Boolean);
       return { columnId, parts };
     }
     return { columnId, parts: [plotName].filter(Boolean) };
@@ -371,11 +381,12 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
         const headerLocaleKey = `DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(lastSegment)}`;
         const tooltipLocaleKey = `TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(lastSegment)}`;
         const prefixParts = isPipeComposite ? parts.slice(0, -1) : [];
+        const nonEmpty = (s) => typeof s === "string" ? s.trim() !== "" : Boolean(s);
         const compositeHeaderText = isPipeComposite
-          ? [...prefixParts.map((p) => t(p)), t(headerLocaleKey)].join(" | ")
+          ? [...prefixParts.map((p) => t(p)), t(headerLocaleKey)].filter(nonEmpty).join(" | ")
           : null;
         const compositeTooltipText = isPipeComposite
-          ? [...prefixParts.map((p) => t(p)), t(tooltipLocaleKey)].join(" | ")
+          ? [...prefixParts.map((p) => t(p)), t(tooltipLocaleKey)].filter(nonEmpty).join(" | ")
           : null;
         const localizedHeader = t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`);
         const tooltipDisplay = isPipeComposite ? compositeTooltipText : t(tooltipLocaleKey);
