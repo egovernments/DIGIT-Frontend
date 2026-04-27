@@ -680,6 +680,7 @@ const BillDetailsTable = ({ ...props }) => {
             ...(updatedFields?.beneficiaryCode !== undefined ? { beneficiaryCode: updatedFields.beneficiaryCode } : {}),
         };
 
+        const payeeUpdatedAtEpochMs = Date.now();
         try {
             await billDetailUpdateMutation.mutateAsync(
                 {
@@ -691,6 +692,13 @@ const BillDetailsTable = ({ ...props }) => {
                             {
                                 id: selectedRow.id,
                                 payee: nextPayee, //todo
+                                additionalDetails: {
+                                    ...(selectedRow?.additionalDetails || {}),
+                                    editInfo: {
+                                        ...(selectedRow?.additionalDetails?.editInfo || {}),
+                                        payeeUpdatedAtEpochMs,
+                                    },
+                                },
                             },
                         ],
                     },

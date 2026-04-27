@@ -631,11 +631,19 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         additionalDetails,
       };
     });
+    const payablesUpdatedAtEpochMs = Date.now();
     const partialBillDetails = billDetails.map((d) => ({
       id: d?.id,
       totalAmount: Number(d?.totalAmount) || 0,
       totalAttendance: Number(d?.totalAttendance) || 0,
       payableLineItems: d?.payableLineItems,
+      additionalDetails: {
+        ...(d?.additionalDetails || {}),
+        editInfo: {
+          ...(d?.additionalDetails?.editInfo || {}),
+          payablesUpdatedAtEpochMs,
+        },
+      },
     }));
     try {
       await billDetailPartialUpdateMutation.mutateAsync(
