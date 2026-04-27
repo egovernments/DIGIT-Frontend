@@ -20,6 +20,7 @@ import MultiSelectDropdown from "./MultiSelectDropdown";
 import NoResultsFound from "./NoResultsFound";
 import AddOrEditMapping from "./AddOrEditMapping";
 import { CustomSVG } from "@egovernments/digit-ui-components";
+import Ajv from "ajv";
 
 const initialState = {
   data: [],
@@ -633,7 +634,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       data[capacityKey] = Number(data[capacityKey]);
     }
 
-    const { default: Ajv } = await import("ajv");
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
 

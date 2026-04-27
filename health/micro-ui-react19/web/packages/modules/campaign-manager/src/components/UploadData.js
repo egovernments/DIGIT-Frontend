@@ -7,6 +7,8 @@ import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import XLSX from "xlsx";
+import Ajv from "ajv";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -704,10 +706,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
-          const [{ default: XLSX }, { default: Ajv }] = await Promise.all([
-            import("xlsx"),
-            import("ajv"),
-          ]);
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
           const sheet = workbook.Sheets[sheetTypeMap[type]];
