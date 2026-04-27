@@ -23,6 +23,8 @@ const EditBillOnExcel = () => {
 
   const handleDownload = async () => {
     try {
+      const user = Digit.UserService.getUser();
+
       const res = await fetch(
         `/${expenseContextPath}/bill/v1/billdetails/_generateTemplate`,
         {
@@ -32,7 +34,11 @@ const EditBillOnExcel = () => {
           },
           body: JSON.stringify({
             RequestInfo: {
-              ...Digit.UserService.getUser(),
+              apiId: "Rainmaker",
+              authToken: user?.access_token || null,
+              userInfo: user?.info || null,
+              msgId: `${Date.now()}|${Digit.StoreData.getCurrentLanguage?.() || "en_IN"}`,
+              plainAccessRequest: {},
             },
             billId: billData?.id,
             tenantId,
