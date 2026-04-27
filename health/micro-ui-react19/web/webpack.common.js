@@ -77,6 +77,13 @@ module.exports = {
       "lodash": "lodash-es",
       "@egovernments/digit-ui-module-campaign-manager": path.resolve(__dirname, "packages/modules/campaign-manager/dist/main.js"),
       "@egovernments/digit-ui-health-css": path.resolve(__dirname, "packages/css/dist/index.css"),
+      // Dedup aliases: force all @egovernments packages to resolve from the top-level node_modules
+      "@egovernments/digit-ui-libraries": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-libraries"),
+      "@egovernments/digit-ui-module-core": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-module-core"),
+      "@egovernments/digit-ui-module-workbench": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-module-workbench"),
+      "@egovernments/digit-ui-react-components": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-react-components"),
+      "@egovernments/digit-ui-svg-components": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-svg-components"),
+      "@egovernments/digit-ui-components": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-components"),
     },
     fallback: {
       fs: false,
@@ -88,6 +95,9 @@ module.exports = {
     },
     // Ensure webpack doesn't cache these modules aggressively
     unsafeCache: false,
+  },
+  externals: {
+    xlsx: "XLSX",
   },
   output: {
     path: path.resolve(__dirname, "build"),

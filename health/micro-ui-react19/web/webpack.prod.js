@@ -79,13 +79,6 @@ module.exports = merge(common, {
           name: "react",
           priority: 40,
         },
-        digitUI: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]/,
-          name: "digit-ui",
-          priority: 35,
-          reuseExistingChunk: true,
-          maxSize: 244000,
-        },
         excel: {
           test: /[\\/]node_modules[\\/](xlsx|exceljs)[\\/]/,
           name: "excel-libs",
@@ -110,8 +103,8 @@ module.exports = merge(common, {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           name(module) {
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-            return `vendors-${packageName.replace("@", "")}`;
+            const packageName = module.context.match(/[\\/]node_modules[\\/]((?:@[^\\/]+[\\/])?[^\\/]+)/)[1];
+            return `vendors-${packageName.replace("@", "").replace(/[\\/]/g, "-")}`;
           },
           priority: 20,
         },

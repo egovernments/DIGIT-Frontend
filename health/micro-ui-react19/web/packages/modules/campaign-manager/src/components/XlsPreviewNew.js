@@ -1,7 +1,13 @@
-import React from "react";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../utils";
+import { Loader } from "@egovernments/digit-ui-components";
+
+const LazyDocViewerWithRenderers = React.lazy(() =>
+  import("@cyntler/react-doc-viewer").then((mod) => ({
+    default: (props) => <mod.default {...props} pluginRenderers={mod.DocViewerRenderers} />,
+  }))
+);
 
 const ArrowBack = ({ className = "", height = "15", width = "15", styles = {} }) => {
   return (
@@ -46,23 +52,24 @@ function XlsPreviewNew({ file, ...props }) {
         />
       </div> */}
       <style>{`#react-doc-viewer #proxy-renderer { display: flex; flex: 1; overflow-y: auto; } #react-doc-viewer #msdoc-renderer { width: 100%; height: 100%; }`}</style>
-      <div className="campaign-popup-module" 
+      <div className="campaign-popup-module"
       style={{ marginTop: "0.5rem" }}
       >
-        <DocViewer
-          style={{ height: "80vh", overflowY: "hidden" }}
-          theme={{
-            primary: PRIMARY_COLOR,
-            secondary: "#feefe7",
-            tertiary: "#feefe7",
-            textPrimary: "#0B0C0C",
-            textSecondary: "#505A5F",
-            textTertiary: "#00000099",
-            disableThemeScrollbar: true,
-          }}
-          documents={documents}
-          pluginRenderers={DocViewerRenderers}
-        />
+        <Suspense fallback={<Loader />}>
+          <LazyDocViewerWithRenderers
+            style={{ height: "80vh", overflowY: "hidden" }}
+            theme={{
+              primary: PRIMARY_COLOR,
+              secondary: "#feefe7",
+              tertiary: "#feefe7",
+              textPrimary: "#0B0C0C",
+              textSecondary: "#505A5F",
+              textTertiary: "#00000099",
+              disableThemeScrollbar: true,
+            }}
+            documents={documents}
+          />
+        </Suspense>
       </div>
     </div>
   );
