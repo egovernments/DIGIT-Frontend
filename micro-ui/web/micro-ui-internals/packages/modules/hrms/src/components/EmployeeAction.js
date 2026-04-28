@@ -1,5 +1,4 @@
 import { FormComposer, Loader, Modal } from "@egovernments/digit-ui-react-components";
-import set from "lodash/set";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { configEmployeeActiveApplication } from "./Modal/EmployeeActivation";
@@ -116,6 +115,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     data.reasonForDeactivation = selectedReason.code;
     let Employees = [...applicationData.Employees];
     if (action !== "ACTIVATE_EMPLOYEE_HEAD") {
+      // DEACTIVATION
       if (file) {
         let documents = {
           referenceType: "DEACTIVATION",
@@ -125,11 +125,16 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         applicationData.Employees[0]["documents"].push(documents);
       }
 
-      set(Employees[0], 'deactivationDetails[0].effectiveFrom', data?.effectiveFrom);
-      set(Employees[0], 'deactivationDetails[0].orderNo', data?.orderNo);
-      set(Employees[0], 'deactivationDetails[0].reasonForDeactivation', data?.reasonForDeactivation);
-      set(Employees[0], 'deactivationDetails[0].remarks', data?.remarks);
+      // Add new deactivation entry (don't update existing ones)
+      const newDeactivationEntry = {
+        reasonForDeactivation: data?.reasonForDeactivation,
+        orderNo: data?.orderNo,
+        remarks: data?.remarks,
+        effectiveFrom: data?.effectiveFrom,
+        tenantId: tenantId,
+      };
 
+      Employees[0].deactivationDetails.push(newDeactivationEntry);
       Employees[0].isActive = false;
       mutationUpdate.mutate(
         {
@@ -149,6 +154,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       );
       history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "DEACTIVATION" });
     } else {
+      // ACTIVATION
       if (file) {
         let documents = {
           referenceType: "ACTIVATION",
@@ -158,10 +164,17 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         applicationData.Employees[0]["documents"].push(documents);
       }
 
-      set(Employees[0], 'reactivationDetails[0].effectiveFrom', data?.effectiveFrom);
-      set(Employees[0], 'reactivationDetails[0].orderNo', data?.orderNo);
-      set(Employees[0], 'reactivationDetails[0].reasonForDeactivation', data?.reasonForDeactivation);
-      set(Employees[0], 'reactivationDetails[0].remarks', data?.remarks);
+      // Add new reactivation entry (don't update existing ones)
+      const newReactivationEntry = {
+        reasonForReactivation: null,
+        orderNo: data?.orderNo,
+        remarks: data?.remarks,
+        effectiveFrom: data?.effectiveFrom,
+        tenantId: tenantId,
+        reasonForDeactivation: data?.reasonForDeactivation,
+      };
+
+      Employees[0].reactivationDetails.push(newReactivationEntry);
       Employees[0].isActive = true;
 
       mutationUpdate.mutate(
