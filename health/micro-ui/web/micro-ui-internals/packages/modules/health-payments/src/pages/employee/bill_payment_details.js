@@ -800,7 +800,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     try {
       await generateAdvisoryMutation.mutateAsync({
         body: {
-          RequestInfo: Digit.Utils.getRequestInfo(),
           billReport: {
             billIds: [billId],
             tenantId,
@@ -809,8 +808,16 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
       });
 
-      setShowToast({ key: "info", label: t("HCM_AM_REPORT_GENERATION_IN_PROGRESS"), transitionTime: 5000 });
-      refetchBill();
+      history.push(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
+        state: "success",
+        info: "HCM_AM_BILL_NUMBER",
+        fileName: billData?.billNumber || billID || "NA",
+        message: "HCM_AM_REPORT_GENERATION_IN_PROGRESS",
+        description: `<p>${t("HCM_AM_REPORT_GENERATION_IN_PROGRESS")}</p>`,
+        showFooter: false,
+        back: "HCM_AM_BACK",
+        backlink: `/${window.contextPath}/employee/payments/manage-bills/${resolvedRole}`,
+      });
     } catch (error) {
       setShowToast({
         key: "error",
@@ -1490,7 +1497,7 @@ const downloadOptions = [
                   showBottom={true}
                 />
               )}
-              <Button
+              {/* <Button
                 variation="secondary"
                 label={t("HCM_AM_VIEW_REGISTERS")}
                 // icon="OpenInNew"
@@ -1498,7 +1505,7 @@ const downloadOptions = [
                 size="medium"
                 style={{ minWidth: "12rem" }}
                 onClick={() => history.push(`/${window.contextPath}/employee/payments/registers-inbox`, { fromBill: true })}
-              />
+              /> */}
             </div>
           </div>
           {isBillLoading || isFetching ? (
@@ -1515,11 +1522,15 @@ const downloadOptions = [
                 <span
                   style={{
                     backgroundColor:
-                      billData?.status === "FULLY_VERIFIED" || billData?.status === "FULLY_PAID"
+                      ["FULLY_VERIFIED", "REVIEWED", "FULLY_PAID"].includes(billData?.status)
                         ? "#00703C" // Green
-                        : billData?.status === "PARTIALLY_VERIFIED" || billData?.status === "PARTIALLY_PAID"
+                        : ["SENDING_FOR_REVIEW", "UNDER_REVIEW", "REVIEW_IN_PROGRESS", "VERIFICATION_IN_PROGRESS", "PARTIALLY_VERIFIED", "PARTIALLY_PAID"].includes(
+                            billData?.status
+                          )
                           ? "#9E5F00" // Yellow
-                          : "#B91900", // Red fallback
+                          : ["PENDING_VERIFICATION"].includes(billData?.status)
+                            ? "#B91900" // Red
+                            : "#B91900", // Red fallback
                     color: "#fff",
                     padding: "0.25rem 0.5rem",
                     borderRadius: "4px",
