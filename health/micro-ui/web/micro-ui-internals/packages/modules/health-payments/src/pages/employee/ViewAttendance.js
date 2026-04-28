@@ -43,7 +43,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   // State variables
   const { registerNumber, boundaryCode, periodDurationInDays } = Digit.Hooks.useQueryParams();
-  const { fromCampaignSupervisor, fromBill } = location.state || {};
+  const { fromCampaignSupervisor, fromBill, isBillGenerated } = location.state || {};
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [attendanceDuration, setAttendanceDuration] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
@@ -55,7 +55,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
   const [updateDisabled, setUpdateDisabled] = useState(false);
-  const [isSaveAndApproveFlow, setIsSaveAndApproveFlow] = useState(false);
   const [triggerCreate, setTriggerCreate] = useState(false);
   const [searchCount, setSearchCount] = useState(1);
   const [data, setData] = useState([]);
@@ -70,6 +69,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showMapPopup, setShowMapPopup] = useState(false);
   const [hasMusterRoll, setHasMusterRoll] = useState(false);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
+  const canCampaignSupervisorEdit = fromCampaignSupervisor && !isBillGenerated;
 
   const handleGoBack = () => {
     fromCampaignSupervisor
@@ -243,7 +243,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     url: `/${musterRollContextPath}/v1/_update`,
   });
 
-  const triggerMusterRollApprove = async ({ comment: overrideComment, supportingDocs: overrideSupportingDocs } = {}) => {
+  const triggerMusterRollApprove = async () => {
     try {
       await approveMutation.mutateAsync(
         {
@@ -254,12 +254,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
               billingPeriodId: selectedPeriod.id,
               additionalDetails: {
                 ...data?.[0]?.additionalDetails,
-                attendanceSupportingDocuments: overrideSupportingDocs || supportingDocs
+                attendanceSupportingDocuments: supportingDocs
               }
             },
             workflow: {
               action: "APPROVE",
-              comments: (overrideComment !== undefined && overrideComment !== null) ? overrideComment : comment,
+              comments: comment,
             },
           },
         },
@@ -290,7 +290,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   };
 
-  const triggerMusterRollUpdate = async ({ skipRedirect = false } = {}) => {
+  const triggerMusterRollUpdate = async () => {
     try {
       await updateMutation.mutateAsync(
         {
@@ -314,11 +314,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {
           onSuccess: (data) => {
             setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
-            if (skipRedirect) {
-              setUpdateDisabled(false);
-              return;
-            }
-
             setTimeout(() => {
               setUpdateDisabled(false);
               history.push(
@@ -336,11 +331,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
     } catch (error) {
       /// will show estimate data only
     }
-  };
-
-  const startSaveAndApprove = () => {
-    setIsSaveAndApproveFlow(true);
-    setOpenApproveCommentPopUp(true);
   };
 
   const triggerMusterRollCreate = async () => {
@@ -714,7 +704,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>
         <Card className="bottom-gap-card-payment">
-          {fromCampaignSupervisor && !editAttendance && !disabledAction && (
+          {canCampaignSupervisorEdit && !editAttendance && (
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.5rem" }}>
               <Button
                 icon="Edit"
@@ -878,7 +868,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
       {openApproveCommentPopUp && (
         <ApproveCommentPopUp
           onClose={() => {
-            setIsSaveAndApproveFlow(false);
             setOpenApproveCommentPopUp(false);
           }}
           // onSubmit={(comment) => {
@@ -886,22 +875,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
           //   setOpenApproveCommentPopUp(false);
           //   setOpenApproveAlertPopUp(true);
           // }}
-          onSubmit={async ({ comment, supportingDocs }) => {
+          onSubmit={({ comment, supportingDocs }) => {
             setComment(comment);
             setSupportingDocs(supportingDocs);
-
-            if (isSaveAndApproveFlow) {
-              setUpdateDisabled(true);
-              try {
-                await triggerMusterRollUpdate({ skipRedirect: true });
-                await triggerMusterRollApprove({ comment, supportingDocs });
-              } finally {
-                setIsSaveAndApproveFlow(false);
-                setOpenApproveCommentPopUp(false);
-              }
-              return;
-            }
-
             setOpenApproveCommentPopUp(false);
             setOpenApproveAlertPopUp(true);
           }}
@@ -932,9 +908,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
             />
           )}
 
-          {disabledAction || fromBill ? (
+          {(disabledAction && !(editAttendance && canCampaignSupervisorEdit)) || fromBill ? (
             <div />
-          ) : editAttendance && fromCampaignSupervisor ? (
+          ) : editAttendance && canCampaignSupervisorEdit ? (
             <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem" }}>
               <Button
                 label={t("HCM_AM_CANCEL")}
@@ -952,9 +928,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
               <div style={{ flex: 1 }} />
               <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "15%" }}>
                 <Button
-                  label={`${t("HCM_AM_SAVE_CHANGES")} & ${t("HCM_AM_APPROVE")}`}
-                  title={`${t("HCM_AM_SAVE_CHANGES")} & ${t("HCM_AM_APPROVE")}`}
-                  onClick={startSaveAndApprove}
+                  label={t("HCM_AM_SAVE_CHANGES")}
+                  title={t("HCM_AM_SAVE_CHANGES")}
+                  onClick={() => {
+                    setUpdateDisabled(true);
+                    triggerMusterRollUpdate();
+                  }}
                   style={{ minWidth: "14rem" }}
                   type="button"
                   variation="primary"
