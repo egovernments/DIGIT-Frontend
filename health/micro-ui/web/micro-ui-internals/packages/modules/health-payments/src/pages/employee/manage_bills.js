@@ -59,6 +59,7 @@ const ManageBills = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [totalCount, setTotalCount] = useState(0);
+  const [forceZeroStatusCount, setForceZeroStatusCount] = useState(false);
   const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
   const [isBillReportLoading, setIsBillReportLoading] = useState(false);
 
@@ -82,12 +83,12 @@ const ManageBills = () => {
     tenantId: tenantId,
     referenceIds: selectedProject?.id ? [selectedProject?.id] : [],
     ...(billID ? { billNumbers: [billID] } : {}),
-    ...(dateRange.startDate && dateRange.endDate
-      ? {
-          fromDate: new Date(dateRange.startDate).getTime(),
-          toDate: new Date(dateRange.endDate).getTime(),
-        }
-      : {}),
+    // ...(dateRange.startDate && dateRange.endDate
+    //   ? {
+    //       fromDate: new Date(dateRange.startDate).getTime(),
+    //       toDate: new Date(dateRange.endDate).getTime(),
+    //     }
+    //   : {}),
     pagination: {
       limit: limitAndOffset.limit,
       offset: limitAndOffset.offset,
@@ -142,6 +143,7 @@ const ManageBills = () => {
   const statusCount = BillCountData?.statusCount || {};
 
   const getTabCount = (tabCode) => {
+    if (forceZeroStatusCount) return 0;
     const statusList = roleConfig?.tabStatusMap?.[tabCode] || [];
   
     return statusList.reduce((sum, status) => {
@@ -397,6 +399,7 @@ const ManageBills = () => {
   // Refetch on filter change
   useEffect(() => {
     refetchBill();
+    refetchBillCount();
   }, [billID, dateRange, limitAndOffset, periodType, activeLink.code]);
 
   const onSubmit = (billID, dateRange, selectedBillType) => {
@@ -407,17 +410,20 @@ const ManageBills = () => {
       ).map((x) => x?.id);
 
       if (filteredPeriods.length == 0) {
+        setForceZeroStatusCount(true);
         setTableData([]);
         setTotalCount(0);
         return;
       }
     }
+    setForceZeroStatusCount(false);
     setBillID(billID);
     setDateRange(dateRange);
     setPeriodType(selectedBillType);
   };
 
   const onClear = () => {
+    setForceZeroStatusCount(false);
     setDateRange({ startDate: "", endDate: "", title: "" });
     setBillID("");
     setPeriodType(null);
