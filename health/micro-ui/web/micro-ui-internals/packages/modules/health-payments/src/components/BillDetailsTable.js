@@ -206,6 +206,8 @@ const BillDetailsTable = ({ ...props }) => {
             },
             allowOverflow: true,
             minWidth: "180px",
+            maxWidth: "240px",
+            grow: 1,
         };
 
         const workerNameCol = {
@@ -217,6 +219,8 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             minWidth: "150px",
+            maxWidth: "220px",
+            grow: 1,
         };
 
         const payeeNameCol = {
@@ -228,6 +232,8 @@ const BillDetailsTable = ({ ...props }) => {
             ),
             style: { justifyContent: "start" },
             minWidth: "130px",
+            maxWidth: "220px",
+            grow: 1,
         };
 
         const phoneCol = {
@@ -238,6 +244,8 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             minWidth: "140px",
+            maxWidth: "180px",
+            grow: 1,
         };
 
         const payeePhoneCol = {
@@ -248,6 +256,8 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             minWidth: "160px",
+            maxWidth: "200px",
+            grow: 1,
         };
 
         const roleCol = {
@@ -258,6 +268,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             style: { justifyContent: "start" },
+            minWidth: "140px",
+            maxWidth: "180px",
+            grow: 1,
         };
 
         const operatorCol = {
@@ -268,6 +281,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </span>
             ),
             style: { justifyContent: "start" },
+            minWidth: "140px",
+            maxWidth: "180px",
+            grow: 1,
         };
 
         const bankAccountCol = {
@@ -279,6 +295,8 @@ const BillDetailsTable = ({ ...props }) => {
             ),
             style: { justifyContent: "start" },
             minWidth: "160px",
+            maxWidth: "220px",
+            grow: 1,
         };
 
         const bankCodeCol = {
@@ -290,6 +308,8 @@ const BillDetailsTable = ({ ...props }) => {
             ),
             style: { justifyContent: "start" },
             minWidth: "140px",
+            maxWidth: "180px",
+            grow: 1,
         };
 
         const beneficiaryCodeCol = {
@@ -301,6 +321,8 @@ const BillDetailsTable = ({ ...props }) => {
             ),
             style: { justifyContent: "start" },
             minWidth: "160px",
+            maxWidth: "220px",
+            grow: 1,
         };
 
         const daysCol = {
@@ -311,6 +333,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "120px",
+            maxWidth: "150px",
+            grow: 1,
         };
 
         const wageCol = {
@@ -321,6 +346,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "120px",
+            maxWidth: "160px",
+            grow: 1,
         };
 
         const totalAmountCol = {
@@ -331,6 +359,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "140px",
+            maxWidth: "180px",
+            grow: 1,
         };
 
         // --- Per-day rate columns (values divided by days worked) ---
@@ -343,6 +374,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+            maxWidth: "170px",
+            grow: 1,
         };
 
         const foodCol = {
@@ -353,6 +387,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+            maxWidth: "170px",
+            grow: 1,
         };
 
         const travelCol = {
@@ -363,6 +400,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+            maxWidth: "170px",
+            grow: 1,
         };
 
         const miscCol = {
@@ -373,6 +413,9 @@ const BillDetailsTable = ({ ...props }) => {
                 </div>
             ),
             style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+            maxWidth: "170px",
+            grow: 1,
         };
 
         const feesCol = {
@@ -386,6 +429,9 @@ const BillDetailsTable = ({ ...props }) => {
                 );
             },
             style: { justifyContent: "flex-end" },
+            minWidth: "130px",
+            maxWidth: "170px",
+            grow: 1,
         };
 
         const totalCol = {
@@ -402,6 +448,9 @@ const BillDetailsTable = ({ ...props }) => {
                 );
             },
             style: { justifyContent: "flex-end" },
+            minWidth: "140px",
+            maxWidth: "180px",
+            grow: 1,
         };
 
         // --- Columns for Partially Verified > Verification Failed ---
@@ -579,20 +628,34 @@ const BillDetailsTable = ({ ...props }) => {
             },
             style: { justifyContent: "flex-end" },
             minWidth: "120px",
+            maxWidth: "170px",
+            grow: 1,
         };
+
+        const removeLastHeaderRightBorder = (cols = []) =>
+            cols.map((col, index) => {
+                const isLast = index === cols.length - 1;
+                if (!isLast || !React.isValidElement(col?.name)) return col;
+                return {
+                    ...col,
+                    name: React.cloneElement(col.name, {
+                        style: { ...(col.name.props?.style || {}), borderRight: "none" },
+                    }),
+                };
+            });
 
         // --- Column set selection based on billStatus and role ---
 
         // Reviewer view (SENT_FOR_REVIEW / SENT_FOR_APPROVAL)
         if (props?.role === "PAYMENT_REVIEWER") {
-            return [userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, payeePhoneCol, operatorCol,
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, payeePhoneCol,
                 bankAccountCol, bankCodeCol,beneficiaryCodeCol, roleCol, reviewerWageCol, reviewerFoodCol,
-                reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol];
+                reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol]);
         }
 
         // bank-mode view: show payee bank details
         if (isBankMode) {
-            return [
+            return removeLastHeaderRightBorder([
                 userIdCol,
                 workerNameCol,
                 payeeNameCol,
@@ -609,30 +672,30 @@ const BillDetailsTable = ({ ...props }) => {
                 daysCol,
                 feesCol,
                 totalCol,
-            ];
+            ]);
         }
 
         // Partially Verified with sub-tabs
         if (billStatus === "PARTIALLY_VERIFIED") {
             if (subTab === "VERIFICATION_FAILED") {
-                return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol, reasonCol, actionCol];
+                return removeLastHeaderRightBorder([userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol, reasonCol, actionCol]);
             }
             // VERIFIED sub-tab
-            return [userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol];
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol]);
         }
 
         // Approver: Partially Paid with sub-tabs (Failed / Paid)
         if (billStatus === "PARTIALLY_PAID") {
             if (subTab === "FAILED") {
-                return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol];
+                return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol]);
             }
             // PAID sub-tab
-            return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
         }
 
         // Standard view for PENDING_VERIFICATION, VERIFICATION_IN_PROGRESS, FULLY_VERIFIED, SENT_FOR_REVIEW,
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
-        return [userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol];
+        return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
 
     }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode, currencySuffix]);
 

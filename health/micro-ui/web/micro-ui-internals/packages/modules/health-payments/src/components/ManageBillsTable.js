@@ -48,8 +48,9 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.billNumber || t("NA")}
                     </div>
                 ),
-                grow: 2,
+                grow: 1,
                 minWidth: "180px",
+                maxWidth: "240px",
                 style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
@@ -60,7 +61,7 @@ const ManageBillsTable = ({ ...props }) => {
                         {t("HCM_AM_ATTENDANCE")}
                     </div>
                 ),
-                grow: 0,
+                grow: 1,
                 minWidth: "130px",
                 maxWidth: "160px",
                 style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
@@ -83,7 +84,7 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.billDetails?.length || "0"}
                     </div>
                 ),
-                grow: 0,
+                grow: 1,
                 minWidth: "120px",
                 maxWidth: "140px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
@@ -99,7 +100,7 @@ const ManageBillsTable = ({ ...props }) => {
                         </div>
                     );
                 },
-                grow: 0,
+                grow: 1,
                 minWidth: "140px",
                 maxWidth: "170px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
@@ -284,7 +285,7 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.billDate ? formatTimestampToDate(row.billDate) : t("NA")}
                     </div>
                 ),
-                grow: 0,
+                grow: 1,
                 minWidth: "170px",
                 maxWidth: "200px",
                 style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
@@ -334,34 +335,46 @@ const ManageBillsTable = ({ ...props }) => {
 
     const columns = useMemo(() => {
         const registry = buildColumnRegistry(t, history, props, setShowToast, props.activeTabCode);
+        const removeLastHeaderRightBorder = (cols = []) =>
+            cols.map((col, index) => {
+                const isLast = index === cols.length - 1;
+                if (!isLast || !React.isValidElement(col?.name)) return col;
+                return {
+                    ...col,
+                    name: React.cloneElement(col.name, {
+                        style: { ...(col.name.props?.style || {}), borderRight: "none" },
+                    }),
+                };
+            });
 
         // Config-driven: use columnKeys if provided
         if (props.columnKeys && Array.isArray(props.columnKeys)) {
-            return props.columnKeys
+            const selectedColumns = props.columnKeys
                 .map((key) => registry[key])
                 .filter(Boolean);
+            return removeLastHeaderRightBorder(selectedColumns);
         }
 
         // Fallback: legacy activeTab-based logic (backward compat)
         const activeTab = props?.activeTab || "NOT_VERIFIED";
 
         if (activeTab === "NOT_VERIFIED") {
-            return [registry.billId, registry.registers, registry.payees, registry.totalAmount, registry.download];
+            return removeLastHeaderRightBorder([registry.billId, registry.registers, registry.payees, registry.totalAmount, registry.download]);
         }
         if (activeTab === "VERIFICATION_IN_PROGRESS") {
-            return [registry.billId, registry.payees, registry.pending, registry.verificationFailed, registry.verified, registry.download];
+            return removeLastHeaderRightBorder([registry.billId, registry.payees, registry.pending, registry.verificationFailed, registry.verified, registry.download]);
         }
         if (activeTab === "PARTIALLY_VERIFIED") {
-            return [registry.billId, registry.payees, registry.failures, registry.download, registry.editBill];
+            return removeLastHeaderRightBorder([registry.billId, registry.payees, registry.failures, registry.download, registry.editBill]);
         }
         if (activeTab === "FULLY_VERIFIED") {
-            return [registry.billId, registry.totalAmount, registry.payees, registry.download];
+            return removeLastHeaderRightBorder([registry.billId, registry.totalAmount, registry.payees, registry.download]);
         }
         if (activeTab === "SENT_FOR_REVIEW") {
-            return [registry.billId, registry.registers, registry.payees, registry.totalAmount, registry.download];
+            return removeLastHeaderRightBorder([registry.billId, registry.registers, registry.payees, registry.totalAmount, registry.download]);
         }
 
-        return [registry.billId, registry.payees, registry.download];
+        return removeLastHeaderRightBorder([registry.billId, registry.payees, registry.download]);
     }, [props.data, props.totalCount, props.columnKeys, props.activeTab, t]);
 
     // Determine if rows are selectable
@@ -403,13 +416,14 @@ const ManageBillsTable = ({ ...props }) => {
                 },
                 {
                   onSuccess: () => {
+                    setShowApprovalPopup(false);
                     setShowToast({
                       key: "success",
                       label: t("HCM_AM_SEND_FOR_APPROVAL_SUCCESS"),
                       transitionTime: 3000,
-                    });//TODO show success screen
-          
-                    setShowApprovalPopup(false);
+                    });
+                    props?.onRefetchBills?.();
+                    props?.onRefetchBillCount?.();
                   },
                   onError: (err) => {
                     console.error("Send for approval failed:", err);
