@@ -786,7 +786,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   });
 
   const generateAdvisoryMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/${expenseContextPath}/bill/v1/report/generate`,
+    url: `/${expenseContextPath}/bill/v1/report/_generate`,
   });
 
   const billReportSearchMutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -1215,10 +1215,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     || "NOT_VERIFIED_VIEW";
 
   // Resolve status display label using role config or fallback
-  const statusDisplayLabel = roleConfig?.statusDisplayMap?.[billData?.status]
-    || STATUS_DISPLAY_MAP[billData?.status]
-    || billData?.status
-    || "NA";
+  const statusDisplayLabel = activeTabCode === "GENERATED_ADVISORIES"
+    ? "HCM_AM_ADVISORY_GENERATED"
+    : roleConfig?.statusDisplayMap?.[billData?.status]
+      || STATUS_DISPLAY_MAP[billData?.status]
+      || billData?.status
+      || "NA";
 
   if (
     isBillLoading ||
@@ -1977,7 +1979,7 @@ const downloadOptions = [
             );
           }
 
-          if (currentView === "APPROVER_NOT_INITIATED_VIEW") {
+          if (currentView === "APPROVER_NOT_INITIATED_VIEW" && activeTabCode !== "GENERATED_ADVISORIES") {
             return (
               <Button
                 label={<span style={{ whiteSpace: "normal" }}>{t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}</span>}

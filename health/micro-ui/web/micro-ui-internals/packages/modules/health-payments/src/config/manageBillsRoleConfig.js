@@ -166,7 +166,7 @@ const MANAGE_BILLS_ROLE_CONFIG = {
       FULLY_PAID: "APPROVER_PAID_VIEW",
     },
     statusDisplayMap: {
-      REVIEWED: "HCM_AM_PENDING_BILLS",
+      REVIEWED: "HCM_AM_REVIEWED",
       FULLY_PAID: "HCM_AM_ADVISORY_GENERATED",
     },
   },
