@@ -24,7 +24,8 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         if (!nameRe.test(trimmed.payeeName)) {
             e.payeeName = t("HCM_AM_INVALID_NAME_ERROR") || "Name must be alphanumeric and up to 100 characters.";
         }
-        if (!isBank && !/^[0-9]{10}$/.test(trimmed.payeeMobile)) {
+        const hasPayeeMobile = !!trimmed.payeeMobile;
+        if ((!isBank || hasPayeeMobile) && !/^[0-9]{10}$/.test(trimmed.payeeMobile)) {
             e.payeeMobileNumber = t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR") || "Phone number must be exactly 10 digits.";
         }
         if (isBank) {
@@ -114,7 +115,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                 heading={t("HCM_AM_EDIT_WORKER_DETAILS_LABEL")}
                 children={[
                     <div key="worker-detail-fields" style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                        {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setField("payeeName", setPayeeName), !isBank, errors.payeeName)}
+                        {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setField("payeeName", setPayeeName), true, errors.payeeName)}
                         {renderEditable(
                             t("HCM_AM_PAYEE_PHONE_NUMBER"),
                             payeeMobileNumber,
