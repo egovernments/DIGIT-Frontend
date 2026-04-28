@@ -69,7 +69,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showMapPopup, setShowMapPopup] = useState(false);
   const [hasMusterRoll, setHasMusterRoll] = useState(false);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
-  const canCampaignSupervisorEdit = fromCampaignSupervisor && !isBillGenerated;
 
   const handleGoBack = () => {
     fromCampaignSupervisor
@@ -110,6 +109,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
+  const isRegisterApproved = AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED";
+  const canCampaignSupervisorEdit = fromCampaignSupervisor && !isBillGenerated && isRegisterApproved;
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
