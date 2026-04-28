@@ -582,6 +582,8 @@ const ManageBills = () => {
             isSelectable={roleConfig?.selectableTabs?.includes(activeLink.code)}
             activeTabCode={activeLink.code}
             role={resolvedRole}
+            onRefetchBills={refetchBill}
+            onRefetchBillCount={refetchBillCount}
           />
         )}
       </Card>
@@ -617,9 +619,9 @@ const ManageBills = () => {
             onClick={() => handleCTAAction(currentCTA.action)}
             style={{
               flexShrink: 0,
-              width: "max-content",
-              minWidth: "14rem",
-              maxWidth: "24rem",
+              // width: "max-content",
+              minWidth: "18rem",
+              maxWidth: "28rem",
               whiteSpace: "normal",
               marginRight: "2rem", 
             }}

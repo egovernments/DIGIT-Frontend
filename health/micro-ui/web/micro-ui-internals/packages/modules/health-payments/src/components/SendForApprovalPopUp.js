@@ -65,11 +65,12 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
         equalWidthButtons={true}
         children={[
           <div key="upload-section">
-            <div className="comment-label">
+            {/* <div className="comment-label">
               {t("HCM_AM_UPLOAD_JUSTIFICATION")}
-            </div>
+            </div> */}
             <div className="comment-label">
               {t("HCM_AM_UPLOAD_BILL_OR_DOC")}
+              <span style={{ color: "red", marginLeft: "4px" }}>*</span>
             </div>
             <BulkUpload
               onSubmit={handleUpload}
@@ -81,6 +82,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
           <div key="comment-section" style={{ marginTop: "1rem" }}>
             <div className="comment-label">
               {t("HCM_AM_COMMENTS")}
+              <span style={{ color: "red", marginLeft: "4px" }}>*</span>
             </div>
             <TextArea
               style={{ maxWidth: "100%" }}
