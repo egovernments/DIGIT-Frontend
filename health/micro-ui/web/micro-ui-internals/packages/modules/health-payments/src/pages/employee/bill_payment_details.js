@@ -1543,7 +1543,8 @@ const downloadOptions = [
                   {t(statusDisplayLabel)}
                 </span>
               )}
-              {activeTabCode === "GENERATED_ADVISORIES" && billData?.additionalDetails?.justificationDetails?.comment
+              {(activeTabCode === "GENERATED_ADVISORIES" || billData?.status === "REVIEWED") &&
+              billData?.additionalDetails?.justificationDetails?.comment
                 ? renderLabelPair("HCM_AM_PAYMENT_REVIEWER_COMMENTS", billData?.additionalDetails?.justificationDetails?.comment, { whiteSpace: "pre-wrap" })
                 : null}
 
