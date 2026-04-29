@@ -149,6 +149,7 @@ const BillInboxComponent = () => {
 
     // Fetch configurations for bill data
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+    const isBillGenerated = (BillData?.bills?.length || 0) > 0;
 
     // Update attendance table data after attendance data is loaded
     useEffect(() => {
@@ -467,6 +468,7 @@ const BillInboxComponent = () => {
                           status={selectedPeriod?.id === "AGGREGATE" ? "PENDING" : activeLink.code}
                           infoDescription={infoDescription}
                           selectedPeriod={selectedPeriod}
+                          isBillGenerated={isBillGenerated}
                         />
                       </Card>
                     </div>

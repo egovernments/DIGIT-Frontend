@@ -6,7 +6,8 @@ const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
   BILLS: ["CAMPAIGN_SUPERVISOR"],
   PAYMENT_SETUP: ["CAMPAIGN_MANAGER"],
-  EDIT_BILLS: ["PAYMENT_EDITOR"],
+  // EDIT_BILLS: ["PAYMENT_EDITOR"],
+  MANAGE_BILLS: ["PAYMENT_EDITOR", "PAYMENT_REVIEWER", "PAYMENT_APPROVER"],
 };
 
 const PaymentsCard = () => {
@@ -23,6 +24,10 @@ const PaymentsCard = () => {
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const hasReviewerRole = Digit.Utils.didEmployeeHasAtleastOneRole(["PAYMENT_REVIEWER"]);
+  const hasApproverRole = Digit.Utils.didEmployeeHasAtleastOneRole(["PAYMENT_APPROVER", "PAYMENT_APPROVER_BANK"]);
+  const manageBillsReviewerLabel = hasReviewerRole && !hasApproverRole ? "CS_TITLE_MANAGE_BILLS" : "CS_TITLE_MANAGE_BILLS_REVIEWER";
+  const manageBillsApproverLabel = hasApproverRole && !hasReviewerRole ? "CS_TITLE_MANAGE_BILLS" : "CS_TITLE_MANAGE_BILLS_APPROVER";
   const generateLink = (labelKey, pathSuffix, roles = ROLES.ATTENDANCE) => {
     return {
       label: t(labelKey),
@@ -40,8 +45,24 @@ const PaymentsCard = () => {
     generateLink("ATTENDANCE_REGISTERS", "project-selection"),
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
-    generateLink("CS_TITLE_VERIFY_AND_GENERATE_PAYMENTS", "verify-bills", ROLES.BILLS),
-    generateLink("CS_TITLE_EDIT_BILLS", "edit-bills", ROLES.EDIT_BILLS),
+    generateLink(
+      "CS_TITLE_MANAGE_BILLS",
+      "manage-bills-project-selection/editor",
+      ["PAYMENT_EDITOR"]
+    ),
+    generateLink(
+      manageBillsReviewerLabel,
+      "manage-bills-project-selection/reviewer",
+      ["PAYMENT_REVIEWER"]
+    ),
+    generateLink(
+      manageBillsApproverLabel,
+      "manage-bills-project-selection/approver",
+      ["PAYMENT_APPROVER", "PAYMENT_APPROVER_BANK"]
+    ),
+    // generateLink("CS_TITLE_MANAGE_BILLS", "manage-bills-project-selection", ROLES.MANAGE_BILLS),//todo check role
+    // generateLink("CS_TITLE_VERIFY_AND_GENERATE_PAYMENTS", "verify-bills", ROLES.BILLS),
+    // generateLink("CS_TITLE_EDIT_BILLS", "edit-bills", ROLES.EDIT_BILLS),
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;
