@@ -95,7 +95,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Documentation
 
-[Documentation](https://https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
+[Documentation](https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
 
 ## Support
