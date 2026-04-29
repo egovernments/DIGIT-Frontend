@@ -24,10 +24,10 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         if (!nameRe.test(trimmed.payeeName)) {
             e.payeeName = t("HCM_AM_INVALID_NAME_ERROR") || "Name must be alphanumeric and up to 100 characters.";
         }
-        const hasPayeeMobile = !!trimmed.payeeMobile;
-        if ((!isBank || hasPayeeMobile) && !/^[0-9]{10}$/.test(trimmed.payeeMobile)) {
-            e.payeeMobileNumber = t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR") || "Phone number must be exactly 10 digits.";
-        }
+        // const hasPayeeMobile = !!trimmed.payeeMobile;
+        // if ((!isBank || hasPayeeMobile) && !/^[0-9]{10}$/.test(trimmed.payeeMobile)) {
+        //     e.payeeMobileNumber = t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR") || "Phone number must be exactly 10 digits.";
+        // }
         if (isBank) {
             if (!/^[0-9]{10}$/.test(trimmed.bankAccount)) {
                 e.bankAccount = t("HCM_AM_INVALID_BANK_ACCOUNT_ERROR") || "Bank account must be exactly 10 digits.";
@@ -51,14 +51,14 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     const handleSave = () => {
         if (!isEditable) return;
         const trimmedPayeeName = payeeName.trim();
-        const trimmedPayeeMobile = payeeMobileNumber.trim();
+        // const trimmedPayeeMobile = payeeMobileNumber.trim();
         const trimmedBankAccount = bankAccount.trim();
         const trimmedBankCode = bankCode.trim();
         const trimmedBeneficiaryCode = beneficiaryCode.trim();
 
         const nextErrors = validate({
             payeeName: trimmedPayeeName,
-            payeeMobile: trimmedPayeeMobile,
+            // payeeMobile: trimmedPayeeMobile,
             bankAccount: trimmedBankAccount,
             bankCode: trimmedBankCode,
             beneficiaryCode: trimmedBeneficiaryCode,
@@ -70,7 +70,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         setErrors({});
         onSubmit({
             payeeName: trimmedPayeeName,
-            payeePhoneNumber: trimmedPayeeMobile,
+            // payeePhoneNumber: trimmedPayeeMobile,
             ...(isBank ? { bankAccount: trimmedBankAccount, bankCode: trimmedBankCode, beneficiaryCode: trimmedBeneficiaryCode } : {}),
         });
     };
@@ -116,13 +116,14 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                 children={[
                     <div key="worker-detail-fields" style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                         {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setField("payeeName", setPayeeName), true, errors.payeeName)}
-                        {renderEditable(
+                        {/* Temporarily hidden as requested; value is still passed through on save. */}
+                        {/* {renderEditable(
                             t("HCM_AM_PAYEE_PHONE_NUMBER"),
                             payeeMobileNumber,
                             setField("payeeMobileNumber", setPayeeMobileNumber),
                             !isBank,
                             errors.payeeMobileNumber
-                        )}
+                        )} */}
                         {renderReadOnlyInput(t("HCM_AM_PAYMENT_PROVIDER"), operator)}
                         {isBank && (
                             <>

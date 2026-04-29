@@ -648,7 +648,7 @@ const BillDetailsTable = ({ ...props }) => {
 
         // Reviewer view (SENT_FOR_REVIEW / SENT_FOR_APPROVAL)
         if (props?.role === "PAYMENT_REVIEWER") {
-            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, operatorCol, phoneCol, payeePhoneCol,
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, phoneCol, payeeNameCol, operatorCol, 
                 bankAccountCol, bankCodeCol,beneficiaryCodeCol, roleCol, reviewerWageCol, reviewerFoodCol,
                 reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol]);
         }
@@ -658,8 +658,8 @@ const BillDetailsTable = ({ ...props }) => {
             return removeLastHeaderRightBorder([
                 userIdCol,
                 workerNameCol,
-                payeeNameCol,
-                payeePhoneCol,
+                phoneCol,
+                payeeNameCol,                
                 operatorCol,
                 bankAccountCol,
                 bankCodeCol,
@@ -678,24 +678,24 @@ const BillDetailsTable = ({ ...props }) => {
         // Partially Verified with sub-tabs
         if (billStatus === "PARTIALLY_VERIFIED") {
             if (subTab === "VERIFICATION_FAILED") {
-                return removeLastHeaderRightBorder([userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol, reasonCol, actionCol]);
+                return removeLastHeaderRightBorder([userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol,  roleCol, daysCol, wageCol, totalAmountCol, reasonCol, actionCol]);
             }
             // VERIFIED sub-tab
-            return removeLastHeaderRightBorder([userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, daysCol, wageCol, totalAmountCol]);
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, operatorCol, payeeNameCol, phoneCol,  roleCol, daysCol, wageCol, totalAmountCol]);
         }
 
         // Approver: Partially Paid with sub-tabs (Failed / Paid)
         if (billStatus === "PARTIALLY_PAID") {
             if (subTab === "FAILED") {
-                return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol]);
+                return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol,  roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol]);
             }
             // PAID sub-tab
-            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol,  roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
         }
 
         // Standard view for PENDING_VERIFICATION, VERIFICATION_IN_PROGRESS, FULLY_VERIFIED, SENT_FOR_REVIEW,
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
-        return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, payeePhoneCol, roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
+        return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol,  roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
 
     }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode, currencySuffix]);
 
@@ -737,7 +737,7 @@ const BillDetailsTable = ({ ...props }) => {
             ...(payeeIdentifier ? { identifier: payeeIdentifier } : {}),
             paymentProvider: existingPayee?.paymentProvider || t("NA"),
             payeeName: updatedFields?.payeeName,
-            payeePhoneNumber: updatedFields?.payeePhoneNumber,
+            // payeePhoneNumber: updatedFields?.payeePhoneNumber,
             ...(updatedFields?.bankAccount !== undefined ? { bankAccount: updatedFields.bankAccount } : {}),
             ...(updatedFields?.bankCode !== undefined ? { bankCode: updatedFields.bankCode } : {}),
             ...(updatedFields?.beneficiaryCode !== undefined ? { beneficiaryCode: updatedFields.beneficiaryCode } : {}),
@@ -775,7 +775,7 @@ const BillDetailsTable = ({ ...props }) => {
                                     ...updatedFields,
                                     payee: nextPayee,
                                     payeeName: updatedFields?.payeeName,
-                                    payeePhoneNumber: updatedFields?.payeePhoneNumber,
+                                    // payeePhoneNumber: updatedFields?.payeePhoneNumber,
                                 }
                                 : row
                         );
