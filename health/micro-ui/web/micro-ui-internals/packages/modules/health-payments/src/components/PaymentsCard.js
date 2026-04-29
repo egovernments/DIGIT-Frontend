@@ -24,6 +24,10 @@ const PaymentsCard = () => {
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
+  const hasReviewerRole = Digit.Utils.didEmployeeHasAtleastOneRole(["PAYMENT_REVIEWER"]);
+  const hasApproverRole = Digit.Utils.didEmployeeHasAtleastOneRole(["PAYMENT_APPROVER", "PAYMENT_APPROVER_BANK"]);
+  const manageBillsReviewerLabel = hasReviewerRole && !hasApproverRole ? "CS_TITLE_MANAGE_BILLS" : "CS_TITLE_MANAGE_BILLS_REVIEWER";
+  const manageBillsApproverLabel = hasApproverRole && !hasReviewerRole ? "CS_TITLE_MANAGE_BILLS" : "CS_TITLE_MANAGE_BILLS_APPROVER";
   const generateLink = (labelKey, pathSuffix, roles = ROLES.ATTENDANCE) => {
     return {
       label: t(labelKey),
@@ -42,17 +46,17 @@ const PaymentsCard = () => {
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
     generateLink(
-      "CS_TITLE_MANAGE_BILLS_EDITOR",
+      "CS_TITLE_MANAGE_BILLS",
       "manage-bills-project-selection/editor",
       ["PAYMENT_EDITOR"]
     ),
     generateLink(
-      "CS_TITLE_MANAGE_BILLS_REVIEWER",
+      manageBillsReviewerLabel,
       "manage-bills-project-selection/reviewer",
       ["PAYMENT_REVIEWER"]
     ),
     generateLink(
-      "CS_TITLE_MANAGE_BILLS_APPROVER",
+      manageBillsApproverLabel,
       "manage-bills-project-selection/approver",
       ["PAYMENT_APPROVER", "PAYMENT_APPROVER_BANK"]
     ),
