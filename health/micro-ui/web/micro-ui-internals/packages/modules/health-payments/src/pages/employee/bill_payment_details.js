@@ -1834,7 +1834,6 @@ const downloadOptions = [
             };
             triggerUpdateBillWithPayload(updatedBill, "SEND_FOR_APPROVAL");
             console.log("Send for approval:", { comment, supportingDocs, billID });
-            setShowToast({ key: "success", label: t("HCM_AM_SENT_FOR_APPROVAL_SUCCESS"), transitionTime: 3000 });
           }}
         />
       )}
