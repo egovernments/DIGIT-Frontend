@@ -588,6 +588,7 @@ const ManageBills = () => {
             isSelectable={roleConfig?.selectableTabs?.includes(activeLink.code)}
             activeTabCode={activeLink.code}
             role={resolvedRole}
+            workerRatesData={workerRatesData}
             onRefetchBills={refetchBill}
             onRefetchBillCount={refetchBillCount}
           />

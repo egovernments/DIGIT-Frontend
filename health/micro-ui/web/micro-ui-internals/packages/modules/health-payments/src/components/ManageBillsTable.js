@@ -17,6 +17,7 @@ const ManageBillsTable = ({ ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const role = props?.role;
+    const currencySuffix = props?.workerRatesData?.currency ? ` (${props.workerRatesData.currency})` : "";
     const [showToast, setShowToast] = useState(null);
     const [showApprovalPopup, setShowApprovalPopup] = useState(false);
     const [selectedBill, setSelectedBill] = useState(null);
@@ -91,7 +92,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             totalAmount: {
-                name: colHeader(t("HCM_AM_TOTAL_AMOUNT")),
+                name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
                 selector: (row) => {
                     const total = row?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
                     return (
