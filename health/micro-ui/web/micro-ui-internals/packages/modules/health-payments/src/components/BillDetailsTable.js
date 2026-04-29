@@ -274,7 +274,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const operatorCol = {
-            name: colHeader(t("HCM_AM_MNO_NAME")),
+            name: colHeader(t("HCM_AM_PAYMENT_PROVIDER")),
             selector: (row) => (
                 <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
                     {row?.payee?.paymentProvider || t("BANK")}

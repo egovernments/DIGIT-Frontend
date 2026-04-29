@@ -123,7 +123,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                             !isBank,
                             errors.payeeMobileNumber
                         )}
-                        {renderReadOnlyInput(t("HCM_AM_MNO_NAME"), operator)}
+                        {renderReadOnlyInput(t("HCM_AM_PAYMENT_PROVIDER"), operator)}
                         {isBank && (
                             <>
                                 {renderEditable(
