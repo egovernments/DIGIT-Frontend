@@ -50,6 +50,9 @@ const VIEWS_WITH_SUB_TABS = [
   "APPROVER_PARTIALLY_PAID_VIEW",
 ];
 
+const DEFAULT_HEAD_ORDER = ["PER_DAY", "FOOD", "TRAVEL", "MISC"];
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 // Sub-tab config per view
 const VIEW_SUB_TABS = {
   PARTIALLY_VERIFIED_VIEW: [
@@ -176,6 +179,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const workerRatesData = useMemo(() => {
     return Digit?.SessionStorage.get("workerRatesData");
   }, []);
+  const maxAttendanceDays = useMemo(() => {
+    const start = Number(billData?.additionalDetails?.periodStartDate);
+    const end = Number(billData?.additionalDetails?.periodEndDate);
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) return null;
+    return Math.floor((end - start) / ONE_DAY_MS) + 1;
+  }, [billData?.additionalDetails?.periodStartDate, billData?.additionalDetails?.periodEndDate]);
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
   };
@@ -285,7 +294,60 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   };
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData, refetch: refetchAllIndividuals } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
+  const getOrderedHeadCodes = (ratesData, billDetails = []) => {
+    const headSet = new Set();
+    (ratesData?.rates || []).forEach((rate) => {
+      Object.keys(rate?.rateBreakup || {}).forEach((headCode) => {
+        if (headCode) headSet.add(headCode);
+      });
+    });
+    (billDetails || []).forEach((billDetail) => {
+      (billDetail?.payableLineItems || []).forEach((item) => {
+        if (item?.type === "PAYABLE" && item?.headCode) headSet.add(item.headCode);
+      });
+    });
+    const headCodes = Array.from(headSet);
+    const known = DEFAULT_HEAD_ORDER.filter((head) => headCodes.includes(head));
+    const other = headCodes
+      .filter((head) => !DEFAULT_HEAD_ORDER.includes(head))
+      .sort((a, b) => a.localeCompare(b));
+    return [...known, ...other];
+  };
+
+  const rateHeadCodes = useMemo(
+    () => getOrderedHeadCodes(workerRatesData, billData?.billDetails || []),
+    [workerRatesData, billData?.billDetails]
+  );
+
+  const buildRatesByHead = ({
+    headCodes = [],
+    payableLineItems = [],
+    attendance,
+    savedRb = {},
+    rateBreakup = {},
+  }) => {
+    return headCodes.reduce((acc, headCode) => {
+      if (hasPayableHead(payableLineItems, headCode)) {
+        acc[headCode] = perDayFromPayable(
+          getPayableAmount(payableLineItems, headCode),
+          attendance
+        );
+      } else {
+        const reviewerValue = savedRb?.[headCode];
+        const defaultValue = rateBreakup?.[headCode];
+        acc[headCode] =
+          reviewerValue != null
+            ? Number(reviewerValue)
+            : defaultValue != null
+              ? Number(defaultValue)
+              : 0;
+      }
+      return acc;
+    }, {});
+  };
+
   function addIndividualDetailsToBillDetails(billDetails, individualsData, workerRatesData) {
+    const headCodes = getOrderedHeadCodes(workerRatesData, billDetails);
     return billDetails.map((billDetail) => {
       const individual = individualsData?.Individual?.find(
         (ind) => ind.id === billDetail?.payee?.identifier
@@ -308,41 +370,19 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
       const usePayables = payableItems.length > 0;
 
-      let perDay;
-      let food;
-      let travel;
-      let misc;
-      let wage;
-      const hasMiscPayable = hasPayableHead(billDetail?.payableLineItems, "MISC");
-
-      let ratesFromPayables = false;
-      if (usePayables) { //todo check
-        ratesFromPayables = true;
-        const pl = billDetail.payableLineItems;
-        perDay = perDayFromPayable(getPayableAmount(pl, "PER_DAY"), attendance);
-        food = perDayFromPayable(getPayableAmount(pl, "FOOD"), attendance);
-        travel = perDayFromPayable(getPayableAmount(pl, "TRAVEL"), attendance);
-        misc = hasMiscPayable
-          ? perDayFromPayable(getPayableAmount(pl, "MISC"), attendance)
-          : 0;
-        wage = perDay + food + travel + misc;
-      } else {
-        wage =
-          (rateBreakup.FOOD || 0) +
-          (rateBreakup.TRAVEL || 0) +
-          (rateBreakup.PER_DAY || 0);
-        perDay =
-          savedRb.PER_DAY != null
-            ? Number(savedRb.PER_DAY)
-            : rateBreakup.PER_DAY || 0;
-        food =
-          savedRb.FOOD != null ? Number(savedRb.FOOD) : rateBreakup.FOOD || 0;
-        travel =
-          savedRb.TRAVEL != null
-            ? Number(savedRb.TRAVEL)
-            : rateBreakup.TRAVEL || 0;
-        misc = savedRb.MISC != null ? Number(savedRb.MISC) : 0;
-      }
+      const ratesByHead = buildRatesByHead({
+        headCodes,
+        payableLineItems: billDetail?.payableLineItems || [],
+        attendance,
+        savedRb,
+        rateBreakup,
+      });
+      const wage = Object.values(ratesByHead).reduce(
+        (sum, value) => sum + (Number(value) || 0),
+        0
+      );
+      const payableHeadCodes = payableItems.map((item) => item?.headCode).filter(Boolean);
+      const ratesFromPayables = usePayables;
 
       return {
         ...billDetail,
@@ -351,11 +391,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         userId: individual?.userDetails?.username,
         role: matchedSkill?.type,
         wage,
-        perDay,
-        food,
-        travel,
-        misc,
-        hasMiscPayable,
+        ratesByHead,
+        payableHeadCodes,
+        perDay: ratesByHead?.PER_DAY || 0,
+        food: ratesByHead?.FOOD || 0,
+        travel: ratesByHead?.TRAVEL || 0,
+        misc: ratesByHead?.MISC || 0,
         ratesFromPayables,
         payeeName: billDetail?.payee?.payeeName || "\u2014",
         payeePhoneNumber: billDetail?.payee?.payeePhoneNumber,
@@ -582,15 +623,29 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       });
       return;
     }
+    const hasAttendanceExceedingBillingPeriod =
+      maxAttendanceDays != null &&
+      (tableData || []).some((row) => Number(row?.totalAttendance) > maxAttendanceDays);
+    if (hasAttendanceExceedingBillingPeriod) {
+      setShowToast({
+        key: "error",
+        label:
+          t("HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD") ||
+          `Attendance cannot exceed ${maxAttendanceDays} day(s) for this billing period`,
+        transitionTime: 4000,
+      });
+      return;
+    }
     const originalById = Object.fromEntries((billData?.billDetails || []).map((d) => [d.id, d]));
     const billDetails = tableData.map((row) => {
       const orig = originalById[row.id] || {};
-      const rates = {
-        PER_DAY: Number(row.perDay) || 0,
-        FOOD: Number(row.food) || 0,
-        TRAVEL: Number(row.travel) || 0,
-        MISC: Number(row.misc) || 0,
-      };
+      const rates = Object.entries(row?.ratesByHead || {}).reduce(
+        (acc, [headCode, value]) => {
+          acc[headCode] = Number(value) || 0;
+          return acc;
+        },
+        {}
+      );
       const days = Number(row?.totalAttendance) || 0;
       const origPayables = orig.payableLineItems;
       let payableLineItems = origPayables;
@@ -599,8 +654,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         payableLineItems = applyPerDayToPayables(origPayables, rates, days);
         totalAmount = sumPayableAmounts(payableLineItems);
       } else {
+        const totalPerDay = Object.values(rates).reduce(
+          (sum, value) => sum + (Number(value) || 0),
+          0
+        );
         totalAmount = Math.round(
-          (rates.PER_DAY + rates.FOOD + rates.TRAVEL + rates.MISC) * days
+          totalPerDay * days
         );
       }
       const {
@@ -615,7 +674,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         travel,
         misc,
         fees,
-        hasMiscPayable,
         ratesFromPayables,
         ...rest
       } = row;
@@ -1790,6 +1848,8 @@ const downloadOptions = [
                 role={activeRole}
                 isReviewerEdit={isReviewerEdit}
                 hasTriedSave={hasTriedSaveReviewer}
+                maxAttendanceDays={maxAttendanceDays}
+                rateHeadCodes={rateHeadCodes}
                 onRowChange={(updatedRow) => setTableData((prev) => prev.map((r) => r.id === updatedRow.id ? updatedRow : r))}
                 onRefetchBill={refetchBill}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
@@ -2096,15 +2156,25 @@ const downloadOptions = [
           setOpenSaveChangesPopUp(false);
           setHasTriedSaveReviewer(true);
           const hasEmpty = (tableData || []).some((row) =>
-            row?.perDay === "" ||
-            row?.food === "" ||
-            row?.travel === "" ||
-            row?.misc === "" ||
+            Object.values(row?.ratesByHead || {}).some((value) => value === "") ||
             row?.totalAttendance === "" ||
             row?.additionalDetails?.feePercent === ""//todo check
           );
+          const hasAttendanceExceedingBillingPeriod =
+            maxAttendanceDays != null &&
+            (tableData || []).some((row) => Number(row?.totalAttendance) > maxAttendanceDays);
           if (hasEmpty) {
             setShowToast({ key: "error", label: t("HCM_AM_PLEASE_FILL_REQUIRED_FIELDS") || t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 3000 });
+            return;
+          }
+          if (hasAttendanceExceedingBillingPeriod) {
+            setShowToast({
+              key: "error",
+              label:
+                t("HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD") ||
+                `Attendance cannot exceed ${maxAttendanceDays} day(s) for this billing period`,
+              transitionTime: 4000,
+            });
             return;
           }
           saveReviewerRateChanges();//todo check
