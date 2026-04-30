@@ -21,10 +21,12 @@ const BillDetailsTable = ({ ...props }) => {
     const [tableData, setTableData] = useState(props?.data || []);
     const [selectedRow, setSelectedRow] = useState(null);
     const workerRatesData = props?.workerRatesData;
+    const rateHeadCodes = props?.rateHeadCodes || ["PER_DAY", "FOOD", "TRAVEL", "MISC"];
     const billStatus = props?.billStatus;
     const subTab = props?.subTab;
     const isReviewerEdit = props?.isReviewerEdit;
     const hasTriedSave = props?.hasTriedSave;
+    const maxAttendanceDays = props?.maxAttendanceDays;
     const tenantId = props?.tenantId || Digit.ULBService.getCurrentTenantId();
     const billId = props?.billId;
     const expenseContextPath = props?.expenseContextPath || "health-expense";
@@ -59,12 +61,13 @@ const BillDetailsTable = ({ ...props }) => {
         return Number.isFinite(n) ? n : null;
     };
     const reviewerLineSubtotal = (row) => {
-        const wage = Number(row?.perDay || 0);
-        const food = Number(row?.food || 0);
-        const travel = Number(row?.travel || 0);
-        const misc = Number(row?.misc || 0);
+        const ratesByHead = row?.ratesByHead || {};
+        const perDaySum = Object.values(ratesByHead).reduce(
+            (sum, value) => sum + (Number(value) || 0),
+            0
+        );
         const days = Number(row?.totalAttendance || 0);
-        return Math.round((wage + food + travel + misc) * days);
+        return Math.round(perDaySum * days);
     };
 
     const normalizeNonNegativeInt = (raw) => {
@@ -82,11 +85,26 @@ const BillDetailsTable = ({ ...props }) => {
         return Math.round(clamped * 10) / 10;
     };
 
-    const handleReviewerCellChange = (rowId, field, value) => {
+    const handleReviewerRateByHeadChange = (rowId, headCode, value) => {
         const normalizedValue = normalizeNonNegativeInt(value);
-        const updatedData = tableData.map((row) =>
-            row.id === rowId ? { ...row, [field]: normalizedValue } : row
-        );
+        const updatedData = tableData.map((row) => {
+            if (row.id !== rowId) return row;
+            const nextRatesByHead = {
+                ...(row?.ratesByHead || {}),
+                [headCode]: normalizedValue,
+            };
+            // Keep legacy fields in sync while callers are still reading them.
+            const legacyFieldByHead = {
+                PER_DAY: "perDay",
+                FOOD: "food",
+                TRAVEL: "travel",
+                MISC: "misc",
+            };
+            const legacyField = legacyFieldByHead[headCode];
+            return legacyField
+                ? { ...row, ratesByHead: nextRatesByHead, [legacyField]: normalizedValue }
+                : { ...row, ratesByHead: nextRatesByHead };
+        });
         setTableData(updatedData);
         if (props?.onRowChange) {
             const updatedRow = updatedData.find((r) => r.id === rowId);
@@ -109,43 +127,18 @@ const BillDetailsTable = ({ ...props }) => {
     };
 
     const currencySuffix = workerRatesData?.currency ? ` (${workerRatesData.currency})` : "";
+    const HEAD_LABEL_KEY_MAP = {
+        PER_DAY: "HCM_AM_WAGE_RATE",
+        FOOD: "HCM_AM_FOOD_ALLOWANCE",
+        TRAVEL: "HCM_AM_TRANSPORTATION",
+        MISC: "HCM_AM_MISC",
+    };
 
     const colHeader = (label) => (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
             {label}
         </div>
     );
-
-    const editableCell = (row, field, withDollar = false) => {
-        if (!isReviewerEdit) {
-            return (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                    {row?.[field] != null ? row[field] : 0}
-                </div>
-            );
-        }
-        const isEmpty = hasTriedSave && row?.[field] === "";
-        return (
-            <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                {withDollar && <span style={{ fontSize: "14px", color: "#505A5F" }}>$</span>}
-                <input
-                    type="number"
-                    value={row?.[field] != null ? row[field] : ""}
-                    onChange={(e) => handleReviewerCellChange(row.id, field, e.target.value)}
-                    min={0}
-                    step={1}
-                    style={{
-                        width: "70px",
-                        padding: "4px 6px",
-                        border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
-                        borderRadius: "4px",
-                        fontSize: "14px",
-                        textAlign: "right",
-                    }}
-                />
-            </div>
-        );
-    };
 
     const columns = useMemo(() => {
         // --- Reusable column definitions ---
@@ -364,59 +357,26 @@ const BillDetailsTable = ({ ...props }) => {
             grow: 1,
         };
 
-        // --- Per-day rate columns (values divided by days worked) ---
+        // --- Per-day rate columns (dynamic by head code) ---
+        const getHeadLabel = (headCode) => {
+            const key = HEAD_LABEL_KEY_MAP?.[headCode];
+            if (key) return t(key);
+            const translated = t(headCode);
+            return translated === headCode ? headCode.replace(/_/g, " ") : translated;
+        };
 
-        const perDayCol = {
-            name: colHeader(`${t("HCM_AM_WAGE_RATE")} ${currencySuffix}`),
+        const dynamicRateCols = rateHeadCodes.map((headCode) => ({
+            name: colHeader(`${getHeadLabel(headCode)} ${currencySuffix}`),
             selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem" ,fontSize: "14px"}}>
-                    {displayPerDayRate(row?.perDay)}
+                <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
+                    {displayPerDayRate(row?.ratesByHead?.[headCode])}
                 </div>
             ),
             style: { justifyContent: "flex-end" },
             minWidth: "130px",
             maxWidth: "170px",
             grow: 1,
-        };
-
-        const foodCol = {
-            name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")} ${currencySuffix}`),
-            selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
-                    {displayPerDayRate(row?.food)}
-                </div>
-            ),
-            style: { justifyContent: "flex-end" },
-            minWidth: "130px",
-            maxWidth: "170px",
-            grow: 1,
-        };
-
-        const travelCol = {
-            name: colHeader(`${t("HCM_AM_TRANSPORTATION")} ${currencySuffix}`),
-            selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
-                    {displayPerDayRate(row?.travel)}
-                </div>
-            ),
-            style: { justifyContent: "flex-end" },
-            minWidth: "130px",
-            maxWidth: "170px",
-            grow: 1,
-        };
-
-        const miscCol = {
-            name: colHeader(`${t("HCM_AM_MISC")} ${currencySuffix}`),
-            selector: (row) => (
-                <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
-                    {displayPerDayRate(row?.misc)}
-                </div>
-            ),
-            style: { justifyContent: "flex-end" },
-            minWidth: "130px",
-            maxWidth: "170px",
-            grow: 1,
-        };
+        }));
 
         const feesCol = {
             name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
@@ -496,43 +456,40 @@ const BillDetailsTable = ({ ...props }) => {
 
         // --- Reviewer editable columns ---
 
-        const reviewerWageCol = {
-            name: colHeader(`${t("HCM_AM_WAGE_RATE")}${currencySuffix}`),
-            selector: (row) => editableCell(row, "perDay"),
-            style: { justifyContent: "flex-end" },
-            minWidth: "130px",
-        };
-
-        const reviewerFoodCol = {
-            name: colHeader(`${t("HCM_AM_FOOD_ALLOWANCE")}${currencySuffix}`),
-            selector: (row) => editableCell(row, "food"),
-            style: { justifyContent: "flex-end" },
-            minWidth: "130px",
-        };
-
-        const reviewerTravelCol = {
-            name: colHeader(`${t("HCM_AM_TRANSPORTATION")}${currencySuffix}`),
-            selector: (row) => editableCell(row, "travel"),
-            style: { justifyContent: "flex-end" },
-            minWidth: "130px",
-        };
-
-        const reviewerMiscCol = {
-            name: colHeader(`${t("HCM_AM_MISC")}${currencySuffix}`),
+        const dynamicReviewerRateCols = rateHeadCodes.map((headCode) => ({
+            name: colHeader(`${getHeadLabel(headCode)}${currencySuffix}`),
             selector: (row) => {
-                const miscLocked = row?.ratesFromPayables && !row?.hasMiscPayable;
-                if (miscLocked) {
+                const headPayableCodes = row?.payableHeadCodes || [];
+                const locked = row?.ratesFromPayables && !headPayableCodes.includes(headCode);
+                if (!isReviewerEdit || locked) {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {displayPerDayRate(row?.misc)}
+                            {displayPerDayRate(row?.ratesByHead?.[headCode])}
                         </div>
                     );
                 }
-                return editableCell(row, "misc");
+                const isEmpty = hasTriedSave && row?.ratesByHead?.[headCode] === "";
+                return (
+                    <input
+                        type="number"
+                        value={row?.ratesByHead?.[headCode] != null ? row.ratesByHead[headCode] : ""}
+                        onChange={(e) => handleReviewerRateByHeadChange(row.id, headCode, e.target.value)}
+                        min={0}
+                        step={1}
+                        style={{
+                            width: "70px",
+                            padding: "4px 6px",
+                            border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
+                            borderRadius: "4px",
+                            fontSize: "14px",
+                            textAlign: "right",
+                        }}
+                    />
+                );
             },
             style: { justifyContent: "flex-end" },
             minWidth: "130px",
-        };
+        }));
 
         const reviewerDaysCol = {
             name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
@@ -545,12 +502,33 @@ const BillDetailsTable = ({ ...props }) => {
                     );
                 }
                 const isEmpty = hasTriedSave && row?.totalAttendance === "";
+                const isOutOfRange =
+                    hasTriedSave &&
+                    maxAttendanceDays != null &&
+                    Number(row?.totalAttendance) > maxAttendanceDays;
                 return (
                     <input
                         type="number"
                         value={row?.totalAttendance != null ? row.totalAttendance : ""}
                         onChange={(e) => {
-                            const val = normalizeNonNegativeInt(e.target.value);
+                            const normalized = normalizeNonNegativeInt(e.target.value);
+                            const isClamped =
+                                normalized !== "" &&
+                                maxAttendanceDays != null &&
+                                Number(normalized) > maxAttendanceDays;
+                            const val =
+                                normalized === "" || maxAttendanceDays == null
+                                    ? normalized
+                                    : Math.min(normalized, maxAttendanceDays);
+                            if (isClamped) {
+                                setShowToast({
+                                    key: "error",
+                                    label:
+                                        t("HCM_AM_ATTENDANCE_EXCEEDS_BILLING_PERIOD") ||
+                                        `Attendance cannot exceed ${maxAttendanceDays} day(s) for this billing period`,
+                                    transitionTime: 3000,
+                                });
+                            }
                             const updatedData = tableData.map((r) =>
                                 r.id === row.id
                                     ? { ...r, totalAttendance: val, additionalDetails: { ...r.additionalDetails, attendance: val } }
@@ -563,11 +541,12 @@ const BillDetailsTable = ({ ...props }) => {
                             }
                         }}
                         min={0}
+                        max={maxAttendanceDays != null ? maxAttendanceDays : undefined}
                         step={1}
                         style={{
                             width: "70px",
                             padding: "4px 6px",
-                            border: isEmpty ? "1px solid #B91900" : "1px solid #B1B4B6",
+                            border: isEmpty || isOutOfRange ? "1px solid #B91900" : "1px solid #B1B4B6",
                             borderRadius: "4px",
                             fontSize: "14px",
                             textAlign: "right",
@@ -648,9 +627,11 @@ const BillDetailsTable = ({ ...props }) => {
 
         // Reviewer view (SENT_FOR_REVIEW / SENT_FOR_APPROVAL)
         if (props?.role === "PAYMENT_REVIEWER") {
-            return removeLastHeaderRightBorder([userIdCol, workerNameCol, phoneCol, payeeNameCol, operatorCol, 
-                bankAccountCol, bankCodeCol,beneficiaryCodeCol, roleCol, reviewerWageCol, reviewerFoodCol,
-                reviewerTravelCol, reviewerMiscCol, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol]);
+            return removeLastHeaderRightBorder([
+                userIdCol, workerNameCol, phoneCol, payeeNameCol, operatorCol,
+                bankAccountCol, bankCodeCol, beneficiaryCodeCol, roleCol,
+                ...dynamicReviewerRateCols, reviewerDaysCol, reviewerFeesCol, reviewerTotalCol
+            ]);
         }
 
         // bank-mode view: show payee bank details
@@ -665,10 +646,7 @@ const BillDetailsTable = ({ ...props }) => {
                 bankCodeCol,
                 beneficiaryCodeCol,
                 roleCol,
-                perDayCol,
-                foodCol,
-                travelCol,
-                miscCol,
+                ...dynamicRateCols,
                 daysCol,
                 feesCol,
                 totalCol,
@@ -687,17 +665,17 @@ const BillDetailsTable = ({ ...props }) => {
         // Approver: Partially Paid with sub-tabs (Failed / Paid)
         if (billStatus === "PARTIALLY_PAID") {
             if (subTab === "FAILED") {
-                return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol,  roleCol, operatorCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol, errorMessageCol]);
+                return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, operatorCol, ...dynamicRateCols, daysCol, feesCol, totalCol, errorMessageCol]);
             }
             // PAID sub-tab
-            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol,  roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
+            return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, ...dynamicRateCols, daysCol, feesCol, totalCol]);
         }
 
         // Standard view for PENDING_VERIFICATION, VERIFICATION_IN_PROGRESS, FULLY_VERIFIED, SENT_FOR_REVIEW,
         // SENT_FOR_APPROVAL, PAYMENT_IN_PROGRESS, FULLY_PAID, etc.
-        return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol,  roleCol, perDayCol, foodCol, travelCol, miscCol, daysCol, feesCol, totalCol]);
+        return removeLastHeaderRightBorder([userIdCol, workerNameCol, payeeNameCol, phoneCol, roleCol, ...dynamicRateCols, daysCol, feesCol, totalCol]);
 
-    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode, currencySuffix]);
+    }, [tableData, t, billStatus, subTab, props?.role, isReviewerEdit, isBankMode, currencySuffix, rateHeadCodes, hasTriedSave]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -831,6 +809,7 @@ const BillDetailsTable = ({ ...props }) => {
                     isSaving={billDetailUpdateMutation?.isLoading}
                     isEditable={["PENDING_VERIFICATION", "VERIFICATION_FAILED"].includes(selectedRow?.status)}
                     isBank={isBankMode}
+                    currency={workerRatesData?.currency}
                 />
             )}
             {showToast && (

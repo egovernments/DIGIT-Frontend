@@ -376,7 +376,15 @@ const ManageBillsTable = ({ ...props }) => {
         }
 
         return removeLastHeaderRightBorder([registry.billId, registry.payees, registry.download]);
-    }, [props.data, props.totalCount, props.columnKeys, props.activeTab, t]);
+    }, [
+        props.data,
+        props.totalCount,
+        props.columnKeys,
+        props.activeTab,
+        props.activeTabCode,
+        props.workerRatesData?.currency,
+        t,
+    ]);
 
     // Determine if rows are selectable
     const isSelectable = props.isSelectable !== undefined
