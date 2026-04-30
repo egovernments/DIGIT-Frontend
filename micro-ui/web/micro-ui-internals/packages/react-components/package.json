@@ -61,10 +61,6 @@
     "react-table": "7.7.0",
     "react-joyride": "2.5.5"
   },
-  "resolutions": {
-    "**/ajv": "8.11.2",
-    "fast-uri":"2.1.0"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
