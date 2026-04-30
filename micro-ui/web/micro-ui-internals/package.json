@@ -96,8 +96,7 @@
     "**/minimatch": "7.4.6",
     "minimatch": "7.4.6",
     "**/glob": "7.2.3",
-    "glob": "7.2.3",
-    "**/ajv-formats": "2.1.1"
+    "glob": "7.2.3"
   },
   "devDependencies": {
     "husky": "7.0.4",

@@ -606,8 +606,8 @@ export {
   BarsChart,
   Employee,
   Calculate,
-  FeatureSearch,
   HierarchyGraph,
+  FeatureSearch,
 
   // Exported all svgs from svg-component library
   SVG
