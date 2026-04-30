@@ -8,7 +8,7 @@ import { PopUp, Button, TextInput } from "@egovernments/digit-ui-components";
  * Editable fields: payee name, payee mobile number
  * Read-only fields: role, no. of days, wage, amount
  */
-const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditable = true, isBank = false }) => {
+const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditable = true, isBank = false, currency }) => {
     const { t } = useTranslation();
     const [payeeName, setPayeeName] = useState(row?.payee?.payeeName || "");
     const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payee?.payeePhoneNumber || "");
@@ -100,11 +100,12 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         </div>
     );
 
+    const currencySuffix = currency ? ` (${currency})` : "";
     const readOnlyFields = [
         { label: t("HCM_AM_ROLE"), value: t(row?.role) },
         { label: t("HCM_AM_NUMBER_OF_DAYS"), value: row?.totalAttendance },
-        { label: t("HCM_AM_WAGE"), value: row?.wage },
-        { label: t("HCM_AM_TOTAL_AMOUNT"), value: row?.totalAmount },
+        { label: `${t("HCM_AM_WAGE")}${currencySuffix}`, value: row?.wage },
+        { label: `${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, value: row?.totalAmount },
     ];
 
     return (
