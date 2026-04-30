@@ -11,7 +11,6 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
-  const [totalRecords, setTotalRecords] = useState(undefined);
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
   });
@@ -29,12 +28,10 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
   );
 
   const { isLoading: isCountLoading, Errors, data: countRes } = Digit.Hooks.hrms.useHRMSCount(tenantId, {}, searchParams);
+  const totalRecords = countRes?.EmployeCount?.totalEmployee != null
+    ? Number(countRes.EmployeCount.totalEmployee)
+    : undefined;
 
-  useEffect(() => {
-    if (countRes) {
-      setTotalRecords(countRes?.EmployeCount?.totalEmployee);
-    }
-  }, [countRes]);
 
 
   useEffect(() => {

@@ -1,3 +1,9 @@
+## [1.9.9] [30-April-2026]
+### 🐛 Bug Fixes:
+- **Inbox Pagination Display**: Fixed "51-20 of 20" wrong pagination label after changing rows-per-page from 10→50→10 and navigating. Root cause was stale internal `pageSize` in react-table's `useControlledState` — resolved by upgrading to `@egovernments/digit-ui-react-components@1.9.3`.
+- **Total Record Count**: Fixed `totalRecords` being returned as a string from the count API — now explicitly cast to `Number` to prevent comparison issues.
+- **Count Display**: Removed unnecessary `useState`/`useEffect` for `totalRecords` in `Inbox.js`; value is now derived directly from `countRes` eliminating a one-render lag where count was `undefined`.
+
 ## [1.9.6] [20-April-2026]
 ### 🔧 Bug Fixes & UI Improvements:
 - **Inbox Pagination**: Fixed pagination flow where changing "Rows per page" didn't reset the offset, preventing out-of-bounds queries.
