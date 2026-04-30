@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.9.3] [30-April-2026]
+### 🐛 Bug Fixes:
+- **Table Pagination**: Fixed stale internal `pageSize` in `useControlledState` causing incorrect pagination display (e.g. "51-20 of 20") and broken navigation after changing rows-per-page. Both `pageIndex` and `pageSize` are now fully controlled via `useControlledState` in manual pagination mode.
+- **Table Display**: Fixed left-bound display formula to use `currentPage * pageSizeLimit + 1` instead of stale internal `pageIndex * pageSize + 1`.
+
 ## [1.9.0] [28-October-2025]
 
 ### 🚀 Enhanced React Component Library

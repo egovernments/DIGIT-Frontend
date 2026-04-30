@@ -103,6 +103,7 @@ const Table = ({
         return React.useMemo(() => ({
           ...state,
           pageIndex: manualPagination ? currentPage : state.pageIndex,
+          pageSize: manualPagination ? pageSizeLimit : state.pageSize,
         }));
       },
     },
@@ -137,7 +138,6 @@ const Table = ({
   useEffect(() => {
     onSort(sortBy);
   }, [onSort, sortBy]);
-
 
   useEffect(() => setGlobalFilter(onSearch), [onSearch, setGlobalFilter,data]);
   
@@ -242,7 +242,7 @@ const Table = ({
           </select>
           <span>
             <span>
-              {pageIndex * pageSize + 1}
+              {manualPagination ? currentPage * pageSizeLimit + 1 : pageIndex * pageSize + 1}
               {"-"}
               {manualPagination
                 ? (currentPage + 1) * pageSizeLimit > totalRecords
