@@ -978,7 +978,7 @@
   width: 80%;
 
   &.progressBar{
-    padding: 8px;
+    padding: 0.5rem;
     overflow: hidden;
   }
 }
@@ -1450,8 +1450,8 @@
 
   &__row-icon {
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1460,7 +1460,7 @@
 
   &__row-content {
     flex: 1;
-    gap: 8px;
+    gap: 0.5rem;
     display: flex;
     flex-direction: column;
   }
@@ -1552,22 +1552,22 @@
   }
 
   &__header-svg {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     flex-shrink: 0;
   }
 
   &__header {
-    margin: 0px;
+    margin: 0rem;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
     align-items: flex-start;
   }
 
   &__header-with-tag {
     display: flex;
-    gap: 8px;
+    gap: 0.5rem;
     align-items: center;
 
     .digit-tag-wrapper{

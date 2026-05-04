@@ -250,7 +250,7 @@ const MyBillsTable = ({ ...props }) => {
 
     const handleSelectedRowsChange = ({ selectedRows,selectedCount }) => {
         props?.onSelectedCountChange?.(selectedCount);
-        props?.onSelectionChange(selectedRows);
+        props?.onSelectionChange?.(selectedRows);
       };
 
     return (

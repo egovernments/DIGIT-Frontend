@@ -31,7 +31,7 @@ const MyBillsSearch = ({ onSubmit = () => { }, onClear = () => { }, headerConten
     setDateRange(data.range);
   };
 
-    const handleSearch = (data) => {
+    const handleSearch = () => {
 
         // Check if startDate and endDate are the same
         const isSameDateTime =

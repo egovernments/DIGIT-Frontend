@@ -115,7 +115,6 @@ module.exports = function (app) {
     "/filestore/v1/files/id",
     "/attendance/v1/_search",
     "/health-project/staff/v1/_search",
-    "/project/staff/v1/_search",
     "/health-project/v1/_search",
     "/health-individual",
     "/health-hrms/employees",
