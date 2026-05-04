@@ -1,0 +1,494 @@
+/* ===================================================================
+   Commodity Management Module - Styles
+   =================================================================== */
+
+/* --- Dashboard Layout --- */
+
+.cm-header {
+  margin: 0 0 1.5rem 0;
+  font-family: var(--digitv2-fontFamily-rc);
+  font-weight: var(--digitv2-fontWeight-bold);
+  font-style: Bold;
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  color: var(--digitv2-lightTheme-primary-2) !important;
+}
+
+.cm-header-tenant {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #505A5F;
+}
+
+/* --- Date Range Section --- */
+.cm-date-section {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cm-date-label {
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-regular);
+  color: var(--digitv2-lightTheme-text-primary);
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-label-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-label-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-label-desktop);
+  }
+}
+
+/* --- Tabs (uses digit-dss-switch-tabs classes from DSS module) --- */
+/* No custom tab styles needed - using digit-dss-switch-tab-* classes */
+
+/* --- Data Sync Card --- */
+.cm-data-sync-card {
+  border: 0.063rem solid #C84C0E;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: #ffffff;
+}
+
+.cm-data-sync-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 40%;
+}
+
+.cm-data-sync-icon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cm-data-sync-title {
+  color: var(--digitv2-lightTheme-text-primary);
+  font-family: Roboto;
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: 0rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.cm-data-sync-metrics {
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: space-around;
+}
+
+/* --- Summary Card --- */
+.cm-summary-card {
+  border: 0.063rem solid #C84C0E;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  background-color: #ffffff;
+  box-shadow: 0rem 0.063rem 0.125rem 0rem #00000029;
+}
+
+.cm-summary-title-block {
+  max-width: 40%;
+}
+
+.cm-summary-title {
+  color: var(--digitv2-lightTheme-text-primary);
+  font-family: Roboto;
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: 0rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.cm-summary-subtitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #C84C0E;
+  margin-top: 0.125rem;
+}
+
+.cm-summary-metrics {
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: space-around;
+}
+
+/* --- Shared Metric Item (used in DataSync and Summary cards) --- */
+.cm-metric-item-label {
+  color: #505A5F;
+  font-family: var(--digitv2-fontFamily-sans);
+  font-style: var(--digitv2-fontStyle-normal);
+  font-weight: var(--digitv2-fontWeight-regular);
+  margin-bottom: 0.5rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: var(--digitv2-fontSize-body-s-mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: var(--digitv2-fontSize-body-s-tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: var(--digitv2-fontSize-body-s-desktop);
+  }
+
+}
+
+.cm-metric-item-value {
+  color: #183E4A;
+  font-family: Roboto;
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: 0rem;
+
+}
+
+/* --- Table Card (wraps table + search + footer) --- */
+.cm-table-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  border: 0.063rem solid #D6D5D4;
+  padding: 1.25rem;
+}
+
+.cm-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cm-table-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0B4B66;
+  margin: 0;
+}
+
+.cm-search-input {
+  padding: 0.5rem 0.75rem;
+  border: 0.063rem solid #D6D5D4;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  width: 12.5rem;
+  outline: none;
+  font-family: "Roboto", sans-serif;
+}
+
+.cm-search-input:focus {
+  border-color: #C84C0E;
+}
+
+/* --- Table Footer --- */
+.cm-table-footer {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 0;
+  border-top: 0.063rem solid #D6D5D4;
+  margin-top: 0.5rem;
+}
+
+/* Footer uses digit-dss-options-header-option-button from DSS module */
+
+/* --- Status Badge --- */
+.cm-status-badge {
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  font-size: 0.813rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.cm-status-badge--completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.cm-status-badge--in-transit {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.cm-status-badge--rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.cm-status-badge--cancelled {
+  background-color: #f5c6cb;
+  color: #721c24;
+}
+
+.cm-status-badge--default {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+/* --- Transaction Type Badge --- */
+.cm-tx-type-badge {
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  font-size: 0.813rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.cm-tx-type-badge--logistics {
+  background-color: #d5f5e3;
+  color: #1e8449;
+}
+
+.cm-tx-type-badge--reverse {
+  background-color: #e8daef;
+  color: #6c3483;
+}
+
+/* --- Link-style cell (Sent From / Sent To) --- */
+.cm-cell-link {
+  color: #C84C0E;
+  font-weight: 500;
+}
+
+/* --- Stock Current Stock cell --- */
+.cm-cell-stock {
+  font-weight: 600;
+  color: #0B4B66;
+}
+
+/* --- Action Button (+ icon in stock table) --- */
+.cm-action-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background-color: #C84C0E;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+  transition: background-color 0.15s ease;
+}
+
+.cm-action-btn:hover {
+  background-color: #e06420;
+}
+
+/* --- Stock Summary Action Buttons Row --- */
+.cm-stock-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* --- ReusableTableWrapper overrides --- */
+.cm-table-card .override-card {
+  padding: 0;
+}
+
+.cm-table-card .rdt_Table {
+  border: none;
+}
+
+.cm-table-card .rdt_TableHead .rdt_TableHeadRow {
+  background-color: #FAFAFA;
+  border-bottom: 0.063rem solid #D6D5D4;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #0B4B66;
+  text-transform: uppercase;
+}
+
+.cm-table-card .rdt_TableBody .rdt_TableRow {
+  border-bottom: 0.063rem solid #f0f0f0;
+  font-size: 0.875rem;
+  min-height: 3rem;
+}
+
+.cm-table-card .rdt_TableBody .rdt_TableRow:hover {
+  background-color: #FAFAFA;
+}
+
+.cm-table-card .rdt_Pagination {
+  border-top: 0.063rem solid #D6D5D4;
+  font-size: 0.813rem;
+  color: #505A5F;
+}
+
+.commodity-management-inbox-table-wrapper {
+  .commodity-management-inbox-table {
+    .rdt_TableBody {
+      border: none !important;
+      border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider) !important;
+    }
+
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .rdt_Pagination {
+    width: 100%;
+    margin: 0rem;
+    padding: 0rem;
+    border-top: 0rem;
+  }
+
+  .rdt_TableCell {
+    text-align: left;
+    width: 100%;
+  }
+}
+
+/* --- Commodity Shipment Popup --- */
+.cm-shipment-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.cm-shipment-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cm-shipment-label {
+  color: #0B0C0C;
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 1rem;
+}
+
+.cm-shipment-commodity-row-heading {
+  font-family: "Roboto";
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 1.25rem;
+  color: #0B4B66;
+
+}
+
+.cm-shipment-error {
+  font-size: 0.75rem;
+  color: #d4351c;
+}
+
+.cm-shipment-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  .digit-checkbox-container {
+    margin: 0;
+  }
+}
+
+.cm-shipment-hint {
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+}
+
+// Ensure toast renders above the popup overlay
+.cm-shipment-toast-wrapper {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10001;
+}
+
+.cm-shipment-commodity-section {
+  background: #fafafa;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+.cm-shipment-commodity-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.cm-shipment-items-list {
+  margin-top: 0rem;
+}
+
+.cm-shipment-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  border: 0.063rem solid #d6d5d4;
+
+  th {
+    text-align: left;
+    padding: 0.5rem;
+    border-bottom: 0.063rem solid #D6D5D4;
+    color: #0B4B66;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-right: 0.063rem solid #D6D5D4;
+  }
+
+  td {
+    padding: 0.5rem;
+    border-bottom: 0.063rem solid #f0f0f0;
+    border-right: 0.063rem solid #D6D5D4;
+  }
+}
+
+.cm-shipment-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.cm-shipment-comment {
+  width: 100%;
+}
+
+.digit-generic-chart-search-field {
+  &.commodity-management {
+    .digit-cursor-pointer {
+      margin-right: 0.5rem;
+    }
+  }
+}

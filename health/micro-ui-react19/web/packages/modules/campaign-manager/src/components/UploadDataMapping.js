@@ -613,7 +613,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     useEffectuploaddatamappineuseeffect();
   }, [SchemasAJV, type]);
 
-  const validateData = (data) => {
+  const validateData = async (data) => {
     const roleKey = "HCM_ADMIN_CONSOLE_USER_ROLE";
     const roles = data[roleKey];
     // Role max limit validation (if it's an array)
@@ -710,7 +710,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         const childData = childRef.current.getData();
         // Convert data types first
 
-        const validationResult = validateData(childData);
+        const validationResult = await validateData(childData);
 
         const userName = childData?.HCM_ADMIN_CONSOLE_USER_NAME;
         const facilityName = childData?.HCM_ADMIN_CONSOLE_FACILITY_NAME;

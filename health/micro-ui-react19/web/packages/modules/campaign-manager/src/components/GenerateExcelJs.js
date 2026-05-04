@@ -1,5 +1,4 @@
 import React from "react";
-import ExcelJS from "exceljs";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -146,6 +145,7 @@ const GenerateExcelJs = ({
    * Main export handler
    */
   const handleExport = async () => {
+    const ExcelJS = (await import("exceljs")).default;
     // Get all locales from languages
     const allLocales = languages?.length > 0
       ? languages.map((l) => l.value)

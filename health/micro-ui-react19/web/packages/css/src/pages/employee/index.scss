@@ -1398,6 +1398,21 @@ tbody {
       width: 100%;
     }
   }
+  .tooltiptextrm.infotext {
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    position: absolute;
+    z-index: 1;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 12rem;
+    text-align: center;
+    font-size: 0.75rem;
+  }
 }
 .drag-handle {
   display: grid;
