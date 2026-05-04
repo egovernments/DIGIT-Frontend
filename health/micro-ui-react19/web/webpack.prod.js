@@ -40,6 +40,7 @@ module.exports = merge(common, {
   
   optimization: {
     minimize: true,
+    usedExports: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -78,17 +79,32 @@ module.exports = merge(common, {
           name: "react",
           priority: 40,
         },
-        digitUI: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]/,
-          name: "digit-ui",
-          priority: 35,
-          reuseExistingChunk: true,
+        excel: {
+          test: /[\\/]node_modules[\\/](xlsx|exceljs)[\\/]/,
+          name: "excel-libs",
+          chunks: "async",
+          priority: 45,
+          enforce: true,
+        },
+        maps: {
+          test: /[\\/]node_modules[\\/](leaflet|proj4|geojson)[\\/]/,
+          name: "map-libs",
+          chunks: "async",
+          priority: 45,
+          enforce: true,
+        },
+        forms: {
+          test: /[\\/]node_modules[\\/](@rjsf|ajv)[\\/]/,
+          name: "form-libs",
+          chunks: "async",
+          priority: 43,
+          enforce: true,
         },
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           name(module) {
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-            return `vendors-${packageName.replace("@", "")}`;
+            const packageName = module.context.match(/[\\/]node_modules[\\/]((?:@[^\\/]+[\\/])?[^\\/]+)/)[1];
+            return `vendors-${packageName.replace("@", "").replace(/[\\/]/g, "-")}`;
           },
           priority: 20,
         },

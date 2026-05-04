@@ -117,10 +117,69 @@ const UnifiedUploadScreen = lazyWithFallback(
   { loaderText: "Loading Unified Upload Screen..." }
 );
 
+const SetupAttendanceScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "setup-attendance" */ "./NewCampaignCreate/SetupAttendanceScreen"),
+  () => require("./NewCampaignCreate/SetupAttendanceScreen").default,
+  { loaderText: "Loading Setup Attendance..." }
+);
+
+const CreateRegistersScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "create-registers-screen" */ "./NewCampaignCreate/CreateRegistersScreen"),
+  () => require("./NewCampaignCreate/CreateRegistersScreen").default,
+  { loaderText: "Loading Create Registers..." }
+);
+
+const MapUsersToRegistersScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "map-users-to-registers" */ "./NewCampaignCreate/MapUsersToRegistersScreen"),
+  () => require("./NewCampaignCreate/MapUsersToRegistersScreen").default,
+  { loaderText: "Loading Map Users to Registers..." }
+);
+
+const RegisterDetailsScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "register-details" */ "./NewCampaignCreate/RegisterDetailsScreen"),
+  () => require("./NewCampaignCreate/RegisterDetailsScreen").default,
+  { loaderText: "Loading Register Details..." }
+);
+const MapAttendeesScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "map-attendees-screen" */ "./NewCampaignCreate/MapAttendeesScreen"),
+  () => require("./NewCampaignCreate/MapAttendeesScreen").default,
+  { loaderText: "Loading Map Attendees..." }
+);
+
 const CampaignTemplates = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
   () => require("./campaignTemplateScreens/CampaignTemplates").default,
   { loaderText: "Loading Campaign Templates..." }
+);
+
+const ReportsConfiguration = lazyWithFallback(
+  () => import(/* webpackChunkName: "reports-configuration" */ "./NewCampaignCreate/ReportsConfiguration"),
+  () => require("./NewCampaignCreate/ReportsConfiguration").default,
+  { loaderText: "Loading Reports Configuration..." }
+);
+
+const CommodityCampaigns = lazyWithFallback(
+  () => import(/* webpackChunkName: "commodity-campaigns" */ "./CommodityCampaigns"),
+  () => require("./CommodityCampaigns").default,
+  { loaderText: "Loading Commodity Campaigns..." }
+);
+
+const CommodityDashboard = lazyWithFallback(
+  () => import(/* webpackChunkName: "commodity-dashboard" */ "../../components/CommodityManagement/CommodityDashboard"),
+  () => require("../../components/CommodityManagement/CommodityDashboard").default,
+  { loaderText: "Loading Commodity Dashboard..." }
+);
+
+const ProjectStaffGuard = lazyWithFallback(
+  () => import(/* webpackChunkName: "project-staff-guard" */ "../../components/CommodityManagement/ProjectStaffGuard"),
+  () => require("../../components/CommodityManagement/ProjectStaffGuard").default,
+  { loaderText: "Loading..." }
+);
+
+const BulkStockUpload = lazyWithFallback(
+  () => import(/* webpackChunkName: "bulk-stock-upload" */ "../../components/CommodityManagement/BulkStockUpload"),
+  () => require("../../components/CommodityManagement/BulkStockUpload").default,
+  { loaderText: "Loading Bulk Stock Upload..." }
 );
 
 /**
@@ -142,6 +201,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const projectType = url?.projectType;
   const name = url?.campaignName;
   const role = url?.role;
+  const projectId = url?.projectId;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
 
@@ -182,9 +242,15 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("checklist/update") ||
         pathVar.includes("upload-screen") ||
         pathVar.includes("unified-upload-screen") ||
+        pathVar.includes("setup-attendance") ||
+        pathVar.includes("create-registers-screen") ||
+        pathVar.includes("map-users-to-registers") ||
+        pathVar.includes("register-details") ||
+        pathVar.includes("map-attendees-screen") ||
         pathVar.includes("update-dates-boundary") ||
         pathVar.includes("delivery-details-preview") ||
-        pathVar.includes("localization-add")
+        pathVar.includes("localization-add") ||
+        pathVar.includes("reports-configuration")
           ? true
           : false,
     },
@@ -219,6 +285,37 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.ACTION_UPLOAD_SCREEN),
       show: pathVar.includes("unified-upload-screen") ? true : false,
+    },
+    {
+      internalLink:
+        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen")
+          ? ""
+          : `/${window?.contextPath}/employee/campaign/setup-attendance`,
+      content: t(I18N_KEYS.PAGES.SETUP_ATTENDANCE),
+      query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.CREATE_REGISTERS),
+      show: pathVar.includes("create-registers-screen") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") ? "" : `/${window?.contextPath}/employee/campaign/map-users-to-registers`,
+      content: t(I18N_KEYS.PAGES.MAP_USERS_TO_REGISTERS),
+      query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show: pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") ? "" : `/${window?.contextPath}/employee/campaign/register-details`,
+      content: t(I18N_KEYS.PAGES.REGISTER_DETAILS),
+      query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${url?.registerId || ""}&registerNumber=${url?.registerNumber || ""}&registerName=${encodeURIComponent(url?.registerName || "")}`,
+      show: pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.MAP_ATTENDEES),
+      show: pathVar.includes("map-attendees-screen") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,
@@ -266,6 +363,27 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.CAMPAIGN_TEMPLATES),
       show: pathVar.includes("campaign-templates") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("commodity-campaigns") ? "" : `/${window?.contextPath}/employee/campaign/commodity-campaigns`,
+      content: t("HCM_COMMODITY_CAMPAIGNS"),
+      show: pathVar.includes("commodity-campaigns") || pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
+    },
+    {
+      internalLink: pathVar.includes("commodity-dashboard") ? "" : `/${window?.contextPath}/employee/campaign/commodity-dashboard`,
+      content: t("HCM_COMMODITY_DASHBOARD"),
+      query: `campaignNumber=${campaignNumber}&campaignId=${campaignId}&tenantId=${tenantId}&projectId=${projectId}`,
+      show: pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t("HCM_BULK_STOCK_UPLOAD"),
+      show: pathVar.includes("bulk-stock-upload") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.REPORTS_CONFIGURATION),
+      show: pathVar.includes("reports-configuration") ? true : false,
     },
   ];
 
@@ -381,9 +499,18 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-features`} element={<AppFeatures />} />
           <Route path={`upload-screen`} element={<NewUploadScreen />} />
           <Route path={`unified-upload-screen`} element={<UnifiedUploadScreen />} />
+          <Route path={`setup-attendance`} element={<SetupAttendanceScreen />} />
+          <Route path={`create-registers-screen`} element={<CreateRegistersScreen />} />
+          <Route path={`map-users-to-registers`} element={<MapUsersToRegistersScreen />} />
+          <Route path={`register-details`} element={<RegisterDetailsScreen />} />
+          <Route path={`map-attendees-screen`} element={<MapAttendeesScreen />} />
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />
+          <Route path={`reports-configuration`} element={<ReportsConfiguration />} />
+          <Route path={`commodity-campaigns`} element={<ProjectStaffGuard><CommodityCampaigns /></ProjectStaffGuard>} />
+          <Route path={`commodity-dashboard`} element={<ProjectStaffGuard><CommodityDashboard /></ProjectStaffGuard>} />
+          <Route path={`bulk-stock-upload`} element={<ProjectStaffGuard><BulkStockUpload /></ProjectStaffGuard>} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>
       </AppContainer>

@@ -122,14 +122,14 @@ const remoteConfigSlice = createSlice({
       // Check if this is a template type page
       const isTemplate = state.currentData?.type === "template";
 
-      // Helper to recursively find field by fieldName in nested template structures
-      const findFieldByName = (node, targetFieldName) => {
+      // Helper to recursively find field by fieldName (and optionally role) in nested template structures
+      const findFieldByName = (node, targetFieldName, targetRole) => {
         if (!node || !targetFieldName) return null;
 
         // Handle arrays
         if (Array.isArray(node)) {
           for (const item of node) {
-            const found = findFieldByName(item, targetFieldName);
+            const found = findFieldByName(item, targetFieldName, targetRole);
             if (found) return found;
           }
           return null;
@@ -139,32 +139,36 @@ const remoteConfigSlice = createSlice({
         if (typeof node === "object") {
           // Check if this node matches
           if (node.fieldName === targetFieldName) {
-            return node;
+            // If targetRole is provided, also require role match (for dropdownTemplate disambiguation)
+            if (targetRole === undefined || node.role === targetRole) {
+              return node;
+            }
+            // Role doesn't match - continue searching
           }
 
           // Check primaryAction and secondaryAction
           if (node.primaryAction) {
-            const found = findFieldByName(node.primaryAction, targetFieldName);
+            const found = findFieldByName(node.primaryAction, targetFieldName, targetRole);
             if (found) return found;
           }
           if (node.secondaryAction) {
-            const found = findFieldByName(node.secondaryAction, targetFieldName);
+            const found = findFieldByName(node.secondaryAction, targetFieldName, targetRole);
             if (found) return found;
           }
 
           // Recursively search in child and children
           if (node.child) {
-            const found = findFieldByName(node.child, targetFieldName);
+            const found = findFieldByName(node.child, targetFieldName, targetRole);
             if (found) return found;
           }
           if (node.children) {
-            const found = findFieldByName(node.children, targetFieldName);
+            const found = findFieldByName(node.children, targetFieldName, targetRole);
             if (found) return found;
           }
 
           // Also search in data object for table columns etc.
           if (node.data && typeof node.data === "object") {
-            const found = findFieldByName(node.data, targetFieldName);
+            const found = findFieldByName(node.data, targetFieldName, targetRole);
             if (found) return found;
           }
         }
@@ -172,11 +176,11 @@ const remoteConfigSlice = createSlice({
         return null;
       };
 
-      // Check if this field is in footer by fieldName or label
+      // Check if this field is in footer by fieldName (and role if present) or label
       const isFooterField = state.currentData?.footer?.some(
-        (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
+        (f) => (field?.fieldName && f.fieldName === field.fieldName && (!field?.role || f.role === field.role)) ||
                (field?.label && f.label === field.label)
-      ) || (isTemplate && field?.fieldName && findFieldByName(state.currentData?.footer, field.fieldName));
+      ) || (isTemplate && field?.fieldName && findFieldByName(state.currentData?.footer, field.fieldName, field.role));
 
       let finalCardIndex = cardIndex;
       let finalFieldIndex = -1;
@@ -186,15 +190,15 @@ const remoteConfigSlice = createSlice({
         // For footer fields, find by fieldName first, then label
         finalCardIndex = -1;
         if (isTemplate && field?.fieldName) {
-          // For templates, search recursively in footer
-          const foundField = findFieldByName(state.currentData.footer, field.fieldName);
+          // For templates, search recursively in footer (with role disambiguation)
+          const foundField = findFieldByName(state.currentData.footer, field.fieldName, field.role);
           if (foundField) {
             actualField = foundField;
           }
         } else {
-          // For non-templates, use flat search
+          // For non-templates, use flat search (with role disambiguation)
           finalFieldIndex = state.currentData.footer.findIndex(
-            (f) => (field?.fieldName && f.fieldName === field.fieldName) ||
+            (f) => (field?.fieldName && f.fieldName === field.fieldName && (!field?.role || f.role === field.role)) ||
                    (field?.label && f.label === field.label)
           );
           if (finalFieldIndex >= 0) {
@@ -202,12 +206,12 @@ const remoteConfigSlice = createSlice({
           }
         }
       } else if (isTemplate && field?.fieldName) {
-        // For template body fields, search by fieldName across ALL cards (ignore cardIndex)
+        // For template body fields, search by fieldName (and role) across ALL cards (ignore cardIndex)
         if (state.currentData?.body && Array.isArray(state.currentData.body)) {
           for (let i = 0; i < state.currentData.body.length; i++) {
             const bodyCard = state.currentData.body[i];
             if (Array.isArray(bodyCard?.fields)) {
-              const foundField = findFieldByName(bodyCard.fields, field.fieldName);
+              const foundField = findFieldByName(bodyCard.fields, field.fieldName, field.role);
               if (foundField) {
                 actualField = foundField;
                 finalCardIndex = i; // Update to actual card index where field was found
@@ -227,10 +231,10 @@ const remoteConfigSlice = createSlice({
         // Find field by fieldName first, then label (no index-based lookup)
         const sourceCard = state.currentData?.body?.[finalCardIndex] || card;
         if (sourceCard?.fields) {
-          // First try fieldName
+          // First try fieldName (with role disambiguation)
           if (field?.fieldName) {
             finalFieldIndex = sourceCard.fields.findIndex(
-              (f) => f.fieldName === field.fieldName
+              (f) => f.fieldName === field.fieldName && (!field?.role || f.role === field.role)
             );
           }
           // If not found, try label
@@ -304,8 +308,10 @@ const remoteConfigSlice = createSlice({
 
             // Handle objects
             if (typeof node === "object") {
-              // Check if this is the selected field (by reference or fieldName)
-              if (node === state.selectedField || node.fieldName === state.selectedField.fieldName) {
+              // Check if this is the selected field (by reference, or fieldName + role)
+              if (node === state.selectedField ||
+                  (node.fieldName === state.selectedField.fieldName &&
+                   (!state.selectedField.role || node.role === state.selectedField.role))) {
                 // Update all properties
                 for (const key in updates) {
                   node[key] = updates[key];
@@ -354,8 +360,10 @@ const remoteConfigSlice = createSlice({
 
           // Handle objects
           if (typeof node === "object") {
-            // Check if this is the selected field (by reference or fieldName)
-            if (node === state.selectedField || node.fieldName === state.selectedField.fieldName) {
+            // Check if this is the selected field (by reference, or fieldName + role)
+            if (node === state.selectedField ||
+                (node.fieldName === state.selectedField.fieldName &&
+                 (!state.selectedField.role || node.role === state.selectedField.role))) {
               // Update all properties
               for (const key in updates) {
                 node[key] = updates[key];
@@ -658,18 +666,18 @@ const remoteConfigSlice = createSlice({
       }
     },
     hideField(state, action) {
-      const { fieldName, cardIndex } = action.payload;
+      const { fieldName, cardIndex, role } = action.payload;
 
       // Check if this is a template type page
       const isTemplate = state.currentData?.type === "template";
 
       if (!isTemplate) {
-        // For non-template types, use existing logic
+        // For non-template types, use existing logic (with role disambiguation)
         const card = state.currentData?.body?.[cardIndex];
         if (!card) return;
 
         if (Array.isArray(card.fields)) {
-          const field = card.fields.find((f) => f.fieldName === fieldName);
+          const field = card.fields.find((f) => f.fieldName === fieldName && (!role || f.role === role));
           if (field) {
             field.hidden = !field.hidden;
           }
@@ -689,8 +697,8 @@ const remoteConfigSlice = createSlice({
 
           // Handle objects
           if (typeof node === "object") {
-            // Check if this node has the matching fieldName
-            if (node.fieldName === fieldName) {
+            // Check if this node has the matching fieldName (and role if provided)
+            if (node.fieldName === fieldName && (!role || node.role === role)) {
               node.hidden = !node.hidden;
               return true;
             }

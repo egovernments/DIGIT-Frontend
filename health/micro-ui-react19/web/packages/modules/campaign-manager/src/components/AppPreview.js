@@ -192,7 +192,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                 <Button
                   key={index}
                   className="app-preview-action-button"
-                  variation="primary"
+                  variation={footer_item?.properties?.type || "primary"}
                   label={t(footer_item?.label)}
                   title={t(footer_item?.label)}
                   onClick={() => {}}

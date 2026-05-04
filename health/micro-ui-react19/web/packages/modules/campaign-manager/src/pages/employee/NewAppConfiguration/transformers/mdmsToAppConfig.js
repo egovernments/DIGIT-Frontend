@@ -328,11 +328,18 @@ const transformFormPage = (pageData) => {
   // Add actionLabel from footer if exists
   if (pageData.footer && Array.isArray(pageData.footer) && pageData.footer.length > 0) {
     page.actionLabel = pageData.footer[0].label;
+    if(pageData.footer?.[1] !== null && pageData.footer?.[1] !== undefined){
+      page.secondaryActionLabel = pageData.footer[1]?.label;
+    }
   }
 
   // Add showAlertPopUp if exists
   if (pageData.showAlertPopUp) {
     page.showAlertPopUp = pageData.showAlertPopUp;
+  }
+
+   if (pageData.showSecondaryAlertPopUp) {
+    page.showSecondaryAlertPopUp = pageData.showSecondaryAlertPopUp;
   }
 
   // Add conditionalNavigateTo if exists

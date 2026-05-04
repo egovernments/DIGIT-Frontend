@@ -12,6 +12,11 @@ const assetsProxy = createProxyMiddleware({
   changeOrigin: true,
   secure: false,
 });
+const kibanaProxy = createProxyMiddleware({
+  target: process.env.REACT_APP_PROXY_KIBANA || "https://mc-nigeria-uat.digit.org",
+  changeOrigin: true,
+  secure: false,
+});
 const mdmsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "http://localhost:8080",
   changeOrigin: true,
@@ -19,6 +24,7 @@ const mdmsProxy = createProxyMiddleware({
 });
 module.exports = function (app) {
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
+  ["/kibana","/kibana-upgrade"].forEach((location) => app.use(location, kibanaProxy));
   [
     "/access/v1/actions/mdms",
     "/egov-mdms-service",
@@ -84,6 +90,7 @@ module.exports = function (app) {
     "/mdms-v2",
     "/hcm-moz-impl",
     "/project",
+    "/project/staff/v1/_search",
     "/project/v1/_search",
     "/facility/v1/_search",
     "/product/v1/_search",
@@ -97,6 +104,7 @@ module.exports = function (app) {
     "/plan-service",
     "/resource-generator",
     "/health-project",
+    "/service-request",
     "/health-service-request",
     "/census-service",
     "/health-attendance/v1/_search",
@@ -105,8 +113,8 @@ module.exports = function (app) {
     "/health-expense/bill/v1/_search",
     "/health-expense-calculator/v1/_calculate",
     "/filestore/v1/files/id",
+    "/attendance/v1/_search",
     "/health-project/staff/v1/_search",
-    "/project/staff/v1/_search",
     "/health-project/v1/_search",
     "/health-individual",
     "/health-hrms/employees",
@@ -115,10 +123,27 @@ module.exports = function (app) {
     "/health-attendance/attendee/v1/_delete",
     "/health-attendance/attendee/v1/_create",
     "/health-hrms/employees/_search",
+    //payment integration changes
+    "/health-expense/bill/v1/_update",
+    "/health-expense/v1/bill/details/status/_update",
+    "/health-expense/v1/task/_status",
+    "/health-expense/v1/bill/_verify",
+    "/health-expense/v1/payment/_transfer",
+    "/health-expense/v1/transactions/report/_search",
+    "/health-expense/v1/transactions/report/_generate",
     // payment v2
     "/health-expense-calculator/billing-config/v1/_search",
     "/health-expense-calculator/billing-config/v1/_create",
-    "/health-expense-calculator/billing-config/v1/_update"
+    "/health-expense-calculator/billing-config/v1/_update",
+    //go_deep
+    "/health-expense/bill/v1/_bulkupdate",
+    "/health-expense/bill/v1/_bulkupdatestatus",
+    "/health-expense/bill/v1/report/_generate",
+    "/health-expense/bill/v1/report/_search",
+    "/health-expense/bill/v1/billdetails/_update",
+    "/health-expense/bill/v1/billdetails/_generateTemplate",
+    "/health-expense/bill/v1/billdetails/_uploadTemplate",
+    "/airflow-trigger-api"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

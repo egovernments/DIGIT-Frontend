@@ -2,8 +2,6 @@ import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "../BulkUpload";
-import Ajv from "ajv";
-import XLSX from "xlsx";
 import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
@@ -38,6 +36,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const parentId = searchParams.get("parentId");
+  const registerId = searchParams.get("registerId") || props?.props?.campaignData?.registerId;
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const [uploadLoader, setUploadLoader] = useState(false);
@@ -49,6 +48,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   {},
   //   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
   // );
+  console.log("regsterId123", registerId);
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -74,6 +74,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const totalData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
+  const [loaderText, setLoaderText] = useState("CAMPAIGN_VALIDATION_INPROGRESS");
   const [currentStep, setCurrentStep] = useState(1);
   const [projectType, setprojectType] = useState(props?.props?.projectType);
   const baseKey = 10;
@@ -124,6 +125,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else if (type === "unified-console") {
       onSelect("uploadUnified", { uploadedFile, isError, isValidation, apiError, isSuccess });
+    } else if (type === "attendanceRegister") {
+      onSelect("uploadAttendanceRegister", { uploadedFile, isError, isValidation, apiError, isSuccess });
+    } else if (type === "attendanceRegisterAttendee") {
+      onSelect("uploadAttendanceRegisterAttendee", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else {
       onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
     }
@@ -306,12 +311,20 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const newReadMeUnifiedConsole = await translateReadMeInfo(
           readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
         );
+        const newReadMeAttendanceRegister = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
+        const newReadMeAttendee = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
 
         const readMeText = {
           boundary: newReadMeboundary,
           facility: newReadMeFacility,
           user: newReadMeUser,
           "unified-console": newReadMeUnifiedConsole,
+          attendanceRegister: newReadMeAttendanceRegister,
+          attendanceRegisterAttendee: newReadMeAttendee,
         };
 
         setReadMeInfo(readMeText);
@@ -329,6 +342,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         uploadType = "uploadFacility";
       } else if (type === "unified-console") {
         uploadType = "uploadUnified";
+      } else if (type === "attendanceRegister") {
+        uploadType = "uploadAttendanceRegister";
       }
       onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
       setExecutionCount((prevCount) => prevCount + 1);
@@ -374,6 +389,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     const totalFormData = props?.props?.sessionData;
     const campaignResources = props?.props?.campaignData?.resources || [];
+    const resourceDetailsFromSearch = props?.props?.resourceDetails || [];
 
     const getUploadedData = (dataPath, typeKey) => {
       const data = totalFormData?.[dataPath];
@@ -384,6 +400,20 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           isSuccess: data?.[uploadKey]?.isSuccess || null,
         };
       } else {
+        // Both attendanceRegister and attendanceRegisterAttendee show upload area directly; existing file accessed via download button
+        const isAttendanceType = false; //todo check
+        if (isAttendanceType && resourceDetailsFromSearch.length > 0) {
+          const fromResource = resourceDetailsFromSearch[0];
+          console.log("fromResourceDetails search:", fromResource);
+          return {
+            uploadedFile: [{
+              ...fromResource,
+              filestoreId: fromResource?.processedFileStoreId || fromResource?.filestoreId || fromResource?.fileStoreId,
+            }],
+            isSuccess: true,
+          };
+        }
+        // For other types, fallback to campaign resources
         const fromCampaign = campaignResources.find((r) => r.type === typeKey);
         return fromCampaign
           ? {
@@ -419,6 +449,28 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
         break;
       }
+      case "attendanceRegister": {
+        // Always show upload area directly; existing file accessible via download button
+        // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_REGISTER_DATA", "attendanceRegister");
+        // setUploadedFile(uploadedFile);
+        // setIsSuccess(isSuccess);
+        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setUploadedFile([]);
+        setIsSuccess(null);
+        setShowPopUp(!downloadedTemplates[type]);
+        break;
+      }
+      case "attendanceRegisterAttendee": {
+        // Always show upload area directly; existing file accessible via download button
+        // const { uploadedFile, isSuccess } = getUploadedData("HCM_ATTENDANCE_ATTENDEE_DATA", "attendanceRegisterAttendee");
+        // setUploadedFile(uploadedFile);
+        // setIsSuccess(isSuccess);
+        // setShowPopUp(!downloadedTemplates[type] && !uploadedFile.length);
+        setUploadedFile([]);
+        setIsSuccess(null);
+        setShowPopUp(!downloadedTemplates[type]);
+        break;
+      }
       default: {
         const { uploadedFile, isSuccess } = getUploadedData("HCM_CAMPAIGN_UPLOAD_USER_DATA", "user");
         setUploadedFile(uploadedFile);
@@ -432,7 +484,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setDownloadError(false);
     setIsError(false);
-  }, [type, props?.props?.totalFormData, props?.props?.campaignData]);
+  }, [type, props?.props?.totalFormData, props?.props?.campaignData, props?.props?.resourceDetails?.[0]?.id]);
 
   useEffect(() => {
     if (errorsType[type]) {
@@ -1006,8 +1058,11 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     if (file && file?.url) {
       // Splitting filename before .xlsx or .xls
       const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
+      const downloadId = (type === "attendanceRegister" || type === "attendanceRegisterAttendee")
+        ? (file?.processedFileStoreId || file?.filestoreId)
+        : file?.filestoreId;
       downloadExcelWithCustomName({
-        fileStoreId: file?.filestoreId,
+        fileStoreId: downloadId,
         customName: fileNameWithoutExtension,
       });
     }
@@ -1033,9 +1088,10 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid == 1) {
         setIsValidation(true);
         setIsError(true);
+        setLoaderText("CAMPAIGN_VALIDATION_INPROGRESS");
         setLoader(true);
-        // For unified-console, use hyphenated validation type; for others use camelCase
-        const validationType = type === "unified-console" ? "unified-console-validation" : `${type}Validation`;
+        // For unified-console and attendanceRegister, use hyphenated validation type; for others use camelCase
+        const validationType = type === "unified-console" ? "unified-console-validation" : type === "attendanceRegister" ? "attendanceRegister-validation" : type === "attendanceRegisterAttendee" ? "attendanceRegisterAttendee-validation" : `${type}Validation`;
 
         try {
           const temp = await Digit.Hooks.campaign.useProcessData(
@@ -1043,8 +1099,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
             validationType,
             tenantId,
-            id,
-            baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
+            type === "attendanceRegisterAttendee" ? registerId : id, //TODO CHECK
+            baseTimeOut?.[CONSOLE_MDMS_MODULENAME],
+            type === "attendanceRegisterAttendee" ? { registerId } : {}
           );
           if (temp?.isError) {
             setLoader(false);
@@ -1069,12 +1126,13 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           if (temp?.status === "completed") {
             setLoader(false);
             setIsValidation(false);
-            // For unified-console, check validationStatus/totalErrors; for others, check sheetErrors
-            const isUnifiedConsoleInvalid =
-              type === "unified-console" &&
+            // For unified-console and attendanceRegister, check validationStatus/totalErrors; for others, check sheetErrors
+            const isExcelIngestionType = type === "unified-console" || type === "attendanceRegister" || type === "attendanceRegisterAttendee";
+            const isExcelIngestionInvalid =
+              isExcelIngestionType &&
               (temp?.additionalDetails?.validationStatus === "invalid" || temp?.additionalDetails?.totalErrors > 0);
             const hasSheetErrors = temp?.additionalDetails?.sheetErrors?.length > 0;
-            const isValidFile = !hasSheetErrors && !isUnifiedConsoleInvalid;
+            const isValidFile = !hasSheetErrors && !isExcelIngestionInvalid;
 
             if (isValidFile) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
@@ -1175,6 +1233,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     facility: false,
     user: false,
     "unified-console": false,
+    attendanceRegister: false,
+    attendanceRegisterAttendee: false,
   });
 
   const downloadTemplate = async () => {
@@ -1231,6 +1291,147 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         }));
       } catch (error) {
         console.error("Error in unified-console download:", error);
+        const errorCode = error?.response?.data?.Errors?.[0]?.code;
+        if (errorCode === "NativeIoException") {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        }
+      }
+      return;
+    }
+
+    // For attendanceRegister / attendanceRegisterAttendee type, use generation search API with polling and generate fallback
+    if (type === "attendanceRegister" || type === "attendanceRegisterAttendee") {
+      const locale = Digit?.SessionStorage?.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage || Digit?.Utils?.getDefaultLanguage();
+      const pollRetryInterval = 2000;
+      const maxPollTime = 60000;
+
+      // Helper: search for generated resource
+      const searchGeneration = async () => {
+        const response = await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_search",
+          body: {
+            GenerationSearchCriteria: {
+              tenantId: tenantId,
+              referenceIds: [type === "attendanceRegisterAttendee" ? registerId : id],
+              statuses: ["completed", "failed", "pending", "inprogress"],
+              limit: 5,
+              offset: 0,
+              locale: locale,
+              types: [type],
+              referenceTypes: [type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign"],
+              additionalDetails: type === "attendanceRegisterAttendee" ? {
+                campaignId: id
+              } : undefined,
+            },
+          },
+        });
+        return response?.GenerationDetails?.[0];
+      };
+
+      // Helper: poll until completed/failed or timeout
+      const pollUntilDone = async () => {
+        const startTime = Date.now();
+        while (Date.now() - startTime < maxPollTime) {
+          await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
+          const resource = await searchGeneration();
+          if (!resource || resource?.status === "completed" || resource?.status === "failed") {
+            return resource;
+          }
+        }
+        return null; // timeout
+      };
+
+      // Helper: trigger generate
+      const triggerGenerate = async () => {
+        await Digit.CustomService.getResponse({
+          url: "/excel-ingestion/v1/data/generate/_init",
+          body: {
+            GenerateResource: {
+              tenantId: tenantId,
+              type: type,
+              hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
+              referenceId: type === "attendanceRegisterAttendee" ? registerId : id,
+              referenceType: type === "attendanceRegisterAttendee" ? "attendanceRegister" : "campaign",
+              locale: locale,
+              additionalDetails: {
+                campaignName: campaignName,
+                campaignId: id
+              },
+            },
+          },
+        });
+      };
+
+      // Helper: download from a completed resource
+      const downloadFromResource = (resource) => {
+        const fileStoreId = resource?.fileStoreid || resource?.fileStoreId;
+        if (!fileStoreId) {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          return;
+        }
+        setDownloadError(false);
+        const templateLabel = type === "attendanceRegisterAttendee" ? "Attendee_Template" : "Attendance_Register_Template";
+        const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${templateLabel}` : `${campaignName}_${templateLabel}`;
+        downloadExcelWithCustomName({ fileStoreId: fileStoreId, customName: customFileName });
+        setDownloadedTemplates((prev) => ({
+          ...prev,
+          [type]: true,
+        }));
+      };
+
+      try {
+        setLoaderText("CAMPAIGN_DOWNLOADING_TEMPLATE");
+        setLoader(true);
+        // Step 1: Search if completed is available
+        let resource = await searchGeneration();
+
+        // If completed, download directly
+        if (resource?.status === "completed") {
+          setLoader(false);
+          downloadFromResource(resource);
+          return;
+        }
+
+        // If pending/inprogress, poll till timeout
+        if (resource?.status === "pending" || resource?.status === "inprogress") {
+          resource = await pollUntilDone();
+          if (resource?.status === "completed") {
+            setLoader(false);
+            downloadFromResource(resource);
+            return;
+          }
+          // If still not completed after polling, treat as failed
+        }
+
+        // If failed or no resource found, trigger generate
+        await triggerGenerate();
+
+        // Then search + poll again
+        resource = await pollUntilDone();
+
+        setLoader(false);
+
+        if (resource?.status === "completed") {
+          downloadFromResource(resource);
+          return;
+        }
+
+        // If failed or timeout after generate, stop
+        if (resource?.status === "failed") {
+          setDownloadError(true);
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        } else {
+          setDownloadError(true);
+          setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+        }
+      } catch (error) {
+        setLoader(false);
+        console.error("Error in attendanceRegister download:", error);
         const errorCode = error?.response?.data?.Errors?.[0]?.code;
         if (errorCode === "NativeIoException") {
           setDownloadError(true);
@@ -1314,6 +1515,18 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       }
     );
   };
+  const downloadCurrentFile = async (suffix) => {
+    const processedFileStoreId = props?.props?.resourceDetails?.[0]?.processedFileStoreId;
+    if (!processedFileStoreId) return;
+    try {
+      downloadExcelWithCustomName({ fileStoreId: processedFileStoreId, customName: `${campaignName}_${suffix}` });
+    } catch (error) {
+      setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+    }
+  };
+  const downloadCurrentAttendeesFile = () => downloadCurrentFile("Current_Attendees");
+  const downloadCurrentRegisterFile = () => downloadCurrentFile("Current_Register");
+
   // Modify the condition for showing the popup
   useEffect(() => {
     // Only show popup if the template for this type hasn't been downloaded yet
@@ -1361,22 +1574,44 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full" style={{ width: "100%" }}>
-        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
+        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t(loaderText)} />}
         {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
           <Card>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <TagComponent campaignName={campaignName} />
-              <Button
-                label={getDownloadLabel()}
-                title={getDownloadLabel()}
-                variation="secondary"
-                icon={"FileDownload"}
-                type="button"
-                className="campaign-download-template-btn"
-                onClick={downloadTemplate}
-                id={"file-download-template"}
-              />
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                {type === "attendanceRegisterAttendee" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
+                  <Button
+                    label={t("HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE")}
+                    title={t("HCM_DOWNLOAD_CURRENT_ATTENDEES_FILE")}
+                    variation="secondary"
+                    icon={"FileDownload"}
+                    type="button"
+                    onClick={downloadCurrentAttendeesFile}
+                  />
+                )}
+                {type === "attendanceRegister" && props?.props?.resourceDetails?.[0]?.processedFileStoreId && (
+                  <Button
+                    label={t("HCM_DOWNLOAD_CURRENT_REGISTER_FILE")}
+                    title={t("HCM_DOWNLOAD_CURRENT_REGISTER_FILE")}
+                    variation="secondary"
+                    icon={"FileDownload"}
+                    type="button"
+                    onClick={downloadCurrentRegisterFile}
+                  />
+                )}
+                <Button
+                  label={getDownloadLabel()}
+                  title={getDownloadLabel()}
+                  variation="secondary"
+                  icon={"FileDownload"}
+                  type="button"
+                  className="campaign-download-template-btn"
+                  onClick={downloadTemplate}
+                  id={"file-download-template"}
+                />
+              </div>
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
@@ -1386,6 +1621,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("WBH_UPLOAD_FACILITY")
                   : type === "unified-console"
                   ? t("WBH_UPLOAD_UNIFIED_DATA")
+                  : type === "attendanceRegister"
+                  ? t("WBH_UPLOAD_ATTENDANCE_REGISTER")
                   : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
             </div>
@@ -1397,6 +1634,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("HCM_FACILITY_MESSAGE")
                   : type === "unified-console"
                   ? t("HCM_UNIFIED_DATA_MESSAGE")
+                  : type === "attendanceRegister"
+                  ? t("HCM_ATTENDANCE_REGISTER_MESSAGE")
                   : t("HCM_USER_MESSAGE")}
               </div>
             )}
@@ -1462,6 +1701,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
                 : type === "unified-console"
                 ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_HEADER")
+                : type === "attendanceRegister"
+                ? t("ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_HEADER")
                 : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
             children={[
@@ -1472,6 +1713,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                   ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
                   : type === "unified-console"
                   ? t("ES_CAMPAIGN_UPLOAD_UNIFIED_DATA_MODAL_TEXT")
+                  : type === "attendanceRegister"
+                  ? t("ES_CAMPAIGN_UPLOAD_ATTENDANCE_REGISTER_MODAL_TEXT")
                   : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
               </div>,
             ]}

@@ -724,7 +724,7 @@ const L2Main = ({}) => {
             </div>
           </div>
         ) : null}
-        <div>
+        <div className="digit-dss-switch-tabs-progressbar-wrapper">
           {tabArray && tabArray?.length > 1 && (
             <div className="digit-dss-switch-tabs">
               <div className="digit-dss-switch-tab-wrapper">
@@ -734,6 +734,10 @@ const L2Main = ({}) => {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+          {tabArray && tabArray?.length > 1 && (
+            <div className="digit-dss-switch-tabs progressBar">
               {showProgressBar && (
                 <ProgressBar
                   className="digit-dss-switch-tab-wrapper"
