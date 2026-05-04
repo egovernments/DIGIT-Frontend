@@ -2,13 +2,13 @@ import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "./BulkUpload";
-import Ajv from "ajv";
-import XLSX from "xlsx";
 import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
+import XLSX from "xlsx";
+import Ajv from "ajv";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -389,7 +389,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [type, errorsType]);
 
-  const validateData = (data) => {
+  const validateData = (data, sheetName, Ajv) => {
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
@@ -482,7 +482,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     return true;
   };
 
-  const validateTargetData = (data, sheetName, targetError) => {
+  const validateTargetData = (data, sheetName, targetError, Ajv) => {
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
@@ -542,7 +542,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     return true;
   };
 
-  const validateMultipleTargets = (workbook) => {
+  const validateMultipleTargets = (workbook, XLSX) => {
     let isValid = true;
     // const sheet = workbook.Sheets[workbook.SheetNames[2]];
     const mdmsHeaders = sheetHeaders[type];
@@ -704,7 +704,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       // Read the Excel file
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
@@ -792,7 +792,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
           if (type === "boundary" && workbook?.SheetNames?.length >= 3) {
-            if (!validateMultipleTargets(workbook)) {
+            if (!validateMultipleTargets(workbook, XLSX)) {
               return;
             }
           } else if (type !== "boundary") {
@@ -825,7 +825,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           //   return;
           // }
           if (type !== "boundary") {
-            if (validateData(jsonData, SheetNames)) {
+            if (validateData(jsonData, SheetNames, Ajv)) {
               resolve(true);
             } else {
               setShowInfoCard(true);

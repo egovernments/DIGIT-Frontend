@@ -148,7 +148,6 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
         // ACCEPTED or IN_TRANSIT: stock has physically left the returner
         commodityMap[productName].totalReturned += qty;
       }
-      // IN_TRANSIT: return not confirmed yet, don't count in commodity
       // REJECTED: return rejected, stock stays with returner, no commodity impact
     }
 

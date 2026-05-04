@@ -13,8 +13,6 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
-import XLSX from "xlsx";
-import ExcelJS from "exceljs";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -622,17 +620,18 @@ const NewShipmentPopup = ({
         }
       } else if (entryType === "RETURNED") {
         const retStatus = record.status || "";
-        if (retStatus === "ACCEPTED") {
-          // Return confirmed: returner loses stock, original sender gains it back
+        if (retStatus === "REJECTED") {
+          // Return rejected by receiver, stock stays with returner, net zero
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock has physically left the returner
           if (senderId === fromFacilityId) {
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
           }
-          if (receiverId === fromFacilityId) {
+          // Only ACCEPTED: receiver (original sender) gains stock back
+          if (retStatus === "ACCEPTED" && receiverId === fromFacilityId) {
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
           }
         }
-        // IN_TRANSIT: return initiated but not confirmed, no stock movement
-        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;
@@ -725,6 +724,7 @@ const NewShipmentPopup = ({
   const handleDownloadTemplate = useCallback(async () => {
     setIsDownloading(true);
     try {
+      const ExcelJS = (await import("exceljs")).default;
       const { boundaryHeaders, stockHeaders } = getTemplateHeaders();
       const projectName = campaignName || "";
 
@@ -951,6 +951,7 @@ const NewShipmentPopup = ({
     }
     setIsSubmitting(true);
     try {
+      const XLSX = (await import("xlsx")).default;
       const file = uploadedFileData[0]?.file;
       if (!file) {
         setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
@@ -1125,6 +1126,7 @@ const NewShipmentPopup = ({
             quantity,
             referenceId: fromFacility?.projectId || projectId || campaignId,
             referenceIdType: "PROJECT",
+            campaignNumber: campaignNumber || "",
             transactionType: "DISPATCHED",
             senderType: "WAREHOUSE",
             senderId,
@@ -1142,6 +1144,7 @@ const NewShipmentPopup = ({
                 { key: "primaryRole", value: "SENDER" },
                 { key: "secondaryRole", value: "RECEIVER" },
                 { key: "status", value: "IN_TRANSIT" },
+                { key: "campaignNumber", value: campaignNumber || "" },
               ],
             },
             auditDetails: {

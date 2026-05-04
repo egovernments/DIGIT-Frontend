@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown, PopUp, Chip,TooltipWrapper } from "@egovernments/digit-ui-components";
+import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown, MultiSelectDropdown, PopUp, Chip } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
 import FilterContext from "../FilterContext";
@@ -218,12 +218,8 @@ const UserActivitySummaryTable = ({ data }) => {
       name: t("USER_ACTIVITY_USER"),
       cell: (row) => (
         <div style={{display:"flex",flexDirection:"column",gap:'4px'}}>
-          <TooltipWrapper header={row.userName} placement={"top"}>
-            <span style={{ ...ellipsisStyle, fontWeight: 600, color: "#0B4B66" }}>{row.userName}</span>
-          </TooltipWrapper>
-          <TooltipWrapper header={row.userId} placement={"top"}>
-            <span style={{ ...ellipsisStyle, fontSize: "12px", color: "#787878" }}>{row.userId}</span>
-          </TooltipWrapper>
+          <span title={row.userName} style={{ ...ellipsisStyle, fontWeight: 600, color: "#0B4B66" }}>{row.userName}</span>
+          <span title={row.userId} style={{ ...ellipsisStyle, fontSize: "12px", color: "#787878" }}>{row.userId}</span>
         </div>
       ),
       sortable: true,
@@ -241,9 +237,7 @@ const UserActivitySummaryTable = ({ data }) => {
     {
       name: t("USER_ACTIVITY_GEO_BOUNDARY"),
       cell: (row) => (
-        <TooltipWrapper header={row.geoBoundary} placement={"top"}>
-          <span style={ellipsisStyle}>{row.geoBoundary}</span>
-        </TooltipWrapper>
+        <span title={row.geoBoundary} style={ellipsisStyle}>{row.geoBoundary}</span>
       ),
       sortable: true,
       grow: 1.5,
@@ -255,12 +249,10 @@ const UserActivitySummaryTable = ({ data }) => {
         const isWarning = row.status === "OFFLINE";
         return (
           <div>
-            <div style={{ color: isWarning ? "#D4351C" : "#363636", fontWeight: isWarning ? 600 : 400 }}>
+            <div style={{ color: isWarning ? "#D4351C" : "#363636", fontWeight: isWarning ? 600 : 400,display:"flex",alignItems:"center",gap:"0.25rem" }}>
               {isWarning && "\u26A0 "}
               {row.lastSync ? (
-                <TooltipWrapper header={row.lastSync || t("NA")}>
-                  <span style={ellipsisStyle}>{row.lastSync || t("NA")}</span>
-                </TooltipWrapper>
+                <span title={row.lastSync} style={ellipsisStyle}>{row.lastSync}</span>
               ) : (
                 t("NA")
               )}

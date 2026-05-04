@@ -112,8 +112,10 @@ const MyBillsTable = ({ ...props }) => {
            );
          },
          style: {
-           justifyContent: "flex-end",
-         },
+          display: "flex",
+          alignItems: "flex-start",
+          paddingTop: "15px",
+        },
        },
       {
         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NUMBER_OF_WORKERS")}</div>,

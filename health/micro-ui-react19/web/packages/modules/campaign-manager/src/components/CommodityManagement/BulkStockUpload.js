@@ -743,6 +743,7 @@ const BulkStockUpload = () => {
             quantity: quantity,
             referenceId: resolvedRefId,
             referenceIdType: "PROJECT",
+            campaignNumber: campaignNumber || "",
             transactionType: "DISPATCHED",
             transactionReason: "DISPATCHED",
             senderType: "WAREHOUSE",
@@ -764,6 +765,7 @@ const BulkStockUpload = () => {
                 { key: "administrativeArea", value: administrativeArea },
                 { key: "stockInHand", value: "0.0" },
                 { key: "mrnNumber", value: mrnNumber },
+                { key: "campaignNumber", value: campaignNumber || "" },
               ],
             },
             auditDetails: {

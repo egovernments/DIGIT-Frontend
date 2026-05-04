@@ -43,14 +43,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   // State variables
   const { registerNumber, boundaryCode, periodDurationInDays } = Digit.Hooks.useQueryParams();
-  const { fromCampaignSupervisor } = location.state || false;
+  const { fromCampaignSupervisor, fromBill, isBillGenerated } = location.state || {};
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [attendanceDuration, setAttendanceDuration] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
   const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const paymentConfig = Digit?.SessionStorage.get("paymentsConfig");
-  const [disabledAction, setDisabledAction] = useState(fromCampaignSupervisor);
+  const [disabledAction, setDisabledAction] = useState(false);
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
   const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
@@ -69,6 +69,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showMapPopup, setShowMapPopup] = useState(false);
   const [hasMusterRoll, setHasMusterRoll] = useState(false);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
+
+  const handleGoBack = () => {
+    fromCampaignSupervisor
+      ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, { fromViewScreen: true })
+      : history.push(
+          `/${window.contextPath}/employee/payments/registers-inbox`,
+          fromBill ? { fromBill: true } : undefined
+        );
+  };
 
   useEffect(() => {
     console.log("ViewAttendance params:", { registerNumber, boundaryCode, periodDurationInDays, fromCampaignSupervisor });
@@ -100,6 +109,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
+  const isRegisterApproved = AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED";
+  const canCampaignSupervisorEdit = fromCampaignSupervisor && !isBillGenerated && isRegisterApproved;
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
@@ -112,7 +123,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       );
       if (AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED") {
         setDisabledAction(true);
-      }
+      }//todo: check and add condition for campaign supervisor
 
       // commented the old code
       // if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
@@ -304,11 +315,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {
           onSuccess: (data) => {
             setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
-            // Delay the navigation for 3 seconds
             setTimeout(() => {
               setUpdateDisabled(false);
               history.push(
-                `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`
+                `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                { fromCampaignSupervisor }
               );
             }, 2000);
           },
@@ -446,7 +457,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     if (!kibanaMapConfig?.routePath) return null;
 
     const baseUrl = kibanaMapConfig.isOrigin
-      ? `https://mc-nigeria-uat.digit.org${kibanaMapConfig.routePath}`
+      ? `https://mc-nigeria-uat.digit.org${kibanaMapConfig.routePath}` //todo check base URL
       : kibanaMapConfig.routePath;
 
     const usernames = (attendeeUsernames || []).filter(Boolean);
@@ -694,6 +705,22 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>
         <Card className="bottom-gap-card-payment">
+          {canCampaignSupervisorEdit && !editAttendance && (
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.5rem" }}>
+              <Button
+                icon="Edit"
+                label={t("HCM_AM_EDIT_ATTENDANCE")}
+                title={t("HCM_AM_EDIT_ATTENDANCE")}
+                variation="secondary"
+                onClick={() => {
+                  history.push(
+                    `/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                    { fromCampaignSupervisor }
+                  );
+                }}
+              />
+            </div>
+          )}
           {/*  INFO:: commenting it as it is handled in edit register screen
           {<div className="card-heading" >
             <h2 className="card-heading-title"></h2>
@@ -816,6 +843,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           onPrimaryAction={() => {
             history.push(
               `/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`
+              , { fromCampaignSupervisor }
             );
           }}
         />
@@ -863,28 +891,57 @@ const ViewAttendance = ({ editAttendance = false }) => {
           className="mc_back"
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
             gap: "1rem",
           }}
         >
-          {disabledAction ? (
+          {!(editAttendance && fromCampaignSupervisor) && (
             <Button
               label={t(`HCM_AM_GO_BACK`)}
               title={t(`HCM_AM_GO_BACK`)}
-              onClick={() => {
-                fromCampaignSupervisor
-                  ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
-                      fromViewScreen: true,
-                    })
-                  : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-              }}
+              onClick={handleGoBack}
               type="button"
               style={{ minWidth: "13rem" }}
-              variation="primary"
+              variation="secondary"
               icon="ArrowBack"
             />
+          )}
+
+          {(disabledAction && !(editAttendance && canCampaignSupervisorEdit)) || fromBill ? (
+            <div />
+          ) : editAttendance && canCampaignSupervisorEdit ? (
+            <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem" }}>
+              <Button
+                label={t("HCM_AM_CANCEL")}
+                title={t("HCM_AM_CANCEL")}
+                onClick={() => {
+                  history.push(
+                    `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                    { fromCampaignSupervisor }
+                  );
+                }}
+                style={{ minWidth: "10rem" }}
+                type="button"
+                variation="secondary"
+              />
+              <div style={{ flex: 1 }} />
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "15%" }}>
+                <Button
+                  label={t("HCM_AM_SAVE_CHANGES")}
+                  title={t("HCM_AM_SAVE_CHANGES")}
+                  onClick={() => {
+                    setUpdateDisabled(true);
+                    triggerMusterRollUpdate();
+                  }}
+                  style={{ minWidth: "14rem" }}
+                  type="button"
+                  variation="primary"
+                  isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
+                />
+              </div>
+            </div>
           ) : editAttendance ? (
             <Button
               label={t(`HCM_AM_SUBMIT_LABEL`)}
@@ -898,6 +955,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
               variation="primary"
               isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
             />
+          ) : fromCampaignSupervisor ? (
+            <div />
           ) : (
             <div
               style={{

@@ -25,7 +25,7 @@ const CommodityDashboard = () => {
   const campaignIdFromUrl = searchParams.get("campaignId");
 
   // Read campaign data from navigation state (passed from HCMCommodityRowCard)
-  const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, isCompleted } = location.state || {};
+  const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, projectCreatedTime, isCompleted } = location.state || {};
 
   // Read userBoundary, userBoundaries, and isTopLevel from context
   const { userBoundary, userBoundaries, isTopLevel } = useCommodityProject();
@@ -54,14 +54,14 @@ const CommodityDashboard = () => {
   const { data: campaignSearchData, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
   const campaignId = campaignIdFromUrl || campaignSearchData?.id;
+  // Use project auditDetails.createdTime (from nav state) as primary, campaign API createdTime as fallback
   const campaignCreatedDate = useMemo(
-    () => (campaignSearchData?.createdTime ? new Date(campaignSearchData.createdTime) : null),
-    [campaignSearchData?.createdTime]
-  );
-
-  const campaignStartDate = useMemo(
-    () => (campaignStartEpoch ? new Date(campaignStartEpoch) : null),
-    [campaignStartEpoch]
+    () => {
+      if (projectCreatedTime) return new Date(projectCreatedTime);
+      if (campaignSearchData?.createdTime) return new Date(campaignSearchData.createdTime);
+      return null;
+    },
+    [projectCreatedTime, campaignSearchData?.createdTime]
   );
   const campaignEndDate = useMemo(
     () => (campaignEndEpoch ? new Date(campaignEndEpoch) : null),

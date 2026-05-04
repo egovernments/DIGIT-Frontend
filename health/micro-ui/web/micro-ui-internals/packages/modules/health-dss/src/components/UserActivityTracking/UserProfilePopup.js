@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp,TooltipWrapper} from "@egovernments/digit-ui-components";
+import { Card, Tag, Button, TextInput, Dropdown, SVG, Loader, PopUp } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import XLSX from "xlsx";
 
@@ -312,9 +312,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       name: t("ACTION_TYPE"),
       selector: (row) => row.actionType,
       cell: (row) => (
-          <TooltipWrapper header={row.actionType}>
-            <span style={ellipsisStyle}>{row.actionType}</span>
-          </TooltipWrapper>
+          <span title={row.actionType} style={ellipsisStyle}>{row.actionType}</span>
         ),
       sortable: true,
       minWidth: "140px",
@@ -323,9 +321,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
     {
       name: t("DETAIL"),
       cell: (row) => (
-        <TooltipWrapper header={row.detail}>
-            <span style={{ ...ellipsisStyle, color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>{row.detail}</span>
-        </TooltipWrapper>
+        <span title={row.detail} style={{ ...ellipsisStyle, color: row.outcome.toUpperCase() === "FAILED" ? "#D4351C" : "#363636", fontWeight: row.outcome.toUpperCase() === "FAILED" ? 600 : 400 }}>{row.detail}</span>
       ),
       grow: 1.75,
       minWidth: "180px",
@@ -393,7 +389,7 @@ const UserProfilePopup = ({ user, onClose, dateRange }) => {
       {/* Summary Cards */}
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${summaryCards.length}, 1fr)`, gap: "24px" }}>
         {summaryCards.map((card) => (
-          <Card key={card.label} style={{ borderRadius: "12px" }}>
+          <Card key={card.label} style={{ borderRadius: "12px", border: "1px solid #D6D5D4" }}>
             <div style={{ fontSize: "14px", fontWeight: 700, color: "#505A5F" }}>{t(card.label)}</div>
             <div style={{ fontSize: "24px", fontWeight: 700, color: card.color }}>{card.value}</div>
             <div style={{ fontSize: "12px", color: "#787878" }}>{card.description}</div>
