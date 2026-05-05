@@ -12,7 +12,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     const { t } = useTranslation();
     const [payeeName, setPayeeName] = useState(row?.payee?.payeeName || "");
     const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payee?.payeePhoneNumber || "");
-    const [operator] = useState(row?.payee?.paymentProvider || "BANK");
+    const [operator] = useState(row?.payee?.paymentProvider || "");
     const [bankAccount, setBankAccount] = useState(row?.payee?.bankAccount || "");
     const [bankCode, setBankCode] = useState(row?.payee?.bankCode || "");
     const [beneficiaryCode, setBeneficiaryCode] = useState(row?.payee?.beneficiaryCode || "");

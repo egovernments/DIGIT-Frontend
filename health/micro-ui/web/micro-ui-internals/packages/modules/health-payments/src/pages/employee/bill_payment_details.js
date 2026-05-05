@@ -17,6 +17,10 @@ import {
   perDayFromPayable,
   sumPayableAmounts,
   applyPerDayToPayables,
+  FEES_HEAD_CODE,
+  getBaseHeadCodes,
+  computeFeePercent,
+  upsertFeesInPayables,
 } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
@@ -52,6 +56,11 @@ const VIEWS_WITH_SUB_TABS = [
 
 const DEFAULT_HEAD_ORDER = ["PER_DAY", "FOOD", "TRAVEL", "MISC"];
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const truncateTo2Decimals = (num) => {
+  const n = Number(num);
+  if (!Number.isFinite(n)) return 0;
+  return Math.trunc(n * 100) / 100;
+};
 
 // Sub-tab config per view
 const VIEW_SUB_TABS = {
@@ -295,6 +304,44 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData, refetch: refetchAllIndividuals } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
   const getOrderedHeadCodes = (ratesData, billDetails = []) => {
+    const fieldConfig = ratesData?.fieldConfig;
+    const headCodeMapping = ratesData?.headCodeMapping;
+
+    // Primary: drive per-day columns from headCodeMapping. When fieldConfig is
+    // also present, prefer entries with type === "PER_DAY" and order them by
+    // their `order` field. FEES is always excluded (it's the percent column).
+    if (headCodeMapping && typeof headCodeMapping === "object") {
+      const fieldKeys = Object.keys(headCodeMapping);
+      let entries = fieldKeys.map((fieldKey) => {
+        const cfg = Array.isArray(fieldConfig)
+          ? fieldConfig.find((f) => f?.fieldKey === fieldKey)
+          : null;
+        return {
+          fieldKey,
+          headCode: headCodeMapping[fieldKey] || fieldKey,
+          type: cfg?.type,
+          paymentType: cfg?.paymentType,
+          valueType: cfg?.valueType,
+          order: cfg?.order,
+        };
+      });
+      if (Array.isArray(fieldConfig) && fieldConfig.length > 0) {
+        entries = entries.filter((e) => {
+          const isPerDay = e.paymentType === "PER_DAY";
+          const isPercentage = e.valueType === "PERCENTAGE";
+          return isPerDay && !isPercentage;
+        });
+        entries.sort((a, b) => ((a.order != null ? a.order : 1e9) - (b.order != null ? b.order : 1e9)));
+      }
+      const ordered = entries
+        .map((e) => e.headCode)
+        .filter((hc) => hc && hc !== FEES_HEAD_CODE);
+      const seen = new Set();
+      return ordered.filter((hc) => (seen.has(hc) ? false : (seen.add(hc), true)));
+    }
+
+    // Fallback: union of rateBreakup keys + payableLineItems headCodes,
+    // excluding FEES, with the historical DEFAULT_HEAD_ORDER preference.
     const headSet = new Set();
     (ratesData?.rates || []).forEach((rate) => {
       Object.keys(rate?.rateBreakup || {}).forEach((headCode) => {
@@ -306,6 +353,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         if (item?.type === "PAYABLE" && item?.headCode) headSet.add(item.headCode);
       });
     });
+    headSet.delete(FEES_HEAD_CODE);
     const headCodes = Array.from(headSet);
     const known = DEFAULT_HEAD_ORDER.filter((head) => headCodes.includes(head));
     const other = headCodes
@@ -317,6 +365,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const rateHeadCodes = useMemo(
     () => getOrderedHeadCodes(workerRatesData, billData?.billDetails || []),
     [workerRatesData, billData?.billDetails]
+  );
+
+  const baseHeadCodes = useMemo(
+    () => getBaseHeadCodes(workerRatesData),
+    [workerRatesData]
   );
 
   const buildRatesByHead = ({
@@ -348,6 +401,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   function addIndividualDetailsToBillDetails(billDetails, individualsData, workerRatesData) {
     const headCodes = getOrderedHeadCodes(workerRatesData, billDetails);
+    const baseHeads = getBaseHeadCodes(workerRatesData);
     return billDetails.map((billDetail) => {
       const individual = individualsData?.Individual?.find(
         (ind) => ind.id === billDetail?.payee?.identifier
@@ -384,6 +438,20 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       const payableHeadCodes = payableItems.map((item) => item?.headCode).filter(Boolean);
       const ratesFromPayables = usePayables;
 
+      // Derive fee percent from the FEES PAYABLE entry (if any) and base heads.
+      // Fall back to legacy additionalDetails.feePercent for older bill details.
+      const computedFeePercent = computeFeePercent(
+        billDetail?.payableLineItems || [],
+        baseHeads
+      );
+      const legacyFeePercent = billDetail?.additionalDetails?.feePercent;
+      const feePercent =
+        computedFeePercent != null
+          ? computedFeePercent
+          : legacyFeePercent != null && legacyFeePercent !== ""
+            ? Number(legacyFeePercent)
+            : null;
+
       return {
         ...billDetail,
         givenName: individual?.name?.givenName,
@@ -397,6 +465,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         food: ratesByHead?.FOOD || 0,
         travel: ratesByHead?.TRAVEL || 0,
         misc: ratesByHead?.MISC || 0,
+        feePercent,
         ratesFromPayables,
         payeeName: billDetail?.payee?.payeeName || "\u2014",
         payeePhoneNumber: billDetail?.payee?.payeePhoneNumber,
@@ -652,15 +721,29 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       let totalAmount;
       if (Array.isArray(origPayables) && origPayables.length > 0) {
         payableLineItems = applyPerDayToPayables(origPayables, rates, days);
-        totalAmount = sumPayableAmounts(payableLineItems);
+        // Recompute the FEES PAYABLE amount from the (newly) edited per-day
+        // rates and the current fee percent, so the saved totals stay
+        // consistent with what the reviewer sees in the UI.
+        const rowFeePercent = row?.feePercent;
+        if (
+          baseHeadCodes.length > 0 &&
+          rowFeePercent !== "" &&
+          rowFeePercent != null &&
+          Number.isFinite(Number(rowFeePercent))
+        ) {
+          payableLineItems = upsertFeesInPayables(
+            payableLineItems,
+            baseHeadCodes,
+            Number(rowFeePercent)
+          );
+        }
+        totalAmount = truncateTo2Decimals(sumPayableAmounts(payableLineItems));
       } else {
         const totalPerDay = Object.values(rates).reduce(
           (sum, value) => sum + (Number(value) || 0),
           0
         );
-        totalAmount = Math.round(
-          totalPerDay * days
-        );
+        totalAmount = truncateTo2Decimals(totalPerDay * days);
       }
       const {
         givenName,
@@ -674,6 +757,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         travel,
         misc,
         fees,
+        feePercent,
         ratesFromPayables,
         ...rest
       } = row;
@@ -692,7 +776,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     const payablesUpdatedAtEpochMs = Date.now();
     const partialBillDetails = billDetails.map((d) => ({
       id: d?.id,
-      totalAmount: Number(d?.totalAmount) || 0,
+      totalAmount: truncateTo2Decimals(d?.totalAmount),
       totalAttendance: Number(d?.totalAttendance) || 0,
       payableLineItems: d?.payableLineItems,
       additionalDetails: {
@@ -1850,6 +1934,7 @@ const downloadOptions = [
                 hasTriedSave={hasTriedSaveReviewer}
                 maxAttendanceDays={maxAttendanceDays}
                 rateHeadCodes={rateHeadCodes}
+                baseHeadCodes={baseHeadCodes}
                 onRowChange={(updatedRow) => setTableData((prev) => prev.map((r) => r.id === updatedRow.id ? updatedRow : r))}
                 onRefetchBill={refetchBill}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
@@ -2158,7 +2243,7 @@ const downloadOptions = [
           const hasEmpty = (tableData || []).some((row) =>
             Object.values(row?.ratesByHead || {}).some((value) => value === "") ||
             row?.totalAttendance === "" ||
-            row?.additionalDetails?.feePercent === ""//todo check
+            (baseHeadCodes.length > 0 && row?.feePercent === "")
           );
           const hasAttendanceExceedingBillingPeriod =
             maxAttendanceDays != null &&
