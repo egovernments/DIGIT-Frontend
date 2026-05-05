@@ -101,7 +101,8 @@ const CreateEmployee = () => {
     return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
   }
   useEffect(() => {
-    const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+    const selectedCountryCode = sessionFormData?.SelectEmployeePhoneNumber?.countryCode || validationConfig?.prefix || "+91";
+    const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === selectedCountryCode) || validationConfig;
     const maxLength = currentValidation?.maxLength || 10;
     const minLength = currentValidation?.minLength || 10;
     const pattern = currentValidation?.pattern
@@ -208,8 +209,9 @@ const CreateEmployee = () => {
     const mobileNum = data?.SelectEmployeePhoneNumber?.mobileNumber;
 
     if (mobileNum) {
-      // Get validation parameters from MDMS or use defaults
-      const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+      // Get validation parameters from MDMS for the selected country code
+      const selectedCountryCode = data?.SelectEmployeePhoneNumber?.countryCode || validationConfig?.prefix || "+91";
+      const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === selectedCountryCode) || validationConfig;
       const maxLength = currentValidation?.maxLength || 10;
       const minLength = currentValidation?.minLength || 10;
       const pattern = currentValidation?.pattern

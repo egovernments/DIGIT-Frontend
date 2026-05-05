@@ -43,10 +43,11 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
     defaultConfig?.prefix ||
     "+91";
 
-  const activeMaxLength = defaultConfig?.maxLength || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.maxLength || 10;
-  const activeMinLength = defaultConfig?.minLength || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.minLength || 10;
-  const activePattern = defaultConfig?.pattern || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.pattern;
-  const activeErrorMsg = defaultConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR";
+  const selectedConfig = effectiveMobileConfigs.find(c => c.prefix === activePrefix) || defaultConfig;
+  const activeMaxLength = selectedConfig?.maxLength || 10;
+  const activeMinLength = selectedConfig?.minLength || 10;
+  const activePattern = selectedConfig?.pattern;
+  const activeErrorMsg = selectedConfig?.errorMessage || "CORE_COMMON_MOBILE_ERROR";
 
   const handlePrefixChange = (e) => {
     const chosen = effectiveMobileConfigs.find((c) => c.prefix === e.target.value) || defaultConfig;
