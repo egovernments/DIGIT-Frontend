@@ -10,6 +10,19 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        include: (filePath) => {
+          const p = filePath.replace(/\\/g, "/");
+          return p.includes("/node_modules/axios/");
+        },
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-env", { targets: "ie 11" }]]
+          }
+        }
+      },
+      {
         test: /\.(js)$/,
         exclude: /node_modules/,
         use: {
