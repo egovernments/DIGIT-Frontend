@@ -1,7 +1,7 @@
 import { FormStep, CardLabelError, CardLabel } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 
-const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMobileChange, config, canSubmit, whatsAppOptIn, onWhatsAppOptInChange, showWhatsAppOptIn }) => {
+const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMobileChange, config, canSubmit, whatsAppOptIn, onWhatsAppOptInChange, showWhatsAppOptIn, countryCode }) => {
   const stateId = Digit.Utils.getMultiRootTenant()
     ? Digit.ULBService.getCurrentTenantId()
     : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
@@ -61,7 +61,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
 
   const allValidationConfigs = mdmsData?.allConfigs || [];
 
-  const [selectedPrefix, setSelectedPrefix] = useState(validationRules.prefix);
+  const [selectedPrefix, setSelectedPrefix] = useState(countryCode || validationRules.prefix);
   const [error, setError] = useState("");
 
   // Get active config based on selected prefix
@@ -80,10 +80,14 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
   }, [allValidationConfigs, validationRules]);
 
   useEffect(() => {
-    if (validationRules?.prefix) {
+    if (validationRules?.prefix && !countryCode) {
       setSelectedPrefix(validationRules.prefix);
     }
   }, [validationRules?.prefix]);
+
+  useEffect(() => {
+    onMobileChange({ target: { value: "" } });
+  }, []);
 
   const handlePrefixChange = (e) => {
     setSelectedPrefix(e.target.value);

@@ -126,6 +126,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
+  const activePrefix = userDetails?.countryCode || userInfo?.countryCode || validationConfig?.prefix || "+91";
+
   const stateLvlTenantId = Digit.Utils.getMultiRootTenant()
     ? Digit.ULBService.getCurrentTenantId()
     : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
@@ -261,7 +263,10 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       if (mdmsValidationData?.prefix) {
         updatedValidationConfig.prefix = mdmsValidationData.prefix;
       }
-      setValidationConfig((prev) => ({ ...prev, ...updatedValidationConfig }));
+      const filteredConfig = Object.fromEntries(
+        Object.entries(updatedValidationConfig).filter(([, v]) => v !== undefined && v !== null)
+      );
+      setValidationConfig((prev) => ({ ...prev, ...filteredConfig }));
     }
   }, [mdmsValidationData]);
 
@@ -292,6 +297,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
         if (response?.Individual?.length) {
           setUserDetails(response.Individual[0]);
+        } else {
+          // No Individual record found — fall back to old user service
+          const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+          if (usersResponse?.user?.length) {
+            setUserDetails(usersResponse.user[0]);
+          }
         }
       } else {
         // Old API
@@ -320,6 +331,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       code: userDetails?.gender,
       value: userDetails?.gender,
     });
+
+    if (userDetails?.mobileNumber) setMobileNo(userDetails.mobileNumber);
 
     const thumbs = userDetails?.photo?.split(",");
     setProfileImg(thumbs?.at(0));
@@ -457,7 +470,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         });
       }
 
-      if (userType === "employee" && !validationConfig?.mobileNumber.test(mobileNumber)) {
+      if (userType === "employee" && validationConfig?.mobileNumber && !validationConfig.mobileNumber.test(mobileNumber)) {
         throw JSON.stringify({
           type: "error",
           message: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
@@ -505,7 +518,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       let responseInfo;
       const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
 
-      if (individualServicePath) {
+      if (individualServicePath && userDetails?.individualId) {
         // Build Individual object dynamically
         const individualPayload = {
           ...userDetails,
@@ -551,12 +564,13 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         const requestData = {
           ...userInfo,
           name,
+          mobileNumber,
           countryCode: activePrefix,
           gender: gender?.value,
           emailId: email,
           photo: profilePic,
         };
-        const response = await Digit.UserService.updateUser(requestData, stateCode);
+        const response = await Digit.UserService.updateUser(requestData, tenant);
         responseInfo = response?.responseInfo;
       }
 
@@ -1003,6 +1017,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 <div style={{ width: "100%" }}>
                   <MobileNumber
                     value={mobileNumber}
+                    prefix={activePrefix}
                     style={{ width: "100%" }}
                     name="mobileNumber"
                     placeholder="Enter a valid Mobile No."

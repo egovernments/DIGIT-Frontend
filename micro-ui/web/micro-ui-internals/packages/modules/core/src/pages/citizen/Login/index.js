@@ -305,6 +305,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               whatsAppOptIn={whatsAppOptIn}
               onWhatsAppOptInChange={setWhatsAppOptIn}
               showWhatsAppOptIn={!!enableUserPreferences}
+              countryCode={params.countryCode || ""}
             />
           </Route>
           <Route path={`${path}/otp`}>
