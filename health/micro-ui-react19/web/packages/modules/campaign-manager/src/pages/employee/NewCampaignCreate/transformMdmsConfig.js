@@ -108,6 +108,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           version: version,
           navigateTo: page.navigateTo,
           onAction: flow.onAction,
+          onSecondaryAction:flow.onSecondaryAction,
           summary: flow.summary || false,
           preventScreenCapture: page.preventScreenCapture || false,
           submitCondition: page.submitCondition || null,

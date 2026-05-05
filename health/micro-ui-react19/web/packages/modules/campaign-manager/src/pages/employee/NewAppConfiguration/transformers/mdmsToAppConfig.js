@@ -34,6 +34,7 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
           screenType: "FORM",
           pages: [],
           onAction: item.onAction,
+          onSecondaryAction:item.onSecondaryAction,
           order: existingFlows?.find(f => f.name === flowName)?.order || item.order || 0,
           initActions: existingFlows?.find(f => f.name === flowName)?.initActions || [],
           wrapperConfig: existingFlows?.find(f => f.name === flowName)?.wrapperConfig || {},
