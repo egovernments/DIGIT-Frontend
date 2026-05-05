@@ -10,6 +10,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        include: /node_modules\/axios\//,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-env", { targets: { ie: 11 } }]]
+          }
+        }
+      },
+      {
         test: /\.(js)$/,
         exclude: /node_modules/,
         use: {
