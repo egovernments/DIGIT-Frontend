@@ -4,6 +4,7 @@ export const loginConfig = [
       header: "CORE_COMMON_LOGIN",
       submitButtonLabel: "CORE_COMMON_LOGIN",
       secondaryButtonLabel: "CORE_COMMON_FORGOT_PASSWORD",
+      loginWithMicroSoft: "CORE_COMMON_LOGIN_WITH_MICROSOFT",
     },
     inputs: [
       {
