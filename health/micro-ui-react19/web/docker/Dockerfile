@@ -34,16 +34,17 @@ RUN yarn install \
 # Production stage
 FROM nginx:mainline-alpine
 ARG BUILD_VARIANT=core-ui
-ARG COUNTRY_PREFIX
 ENV BUILD_VARIANT=${BUILD_VARIANT}
-ENV COUNTRY_PREFIX=${COUNTRY_PREFIX}
-ENV WORK_DIR=/var/web/${COUNTRY_PREFIX}/${BUILD_VARIANT}
 
-RUN mkdir -p ${WORK_DIR}
+# Copy built files to a known location
+RUN mkdir -p /var/web/app
+COPY --from=build /app/web/build /var/web/app/
 
-COPY --from=build /app/web/build ${WORK_DIR}/
-
-# Copy the nginx template and substitute the BUILD_VARIANT and COUNTRY_PREFIX
+# Copy nginx template (will be processed at container startup)
 COPY health/micro-ui-react19/web/docker/nginx.conf.template /tmp/nginx.conf.template
-RUN envsubst '${BUILD_VARIANT} ${COUNTRY_PREFIX}' < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf \
-    && rm /tmp/nginx.conf.template
+
+# Copy and set up entrypoint script
+COPY health/micro-ui-react19/web/docker/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

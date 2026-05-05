@@ -3,9 +3,8 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const dotenv = require("dotenv");
 
-// Load package.json to get the homepage/publicPath
-const packageJson = require("./package.json");
-const publicPath = process.env.PUBLIC_PATH || packageJson.homepage || "/";
+// publicPath 'auto' lets webpack determine the base URL at runtime from the script's src
+const publicPath = process.env.PUBLIC_PATH || "auto";
 
 // Load .env variables
 const envFile = dotenv.config().parsed || {};

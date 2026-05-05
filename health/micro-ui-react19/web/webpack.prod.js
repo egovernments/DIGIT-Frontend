@@ -6,9 +6,8 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
-// Load package.json to get the homepage/publicPath
-const packageJson = require("./package.json");
-const publicPath = process.env.PUBLIC_PATH || packageJson.homepage || "/";
+// publicPath 'auto' lets webpack determine the base URL at runtime from the script's src
+const publicPath = process.env.PUBLIC_PATH || "auto";
 
 module.exports = merge(common, {
   mode: "production",
