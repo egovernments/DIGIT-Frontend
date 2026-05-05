@@ -776,7 +776,7 @@ const BillDetailsTable = ({ ...props }) => {
             tenantId: existingPayee?.tenantId || tenantId,
             ...(existingPayee?.type ? { type: existingPayee.type } : {}),
             ...(payeeIdentifier ? { identifier: payeeIdentifier } : {}),
-            ...(existingPayee?.paymentProvider ? { paymentProvider: existingPayee.paymentProvider } : {}),
+            paymentProvider: existingPayee?.paymentProvider || "BANK",
             payeeName: updatedFields?.payeeName,
             // payeePhoneNumber: updatedFields?.payeePhoneNumber,
             ...(updatedFields?.bankAccount !== undefined ? { bankAccount: updatedFields.bankAccount } : {}),
