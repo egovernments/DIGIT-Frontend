@@ -46,7 +46,7 @@ const CampaignCard = () => {
     // },
     {
       label: t(I18N_KEYS.COMPONENTS.ACTION_TEST_CREATE_CAMPAIGN),
-      link: `/workbench-ui/employee/campaign/campaign-home`,
+      link: `/${window?.contextPath}/employee/campaign/campaign-home`,
       id:`admin-console-home-screen-create-campaign-link`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data

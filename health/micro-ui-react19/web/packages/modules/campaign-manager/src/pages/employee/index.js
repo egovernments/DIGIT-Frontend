@@ -416,16 +416,16 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
   useEffect(() => {
-    if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
+    if (!window.location.pathname.endsWith("/employee/campaign/setup-campaign")) {
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     }
-    if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
+    if (window.location.pathname.endsWith("/employee/campaign/response")) {
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     }
     return () => {
-      if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
+      if (!window.location.pathname.endsWith("/employee/campaign/setup-campaign")) {
         window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
         window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
       }
@@ -453,12 +453,12 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   return (
     <React.Fragment>
       <div className="wbh-header-container">
-        {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
-        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ||
-        window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
+        {window?.location?.pathname?.endsWith("/employee/campaign/add-product") ||
+        window?.location?.pathname?.endsWith("/employee/campaign/response") ||
+        window?.location?.pathname?.endsWith("/employee/campaign/new-app-configuration-redesign") ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        {window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
+        {window?.location?.pathname?.endsWith("/employee/campaign/new-app-configuration-redesign") ? null : (
           <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
         )}
       </div>

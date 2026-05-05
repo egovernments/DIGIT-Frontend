@@ -47,6 +47,14 @@ config:
         build-args:
           BUILD_VARIANT: workbench-ui
 
+  - name: builds/Digit-Frontend/health/hcm-digit-ui
+    build:
+      - work-dir: health/micro-ui-react19/
+        dockerfile: health/micro-ui-react19/web/docker/Dockerfile
+        image-name: hcm-digit-ui
+        build-args:
+          BUILD_VARIANT: hcm-digit-ui
+
   - name: builds/Digit-Frontend/health/microplan-ui
     build:
     - work-dir: health/micro-ui/

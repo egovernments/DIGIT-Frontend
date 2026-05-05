@@ -8,7 +8,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 
 // Load package.json to get the homepage/publicPath
 const packageJson = require("./package.json");
-const publicPath = packageJson.homepage || "/";
+const publicPath = process.env.PUBLIC_PATH || packageJson.homepage || "/";
 
 module.exports = merge(common, {
   mode: "production",

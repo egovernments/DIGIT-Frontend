@@ -120,7 +120,7 @@ const CloneCampaignWrapper = (props) => {
           });
           setTimeout(() => {
             navigate(
-              `/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`
+              `/${window?.contextPath}/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`
             );
           }, 1000);
         }

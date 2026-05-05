@@ -10,7 +10,7 @@ module.exports = merge(common, {
   output: {
     filename: "[name].bundle.js",
     chunkFilename: "[name].chunk.js",
-    publicPath: "/workbench-ui/",
+    publicPath: "/hcm-digit-ui/",
   },
 
   devServer: {
@@ -18,7 +18,7 @@ module.exports = merge(common, {
       directory: path.join(__dirname, "public"),
     },
     historyApiFallback: {
-      index: "/workbench-ui/index.html",
+      index: "/hcm-digit-ui/index.html",
     },
     compress: true,
     port: process.env.PORT || 3000,
@@ -89,7 +89,7 @@ module.exports = merge(common, {
           "/stock/v1",
           "/attendance"
         ],
-        target: process.env.REACT_APP_PROXY_URL || "https://bauchi-hcm-uat.digit.org" || "https://unified-uat.digit.org",
+        target: process.env.REACT_APP_PROXY_URL || "https://campaigns.afro.who.int" || "https://unified-uat.digit.org",
         changeOrigin: true,
         secure: false,
       },
