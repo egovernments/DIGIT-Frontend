@@ -41,7 +41,7 @@ const Profile = ({ info, stateName, t }) => {
         <div className="label-text"> {info?.name} </div>
       </div>
       <div id="profile-location" className="label-container loc-Profile">
-        <div className="label-text"> {info?.mobileNumber} </div>
+        <div className="label-text"> {info?.countryCode ? `${info.countryCode} ${info.mobileNumber}` : info?.mobileNumber} </div>
       </div>
       {info?.emailId && (
         <div id="profile-emailid" className="label-container loc-Profile">
@@ -421,7 +421,7 @@ export const CitizenSideBar = ({
     <Hamburger
       items={hamburgerItems}
       profileName={user?.info?.name}
-      profileNumber={user?.info?.mobileNumber || user?.info?.emailId}
+      profileNumber={user?.info?.countryCode ? `${user.info.countryCode} ${user.info.mobileNumber}` : user?.info?.mobileNumber}
       theme="dark"
       transitionDuration={0.3}
       styles={{ marginTop: "64px", height: "93%" }}

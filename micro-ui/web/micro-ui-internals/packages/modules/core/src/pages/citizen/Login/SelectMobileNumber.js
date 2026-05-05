@@ -15,6 +15,7 @@ const SelectMobileNumber = ({
   allValidationConfigs,
   onConsentChange,
   enableUserPreferences,
+  countryCode,
 }) => {
   const [isEmail, setIsEmail] = useState(emailId ? true : false);
   const [error, setError] = useState("");
@@ -32,14 +33,27 @@ const SelectMobileNumber = ({
     return mobileConfigs.find((c) => c.isDefault) || mobileConfigs[0] || validationConfig || {};
   }, [mobileConfigs, validationConfig]);
 
-  const [selectedConfig, setSelectedConfig] = useState(defaultConfig);
+  const [selectedConfig, setSelectedConfig] = useState(() => {
+    if (countryCode) {
+      const matched = mobileConfigs.find((c) => c.prefix === countryCode);
+      if (matched) return matched;
+    }
+    return defaultConfig;
+  });
 
   // Sync when MDMS data arrives asynchronously
   useEffect(() => {
-    if (defaultConfig && defaultConfig.prefix && !selectedConfig?.prefix) {
+    if (countryCode && !selectedConfig?.prefix) {
+      const matched = mobileConfigs.find((c) => c.prefix === countryCode);
+      if (matched) setSelectedConfig(matched);
+    } else if (defaultConfig && defaultConfig.prefix && !selectedConfig?.prefix && !countryCode) {
       setSelectedConfig(defaultConfig);
     }
-  }, [defaultConfig]);
+  }, [defaultConfig, countryCode, mobileConfigs]);
+
+  useEffect(() => {
+    onMobileChange({ target: { value: "" } });
+  }, []);
 
   // ── active rules from selected config ─────────────────────────────────────
   const activeConfig = selectedConfig || validationConfig || {};

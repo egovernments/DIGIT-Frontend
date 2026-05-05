@@ -499,6 +499,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               validationConfig={validationConfig}
               allValidationConfigs={allValidationConfigs}
               enableUserPreferences={enableUserPreferences}
+              countryCode={params.countryCode || ""}
             />
           </Route>
           <Route path={`${path}/otp`}>

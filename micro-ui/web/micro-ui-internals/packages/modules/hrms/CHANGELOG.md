@@ -1,3 +1,7 @@
+## [1.9.10] [05-MAY-2026]
+### 🚀 Features:
+- **Country Code Support**: Integrated mobile number country code support and validation logic in HRMS `EmployeeDetails` page.
+
 ## [1.9.9] [30-April-2026]
 ### 🐛 Bug Fixes:
 - **Inbox Pagination Display**: Fixed "51-20 of 20" wrong pagination label after changing rows-per-page from 10→50→10 and navigating. Root cause was stale internal `pageSize` in react-table's `useControlledState` — resolved by upgrading to `@egovernments/digit-ui-react-components@1.9.3`.

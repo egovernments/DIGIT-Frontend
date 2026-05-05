@@ -1,4 +1,8 @@
 # Changelog
+## [1.9.23-cms]  [05-MAY-2026]
+- **Feature**: Added country code support for mobile numbers in citizen Login flow and UserProfile.
+- **Refactor**: Updated CitizenSideBar and StaticCitizenSideBar to correctly reflect and handle profile updates with country codes.
+
 ## [1.9.22-cms]  [14-APR-2026]
 - **Refactor**: Simplified citizen login preferred language save flow.
   - Removed the `/user-preference/v1/_search` pre-fetch call on OTP success — no longer fetches existing preferences before upsert.
