@@ -11,11 +11,14 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        include: /node_modules\/axios\//,
+        include: (filePath) => {
+          const p = filePath.replace(/\\/g, "/");
+          return p.includes("/node_modules/axios/");
+        },
         use: {
           loader: "babel-loader",
           options: {
-            presets: [["@babel/preset-env", { targets: { ie: 11 } }]]
+            presets: [["@babel/preset-env", { targets: "ie 11" }]]
           }
         }
       },
@@ -26,7 +29,10 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"]
+            plugins: [
+              "@babel/plugin-proposal-optional-chaining",
+              "@babel/plugin-proposal-nullish-coalescing-operator"
+            ]
           }
         },
       },
