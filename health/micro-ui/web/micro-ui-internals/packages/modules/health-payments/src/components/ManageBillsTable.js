@@ -94,7 +94,7 @@ const ManageBillsTable = ({ ...props }) => {
             totalAmount: {
                 name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
                 selector: (row) => {
-                    const total = row?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
+                    const total = row?.totalAmount || 0;
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                             {total}
