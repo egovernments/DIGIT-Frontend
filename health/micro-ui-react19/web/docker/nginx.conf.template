@@ -11,7 +11,7 @@ server {
     location /${COUNTRY_PREFIX}/${BUILD_VARIANT}/ {
         alias /var/web/app/;
         index index.html index.htm;
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /${COUNTRY_PREFIX}/${BUILD_VARIANT}/index.html;
     }
 
     # Gzip compression
