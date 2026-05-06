@@ -420,7 +420,49 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     ),
   };
 
-  let config = [{ body: propsConfig?.inputs }];
+  const ssoConfigs = ssoMDMSData?.map((sso) => ({
+    ...sso,
+    provider: sso.ui?.provider || sso.provider || "sso",
+    label: t(`SSO_PROVIDER_${sso.ui?.name || sso.id}`),
+    icon: sso.ui?.logo ? (
+      <img
+        src={sso.ui.logo}
+        alt={sso.ui?.name}
+        className="employee-login-sso-logo"
+      />
+    ) : sso.ui?.provider === "MICROSOFT" ? (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="employee-login-sso-logo"
+        viewBox="0 0 21 21"
+      >
+        <title>MS-SymbolLockup</title>
+        <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+        <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+        <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+        <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+      </svg>
+    ) : null,
+    onLogin: (ssoConfig) => {
+      onSSOLogin(ssoConfig);
+    },
+  }));
+
+  let config = [
+    {
+      body: propsConfig?.inputs?.map((field) =>
+        field?.component === "EmployeeSSOLoginOptions"
+          ? {
+              ...field,
+              customProps: {
+                ...field.customProps,
+                ssoConfigs,
+              },
+            }
+          : field,
+      ),
+    },
+  ];
 
   const { mode } = Digit.Hooks.useQueryParams();
   if (
@@ -475,14 +517,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         propsConfig?.texts?.secondaryButtonLabel +
         (extraClasses.includes("login-form-container") ? "?" : "")
       }
-      ssoConfigs={ssoConfigs}
-      loginWithMicroSoft={
-        (!ssoConfigs || ssoConfigs.length === 0) &&
-        window?.globalConfigs?.getConfig?.("ENABLE_MICROSOFT_LOGIN")
-          ? propsConfig.texts.loginWithMicroSoft
-          : null
-      }
-      onSSOLogin={onSSOLogin}
       onSecondayActionClick={onForgotPassword}
       onFormValueChange={onFormValueChange}
       heading={propsConfig?.texts?.header}
@@ -508,35 +542,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       />
     </div>
   );
-
-  const ssoConfigs = ssoMDMSData?.map((sso) => ({
-    ...sso,
-    provider: sso.ui?.provider || sso.provider || "sso",
-    label: t(`SSO_PROVIDER_${sso.ui?.name || sso.id}`),
-    icon: sso.ui?.logo ? (
-      <img
-        src={sso.ui.logo}
-        alt={sso.ui?.name}
-        style={{ width: "100%", height: "100%", objectFit: "contain" }}
-      />
-    ) : sso.ui?.provider === "MICROSOFT" ? (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100%"
-        height="100%"
-        viewBox="0 0 21 21"
-      >
-        <title>MS-SymbolLockup</title>
-        <rect x="1" y="1" width="9" height="9" fill="#f25022" />
-        <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
-        <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
-        <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
-      </svg>
-    ) : null,
-    onLogin: (ssoConfig) => {
-      onSSOLogin(ssoConfig);
-    },
-  }));
 
   if (isLoading || isStoreLoading) {
     return <Loader page={true} variant="PageLoader" />;

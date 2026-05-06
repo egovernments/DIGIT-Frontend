@@ -16,6 +16,7 @@ import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 import LoginSignupSelector from "./components/LoginSignupSelector";
 import ForgotOrganizationTooltip from "./components/ForgotOrganizationTooltip";
+import EmployeeSSOLoginOptions from "./components/EmployeeSSOLoginOptions";
 
 // Create QueryClient instance outside component to prevent recreation
 const createQueryClient = () => new QueryClient({
@@ -169,7 +170,8 @@ const componentsToRegister = {
   PrivacyComponent,
   OtpComponent,
   ForgotOrganizationTooltip,
-  LoginSignupSelector
+  LoginSignupSelector,
+  EmployeeSSOLoginOptions
 };
 
 export const initCoreComponents = () => {
