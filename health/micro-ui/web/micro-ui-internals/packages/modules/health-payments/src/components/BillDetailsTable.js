@@ -467,7 +467,7 @@ const BillDetailsTable = ({ ...props }) => {
                 const displayPercent = displayFeePercentOneDecimal(percent);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem",fontSize: "14px" }}>
-                        {displayPercent == null ? "\u2014" : `${displayPercent}%`}
+                        {displayPercent == null ? "\u2014" : displayPercent}
                     </div>
                 );
             },
@@ -672,9 +672,10 @@ const BillDetailsTable = ({ ...props }) => {
                         />
                     );
                 }
+                const displayFee = displayFeePercentOneDecimal(percent);
                 return (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                        {displayFeePercentOneDecimal(percent) == null ? "\u2014" : `${displayFeePercentOneDecimal(percent)}%`}
+                        {displayFee == null ? "\u2014" : displayFee}
                     </div>
                 );
             },
