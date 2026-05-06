@@ -187,14 +187,14 @@ function Jurisdiction({
   const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
     stateId: Digit.ULBService.getStateId(),
     includeSubTenants: true,
-    config : {
+    config: {
       enabled: Digit.Utils.getMultiRootTenant()
     }
   });
   //  const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   //  const subTenantList = getSubTenants();
 
-    useEffect(() => {
+  useEffect(() => {
     if (Digit.Utils.getMultiRootTenant()) {
       selectboundary(cities);
     }
@@ -212,14 +212,17 @@ function Jurisdiction({
   }, [Boundary]);
 
   const selectHierarchy = (value) => {
+    console.log("selectedHierarchy", value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: value } : item)));
   };
 
   const selectboundaryType = (value) => {
+    console.log("selectboundaryType", value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundaryType: value } : item)));
   };
 
   const selectedboundary = (value) => {
+    console.log("selectedboundary", value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundary: value } : item)));
   };
 

@@ -247,8 +247,11 @@ const EditForm = ({ tenantId, data }) => {
     //   return;
     // }
     input.Jurisdictions = input?.Jurisdictions?.map((juris) => {
+      const normalizedBoundary = juris?.boundary === "citya" ? "pg.citya" : juris?.boundary;
       return {
         ...juris,
+        boundaryType: juris?.boundaryType,
+        boundary: normalizedBoundary,
         tenantId: tenantId,
       };
     });
