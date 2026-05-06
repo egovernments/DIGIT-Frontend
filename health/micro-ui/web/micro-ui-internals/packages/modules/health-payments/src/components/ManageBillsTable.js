@@ -25,6 +25,25 @@ const ManageBillsTable = ({ ...props }) => {
         props?.onSelectionChange?.(selectedRows);
     };
 
+    const navigateToBillDetails = (row) => {
+        history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
+            billID: row.billNumber,
+            activeTabCode: props.activeTabCode,
+            advisoryReport: row?.advisoryReport || null,
+        });
+    };
+
+    const handleRowClicked = (row, e) => {
+        const target = e?.target;
+        if (target?.closest) {
+            const interactive = target.closest(
+                'button, a, input, textarea, select, label, [role="button"], [role="menuitem"], [role="menuitemcheckbox"], .digit-button-primary, .digit-button-secondary, .digit-button-teritiary'
+            );
+            if (interactive) return;
+        }
+        navigateToBillDetails(row);
+    };
+
     const buildColumnRegistry = (t, history, props, setShowToast, activeTabCode) => {
         const colHeader = (label) => (
             <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{label}</div>
@@ -38,12 +57,9 @@ const ManageBillsTable = ({ ...props }) => {
                         className="ellipsis-cell"
                         style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
                         title={row?.billNumber || t("NA")}
-                        onClick={() => {
-                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
-                                billID: row.billNumber,
-                                activeTabCode: activeTabCode,
-                                advisoryReport: row?.advisoryReport || null,
-                            });
+                        onClick={(ev) => {
+                            ev.stopPropagation();
+                            navigateToBillDetails(row);
                         }}
                     >
                         {row?.billNumber || t("NA")}
@@ -488,6 +504,8 @@ const ManageBillsTable = ({ ...props }) => {
                 }
                 conditionalRowStyles={conditionalRowStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
+                onRowClicked={handleRowClicked}
+                pointerOnHover
                 paginationComponentOptions={getCustomPaginationOptions(t)}
             />
             {showToast && (
