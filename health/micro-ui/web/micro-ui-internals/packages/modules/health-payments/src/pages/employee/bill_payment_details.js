@@ -1654,7 +1654,7 @@ const downloadOptions = [
             <Loader />
           ) : (
             <>
-              {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"), { color: "#C84C0E" })}
+              {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"))}
               {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
               {/* {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))} */}
               {/* {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))} */}
