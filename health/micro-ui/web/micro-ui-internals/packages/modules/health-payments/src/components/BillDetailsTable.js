@@ -872,7 +872,7 @@ const BillDetailsTable = ({ ...props }) => {
                 data={tableData}
                 pagination
                 paginationServer
-                customStyles={tableCustomStyle(false)}
+                customStyles={tableCustomStyle(false, { rowHover: false })}
                 paginationDefaultPage={props?.currentPage}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handlePerRowsChange}

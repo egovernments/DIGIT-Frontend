@@ -261,7 +261,7 @@ const MyBillsTable = ({ ...props }) => {
                 data={props.data}
                 pagination
                 paginationServer
-                customStyles={tableCustomStyle(false)}
+                customStyles={tableCustomStyle(false, { rowHover: false })}
                 paginationDefaultPage={props?.currentPage}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handlePerRowsChange}
