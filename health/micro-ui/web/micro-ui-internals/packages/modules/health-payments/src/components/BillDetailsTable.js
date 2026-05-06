@@ -209,8 +209,15 @@ const BillDetailsTable = ({ ...props }) => {
         MISC: "HCM_AM_MISC",
     };
 
-    const colHeader = (label) => (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+    const colHeader = (label, textAlign = "start") => (
+        <div
+            style={{
+                borderRight: "2px solid #787878",
+                width: "100%",
+                textAlign,
+                ...(textAlign === "right" ? { paddingRight: "1rem", boxSizing: "border-box" } : {}),
+            }}
+        >
             {label}
         </div>
     );
@@ -394,7 +401,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const daysCol = {
-            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
+            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS"), "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {row?.totalAttendance != null ? row.totalAttendance : t("NA")}
@@ -407,7 +414,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const wageCol = {
-            name: colHeader(`${t("HCM_AM_WAGE")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_WAGE")}${currencySuffix}`, "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {`${row.wage}`}
@@ -420,7 +427,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const totalAmountCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {displayAmountMax2(row?.totalAmount)}
@@ -441,7 +448,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const dynamicRateCols = rateHeadCodes.map((headCode) => ({
-            name: colHeader(`${getHeadLabel(headCode)} ${currencySuffix}`),
+            name: colHeader(`${getHeadLabel(headCode)} ${currencySuffix}`, "right"),
             selector: (row) => (
                 <div className="ellipsis-cell" style={{ paddingRight: "1rem", fontSize: "14px" }}>
                     {displayPerDayRate(row?.ratesByHead?.[headCode])}
@@ -454,7 +461,7 @@ const BillDetailsTable = ({ ...props }) => {
         }));
 
         const feesCol = {
-            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
+            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`, "right"),
             selector: (row) => {
                 const percent = getFeePercent(row);
                 const displayPercent = displayFeePercentOneDecimal(percent);
@@ -471,7 +478,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const totalCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, "right"),
             selector: (row) => {
                 const total = displayAmountMax2(row?.totalAmount);
                 // const percent = getFeePercent(row);
@@ -533,7 +540,7 @@ const BillDetailsTable = ({ ...props }) => {
         // --- Reviewer editable columns ---
 
         const dynamicReviewerRateCols = rateHeadCodes.map((headCode) => ({
-            name: colHeader(`${getHeadLabel(headCode)}${currencySuffix}`),
+            name: colHeader(`${getHeadLabel(headCode)}${currencySuffix}`, "right"),
             selector: (row) => {
                 const headPayableCodes = row?.payableHeadCodes || [];
                 const locked = row?.ratesFromPayables && !headPayableCodes.includes(headCode);
@@ -570,7 +577,7 @@ const BillDetailsTable = ({ ...props }) => {
         }));
 
         const reviewerDaysCol = {
-            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS")),
+            name: colHeader(t("HCM_AM_NUMBER_OF_DAYS"), "right"),
             selector: (row) => {
                 if (!isReviewerEdit) {
                     return (
@@ -637,7 +644,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const reviewerFeesCol = {
-            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`),
+            name: colHeader(`${t("HCM_AM_FEES_AND_CHARGES")} %`, "right"),
             selector: (row) => {
                 const percent = getFeePercent(row);
                 // FEES is editable only when (a) reviewer is in edit mode AND
@@ -676,7 +683,7 @@ const BillDetailsTable = ({ ...props }) => {
         };
 
         const reviewerTotalCol = {
-            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
+            name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`, "right"),
             selector: (row) => {
                 const subtotal = reviewerLineSubtotal(row);
                 const baseSubtotal =

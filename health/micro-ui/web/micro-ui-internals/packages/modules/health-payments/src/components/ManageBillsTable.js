@@ -45,8 +45,17 @@ const ManageBillsTable = ({ ...props }) => {
     };
 
     const buildColumnRegistry = (t, history, props, setShowToast, activeTabCode) => {
-        const colHeader = (label) => (
-            <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{label}</div>
+        const colHeader = (label, textAlign = "start") => (
+            <div
+                style={{
+                    borderRight: "2px solid #787878",
+                    width: "100%",
+                    textAlign,
+                    ...(textAlign === "right" ? { paddingRight: "1rem", boxSizing: "border-box" } : {}),
+                }}
+            >
+                {label}
+            </div>
         );
     
         return {
@@ -85,7 +94,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             registers: {
-                name: colHeader(t("HCM_AM_NO_OF_REGISTERS")),
+                name: colHeader(t("HCM_AM_NO_OF_REGISTERS"), "right"),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {row?.additionalDetails?.noOfRegisters || "0"}
@@ -95,7 +104,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             payees: {
-                name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES")),
+                name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES"), "right"),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {row?.billDetails?.length || "0"}
@@ -240,7 +249,7 @@ const ManageBillsTable = ({ ...props }) => {
     
             // ── Status count columns (verification) ──────────────────────────
             pending: {
-                name: colHeader(t("HCM_AM_PENDING")),
+                name: colHeader(t("HCM_AM_PENDING"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PENDING_VERIFICATION")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -258,7 +267,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             verified: {
-                name: colHeader(t("HCM_AM_VERIFIED")),
+                name: colHeader(t("HCM_AM_VERIFIED"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => ["VERIFIED", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
@@ -267,7 +276,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             failures: {
-                name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES")),
+                name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -309,7 +318,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             amountPaid: {
-                name: colHeader(t("HCM_AM_AMOUNT_PAID")),
+                name: colHeader(t("HCM_AM_AMOUNT_PAID"), "right"),
                 selector: (row) => {
                     const paid = row?.billDetails?.filter((d) => d?.status === "PAID")?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
                     return (
@@ -322,7 +331,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             pendingPayment: {
-                name: colHeader(t("HCM_AM_PENDING")),
+                name: colHeader(t("HCM_AM_PENDING"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => !["PAID", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>{count}</div>;
@@ -331,7 +340,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             failedPayment: {
-                name: colHeader(t("HCM_AM_FAILED")),
+                name: colHeader(t("HCM_AM_FAILED"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAYMENT_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
@@ -340,7 +349,7 @@ const ManageBillsTable = ({ ...props }) => {
             },
     
             paidCount: {
-                name: colHeader(t("HCM_AM_PAID")),
+                name: colHeader(t("HCM_AM_PAID"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAID")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
