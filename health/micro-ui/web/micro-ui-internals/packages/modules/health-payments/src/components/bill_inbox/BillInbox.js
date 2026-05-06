@@ -127,7 +127,11 @@ const BillInboxComponent = () => {
       billCriteria: {
         tenantId: tenantId,
         localityCode: selectedBoundaryCode,
-        referenceIds: [project?.[0]?.id],
+        referenceIds: [
+          selectedProject == undefined
+            ? Digit.SessionStorage.get("paymentInbox")?.selectedProject?.id
+            : selectedProject?.id,
+        ],
         billingPeriodIds: pId === "AGGREGATE" ? [] : [pId],
         // TODO: added condtion to pass data in case of aggregate
         ...(pId === "AGGREGATE"
