@@ -376,44 +376,41 @@ margin-top: 0.5rem !important;
 }
 
 .employee-login-sso-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 48px;
   height: 48px;
   border: 1px solid #D6D5D4;
   border-radius: 4px;
   background-color: #F7F8F9;
   padding: 8px;
-}
+  min-width: 48px;
 
-.employee-login-sso-icon-content {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .icon-label-container {
+    justify-content: center;
+  }
+
+  .digit-button-label {
+    display: none;
+  }
 }
 
 .employee-login-sso-button {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
   width: 100%;
   height: 40px;
-  padding: 10px 12px;
   border: 1px solid #F47738;
   background-color: #F47738;
-  color: #FFFFFF;
-  font-size: 15px;
-  font-weight: 700;
   box-shadow: 0 2px 0 #0B0C0C;
+
+  .icon-label-container {
+    gap: 12px;
+  }
+
+  .digit-button-label {
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+  }
 }
 
-.employee-login-sso-button-icon,
 .employee-login-sso-logo {
   width: 21px;
   height: 21px;

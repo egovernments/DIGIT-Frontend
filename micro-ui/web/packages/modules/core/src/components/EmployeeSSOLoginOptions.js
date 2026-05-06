@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@egovernments/digit-ui-components";
 
 const EmployeeSSOLoginOptions = ({ t, props }) => {
   const { ssoConfigs = [] } = props || {};
@@ -17,28 +18,30 @@ const EmployeeSSOLoginOptions = ({ t, props }) => {
       {hasMultipleOptions ? (
         <div className="employee-login-sso-icons">
           {ssoConfigs.map((sso, index) => (
-            <button
+            <Button
               key={sso.id || sso.provider || index}
-              type="button"
+              label=""
+              variation="secondary"
+              size="large"
+              icon={sso.icon}
               className={`employee-login-sso-icon ${sso.provider?.toLowerCase() || "provider"}-login-icon`}
               onClick={() => sso.onLogin?.(sso)}
               title={t(sso.label)}
-            >
-              <span className="employee-login-sso-icon-content">{sso.icon}</span>
-            </button>
+              ariaLabel={t(sso.label)}
+            />
           ))}
         </div>
       ) : (
         ssoConfigs.map((sso, index) => (
-          <button
+          <Button
             key={sso.id || sso.provider || index}
-            type="button"
+            label={t(sso.label)}
+            variation="primary"
+            size="large"
+            icon={sso.icon}
             className={`employee-login-sso-button ${sso.provider?.toLowerCase() || "provider"}-login-btn`}
             onClick={() => sso.onLogin?.(sso)}
-          >
-            <span className="employee-login-sso-button-icon">{sso.icon}</span>
-            {t(sso.label)}
-          </button>
+          />
         ))
       )}
     </div>
