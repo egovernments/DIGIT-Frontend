@@ -127,7 +127,10 @@ const EditForm = ({ tenantId, data }) => {
           name: ele.hierarchy,
         },
         boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
-        boundary: { code: ele.boundary },
+        boundary: {
+          code: ele.boundary === "pg.citya" ? "citya" : ele.boundary,
+          i18nKey: Digit.Utils.locale.getCityLocale(ele.boundary === "pg.citya" ? "citya" : ele.boundary)
+        },
         roles: Digit.Utils.getMultiRootTenant() ? data?.user?.roles : data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
