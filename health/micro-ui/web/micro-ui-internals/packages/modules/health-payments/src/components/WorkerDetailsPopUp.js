@@ -159,16 +159,36 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                             {readOnlyFields.map((field) => (
                                 <div
                                     key={field.label}
+                                    className="label-pair"
                                     style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
                                         alignItems: "center",
+                                        gap: "2rem",
                                         padding: "6px 0",
                                         borderBottom: "1px solid #E8E8E8",
                                     }}
                                 >
-                                    <span style={{ fontSize: "14px", color: "#0B0C0C", fontWeight: "600" }}>{field.label}</span>
-                                    <span style={{ fontSize: "14px", color: "#505A5F" }}>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            color: "#0B0C0C",
+                                            fontWeight: "600",
+                                            width: "20%",
+                                            flexShrink: 0,
+                                            textAlign: "left",
+                                            whiteSpace: "pre-wrap",
+                                            wordWrap: "break-word",
+                                        }}
+                                    >
+                                        {field.label}
+                                    </span>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            color: "#505A5F",
+                                            width: "80%",
+                                            textAlign: "left",
+                                        }}
+                                    >
                                         {field.value !== undefined && field.value !== null ? field.value : t("NA")}
                                     </span>
                                 </div>

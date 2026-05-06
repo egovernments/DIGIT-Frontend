@@ -148,6 +148,12 @@
     overflow-y: auto;
 }
 
+.label-pair {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
 .view-label-heading {
     @extend .typography.heading-s;
     color: theme(digitv2.lightTheme.text-primary);
