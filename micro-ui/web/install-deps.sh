@@ -11,9 +11,9 @@ STUDIO_REPO="DIGIT-Studio"
 if [ ! -d "$STUDIO_REPO" ]; then
     echo "Cloning DIGIT-Studio repository..."
     if [ -n "$GIT_TOKEN" ]; then
-        git clone -b develop-ui-rc19 "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+        git clone -b STUDIO-UPDATE-FEATURE "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
     else
-        git clone -b develop-ui-rc19 "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+        git clone -b STUDIO-UPDATE-FEATURE "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
     fi
 fi
 
