@@ -114,7 +114,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const navigateToWorkflowSuccess = (action, billNumber) => {
     const config = workflowSuccessNavConfig?.[action];
     if (!config?.route) return false;
-    history.push(config.route, {
+    history.replace(config.route, {
       state: "success",
       info: "HCM_AM_BILL_NUMBER",
       fileName: billNumber || "NA",
@@ -566,7 +566,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               transitionTime: 2000,
             });
             if (wfAction === "EDIT") { //move to success response page after edit success
-              history.push(`/${window.contextPath}/employee/payments/edit-bill-success`, {
+              history.replace(`/${window.contextPath}/employee/payments/edit-bill-success`, {
                 state: "success",
                 info: t("HCM_AM_BILL_NUMBER"),
                 fileName: BillData?.bills?.[0]?.billNumber || t("NA"),
@@ -950,7 +950,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
       });
 
-      history.push(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
+      history.replace(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
         state: "success",
         info: "HCM_AM_BILL_NUMBER",
         fileName: billData?.billNumber || billID || "NA",

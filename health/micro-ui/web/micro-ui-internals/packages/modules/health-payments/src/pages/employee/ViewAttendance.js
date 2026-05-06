@@ -266,7 +266,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         },
         {
           onSuccess: (data) => {
-            history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
+            history.replace(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
               state: "success",
               info: t("HCM_AM_MUSTER_ROLL_ID"),
               fileName: data?.musterRolls?.[0]?.musterRollNumber,
@@ -277,7 +277,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             });
           },
           onError: (error) => {
-            history.push(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
+            history.replace(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
               state: "error",
               message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
               back: t(`GO_BACK_TO_HOME`),
