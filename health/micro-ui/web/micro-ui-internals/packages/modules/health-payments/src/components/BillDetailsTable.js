@@ -121,6 +121,11 @@ const BillDetailsTable = ({ ...props }) => {
         return Math.max(0, Math.trunc(n));
     };
 
+    const getReviewerRateMaxByHead = (headCode) => {
+        if (headCode === "PER_DAY") return 150;
+        return 50;
+    };
+
     const normalizeFeePercent = (raw) => {
         if (raw === "") return "";
         const n = Number(raw);
@@ -131,11 +136,18 @@ const BillDetailsTable = ({ ...props }) => {
 
     const handleReviewerRateByHeadChange = (rowId, headCode, value) => {
         const normalizedValue = normalizeNonNegativeInt(value);
+        const maxAllowed = getReviewerRateMaxByHead(headCode);
+        const isClamped =
+            normalizedValue !== "" &&
+            Number.isFinite(Number(normalizedValue)) &&
+            Number(normalizedValue) > maxAllowed;
+        const clampedValue =
+            normalizedValue === "" ? normalizedValue : Math.min(Number(normalizedValue), maxAllowed);
         const updatedData = tableData.map((row) => {
             if (row.id !== rowId) return row;
             const nextRatesByHead = {
                 ...(row?.ratesByHead || {}),
-                [headCode]: normalizedValue,
+                [headCode]: clampedValue,
             };
             // Keep legacy fields in sync while callers are still reading them.
             const legacyFieldByHead = {
@@ -146,9 +158,16 @@ const BillDetailsTable = ({ ...props }) => {
             };
             const legacyField = legacyFieldByHead[headCode];
             return legacyField
-                ? { ...row, ratesByHead: nextRatesByHead, [legacyField]: normalizedValue }
+                ? { ...row, ratesByHead: nextRatesByHead, [legacyField]: clampedValue }
                 : { ...row, ratesByHead: nextRatesByHead };
         });
+        if (isClamped) {
+            setShowToast({
+                key: "error",
+                label: `Rate cannot exceed ${maxAllowed} for ${headCode.replace(/_/g, " ")}`,
+                transitionTime: 3000,
+            });
+        }
         setTableData(updatedData);
         if (props?.onRowChange) {
             const updatedRow = updatedData.find((r) => r.id === rowId);
@@ -526,12 +545,14 @@ const BillDetailsTable = ({ ...props }) => {
                     );
                 }
                 const isEmpty = hasTriedSave && row?.ratesByHead?.[headCode] === "";
+                const maxAllowed = getReviewerRateMaxByHead(headCode);
                 return (
                     <input
                         type="number"
                         value={row?.ratesByHead?.[headCode] != null ? row.ratesByHead[headCode] : ""}
                         onChange={(e) => handleReviewerRateByHeadChange(row.id, headCode, e.target.value)}
                         min={0}
+                        max={maxAllowed}
                         step={1}
                         style={{
                             width: "70px",
