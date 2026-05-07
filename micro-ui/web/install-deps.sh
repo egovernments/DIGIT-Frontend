@@ -8,13 +8,13 @@ echo "Main Branch: $BRANCH"
 
 STUDIO_REPO="DIGIT-Studio"
 
-if [ ! -d "$STUDIO_REPO" ]; then
-    echo "Cloning DIGIT-Studio repository..."
-    if [ -n "$GIT_TOKEN" ]; then
-        git clone -b STUDIO-UPDATE-FEATURE "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
-    else
-        git clone -b STUDIO-UPDATE-FEATURE "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
-    fi
+rm -rf "$STUDIO_REPO"
+
+echo "Cloning DIGIT-Studio repository..."
+if [ -n "$GIT_TOKEN" ]; then
+    git clone -b STUDIO-UPDATE-FEATURE "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+else
+    git clone -b STUDIO-UPDATE-FEATURE "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
 fi
 
 # Path to packages in the cloned repo (adjust based on actual structure)
