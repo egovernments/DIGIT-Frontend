@@ -11,7 +11,6 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
   PGRReducers,
 } from "@egovernments/digit-ui-module-cms";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { overrideComponents } from "./Customisations/pgr";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -40,7 +39,6 @@ const initDigitUI = () => {
   initPGRComponents();
   initCoreComponents();
   initHRMSComponents();
-  initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
   initSandboxComponents();
