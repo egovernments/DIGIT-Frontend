@@ -10,6 +10,7 @@ const CreateEmployee = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false)
@@ -101,8 +102,8 @@ const CreateEmployee = () => {
     return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
   }
   useEffect(() => {
-    const selectedCountryCode = sessionFormData?.SelectEmployeePhoneNumber?.countryCode || validationConfig?.prefix || "+91";
-    const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === selectedCountryCode) || validationConfig;
+    const currentSelectedCode = selectedCountryCode || validationConfig?.prefix || "+91";
+    const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === currentSelectedCode) || validationConfig;
     const maxLength = currentValidation?.maxLength || 10;
     const minLength = currentValidation?.minLength || 10;
     const pattern = currentValidation?.pattern
@@ -116,7 +117,7 @@ const CreateEmployee = () => {
       mobileNumber.match(pattern)
     ) {
       setShowToast(null);
-      Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
+      Digit.HRMSService.search(tenantId, null, { phone: mobileNumber, countryCode: currentSelectedCode }).then((result, err) => {
         if (result.Employees.length > 0) {
           setShowToast({ key: "error", label: "ERR_HRMS_USER_EXIST_MOB" });
           setPhonecheck(false);
@@ -127,7 +128,7 @@ const CreateEmployee = () => {
     } else {
       setPhonecheck(false);
     }
-  }, [mobileNumber]);
+  }, [mobileNumber, selectedCountryCode]);
 
   const defaultValues = {
 
@@ -155,6 +156,7 @@ const CreateEmployee = () => {
     } else {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
     }
+    setSelectedCountryCode(formData?.SelectEmployeePhoneNumber?.countryCode || null);
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
       if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {

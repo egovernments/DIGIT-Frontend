@@ -1,15 +1,36 @@
-import { ActionBar, CloseSvg, DatePicker, Label, LinkLabel, SubmitBar, TextInput } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import { ActionBar, CardLabelError, CloseSvg, DatePicker, Label, LinkLabel, SubmitBar, TextInput, Toast } from "@egovernments/digit-ui-react-components";
+import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage, defaultSearchParams }) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, reset, watch, control } = useForm({
+  const { register, handleSubmit, reset, watch, control, formState: { errors }, setValue, clearErrors } = useForm({
     defaultValues: searchParams,
   });
+
+  const buildRegister = (input) => {
+    const opts = {};
+    if (input.pattern) opts.pattern = { value: new RegExp(input.pattern), message: input.errorMessage || "" };
+    if (input.maxlength) opts.maxLength = { value: input.maxlength, message: input.errorMessage || "" };
+    return Object.keys(opts).length ? register(opts) : register;
+  };
+  const [showToast, setShowToast] = useState(null);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   const mobileView = innerWidth <= 640;
   const onSubmitInput = (data) => {
+    const hasValue = searchFields.some((field) => data[field.name] && String(data[field.name]).trim() !== "");
+    if (!hasValue) {
+      setShowToast({ key: "error", label: "ES_COMMON_MIN_SEARCH_CRITERIA_MSG" });
+      return;
+    }
     if (!data.mobileNumber) {
       delete data.mobileNumber;
     }
@@ -44,7 +65,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitInput)}>
+    <form onSubmit={handleSubmit(onSubmitInput)} noValidate>
       <React.Fragment>
         <div className="search-container" style={{ width: "auto", marginLeft: isInboxPage ? "24px" : "revert" }}>
           <div className="search-complaint-container">
@@ -64,13 +85,23 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                     <span className={"mobile-input"}>
                       <Label>{input.label}</Label>
                       {input.type !== "date" ? (
-                        <div className="field-container">
+                        <div
+                          className="field-container"
+                          style={{
+                            ...(input?.componentInFront ? { height: "2.5rem", alignItems: "stretch" } : {}),
+                            ...(errors[input.name] ? { outline: "2px solid #d4351c", outlineOffset: "-1px" } : {}),
+                          }}
+                        >
                           {input?.componentInFront ? (
-                            <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
+                            <span
+                              className="citizen-card-input citizen-card-input--front"
+                              style={{ flex: "none", marginBottom: 0, height: "100%" }}
+                              onChange={() => { setValue(input.name, ""); clearErrors(input.name); }}
+                            >
                               {input?.componentInFront}
                             </span>
                           ) : null}
-                          <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
+                          <TextInput {...input} inputRef={buildRegister(input)} watch={watch} shouldUpdate={true} />
                         </div>
                       ) : (
                         <Controller
@@ -79,6 +110,11 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                           control={control}
                           defaultValue={null}
                         />
+                      )}
+                      {errors[input.name] && (
+                        <CardLabelError style={{ width: "100%", marginTop: "4px" }}>
+                          {errors[input.name].message}
+                        </CardLabelError>
                       )}{" "}
                     </span>
                   </div>
@@ -110,6 +146,13 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
           </ActionBar>
         )}
       </React.Fragment>
+      {showToast && (
+        <Toast
+          error={showToast.key === "error"}
+          label={t(showToast.label)}
+          onClose={() => setShowToast(null)}
+        />
+      )}
     </form>
   );
 };

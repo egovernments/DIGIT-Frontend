@@ -134,7 +134,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
         name: "phone",
         maxlength: selectedMobileConfig?.maxLength || 10,
         pattern: selectedMobileConfig?.pattern || ".[0-9]{9}",
-        title: t(selectedMobileConfig?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        errorMessage: t(selectedMobileConfig?.errorMessage || "ES_SEARCH_APPLICATION_MOBILE_INVALID"),
         componentInFront: (validationConfig?.mobileConfigs?.length > 0) ? (
           <div className="citizen-card-input--front" style={{
             position: "relative", display: "flex", alignItems: "center", height: "100%", marginLeft: "-1px"
