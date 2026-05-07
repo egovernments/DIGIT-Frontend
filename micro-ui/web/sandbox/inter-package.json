@@ -10,7 +10,8 @@
     "packages/modules/sandbox",
     "packages/modules/pgr",
     "packages/modules/dss",
-    "packages/modules/hrms"
+    "packages/modules/hrms",
+    "packages/modules/engagement"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -45,7 +46,7 @@
     "build:hrms": "cd packages/modules/hrms && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
     "buildD:utilities": "cd packages/modules/utilities && yarn build",
-    "buildD:engagement": "cd packages/modules/engagement && yarn build",
+    "build:engagement": "cd packages/modules/engagement && yarn build",
     "build:sandbox": "cd packages/modules/sandbox && yarn build",
     "build:pgr": "cd packages/modules/pgr && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
