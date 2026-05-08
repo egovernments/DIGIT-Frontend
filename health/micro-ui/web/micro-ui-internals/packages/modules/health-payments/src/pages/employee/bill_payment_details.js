@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { useLocation, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
+import {Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Loader,Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
@@ -1371,6 +1371,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       || billData?.status
       || "NA";
 
+  const renderCenteredLoader = (minHeight = "12rem") => (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", minHeight }}>
+      <Loader />
+    </div>
+  );
+
   if (
     isBillLoading ||
     isAllIndividualsLoading ||
@@ -1381,7 +1387,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     billDetailPartialUpdateMutation.isLoading
   ) {
     console.log("Loading bill data or individual data...");
-    return <Loader />
+    return renderCenteredLoader("16rem");
   }
 
   console.log("Rendering buttons for:", activeLink?.code);
@@ -1582,10 +1588,12 @@ const downloadOptions = [
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editBillDetails
-            ? t('HCM_AM_EDIT_BILL')
-            : t('HCM_AM_VIEW_BILL')
-          }
+          <span style={{ color: "#0B4B66" }}>
+            {editBillDetails
+              ? t('HCM_AM_EDIT_BILL')
+              : t('HCM_AM_VIEW_BILL')
+            }
+          </span>
         </Header>
         {/* Summary cards row */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
@@ -1622,7 +1630,7 @@ const downloadOptions = [
 
         <Card type="primary" className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "18px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
+            <span style={{ fontSize: "24px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {downloadOptions.length > 0 && (
                 <Button
@@ -1651,7 +1659,7 @@ const downloadOptions = [
             </div>
           </div>
           {isBillLoading || isFetching ? (
-            <Loader />
+            renderCenteredLoader()
           ) : (
             <>
               {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"))}
@@ -1803,7 +1811,7 @@ const downloadOptions = [
 </div> */}
 
 
-              {
+              {/* {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                   
                   {
@@ -1851,7 +1859,7 @@ const downloadOptions = [
                   ) : null             
                   }
                 </div>
-              }
+              } */}
             </>
           )}
         </Card>
@@ -1889,7 +1897,7 @@ const downloadOptions = [
         )}
         <Card style={{ width: "100%", }}>
           {isBillLoading || isFetching ? (
-            <Loader />
+            renderCenteredLoader()
           ) : tableData.length === 0 ? (
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
@@ -2035,7 +2043,16 @@ const downloadOptions = [
       {/* Footer action bar: show Back for all views except reviewer edit mode */}
       {(() => {
         const isReviewerEditView = currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit;
-        const ctaStyle = { minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" };
+        const ctaStyle = { minWidth: "14rem", width: "auto", maxWidth: "none", marginRight: "1rem" };
+        const ctaTextStyles = {
+          whiteSpace: "normal",
+          overflow: "visible",
+          textOverflow: "clip",
+          width: "100%",
+          lineHeight: "1.25rem",
+          textAlign: "center",
+          display: "block",
+        };
 
         const ctaByView = () => {
           if (currentView === "NOT_VERIFIED_VIEW") {
@@ -2044,6 +2061,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_VERIFY`)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2056,6 +2074,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_GENERATE_PAYMENT`)}
                 onClick={() => setOpenApprovePaymentAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2068,6 +2087,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_SEND_FOR_EDIT`)}
                 onClick={() => setOpenSendForEditPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2081,6 +2101,7 @@ const downloadOptions = [
                 title={t(`HCM_AM_GENERATE_PAYMENT`)}
                 onClick={() => setOpenApprovePaymentAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2093,6 +2114,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_VERIFY`)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2105,6 +2127,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_SEND_FOR_REVIEW`)}
                 onClick={() => setOpenSendForReviewPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2117,6 +2140,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_VERIFY`)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2129,6 +2153,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
                 onClick={() => setOpenSendForApprovalPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2138,9 +2163,10 @@ const downloadOptions = [
           if (currentView === "APPROVER_NOT_INITIATED_VIEW" && activeTabCode !== "GENERATED_ADVISORIES") {
             return (
               <Button
-                label={<span style={{ whiteSpace: "normal" }}>{t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}</span>}
+                label={t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}
                 onClick={() => triggerGenerateAdvisoryForBill()}
                 style={{ ...ctaStyle, minWidth: "20rem" }}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2153,6 +2179,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_RETRY_PAYMENT`)}
                 onClick={() => setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 })}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2168,7 +2195,8 @@ const downloadOptions = [
               <Button
                 label={t(`HCM_AM_SAVE_CHANGES`)}
                 onClick={() => setOpenSaveChangesPopUp(true)}
-                style={{ minWidth: "14rem", whiteSpace: "normal" }}
+                style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
