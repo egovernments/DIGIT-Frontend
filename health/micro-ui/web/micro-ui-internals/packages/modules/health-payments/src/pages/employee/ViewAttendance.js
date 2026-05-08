@@ -660,22 +660,27 @@ const ViewAttendance = ({ editAttendance = false }) => {
         </Card>
 
         <Card type="primary" className="bottom-gap-card-payment">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
-            <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "#0B4B66" }}>{t("HCM_AM_REGISTER_DETAILS")}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+            <span style={{ fontSize: "24px", fontWeight: 700, color: "#0B4B66", lineHeight: "1.5rem" }}>{t("HCM_AM_REGISTER_DETAILS")}</span>
             {hasMusterRoll && (
-              <div style={{ display: "flex", gap: "0.5rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <Button
                   label={t("HCM_AM_VIEW_MAPS")}
                   title={t("HCM_AM_VIEW_MAPS")}
-                  variation="secondary"
+                  variation="link"
                   icon="Map"
+                  isSuffix={false}
+                  size="large"
+                  style={{ minHeight: "2.5rem", marginRight: "0.25rem" }}
                   onClick={() => setShowMapPopup(true)}
                 />
+                <div style={{ width: "1px", height: "1.5rem", backgroundColor: "#D6D5D4", margin: "0 0.25rem" }} />
                 <Button
                   label={t("HCM_AM_DOWNLOAD_REPORT")}
                   title={t("HCM_AM_DOWNLOAD_REPORT")}
                   variation="secondary"
                   icon="FileDownload"
+                  size="small"
                   onClick={handleDownloadReport}
                 />
               </div>
@@ -705,8 +710,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>
         <Card className="bottom-gap-card-payment">
-          {canCampaignSupervisorEdit && !editAttendance && (
-            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "0.75rem" }}>
+            <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "#0B4B66", lineHeight: "1.5rem" }}>
+              {t("HCM_AM_ATTENDANCE_TABLE_HEADER")}
+            </span>
+            {canCampaignSupervisorEdit && !editAttendance && (
               <Button
                 icon="Edit"
                 label={t("HCM_AM_EDIT_ATTENDANCE")}
@@ -719,8 +727,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   );
                 }}
               />
-            </div>
-          )}
+            )}
+          </div>
           {/*  INFO:: commenting it as it is handled in edit register screen
           {<div className="card-heading" >
             <h2 className="card-heading-title"></h2>
@@ -777,7 +785,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                         icon="FileDownload"
                         label={t("WBH_DOWNLOAD")}
                         variation="secondary"
-                        size="small"
+                        size=""
                         isDisabled={!doc.fileStoreId}
                         onClick={() => handleDownloadSupportingDoc(doc.fileStoreId, doc.fileName)}
                       />
@@ -912,22 +920,21 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {(disabledAction && !(editAttendance && canCampaignSupervisorEdit)) || fromBill ? (
             <div />
           ) : editAttendance && canCampaignSupervisorEdit ? (
-            <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem" }}>
-              <Button
-                label={t("HCM_AM_CANCEL")}
-                title={t("HCM_AM_CANCEL")}
-                onClick={() => {
-                  history.push(
-                    `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
-                    { fromCampaignSupervisor }
-                  );
-                }}
-                style={{ minWidth: "10rem" }}
-                type="button"
-                variation="secondary"
-              />
-              <div style={{ flex: 1 }} />
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "15%" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "1rem", marginLeft: "auto", flex: "0 0 auto" }}>
+                <Button
+                  label={t("HCM_AM_CANCEL")}
+                  title={t("HCM_AM_CANCEL")}
+                  onClick={() => {
+                    history.push(
+                      `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                      { fromCampaignSupervisor }
+                    );
+                  }}
+                  style={{ minWidth: "10rem", width: "auto", flex: "0 0 auto" }}
+                  type="button"
+                  variation="secondary"
+                />
                 <Button
                   label={t("HCM_AM_SAVE_CHANGES")}
                   title={t("HCM_AM_SAVE_CHANGES")}
@@ -935,7 +942,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                     setUpdateDisabled(true);
                     triggerMusterRollUpdate();
                   }}
-                  style={{ minWidth: "14rem" }}
+                  style={{ minWidth: "14rem", width: "auto", flex: "0 0 auto" }}
                   type="button"
                   variation="primary"
                   isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
