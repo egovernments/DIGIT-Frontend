@@ -338,7 +338,19 @@ const BillDetailsTable = ({ ...props }) => {
         const roleCol = {
             name: colHeader(t("HCM_AM_ROLE")),
             selector: (row) => (
-                <span className="ellipsis-cell" title={t(row?.role) || t("NA")} style={{ fontSize: "14px" }}>
+                <span
+                    className="ellipsis-cell"
+                    title={t(row?.role) || t("NA")}
+                    style={{
+                        fontSize: "14px",
+                        whiteSpace: "normal",
+                        overflow: "visible",
+                        textOverflow: "clip",
+                        display: "block",
+                        overflowWrap: "anywhere",
+                        wordBreak: "break-word",
+                    }}
+                >
                     {t(row?.role) || t("NA")}
                 </span>
             ),
@@ -501,8 +513,20 @@ const BillDetailsTable = ({ ...props }) => {
         const reasonCol = {
             name: colHeader(t("HCM_AM_REASON_FOR_FAILURE")),
             selector: (row) => (
-                <span className="ellipsis-cell" title={t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
-                    style={{ fontSize: "14px", color: "#B91900" }}>
+                <span
+                    className="ellipsis-cell"
+                    title={t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
+                    style={{
+                        fontSize: "14px",
+                        color: "#B91900",
+                        whiteSpace: "normal",
+                        overflow: "visible",
+                        textOverflow: "clip",
+                        display: "block",
+                        overflowWrap: "anywhere",
+                        wordBreak: "break-word",
+                    }}
+                >
                     {t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
                 </span>
             ),
@@ -728,11 +752,11 @@ const BillDetailsTable = ({ ...props }) => {
 
         // bank-mode view: show payee bank details
         if (isBankMode) {
-            return removeLastHeaderRightBorder([
+            const bankModeCols = [
                 userIdCol,
                 workerNameCol,
                 phoneCol,
-                payeeNameCol,                
+                payeeNameCol,
                 operatorCol,
                 bankAccountCol,
                 bankCodeCol,
@@ -742,7 +766,9 @@ const BillDetailsTable = ({ ...props }) => {
                 daysCol,
                 feesCol,
                 totalCol,
-            ]);
+            ];
+            const showFailedVerificationExtras = billStatus === "PARTIALLY_VERIFIED" && subTab === "VERIFICATION_FAILED";
+            return removeLastHeaderRightBorder(showFailedVerificationExtras ? [...bankModeCols, reasonCol] : bankModeCols);//todo add actionCol as well for ignore error
         }
 
         // Partially Verified with sub-tabs
@@ -852,7 +878,9 @@ const BillDetailsTable = ({ ...props }) => {
                         setTableData(updatedData);
                         setSelectedRow(null);
                         setShowToast({ key: "success", label: t("HCM_AM_SAVE_CHANGES_SUCCESS"), transitionTime: 3000 });
-                        props?.onRefetchBill?.();
+                        setTimeout(() => {
+                            props?.onRefetchBill?.();
+                        }, 2000);
                     },
                     onError: (error) => {
                         setShowToast({

@@ -64,7 +64,7 @@ const ManageBillsTable = ({ ...props }) => {
                 selector: (row) => (
                     <div
                         className="ellipsis-cell"
-                        style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
+                        style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}
                         title={row?.billNumber || t("NA")}
                         onClick={(ev) => {
                             ev.stopPropagation();
@@ -148,7 +148,7 @@ const ManageBillsTable = ({ ...props }) => {
                             isSuffix
                             label={t("HCM_AM_DOWNLOAD_BILLS")}
                             title={t("HCM_AM_DOWNLOAD_BILLS")}
-                            showBottom={isLastRow && props.data.length !== 1 ? false : true}
+                            showBottom={!isLastRow}
                             onOptionSelect={(value) => {
                                 if (value.code === "HCM_AM_PDF") {
                                     if (reportDetails?.pdfReportId) {

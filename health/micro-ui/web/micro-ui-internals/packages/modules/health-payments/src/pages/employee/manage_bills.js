@@ -139,8 +139,14 @@ const ManageBills = () => {
     },
   };
 
-  const { data: BillCountData, refetch: refetchBillCount } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
+  const {
+    isLoading: isBillCountLoading,
+    isFetching: isBillCountFetching,
+    data: BillCountData,
+    refetch: refetchBillCount,
+  } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
   const statusCount = BillCountData?.statusCount || {};
+  const isInitialBillsDataReady = !selectedProject?.id || (!!BillData && !!BillCountData);
 
   const getTabCount = (tabCode) => {
     if (forceZeroStatusCount) return 0;
@@ -485,7 +491,7 @@ const ManageBills = () => {
     );
   }
 
-  if (isBillLoading) {
+  if (isBillLoading || (selectedProject?.id && !isInitialBillsDataReady) || (selectedProject?.id && isBillCountLoading)) {
     return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
@@ -570,7 +576,7 @@ const ManageBills = () => {
 
       <Card>      
 
-        {isFetching || isBillReportLoading ? (
+        {isFetching || isBillReportLoading || isBillCountFetching ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
         ) : tableData.length === 0 ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
