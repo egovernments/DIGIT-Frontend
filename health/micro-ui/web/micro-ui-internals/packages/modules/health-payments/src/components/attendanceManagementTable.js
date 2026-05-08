@@ -53,7 +53,7 @@ const AttendanceManagementTable = ({ ...props }) => {
         return props.onAttendeeClick ? (
           <span
             className="ellipsis-cell"
-            style={{ color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
+            style={{ color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}
             onClick={() => props.onAttendeeClick(row)}
           >
             {name}
