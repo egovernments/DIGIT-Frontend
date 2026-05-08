@@ -1,0 +1,162 @@
+import Urls from "../../services/urls";
+
+const inboxSearchConfig = (tenantId) => ({
+  type: "inbox",
+  label: "Search Employee",
+  sections: {
+    filter: {
+      uiConfig: {
+        type: "filter",
+        headerStyle: null,
+        primaryLabel: "HRMS_APPLY_FILTERS",
+        secondaryLabel: "HRMS_CLEAR_FILTER",
+        minReqFields: 1,
+        defaultValues: { roles: [] },
+        fields: [
+          {
+            label: "HR_COMMON_TABLE_COL_ROLE",
+            type: "dropdown",
+            isMandatory: false,
+            disable: false,
+            populators: {
+              isDropdownWithChip: true,
+              name: "roles",
+              optionsKey: "name",
+              error: "Error!",
+              required: false,
+              mdmsConfig: { masterName: "roles", moduleName: "ACCESSCONTROL-ROLES", localePrefix: "ACCESSCONTROL_ROLES_ROLES" },
+            },
+          },
+          {
+            label: "HR_EMP_STATUS_LABEL",
+            type: "radio",
+            isMandatory: false,
+            disable: false,
+            addDivider: true,
+            populators: {
+              alignVertical: true,
+              name: "isActive",
+              options: [
+                { code: false, name: "HR_DEACTIVATE_HEAD" },
+                { code: true, name: "HR_ACTIVATE_HEAD" },
+              ],
+              optionsKey: "name",
+            },
+          },
+        ],
+      },
+      label: "ES_COMMON_FILTERS",
+      show: true,
+    },
+    links: {
+      uiConfig: {
+        links: [
+          {
+            text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
+            url: "/employee/hrms/create",
+            roles: ["SYSTEM_ADMINISTRATOR", "HRMS_ADMIN"],
+            hyperlink: true,
+          },
+        ],
+        label: "HRMS",
+        logoIcon: { component: "Opacity", customClass: "search-icon--projects" },
+      },
+      children: {},
+      show: true,
+    },
+    search: {
+      show: true,
+      label: "",
+      children: {},
+      uiConfig: {
+        type: "search",
+        fields: [
+          {
+            type: "text",
+            label: "HR_NAME_LABEL",
+            disable: false,
+            populators: { name: "names", error: "ERR_INVALID_NAME", style: { marginBottom: "0px" } },
+            isMandatory: false,
+          },
+          {
+            type: "text",
+            label: "HR_USERNAME_LABEL",
+            disable: false,
+            populators: { name: "codes", error: "ERR_INVALID_NAME", style: { marginBottom: "0px" } },
+            isMandatory: false,
+          },
+          {
+            type: "number",
+            label: "HR_MOB_NO_LABEL",
+            disable: false,
+            populators: { name: "phone", error: "ERR_INVALID_PHONE_NUMBER", style: { marginBottom: "0px" } },
+            isMandatory: false,
+          },
+        ],
+        typeMobile: "filter",
+        headerLabel: "ES_COMMON_SEARCH",
+        headerStyle: null,
+        minReqFields: 0,
+        primaryLabel: "Search",
+        defaultValues: {
+          codes: "",
+          limit: 10,
+          names: "",
+          phone: "",
+          roles: "",
+          offset: 0,
+          tenantId: tenantId || "mz",
+          sortOrder: "DESC",
+        },
+        secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+        searchWrapperStyles: {},
+      },
+      labelMobile: "ES_COMMON_SEARCH",
+    },
+    searchResult: {
+      show: true,
+      children: {},
+      uiConfig: {
+        columns: [
+          { label: "HR_EMP_ID_LABEL", jsonPath: "code", additionalCustomization: true },
+          { label: "HR_EMP_NAME_LABEL", jsonPath: "user.name", additionalCustomization: true },
+          { label: "HR_ROLE_NO_LABEL", jsonPath: "user.roles", additionalCustomization: true },
+          { label: "HR_JURIDICTIONS_LABEL", jsonPath: "jurisdictions", additionalCustomization: true },
+          { label: "HR_DESG_LABEL", jsonPath: "assignments[0]", additionalCustomization: true },
+          { label: "HR_EMPLOYMENT_DEPARTMENT_LABEL", jsonPath: "assignments[0]", additionalCustomization: true },
+        ],
+        rowClassName: "table-row-mdms table-row-mdms-hover",
+        tableClassName: "pqm-table",
+        resultsJsonPath: "Employees",
+        enableColumnSort: false,
+        enableGlobalSearch: false,
+        isPaginationRequired: true,
+      },
+    },
+  },
+  apiDetails: {
+    masterName: "commonUiConfig",
+    moduleName: "HRMSInboxConfig",
+    requestBody: {},
+    serviceName: Urls.hrms.search,
+    requestParam: {
+      limit: 10,
+      names: "",
+      roles: "",
+      offset: 0,
+      sortBy: "lastModifiedTime",
+      tenantId: tenantId || "mz",
+      sortOrder: "DESC",
+    },
+    tableFormJsonPath: "requestParam",
+    filterFormJsonPath: "requestParam",
+    searchFormJsonPath: "requestParam",
+    minParametersForFilterForm: 0,
+    minParametersForSearchForm: 0,
+  },
+  persistFormData: true,
+  additionalSections: {},
+  showAsRemovableTagsInMobile: true,
+});
+
+export default inboxSearchConfig;

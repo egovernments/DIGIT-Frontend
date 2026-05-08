@@ -1,0 +1,251 @@
+// PGR (Public Grievance Redressal) styles
+// All classes use pgr-* prefix to avoid collisions.
+
+// Inbox layout
+.inbox-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  max-width: 280px;
+  flex-shrink: 0;
+}
+
+// Complaint links sidebar card
+.complaint-links-container {
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e0e0e0;
+
+    .logo { display: flex; align-items: center; }
+    .text { font-weight: 600; font-size: 1rem; }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+}
+
+// Filter panel
+.filter {
+  .filter-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1rem;
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+
+      .filter-label { font-weight: 600; }
+      .clearAll { cursor: pointer; color: #f47738; font-size: 0.875rem; }
+    }
+  }
+}
+
+.filter-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  color: #505a5f;
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.status-container {
+  margin-top: 0.75rem;
+}
+
+// Search box
+.search-container {
+  .search-complaint-container {
+    .complaint-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .complaint-input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+
+      .complaint-input,
+      .mobile-input {
+        display: flex;
+        flex-direction: column;
+        min-width: 180px;
+      }
+    }
+
+    .clear-search { margin-top: 0.5rem; }
+  }
+}
+
+// Table cells
+.cell-text { font-size: 0.875rem; }
+.complain-no-cell-text { font-size: 0.75rem; color: #6c757d; }
+.sla-cell-error { color: #d4351c; font-weight: 500; }
+.sla-cell-success { color: #00703c; font-weight: 500; }
+
+// Complaint status badge
+.pgr-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  &--open,
+  &--pendingforassignment { background: #fff7bf; color: #594d00; }
+  &--resolved { background: #cce2d8; color: #005a30; }
+  &--rejected,
+  &--closed { background: #f6d7d2; color: #942514; }
+  &--assigned { background: #d2e2f1; color: #144e81; }
+}
+
+// Complaint details (employee + citizen)
+.pgr-complaint-details,
+.pgr-complaint-details-citizen {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.pgr-timeline-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  .pgr-timeline-action {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .pgr-timeline-comment {
+    font-size: 0.875rem;
+    color: #505a5f;
+    margin: 0;
+  }
+}
+
+// Create complaint form (employee)
+.pgr-create-complaint {
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+  h2 { margin-bottom: 1.5rem; }
+
+  .pgr-field-pair {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+      color: #0b0c0c;
+    }
+
+    input,
+    textarea {
+      border: 1px solid #b1b4b6;
+      border-radius: 4px;
+      padding: 0.5rem;
+      font-size: 1rem;
+
+      &:focus { outline: 3px solid #fd0; outline-offset: 0; }
+    }
+
+    textarea { min-height: 80px; resize: vertical; }
+  }
+
+  button {
+    background: #00703c;
+    color: #fff;
+    border: 2px solid #00703c;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:disabled { background: #b1b4b6; border-color: #b1b4b6; cursor: not-allowed; }
+    &:hover:not(:disabled) { background: #005a30; }
+  }
+}
+
+// Citizen wrapper
+.pgr-citizen-wrapper {
+  padding: 0;
+}
+
+.applications-list-container {
+  padding: 1rem;
+}
+
+// Complaint row card (citizen complaints list)
+.complaint-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  font-size: 0.9375rem;
+}
+
+// Input error text
+.pgr-input-error {
+  color: #d4351c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+// Geolocation placeholder
+.pgr-geolocation-placeholder {
+  border: 1px dashed #b1b4b6;
+  border-radius: 4px;
+  color: #505a5f;
+  font-size: 0.875rem;
+}
+
+// Mobile search/filter action bar
+.searchBox {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+// Timeline comments
+.TLComments {
+  margin-top: 0.5rem;
+  h3 { font-size: 0.875rem; font-weight: 600; margin: 0 0 0.25rem; }
+  p { font-size: 0.875rem; margin: 0; color: #505a5f; }
+}
