@@ -73,9 +73,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     // If we are not on an SSO callback URL, never keep the SSO overlay loader.
     // Important: we intentionally don't set the loader before redirecting to the provider,
     // so browser back (including bfcache restores) won't get stuck with a stale loader.
+    // Note: do NOT reset `disable` here — it is also used for form-validation gating and
+    // resetting it would fight FormComposerV2's onFormValueChange, causing an infinite loop.
     if (!idToken && !code && !error) {
       if (loginLoader) setLoginLoader(false);
-      if (disable) setDisable(false);
       return;
     }
 

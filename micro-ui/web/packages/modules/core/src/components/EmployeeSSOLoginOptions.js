@@ -28,6 +28,7 @@ const EmployeeSSOLoginOptions = ({ t, props }) => {
               onClick={() => sso.onLogin?.(sso)}
               title={t(sso.label)}
               ariaLabel={t(sso.label)}
+              style={{width:"100%"}}
             />
           ))}
         </div>
@@ -41,6 +42,7 @@ const EmployeeSSOLoginOptions = ({ t, props }) => {
             icon={sso.icon}
             className={`employee-login-sso-button ${sso.provider?.toLowerCase() || "provider"}-login-btn`}
             onClick={() => sso.onLogin?.(sso)}
+            style={{width:"100%"}}
           />
         ))
       )}

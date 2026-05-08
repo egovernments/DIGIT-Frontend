@@ -44,6 +44,9 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserT
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
+  if(!Digit.ComponentRegistryService.getComponent("EmployeeSSOLoginOptions")){
+    Digit.ComponentRegistryService.setComponent("EmployeeSSOLoginOptions", EmployeeSSOLoginOptions);
+  }
   return (
     <Provider store={data}>
       <Router>
