@@ -139,7 +139,8 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     return (
         <>
             <PopUp
-                style={{ width: "600px", color: "#0B4B66" }}
+                className="worker-details-popup"
+                style={{ width: "600px" }}
                 onClose={onClose}
                 heading={t("HCM_AM_EDIT_WORKER_DETAILS_LABEL")}
                 children={[

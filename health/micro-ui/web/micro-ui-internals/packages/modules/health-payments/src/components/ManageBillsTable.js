@@ -196,6 +196,8 @@ const ManageBillsTable = ({ ...props }) => {
                         variation="secondary"
                         size="medium"
                         label={t("HCM_AM_SEND_FOR_APPROVAL")}
+                        title={t("HCM_AM_SEND_FOR_APPROVAL")}
+                        style={{ minWidth: "12.5rem", maxWidth: "none" }}
                         onClick={() => {
                             setSelectedBill(row); // Set the selected bill details
                             setShowApprovalPopup(true); // Show the popup
@@ -203,8 +205,15 @@ const ManageBillsTable = ({ ...props }) => {
                         isDisabled={row?.status == "REVIEW_IN_PROGRESS"}
                     />
                 ),
-                width: "200px",
-                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+                grow: 0,
+                minWidth: "260px",
+                width: "280px",
+                style: {
+                    display: "flex",
+                    alignItems: "flex-start",
+                    paddingTop: "15px",
+                    overflow: "visible",
+                },
             },
     
             downloadAdvisory: {
