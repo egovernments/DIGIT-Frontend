@@ -540,7 +540,9 @@ const BillDetailsTable = ({ ...props }) => {
                     {t(row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
                 </span>
             ),
+            grow: 1,
             minWidth: "180px",
+            maxWidth: "280px",
             style: { justifyContent: "start" },
         };
 
@@ -567,7 +569,9 @@ const BillDetailsTable = ({ ...props }) => {
                     {t(row?.additionalDetails?.responseMessage || row?.additionalDetails?.errorDetails?.reasonForFailure) || t("NA")}
                 </span>
             ),
+            grow: 1,
             minWidth: "180px",
+            maxWidth: "280px",
             style: { justifyContent: "start" },
         };
 
@@ -607,7 +611,9 @@ const BillDetailsTable = ({ ...props }) => {
                 );
             },
             style: { justifyContent: "flex-end" },
+            grow: 1,
             minWidth: "130px",
+            maxWidth: "170px",
         }));
 
         const reviewerDaysCol = {
@@ -674,7 +680,9 @@ const BillDetailsTable = ({ ...props }) => {
                 );
             },
             style: { justifyContent: "flex-end" },
+            grow: 1,
             minWidth: "130px",
+            maxWidth: "170px",
         };
 
         const reviewerFeesCol = {
@@ -714,7 +722,9 @@ const BillDetailsTable = ({ ...props }) => {
                 );
             },
             style: { justifyContent: "flex-end" },
+            grow: 1,
             minWidth: "130px",
+            maxWidth: "170px",
         };
 
         const reviewerTotalCol = {

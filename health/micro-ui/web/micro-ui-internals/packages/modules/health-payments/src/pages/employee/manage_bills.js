@@ -7,7 +7,7 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
+import { AlertCard as InfoCard, Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
 import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
@@ -634,6 +634,24 @@ const ManageBills = () => {
           />
         )}
       </Card>
+
+      {(() => {
+        const hasInProgressRows = tableData.some(
+          (row) => row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
+        );
+        const showInfoCard =
+          hasInProgressRows ||
+          (activeLink.code === "VERIFICATION_IN_PROGRESS" && tableData.length > 0);
+        return showInfoCard ? (
+          <InfoCard
+            populators={{ name: "infocard" }}
+            variant="default"
+            style={{ margin: "0.75rem 0 0", width: "100%", maxWidth: "unset" }}
+            label={t("HCM_AM_INFO")}
+            text={t("HCM_AM_BILLS_PROCESSING_INFO")}
+          />
+        ) : null;
+      })()}
 
       {showToast && (
         <Toast

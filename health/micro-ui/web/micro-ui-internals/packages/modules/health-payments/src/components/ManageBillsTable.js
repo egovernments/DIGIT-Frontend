@@ -100,6 +100,9 @@ const ManageBillsTable = ({ ...props }) => {
                         {row?.additionalDetails?.noOfRegisters || "0"}
                     </div>
                 ),
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "140px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -263,15 +266,21 @@ const ManageBillsTable = ({ ...props }) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PENDING_VERIFICATION")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             verificationFailed: {
-                name: colHeader(t("HCM_AM_VERIFICATION_FAILED")),
+                name: colHeader(t("HCM_AM_VERIFICATION_FAILED"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "150px",
+                maxWidth: "190px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -281,6 +290,9 @@ const ManageBillsTable = ({ ...props }) => {
                     const count = row?.billDetails?.filter((d) => ["VERIFIED", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -290,6 +302,9 @@ const ManageBillsTable = ({ ...props }) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "120px",
+                maxWidth: "160px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -336,6 +351,9 @@ const ManageBillsTable = ({ ...props }) => {
                         </div>
                     );
                 },
+                grow: 1,
+                minWidth: "130px",
+                maxWidth: "170px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -345,6 +363,9 @@ const ManageBillsTable = ({ ...props }) => {
                     const count = row?.billDetails?.filter((d) => !["PAID", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -354,6 +375,9 @@ const ManageBillsTable = ({ ...props }) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAYMENT_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -363,6 +387,9 @@ const ManageBillsTable = ({ ...props }) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAID")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
         };
@@ -487,6 +514,7 @@ const ManageBillsTable = ({ ...props }) => {
           const conditionalRowStyles = [
             {
               when: (row) =>
+                row.status === "VERIFICATION_IN_PROGRESS" ||
                 row.status === "SENDING_FOR_REVIEW" ||
                 row.status === "REVIEW_IN_PROGRESS",
               style: {
@@ -518,7 +546,7 @@ const ManageBillsTable = ({ ...props }) => {
                 fixedHeaderScrollHeight={"70vh"}
                 selectableRows={isSelectable}
                 selectableRowDisabled={(row) =>
-                    row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
+                    row.status === "VERIFICATION_IN_PROGRESS" || row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
                 }
                 conditionalRowStyles={conditionalRowStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}

@@ -4,6 +4,12 @@ import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-component
 import BulkUpload from "./BulkUpload";
 import { downloadFileWithName } from "../utils";
 
+const sanitizeComment = (value) =>
+  value
+    .replace(/\p{Emoji_Presentation}/gu, "")
+    .replace(/[<>&"]/g, "")
+    .replace(/\s{2,}/g, " ");
+
 const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -87,7 +93,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             <TextArea
               style={{ maxWidth: "100%" }}
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => setComment(sanitizeComment(e.target.value))}
             />
           </div>,
         ]}
