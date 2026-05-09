@@ -122,6 +122,16 @@ const BillDetailsTable = ({ ...props }) => {
     };
 
     const getReviewerRateMaxByHead = (headCode) => {
+        const rateMaxLimitSchema = props?.rateMaxLimitSchema;
+        if (rateMaxLimitSchema && workerRatesData?.headCodeMapping) {
+            const reverseMap = Object.fromEntries(
+                Object.entries(workerRatesData.headCodeMapping).map(([field, hc]) => [hc, field])
+            );
+            const fieldKey = reverseMap[headCode];
+            if (fieldKey !== undefined && rateMaxLimitSchema[fieldKey] !== undefined) {
+                return rateMaxLimitSchema[fieldKey];
+            }
+        }
         if (headCode === "PER_DAY") return 150;
         return 50;
     };

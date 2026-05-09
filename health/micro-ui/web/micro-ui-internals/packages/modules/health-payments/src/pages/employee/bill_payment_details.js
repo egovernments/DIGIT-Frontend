@@ -188,6 +188,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const workerRatesData = useMemo(() => {
     return Digit?.SessionStorage.get("workerRatesData");
   }, []);
+  const reviewerRateMaxSchema = useMemo(() => {
+    return Digit?.SessionStorage.get("reviewerRateMaxSchema");
+  }, []);
   const maxAttendanceDays = useMemo(() => {
     const start = Number(billData?.additionalDetails?.periodStartDate);
     const end = Number(billData?.additionalDetails?.periodEndDate);
@@ -1311,6 +1314,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         workerRatesData
       );
 
+      const sortedEnriched = [...enriched].sort((a, b) => {
+        const nameA = (a.givenName || a.payeeName || "").toLowerCase();
+        const nameB = (b.givenName || b.payeeName || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+
       const view = editBillDetails
         ? "EDIT_VIEW"
         : roleConfig?.billDetailViewMap?.[billData?.status]
@@ -1320,15 +1329,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       if (VIEW_SUB_TABS[view]) {
         const activeSubTab = VIEW_SUB_TABS[view].find((st) => st.code === activeLink?.code);
         if (activeSubTab) {
-          const filtered = enriched.filter((item) => item.status === activeSubTab.statusFilter);
+          const filtered = sortedEnriched.filter((item) => item.status === activeSubTab.statusFilter);
           setTableData(filtered || []);
         } else {
           const firstSubTab = VIEW_SUB_TABS[view][0];
-          const filtered = enriched.filter((item) => item.status === firstSubTab.statusFilter);
+          const filtered = sortedEnriched.filter((item) => item.status === firstSubTab.statusFilter);
           setTableData(filtered || []);
         }
       } else {
-        setTableData(enriched || []);
+        setTableData(sortedEnriched || []);
       }
 
       const counts = {
@@ -1983,6 +1992,7 @@ const downloadOptions = [
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
                 workerRatesData={workerRatesData}
+                rateMaxLimitSchema={reviewerRateMaxSchema}
                 billId={billData?.id}
                 tenantId={tenantId}
                 expenseContextPath={expenseContextPath}

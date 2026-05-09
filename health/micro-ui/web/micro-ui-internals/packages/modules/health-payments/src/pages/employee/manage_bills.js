@@ -188,6 +188,40 @@ const ManageBills = () => {
   const { data: workerRatesData } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
   Digit.SessionStorage.set("workerRatesData", workerRatesData);
 
+  const campaignTypeSkillsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            moduleName: "HCM-BILLING-CONFIG-PAYMENT-SETUP",
+            masterDetails: [
+              {
+                name: "CampaignTypeSkills",
+                filter: `[?(@.campaignType=='${selectedProject?.projectType}')]`,
+              },
+            ],
+          },
+        ],
+      },
+    },
+    config: {
+      enabled: activeRole === MANAGE_BILLS_ROLES.PAYMENT_REVIEWER && !!selectedProject?.projectType,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      changeQueryName: `campaignTypeSkills_reviewer_${selectedProject?.projectType}`,
+      select: (data) => {
+        const skills = data?.MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.CampaignTypeSkills || [];
+        return skills[0]?.rateMaxLimitSchema || null;
+      },
+    },
+  };
+  const { data: reviewerRateMaxSchema } = Digit.Hooks.useCustomAPIHook(campaignTypeSkillsCriteria);
+  Digit.SessionStorage.set("reviewerRateMaxSchema", reviewerRateMaxSchema);
+
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
     setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
