@@ -492,7 +492,7 @@ const ManageBills = () => {
   }
 
   if (isBillLoading || (selectedProject?.id && !isInitialBillsDataReady) || (selectedProject?.id && isBillCountLoading)) {
-    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
+    return <Loader className={"digit-center-loader"} />;
   }
 
   if (!selectedProject?.id) {

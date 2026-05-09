@@ -491,7 +491,7 @@ const ManageBillsTable = ({ ...props }) => {
     return (
         <>
             <DataTable
-                className="search-component-table"
+                className="search-component-table manage-bills-table"
                 columns={columns}
                 data={props.data}
                 pagination

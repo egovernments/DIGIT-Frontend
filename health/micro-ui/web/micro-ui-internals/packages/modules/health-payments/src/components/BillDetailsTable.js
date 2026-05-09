@@ -903,7 +903,7 @@ const BillDetailsTable = ({ ...props }) => {
     return (
         <>
             <DataTable
-                className="search-component-table"
+                className="search-component-table bill-details-table"
                 columns={columns}
                 data={tableData}
                 pagination

@@ -1545,9 +1545,17 @@ const downloadOptions = [
     : []),
 ];
 
+  const billDownloadFormatOptions = [
+    { code: "BILL_EXCEL", name: t("HCM_AM_EXCEL") },
+    { code: "BILL_PDF", name: t("HCM_AM_PDF") },
+  ];
+
+  const hasOnlyBillDownloadOption =
+    downloadOptions.length === 1 && downloadOptions[0]?.code === "BILL";
+
   const handleDownloadSelect = (option) => {
     if (option?.code === "BILL") {
-      handleDownloadBill();
+      handleDownloadBill("excel");
       return;
     }
     if (option?.code === "JUSTIFICATION") {
@@ -1564,14 +1572,25 @@ const downloadOptions = [
     }
   };
 
-  const handleDownloadBill = () => {
+  const handleBillFormatDownloadSelect = (option) => {
+    if (option?.code === "BILL_PDF") {
+      handleDownloadBill("pdf");
+      return;
+    }
+    handleDownloadBill("excel");
+  };
+
+  const handleDownloadBill = (downloadType = "excel") => {
     if(billData?.additionalDetails?.reportDetails?.status ==="COMPLETED"){
-    const excelReportId = billData?.additionalDetails?.reportDetails?.excelReportId;
-    if (excelReportId) {
+    const selectedReportId =
+      downloadType === "pdf"
+        ? billData?.additionalDetails?.reportDetails?.pdfReportId
+        : billData?.additionalDetails?.reportDetails?.excelReportId;
+    if (selectedReportId) {
       downloadFileWithName({
-        fileStoreId: excelReportId,
+        fileStoreId: selectedReportId,
         customName: billData?.billNumber || billID || "bill",
-        type: "excel",
+        type: downloadType,
       });
       return;
     }
@@ -1633,19 +1652,35 @@ const downloadOptions = [
             <span style={{ fontSize: "24px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {downloadOptions.length > 0 && (
-                <Button
-                  icon="ArrowDropDown"
-                  isSuffix
-                  label={t("HCM_AM_DOWNLOAD")}
-                  variation="secondary"
-                  type="actionButton"
-                  size="medium"
-                  options={downloadOptions}
-                  optionsKey="name"
-                  onOptionSelect={handleDownloadSelect}
-                  style={{ minWidth: "12rem" }}
-                  showBottom={true}
-                />
+                hasOnlyBillDownloadOption ? (
+                  <Button
+                    icon="ArrowDropDown"
+                    isSuffix
+                    label={t("HCM_AM_DOWNLOAD_BILL")}
+                    variation="secondary"
+                    type="actionButton"
+                    size="medium"
+                    options={billDownloadFormatOptions}
+                    optionsKey="name"
+                    onOptionSelect={handleBillFormatDownloadSelect}
+                    style={{ minWidth: "12rem" }}
+                    showBottom={true}
+                  />
+                ) : (
+                  <Button
+                    icon="ArrowDropDown"
+                    isSuffix
+                    label={t("HCM_AM_DOWNLOAD")}
+                    variation="secondary"
+                    type="actionButton"
+                    size="medium"
+                    options={downloadOptions}
+                    optionsKey="name"
+                    onOptionSelect={handleDownloadSelect}
+                    style={{ minWidth: "12rem" }}
+                    showBottom={true}
+                  />
+                )
               )}
               {/* <Button
                 variation="secondary"
