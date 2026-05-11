@@ -78,6 +78,7 @@ module.exports = {
       "@egovernments/digit-ui-module-campaign-manager": path.resolve(__dirname, "packages/modules/campaign-manager/dist/main.js"),
       "@egovernments/digit-ui-module-pgr": path.resolve(__dirname, "packages/modules/pgr/dist/main.js"),
       "@egovernments/digit-ui-module-health-hrms": path.resolve(__dirname, "packages/modules/health-hrms/dist/main.js"),
+      "@egovernments/digit-ui-module-health-payments": path.resolve(__dirname, "packages/modules/health-payments/dist/main.js"),
       "@egovernments/digit-ui-health-css": path.resolve(__dirname, "packages/css/dist/index.css"),
     },
     fallback: {
