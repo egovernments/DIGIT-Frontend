@@ -668,7 +668,7 @@ const ManageBills = () => {
           variation="secondary"
           label={t("HCM_AM_BACK")}
           icon="ArrowBack"
-          onClick={() => history.goBack()}
+          onClick={() => history.push(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
           style={{
             flexShrink: 0,
             minWidth: "10rem",
