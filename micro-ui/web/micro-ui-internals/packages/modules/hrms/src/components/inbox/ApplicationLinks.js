@@ -15,11 +15,48 @@ const InboxLinks = ({ parentRoute, businessService, allLinks, headerText }) => {
   }, []);
 
   const GetLogo = () => (
-    <div className="header">
-      <span className="logo">
-        <PersonIcon />
-      </span>{" "}
-      <span className="text">{t(headerText)}</span>
+    <div
+      className="header"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "auto 1fr",
+        alignItems: "center",
+        gap: "0.75rem",
+        width: "100%",
+      }}
+    >
+      <span
+        className="logo"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          lineHeight: 0,
+        }}
+      >
+        
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: "scale(1.4)",
+            transformOrigin: "center center",
+          }}
+        >
+      <div 
+        style={{
+            marginTop: "1rem",
+            marginLeft: "1rem",
+          }}>
+
+          <PersonIcon />
+          </div>
+        </span>
+      </span>
+      <span className="text" style={{ minWidth: 0 }}>
+        {t(headerText)}
+      </span>
     </div>
   );
   return (
