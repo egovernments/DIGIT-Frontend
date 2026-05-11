@@ -1,7 +1,7 @@
 import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
 import { AppHome, processLinkData } from "../../components/Home";
@@ -71,6 +71,22 @@ const Home = ({
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
+  const location = useLocation();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const fromSandbox = new URLSearchParams(location.search).get("from") === "sandbox";
+  const _user = Digit.UserService.getUser();
+  const isLoggedIn = _user && _user.access_token && _user.info;
+  const sandboxLangSelectionPath = (() => {
+    if (!fromSandbox) return null;
+    const segs = location.pathname.split("/");
+    const citIdx = segs.indexOf("citizen");
+    const urlTenant = citIdx > 0 ? segs[citIdx - 1] : null;
+    const userTenant = _user?.info?.tenantId;
+    const isTenantMismatch = isLoggedIn && urlTenant && userTenant && userTenant !== urlTenant;
+    if (!isLoggedIn || isTenantMismatch) return `/${window?.globalPath}/user/login`;
+    return null;
+  })();
+
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
   };
@@ -191,7 +207,7 @@ const Home = ({
           </Route>
 
           <Route path={`${path}/login`}>
-            <Login stateCode={stateCode} />
+            {sandboxLangSelectionPath ? <Redirect to={sandboxLangSelectionPath} /> : <Login stateCode={stateCode} />}
           </Route>
 
           <Route path={`${path}/register`}>

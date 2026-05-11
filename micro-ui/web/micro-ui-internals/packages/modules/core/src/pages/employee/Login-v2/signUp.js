@@ -17,6 +17,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const history = useHistory();
 
   function buildOtpUrl(contextPath, tenantId) {
+    if (window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT")) {
+      return `/${window?.globalPath}/${tenantId}/employee/user/login/otp`;
+    }
     const ctx = (contextPath || "").split("/").filter(Boolean).join("/");
     if (ctx.includes("/")) {
       return `/${ctx}/employee/user/login/otp`;
