@@ -16,6 +16,7 @@ import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 import LoginSignupSelector from "./components/LoginSignupSelector";
 import ForgotOrganizationTooltip from "./components/ForgotOrganizationTooltip";
+import EmployeeSSOLoginOptions from "./components/EmployeeSSOLoginOptions";
 
 // Create QueryClient instance outside component to prevent recreation
 const createQueryClient = () => new QueryClient({
@@ -42,6 +43,9 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserT
   const i18n = getI18n();
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
+  }
+  if(!Digit.ComponentRegistryService.getComponent("EmployeeSSOLoginOptions")){
+    Digit.ComponentRegistryService.setComponent("EmployeeSSOLoginOptions", EmployeeSSOLoginOptions);
   }
   return (
     <Provider store={data}>
@@ -169,7 +173,8 @@ const componentsToRegister = {
   PrivacyComponent,
   OtpComponent,
   ForgotOrganizationTooltip,
-  LoginSignupSelector
+  LoginSignupSelector,
+  EmployeeSSOLoginOptions
 };
 
 export const initCoreComponents = () => {

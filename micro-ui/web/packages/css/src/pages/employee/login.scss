@@ -347,6 +347,58 @@ margin-top: 0.5rem !important;
   }
 }
 
+.employee-login-sso-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #505A5F;
+  font-size: 14px;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #D6D5D4;
+  }
+
+  span {
+    margin: 0 10px;
+  }
+}
+
+.employee-login-sso-icons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.employee-login-sso-icon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #D6D5D4;
+  border-radius: 4px;
+  background-color: #F7F8F9;
+  padding: 8px;
+  min-width: 48px;
+
+  .icon-label-container {
+    justify-content: center;
+  }
+
+  .digit-button-label {
+    display: none;
+  }
+}
+
+.employee-login-sso-logo {
+  width: 21px;
+  height: 21px;
+  object-fit: contain;
+}
+
 .employeeForgotPassword{
   .digit-dropdown-employee-select-wrap {
     .digit-dropdown-options-card{

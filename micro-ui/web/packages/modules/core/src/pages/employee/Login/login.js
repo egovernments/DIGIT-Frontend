@@ -27,15 +27,99 @@ const setEmployeeDetail = (userObject, token) => {
 
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
-  const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
+  const {
+    data: storeData,
+    isLoading: isStoreLoading,
+  } = Digit.Hooks.useStore.getInitData();
+  const {
+    data: ssoMDMSData,
+    isLoading: isSSOMDMSLoading,
+  } = Digit.Hooks.useSSOConfig(Digit.ULBService.getStateId(), {
+    select: (data) => {
+      const config =
+        data?.MdmsRes?.["SSO"]?.IdentityProviders ||
+        data?.["SSO"]?.IdentityProviders ||
+        data?.["IdentityProviders"] ||
+        [];
+      return Array.isArray(config) ? config : [];
+    },
+  });
   const { stateInfo } = storeData || {};
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-  const navigate = useNavigate(); 
- const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent("DynamicLoginComponent");
+  const [loginLoader, setLoginLoader] = useState(false);
+  const navigate = useNavigate();
+  const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent(
+    "DynamicLoginComponent",
+  );
 
+  /* Generic SSO Callback Handler - runs on mount / when disable/user/stateInfo change */
+  useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.search);
+    const idToken = hashParams.get("id_token") || searchParams.get("id_token");
+    const accessToken =
+      hashParams.get("access_token") || searchParams.get("access_token");
+    const code = searchParams.get("code");
 
+    const error = searchParams.get("error") || hashParams.get("error");
+    const errorDescription =
+      searchParams.get("error_description") ||
+      hashParams.get("error_description") ||
+      searchParams.get("errorDescription") ||
+      hashParams.get("errorDescription");
+
+    // If we are not on an SSO callback URL, never keep the SSO overlay loader.
+    // Important: we intentionally don't set the loader before redirecting to the provider,
+    // so browser back (including bfcache restores) won't get stuck with a stale loader.
+    // Note: do NOT reset `disable` here — it is also used for form-validation gating and
+    // resetting it would fight FormComposerV2's onFormValueChange, causing an infinite loop.
+    if (!idToken && !code && !error) {
+      if (loginLoader) setLoginLoader(false);
+      return;
+    }
+
+    if (error && !showToast) {
+      setShowToast(errorDescription || "SSO Login Failed!");
+      setTimeout(closeToast, 5000);
+      setLoginLoader(false);
+      setDisable(false);
+      return;
+    }
+
+    if (!stateInfo?.code) {
+      // Tenant/state not ready yet; wait and retry when stateInfo arrives.
+      return;
+    }
+
+    if ((idToken || code) && !user && !disable) {
+      if (idToken) {
+        handleDigitLogin(idToken, accessToken);
+      } else if (code) {
+        setDisable(true);
+        setLoginLoader(true);
+        Digit.UserService.microsoftAuthenticate({ code })
+          .then(({ UserRequest: info, ...tokens }) => {
+            Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+            setUser({ info, ...tokens });
+            setDisable(false);
+            setLoginLoader(false);
+          })
+          .catch((err) => {
+            setShowToast(
+              err?.response?.data?.error_description || "Login Failed!",
+            );
+            setTimeout(closeToast, 5000);
+            setDisable(false);
+            setLoginLoader(false);
+          });
+      }
+    }
+
+  }, [user, disable, stateInfo, loginLoader, showToast]);
+
+  /* Post-login redirect and user setup */
   useEffect(() => {
     if (!user) {
       return;
@@ -53,16 +137,189 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     }
 
     /*  RAIN-6489 Logic to navigate to National DSS home in case user has only one role [NATADMIN]*/
-    if (user?.info?.roles && user?.info?.roles?.length > 0 && user?.info?.roles?.every((e) => e.code === "NATADMIN")) {
+    if (
+      user?.info?.roles &&
+      user?.info?.roles?.every((e) => e.code === "NATADMIN")
+    ) {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/NURT_DASHBOARD`;
     }
-    /*  RAIN-6489 Logic to navigate to National DSS home in case user has only one role [NATADMIN]*/
-    if (user?.info?.roles && user?.info?.roles?.length > 0 && user?.info?.roles?.every((e) => e.code === "STADMIN")) {
+
+    /*  RAIN-6489 Logic to navigate to National DSS home incase user has only one role [NATADMIN]*/
+    if (
+      user?.info?.roles &&
+      user?.info?.roles?.every((e) => e.code === "STADMIN")
+    ) {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/home`;
     }
 
-    navigate(redirectPath, { replace: true }); // Replaced history.replace with navigate
+    navigate(redirectPath, { replace: true });
   }, [user]);
+
+  /* Generic Token Exchange with DIGIT Backend */
+  const handleDigitLogin = async (idToken, accessToken = null) => {
+    setDisable(true);
+    setLoginLoader(true);
+    try {
+      const response = await fetch("/user/oauth/token", {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${
+            window?.globalConfigs?.getConfig("JWT_TOKEN") ||
+            "ZWdvdi11c2VyLWNsaWVudDo="
+          }`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "jwt_exchange",
+          scope: "read",
+          userType: "EMPLOYEE",
+          assertion: idToken,
+          ...(accessToken && { access_token: accessToken }),
+          tenantId: stateInfo?.code,
+        }),
+      });
+
+      if (!response.ok) {
+        const raw = await response.text();
+        let parsed;
+        try {
+          parsed = raw ? JSON.parse(raw) : null;
+        } catch (e) {
+          parsed = null;
+        }
+        const message =
+          parsed?.error_description ||
+          parsed?.errorDescription ||
+          parsed?.message ||
+          parsed?.error ||
+          raw ||
+          "DIGIT Login Failed";
+        throw new Error(message);
+      }
+
+      const data = await response.json();
+      const { UserRequest: info, ...tokens } = data;
+
+      Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+      setUser({ info, ...tokens });
+    } catch (error) {
+      console.error("DIGIT Login Error:", error);
+      setShowToast(error?.message || "DIGIT Login Failed");
+      setTimeout(closeToast, 5000);
+
+
+      // If token exchange fails, force Microsoft to prompt credentials on next SSO click.
+      try {
+        window.sessionStorage.setItem("sso.force.prompt.login", "true");
+      } catch (e) {
+        // no-op
+      }
+
+      // Prevent retry loop: clear `id_token`/`code` from URL (stay on same page).
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (e) {
+        // no-op
+      }
+    }
+    setDisable(false);
+    setLoginLoader(false);
+  };
+
+  const buildOIDCAuthorizeUrl = (uiConfig) => {
+    const {
+      authorizeUrl,
+      clientId,
+      scopes = ["openid", "profile", "email"],
+      responseType = "id_token",
+      responseMode = "fragment",
+      nonceRequired = true,
+      redirectPath = "employee/user/login",
+      resource,
+      provider,
+    } = uiConfig || {};
+
+    if (!authorizeUrl || !clientId) {
+      throw new Error("Missing authorizeUrl or clientId for OIDC login");
+    }
+
+    const nonce = nonceRequired
+      ? Math.random().toString(36).substring(2)
+      : undefined;
+    const redirectUri = `${window.location.origin}/${window?.contextPath}/${redirectPath}`;
+
+    const params = new URLSearchParams();
+    params.set("client_id", clientId);
+    params.set("response_type", responseType);
+    params.set("redirect_uri", redirectUri);
+    if (nonce) params.set("nonce", nonce);
+    if (responseMode) params.set("response_mode", responseMode);
+    if (scopes && scopes.length) params.set("scope", scopes.join(" "));
+    if (resource) params.set("resource", resource);
+
+    // One-time forced login prompt (mainly for Microsoft) after a failed exchange.
+    try {
+      const forcePromptLogin = window.sessionStorage.getItem("sso.force.prompt.login") === "true";
+      if (forcePromptLogin && provider === "MICROSOFT") {
+        params.set("prompt", "login");
+        window.sessionStorage.removeItem("sso.force.prompt.login");
+      }
+    } catch (e) {
+      // no-op
+    }
+
+    return `${authorizeUrl}?${params.toString()}`;
+  };
+
+  const onSSOLogin = async (ssoConfig) => {
+    // For OIDC-like providers (MICROSOFT, GOOGLE, etc.), use generic OIDC login
+    const ui = ssoConfig?.ui || {};
+    const hasOidcConfig = Boolean((ui.authorizeUrl || ssoConfig?.authorizeUrl) && ui.clientId);
+
+    if (ui.authStrategy === "OIDC_POPUP" || ui.provider === "MICROSOFT" || hasOidcConfig) {
+      return onOIDCLogin(ssoConfig);
+    }
+
+    // If the config doesn't match any known SSO strategy, don't leave the overlay loader stuck.
+    setShowToast("SSO configuration is invalid or unsupported");
+    setTimeout(closeToast, 5000);
+  };
+
+  const onOIDCLogin = async (ssoConfig) => {
+    try {
+      const ui = { ...(ssoConfig?.ui || {}) };
+      // Backward-compatibility for older configs where authorizeUrl/resource
+      // might be on the top level instead of inside ui.
+      ui.authorizeUrl = ui.authorizeUrl || ssoConfig?.authorizeUrl;
+      ui.resource = ui.resource || ssoConfig?.resource;
+      // For Microsoft, if resource is not explicitly provided, default it to clientId (v1 behavior).
+      if (ui.provider === "MICROSOFT" && !ui.resource) {
+        ui.resource = ui.clientId;
+      }
+      // Persist provider + logout-relevant info for later use during logout
+      if (ui.provider) {
+        localStorage.setItem("sso-provider", ui.provider);
+      }
+      if (ui.logoutUrl) {
+        localStorage.setItem("sso-logout-url", ui.logoutUrl);
+      }
+      if (ui.tenantId) {
+        localStorage.setItem("sso-tenant-id", ui.tenantId);
+      }
+      if (ui.authority) {
+        localStorage.setItem("sso-authority", ui.authority);
+      }
+      const url = buildOIDCAuthorizeUrl(ui);
+      // Simple implementation: redirect for OIDC if no library is present
+      // For a better experience, a popup and message bridge should be used
+      window.location.href = url;
+    } catch (error) {
+      console.error("OIDC Login Error:", error);
+      setShowToast(error.message || "OIDC Login Failed");
+      setTimeout(closeToast, 5000);
+      setLoginLoader(false);
+    }
+  };
 
   const onLogin = async (data) => {
     // if (!data.city) {
@@ -77,7 +334,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     }
 
     setDisable(true);
-
+    setLoginLoader(true);
     const requestData = {
       ...data,
       ...defaultValues,
@@ -98,6 +355,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       setTimeout(closeToast, 5000);
     }
     setDisable(false);
+    setLoginLoader(false);
   };
 
   const reqCreate = {
@@ -129,16 +387,21 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       {
         onError: (error, variables) => {
           setShowToast(
-            error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`
+            error?.response?.data?.Errors?.[0].code
+              ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}`
+              : `SANDBOX_RESEND_OTP_ERROR`,
           );
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
           navigate(`/${window?.contextPath}/employee/user/login/otp`, {
-            state: { email: inputEmail, tenant: Digit?.ULBService?.getStateId() },
+            state: {
+              email: inputEmail,
+              tenant: Digit?.ULBService?.getStateId(),
+            },
           });
         },
-      }
+      },
     );
   };
 
@@ -153,23 +416,69 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
   const defaultValue = {
     code: defaultTenant,
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${defaultTenant}`),
+    name: Digit.Utils.locale.getTransformedLocale(
+      `TENANT_TENANTS_${defaultTenant}`,
+    ),
   };
 
-  let config = [{ body: propsConfig?.inputs }];
+  const ssoConfigs = ssoMDMSData?.map((sso) => ({
+    ...sso,
+    provider: sso.ui?.provider || sso.provider || "sso",
+    label: t(`SSO_PROVIDER_${sso.ui?.name || sso.id}`),
+    icon: sso.ui?.logo ? (
+      <img
+        src={sso.ui.logo}
+        alt={sso.ui?.name}
+        className="employee-login-sso-logo"
+      />
+    ) : sso.ui?.provider === "MICROSOFT" ? "Microsoft" : sso.ui?.icon,
+    onLogin: (ssoConfig) => {
+      onSSOLogin(ssoConfig);
+    },
+  }));
+
+  let config = [
+    {
+      body: propsConfig?.inputs?.map((field) =>
+        field?.component === "EmployeeSSOLoginOptions"
+          ? {
+              ...field,
+              customProps: {
+                ...field.customProps,
+                ssoConfigs,
+              },
+            }
+          : field,
+      ),
+    },
+  ];
 
   const { mode } = Digit.Hooks.useQueryParams();
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+  if (
+    mode === "admin" &&
+    config?.[0]?.body?.[2]?.disable == false &&
+    config?.[0]?.body?.[2]?.populators?.defaultValue == undefined
+  ) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
 
-  const defaultValues = useMemo(()=>Object.fromEntries(
-    config[0].body
-      .filter(field => field?.populators?.defaultValue && field?.populators?.name)
-      .map(field => [field.populators.name, field.populators.defaultValue])
-  ),[])
+  const defaultValues = useMemo(
+    () =>
+      Object.fromEntries(
+        config[0].body
+          .filter(
+            (field) =>
+              field?.populators?.defaultValue && field?.populators?.name,
+          )
+          .map((field) => [
+            field.populators.name,
+            field.populators.defaultValue,
+          ]),
+      ),
+    [],
+  );
 
   const onFormValueChange = (setValue, formData, formState) => {
 
@@ -222,10 +531,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       />
     </div>
   );
-  
 
-  if(isLoading || isStoreLoading ){
-   return  <Loader page={true} variant="PageLoader" />
+  if (isLoading || isStoreLoading) {
+    return <Loader page={true} variant="PageLoader" />;
   }
   return propsConfig?.bannerImages ? (
     <div className="login-container">
@@ -240,13 +548,31 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     </div>
   ) : (
     <Background>
+      {loginLoader && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.35)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <Loader />
+        </div>
+      )}
       <div className="employeeBackbuttonAlign">
         <BackLink onClick={() => window.history.back()} />
       </div>
       {renderLoginForm(
         "loginFormStyleEmployee",
         "loginCardClassName",
-        loginOTPBased ? "sandbox-onboarding-wrapper" : ""
+        loginOTPBased ? "sandbox-onboarding-wrapper" : "",
       )}
         {DynamicLoginComponent && <DynamicLoginComponent />}
        {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}

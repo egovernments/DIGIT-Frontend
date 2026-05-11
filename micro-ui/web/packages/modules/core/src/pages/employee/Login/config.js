@@ -65,6 +65,17 @@ export const loginConfig = [
         isMandatory: false,
         withoutLabel: true
       },
+      {
+        key: "employeeSsoLoginOptions",
+        type: "component",
+        disable: false,
+        component: "EmployeeSSOLoginOptions",
+        populators: {
+          name: "employeeSsoLoginOptions"
+        },
+        isMandatory: false,
+        withoutLabel: true
+      },
     ],
   },
 ];
