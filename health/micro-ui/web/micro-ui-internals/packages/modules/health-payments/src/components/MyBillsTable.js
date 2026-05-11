@@ -103,7 +103,7 @@ const MyBillsTable = ({ ...props }) => {
       },
       // INFO:: no of registers commented
        {
-         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
+         name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t("HCM_AM_NO_OF_REGISTERS")}</div>,
          selector: (row) => {
            return (
              <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
@@ -112,13 +112,13 @@ const MyBillsTable = ({ ...props }) => {
            );
          },
          style: {
-          display: "flex",
-          alignItems: "flex-start",
+          justifyContent: "flex-end",
           paddingTop: "15px",
+          alignItems: "flex-start",
         },
        },
       {
-        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{t("HCM_AM_NUMBER_OF_WORKERS")}</div>,
+        name: <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "right", paddingRight: "1rem" }}>{t("HCM_AM_NUMBER_OF_WORKERS")}</div>,
         selector: (row) => {
           return (
             <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
