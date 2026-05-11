@@ -106,7 +106,12 @@ const EditForm = ({ tenantId, data }) => {
     tenantId: tenantId,
     employeeStatus: "EMPLOYED",
     employeeType: data?.code,
-    SelectEmployeePhoneNumber: { mobileNumber: data?.user?.mobileNumber },
+    // Seed saved countryCode so the prefix dropdown reflects the persisted value
+    // (e.g. +251) instead of falling through to the MDMS default (+91).
+    SelectEmployeePhoneNumber: {
+      mobileNumber: data?.user?.mobileNumber,
+      countryCode: data?.user?.countryCode,
+    },
     SelectEmployeeId: { code: data?.code },
     SelectEmployeeName: { employeeName: data?.user?.name },
     SelectEmployeeEmailId: { emailId: data?.user?.emailId },
