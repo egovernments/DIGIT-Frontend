@@ -11,6 +11,7 @@ const EditForm = ({ tenantId, data }) => {
   const [canSubmit, setSubmitValve] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const [mobileNumber, setMobileNumber] = useState(null);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
@@ -74,7 +75,8 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+    const currentSelectedCode = selectedCountryCode || validationConfig?.prefix || "+91";
+    const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === currentSelectedCode) || validationConfig;
     const maxLength = currentValidation?.maxLength || 10;
     const minLength = currentValidation?.minLength || 10;
     const pattern = currentValidation?.pattern
@@ -86,7 +88,7 @@ const EditForm = ({ tenantId, data }) => {
       if (data.user.mobileNumber == mobileNumber) {
         setPhonecheck(true);
       } else {
-        Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
+        Digit.HRMSService.search(tenantId, null, { phone: mobileNumber, countryCode: currentSelectedCode }).then((result, err) => {
           if (result.Employees.length > 0) {
             setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
             setPhonecheck(false);
@@ -98,13 +100,18 @@ const EditForm = ({ tenantId, data }) => {
     } else {
       setPhonecheck(false);
     }
-  }, [mobileNumber]);
+  }, [mobileNumber, selectedCountryCode]);
 
   const defaultValues = {
     tenantId: tenantId,
     employeeStatus: "EMPLOYED",
     employeeType: data?.code,
-    SelectEmployeePhoneNumber: { mobileNumber: data?.user?.mobileNumber },
+    // Seed saved countryCode so the prefix dropdown reflects the persisted value
+    // (e.g. +251) instead of falling through to the MDMS default (+91).
+    SelectEmployeePhoneNumber: {
+      mobileNumber: data?.user?.mobileNumber,
+      countryCode: data?.user?.countryCode,
+    },
     SelectEmployeeId: { code: data?.code },
     SelectEmployeeName: { employeeName: data?.user?.name },
     SelectEmployeeEmailId: { emailId: data?.user?.emailId },
@@ -166,6 +173,7 @@ const EditForm = ({ tenantId, data }) => {
     } else {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
     }
+    setSelectedCountryCode(formData?.SelectEmployeePhoneNumber?.countryCode || null);
 
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
@@ -218,8 +226,9 @@ const EditForm = ({ tenantId, data }) => {
     const mobileNum = input?.SelectEmployeePhoneNumber?.mobileNumber;
 
     if (mobileNum) {
-      // Get validation parameters from MDMS or use defaults
-      const currentValidation = window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation || validationConfig;
+      // Get validation parameters from MDMS for the selected country code
+      const selectedCC = input?.SelectEmployeePhoneNumber?.countryCode || validationConfig?.prefix || "+91";
+      const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === selectedCC) || validationConfig;
       const maxLength = currentValidation?.maxLength || 10;
       const minLength = currentValidation?.minLength || 10;
       const pattern = currentValidation?.pattern

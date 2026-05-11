@@ -9,7 +9,10 @@ const NotificationsAndWhatsNew = ({ variant, parentRoute }) => {
   const location = useLocation();
   const history = useHistory();
 
-  const tenantId = Digit.ULBService.getCitizenCurrentTenant();
+  // For multi-root tenant, use tenant from URL; otherwise use selected home city
+  const tenantId = Digit.Utils.getMultiRootTenant() 
+    ? Digit.ULBService.getStateId() 
+    : Digit.ULBService.getCitizenCurrentTenant();
   const {
     data: { unreadCount: preVisitUnseenNotificationCount } = {},
     isSuccess: preVisitUnseenNotificationCountLoaded,

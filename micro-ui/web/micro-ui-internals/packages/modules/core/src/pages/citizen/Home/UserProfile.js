@@ -1022,7 +1022,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="mobileNumber"
                     placeholder="Enter a valid Mobile No."
                     onChange={(value) => setUserMobileNumber(value)}
-                    disable={Digit.Utils.getMultiRootTenant() ? false : true}
+                    disable={Digit.Utils.getMultiRootTenant() ? true : editScreen}
                     {...{
                       required: true,
                       pattern:

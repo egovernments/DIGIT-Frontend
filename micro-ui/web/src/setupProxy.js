@@ -7,6 +7,7 @@ module.exports = function (app) {
   [
     "/egov-mdms-service",
     "/egov-location",
+    "/egov-user-event",
     "/localization",
     "/egov-workflow-v2",
     "/pgr-services",

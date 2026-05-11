@@ -375,11 +375,13 @@
   .EventNotificationWrapper {
     @apply relative cursor-pointer ml-md;
     span {
-      top: -10px;
-      right: -10px;
-      @apply absolute bg-error h-5 w-5 rounded-full text-center;
+      top: -8px;
+      right: -8px;
+      @apply absolute bg-error h-5 w-5 rounded-full flex items-center justify-center;
       p {
-        line-height: 20px;
+        @apply text-white leading-none;
+        font-size: 11px;
+        margin: 0;
       }
     }
   }

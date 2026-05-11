@@ -136,10 +136,15 @@ const Response = () => {
   );
   const { state } = useLocation();
 
+  // CCSD-FIX: append `from=sandbox&module=PGR&userType=employee` so the core employee
+  // route does not auto-redirect SUPERUSERs with multiple root tenants to the products
+  // landing page (see core/src/pages/employee/index.js: redirects when `from !== "sandbox"`).
+  const HOME_PATH = `/${window.contextPath}/employee?from=sandbox&module=PGR&userType=employee`;
+
   const navigate = (page) => {
     switch (page) {
       case "home": {
-        history.push(`/${window.contextPath}/employee`);
+        history.push(HOME_PATH);
       }
     }
   };
@@ -163,7 +168,7 @@ const Response = () => {
         children={state?.showChildren ? children : []}
       />
       <ActionBar>
-        <Link to={`/${window.contextPath}/employee`}>
+        <Link to={HOME_PATH}>
           <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
         </Link>
       </ActionBar>
