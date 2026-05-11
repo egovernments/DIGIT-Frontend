@@ -75,8 +75,6 @@ const ManageBillsTable = ({ ...props }) => {
                     </div>
                 ),
                 grow: 1,
-                minWidth: "180px",
-                maxWidth: "240px",
                 style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
@@ -88,9 +86,7 @@ const ManageBillsTable = ({ ...props }) => {
                     </div>
                 ),
                 grow: 1,
-                minWidth: "130px",
-                maxWidth: "160px",
-                style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
             registers: {
@@ -238,9 +234,7 @@ const ManageBillsTable = ({ ...props }) => {
                             onClick={() => {
                                 downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `Payment_Advisory_${billId}`, type: "excel" });
                             }}
-                            // showBottom={isLas    tRow && props.data.length !== 1 ? false : true}                            
-                            style={{ minWidth: "10rem" }}
-                            // type="actionButton"
+                            style={{ whiteSpace: "nowrap" }}
                             variation="secondary"
                         />
                     ) : (
@@ -336,9 +330,7 @@ const ManageBillsTable = ({ ...props }) => {
                     </div>
                 ),
                 grow: 1,
-                minWidth: "170px",
-                maxWidth: "200px",
-                style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
             amountPaid: {
