@@ -48,6 +48,9 @@ export const UserService = {
   },
   logout: async () => {
     const userType = UserService.getType();
+    const savedLocale = window.sessionStorage.getItem("locale") ||
+                        window.localStorage.getItem("Citizen.locale") ||
+                        window.localStorage.getItem("Employee.locale");
     try {
       await UserService.logoutUser();
     } catch (e) {
@@ -55,6 +58,7 @@ export const UserService = {
     finally{
       window.localStorage.clear();
       window.sessionStorage.clear();
+      if (savedLocale) window.sessionStorage.setItem("locale", savedLocale);
       if (userType === "citizen") {
         window.location.replace(`/${window?.contextPath}/citizen`);
       } else {
