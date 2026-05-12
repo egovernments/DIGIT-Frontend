@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
+import { CustomisedHooks } from "./hooks";
 import { ProviderContext } from "./utils/context";
 import BoundaryComponent from "./components/BoundaryComponent";
 import AttendanceInboxComponent from "./components/attendance_inbox/attendance_inbox";
@@ -47,7 +48,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     "HCM",
     [{ name: "paymentsConfig" }],
     {
-      gcTime: Infinity,
+      cacheTime: Infinity,
     },
     { schemaCode: "PAYMENTS_MASTER_DATA" } //mdmsv2
   );
@@ -99,7 +100,7 @@ const componentsToRegister = {
 };
 
 export const initPaymentComponents = () => {
-  overrideHooks();
+  overrideHooks(CustomisedHooks);
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);

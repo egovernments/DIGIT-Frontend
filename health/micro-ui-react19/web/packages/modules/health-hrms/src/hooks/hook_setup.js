@@ -1,43 +1,48 @@
+import _ from "lodash";
 import axios from "axios";
-import { CustomisedHooks } from "./index";
 
-export const overrideHooks = () => {
-  Object.keys(CustomisedHooks).forEach((ele) => {
+export const overrideHooks = (CustomisedHooks) => {
+  Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
-      Object.keys(CustomisedHooks[ele]).forEach((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).forEach((method) => {
+      Object.keys(CustomisedHooks[ele]).map((hook) => {
+        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
           setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
         });
       });
     } else if (ele === "Utils") {
-      Object.keys(CustomisedHooks[ele]).forEach((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).forEach((method) => {
+      Object.keys(CustomisedHooks[ele]).map((hook) => {
+        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
           setupHooks(hook, method, CustomisedHooks[ele][hook][method], false);
         });
       });
     } else {
-      Object.keys(CustomisedHooks[ele]).forEach((method) => {
+      Object.keys(CustomisedHooks[ele]).map((method) => {
         setupLibraries(ele, method, CustomisedHooks[ele][method]);
       });
     }
   });
 };
-
 const setupHooks = (HookName, HookFunction, method, isHook = true) => {
   window.Digit = window.Digit || {};
   window.Digit[isHook ? "Hooks" : "Utils"] = window.Digit[isHook ? "Hooks" : "Utils"] || {};
   window.Digit[isHook ? "Hooks" : "Utils"][HookName] = window.Digit[isHook ? "Hooks" : "Utils"][HookName] || {};
   window.Digit[isHook ? "Hooks" : "Utils"][HookName][HookFunction] = method;
 };
-
+/* To Overide any existing libraries  we need to use similar method */
 const setupLibraries = (Library, service, method) => {
   window.Digit = window.Digit || {};
   window.Digit[Library] = window.Digit[Library] || {};
   window.Digit[Library][service] = method;
 };
 
-export const updateCustomConfigs = () => {};
+/* To Overide any existing config/middlewares  we need to use similar method */
+export const updateCustomConfigs = () => {
+  //setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
+  // setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig });
+  // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
+};
 
+/// Util function to downloads files with type as pdf or excel
 export const downloadFileWithName = ({ fileStoreId = null, customName = null, type = "excel" }) => {
   const downloadFile = (blob, fileName, extension) => {
     const link = document.createElement("a");
@@ -55,10 +60,13 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
         mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         extension: "xlsx",
       },
-      pdf: { mimeType: "application/pdf", extension: "pdf" },
+      pdf: {
+        mimeType: "application/pdf",
+        extension: "pdf",
+      },
     };
 
-    const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"];
+    const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"]; // Default to Excel if type is invalid
 
     axios
       .get("/filestore/v1/files/id", {
@@ -70,23 +78,42 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
         },
         params: {
           tenantId: Digit.ULBService.getCurrentTenantId(),
-          fileStoreId,
+          fileStoreId: fileStoreId,
         },
       })
       .then((res) => {
-        downloadFile(new Blob([res.data], { type: mimeType }), customName || "download", extension);
+        downloadFile(
+          new Blob([res.data], { type: mimeType }),
+          customName || "download",
+          extension
+        );
       });
   }
 };
 
-export const formatTimestampToDate = (timestamp) => {
-  if (!timestamp || typeof timestamp !== "number") return "Invalid timestamp";
+
+export function formatTimestampToDate(timestamp) {
+  // Check if the timestamp is valid
+  if (!timestamp || typeof timestamp !== "number") {
+    return "Invalid timestamp";
+  }
+
+  // Convert timestamp to a JavaScript Date object
   const date = new Date(timestamp);
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Define an array of month abbreviations
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Extract day, month, and year from the date
   const day = date.getDate().toString().padStart(2, "0");
-  const month = monthNames[date.getMonth()];
+  const month = monthNames[date.getMonth()]; // getMonth() returns 0-11
   const year = date.getFullYear();
+
+  // Return the formatted date string
   return `${day} ${month} ${year}`;
-};
+}
+
+
 
 export default {};

@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
-import { Loader } from "@egovernments/digit-ui-components";
+import React, { useEffect, useMemo, useState } from "react";
+
+import CreateEmployeePage from "./pages/employee/createEmployee";
+
 import EmployeeApp from "./pages/employee";
+
 import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
+import { CustomisedHooks } from "./hooks";
 import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
 import ResponseScreen from "./pages/employee/Response";
 import InboxSearch from "./pages/employee/Inbox";
@@ -9,34 +13,38 @@ import ActionPopUp from "./components/pageComponents/popup";
 import EmployeeDetailScreen from "./pages/employee/employeeDetails";
 import AssignCampaignInbox from "./pages/employee/CampaignAssignmentInbox";
 import Jurisdictions from "./components/pageComponents/Jurisdictions";
+
 import BreadCrumbs from "./components/pageComponents/BreadCrumb";
+import { Loader } from "@egovernments/digit-ui-components";
 import HierarchySelection from "./pages/employee/HierarchySelection";
 import UserAssignment from "./components/pageComponents/UserAssigment";
 import SearchUserToReport from "./components/pageComponents/SearchUserToReport";
 import SelectableList from "./components/pageComponents/SelectableList";
 import HRMSCard from "./components/HRMSCard";
-import CreateEmployeePage from "./pages/employee/createEmployee";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const modulePrefix = "hcm";
   const [hierarchySelected, setHierarchySelected] = useState(null);
 
-  const { data: hierarchies, isLoading: isHierarchyLoading } =
-    Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({ tenantId });
 
-  const moduleCode = ["HR"];
+  const { data: hierarchies,
+    isLoading: isHierarchyLoading,
+  } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({ tenantId });
+
+  const moduleCode = ["HR",];
   const language = Digit.StoreData.getCurrentLanguage();
 
   useEffect(() => {
     Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
   }, []);
-
-  const { isLoading } = Digit.Services.useStore({ stateCode, moduleCode, language, modulePrefix: "hcm" });
-
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode: moduleCode, language, modulePrefix });
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
 
-  if (!Digit.Utils.hrmsAccess?.()) return null;
+  if (!Digit.Utils.hrmsAccess()) {
+    return null;
+  }
 
   if (isLoading || isHierarchyLoading) {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
@@ -53,11 +61,11 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
     );
   }
 
-  if (userType === "employee") {
-    return <EmployeeApp />;
+  else {
+    if (userType === "employee") {
+      return <EmployeeApp />;
+    }
   }
-
-  return null;
 };
 
 const componentsToRegister = {
@@ -76,11 +84,13 @@ const componentsToRegister = {
   UserAssignment,
   SearchUserToReport,
   SelectableList,
+
 };
 
 export const initHRMSComponents = () => {
-  overrideHooks();
+  overrideHooks(CustomisedHooks);
   updateCustomConfigs();
+
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });

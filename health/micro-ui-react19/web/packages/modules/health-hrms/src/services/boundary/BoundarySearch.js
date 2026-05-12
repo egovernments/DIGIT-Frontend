@@ -2,6 +2,7 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
   const order = [];
   const seenTypes = new Set();
 
+  // Recursive function to traverse the hierarchy
   const traverse = (node, currentOrder) => {
     if (!seenTypes.has(node.boundaryType)) {
       order.push({ code: node.boundaryType, order: currentOrder });
@@ -12,7 +13,9 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
     }
   };
 
+  // Process the root boundaries
   tenantBoundary.forEach((boundary) => traverse(boundary, 1));
+
   return order;
 };
 
@@ -24,8 +27,8 @@ const fetchBoundaries = async ({ tenantId, hierarchyType }) => {
       method: "POST",
       userService: false,
       params: {
-        tenantId,
-        hierarchyType,
+        tenantId: tenantId,
+        hierarchyType: hierarchyType,
         includeChildren: true,
       },
     });

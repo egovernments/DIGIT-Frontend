@@ -1,8 +1,7 @@
 {
-  "name": "@egovernments/digit-ui-module-pgr",
-  "version": "1.0.0",
-  "description": "PGR (Public Grievance Redressal) module for DIGIT Health UI — React 19",
-  "license": "MIT",
+  "name": "@egovernments/digit-ui-module-health-pgr",
+  "version": "0.0.2",
+  "description": "PGR Module UI",
   "main": "dist/main.js",
   "module": "dist/main.js",
   "source": "src/Module.js",
@@ -10,49 +9,27 @@
     "dist"
   ],
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js",
-    "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze",
-    "publish:components": "npm publish --tag pgr-v1.0"
+    "build": "NODE_ENV=production ../../../node_modules/.bin/webpack --config webpack.config.js",
+    "build:dev": "NODE_ENV=development ../../../node_modules/.bin/webpack --config webpack.config.js",
+    "prepublish": "npm run build"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "^5.62.16",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-router-dom": "6.25.1",
-    "react-i18next": "15.0.0",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-09",
-    "@egovernments/digit-ui-svg-components": "2.0.0-dev-01",
-    "@egovernments/digit-ui-components": "2.0.0-dev-38"
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "react-router-dom": ">=5.0.0",
+    "react-i18next": ">=11.0.0",
+    "react-hook-form": ">=6.0.0",
+    "@tanstack/react-query": ">=4.0.0",
+    "@egovernments/digit-ui-react-components": "*",
+    "@egovernments/digit-ui-components": "2.0.0-dev-47"
   },
   "dependencies": {
-    "react-hook-form": "6.15.8",
-    "react-select": "5.7.4",
-    "lodash.merge": "^4.6.2"
+    "react-date-range": "^1.4.0",
+    "date-fns": "^2.29.3",
+    "lodash": "^4.17.21",
+    "axios": "^1.3.4",
+    "prop-types": "^15.8.1"
   },
-  "sideEffects": false,
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "author": "eGovernments Foundation",
-  "keywords": [
-    "digit",
-    "egov",
-    "dpg",
-    "digit-ui",
-    "pgr",
-    "grievance",
-    "complaints"
-  ],
   "devDependencies": {
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
@@ -60,16 +37,14 @@
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9.1.3",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "compression-webpack-plugin": "^11.1.0",
     "core-js": "^3.33.0",
     "cross-env": "7.0.3",
-    "css-loader": "^6.8.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router-dom": "6.25.1",
-    "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
-  }
+    "webpack-cli": "^5.1.4"
+  },
+  "author": "Ramkrishna <ramkrishna.sahoo@egovernments.org>",
+  "license": "MIT"
 }

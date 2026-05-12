@@ -7,6 +7,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
 
+// Lazy load the core module
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 const enabledModules = ["Utilities", "Payments", "PGR", "HRMS"];
@@ -76,6 +77,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
     initTokens(stateCode);
     setLoaded(true);
   }, [stateCode, isReady]);
@@ -90,7 +92,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
         <DigitUILazy
           stateCode={stateCode}
           enabledModules={enabledModules}
-          allowedUserTypes={["employee"]}
+          allowedUserTypes={["employee", "citizen"]}
           defaultLanding="employee"
         />
       )}

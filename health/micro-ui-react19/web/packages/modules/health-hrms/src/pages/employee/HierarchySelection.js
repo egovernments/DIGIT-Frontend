@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Dropdown,
@@ -8,9 +8,8 @@ import {
   LabelFieldPair,
   Button,
   Toast,
+  Footer
 } from "@egovernments/digit-ui-components";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
-
 const HierarchySelection = ({ onHierarchyChosen }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
@@ -22,12 +21,18 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
   const [selectedHierarchy, setSelectedHierarchy] = useState(
     Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || null
   );
+
   const [toast, setToast] = useState({ show: false, label: "", type: "" });
 
-  const { data: boundaryData, isLoading: isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch({
+  const {
+    data: boundaryData,
+    isLoading: isBoundaryLoading,
+  } = Digit.Hooks.hrms.useBoundriesFetch({
     tenantId,
     hierarchyType: selectedHierarchy?.hierarchyType,
-    config: { enabled: !!selectedHierarchy?.hierarchyType },
+    config: {
+      enabled: !!selectedHierarchy?.hierarchyType,
+    },
   });
 
   const moduleCode = selectedHierarchy
@@ -42,12 +47,19 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     config: { enabled: !!selectedHierarchy },
   });
 
+  // auto close toast after 3 seconds
   useEffect(() => {
     if (toast?.show) {
-      const timer = setTimeout(() => setToast({ show: false, label: "", type: "" }), 3000);
+      const timer = setTimeout(() => {
+        setToast({ show: false, label: "", type: "" });
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [toast?.show]);
+
+  const handleToastClose = () => {
+    setToast({ show: false, label: "", type: "" });
+  };
 
   const onHierarchySelect = (hierarchy) => {
     setSelectedHierarchy(hierarchy);
@@ -57,38 +69,73 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
 
   const onNextClick = () => {
     if (!selectedHierarchy) {
-      setToast({ show: true, label: t("HIERARCHY_FIELD_MANDATORY"), type: "error" });
+      setToast({
+        show: true,
+        label: t("HIERARCHY_FIELD_MANDATORY"),
+        type: "error",
+      });
       return;
     }
 
-    if (!boundaryData || boundaryData.length === 0 || !boundaryData[0]?.boundary || boundaryData[0].boundary.length === 0) {
-      setToast({ show: true, label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"), type: "error" });
+    if (
+      !boundaryData ||
+      boundaryData.length === 0 ||
+      !boundaryData[0]?.boundary ||
+      boundaryData[0].boundary.length === 0
+    ) {
+      setToast({
+        show: true,
+        label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"),
+        type: "error",
+      });
       return;
     }
+    else {
 
-    Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
-    onHierarchyChosen(selectedHierarchy);
+      Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
+
+      onHierarchyChosen(selectedHierarchy);
+    }
   };
 
   useEffect(() => {
     if (!selectedHierarchy || isBoundaryLoading) return;
 
-    if (!boundaryData || boundaryData.length === 0 || !boundaryData[0]?.boundary || boundaryData[0].boundary.length === 0) {
-      setToast({ show: true, label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"), type: "error" });
+    if (
+      !boundaryData ||
+      boundaryData.length === 0 ||
+      !boundaryData[0]?.boundary ||
+      boundaryData[0].boundary.length === 0
+    ) {
+      setToast({
+        show: true,
+        label: t("NO_BOUNDARY_FOUND_FOR_THE_SELECTED_HIERARCHY"),
+        type: "error",
+      });
     }
   }, [boundaryData, selectedHierarchy]);
 
   if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) {
+
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
   return (
     <div className="container">
       <Card className="setup-campaign-card">
-        <HeaderComponent styles={{ margin: "0px" }}>{t(`HCM_HIERARCHY_TYPE_HEADER`)}</HeaderComponent>
-        <p className="description-type">{t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}</p>
+        <HeaderComponent
+          styles={{ margin: "0px", fontSize: "2rem", color: "#0b4b66" }}
+        >
+          {t(`HCM_HIERARCHY_TYPE_HEADER`)}
+        </HeaderComponent>
+        <p className="description-type">
+          {t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}
+        </p>
         <LabelFieldPair>
-          <div style={{ justifyContent: "center", marginTop: "6px" }}>
+          <div
+            className=""
+            style={{ justifyContent: "center", marginTop: "6px" }}
+          >
             <span>{t("HCM_HIERARCHY_TYPE")}</span>
             <span className="mandatory-span">*</span>
           </div>
@@ -98,24 +145,32 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
             option={hierarchies || []}
             optionKey={"hierarchyType"}
             selected={selectedHierarchy}
-            select={onHierarchySelect}
+            select={(value) => onHierarchySelect(value)}
           />
         </LabelFieldPair>
       </Card>
-      <ActionBar className="mc_back">
-        <Button
-          style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "10rem" }}
-          variation="primary"
-          label={t("NEXT")}
-          title={t("NEXT")}
-          onClick={onNextClick}
-          icon={"ArrowForward"}
-          isSuffix
-        />
-      </ActionBar>
+      <Footer
+        actionFields={[
+          <Button
+            style={{minWidth: "10rem" }}
+            variation="primary"
+            label={t("NEXT")}
+            title={t("NEXT")}
+            onClick={onNextClick}
+            icon={"ArrowForward"}
+            isSuffix
+          />
+        ]}
+        setactionFieldsToRight={true}
+      />
 
       {toast.show && (
-        <Toast type={toast.type} label={toast.label} isDleteBtn={true} onClose={() => setToast({ show: false, label: "", type: "" })} />
+        <Toast
+          type={toast.type}
+          label={toast.label}
+          isDleteBtn={true}
+          onClose={handleToastClose}
+        />
       )}
     </div>
   );

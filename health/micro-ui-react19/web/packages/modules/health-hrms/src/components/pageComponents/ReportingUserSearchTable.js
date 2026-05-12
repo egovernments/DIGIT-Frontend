@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
-import { useTranslation } from "react-i18next";
+
+import React, { useState, useMemo } from "react";
 import { Loader, CustomSVG } from "@egovernments/digit-ui-components";
+import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { editAttendeetableCustomStyle } from "../../utils/utlis";
 
@@ -16,6 +17,7 @@ const ReportingUserSearchTable = ({
   const { t } = useTranslation();
   const [selectedUserId, setSelectedUserId] = useState(null);
 
+  // Compute current page (DataTable pages start at 1)
   const currentPage = Math.floor(offset / rowsPerPage) + 1;
 
   const handlePageChange = (page) => {
@@ -33,6 +35,7 @@ const ReportingUserSearchTable = ({
     onSelect?.(user);
   };
 
+  // Columns configuration
   const columns = useMemo(
     () => [
       {
@@ -59,12 +62,15 @@ const ReportingUserSearchTable = ({
     [t]
   );
 
+  // Row highlight styles
   const conditionalRowStyles = [
     {
       when: (row) => row.userUuid === selectedUserId,
       style: {
         backgroundColor: "#e0e0e0 !important",
-        "&:hover": { backgroundColor: "#d5d5d5 !important" },
+        "&:hover": {
+          backgroundColor: "#d5d5d5 !important",
+        },
       },
     },
   ];
@@ -96,7 +102,9 @@ const ReportingUserSearchTable = ({
           fixedHeaderScrollHeight="70vh"
           conditionalRowStyles={conditionalRowStyles}
           noDataComponent={
-            <div style={{ textAlign: "center", padding: "10px" }}>{t("COMMON_NO_DATA")}</div>
+            <div style={{ textAlign: "center", padding: "10px" }}>
+              {t("COMMON_NO_DATA")}
+            </div>
           }
         />
       )}

@@ -1,14 +1,17 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, Fragment } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
-import { Button, PanelCard } from "@egovernments/digit-ui-components";
+import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
+import { PanelCard } from "@egovernments/digit-ui-components";
 import { ReposeScreenType } from "../../constants/enums";
 
 const ResponseScreen = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const { state } = useLocation();
-  const back = state?.back || "BACK";
+  const back = state?.back ? state?.back : "BACK";
 
   return (
     <>
@@ -26,9 +29,10 @@ const ResponseScreen = () => {
             ? []
             : [
                 <Button
-                  key="back"
                   label={t(back)}
-                  onClick={() => navigate(`/${window.contextPath}/employee/`)}
+                  onClick={() => {
+                    navigate(`/${window.contextPath}/employee/`);
+                  }}
                   variation="teritiary"
                   icon="ArrowForward"
                   isSuffix
@@ -46,17 +50,17 @@ const ResponseScreen = () => {
         sortFooterButtons
         style={{}}
         type={state?.state}
-      />
+      ></PanelCard>
       <ActionBar className="mc_back">
         <Button
           style={{ margin: "0.5rem", marginLeft: "6rem", width: "25%" }}
           variation="primary"
-          label={state.isCampaign === ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
-          icon="ArrowForward"
+          label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
+          icon={"ArrowForward"}
           isSuffix
           onClick={() => {
             const backlink =
-              state.isCampaign === ReposeScreenType.CREAT_EUSER
+              state.isCampaign == ReposeScreenType.CREAT_EUSER
                 ? `/${window.contextPath}/employee/hrms/assign-campaign/${state?.fileName?.code}`
                 : `/${window.contextPath}/employee/`;
             navigate(backlink);

@@ -75,6 +75,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
     initTokens(stateCode);
     setLoaded(true);
   }, [stateCode, isReady]);

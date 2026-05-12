@@ -1,87 +1,56 @@
-import { useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { BreadCrumb } from "@egovernments/digit-ui-react-components";
-import { lazyWithFallback } from "@egovernments/digit-ui-components";
-import { Employee } from "../../constants/Routes";
+import { Routes, Route, useLocation } from "react-router-dom";
 
-// Lazy-load all page components — same pattern as campaign-manager
-const Inbox = lazyWithFallback(
-  () => import(/* webpackChunkName: "pgr-inbox" */ "./Inbox"),
-  () => require("./Inbox").default,
-  { loaderText: "Loading Inbox..." }
-);
-
-const ComplaintDetails = lazyWithFallback(
-  () => import(/* webpackChunkName: "pgr-complaint-details" */ "./ComplaintDetails").then((m) => ({ default: m.ComplaintDetails })),
-  () => ({ default: require("./ComplaintDetails").ComplaintDetails }),
-  { loaderText: "Loading Complaint Details..." }
-);
-
-const CreateComplaint = lazyWithFallback(
-  () => import(/* webpackChunkName: "pgr-create-complaint" */ "./CreateComplaint").then((m) => ({ default: m.CreateComplaint })),
-  () => ({ default: require("./CreateComplaint").CreateComplaint }),
-  { loaderText: "Loading Create Complaint..." }
-);
-
-const Response = lazyWithFallback(
-  () => import(/* webpackChunkName: "pgr-emp-response" */ "./Response"),
-  () => require("./Response").default,
-  { loaderText: "Loading Response..." }
-);
-
-const InboxV2 = lazyWithFallback(
-  () => import(/* webpackChunkName: "pgr-inbox-v2" */ "./new-inbox"),
-  () => require("./new-inbox").default,
-  { loaderText: "Loading Inbox..." }
-);
-
-// Breadcrumb for PGR employee section
-const PGRBreadCrumb = ({ defaultPath }) => {
+const EmployeeApp = ({ stateCode, userType, tenants }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
 
-  const crumbs = [
-    { path: `/${window?.contextPath}/employee`, content: t("HOME"), show: true },
-    {
-      path: pathVar.includes("pgr/complaint/details") ? `/${window?.contextPath}/employee/pgr/inbox` : "",
-      content: t("PGR_INBOX_CRUMB"),
-      show: pathVar.includes("pgr/inbox") || pathVar.includes("pgr/complaint/details"),
-    },
-    {
-      path: "",
-      content: t("PGR_CREATE_CRUMB"),
-      show: pathVar.includes("pgr/complaint/create"),
-    },
-    {
-      path: "",
-      content: t("PGR_DETAILS_CRUMB"),
-      show: pathVar.includes("pgr/complaint/details"),
-    },
-  ];
-
-  return <BreadCrumb crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
-};
-
-// Employee app container — mounts at /{contextPath}/employee/pgr/*
-// React Router v6: Routes + Route element={} instead of Switch + Route component={}
-const EmployeePGRApp = () => {
-  const location = useLocation();
+  const PGRCreateComplaint = Digit?.ComponentRegistryService?.getComponent("PGRCreateComplaint");
+  const PGRComplaintDetails = Digit?.ComponentRegistryService?.getComponent("PGRComplaintDetails");
+  const PGRSearchInbox = Digit?.ComponentRegistryService?.getComponent("PGRSearchInbox");
+  const PGRResponse = Digit?.ComponentRegistryService?.getComponent("PGRResponse");
+  const BreadCrumbs = Digit?.ComponentRegistryService?.getComponent("PGRBreadCrumbs");
 
   return (
     <div className="ground-container">
-      <PGRBreadCrumb defaultPath={`/${window?.contextPath}/employee/pgr`} />
+      <React.Fragment>
+        <BreadCrumbs
+          location={location}
+          crumbs={[
+            {
+              content: t("ACTION_TEST_HOME"),
+              internalLink: `/${window?.contextPath}/employee`,
+              show: !location.pathname.includes("complaint-success"),
+            },
+            {
+              internalLink: `/${window?.contextPath}/employee/pgr/complaint/create`,
+              content: t("ACTION_TEST_CREATE_COMPLAINT"),
+              show: location.pathname.includes("complaint/create"),
+            },
+            {
+              internalLink: `/${window?.contextPath}/employee/pgr/inbox-v2`,
+              content: t("PGR_INBOX"),
+              show: location.pathname.includes("inbox") || location.pathname.includes("complaint-details"),
+            },
+            {
+              internalLink: `/${window?.contextPath}/employee/pgr/complaint-details`,
+              content: t("CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS"),
+              show: location.pathname.includes("complaint-details"),
+            },
+          ]}
+        />
+      </React.Fragment>
+
       <Routes>
-        <Route path="inbox" element={<Inbox />} />
-        <Route path="inbox-v2" element={<InboxV2 />} />
-        <Route path="complaint/create" element={<CreateComplaint parentUrl={`/${window?.contextPath}/employee/pgr`} />} />
-        {/* :id catches the serviceRequestId; no * needed in v6 */}
-        <Route path="complaint/details/:id" element={<ComplaintDetails />} />
-        <Route path="response" element={<Response />} />
+        <Route path="complaint/create" element={<PGRCreateComplaint />} />
+        <Route path="complaint-success" element={<PGRResponse />} />
+        <Route path="complaint-failed" element={<PGRResponse />} />
+        <Route path="complaint-details/:id" element={<PGRComplaintDetails />} />
+        <Route path="inbox-v2" element={<PGRSearchInbox />} />
       </Routes>
     </div>
   );
 };
 
-export default EmployeePGRApp;
+export default EmployeeApp;

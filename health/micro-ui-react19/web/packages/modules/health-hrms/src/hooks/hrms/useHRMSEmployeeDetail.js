@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import employeeDetailsFetch from "../../services/FetchEmployeeDetails";
+import { useQuery } from "@tanstack/react-query";
 
 const useHrmsEmployeeDetail = (userCode, tenantId) => {
   return useQuery({

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -11,16 +11,21 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
     config: { enabled: !!hierarchy?.hierarchyType },
   });
 
+  // list of all levels, e.g. ["COUNTRY","STATE","LGA",...]
   const levels = hierarchy?.boundaryHierarchy?.map((i) => i.boundaryType) || [];
+
   const [optionsByType, setOptionsByType] = useState({});
   const [selectedByType, setSelectedByType] = useState({});
 
   useEffect(() => {
+    // 1) wait for your array
     if (!Array.isArray(childrenData) || childrenData.length === 0) return;
 
+    // 2) pull out the single root node
     const root = childrenData[0].boundary?.[0];
     if (!root) return;
 
+    // DFS: find path from root → formData.code (if editing)
     const findPath = (node, code, trail = []) => {
       const here = [...trail, node];
       if (node.code === code) return here;
@@ -31,21 +36,32 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
       return [];
     };
 
-    const path = formData?.code ? findPath(root, formData.code) : [];
+    const path = formData?.code
+      ? findPath(root, formData.code)
+      : [];
+
     const newOpts = {};
     const newSel = {};
 
     if (path.length) {
+      // editing: pre-populate every level in path
       path.forEach((node, idx) => {
         const type = node.boundaryType;
         newSel[type] = { ...node, hierarchyType: hierarchy.hierarchyType };
-        newOpts[type] = idx === 0 ? [root] : path[idx - 1].children || [];
+
+        // siblings at this level
+        newOpts[type] = idx === 0
+          ? [root]
+          : (path[idx - 1].children || []);
+
+        // next-level options
         if ((node.children || []).length) {
           const next = node.children[0].boundaryType;
           newOpts[next] = node.children;
         }
       });
     } else {
+      // brand-new: only show root + its children
       newOpts[root.boundaryType] = [root];
     }
 
@@ -61,11 +77,13 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
     const opts = { ...optionsByType };
     const sel = { ...selectedByType, [type]: { ...node, hierarchyType: hierarchy.hierarchyType } };
 
+    // clear deeper levels
     for (let i = idx + 1; i < levels.length; i++) {
       delete opts[levels[i]];
       delete sel[levels[i]];
     }
 
+    // populate children of the selected node
     if (Array.isArray(node.children) && node.children.length) {
       opts[node.children[0].boundaryType] = node.children;
     }
@@ -76,15 +94,21 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
   };
 
   if (isLoading) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", width: "100%" }}>
-        <Loader />
-      </div>
-    );
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
   }
 
   return (
-    <LabelFieldPair>
+    <LabelFieldPair removeMargin={true}>
       <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
         {t("HRMS_BOUNDARY_LABEL")} {index}*
       </CardLabel>

@@ -150,7 +150,7 @@ const PaymentSetUpPage = () => {
       config: {
         enabled: true,
         select: (data) => data,
-        gcTime: Infinity, // Keep in cache forever
+        cacheTime: Infinity, // Keep in cache forever
         staleTime: Infinity, // Never consider stale
         refetchOnWindowFocus: false,
         refetchOnMount: false,
@@ -193,7 +193,7 @@ const PaymentSetUpPage = () => {
         const billingCycles = MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.BillingCycle || [];
         return billingCycles.sort((a, b) => a.order - b.order);
       },
-      gcTime: Infinity,
+      cacheTime: Infinity,
       staleTime: Infinity,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
@@ -434,32 +434,28 @@ const PaymentSetUpPage = () => {
           onError: (error) => {
             setLoading(false);
             navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-              state: {
-                state: "error",
-                info: "",
-                fileName: "",
-                description: "",
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                back: t("GO_BACK_TO_HOME"),
-                backlink: `/${window.contextPath}/employee`,
-                showFooter: false,
-              },
+              state: "error",
+              info: "",
+              fileName: "",
+              description: "",
+              message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+              back: t("GO_BACK_TO_HOME"),
+              backlink: `/${window.contextPath}/employee`,
+              showFooter: false,
             });
           },
           onSuccess: (responseData) => {
             setLoading(false);
             const camData = `<strong>${selectedCampaign?.name}</strong>`;
             navigate(`/${window.contextPath}/employee/payments/payment-setup-success`, {
-              state: {
-                state: "success",
-                info: "",
-                fileName: "",
-                description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
-                back: t("GO_BACK_TO_HOME"),
-                backlink: `/${window.contextPath}/employee`,
-                showFooter: false,
-              },
+              state: "success",
+              info: "",
+              fileName: "",
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
+              message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
+              back: t("GO_BACK_TO_HOME"),
+              backlink: `/${window.contextPath}/employee`,
+              showFooter: false,
             });
           },
         }
@@ -467,19 +463,17 @@ const PaymentSetUpPage = () => {
     } catch (err) {
       setLoading(false);
       navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-        state: {
-          state: "error",
-          info: "",
-          fileName: "",
-          description: "",
-          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-          back: t("GO_BACK_TO_HOME"),
-          backlink: `/${window.contextPath}/employee`,
-          showFooter: false,
-        },
+        state: "error",
+        info: "",
+        fileName: "",
+        description: "",
+        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+        back: t("GO_BACK_TO_HOME"),
+        backlink: `/${window.contextPath}/employee`,
+        showFooter: false,
       });
     }
-  }, [mDMSRatesCreate, wagePayload, navigate, t, selectedCampaign]);
+  }, [mDMSRatesCreate, wagePayload, history, t, selectedCampaign]);
 
   //INFO:: update mdms rates
   const updateRates = useCallback(async () => {
@@ -490,32 +484,28 @@ const PaymentSetUpPage = () => {
           onError: (error) => {
             setLoading(false);
             navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-              state: {
-                state: "error",
-                info: "",
-                fileName: "",
-                description: "",
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                back: t("GO_BACK_TO_HOME"),
-                backlink: `/${window.contextPath}/employee`,
-                showFooter: false,
-              },
+              state: "error",
+              info: "",
+              fileName: "",
+              description: "",
+              message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+              back: t("GO_BACK_TO_HOME"),
+              backlink: `/${window.contextPath}/employee`,
+              showFooter: false,
             });
           },
           onSuccess: (responseData) => {
             setLoading(false);
             const camData = `<strong>${selectedCampaign?.name}</strong>`;
             navigate(`/${window.contextPath}/employee/payments/payment-setup-success`, {
-              state: {
-                state: "success",
-                info: "",
-                fileName: "",
-                description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
-                message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
-                back: t("GO_BACK_TO_HOME"),
-                backlink: `/${window.contextPath}/employee`,
-                showFooter: false,
-              },
+              state: "success",
+              info: "",
+              fileName: "",
+              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
+              message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
+              back: t("GO_BACK_TO_HOME"),
+              backlink: `/${window.contextPath}/employee`,
+              showFooter: false,
             });
           },
         }
@@ -523,19 +513,17 @@ const PaymentSetUpPage = () => {
     } catch (err) {
       setLoading(false);
       navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-        state: {
-          state: "error",
-          info: "",
-          fileName: "",
-          description: "",
-          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-          back: t("GO_BACK_TO_HOME"),
-          backlink: `/${window.contextPath}/employee`,
-          showFooter: false,
-        },
+        state: "error",
+        info: "",
+        fileName: "",
+        description: "",
+        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+        back: t("GO_BACK_TO_HOME"),
+        backlink: `/${window.contextPath}/employee`,
+        showFooter: false,
       });
     }
-  }, [mDMSRatesUpdate, wagePayload, navigate, t, selectedCampaign]);
+  }, [mDMSRatesUpdate, wagePayload, history, t, selectedCampaign]);
 
   // Form Submission Handler
   const handleSubmit = useCallback(async () => {
@@ -569,16 +557,14 @@ const PaymentSetUpPage = () => {
             onError: (error) => {
               setLoading(false);
               navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-                state: {
-                  state: "error",
-                  info: "",
-                  fileName: "",
-                  description: "",
-                  message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                  back: t("GO_BACK_TO_HOME"),
-                  backlink: `/${window.contextPath}/employee`,
-                  showFooter: false,
-                },
+                state: "error",
+                info: "",
+                fileName: "",
+                description: "",
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
               });
             },
             onSuccess: async (responseData) => {
@@ -608,16 +594,14 @@ const PaymentSetUpPage = () => {
           {
             onError: (error) => {
               navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-                state: {
-                  state: "error",
-                  info: "",
-                  fileName: "",
-                  description: "",
-                  message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                  back: t("GO_BACK_TO_HOME"),
-                  backlink: `/${window.contextPath}/employee`,
-                  showFooter: false,
-                },
+                state: "error",
+                info: "",
+                fileName: "",
+                description: "",
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
               });
             },
             onSuccess: async (responseData) => {
@@ -632,16 +616,14 @@ const PaymentSetUpPage = () => {
       }
     } catch (err) {
       navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-        state: {
-          state: "error",
-          info: "",
-          fileName: "",
-          description: "",
-          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-          back: t("GO_BACK_TO_HOME"),
-          backlink: `/${window.contextPath}/employee`,
-          showFooter: false,
-        },
+        state: "error",
+        info: "",
+        fileName: "",
+        description: "",
+        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+        back: t("GO_BACK_TO_HOME"),
+        backlink: `/${window.contextPath}/employee`,
+        showFooter: false,
       });
     }
   }, [
@@ -657,7 +639,7 @@ const PaymentSetUpPage = () => {
     createBillConfig,
     updateRates,
     createRates,
-    navigate,
+    history,
     t,
   ]);
 
@@ -707,7 +689,7 @@ const PaymentSetUpPage = () => {
     //}
 
     setPopUp(true);
-  }, [isCampaignStarted, edit, navigate, handleEditClick]);
+  }, [isCampaignStarted, edit, history, handleEditClick]);
 
   // Show loading state
   if (loadingBilling || isCampaignLoading) {
@@ -813,10 +795,10 @@ const PaymentSetUpPage = () => {
                       })
                     )) && (
                   <span style={{ color: "red", fontSize: "0.8rem" }}>
-                    {`${t("HCM_AM_BILLING_CYCLE_DURATION_BETWEEN")}
-        ${billingCycle.minDuration}
-        ${t("HCM_AM_TO")}
-        ${billingCycle.maxDuration}
+                    {`${t("HCM_AM_BILLING_CYCLE_DURATION_BETWEEN")} 
+        ${billingCycle.minDuration} 
+        ${t("HCM_AM_TO")} 
+        ${billingCycle.maxDuration} 
         ${t("HCM_AM_DAYS")}`}
                   </span>
                 )}

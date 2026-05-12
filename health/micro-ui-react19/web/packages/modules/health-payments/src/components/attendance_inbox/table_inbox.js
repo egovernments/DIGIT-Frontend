@@ -186,7 +186,7 @@ const CustomInboxTable = ({
       );
     }
 
-    // history.push(
+    // navigate(
     //   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
     // );
   };

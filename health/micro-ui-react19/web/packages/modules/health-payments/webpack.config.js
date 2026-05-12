@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = !isProduction;
@@ -61,22 +61,20 @@ module.exports = {
   },
 
   performance: {
-    maxAssetSize: 100000,
-    maxEntrypointSize: 100000,
+    maxAssetSize: 500000,
+    maxEntrypointSize: 500000,
     hints: isProduction ? "warning" : false,
   },
 
   externals: {
-    // Core React ecosystem — provided by the parent app
     react: "React",
     "react-dom": "ReactDOM",
     "react-router-dom": "react-router-dom",
     "react-i18next": "react-i18next",
+    "react-hook-form": "react-hook-form",
     "@tanstack/react-query": "@tanstack/react-query",
-    // Redux — provided by parent app
     "react-redux": "react-redux",
     redux: "redux",
-    // DIGIT UI packages — provided by parent app
     "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
     "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",
     "@egovernments/digit-ui-libraries": "@egovernments/digit-ui-libraries",
@@ -117,18 +115,35 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)$/,
         type: "asset",
-        parser: { dataUrlCondition: { maxSize: 10 * 1024 } },
-        generator: { filename: "images/[name].[hash][ext]" },
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        type: "asset/resource",
-        generator: { filename: "fonts/[name].[hash][ext]" },
+        parser: {
+          dataUrlCondition: { maxSize: 10 * 1024 },
+        },
+        generator: {
+          filename: "images/[name].[hash][ext]",
+        },
       },
     ],
   },
 
   devtool: isProduction ? "hidden-source-map" : "cheap-module-source-map",
+
+  devServer: isDevelopment
+    ? {
+        static: {
+          directory: path.join(__dirname, "dist"),
+        },
+        hot: true,
+        historyApiFallback: true,
+        watchFiles: {
+          paths: ["src/**/*"],
+          options: {
+            ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
+            poll: 1000,
+            aggregateTimeout: 300,
+          },
+        },
+      }
+    : undefined,
 
   plugins: [
     new webpack.DefinePlugin({

@@ -24,7 +24,7 @@ export const useFetchAllBoundaryHierarchies = ({ tenantId, config = {} }) => {
     config: {
       enabled: !!tenantId,
       staleTime: config.staleTime || 5 * 60 * 1000,
-      gcTime: config.cacheTime || 15 * 60 * 1000,
+      cacheTime: config.cacheTime || 15 * 60 * 1000,
       ...config,
     },
   });
@@ -60,11 +60,22 @@ export const useFetchAllBoundaryHierarchies = ({ tenantId, config = {} }) => {
   }, [data]);
 
   useEffect(() => {
-    if (totalCount !== null && allBoundaries.length < totalCount && !isLoading && !fetchingMore.current) {
+    if (
+      totalCount !== null &&
+      allBoundaries.length < totalCount &&
+      !isLoading &&
+      !fetchingMore.current
+    ) {
       fetchingMore.current = true;
       setOffset((prev) => prev + DEFAULT_LIMIT);
     }
   }, [totalCount, allBoundaries, isLoading]);
 
-  return { data: allBoundaries, totalCount, isLoading, isError, error };
+  return {
+    data: allBoundaries,
+    totalCount,
+    isLoading,
+    isError,
+    error,
+  };
 };

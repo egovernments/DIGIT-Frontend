@@ -1,114 +1,112 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
-import { useTranslation } from "react-i18next";
-
-import { pgr as PGRHooks } from "./hooks";
-import { UICustomizations } from "./configs/UICustomizations";
+import { Loader } from "@egovernments/digit-ui-components";
+import React, { useEffect } from "react";
+import { default as EmployeeApp } from "./pages/employee";
 import PGRCard from "./components/PGRCard";
-import TimeLine from "./components/TimeLine";
-import Complaint from "./components/Complaint";
-import { FormComposer } from "./components/FormComposer";
+import { overrideHooks, updateCustomConfigs } from "./utils";
+import { CustomisedHooks } from "./hooks";
+import { ProviderContext } from "./utils/context";
+import BoundaryComponent from "./components/BoundaryComponent";
+import BoundaryComponentWithCard from "./components/BoundaryComponentWithCard";
+import DatePickerComponent from "./components/DatePickerComponent";
+import PGRDetails from "./pages/employee/PGRDetails";
+import TimelineWrapper from "./components/TimeLineWrapper";
+import AssigneeComponent from "./components/AssigneeComponent";
+import PGRSearchInbox from "./pages/employee/PGRInbox";
+import CreateComplaint from "./pages/employee/CreateComplaint";
+import Response from "./components/Response";
+import BreadCrumbs from "./components/BreadCrumbs";
+import UploadFileComponent from "./components/UploadFileComponent";
 
-import { ComplaintDetails } from "./pages/employee/ComplaintDetails";
-import { CreateComplaint as CreateComplaintEmp } from "./pages/employee/CreateComplaint";
-import Inbox from "./pages/employee/Inbox";
-import InboxV2 from "./pages/employee/new-inbox";
-import ResponseEmp from "./pages/employee/Response";
+export const PGRModule = ({ stateCode, userType, tenants }) => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  useEffect(() => {
+    Digit.SessionStorage.del("filtersForInbox");
+  }, []);
 
-import { CreateComplaint as CreateComplaintCitizen } from "./pages/citizen/Create";
-import { ComplaintsList } from "./pages/citizen/ComplaintsList";
-import ComplaintDetailsPage from "./pages/citizen/ComplaintDetails";
-import SelectRating from "./pages/citizen/Rating/SelectRating";
-import RatingAndFeedBack from "./pages/citizen/Rating/Rating";
-import ResponseCitizen from "./pages/citizen/Response";
-import CitizenPGRApp from "./pages/citizen";
-import EmployeePGRApp from "./pages/employee";
+ 
 
-import { LOCALE } from "./constants/Localization";
-import { PGR_CITIZEN_CREATE_COMPLAINT } from "./constants/Citizen";
+  // Fetch hierarchy type from MDMS v2
+  const { isLoading: isMDMSLoading, data: HierarchySelectedForPGR } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "PGR",
+    [{ name: "HierarchySelectedForPGR" }],
+    {
+      select: (data) => {
+        // Extract hierarchyTypeCode from MDMS response
+        const hierarchyTypeCode = data?.PGR?.HierarchySelectedForPGR?.[0]?.hierarchyTypeCode;
+        return hierarchyTypeCode;
+      },
+    },
+    {
+      schemaCode: "PGR.HierarchySelectedForPGR",
+      limit: 10,
+      offset: 0
+    }
+  );
 
-const PGRModule = ({ stateCode, userType }) => {
+  const { data: hierarchies,
+    isLoading: isHierarchyLoading,
+  } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId, config:{refetchKey: HierarchySelectedForPGR, enabled: !!HierarchySelectedForPGR} });
+
+  // Set hierarchy in SessionStorage when both hierarchies and HierarchySelectedForPGR are available
+  useEffect(() => {
+    if (hierarchies && HierarchySelectedForPGR) {
+      // Find the matching hierarchy from hierarchies data
+      const selectedHierarchy = hierarchies.find(h => h.hierarchyType === HierarchySelectedForPGR);
+      if (selectedHierarchy) {
+        // Store the complete hierarchy object in sessionStorage
+        Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
+      }
+    }
+  }, [hierarchies, HierarchySelectedForPGR]);
+
+
+  const moduleCode = ["pgr",];
+  const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
-  const moduleCode = "PGR";
-  const { isLoading } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
-  if (isLoading) return <Loader />;
+  const { isLoading, data: store } = Digit.Services.useStore({
+    stateCode,
+    moduleCode,
+    language,
+    modulePrefix,
+  });
 
-  Digit.SessionStorage.set("PGR_STATE_CODE", stateCode);
+  Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
+  let user = Digit?.SessionStorage.get("User");
 
-  return userType === "citizen" ? <CitizenPGRApp /> : <EmployeePGRApp />;
+
+  if (isLoading || isHierarchyLoading || isMDMSLoading) {
+    return (
+      <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+    );
+  }
+
+  return (
+    <ProviderContext>
+      <EmployeeApp stateCode={stateCode} userType={userType} tenants={tenants} />
+    </ProviderContext>
+  );
 };
 
-const PGRLinks = ({ matchPath }) => {
-  const { t } = useTranslation();
-  const [, , clearParams] = Digit.Hooks.useSessionStorage(PGR_CITIZEN_CREATE_COMPLAINT, {});
-
-  // Clear any stale session state when user lands on the home card
-  const { CitizenHomeCard, ComplaintIcon } = Digit?.ComponentRegistryService?.getComponent("CitizenHomeCard") ? {} : {};
-
-  const links = [
-    { link: `${matchPath}/create-complaint/complaint-type`, i18nKey: t("CS_COMMON_FILE_A_COMPLAINT") },
-    { link: `${matchPath}/complaints`, i18nKey: t(LOCALE.MY_COMPLAINTS) },
-  ];
-
-  const CitizenHomeCardComp = Digit.ComponentRegistryService.getComponent("CitizenHomeCard");
-  const ComplaintIconComp = Digit.ComponentRegistryService.getComponent("ComplaintIcon");
-
-  return CitizenHomeCardComp ? (
-    <CitizenHomeCardComp header={t(LOCALE.HOME_COMPLAINTS)} links={links} Icon={ComplaintIconComp} />
-  ) : null;
-};
-
-// All components registered globally — looked up at runtime via
-// Digit.ComponentRegistryService.getComponent("key")
 const componentsToRegister = {
   PGRModule,
-  PGRLinks,
   PGRCard,
-  PGRTimeLine: TimeLine,
-  PGRComplaint: Complaint,
-  PGRFormComposer: FormComposer,
-  // Employee pages
-  PGRComplaintDetails: ComplaintDetails,
-  PGRCreateComplaintEmp: CreateComplaintEmp,
-  PGRInbox: Inbox,
-  PGRInboxV2: InboxV2,
-  PGRResponseEmp: ResponseEmp,
-  // Citizen pages
-  PGRCreateComplaintCitizen: CreateComplaintCitizen,
-  PGRComplaintsList: ComplaintsList,
-  PGRComplaintDetailsPage: ComplaintDetailsPage,
-  PGRSelectRating: SelectRating,
-  PGRRatingAndFeedBack: RatingAndFeedBack,
-  PGRResponseCitizen: ResponseCitizen,
+  PGRBoundaryComponent: BoundaryComponent,
+  BoundaryComponentWithCard: BoundaryComponentWithCard,
+  DatePickerComponent: DatePickerComponent,
+  PGRComplaintDetails: PGRDetails,
+  PGRTimeLineWrapper: TimelineWrapper,
+  PGRAssigneeComponent: AssigneeComponent,
+  PGRSearchInbox,
+  PGRCreateComplaint: CreateComplaint,
+  PGRResponse: Response,
+  PGRBreadCrumbs: BreadCrumbs,
+  UploadFileComponent
 };
 
-const setupLibraries = (Library, service, method) => {
-  window.Digit = window.Digit || {};
-  window.Digit[Library] = window.Digit[Library] || {};
-  window.Digit[Library][service] = method;
-};
-
-// Register all PGR hooks on Digit.Hooks.pgr
-const overrideHooks = () => {
-  Object.entries(PGRHooks).forEach(([method, fn]) => {
-    setupLibraries("Hooks", "pgr", {
-      ...(window.Digit?.Hooks?.pgr || {}),
-      [method]: fn,
-    });
-  });
-};
-
-// Merge UICustomizations into the global config (same pattern as campaign-manager)
-const updateCustomConfigs = () => {
-  setupLibraries("Customizations", "commonUiConfig", {
-    ...window?.Digit?.Customizations?.commonUiConfig,
-    ...UICustomizations,
-  });
-};
-
-// Called by parent app (src/index.js) after initLibraries()
 export const initPGRComponents = () => {
-  overrideHooks();
+  overrideHooks(CustomisedHooks);
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);

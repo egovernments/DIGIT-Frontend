@@ -1,40 +1,33 @@
-import { Request } from "@egovernments/digit-ui-libraries";
 import Urls from "../urls";
 
 export const StaffService = {
   search_staff: (data, tenantId) =>
-    Request({
-      url: `${Urls.hcm.searchStaff}`,
+    Digit.CustomService.getResponse({
+      url: Urls.hcm.searchStaff,
       useCache: false,
       method: "POST",
-      data: data,
+      body: data,
       params: { tenantId, limit: 100, offset: 0 },
-      auth: true,
-      userService: false,
     }),
   delete_staff: ({ projectStaff }) =>
-    Request({
-      url: `${Urls.hcm.deleteStaff}`,
+    Digit.CustomService.getResponse({
+      url: Urls.hcm.deleteStaff,
       useCache: false,
       method: "POST",
-      data: { ProjectStaff: projectStaff },
-      auth: true,
-      userService: false,
+      body: { ProjectStaff: projectStaff },
     }),
   searchStaffByProject: ({ projectId, tenantId }) =>
-    Request({
-      url: `${Urls.hcm.searchStaff}`,
+    Digit.CustomService.getResponse({
+      url: Urls.hcm.searchStaff,
       useCache: false,
       method: "POST",
-      data: { ProjectStaff: { projectId } },
+      body: { ProjectStaff: { projectId } },
       params: { tenantId, limit: 100, offset: 0 },
-      auth: true,
-      userService: false,
     }),
   search_project: ({ tenantId, projects, includeDescendants, includeImmediateChildren }) =>
-    Request({
-      url: `${Urls.hcm.searchProject}`,
-      useCache: true,
+    Digit.CustomService.getResponse({
+      url: Urls.hcm.searchProject,
+      useCache: false,
       method: "POST",
       params: {
         tenantId,
@@ -44,17 +37,31 @@ export const StaffService = {
         includeDescendants,
         includeImmediateChildren,
       },
-      data: { Projects: projects },
-      auth: true,
-      userService: false,
+      body: { Projects: projects },
     }),
+  getProjectDetails: async ({ userId, tenantId, includeDescendants, includeImmediateChildren }) => {
+    let projectStaff = [];
+    let projectDetails = [];
+    try {
+      await StaffService.search_staff({ userId }, tenantId)
+        .then((res) => { projectStaff = res?.ProjectStaff; })
+        .catch((err) => err);
+      if (projectStaff.some((staff) => staff?.projectId?.length !== 0)) {
+        const projects = projectStaff.map((s) => ({ id: s.projectId, tenantId: s.tenantId }));
+        await StaffService.search_project({ tenantId, projects, includeDescendants, includeImmediateChildren })
+          .then((res) => { projectDetails = res?.Project; })
+          .catch((err) => err);
+      }
+      return projectDetails;
+    } catch (err) {
+      return projectDetails;
+    }
+  },
   createStaff: async ({ projectStaff }) =>
-    Request({
-      url: `${Urls.hcm.createStaff}`,
+    Digit.CustomService.getResponse({
+      url: Urls.hcm.createStaff,
       useCache: false,
       method: "POST",
-      data: { ProjectStaff: projectStaff, apiOperation: "CREATE" },
-      auth: true,
-      userService: false,
+      body: { ProjectStaff: projectStaff, apiOperation: "CREATE" },
     }),
 };

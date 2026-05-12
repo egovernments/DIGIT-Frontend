@@ -1,5 +1,5 @@
 import useBoundriesFetch from "./boundaries/useFetchBoundaries";
-import utils from "./hook_setup";
+import utils from "../hooks/hook_setup";
 import useHRMSCreate from "./hrms/useHRMSCreate";
 import useHRMSSearch from "./hrms/useHRMSSearch";
 import useHRMSStaffCreate from "./hrms/useHRMSStaffCreate";
@@ -21,11 +21,20 @@ const hrms = {
   useFetchAllBoundaryHierarchies,
 };
 
-const Hooks = { hrms };
-
-const Utils = {
-  browser: { hrms: () => {} },
-  hrms: { ...utils },
+const Hooks = {
+  hrms,
 };
 
-export const CustomisedHooks = { Hooks, Utils };
+const Utils = {
+  browser: {
+    hrms: () => {},
+  },
+  hrms: {
+    ...utils,
+  },
+};
+
+export const CustomisedHooks = {
+  Hooks,
+  Utils,
+};

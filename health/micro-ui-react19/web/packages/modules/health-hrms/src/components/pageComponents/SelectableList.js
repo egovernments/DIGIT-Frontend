@@ -1,12 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function SelectableList({ selectableList, onSelect }) {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const handleSelect = (user) => {
-    setSelectedUserId(user);
-    if (onSelect) onSelect(user);
+  const handleSelect = (userId) => {
+    
+    setSelectedUserId(userId);
+    if (onSelect) {
+      onSelect(userId); // send id back to parent
+    }
   };
+
+
+  // return <div>HEHEEH</div>
 
   return (
     <div>

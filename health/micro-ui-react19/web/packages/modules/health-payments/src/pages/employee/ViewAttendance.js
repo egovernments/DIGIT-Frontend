@@ -207,7 +207,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   }, [data]);
 
-
+  
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${musterRollContextPath}/v1/_create`,
   });
@@ -235,25 +235,21 @@ const ViewAttendance = ({ editAttendance = false }) => {
         {
           onSuccess: (data) => {
             navigate(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
-              state: {
-                state: "success",
-                info: t("HCM_AM_MUSTER_ROLL_ID"),
-                fileName: data?.musterRolls?.[0]?.musterRollNumber,
-                description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
-                message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
-                back: t(`GO_BACK_TO_HOME`),
-                backlink: `/${window.contextPath}/employee`,
-              },
+              state: "success",
+              info: t("HCM_AM_MUSTER_ROLL_ID"),
+              fileName: data?.musterRolls?.[0]?.musterRollNumber,
+              description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
+              message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
             });
           },
           onError: (error) => {
             navigate(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
-              state: {
-                state: "error",
-                message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
-                back: t(`GO_BACK_TO_HOME`),
-                backlink: `/${window.contextPath}/employee`,
-              },
+              state: "error",
+              message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`,
             });
           },
         }
@@ -480,7 +476,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     </div>
   );
 
-  if (updateMutation.isLoading) {
+  if (updateMutation.isPending) {
     return <Loader variant={"OverlayLoader"} />;
   }
 
@@ -491,7 +487,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     isIndividualsLoading ||
     isMusterRollLoading ||
     isAllIndividualsLoading ||
-    mutation.isLoading ||
+    mutation.isPending ||
     isrefetching
   ) {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
@@ -652,7 +648,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               onClick={() => {
                 fromCampaignSupervisor
                   ? navigate(`/${window.contextPath}/employee/payments/generate-bill`, {
-                      state: { fromViewScreen: true },
+                      fromViewScreen: true,
                     })
                   : navigate(`/${window.contextPath}/employee/payments/registers-inbox`);
               }}
@@ -672,7 +668,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               style={{ minWidth: "14rem" }}
               type="button"
               variation="primary"
-              isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
+              isDisabled={updateMutation.isPending || updateDisabled || !isSubmitEnabled}
             />
           ) : (
             <div

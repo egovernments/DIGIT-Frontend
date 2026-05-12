@@ -327,7 +327,7 @@ const BillInboxComponent = () => {
     }
   };
 
-  if (generateBillMutation.isLoading) {
+  if (generateBillMutation.isPending) {
     return <LoaderWithGap />;
   }
   if (isAttendanceLoading || isBillLoading) {
@@ -507,7 +507,7 @@ const BillInboxComponent = () => {
             }}
             type="button"
             variation="primary"
-            isDisabled={generateBillMutation.isLoading}
+            isDisabled={generateBillMutation.isPending}
           />
         </ActionBar>
       )}

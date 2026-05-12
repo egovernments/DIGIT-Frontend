@@ -1,43 +1,19 @@
-import { useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Routes, Route } from "react-router-dom";
-import { lazyWithFallback } from "@egovernments/digit-ui-components";
-import BreadCrumbs from "../../components/pageComponents/BreadCrumb";
-
-const EmployeeDetailScreen = lazyWithFallback(
-  () => import(/* webpackChunkName: "hrms-details" */ "./employeeDetails"),
-  () => require("./employeeDetails").default,
-  { loaderText: "Loading Employee Details..." }
-);
-
-const InboxSearch = lazyWithFallback(
-  () => import(/* webpackChunkName: "hrms-inbox" */ "./Inbox"),
-  () => require("./Inbox").default,
-  { loaderText: "Loading Inbox..." }
-);
-
-const CreateEmployee = lazyWithFallback(
-  () => import(/* webpackChunkName: "hrms-create" */ "./createEmployee"),
-  () => require("./createEmployee").default,
-  { loaderText: "Loading Create Employee..." }
-);
-
-const ResponseScreen = lazyWithFallback(
-  () => import(/* webpackChunkName: "hrms-response" */ "./Response"),
-  () => require("./Response").default,
-  { loaderText: "Loading Response..." }
-);
-
-const AssignCampaignInbox = lazyWithFallback(
-  () => import(/* webpackChunkName: "hrms-assign-campaign" */ "./CampaignAssignmentInbox"),
-  () => require("./CampaignAssignmentInbox").default,
-  { loaderText: "Loading Campaign Assignment..." }
-);
+import { Link, Routes, Route, useLocation } from "react-router-dom";
 
 const EmployeeApp = () => {
   const { t } = useTranslation();
   const location = useLocation();
 
+  const EmployeeDetails = Digit?.ComponentRegistryService?.getComponent("EmployeeDetailScreen");
+  const Inbox = Digit?.ComponentRegistryService?.getComponent("InboxSearch");
+  const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
+  const AssignCampaignInbox = Digit?.ComponentRegistryService?.getComponent("AssignCampaignInbox");
+  const ResponseScreen = Digit?.ComponentRegistryService?.getComponent("ResponseScreen");
+
+  const BreadCrumbs = Digit?.ComponentRegistryService?.getComponent("BreadCrumbs");
+  
   return (
     <div className="ground-container">
       <BreadCrumbs
@@ -51,10 +27,7 @@ const EmployeeApp = () => {
             content: t("CS_COMMON_INBOX"),
             internalLink: `/${window?.contextPath}/employee/hrms/inbox`,
             show:
-              Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "INBOX" ||
-              location.pathname.includes("details") ||
-              location.pathname.includes("update") ||
-              location.pathname.includes("edit"),
+              Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "INBOX" || location.pathname.includes("details") || location.pathname.includes("update") || location.pathname.includes("edit"),
           },
           {
             content: t("details"),
@@ -79,13 +52,13 @@ const EmployeeApp = () => {
         ]}
       />
       <Routes>
-        <Route path="inbox" element={<InboxSearch />} />
-        <Route path="response" element={<ResponseScreen />} />
         <Route path="create" element={<CreateEmployee />} />
+        <Route path="response" element={<ResponseScreen />} />
         <Route path="edit/:id" element={<CreateEmployee editUser={true} />} />
         <Route path="assign-campaign/:id" element={<AssignCampaignInbox />} />
         <Route path="update/assign-campaign/:id" element={<AssignCampaignInbox editCampaign={true} />} />
-        <Route path="details/:id" element={<EmployeeDetailScreen />} />
+        <Route path="inbox" element={<Inbox />} />
+        <Route path="details/:id" element={<EmployeeDetails />} />
       </Routes>
     </div>
   );

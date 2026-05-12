@@ -1,63 +1,17 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Routes, Route } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { lazyWithFallback } from "@egovernments/digit-ui-components";
+import { Routes, Route, useLocation } from "react-router-dom";
+import ViewAttendance from "./ViewAttendance";
 import BreadCrumbs from "../../components/BreadCrumbs";
+import Response from "../../components/Response";
+import AttendanceInbox from "./attendance_inbox";
+import BillInbox from "./bill_inbox";
+import MyBills from "./my_bills";
+import ProjectSelect from "./project_selection";
+import EditRegister from "./EditRegister";
+import InboxAttendeesSearch from "./AttendeeSearchAssign";
+import PaymentSetUpPage from "./payment_setup";
 
-const ViewAttendance = lazyWithFallback(
-  () => import(/* webpackChunkName: "view-attendance" */ "./ViewAttendance"),
-  () => require("./ViewAttendance").default,
-  { loaderText: "Loading View Attendance..." }
-);
-
-const AttendanceInbox = lazyWithFallback(
-  () => import(/* webpackChunkName: "attendance-inbox" */ "./attendance_inbox"),
-  () => require("./attendance_inbox").default,
-  { loaderText: "Loading Attendance Inbox..." }
-);
-
-const BillInbox = lazyWithFallback(
-  () => import(/* webpackChunkName: "bill-inbox" */ "./bill_inbox"),
-  () => require("./bill_inbox").default,
-  { loaderText: "Loading Bill Inbox..." }
-);
-
-const MyBills = lazyWithFallback(
-  () => import(/* webpackChunkName: "my-bills" */ "./my_bills"),
-  () => require("./my_bills").default,
-  { loaderText: "Loading My Bills..." }
-);
-
-const ProjectSelect = lazyWithFallback(
-  () => import(/* webpackChunkName: "project-selection" */ "./project_selection"),
-  () => require("./project_selection").default,
-  { loaderText: "Loading Project Selection..." }
-);
-
-const EditRegister = lazyWithFallback(
-  () => import(/* webpackChunkName: "edit-register" */ "./EditRegister"),
-  () => require("./EditRegister").default,
-  { loaderText: "Loading Edit Register..." }
-);
-
-const InboxAttendeesSearch = lazyWithFallback(
-  () => import(/* webpackChunkName: "attendee-search-assign" */ "./AttendeeSearchAssign"),
-  () => require("./AttendeeSearchAssign").default,
-  { loaderText: "Loading Attendee Search..." }
-);
-
-const PaymentSetUpPage = lazyWithFallback(
-  () => import(/* webpackChunkName: "payment-setup" */ "./payment_setup"),
-  () => require("./payment_setup").default,
-  { loaderText: "Loading Payment Setup..." }
-);
-
-const Response = lazyWithFallback(
-  () => import(/* webpackChunkName: "response" */ "../../components/Response"),
-  () => require("../../components/Response").default,
-  { loaderText: "Loading..." }
-);
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -103,8 +57,6 @@ const ProjectBreadCrumb = ({ location }) => {
 };
 
 const App = ({ stateCode, userType, tenants }) => {
-  const location = useLocation();
-
   return (
     <div className="ground-container">
       <ProjectBreadCrumb location={location} />

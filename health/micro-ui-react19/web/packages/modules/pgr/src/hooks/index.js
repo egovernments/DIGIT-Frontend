@@ -1,14 +1,40 @@
-import useSearchComplaints from "./useSearchComplaints";
-import useCreateComplaint from "./useCreateComplaint";
-import useUpdateComplaint from "./useUpdateComplaint";
-import useComplaintTypes from "./useComplaintTypes";
-import useInboxData from "./useInboxData";
+import utils from "../utils";
+import useProjectSearch from "./project/useProjectSearch";
+import useFetchBoundaries from "./boundary/useFetchBoundaries";
+import useCreateComplaint from "./pgr/useCreateComplaint";
+import usePGRSearch from "./pgr/usePGRSearch";
+import usePGRUpdate from "./pgr/usePGRUpdate";
+import useServiceDefs from "./pgr/useServiceDefs";
+import { useFetchAllBoundaryHierarchies } from "./boundary/useFetchAllHierarchies";
 
-// All PGR hooks — registered on Digit.Hooks.pgr in Module.js
-export const pgr = {
-  useSearchComplaints,
+const pgr = {
+  useProjectSearch,
+  useFetchBoundaries,
   useCreateComplaint,
-  useUpdateComplaint,
-  useComplaintTypes,
-  useInboxData,
+  usePGRSearch,
+  usePGRUpdate,
+  useServiceDefs,
+  useFetchAllBoundaryHierarchies,
 };
+
+
+
+
+const Hooks = {
+  pgr,
+};
+
+const Utils = {
+  browser: {
+    pgr: () => { },
+  },
+  pgr: {
+    ...utils,
+  },
+};
+
+export const CustomisedHooks = {
+  Hooks,
+  Utils,
+};
+

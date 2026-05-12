@@ -94,7 +94,7 @@ const BillInboxTable = ({ ...props }) => {
                     navigate(
                       `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`,
                       {
-                        state: { fromCampaignSupervisor: true },
+                        fromCampaignSupervisor: true,
                       }
                     )
             }
@@ -169,7 +169,7 @@ const BillInboxTable = ({ ...props }) => {
 
   const handleRowClick = (row) => {
     navigate(`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`, {
-      state: { fromCampaignSupervisor: true },
+      fromCampaignSupervisor: true,
     });
   };
 
