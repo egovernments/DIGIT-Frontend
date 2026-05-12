@@ -274,6 +274,7 @@ export const CreateEmployeeConfig = {
               type: "dropdown",
               label: "HRMS_ROLES",
               disable: false,
+              disablePortal:true,
               populators: {
                 name: "RolesAssigned",
                 optionsKey: "name",
