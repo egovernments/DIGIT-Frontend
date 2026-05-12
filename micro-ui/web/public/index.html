@@ -13,6 +13,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#00bcd1" />
   <title>DIGIT</title>
+  <script>
+    // Workaround for @egovernments/digit-ui-components Dropdown bug.
+    // The Dropdown component runs a mount-time useEffect that calls
+    // `scrollIntoView({behavior:"smooth",block:"center",inline:"center"})` on
+    // itself whenever its bounding rect sits outside the viewport. On tall
+    // forms the dropdowns below the fold each scroll the page downward on
+    // first paint — the last one wins. We monkey-patch
+    // Element.prototype.scrollIntoView to no-op only when (a) the target
+    // element is a Dropdown root (identified by class) AND (b) the current
+    // page is one of the known-affected PGR pages. Every other page and
+    // every other scrollIntoView call passes through unchanged.
+    (function () {
+      var orig = Element.prototype.scrollIntoView;
+      var DROPDOWN_CLASS = /(^|\s)(digit-dropdown-employee-select-wrap|digit-dropdown-select-wrap)(\s|$)/;
+      function isAffectedPage() {
+        var p = location.pathname;
+        return /\/employee\/pgr\/complaint\/create(\/|$)/.test(p)
+            || /\/employee\/pgr\/inbox(\/|$)/.test(p);
+      }
+      Element.prototype.scrollIntoView = function () {
+        var cls = this && typeof this.className === "string" ? this.className : "";
+        if (DROPDOWN_CLASS.test(cls) && isAffectedPage()) return;
+        return orig.apply(this, arguments);
+      };
+    })();
+  </script>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
   <!-- Matomo -->
