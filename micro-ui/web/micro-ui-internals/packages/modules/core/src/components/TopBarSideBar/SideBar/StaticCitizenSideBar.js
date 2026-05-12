@@ -102,15 +102,18 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     toggleSidebar(false);
     setShowDialog(true);
   };
-  const handleOnSubmit = () => {
-    if (Digit.Utils.getMultiRootTenant()) {
-      Digit.UserService.logout();
-      setShowDialog(false);
-      window.location.href = `/${window?.contextPath}/citizen/login`;
-    } else {
-      Digit.UserService.logout();
-      setShowDialog(false);
+  const handleOnSubmit = async () => {
+    const savedDigitLocale = window.sessionStorage.getItem("Digit.locale");
+    try {
+      await Digit.UserService.logoutUser();
+    } catch (e) {}
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    if (savedDigitLocale) {
+      window.sessionStorage.setItem("Digit.locale", savedDigitLocale);
     }
+    setShowDialog(false);
+    window.location.replace(`/${window?.contextPath}/citizen`);
   };
   const handleOnCancel = () => {
     setShowDialog(false);

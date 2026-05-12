@@ -26,21 +26,24 @@ const TopBarSideBar = ({
     setShowDialog(true);
   };
   const handleOnSubmit = async () => {
+    const savedDigitLocale = window.sessionStorage.getItem("Digit.locale");
+    const isSuperUserWithMultipleRootTenant = Digit?.UserService?.hasAccess("SUPERUSER") && Digit?.Utils?.getMultiRootTenant();
     try {
-      const isSuperUserWithMultipleRootTenant = Digit?.UserService?.hasAccess("SUPERUSER") && Digit?.Utils?.getMultiRootTenant();
-      if (isSuperUserWithMultipleRootTenant) {
-        try {
-          await Digit.UserService.logoutUser();
-        } catch (e) {}
-        window.localStorage.clear();
-        window.sessionStorage.clear();
-        const ts = Date.now();
-        window.location.replace(`/${window?.globalPath}/user/login?ts=${ts}`);
-      } else {
-        Digit.UserService.logout();
-      }
-    } finally {
-      setShowDialog(false);
+      await Digit.UserService.logoutUser();
+    } catch (e) {}
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    if (savedDigitLocale) {
+      window.sessionStorage.setItem("Digit.locale", savedDigitLocale);
+    }
+    setShowDialog(false);
+    if (isSuperUserWithMultipleRootTenant) {
+      const ts = Date.now();
+      window.location.replace(`/${window?.globalPath}/user/login?ts=${ts}`);
+    } else if (CITIZEN) {
+      window.location.replace(`/${window?.contextPath}/citizen`);
+    } else {
+      window.location.replace(`/${window?.contextPath}/employee/user/language-selection`);
     }
   };
   const handleOnCancel = () => {
