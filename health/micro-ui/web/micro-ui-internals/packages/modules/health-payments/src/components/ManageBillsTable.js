@@ -81,7 +81,7 @@ const ManageBillsTable = ({ ...props }) => {
             source: {
                 name: colHeader(t("HCM_AM_SOURCE")),
                 selector: () => (
-                    <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
+                    <div className="ellipsis-cell" title={t("HCM_AM_ATTENDANCE")} style={{ paddingRight: "1rem" }}>
                         {t("HCM_AM_ATTENDANCE")}
                     </div>
                 ),
@@ -173,19 +173,20 @@ const ManageBillsTable = ({ ...props }) => {
                             variation="secondary"
                         />
                     ) : (
-                        <div>
+                        <div title={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}>
                             <Tag
                                 {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
                                 label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
                                 showIcon={true}
                                 {...(reportDetails?.status === "FAILED" && { type: "error" })}
+                                style={{ whiteSpace: "normal", wordBreak: "break-word", height: "auto", minHeight: "unset" }}
                             />
                         </div>
                     );
                 },
-                grow: 0,
-                width: "200px",
-                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+                grow: 1,
+                minWidth: "200px",
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px", overflow: "visible" },
             },
     
             sendForApproval: {
@@ -238,19 +239,20 @@ const ManageBillsTable = ({ ...props }) => {
                             variation="secondary"
                         />
                     ) : (
-                        <div>
+                        <div title={advisoryReport?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}>
                             <Tag
                                 {...(advisoryReport?.status !== "FAILED" && { icon: "Info" })}
                                 label={advisoryReport?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
                                 showIcon={true}
                                 {...(advisoryReport?.status === "FAILED" && { type: "error" })}
+                                style={{ whiteSpace: "normal", wordBreak: "break-word", height: "auto", minHeight: "unset" }}
                             />
                         </div>
                     );
                 },
-                grow: 0,
-                width: "260px",
-                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+                grow: 1,
+                minWidth: "260px",
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px", overflow: "visible" },
             },
     
             // ── Status count columns (verification) ──────────────────────────

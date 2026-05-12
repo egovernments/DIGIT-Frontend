@@ -1952,6 +1952,7 @@ const downloadOptions = [
                   <Button
                     variation="secondary"
                     label={isReviewerEdit ? t("HCM_AM_CANCEL_EDIT") : t("HCM_AM_EDIT")}
+                    size="medium"
                     icon={isReviewerEdit ? "Close" : "Edit"}
                     onClick={() => {
                       if (isReviewerEdit) {
@@ -1967,6 +1968,7 @@ const downloadOptions = [
                       variation="secondary"
                       label={t("HCM_AM_EDIT_ON_EXCEL")}
                       icon="TableView"
+                      size="medium"
                       onClick={() => history.push(
                         `/${window.contextPath}/employee/payments/edit-bill-on-excel`,
                         { billID, billData }
@@ -2197,7 +2199,7 @@ const downloadOptions = [
               <Button
                 label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
                 onClick={() => setOpenSendForApprovalPopUp(true)}
-                style={ctaStyle}
+                style={{ ...ctaStyle, minWidth: "18rem" }}
                 textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"

@@ -240,8 +240,8 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                             type="button"
                             size="large"
                             variation="primary"
-                            label={t("HCM_AM_APPROVE")}
-                            title={t("HCM_AM_APPROVE")}
+                            label={t("HCM_AM_SAVE")}
+                            title={t("HCM_AM_SAVE")}
                             onClick={handleSave}
                             isDisabled={!isEditable || isSaving || !isFormValid}
                         />
