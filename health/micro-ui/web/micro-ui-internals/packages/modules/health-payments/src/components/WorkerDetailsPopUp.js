@@ -1,6 +1,8 @@
 import React, { useState, Fragment } from "react";
+import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextInput } from "@egovernments/digit-ui-components";
+import AlertPopUp from "./alertPopUp";
 
 /**
  * WorkerDetailsPopUp
@@ -17,6 +19,8 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     const [bankCode, setBankCode] = useState(row?.payee?.bankCode || "");
     const [beneficiaryCode, setBeneficiaryCode] = useState(row?.payee?.beneficiaryCode || "");
     const [errors, setErrors] = useState({});
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [pendingSubmitData, setPendingSubmitData] = useState(null);
 
     const validate = (trimmed) => {
         const e = {};
@@ -86,11 +90,23 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
             return;
         }
         setErrors({});
-        onSubmit({
+        setPendingSubmitData({
             payeeName: trimmedPayeeName,
             // payeePhoneNumber: trimmedPayeeMobile,
             ...(isBank ? { bankAccount: trimmedBankAccount, bankCode: trimmedBankCode, beneficiaryCode: trimmedBeneficiaryCode } : {}),
         });
+        setShowConfirm(true);
+    };
+
+    const handleConfirmSave = () => {
+        setShowConfirm(false);
+        onSubmit(pendingSubmitData);
+        setPendingSubmitData(null);
+    };
+
+    const handleCancelConfirm = () => {
+        setShowConfirm(false);
+        setPendingSubmitData(null);
     };
 
     const isFormValid =
@@ -138,6 +154,17 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
 
     return (
         <>
+            {showConfirm && ReactDOM.createPortal(
+                <AlertPopUp
+                    alertHeading={t("HCM_AM_CONFIRM_SAVE_HEADING")}
+                    alertMessage={t("HCM_AM_CONFIRM_SAVE_MESSAGE")}
+                    submitLabel="HCM_AM_CONFIRM"
+                    cancelLabel="HCM_AM_CANCEL"
+                    onPrimaryAction={handleConfirmSave}
+                    onClose={handleCancelConfirm}
+                />,
+                document.body
+            )}
             <PopUp
                 className="worker-details-popup"
                 style={{ width: "600px" }}

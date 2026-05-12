@@ -1716,7 +1716,8 @@ const downloadOptions = [
                 <span
                   style={{
                     backgroundColor:
-                      ["FULLY_VERIFIED", "REVIEWED", "FULLY_PAID"].includes(billData?.status)
+                      ["FULLY_VERIFIED", "REVIEWED", "FULLY_PAID"].includes(billData?.status) ||
+                      statusDisplayLabel === "HCM_AM_SENT_FOR_REVIEW"
                         ? "#00703C" // Green
                         : ["SENDING_FOR_REVIEW", "UNDER_REVIEW", "REVIEW_IN_PROGRESS", "VERIFICATION_IN_PROGRESS", "PARTIALLY_VERIFIED", "PARTIALLY_PAID"].includes(
                             billData?.status
