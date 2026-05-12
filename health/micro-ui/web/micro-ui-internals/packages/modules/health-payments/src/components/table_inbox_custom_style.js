@@ -1,4 +1,7 @@
-export const tableCustomStyle = (isInbox = false) => ({
+export const tableCustomStyle = (isInbox = false, options = {}) => {
+  const { rowHover = true } = options;
+
+  return {
   tableWrapper: {
     style: {
       minHeight: "fit-content",
@@ -28,9 +31,11 @@ export const tableCustomStyle = (isInbox = false) => ({
   rows: {
     style: {
       backgroundColor: "#FFFFFF",
-      "&:hover": {
-        backgroundColor: "#FBEEE8",
-      },
+      ...(rowHover && {
+        "&:hover": {
+          backgroundColor: "#FBEEE8",
+        },
+      }),
     },
   },
   headRow: {
@@ -105,7 +110,8 @@ export const tableCustomStyle = (isInbox = false) => ({
       },
     },
   },
-});
+};
+};
 
 
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({

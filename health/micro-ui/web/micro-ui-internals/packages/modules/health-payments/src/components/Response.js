@@ -62,7 +62,7 @@ const Response = () => {
           icon={"ExitToApp"}
           onClick={() => {
             const backlink = state?.backlink || `/${window.contextPath}/employee/`;
-            history.push(backlink);
+            history.replace(backlink);
           }}
         />
       </ActionBar>

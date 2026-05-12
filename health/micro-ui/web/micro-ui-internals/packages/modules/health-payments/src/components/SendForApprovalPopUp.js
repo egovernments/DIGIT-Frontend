@@ -4,6 +4,12 @@ import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-component
 import BulkUpload from "./BulkUpload";
 import { downloadFileWithName } from "../utils";
 
+const sanitizeComment = (value) =>
+  value
+    .replace(/\p{Emoji_Presentation}/gu, "")
+    .replace(/[<>&"]/g, "")
+    .replace(/\s{2,}/g, " ");
+
 const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -42,6 +48,13 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
     }
   }, []);
 
+  const handleCancel = useCallback(() => {
+    setUploadedFile([]);
+    setComment("");
+    setShowToast(null);
+    onClose();
+  }, [onClose]);
+
   const handleSave = () => {
     setShowToast(null);
     const trimmedComment = comment.trim();
@@ -59,9 +72,9 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
     <>
       <PopUp
         style={{ width: "700px" }}
-        onClose={onClose}
+        onClose={handleCancel}
         heading={t("HCM_AM_ADD_JUSTIFICATION_AND_COMMENTS")}
-        onOverlayClick={onClose}
+        onOverlayClick={handleCancel}
         equalWidthButtons={true}
         children={[
           <div key="upload-section">
@@ -87,7 +100,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             <TextArea
               style={{ maxWidth: "100%" }}
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => setComment(sanitizeComment(e.target.value))}
             />
           </div>,
         ]}
@@ -101,7 +114,7 @@ const SendForApprovalPopUp = ({ onClose, onSubmit }) => {
             variation="secondary"
             label={t("HCM_AM_CANCEL")}
             title={t("HCM_AM_CANCEL")}
-            onClick={onClose}
+            onClick={handleCancel}
           />,
           <Button
             key="submit-button"

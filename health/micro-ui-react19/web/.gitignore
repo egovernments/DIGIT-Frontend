@@ -22,6 +22,30 @@
 .env.development.local
 .env.test.local
 .env.production.local
+# dependencies
+node_modules/
+
+# production build
+build/
+
+# dist
+dist/
+packages/*/dist
+packages/modules/*/dist
+
+# environment files
+.env
+.env.*
+!.env.example
+
+# compressed assets
+*.gz
+
+# testing
+coverage/
+
+# misc
+.DS_Store
 
 # logs
 npm-debug.log*
@@ -37,3 +61,7 @@ stats.json
 .yarn/
 .pnp.*
 yarn-error.log
+
+# dev scripts
+start-dev.js
+start-windows.bat

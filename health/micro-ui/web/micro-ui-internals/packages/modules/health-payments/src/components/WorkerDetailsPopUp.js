@@ -12,7 +12,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     const { t } = useTranslation();
     const [payeeName, setPayeeName] = useState(row?.payee?.payeeName || "");
     const [payeeMobileNumber, setPayeeMobileNumber] = useState(row?.payee?.payeePhoneNumber || "");
-    const [operator] = useState(row?.payee?.paymentProvider || "BANK");
+    const [operator] = useState(row?.payee?.paymentProvider || "");
     const [bankAccount, setBankAccount] = useState(row?.payee?.bankAccount || "");
     const [bankCode, setBankCode] = useState(row?.payee?.bankCode || "");
     const [beneficiaryCode, setBeneficiaryCode] = useState(row?.payee?.beneficiaryCode || "");
@@ -43,9 +43,27 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
         return e;
     };
 
-    const setField = (key, setter) => (val) => {
-        setter(val);
-        if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+    /** Updates field state and re-runs validation so errors reflect the current input while typing. */
+    const onEditableChange = (field, value) => {
+        const nextPayeeName = field === "payeeName" ? value : payeeName;
+        const nextBankAccount = field === "bankAccount" ? value : bankAccount;
+        const nextBankCode = field === "bankCode" ? value : bankCode;
+        const nextBeneficiaryCode = field === "beneficiaryCode" ? value : beneficiaryCode;
+
+        if (field === "payeeName") setPayeeName(value);
+        else if (field === "bankAccount") setBankAccount(value);
+        else if (field === "bankCode") setBankCode(value);
+        else if (field === "beneficiaryCode") setBeneficiaryCode(value);
+
+        if (!isEditable) return;
+
+        const nextErrors = validate({
+            payeeName: nextPayeeName.trim(),
+            bankAccount: nextBankAccount.trim(),
+            bankCode: nextBankCode.trim(),
+            beneficiaryCode: nextBeneficiaryCode.trim(),
+        });
+        setErrors(nextErrors);
     };
 
     const handleSave = () => {
@@ -74,6 +92,16 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
             ...(isBank ? { bankAccount: trimmedBankAccount, bankCode: trimmedBankCode, beneficiaryCode: trimmedBeneficiaryCode } : {}),
         });
     };
+
+    const isFormValid =
+        Object.keys(
+            validate({
+                payeeName: payeeName.trim(),
+                bankAccount: bankAccount.trim(),
+                bankCode: bankCode.trim(),
+                beneficiaryCode: beneficiaryCode.trim(),
+            })
+        ).length === 0;
 
     const labelStyle = { fontWeight: "600", fontSize: "14px", marginBottom: "4px", color: "#0B0C0C" };
 
@@ -111,17 +139,18 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
     return (
         <>
             <PopUp
+                className="worker-details-popup"
                 style={{ width: "600px" }}
                 onClose={onClose}
                 heading={t("HCM_AM_EDIT_WORKER_DETAILS_LABEL")}
                 children={[
                     <div key="worker-detail-fields" style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                        {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, setField("payeeName", setPayeeName), true, errors.payeeName)}
+                        {renderEditable(t("HCM_AM_PAYEE_NAME"), payeeName, (v) => onEditableChange("payeeName", v), true, errors.payeeName)}
                         {/* Temporarily hidden as requested; value is still passed through on save. */}
                         {/* {renderEditable(
                             t("HCM_AM_PAYEE_PHONE_NUMBER"),
                             payeeMobileNumber,
-                            setField("payeeMobileNumber", setPayeeMobileNumber),
+                            (v) => setPayeeMobileNumber(v),
                             !isBank,
                             errors.payeeMobileNumber
                         )} */}
@@ -131,15 +160,15 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                                 {renderEditable(
                                     t("HCM_AM_BANK_ACCOUNT"),
                                     bankAccount,
-                                    setField("bankAccount", setBankAccount),
+                                    (v) => onEditableChange("bankAccount", v),
                                     true,
                                     errors.bankAccount
                                 )}
-                                {renderEditable(t("HCM_AM_BANK_CODE"), bankCode, setField("bankCode", setBankCode), true, errors.bankCode)}
+                                {renderEditable(t("HCM_AM_BANK_CODE"), bankCode, (v) => onEditableChange("bankCode", v), true, errors.bankCode)}
                                 {renderEditable(
                                     t("HCM_AM_BENEFICIARY_CODE"),
                                     beneficiaryCode,
-                                    setField("beneficiaryCode", setBeneficiaryCode),
+                                    (v) => onEditableChange("beneficiaryCode", v),
                                     true,
                                     errors.beneficiaryCode
                                 )}
@@ -159,16 +188,36 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                             {readOnlyFields.map((field) => (
                                 <div
                                     key={field.label}
+                                    className="label-pair"
                                     style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
                                         alignItems: "center",
+                                        gap: "5rem",
                                         padding: "6px 0",
                                         borderBottom: "1px solid #E8E8E8",
                                     }}
                                 >
-                                    <span style={{ fontSize: "14px", color: "#0B0C0C", fontWeight: "600" }}>{field.label}</span>
-                                    <span style={{ fontSize: "14px", color: "#505A5F" }}>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            color: "#0B0C0C",
+                                            fontWeight: "600",
+                                            width: "20%",
+                                            flexShrink: 0,
+                                            textAlign: "left",
+                                            whiteSpace: "pre-wrap",
+                                            wordWrap: "break-word",
+                                        }}
+                                    >
+                                        {field.label}
+                                    </span>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            color: "#505A5F",
+                                            width: "80%",
+                                            textAlign: "left",
+                                        }}
+                                    >
                                         {field.value !== undefined && field.value !== null ? field.value : t("NA")}
                                     </span>
                                 </div>
@@ -194,7 +243,7 @@ const WorkerDetailsPopUp = ({ onClose, onSubmit, row, isSaving = false, isEditab
                             label={t("HCM_AM_APPROVE")}
                             title={t("HCM_AM_APPROVE")}
                             onClick={handleSave}
-                            isDisabled={!isEditable || isSaving}
+                            isDisabled={!isEditable || isSaving || !isFormValid}
                         />
                     </div>,
                 ]}

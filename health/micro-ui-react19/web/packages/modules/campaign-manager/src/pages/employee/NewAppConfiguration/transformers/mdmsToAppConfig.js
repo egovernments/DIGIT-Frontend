@@ -66,19 +66,21 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
       lastPage.conditionalNavigationProperties.targetPages &&
       lastPage.conditionalNavigationProperties.targetPages.length > 0
     ) {
-      // Create a map of name+type -> condition from conditionalNavigateTo
+      // Create a map of actionIndex -> condition from conditionalNavigateTo
+      // actionIndex uniquely identifies each onAction item (handles duplicate name|type targets)
       const conditionMap = new Map();
 
       if (lastPage.conditionalNavigateTo && Array.isArray(lastPage.conditionalNavigateTo)) {
-        lastPage.conditionalNavigateTo.forEach((navItem) => {
-          const key = `${navItem.navigateTo.name}|${navItem.navigateTo.type?.toLowerCase() || "form"}`;
+        lastPage.conditionalNavigateTo.forEach((navItem, i) => {
+          const actionIndex = navItem.actionIndex;
+          const key = actionIndex !== undefined ? `idx:${actionIndex}` : `${navItem.navigateTo.name}|${navItem.navigateTo.type?.toLowerCase() || "form"}:${i}`;
           conditionMap.set(key, navItem.condition);
         });
       }
 
       // Update form's onAction based on the condition map
       if (form.onAction && Array.isArray(form.onAction)) {
-        form.onAction = form.onAction.map((actionItem) => {
+        form.onAction = form.onAction.map((actionItem, actionIdx) => {
           if (!actionItem.actions || !Array.isArray(actionItem.actions)) {
             return actionItem;
           }
@@ -97,37 +99,20 @@ export const transformMdmsToAppConfig = (fullData, version, existingFlows) => {
             return actionItem;
           }
 
-          // Find NAVIGATION action
-          const navigationAction = actionItem?.actions.find(
-            (action) => action.actionType === "NAVIGATION"
-          );
+          // Look up by actionIndex (unique identifier)
+          const indexKey = `idx:${actionIdx}`;
 
-          if (navigationAction && navigationAction.properties) {
-            const { name, type } = navigationAction.properties;
-            const key = `${name}|${type?.toLowerCase() || "form"}`;
-
-            // Check if we have a condition for this navigation target
-            if (conditionMap.has(key)) {
-              // Update the condition with the one from conditionalNavigateTo
-              return {
-                ...actionItem,
-                condition: {
-                  expression: conditionMap.get(key)
-                }
-              };
-            }
-            else {
-              // Navigation target exists but not in conditionalNavigateTo - set as NOT_CONFIGURED
-              return {
-                ...actionItem,
-                condition: {
-                  expression: "NOT_CONFIGURED"
-                }
-              };
-            }
+          if (conditionMap.has(indexKey)) {
+            const newCondition = conditionMap.get(indexKey);
+            return {
+              ...actionItem,
+              condition: {
+                ...actionItem.condition,
+                expression: newCondition
+              }
+            };
           }
 
-          // No NAVIGATION action found, return original
           return actionItem;
         });
       }

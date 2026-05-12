@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button } from "@egovernments/digit-ui-components";
+import { PopUp } from "@egovernments/digit-ui-components";
 import { formatTimestampToDate } from "../utils";
 
 /**
@@ -37,7 +37,7 @@ const AttendeeDetailsPopUp = ({ attendee, onClose }) => {
 
   return (
     <PopUp
-      style={{ width: "700px" }}
+      style={{ width: "min(440px, 94vw)" }}
       onClose={onClose}
       onOverlayClick={onClose}
       heading={
@@ -46,7 +46,7 @@ const AttendeeDetailsPopUp = ({ attendee, onClose }) => {
         </span>
       }
       children={[
-        <div key="attendee-details" style={{ padding: "0.5rem 0" }}>
+        <div key="attendee-details" style={{ paddingTop: 0, paddingBottom: "0.5rem" }}>
           <div style={{ marginBottom: "0.75rem" }}>
             <span
               style={{
@@ -64,16 +64,39 @@ const AttendeeDetailsPopUp = ({ attendee, onClose }) => {
           </div>
           {details.map((item, index) => (
             <div
-              key={index}
+              key={item.label}
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                gap: "1.5rem",
                 padding: "0.75rem 0",
                 borderBottom: index < details.length - 1 ? "1px solid #D6D5D4" : "none",
               }}
             >
-              <span style={{ fontWeight: 700, color: "#0B4B66", fontSize: "1rem" }}>{t(item.label)}</span>
-              <span style={{ color: "#505A5F", fontSize: "1rem" }}>{item.value}</span>
+              <span
+                style={{
+                  fontWeight: 700,
+                  color: "#0B4B66",
+                  fontSize: "1rem",
+                  flex: "0 0 28%",
+                  minWidth: 0,
+                  textAlign: "left",
+                }}
+              >
+                {t(item.label)}
+              </span>
+              <span
+                style={{
+                  color: "#505A5F",
+                  fontSize: "1rem",
+                  flex: "1 1 auto",
+                  minWidth: 0,
+                  textAlign: "left",
+                }}
+              >
+                {item.value}
+              </span>
             </div>
           ))}
         </div>,

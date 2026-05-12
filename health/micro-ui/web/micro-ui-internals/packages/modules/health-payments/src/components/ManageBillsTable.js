@@ -25,9 +25,37 @@ const ManageBillsTable = ({ ...props }) => {
         props?.onSelectionChange?.(selectedRows);
     };
 
+    const navigateToBillDetails = (row) => {
+        history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
+            billID: row.billNumber,
+            activeTabCode: props.activeTabCode,
+            advisoryReport: row?.advisoryReport || null,
+        });
+    };
+
+    const handleRowClicked = (row, e) => {
+        const target = e?.target;
+        if (target?.closest) {
+            const interactive = target.closest(
+                'button, a, input, textarea, select, label, [role="button"], [role="menuitem"], [role="menuitemcheckbox"], .digit-button-primary, .digit-button-secondary, .digit-button-teritiary'
+            );
+            if (interactive) return;
+        }
+        navigateToBillDetails(row);
+    };
+
     const buildColumnRegistry = (t, history, props, setShowToast, activeTabCode) => {
-        const colHeader = (label) => (
-            <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>{label}</div>
+        const colHeader = (label, textAlign = "start") => (
+            <div
+                style={{
+                    borderRight: "2px solid #787878",
+                    width: "100%",
+                    textAlign,
+                    ...(textAlign === "right" ? { paddingRight: "1rem", boxSizing: "border-box" } : {}),
+                }}
+            >
+                {label}
+            </div>
         );
     
         return {
@@ -36,22 +64,17 @@ const ManageBillsTable = ({ ...props }) => {
                 selector: (row) => (
                     <div
                         className="ellipsis-cell"
-                        style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#F47738", cursor: "pointer", textDecoration: "underline" }}
+                        style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "start", lineHeight: "1.4", color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}
                         title={row?.billNumber || t("NA")}
-                        onClick={() => {
-                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details/${role}`, {
-                                billID: row.billNumber,
-                                activeTabCode: activeTabCode,
-                                advisoryReport: row?.advisoryReport || null,
-                            });
+                        onClick={(ev) => {
+                            ev.stopPropagation();
+                            navigateToBillDetails(row);
                         }}
                     >
                         {row?.billNumber || t("NA")}
                     </div>
                 ),
                 grow: 1,
-                minWidth: "180px",
-                maxWidth: "240px",
                 style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
@@ -63,23 +86,24 @@ const ManageBillsTable = ({ ...props }) => {
                     </div>
                 ),
                 grow: 1,
-                minWidth: "130px",
-                maxWidth: "160px",
-                style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
             registers: {
-                name: colHeader(t("HCM_AM_NO_OF_REGISTERS")),
+                name: colHeader(t("HCM_AM_NO_OF_REGISTERS"), "right"),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {row?.additionalDetails?.noOfRegisters || "0"}
                     </div>
                 ),
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "140px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             payees: {
-                name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES")),
+                name: colHeader(t("HCM_AM_NUMBER_OF_PAYEES"), "right"),
                 selector: (row) => (
                     <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                         {row?.billDetails?.length || "0"}
@@ -94,7 +118,7 @@ const ManageBillsTable = ({ ...props }) => {
             totalAmount: {
                 name: colHeader(`${t("HCM_AM_TOTAL_AMOUNT")}${currencySuffix}`),
                 selector: (row) => {
-                    const total = row?.billDetails?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
+                    const total = row?.totalAmount || 0;
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
                             {total}
@@ -123,7 +147,7 @@ const ManageBillsTable = ({ ...props }) => {
                             isSuffix
                             label={t("HCM_AM_DOWNLOAD_BILLS")}
                             title={t("HCM_AM_DOWNLOAD_BILLS")}
-                            showBottom={isLastRow && props.data.length !== 1 ? false : true}
+                            showBottom={!isLastRow}
                             onOptionSelect={(value) => {
                                 if (value.code === "HCM_AM_PDF") {
                                     if (reportDetails?.pdfReportId) {
@@ -171,6 +195,8 @@ const ManageBillsTable = ({ ...props }) => {
                         variation="secondary"
                         size="medium"
                         label={t("HCM_AM_SEND_FOR_APPROVAL")}
+                        title={t("HCM_AM_SEND_FOR_APPROVAL")}
+                        style={{ minWidth: "12.5rem", maxWidth: "none" }}
                         onClick={() => {
                             setSelectedBill(row); // Set the selected bill details
                             setShowApprovalPopup(true); // Show the popup
@@ -178,8 +204,15 @@ const ManageBillsTable = ({ ...props }) => {
                         isDisabled={row?.status == "REVIEW_IN_PROGRESS"}
                     />
                 ),
-                width: "200px",
-                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
+                grow: 0,
+                minWidth: "260px",
+                width: "280px",
+                style: {
+                    display: "flex",
+                    alignItems: "flex-start",
+                    paddingTop: "15px",
+                    overflow: "visible",
+                },
             },
     
             downloadAdvisory: {
@@ -201,9 +234,7 @@ const ManageBillsTable = ({ ...props }) => {
                             onClick={() => {
                                 downloadFileWithName({ fileStoreId: advisoryReport.fileStoreId, customName: `Payment_Advisory_${billId}`, type: "excel" });
                             }}
-                            // showBottom={isLas    tRow && props.data.length !== 1 ? false : true}                            
-                            style={{ minWidth: "10rem" }}
-                            // type="actionButton"
+                            style={{ whiteSpace: "nowrap" }}
                             variation="secondary"
                         />
                     ) : (
@@ -224,38 +255,50 @@ const ManageBillsTable = ({ ...props }) => {
     
             // ── Status count columns (verification) ──────────────────────────
             pending: {
-                name: colHeader(t("HCM_AM_PENDING")),
+                name: colHeader(t("HCM_AM_PENDING"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PENDING_VERIFICATION")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             verificationFailed: {
-                name: colHeader(t("HCM_AM_VERIFICATION_FAILED")),
+                name: colHeader(t("HCM_AM_VERIFICATION_FAILED"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "150px",
+                maxWidth: "190px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             verified: {
-                name: colHeader(t("HCM_AM_VERIFIED")),
+                name: colHeader(t("HCM_AM_VERIFIED"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => ["VERIFIED", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             failures: {
-                name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES")),
+                name: colHeader(t("HCM_AM_NUMBER_OF_FAILURES"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "VERIFICATION_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "120px",
+                maxWidth: "160px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
@@ -287,13 +330,11 @@ const ManageBillsTable = ({ ...props }) => {
                     </div>
                 ),
                 grow: 1,
-                minWidth: "170px",
-                maxWidth: "200px",
-                style: { justifyContent: "flex-start", paddingTop: "15px", alignItems: "flex-start" },
+                style: { display: "flex", alignItems: "flex-start", paddingTop: "15px" },
             },
     
             amountPaid: {
-                name: colHeader(t("HCM_AM_AMOUNT_PAID")),
+                name: colHeader(t("HCM_AM_AMOUNT_PAID"), "right"),
                 selector: (row) => {
                     const paid = row?.billDetails?.filter((d) => d?.status === "PAID")?.reduce((sum, d) => sum + (d?.totalAmount || 0), 0) || 0;
                     return (
@@ -302,33 +343,45 @@ const ManageBillsTable = ({ ...props }) => {
                         </div>
                     );
                 },
+                grow: 1,
+                minWidth: "130px",
+                maxWidth: "170px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             pendingPayment: {
-                name: colHeader(t("HCM_AM_PENDING")),
+                name: colHeader(t("HCM_AM_PENDING"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => !["PAID", "PAYMENT_FAILED"].includes(d?.status))?.length || 0;
                     return <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             failedPayment: {
-                name: colHeader(t("HCM_AM_FAILED")),
+                name: colHeader(t("HCM_AM_FAILED"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAYMENT_FAILED")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
     
             paidCount: {
-                name: colHeader(t("HCM_AM_PAID")),
+                name: colHeader(t("HCM_AM_PAID"), "right"),
                 selector: (row) => {
                     const count = row?.billDetails?.filter((d) => d?.status === "PAID")?.length || 0;
                     return <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>{count}</div>;
                 },
+                grow: 1,
+                minWidth: "100px",
+                maxWidth: "130px",
                 style: { justifyContent: "flex-end", paddingTop: "15px", alignItems: "flex-start" },
             },
         };
@@ -453,6 +506,7 @@ const ManageBillsTable = ({ ...props }) => {
           const conditionalRowStyles = [
             {
               when: (row) =>
+                row.status === "VERIFICATION_IN_PROGRESS" ||
                 row.status === "SENDING_FOR_REVIEW" ||
                 row.status === "REVIEW_IN_PROGRESS",
               style: {
@@ -466,7 +520,7 @@ const ManageBillsTable = ({ ...props }) => {
     return (
         <>
             <DataTable
-                className="search-component-table"
+                className="search-component-table manage-bills-table"
                 columns={columns}
                 data={props.data}
                 pagination
@@ -484,10 +538,12 @@ const ManageBillsTable = ({ ...props }) => {
                 fixedHeaderScrollHeight={"70vh"}
                 selectableRows={isSelectable}
                 selectableRowDisabled={(row) =>
-                    row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
+                    row.status === "VERIFICATION_IN_PROGRESS" || row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
                 }
                 conditionalRowStyles={conditionalRowStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
+                onRowClicked={handleRowClicked}
+                pointerOnHover
                 paginationComponentOptions={getCustomPaginationOptions(t)}
             />
             {showToast && (

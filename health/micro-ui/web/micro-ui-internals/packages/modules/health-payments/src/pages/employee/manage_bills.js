@@ -7,7 +7,7 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
+import { AlertCard as InfoCard, Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
 import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 import _ from "lodash";
@@ -139,8 +139,14 @@ const ManageBills = () => {
     },
   };
 
-  const { data: BillCountData, refetch: refetchBillCount } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
+  const {
+    isLoading: isBillCountLoading,
+    isFetching: isBillCountFetching,
+    data: BillCountData,
+    refetch: refetchBillCount,
+  } = Digit.Hooks.useCustomAPIHook(BillStatusCountCri);
   const statusCount = BillCountData?.statusCount || {};
+  const isInitialBillsDataReady = !selectedProject?.id || (!!BillData && !!BillCountData);
 
   const getTabCount = (tabCode) => {
     if (forceZeroStatusCount) return 0;
@@ -181,6 +187,40 @@ const ManageBills = () => {
   };
   const { data: workerRatesData } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
   Digit.SessionStorage.set("workerRatesData", workerRatesData);
+
+  const campaignTypeSkillsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            moduleName: "HCM-BILLING-CONFIG-PAYMENT-SETUP",
+            masterDetails: [
+              {
+                name: "CampaignTypeSkills",
+                filter: `[?(@.campaignType=='${selectedProject?.projectType}')]`,
+              },
+            ],
+          },
+        ],
+      },
+    },
+    config: {
+      enabled: activeRole === MANAGE_BILLS_ROLES.PAYMENT_REVIEWER && !!selectedProject?.projectType,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      changeQueryName: `campaignTypeSkills_reviewer_${selectedProject?.projectType}`,
+      select: (data) => {
+        const skills = data?.MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.CampaignTypeSkills || [];
+        return skills[0]?.rateMaxLimitSchema || null;
+      },
+    },
+  };
+  const { data: reviewerRateMaxSchema } = Digit.Hooks.useCustomAPIHook(campaignTypeSkillsCriteria);
+  Digit.SessionStorage.set("reviewerRateMaxSchema", reviewerRateMaxSchema);
 
   const handlePageChange = (page, totalRows) => {
     setCurrentPage(page);
@@ -485,8 +525,8 @@ const ManageBills = () => {
     );
   }
 
-  if (isBillLoading) {
-    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
+  if (isBillLoading || (selectedProject?.id && !isInitialBillsDataReady) || (selectedProject?.id && isBillCountLoading)) {
+    return <Loader className={"digit-center-loader"} />;
   }
 
   if (!selectedProject?.id) {
@@ -570,7 +610,7 @@ const ManageBills = () => {
 
       <Card>      
 
-        {isFetching || isBillReportLoading ? (
+        {isFetching || isBillReportLoading || isBillCountFetching ? (
           <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
         ) : tableData.length === 0 ? (
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
@@ -595,6 +635,24 @@ const ManageBills = () => {
         )}
       </Card>
 
+      {(() => {
+        const hasInProgressRows = tableData.some(
+          (row) => row.status === "SENDING_FOR_REVIEW" || row.status === "REVIEW_IN_PROGRESS"
+        );
+        const showInfoCard =
+          hasInProgressRows ||
+          (activeLink.code === "VERIFICATION_IN_PROGRESS" && tableData.length > 0);
+        return showInfoCard ? (
+          <InfoCard
+            populators={{ name: "infocard" }}
+            variant="default"
+            style={{ margin: "0.75rem 0 0", width: "100%", maxWidth: "unset" }}
+            label={t("HCM_AM_INFO")}
+            text={t("HCM_AM_BILLS_PROCESSING_INFO")}
+          />
+        ) : null;
+      })()}
+
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
@@ -610,7 +668,7 @@ const ManageBills = () => {
           variation="secondary"
           label={t("HCM_AM_BACK")}
           icon="ArrowBack"
-          onClick={() => history.goBack()}
+          onClick={() => history.push(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
           style={{
             flexShrink: 0,
             minWidth: "10rem",

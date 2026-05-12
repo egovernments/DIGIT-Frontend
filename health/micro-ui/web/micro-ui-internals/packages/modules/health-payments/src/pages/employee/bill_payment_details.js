@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { useLocation, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
+import {Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Loader,Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
@@ -17,6 +17,10 @@ import {
   perDayFromPayable,
   sumPayableAmounts,
   applyPerDayToPayables,
+  FEES_HEAD_CODE,
+  getBaseHeadCodes,
+  computeFeePercent,
+  upsertFeesInPayables,
 } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
@@ -52,6 +56,11 @@ const VIEWS_WITH_SUB_TABS = [
 
 const DEFAULT_HEAD_ORDER = ["PER_DAY", "FOOD", "TRAVEL", "MISC"];
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const truncateTo2Decimals = (num) => {
+  const n = Number(num);
+  if (!Number.isFinite(n)) return 0;
+  return Math.trunc(n * 100) / 100;
+};
 
 // Sub-tab config per view
 const VIEW_SUB_TABS = {
@@ -105,7 +114,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const navigateToWorkflowSuccess = (action, billNumber) => {
     const config = workflowSuccessNavConfig?.[action];
     if (!config?.route) return false;
-    history.push(config.route, {
+    history.replace(config.route, {
       state: "success",
       info: "HCM_AM_BILL_NUMBER",
       fileName: billNumber || "NA",
@@ -178,6 +187,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
   const workerRatesData = useMemo(() => {
     return Digit?.SessionStorage.get("workerRatesData");
+  }, []);
+  const reviewerRateMaxSchema = useMemo(() => {
+    return Digit?.SessionStorage.get("reviewerRateMaxSchema");
   }, []);
   const maxAttendanceDays = useMemo(() => {
     const start = Number(billData?.additionalDetails?.periodStartDate);
@@ -295,6 +307,44 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData, refetch: refetchAllIndividuals } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
   const getOrderedHeadCodes = (ratesData, billDetails = []) => {
+    const fieldConfig = ratesData?.fieldConfig;
+    const headCodeMapping = ratesData?.headCodeMapping;
+
+    // Primary: drive per-day columns from headCodeMapping. When fieldConfig is
+    // also present, prefer entries with type === "PER_DAY" and order them by
+    // their `order` field. FEES is always excluded (it's the percent column).
+    if (headCodeMapping && typeof headCodeMapping === "object") {
+      const fieldKeys = Object.keys(headCodeMapping);
+      let entries = fieldKeys.map((fieldKey) => {
+        const cfg = Array.isArray(fieldConfig)
+          ? fieldConfig.find((f) => f?.fieldKey === fieldKey)
+          : null;
+        return {
+          fieldKey,
+          headCode: headCodeMapping[fieldKey] || fieldKey,
+          type: cfg?.type,
+          paymentType: cfg?.paymentType,
+          valueType: cfg?.valueType,
+          order: cfg?.order,
+        };
+      });
+      if (Array.isArray(fieldConfig) && fieldConfig.length > 0) {
+        entries = entries.filter((e) => {
+          const isPerDay = e.paymentType === "PER_DAY";
+          const isPercentage = e.valueType === "PERCENTAGE";
+          return isPerDay && !isPercentage;
+        });
+        entries.sort((a, b) => ((a.order != null ? a.order : 1e9) - (b.order != null ? b.order : 1e9)));
+      }
+      const ordered = entries
+        .map((e) => e.headCode)
+        .filter((hc) => hc && hc !== FEES_HEAD_CODE);
+      const seen = new Set();
+      return ordered.filter((hc) => (seen.has(hc) ? false : (seen.add(hc), true)));
+    }
+
+    // Fallback: union of rateBreakup keys + payableLineItems headCodes,
+    // excluding FEES, with the historical DEFAULT_HEAD_ORDER preference.
     const headSet = new Set();
     (ratesData?.rates || []).forEach((rate) => {
       Object.keys(rate?.rateBreakup || {}).forEach((headCode) => {
@@ -306,6 +356,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         if (item?.type === "PAYABLE" && item?.headCode) headSet.add(item.headCode);
       });
     });
+    headSet.delete(FEES_HEAD_CODE);
     const headCodes = Array.from(headSet);
     const known = DEFAULT_HEAD_ORDER.filter((head) => headCodes.includes(head));
     const other = headCodes
@@ -317,6 +368,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const rateHeadCodes = useMemo(
     () => getOrderedHeadCodes(workerRatesData, billData?.billDetails || []),
     [workerRatesData, billData?.billDetails]
+  );
+
+  const baseHeadCodes = useMemo(
+    () => getBaseHeadCodes(workerRatesData),
+    [workerRatesData]
   );
 
   const buildRatesByHead = ({
@@ -348,6 +404,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   function addIndividualDetailsToBillDetails(billDetails, individualsData, workerRatesData) {
     const headCodes = getOrderedHeadCodes(workerRatesData, billDetails);
+    const baseHeads = getBaseHeadCodes(workerRatesData);
     return billDetails.map((billDetail) => {
       const individual = individualsData?.Individual?.find(
         (ind) => ind.id === billDetail?.payee?.identifier
@@ -384,6 +441,20 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       const payableHeadCodes = payableItems.map((item) => item?.headCode).filter(Boolean);
       const ratesFromPayables = usePayables;
 
+      // Derive fee percent from the FEES PAYABLE entry (if any) and base heads.
+      // Fall back to legacy additionalDetails.feePercent for older bill details.
+      const computedFeePercent = computeFeePercent(
+        billDetail?.payableLineItems || [],
+        baseHeads
+      );
+      const legacyFeePercent = billDetail?.additionalDetails?.feePercent;
+      const feePercent =
+        computedFeePercent != null
+          ? computedFeePercent
+          : legacyFeePercent != null && legacyFeePercent !== ""
+            ? Number(legacyFeePercent)
+            : null;
+
       return {
         ...billDetail,
         givenName: individual?.name?.givenName,
@@ -397,6 +468,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         food: ratesByHead?.FOOD || 0,
         travel: ratesByHead?.TRAVEL || 0,
         misc: ratesByHead?.MISC || 0,
+        feePercent,
         ratesFromPayables,
         payeeName: billDetail?.payee?.payeeName || "\u2014",
         payeePhoneNumber: billDetail?.payee?.payeePhoneNumber,
@@ -497,7 +569,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               transitionTime: 2000,
             });
             if (wfAction === "EDIT") { //move to success response page after edit success
-              history.push(`/${window.contextPath}/employee/payments/edit-bill-success`, {
+              history.replace(`/${window.contextPath}/employee/payments/edit-bill-success`, {
                 state: "success",
                 info: t("HCM_AM_BILL_NUMBER"),
                 fileName: BillData?.bills?.[0]?.billNumber || t("NA"),
@@ -652,15 +724,29 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       let totalAmount;
       if (Array.isArray(origPayables) && origPayables.length > 0) {
         payableLineItems = applyPerDayToPayables(origPayables, rates, days);
-        totalAmount = sumPayableAmounts(payableLineItems);
+        // Recompute the FEES PAYABLE amount from the (newly) edited per-day
+        // rates and the current fee percent, so the saved totals stay
+        // consistent with what the reviewer sees in the UI.
+        const rowFeePercent = row?.feePercent;
+        if (
+          baseHeadCodes.length > 0 &&
+          rowFeePercent !== "" &&
+          rowFeePercent != null &&
+          Number.isFinite(Number(rowFeePercent))
+        ) {
+          payableLineItems = upsertFeesInPayables(
+            payableLineItems,
+            baseHeadCodes,
+            Number(rowFeePercent)
+          );
+        }
+        totalAmount = truncateTo2Decimals(sumPayableAmounts(payableLineItems));
       } else {
         const totalPerDay = Object.values(rates).reduce(
           (sum, value) => sum + (Number(value) || 0),
           0
         );
-        totalAmount = Math.round(
-          totalPerDay * days
-        );
+        totalAmount = truncateTo2Decimals(totalPerDay * days);
       }
       const {
         givenName,
@@ -674,6 +760,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         travel,
         misc,
         fees,
+        feePercent,
         ratesFromPayables,
         ...rest
       } = row;
@@ -692,7 +779,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     const payablesUpdatedAtEpochMs = Date.now();
     const partialBillDetails = billDetails.map((d) => ({
       id: d?.id,
-      totalAmount: Number(d?.totalAmount) || 0,
+      totalAmount: truncateTo2Decimals(d?.totalAmount),
       totalAttendance: Number(d?.totalAttendance) || 0,
       payableLineItems: d?.payableLineItems,
       additionalDetails: {
@@ -866,7 +953,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
       });
 
-      history.push(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
+      history.replace(`/${window.contextPath}/employee/payments/send-for-approval-success`, {
         state: "success",
         info: "HCM_AM_BILL_NUMBER",
         fileName: billData?.billNumber || billID || "NA",
@@ -1227,6 +1314,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         workerRatesData
       );
 
+      const sortedEnriched = [...enriched].sort((a, b) => {
+        const nameA = (a.givenName || a.payeeName || "").toLowerCase();
+        const nameB = (b.givenName || b.payeeName || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+
       const view = editBillDetails
         ? "EDIT_VIEW"
         : roleConfig?.billDetailViewMap?.[billData?.status]
@@ -1236,15 +1329,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       if (VIEW_SUB_TABS[view]) {
         const activeSubTab = VIEW_SUB_TABS[view].find((st) => st.code === activeLink?.code);
         if (activeSubTab) {
-          const filtered = enriched.filter((item) => item.status === activeSubTab.statusFilter);
+          const filtered = sortedEnriched.filter((item) => item.status === activeSubTab.statusFilter);
           setTableData(filtered || []);
         } else {
           const firstSubTab = VIEW_SUB_TABS[view][0];
-          const filtered = enriched.filter((item) => item.status === firstSubTab.statusFilter);
+          const filtered = sortedEnriched.filter((item) => item.status === firstSubTab.statusFilter);
           setTableData(filtered || []);
         }
       } else {
-        setTableData(enriched || []);
+        setTableData(sortedEnriched || []);
       }
 
       const counts = {
@@ -1287,6 +1380,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       || billData?.status
       || "NA";
 
+  const renderCenteredLoader = (minHeight = "12rem") => (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", minHeight }}>
+      <Loader />
+    </div>
+  );
+
   if (
     isBillLoading ||
     isAllIndividualsLoading ||
@@ -1297,7 +1396,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     billDetailPartialUpdateMutation.isLoading
   ) {
     console.log("Loading bill data or individual data...");
-    return <Loader />
+    return renderCenteredLoader("16rem");
   }
 
   console.log("Rendering buttons for:", activeLink?.code);
@@ -1455,9 +1554,17 @@ const downloadOptions = [
     : []),
 ];
 
+  const billDownloadFormatOptions = [
+    { code: "BILL_EXCEL", name: t("HCM_AM_EXCEL") },
+    { code: "BILL_PDF", name: t("HCM_AM_PDF") },
+  ];
+
+  const hasOnlyBillDownloadOption =
+    downloadOptions.length === 1 && downloadOptions[0]?.code === "BILL";
+
   const handleDownloadSelect = (option) => {
     if (option?.code === "BILL") {
-      handleDownloadBill();
+      handleDownloadBill("excel");
       return;
     }
     if (option?.code === "JUSTIFICATION") {
@@ -1474,14 +1581,25 @@ const downloadOptions = [
     }
   };
 
-  const handleDownloadBill = () => {
+  const handleBillFormatDownloadSelect = (option) => {
+    if (option?.code === "BILL_PDF") {
+      handleDownloadBill("pdf");
+      return;
+    }
+    handleDownloadBill("excel");
+  };
+
+  const handleDownloadBill = (downloadType = "excel") => {
     if(billData?.additionalDetails?.reportDetails?.status ==="COMPLETED"){
-    const excelReportId = billData?.additionalDetails?.reportDetails?.excelReportId;
-    if (excelReportId) {
+    const selectedReportId =
+      downloadType === "pdf"
+        ? billData?.additionalDetails?.reportDetails?.pdfReportId
+        : billData?.additionalDetails?.reportDetails?.excelReportId;
+    if (selectedReportId) {
       downloadFileWithName({
-        fileStoreId: excelReportId,
+        fileStoreId: selectedReportId,
         customName: billData?.billNumber || billID || "bill",
-        type: "excel",
+        type: downloadType,
       });
       return;
     }
@@ -1498,10 +1616,12 @@ const downloadOptions = [
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editBillDetails
-            ? t('HCM_AM_EDIT_BILL')
-            : t('HCM_AM_VIEW_BILL')
-          }
+          <span style={{ color: "#0B4B66" }}>
+            {editBillDetails
+              ? t('HCM_AM_EDIT_BILL')
+              : t('HCM_AM_VIEW_BILL')
+            }
+          </span>
         </Header>
         {/* Summary cards row */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
@@ -1538,22 +1658,38 @@ const downloadOptions = [
 
         <Card type="primary" className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-            <span style={{ fontSize: "18px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
+            <span style={{ fontSize: "24px", fontWeight: "700", color: "#0B4B66" }}>{t("HCM_AM_BILL_DETAILS")}</span>
             <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
               {downloadOptions.length > 0 && (
-                <Button
-                  icon="ArrowDropDown"
-                  isSuffix
-                  label={t("HCM_AM_DOWNLOAD")}
-                  variation="secondary"
-                  type="actionButton"
-                  size="medium"
-                  options={downloadOptions}
-                  optionsKey="name"
-                  onOptionSelect={handleDownloadSelect}
-                  style={{ minWidth: "12rem" }}
-                  showBottom={true}
-                />
+                hasOnlyBillDownloadOption ? (
+                  <Button
+                    icon="ArrowDropDown"
+                    isSuffix
+                    label={t("HCM_AM_DOWNLOAD_BILL")}
+                    variation="secondary"
+                    type="actionButton"
+                    size="medium"
+                    options={billDownloadFormatOptions}
+                    optionsKey="name"
+                    onOptionSelect={handleBillFormatDownloadSelect}
+                    style={{ minWidth: "12rem" }}
+                    showBottom={true}
+                  />
+                ) : (
+                  <Button
+                    icon="ArrowDropDown"
+                    isSuffix
+                    label={t("HCM_AM_DOWNLOAD")}
+                    variation="secondary"
+                    type="actionButton"
+                    size="medium"
+                    options={downloadOptions}
+                    optionsKey="name"
+                    onOptionSelect={handleDownloadSelect}
+                    style={{ minWidth: "12rem" }}
+                    showBottom={true}
+                  />
+                )
               )}
               {/* <Button
                 variation="secondary"
@@ -1567,10 +1703,10 @@ const downloadOptions = [
             </div>
           </div>
           {isBillLoading || isFetching ? (
-            <Loader />
+            renderCenteredLoader()
           ) : (
             <>
-              {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"), { color: "#C84C0E" })}
+              {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"))}
               {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
               {/* {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))} */}
               {/* {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))} */}
@@ -1719,7 +1855,7 @@ const downloadOptions = [
 </div> */}
 
 
-              {
+              {/* {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                   
                   {
@@ -1767,7 +1903,7 @@ const downloadOptions = [
                   ) : null             
                   }
                 </div>
-              }
+              } */}
             </>
           )}
         </Card>
@@ -1805,7 +1941,7 @@ const downloadOptions = [
         )}
         <Card style={{ width: "100%", }}>
           {isBillLoading || isFetching ? (
-            <Loader />
+            renderCenteredLoader()
           ) : tableData.length === 0 ? (
             <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
           ) : (
@@ -1850,11 +1986,13 @@ const downloadOptions = [
                 hasTriedSave={hasTriedSaveReviewer}
                 maxAttendanceDays={maxAttendanceDays}
                 rateHeadCodes={rateHeadCodes}
+                baseHeadCodes={baseHeadCodes}
                 onRowChange={(updatedRow) => setTableData((prev) => prev.map((r) => r.id === updatedRow.id ? updatedRow : r))}
                 onRefetchBill={refetchBill}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
                 workerRatesData={workerRatesData}
+                rateMaxLimitSchema={reviewerRateMaxSchema}
                 billId={billData?.id}
                 tenantId={tenantId}
                 expenseContextPath={expenseContextPath}
@@ -1950,7 +2088,16 @@ const downloadOptions = [
       {/* Footer action bar: show Back for all views except reviewer edit mode */}
       {(() => {
         const isReviewerEditView = currentView === "REVIEWER_PENDING_VIEW" && isReviewerEdit;
-        const ctaStyle = { minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" };
+        const ctaStyle = { minWidth: "14rem", width: "auto", maxWidth: "none", marginRight: "1rem" };
+        const ctaTextStyles = {
+          whiteSpace: "normal",
+          overflow: "visible",
+          textOverflow: "clip",
+          width: "100%",
+          lineHeight: "1.25rem",
+          textAlign: "center",
+          display: "block",
+        };
 
         const ctaByView = () => {
           if (currentView === "NOT_VERIFIED_VIEW") {
@@ -1959,6 +2106,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_VERIFY`)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -1971,6 +2119,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_GENERATE_PAYMENT`)}
                 onClick={() => setOpenApprovePaymentAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -1983,6 +2132,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_SEND_FOR_EDIT`)}
                 onClick={() => setOpenSendForEditPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -1996,6 +2146,7 @@ const downloadOptions = [
                 title={t(`HCM_AM_GENERATE_PAYMENT`)}
                 onClick={() => setOpenApprovePaymentAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2008,6 +2159,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_VERIFY`)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2020,6 +2172,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_SEND_FOR_REVIEW`)}
                 onClick={() => setOpenSendForReviewPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2032,6 +2185,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_VERIFY`)}
                 onClick={() => setOpenVerifyAlertPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2044,6 +2198,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_SEND_FOR_APPROVAL`)}
                 onClick={() => setOpenSendForApprovalPopUp(true)}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2053,9 +2208,10 @@ const downloadOptions = [
           if (currentView === "APPROVER_NOT_INITIATED_VIEW" && activeTabCode !== "GENERATED_ADVISORIES") {
             return (
               <Button
-                label={<span style={{ whiteSpace: "normal" }}>{t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}</span>}
+                label={t("HCM_AM_GENERATE_PAYMENT_ADVISORY")}
                 onClick={() => triggerGenerateAdvisoryForBill()}
                 style={{ ...ctaStyle, minWidth: "20rem" }}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2068,6 +2224,7 @@ const downloadOptions = [
                 label={t(`HCM_AM_RETRY_PAYMENT`)}
                 onClick={() => setShowToast({ key: "info", label: t("HCM_AM_RETRY_PAYMENT_PLACEHOLDER"), transitionTime: 3000 })}
                 style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2083,7 +2240,8 @@ const downloadOptions = [
               <Button
                 label={t(`HCM_AM_SAVE_CHANGES`)}
                 onClick={() => setOpenSaveChangesPopUp(true)}
-                style={{ minWidth: "14rem", whiteSpace: "normal" }}
+                style={ctaStyle}
+                textStyles={ctaTextStyles}
                 type="button"
                 variation="primary"
               />
@@ -2158,7 +2316,7 @@ const downloadOptions = [
           const hasEmpty = (tableData || []).some((row) =>
             Object.values(row?.ratesByHead || {}).some((value) => value === "") ||
             row?.totalAttendance === "" ||
-            row?.additionalDetails?.feePercent === ""//todo check
+            (baseHeadCodes.length > 0 && row?.feePercent === "")
           );
           const hasAttendanceExceedingBillingPeriod =
             maxAttendanceDays != null &&

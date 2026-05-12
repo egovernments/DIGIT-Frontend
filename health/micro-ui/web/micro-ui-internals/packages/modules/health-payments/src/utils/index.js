@@ -172,6 +172,13 @@ export {//todo check
   perDayFromPayable,
   sumPayableAmounts,
   applyPerDayToPayables,
+  FEES_HEAD_CODE,
+  getFeesFieldConfig,
+  getBaseHeadCodes,
+  getFeesAmount,
+  sumPayableForHeads,
+  computeFeePercent,
+  upsertFeesInPayables,
 } from "./billPayableLineItems";
 
 export default {};
