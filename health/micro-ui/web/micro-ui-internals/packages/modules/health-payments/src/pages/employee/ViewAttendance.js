@@ -292,6 +292,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const triggerMusterRollUpdate = async () => {
+    const attendanceUpdatedAtEpochMs = Date.now();
     try {
       await updateMutation.mutateAsync(
         {
@@ -303,6 +304,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 return {
                   ...entry,
                   modifiedTotalAttendance: updatedAttendance || entry.actualTotalAttendance,
+                  additionalDetails: {
+                    ...(entry.additionalDetails || {}),
+                    editInfo: {
+                      ...(entry.additionalDetails?.editInfo || {}),
+                      attendanceUpdatedAtEpochMs,
+                    },
+                  },
                 };
               }),
               billingPeriodId: selectedPeriod.id,
