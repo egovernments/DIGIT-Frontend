@@ -32,6 +32,7 @@ const TopBarSideBar = ({
     localStorage.removeItem("sso-tenant-id");
     localStorage.removeItem("sso-authority");
     localStorage.removeItem("sso-logout-url");
+    localStorage.removeItem("sso-logout-redirect-param");
   };
 
   const getSSOPostLogoutRedirectUri = () => `${window.location.origin}/${window?.contextPath || ""}/employee`;
@@ -40,30 +41,11 @@ const TopBarSideBar = ({
     const provider = localStorage.getItem("sso-provider");
     const normalizedProvider = provider?.toUpperCase();
     const logoutUrlFromConfig = localStorage.getItem("sso-logout-url");
+    const redirectParamName = localStorage.getItem("sso-logout-redirect-param") || "post_logout_redirect_uri";
 
-    if (logoutUrlFromConfig) {
-      const postLogoutRedirectUri = getSSOPostLogoutRedirectUri();
-      clearSSOLogoutMarkers();
-
-      try {
-        await Digit.UserService.logout();
-      } finally {
-        try {
-          const url = new URL(logoutUrlFromConfig);
-          url.searchParams.set("post_logout_redirect_uri", postLogoutRedirectUri);
-          window.location.href = url.toString();
-        } catch (error) {
-          window.location.href = `${logoutUrlFromConfig}?post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
-        }
-      }
-
-      return true;
-    }
-
+    // Perform provider-specific cleanup before logout
     if (normalizedProvider === "GOOGLE") {
-      const postLogoutRedirectUri = getSSOPostLogoutRedirectUri();
       const token = localStorage.getItem("google_access_token");
-      clearSSOLogoutMarkers();
 
       try {
         if (window.google?.accounts?.id) {
@@ -79,30 +61,25 @@ const TopBarSideBar = ({
           });
           localStorage.removeItem("google_access_token");
         }
-
-        await Digit.UserService.logout();
       } catch (error) {
-        console.error("Google logout error", error);
-        await Digit.UserService.logout();
-      } finally {
-        window.location.href = postLogoutRedirectUri;
+        console.error("Provider cleanup error", error);
       }
-
-      return true;
     }
 
-    if (normalizedProvider === "MICROSOFT") {
-      const tenantId = localStorage.getItem("sso-tenant-id");
-      const authority = localStorage.getItem("sso-authority") || "https://login.microsoftonline.com";
+    // Generic SSO logout handler
+    if (logoutUrlFromConfig) {
       const postLogoutRedirectUri = getSSOPostLogoutRedirectUri();
       clearSSOLogoutMarkers();
 
       try {
         await Digit.UserService.logout();
       } finally {
-        if (tenantId) {
-          const baseLogoutUrl = `${authority.replace(/\/+$/, "")}/${tenantId}/oauth2/logout`;
-          window.location.href = `${baseLogoutUrl}?post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
+        try {
+          const url = new URL(logoutUrlFromConfig);
+          url.searchParams.set(redirectParamName, postLogoutRedirectUri);
+          window.location.href = url.toString();
+        } catch (error) {
+          window.location.href = `${logoutUrlFromConfig}?${redirectParamName}=${encodeURIComponent(postLogoutRedirectUri)}`;
         }
       }
 

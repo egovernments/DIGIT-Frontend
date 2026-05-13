@@ -303,6 +303,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       if (ui.logoutUrl) {
         localStorage.setItem("sso-logout-url", ui.logoutUrl);
       }
+      if (ui.logoutRedirectParam) {
+        localStorage.setItem("sso-logout-redirect-param", ui.logoutRedirectParam);
+      }
       if (ui.tenantId) {
         localStorage.setItem("sso-tenant-id", ui.tenantId);
       }
