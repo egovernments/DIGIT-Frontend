@@ -1,4 +1,5 @@
 FROM node:20-alpine AS build
+ARG CACHEBUST=1
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
@@ -10,8 +11,6 @@ ENV GIT_TOKEN=${GIT_TOKEN}
 # --- ADD THIS LINE HERE ---
 # ARG CACHEBUST=1 
 # --------------------------
-
-ARG CACHEBUST=1
 
 COPY ${WORK_DIR} .
 RUN ls -lah
