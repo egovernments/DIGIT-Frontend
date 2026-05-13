@@ -670,7 +670,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   variation="link"
                   icon="Map"
                   isSuffix={false}
-                  size="large"
+                  size="medium"
                   style={{ minHeight: "2.5rem", marginRight: "0.25rem" }}
                   onClick={() => setShowMapPopup(true)}
                 />
@@ -680,7 +680,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   title={t("HCM_AM_DOWNLOAD_REPORT")}
                   variation="secondary"
                   icon="FileDownload"
-                  size="small"
+                  size="medium"
                   onClick={handleDownloadReport}
                 />
               </div>
@@ -719,6 +719,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 icon="Edit"
                 label={t("HCM_AM_EDIT_ATTENDANCE")}
                 title={t("HCM_AM_EDIT_ATTENDANCE")}
+                size="medium"
                 variation="secondary"
                 onClick={() => {
                   history.push(
@@ -767,7 +768,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   onClick={handleCommentLogClick}
                   options={[]}
                   optionsKey=""
-                  size=""
+                  size="medium"
                   style={{}}
                   title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
                   variation="secondary"
