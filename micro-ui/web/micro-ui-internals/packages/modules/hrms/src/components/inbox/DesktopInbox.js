@@ -63,7 +63,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
           return GetCell(
             `${
               t(
-                "COMMON_MASTERS_DESIGNATION_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.designation
+                "COMMON_MASTERS_DESIGNATION_" + (row.original?.assignments?.find((a) => a.isCurrentAssignment) || row.original?.assignments?.sort((a, b) => new Date(b.fromDate) - new Date(a.fromDate))[0])?.designation
               ) || ""
             }`
           );
@@ -76,7 +76,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
           return GetCell(
             `${
               t(
-                "COMMON_MASTERS_DEPARTMENT_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.department
+                "COMMON_MASTERS_DEPARTMENT_" + (row.original?.assignments?.find((a) => a.isCurrentAssignment) || row.original?.assignments?.sort((a, b) => new Date(b.fromDate) - new Date(a.fromDate))[0])?.department
               ) || ""
             }`
           );
