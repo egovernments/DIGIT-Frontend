@@ -237,6 +237,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       redirectPath = "employee/user/login",
       resource,
       provider,
+      prompt,
     } = uiConfig || {};
 
     if (!authorizeUrl || !clientId) {
@@ -257,15 +258,29 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     if (scopes && scopes.length) params.set("scope", scopes.join(" "));
     if (resource) params.set("resource", resource);
 
-    // One-time forced login prompt (mainly for Microsoft) after a failed exchange.
+    // Handle prompt parameter with priority:
+    // 1. Use configured prompt from SSO config (respects admin configuration)
+    // 2. Fall back to forced login only if no prompt is configured AND a previous login failed
     try {
       const forcePromptLogin = window.sessionStorage.getItem("sso.force.prompt.login") === "true";
-      if (forcePromptLogin && provider === "MICROSOFT") {
+
+      if (prompt) {
+        // Respect configured prompt (e.g., "select_account", "consent")
+        params.set("prompt", prompt);
+        // Clear the force flag since we're using configured prompt
+        if (forcePromptLogin) {
+          window.sessionStorage.removeItem("sso.force.prompt.login");
+        }
+      } else if (forcePromptLogin) {
+        // Only force login if no prompt is configured
         params.set("prompt", "login");
         window.sessionStorage.removeItem("sso.force.prompt.login");
       }
     } catch (e) {
-      // no-op
+      // If prompt is configured, still set it even if sessionStorage fails
+      if (prompt) {
+        params.set("prompt", prompt);
+      }
     }
 
     return `${authorizeUrl}?${params.toString()}`;
