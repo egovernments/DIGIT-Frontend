@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.9.5] [14-May-2026]
+
+### 🚀 New Features & Enhancements:
+
+#### 📋 Modified Files:
+- `packages/libraries/src/index.js`:
+  - Imported and registered `UserPreferencesService`
+- `packages/libraries/src/hooks/hrms/useHRMSCount.js`:
+  - Added `filters` and `searchparams` arguments and included them in the query key
+- `packages/libraries/src/services/elements/HRMS.js`:
+  - `count` method now accepts `filters` and `searchParams` and spreads them into request params
+
+### Impact:
+- Enables user preference management across DIGIT-UI modules through a shared service
+- More accurate HRMS count queries with filter/search-aware caching
+
 ## [1.9.4] [10-March-2026]
 
 ### 🔧 Multi-Root Tenant Support Enhancement:
