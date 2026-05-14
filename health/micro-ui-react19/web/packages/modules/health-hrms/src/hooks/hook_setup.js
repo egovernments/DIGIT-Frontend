@@ -1,5 +1,6 @@
 import _ from "lodash";
 import axios from "axios";
+import { UICustomizations } from "../components/config/UICustomizations";
 
 export const overrideHooks = (CustomisedHooks) => {
   Object.keys(CustomisedHooks).map((ele) => {
@@ -37,9 +38,7 @@ const setupLibraries = (Library, service, method) => {
 
 /* To Overide any existing config/middlewares  we need to use similar method */
 export const updateCustomConfigs = () => {
-  //setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  // setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig });
-  // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
+  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
 };
 
 /// Util function to downloads files with type as pdf or excel

@@ -1,4 +1,3 @@
-//import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { FormComposerV2, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -458,6 +457,7 @@ const CreateEmployee = ({ editUser = false }) => {
           isDisabled={!canSubmit}
           label={t("HR_COMMON_BUTTON_SUBMIT")}
           actionClassName={"actionBarClass"}
+          className="custom-form-employee-create"
         />
 
         {showToast && (

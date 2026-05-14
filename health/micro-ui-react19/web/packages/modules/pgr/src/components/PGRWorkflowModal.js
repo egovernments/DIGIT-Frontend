@@ -43,6 +43,7 @@ const PGRWorkflowModal = ({
             onFormValueChange={onFormValueChange}
             defaultValues={sessionFormData}
             formId="modal-action"
+            className="complaint-details-popup-form"
           />
         </div>
       ]}

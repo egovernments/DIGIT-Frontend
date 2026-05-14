@@ -129,7 +129,7 @@ const BoundaryDropdown = ({ label, data, onChange, selected, isMandatory }) => {
         {isMandatory && <span style={{ color: "#d4351c" }}> *</span>}
       </div>
       <div className='digit-text-input-field-without-card'>
-        <Dropdown style={{}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
+        <Dropdown style={{marginBottom:"1.5rem"}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
       </div>
     </div>
   );

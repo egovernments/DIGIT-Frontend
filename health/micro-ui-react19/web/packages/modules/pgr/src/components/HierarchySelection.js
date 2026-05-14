@@ -8,8 +8,8 @@ import {
   LabelFieldPair,
   Button,
   Toast,
+  Footer,
 } from "@egovernments/digit-ui-components";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
 
 const HierarchySelection = ({onHierarchyChosen}) => {
   const { t } = useTranslation();
@@ -140,17 +140,19 @@ const HierarchySelection = ({onHierarchyChosen}) => {
           />
         </LabelFieldPair>
       </Card>
-      <ActionBar className="mc_back">
-        <Button
-          style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
-          variation="primary"
-          label={t("NEXT")}
-          title={t("NEXT")}
-          onClick={onNextClick}
-          icon={"ArrowForward"}
-          isSuffix
-        />
-      </ActionBar>
+      <Footer
+        setActionFieldsToRight
+        actionFields={[
+          <Button
+            variation="primary"
+            label={t("NEXT")}
+            title={t("NEXT")}
+            onClick={onNextClick}
+            icon={"ArrowForward"}
+            isSuffix
+          />,
+        ]}
+      />
 
       {toast.show && (
         <Toast

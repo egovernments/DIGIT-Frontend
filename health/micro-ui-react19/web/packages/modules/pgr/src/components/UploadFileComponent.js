@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { UploadFile, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { FileUpload } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
 import { Button } from "@egovernments/digit-ui-components";
@@ -75,8 +75,8 @@ const UploadedFileComponent = ({ config, onSelect }) => {
     })();
   }, [file, maxFileSize]);
 
-  function selectFile(e) {
-    setFile(e.target.files[0]);
+  function selectFile(files) {
+    if (files && files.length > 0) setFile(files[0]);
   }
 
   async function downloadFile() {
@@ -105,18 +105,19 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   }
 
   return (
-    <div className="pgr-upload-file-wrapper" style={{ maxWidth: "37.5rem" }}>
-      <UploadFile
+    <div className="pgr-upload-file-wrapper" style={{ maxWidth: "37.5rem" ,gap:"1.5rem",display:"flex",flexDirection:"column"}}>
+      <FileUpload
         id={config?.key ? `upload-${config.key}` : "upload-doc"}
+        variant="uploadField"
         accept=".pdf,.jpg,.jpeg"
         onUpload={selectFile}
-        onDelete={() => {
+        iserror={error || ""}
+        removeTargetedFile={() => {
           setUploadedFile(null);
           setFile(null);
           setError(null);
           if (config?.key) onSelect(config.key, null);
         }}
-        message={uploadedFile ? `1 ${t("CS_ACTION_FILEUPLOADED")}` : t("CS_ACTION_NO_FILEUPLOADED")}
       />
       {uploadedFile && (
         <Button
@@ -128,7 +129,6 @@ const UploadedFileComponent = ({ config, onSelect }) => {
           onClick={downloadFile}
         />
       )}
-      {error && <p className="pgr-upload-error">{error}</p>}
     </div>
   );
 };

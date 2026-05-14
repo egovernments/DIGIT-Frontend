@@ -291,6 +291,7 @@ const CreateComplaintForm = ({
         onFormValueChange={onFormValueChange}
         isDisabled={isSubmitting}
         label={t("CS_COMMON_SUBMIT")}
+        actionClassName={"actionBarClass"}
       />
 
       {/* Toast Notification for success/failure messages */}

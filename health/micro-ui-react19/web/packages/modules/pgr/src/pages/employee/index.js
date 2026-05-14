@@ -24,9 +24,9 @@ const EmployeeApp = ({ stateCode, userType, tenants }) => {
               show: !location.pathname.includes("complaint-success"),
             },
             {
-              internalLink: `/${window?.contextPath}/employee/pgr/complaint/create`,
+              internalLink: `/${window?.contextPath}/employee/pgr/create-complaint`,
               content: t("ACTION_TEST_CREATE_COMPLAINT"),
-              show: location.pathname.includes("complaint/create"),
+              show: location.pathname.includes("create-complaint"),
             },
             {
               internalLink: `/${window?.contextPath}/employee/pgr/inbox-v2`,
@@ -43,7 +43,7 @@ const EmployeeApp = ({ stateCode, userType, tenants }) => {
       </React.Fragment>
 
       <Routes>
-        <Route path="complaint/create" element={<PGRCreateComplaint />} />
+        <Route path="create-complaint" element={<PGRCreateComplaint />} />
         <Route path="complaint-success" element={<PGRResponse />} />
         <Route path="complaint-failed" element={<PGRResponse />} />
         <Route path="complaint-details/:id" element={<PGRComplaintDetails />} />

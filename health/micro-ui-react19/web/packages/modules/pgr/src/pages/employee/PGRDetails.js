@@ -12,8 +12,8 @@ import {
   Timeline,
   Toast,
   NoResultsFound,
+  Loader
 } from "@egovernments/digit-ui-components";
-import { Loader } from "@egovernments/digit-ui-react-components";
 import { convertEpochFormateToDate } from "../../utils";
 import TimelineWrapper from "../../components/TimeLineWrapper";
 import PGRWorkflowModal from "../../components/PGRWorkflowModal";
@@ -536,6 +536,7 @@ const PGRDetails = () => {
               },
             ]}
             type="primary"
+            className="summary-card-complaint-details"
           />
         ) : (
           <NoResultsFound />
@@ -546,9 +547,9 @@ const PGRDetails = () => {
       <Footer
         actionFields={[
           <Button
-            className="custom-class"
+            // className="custom-class"
             isSearchable={false}
-            onClick={function noRefCheck() {}}
+            onClick={()=>{}}
             menuStyles={{
               bottom: "40px",
               maxWidth: "fit-content",
@@ -564,6 +565,7 @@ const PGRDetails = () => {
             options={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0])}
             optionsKey="action"
             type="actionButton"
+            variation="primary"
           />,
         ]}
         className=""

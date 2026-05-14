@@ -92,7 +92,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
 
   return (
     <React.Fragment>
-      <div className="boundary-dropdown-container">
+      <div className="boundary-dropdown-container" style={{width:"100%"}}>
         {boundaryHierarchy.map((key) => {
           if (value[key]?.length > 0) {
             return (
@@ -121,9 +121,9 @@ const BoundaryDropdown = ({ label, data, onChange, selected }) => {
   return (
     <React.Fragment>
       <div className="comment-label">{t(label)}</div>
-      <div className='digit-text-input-field'>
-      <Dropdown style={{width: "100%", maxWidth : "37.5rem"}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
-    </div>
+      <div className="digit-field" style={{ width: "100%" }}>
+        <Dropdown style={{ width: "100%",marginBottom:"1rem" }} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} optionCardStyles ={{maxHeight:"10vh"}} />
+      </div>
     </React.Fragment>
   );
 };

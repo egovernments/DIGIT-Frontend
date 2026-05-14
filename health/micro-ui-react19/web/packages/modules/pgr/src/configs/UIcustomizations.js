@@ -15,100 +15,83 @@ export const UICustomizations = {
 
   PGRInboxConfig: {
     preProcess: (data) => {
-      data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.inbox.limit= data?.state?.tableForm?.limit;
+      const tenantId = Digit.ULBService.getCurrentTenantId() || Digit.ULBService.getStateId();
+      const stateTenantId = tenantId?.split(".")[0];
+      const tableForm = data?.state?.tableForm || {};
+      const searchForm = data?.state?.searchForm || {};
+      const filterForm = data?.state?.filterForm || {};
 
-      const requestDate = data?.body?.inbox?.moduleSearchCriteria?.range?.requestDate;
+      // Build moduleSearchCriteria fresh — never mutate the static config body reference.
+      // useCustomAPIHook keys on useMemo(() => JSON.stringify(body), [body]) by reference,
+      // so we must replace data.body with a new object each call to trigger recomputation.
+      const moduleSearchCriteria = {};
 
+      // Search form
+      if (searchForm.complaintNumber) moduleSearchCriteria.complaintNumber = searchForm.complaintNumber;
+      if (searchForm.mobileNumber) moduleSearchCriteria.mobileNumber = searchForm.mobileNumber;
+
+      const requestDate = searchForm.range?.requestDate;
       if (requestDate?.startDate && requestDate?.endDate) {
-        const fromDate = new Date(requestDate.startDate).getTime();
-        const toDate = new Date(new Date(requestDate.endDate).setHours(23,59,59,999)).getTime();
-
-        data.body.inbox.moduleSearchCriteria.fromDate = fromDate;
-        data.body.inbox.moduleSearchCriteria.toDate = toDate;
-      } else {
-        delete data.body.inbox.moduleSearchCriteria.fromDate;
-        delete data.body.inbox.moduleSearchCriteria.toDate;
+        moduleSearchCriteria.fromDate = new Date(requestDate.startDate).getTime();
+        moduleSearchCriteria.toDate = new Date(new Date(requestDate.endDate).setHours(23, 59, 59, 999)).getTime();
       }
 
-      if (data?.state?.tableForm?.sortOrder) {
-        delete data.state.tableForm.sortOrder;
-      }
-      
-      // Always delete the full range object if it exists
-      delete data.body.inbox.moduleSearchCriteria.range;
-
-      const assignee = _.clone(data.body.inbox.moduleSearchCriteria.assignedToMe);
-      delete data.body.inbox.moduleSearchCriteria.assignedToMe;
-      delete data.body.inbox.moduleSearchCriteria.assignee;
-
-      if (assignee?.code === "ASSIGNED_TO_ME" || data?.state?.filterForm?.assignedToMe?.code === "ASSIGNED_TO_ME") {
-        data.body.inbox.moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
+      // Filter: assignedToMe
+      if (filterForm.assignedToMe?.code === "ASSIGNED_TO_ME") {
+        moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
       }
 
-      // if(data?.state?.filterForm){
-      //   window.Digit.SessionStorage.set("filtersForInbox",data?.state?.filterForm); 
-      // }
-
-      // --- Handle serviceCode ---
-      let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
-      serviceCodes = serviceCodes?.serviceCode;
-      delete data.body.inbox.moduleSearchCriteria.serviceCode;
-      if (serviceCodes != null) {
-        data.body.inbox.moduleSearchCriteria.complaintType = serviceCodes;
-      } else {
-        delete data.body.inbox.moduleSearchCriteria.complaintType;
+      // Filter: serviceCode → complaintType
+      if (filterForm.serviceCode?.serviceCode) {
+        moduleSearchCriteria.complaintType = filterForm.serviceCode.serviceCode;
       }
 
-      delete data.body.inbox.moduleSearchCriteria.locality;
-      let rawLocality = data?.state?.filterForm?.locality;
+      // Filter: locality
+      let rawLocality = filterForm.locality;
       let localityArray = [];
       if (rawLocality) {
         if (Array.isArray(rawLocality)) {
           localityArray = rawLocality.map((loc) => {
-            // Extract last segment from dot-separated code (e.g., "MICROPLAN_MO_16_FCT__ABUJA_STATE.MICROPLAN_MO_16_01_FCT__ABUJA.MICROPLAN_MO_16_01_01_ABAJI.MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI" -> "MICROPLAN_MO_16_01_01_02_AGYANA_PAN_DAGI")
             const code = loc?.code;
-            if (code && typeof code === 'string' && code.includes('.')) {
-              const segments = code.split('.');
-              const lastSegment = segments[segments.length - 1];
-              return lastSegment || null;
+            if (code && typeof code === "string" && code.includes(".")) {
+              const segments = code.split(".");
+              return segments[segments.length - 1] || null;
             }
             return code || null;
           }).filter(Boolean);
         } else if (rawLocality?.code) {
-          // Extract last segment for single locality
           const code = rawLocality.code;
-          if (code && typeof code === 'string') {
-            if (code.includes('.')) {
-              const segments = code.split('.');
+          if (code && typeof code === "string") {
+            if (code.includes(".")) {
+              const segments = code.split(".");
               const lastSegment = segments[segments.length - 1];
-              if (lastSegment) {
-                localityArray = [lastSegment];
-              }
+              if (lastSegment) localityArray = [lastSegment];
             } else {
               localityArray = [code];
             }
           }
         }
       }
+      if (localityArray.length > 0) moduleSearchCriteria.area = localityArray;
 
-      if (Array.isArray(localityArray) && localityArray.length > 0) {
-        delete data.body.inbox.moduleSearchCriteria.locality;
-        data.body.inbox.moduleSearchCriteria.area = localityArray;
-      } else {
-        delete data.body.inbox.moduleSearchCriteria.area;
-      }
-
-      // --- Handle status from state.filterForm ---
-      const rawStatuses = _.clone(data?.state?.filterForm?.status || {});
+      // Filter: status
+      const rawStatuses = filterForm.status || {};
       const statuses = Object.keys(rawStatuses).filter((key) => rawStatuses[key] === true);
+      if (statuses.length > 0) moduleSearchCriteria.status = statuses;
 
-      if (statuses.length > 0) {
-        data.body.inbox.moduleSearchCriteria.status = statuses;
-      } else {
-        delete data.body.inbox.moduleSearchCriteria.status;
-      }
+      // Replace body with a new object so useCustomAPIHook detects the reference change
+      data.body = {
+        inbox: {
+          tenantId: stateTenantId,
+          processSearchCriteria: {
+            ...data.body.inbox.processSearchCriteria,
+            tenantId: stateTenantId,
+          },
+          moduleSearchCriteria,
+          limit: tableForm.limit,
+          offset: tableForm.offset,
+        },
+      };
 
       return data;
     },

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks, initLibraries } from "@egovernments/digit-ui-libraries";
+import "@egovernments/digit-ui-health-css";
 
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
@@ -94,7 +95,8 @@ const MainApp = ({ stateCode, enabledModules }) => {
       }
 
       window.Digit.Customizations = {
-        PGR: {},
+        ...window.Digit.Customizations,
+        PGR: window.Digit.Customizations?.PGR || {},
       };
 
       setIsReady(true);

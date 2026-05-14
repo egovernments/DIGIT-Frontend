@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Button, Header, RemoveIcon } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import BoundaryComponent from "./SelectEmployeeBoundary";
-import { Loader } from "@egovernments/digit-ui-components";
-import { Card} from "@egovernments/digit-ui-components";
+import { Loader,Card,Button,DeleteIcon } from "@egovernments/digit-ui-components";
 
 const Jurisdictions = ({ config, onSelect, formData }) => {
   const { t } = useTranslation();
@@ -20,12 +18,6 @@ const Jurisdictions = ({ config, onSelect, formData }) => {
     setBoundaryList([...boundaryList, { id: Date.now() }]);
   };
 
-  const DeleteIcon = ({ style, fill }) => (
-    <svg style={style} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill={fill} />
-    </svg>
-  );
-
   const handleRemove = (id) => {
     const updatedList = boundaryList.filter((item) => item.id !== id);
     const updatedValues = boundaryValues.filter((_, idx) => idx !== boundaryList.findIndex(i => i.id === id));
@@ -36,7 +28,7 @@ const Jurisdictions = ({ config, onSelect, formData }) => {
 
   const isLastBoundaryValid = () => {
     const lastValue = boundaryValues[boundaryValues.length - 1];
-    return lastValue?.boundaryType && lastValue?.boundary; // Validation to disable the add button if the last boundary is not selected
+    return lastValue?.boundaryType && lastValue?.code; // Validation to disable the add button if the last boundary is not selected
   };
 
   const handleBoundarySelect = (index, value) => {
@@ -81,7 +73,7 @@ const Jurisdictions = ({ config, onSelect, formData }) => {
         </Card>
       ))}
       {selectedHierarchy && (<div>
-        <Button label={t("ADD_JURISDICTION")} onButtonClick={handleAdd} disabled={boundaryList.length > 0 && !isLastBoundaryValid()} />
+        <Button label={t("ADD_JURISDICTION")} variation={"primary"} onClick={handleAdd} isDisabled={(boundaryList.length > 0 && !isLastBoundaryValid()) ? true : false} />
       </div>)}
     </div>
   );

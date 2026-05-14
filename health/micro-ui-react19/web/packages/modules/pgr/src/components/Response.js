@@ -1,16 +1,13 @@
-import React, { useState, Fragment } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-components";
-import { PanelCard } from "@egovernments/digit-ui-components";
+import { PanelCard, Footer, Button } from "@egovernments/digit-ui-components";
 
 const Response = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const queryStrings = Digit.Hooks.useQueryParams();
-  const { state } = useLocation();
-  const back = state?.back ? state?.back : "BACK";
+  const { state, pathname } = useLocation();
+  const panelType = pathname?.includes("complaint-success") ? "success" : "error";
 
   return (
     <>
@@ -32,32 +29,33 @@ const Response = () => {
         response={t(state?.fileName ? state?.fileName : state?.responseId ? state?.responseId : "")}
         sortFooterButtons
         style={{}}
-        type={state?.state}
-      ></PanelCard>
-      <ActionBar
-        className="pgr-response-actionbar"
-        style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%", gap: "2.5rem", paddingRight: "1.5rem" }}
-      >
-        <Button
-          className="pgr-response-btn create-complaint-btn"
-          variation="secondary"
-          label={t(`PGR_CREATE_ANOTHER_COMPLAIN`)}
-          icon={"Add"}
-          onClick={() => {
-            navigate(`/${window.contextPath}/employee/pgr/complaint/create`);
-          }}
-        />
-        <Button
-          className="pgr-response-btn back-btn"
-          variation="primary"
-          label={t("PGR_SEARCH_COMPLAINT")}
-          icon={"ExitToApp"}
-          onClick={() => {
-            const backlink = state?.backlink || `/${window.contextPath}/employee/`;
-            navigate(backlink);
-          }}
-        />
-      </ActionBar>
+        type={panelType}
+      />
+      <Footer
+        actionFields={[
+          <Button
+            key="create-another"
+            variation="secondary"
+            label={t("PGR_CREATE_ANOTHER_COMPLAIN")}
+            icon={"Add"}
+            onClick={() => navigate(`/${window.contextPath}/employee/pgr/create-complaint`)}
+            type="button"
+          />,
+          <Button
+            key="go-to-inbox"
+            variation="primary"
+            label={t("PGR_SEARCH_COMPLAINT")}
+            icon={"ExitToApp"}
+            isSuffix={true}
+            onClick={() => navigate(state?.backlink || `/${window.contextPath}/employee/`)}
+            type="button"
+          />,
+        ]}
+        maxActionFieldsAllowed={5}
+        setactionFieldsToRight
+        sortActionFields
+        style={{}}
+      />
     </>
   );
 };

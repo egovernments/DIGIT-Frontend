@@ -4,7 +4,7 @@ import { PopUp, Timeline, TimelineMolecule, Loader } from "@egovernments/digit-u
 import { useMyContext } from "../utils/context";
 import { convertEpochFormateToDate } from "../utils";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
-import { DownloadIcon, FileIcon } from "@egovernments/digit-ui-react-components";
+import { DownloadIcon, FileIcon } from "@egovernments/digit-ui-components";
 
 const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPrefix = "" }) => {
   const { state } = useMyContext();
