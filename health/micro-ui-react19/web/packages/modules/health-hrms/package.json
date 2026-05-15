@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-health-hrms",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "HRMS Module UI",
   "main": "dist/main.js",
   "module": "dist/main.js",
