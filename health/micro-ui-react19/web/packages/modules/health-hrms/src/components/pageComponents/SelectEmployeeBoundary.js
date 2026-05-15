@@ -1,5 +1,4 @@
-import { LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
-import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { LabelFieldPair, CardLabel, Loader, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -112,7 +111,7 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
       <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
         {t("HRMS_BOUNDARY_LABEL")} {index}*
       </CardLabel>
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%",display:"flex",flexDirection:"column",gap:"1.5rem" }}>
         {levels.map((lvl) =>
           Array.isArray(optionsByType[lvl]) && optionsByType[lvl].length > 0 ? (
             <BoundaryDropdown

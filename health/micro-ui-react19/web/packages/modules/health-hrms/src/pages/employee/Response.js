@@ -1,9 +1,7 @@
 import React, { useState, Fragment } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, SubmitBar, ArrowLeft, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-components";
-import { PanelCard } from "@egovernments/digit-ui-components";
+import { Button, PanelCard, Footer } from "@egovernments/digit-ui-components";
 import { ReposeScreenType } from "../../constants/enums";
 
 const ResponseScreen = () => {
@@ -51,22 +49,27 @@ const ResponseScreen = () => {
         style={{}}
         type={state?.state}
       ></PanelCard>
-      <ActionBar className="mc_back">
-        <Button
-          style={{ margin: "0.5rem", marginLeft: "6rem", width: "25%" }}
-          variation="primary"
-          label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
-          icon={"ArrowForward"}
-          isSuffix
-          onClick={() => {
-            const backlink =
-              state.isCampaign == ReposeScreenType.CREAT_EUSER
-                ? `/${window.contextPath}/employee/hrms/assign-campaign/${state?.fileName?.code}`
-                : `/${window.contextPath}/employee/`;
-            navigate(backlink);
-          }}
-        />
-      </ActionBar>
+      <Footer
+        className="mc_back"
+        setactionFieldsToRight={true}
+        actionFields={[
+          <Button
+            key="back"
+            style={{ margin: "0.5rem", marginLeft: "6rem", width: "25%" }}
+            variation="primary"
+            label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
+            icon={"ArrowForward"}
+            isSuffix
+            onClick={() => {
+              const backlink =
+                state.isCampaign == ReposeScreenType.CREAT_EUSER
+                  ? `/${window.contextPath}/employee/hrms/assign-campaign/${state?.fileName?.code}`
+                  : `/${window.contextPath}/employee/`;
+              navigate(backlink);
+            }}
+          />,
+        ]}
+      />
     </>
   );
 };

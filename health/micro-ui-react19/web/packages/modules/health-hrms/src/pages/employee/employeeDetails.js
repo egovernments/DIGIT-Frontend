@@ -4,8 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { convertEpochToDate } from "../../utils/utlis";
 import { searchStaff } from "../../services/service";
 
-import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag, NoResultsFound } from "@egovernments/digit-ui-components";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag, NoResultsFound,Loader } from "@egovernments/digit-ui-components";
 import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
 import { ReposeScreenType } from "../../constants/enums";
 
@@ -473,14 +472,15 @@ const EmployeeDetailScreen = () => {
         <Footer
           actionFields={[
             <Button
-              className="custom-class"
-              iconFill=""
-              isSearchable
+              // className="custom-class"
+              variation="primary"
               label={t("HR_COMMON_TAKE_ACTION")}
               menuStyles={{
-                bottom: "40px",
+                  bottom: "40px",
+                  maxWidth: "fit-content",
+                  minWidth: "100%",
               }}
-              onClick={function noRefCheck() {}}
+              onClick={()=>{}}
               onOptionSelect={(e) => {
                 let key = e.code;
                 switch (key) {
@@ -511,7 +511,7 @@ const EmployeeDetailScreen = () => {
                   : deactiveworkflowActions
               }
               optionsKey="name"
-              style={{}}
+              style={{minWidth:"20px"}}
               title=""
               type="actionButton"
             />,

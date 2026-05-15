@@ -4,23 +4,41 @@ import { Link } from "react-router-dom";
 export const UICustomizations = {
   HRMSInboxConfig: {
     preProcess: (data) => {
-      const requestParam = { ...(data?.requestParam || {}) };
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const searchForm = data?.state?.searchForm || {};
+      const filterForm = data?.state?.filterForm || {};
+      const tableForm = data?.state?.tableForm || {};
 
-      if (requestParam.isActive && typeof requestParam.isActive === "object") {
-        requestParam.isActive = requestParam.isActive.code;
+      const requestParam = {
+        tenantId,
+        limit: tableForm.limit ?? 10,
+        offset: tableForm.offset ?? 0,
+        sortBy: "lastModifiedTime",
+        sortOrder: "DESC",
+      };
+
+      if (searchForm.names) requestParam.names = searchForm.names;
+      if (searchForm.codes) requestParam.codes = searchForm.codes;
+      if (searchForm.phone) requestParam.phone = searchForm.phone;
+
+      const isActive = filterForm.isActive;
+      if (isActive !== null && isActive !== undefined && isActive !== "") {
+        requestParam.isActive = typeof isActive === "object" ? isActive.code : isActive;
       }
 
-      if (requestParam.roles && typeof requestParam.roles === "object" && !Array.isArray(requestParam.roles)) {
-        requestParam.roles = requestParam.roles.code;
-      }
-
-      Object.keys(requestParam).forEach((key) => {
-        if (requestParam[key] === "" || requestParam[key] === null || requestParam[key] === undefined) {
-          delete requestParam[key];
+      const roles = filterForm.roles;
+      if (roles && !(Array.isArray(roles) && roles.length === 0) && roles !== "") {
+        if (Array.isArray(roles)) {
+          requestParam.roles = roles.map((r) => (typeof r === "object" ? r.code : r)).join(",");
+        } else if (typeof roles === "object") {
+          requestParam.roles = roles.code;
+        } else {
+          requestParam.roles = roles;
         }
-      });
+      }
 
-      return { ...data, requestParam };
+      // params = GET query string; changeQueryName forces React Query key to change (body is always {} for HRMS GET)
+      return { ...data, params: requestParam, changeQueryName: JSON.stringify(requestParam) };
     },
 
     additionalCustomizations: (row, key, column, value, t) => {
