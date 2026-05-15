@@ -256,3 +256,11 @@ This project is licensed under the MIT License.
 ---
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12843/badge)](https://www.bestpractices.dev/projects/12843)
+
+---
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/egovernments/DIGIT-Frontend/badge)](https://scorecard.dev/viewer/?uri=github.com/egovernments/DIGIT-Frontend)
+
+[![CI](https://github.com/egovernments/DIGIT-Frontend/actions/workflows/build.yml/badge.svg)](https://github.com/egovernments/DIGIT-Frontend/actions)
