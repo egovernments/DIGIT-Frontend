@@ -57,7 +57,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
       const results = await Promise.allSettled([
         import(/* webpackChunkName: "campaign-manager" */ "@egovernments/digit-ui-module-campaign-manager"),
         import(/* webpackChunkName: "workbench" */ "@egovernments/digit-ui-module-workbench"),
-        import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-pgr"),
+        import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-health-pgr"),
         import(/* webpackChunkName: "health-hrms" */ "@egovernments/digit-ui-module-health-hrms"),
         import(/* webpackChunkName: "health-payments" */ "@egovernments/digit-ui-module-health-payments"),
       ]);

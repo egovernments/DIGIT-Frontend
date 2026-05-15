@@ -56,7 +56,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
       try {
         const [paymentsModule, pgrModule, hrmsModule] = await Promise.all([
           import(/* webpackChunkName: "health-payments" */ "@egovernments/digit-ui-module-health-payments"),
-          import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-pgr"),
+          import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-health-pgr"),
           import(/* webpackChunkName: "health-hrms" */ "@egovernments/digit-ui-module-health-hrms"),
         ]);
 
