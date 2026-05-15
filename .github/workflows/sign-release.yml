@@ -1,0 +1,38 @@
+name: Sign Release Artifacts
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  sign-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Release Archive
+        run: |
+          git archive --format tar.gz --output DIGIT-Frontend-${{ github.ref_name }}.tar.gz HEAD
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign Release Archive
+        run: |
+          cosign sign-blob \
+            --yes \
+            --output-signature DIGIT-Frontend-${{ github.ref_name }}.tar.gz.sig \
+            DIGIT-Frontend-${{ github.ref_name }}.tar.gz
+
+      - name: Upload Signed Assets to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            DIGIT-Frontend-${{ github.ref_name }}.tar.gz
+            DIGIT-Frontend-${{ github.ref_name }}.tar.gz.sig
