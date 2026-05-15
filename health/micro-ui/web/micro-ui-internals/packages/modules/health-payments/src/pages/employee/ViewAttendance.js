@@ -299,18 +299,18 @@ const ViewAttendance = ({ editAttendance = false }) => {
           body: {
             musterRoll: {
               ...data[0], // Spread the existing data
+              additionalDetails: {
+                ...(data[0].additionalDetails || {}),
+                editInfo: {
+                  ...(data[0].additionalDetails?.editInfo || {}),
+                  attendanceUpdatedAtEpochMs,
+                },
+              },
               individualEntries: data[0].individualEntries.map((entry) => {
                 const updatedAttendance = attendanceSummary.find(([id]) => id === entry.individualId)?.[4]; // Extract the updated actualTotalAttendance
                 return {
                   ...entry,
                   modifiedTotalAttendance: updatedAttendance || entry.actualTotalAttendance,
-                  additionalDetails: {
-                    ...(entry.additionalDetails || {}),
-                    editInfo: {
-                      ...(entry.additionalDetails?.editInfo || {}),
-                      attendanceUpdatedAtEpochMs,
-                    },
-                  },
                 };
               }),
               billingPeriodId: selectedPeriod.id,
