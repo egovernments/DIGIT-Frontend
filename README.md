@@ -133,3 +133,7 @@ Start the server
 ```
 
 ![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
+
+
+
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12843/badge)](https://www.bestpractices.dev/projects/12843)
