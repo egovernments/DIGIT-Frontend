@@ -465,7 +465,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     if (!kibanaMapConfig?.routePath) return null;
 
     const baseUrl = kibanaMapConfig.isOrigin
-      ? `https://mc-nigeria-uat.digit.org${kibanaMapConfig.routePath}` //todo check base URL
+      ? `${window.location.origin}${kibanaMapConfig.routePath}`
       : kibanaMapConfig.routePath;
 
     const usernames = (attendeeUsernames || []).filter(Boolean);
@@ -475,7 +475,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
       ? `(query:(terms:(Data.userName.keyword:!(${usernames.map(u => `'${u}'`).join(",")}))))`
       : "";
 
-    const filters = termsFilter ? `filters:!(${termsFilter}),` : "";
+    // Build range filter for createdTime based on attendance period (epoch ms)
+    const periodStart = selectedPeriod?.periodStartDate;
+    const periodEnd = selectedPeriod?.periodEndDate;
+    const rangeFilter = periodStart && periodEnd
+      ? `(query:(range:(Data.createdTime:(format:epoch_millis,gte:${periodStart},lte:${periodEnd}))))`
+      : "";
+
+    const activeFilters = [termsFilter, rangeFilter].filter(Boolean);
+    const filters = activeFilters.length > 0 ? `filters:!(${activeFilters.join(",")}),` : "";
     const gState = `(${filters}refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))`;
 
     return `${baseUrl}&_g=${gState}&hide-filter-bar=true`;
