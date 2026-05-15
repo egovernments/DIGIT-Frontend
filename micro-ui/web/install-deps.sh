@@ -2,25 +2,33 @@
 
 set -e
 
-BRANCH="$(git branch --show-current 2>/dev/null || echo 'main')"
-
-echo "Main Branch: $BRANCH"
-
 STUDIO_REPO="DIGIT-Studio"
 
 rm -rf "$STUDIO_REPO"
 
 echo "Cloning DIGIT-Studio repository..."
+
 if [ -n "$GIT_TOKEN" ]; then
-    git clone -b STUDIO-UPDATE-FEATURE "https://${GIT_TOKEN}:x-oauth-basic@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+    git clone -b STUDIO-UPDATE-FEATURE \
+    "https://${GIT_TOKEN}:x-oauth-basic@github.com/egovernments/DIGIT-Studio.git" \
+    "$STUDIO_REPO"
 else
-    git clone -b STUDIO-UPDATE-FEATURE "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
+    git clone -b STUDIO-UPDATE-FEATURE \
+    "https://github.com/egovernments/DIGIT-Studio.git" \
+    "$STUDIO_REPO"
 fi
 
-# Path to packages in the cloned repo (adjust based on actual structure)
+cd "$STUDIO_REPO"
+
+echo "Latest pulled commit:"
+git log -1 --oneline
+
+cd ..
+
+# Path to packages in the cloned repo
 PACKAGES_PATH="$STUDIO_REPO/frontend/web/packages"
 
-# Fallback paths if structure is different
+# Fallback paths
 if [ ! -d "$PACKAGES_PATH" ]; then
     PACKAGES_PATH="$STUDIO_REPO/packages"
 fi
@@ -31,20 +39,23 @@ fi
 
 if [ -d "$PACKAGES_PATH" ]; then
     echo "Found packages at: $PACKAGES_PATH"
-    echo "Copying packages folder..."
+
     rm -rf packages
     cp -r "$PACKAGES_PATH" packages
+
     echo "Packages copied successfully"
 else
-    echo "Error: packages directory not found in any expected location"
-    echo "Searched in:"
-    echo "  - $STUDIO_REPO/frontend/web/packages"
-    echo "  - $STUDIO_REPO/packages"
-    echo "  - $STUDIO_REPO/health/micro-ui/packages"
+    echo "Error: packages directory not found"
+
+    echo "Searched:"
+    echo " - $STUDIO_REPO/frontend/web/packages"
+    echo " - $STUDIO_REPO/packages"
+    echo " - $STUDIO_REPO/health/micro-ui/packages"
+
     exit 1
 fi
 
-# Copy UICustomizations.js if it exists
+# Copy UICustomizations.js if present
 CUSTOMIZATIONS_PATHS="
 $STUDIO_REPO/frontend/web/example/src/UICustomizations.js
 $STUDIO_REPO/example/src/UICustomizations.js
@@ -53,9 +64,11 @@ $STUDIO_REPO/health/micro-ui/web/src/Customisations/UICustomizations.js
 
 for CUSTOM_PATH in $CUSTOMIZATIONS_PATHS; do
     if [ -f "$CUSTOM_PATH" ]; then
-        echo "Copying UICustomizations.js from $CUSTOM_PATH..."
+        echo "Copying UICustomizations.js from $CUSTOM_PATH"
+
         mkdir -p src/Customisations
         cp "$CUSTOM_PATH" src/Customisations/
+
         break
     fi
 done
