@@ -163,6 +163,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
           style={{
             border: "none",
             borderRight: "1px solid #000000",
+            width: `calc(${selectedPrefix.length}ch + 36px)`,
             padding: "10px 8px",
             fontSize: "16px",
             backgroundColor: "#EEEEEE",
@@ -170,8 +171,6 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
             outline: "none",
             color: "#0B0C0C",
             fontWeight: "500",
-            minWidth: "75px",
-            appearance: "auto",
           }}
         >
           {allPrefixes.map((p) => (

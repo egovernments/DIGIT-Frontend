@@ -113,8 +113,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                       outline: "none",
                       color: "#333",
                       fontWeight: "600",
-                      width: "100%",
-                      minWidth: "90px",
+                      width: `calc(${activePrefix.length}ch + 40px)`,
                       appearance: "none",
                       zIndex: 1,
                       height: "100%"
