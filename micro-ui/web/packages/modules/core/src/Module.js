@@ -178,6 +178,12 @@ const componentsToRegister = {
 };
 
 export const initCoreComponents = () => {
+  // Ensure hooks introduced in newer libraries versions are always available.
+  // Old deployments (e.g. digit-ui-libraries@1.8.8) won't have useSSOConfig,
+  // so we register a no-op fallback so login.js never crashes with "not a function".
+  if (!Digit.Hooks.useSSOConfig) {
+    Digit.Hooks.useSSOConfig = () => ({ data: [], isLoading: false });
+  }
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
