@@ -30,8 +30,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-   //checking for custom login components
-   const DynamicLoginComponent = Digit.ComponentRegistryService?.getComponent("DynamicLoginComponent");
   // const { t } = useTranslation();
 
   const history = useHistory();
@@ -232,7 +230,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       <Carousel bannerImages={propsConfig?.bannerImages} />
       <div className="login-form-container">
         {renderLoginForm("login-form-container", "", loginOTPBased ? "sandbox-onboarding-wrapper" : "")}
-        {DynamicLoginComponent && <DynamicLoginComponent />}
         {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
         {renderFooter("EmployeeLoginFooter")}
       </div>
@@ -247,7 +244,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         "loginCardClassName",
         loginOTPBased ? "sandbox-onboarding-wrapper" : ""
       )}
-      {DynamicLoginComponent && <DynamicLoginComponent />}
       {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
       {renderFooter("employee-login-home-footer")}
     </Background>

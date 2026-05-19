@@ -21,9 +21,7 @@ const makeDefaultValues = (sessionFormData) => {
 const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [inactiveJurisdictions, setInactiveJurisdictions] = useState([]);
-  const [boundaryData, setBoundaryData] = useState();
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
-  // const { data: boundaryData = {}, isLoadingBoundary } = Digit.Hooks.hrms.useHrmsMDMS(tenantId,"FetchBoundaries") || {};
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
   const isEdit = window.location.href.includes("hrms/edit")
@@ -39,40 +37,6 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
       },
     ])
   );
-
-  useEffect(() => {
-    fetchDetailsForSelectedOption();
-  }, [])
-
-  const fetchDetailsForSelectedOption = async () => {
-    const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
-    const boundaryType = window?.globalConfigs?.getConfig("BOUNDARY_TYPE") || "Locality";
-
-    let response = null;
-
-    try {
-      response = await Digit.CustomService.getResponse({
-        url: `/boundary-service/boundary-relationships/_search`,
-        useCache: false,
-        method: "POST",
-        userService: false,
-        params: {
-          tenantId: tenantId,
-          hierarchyType: hierarchyType,
-          boundaryType: boundaryType,
-          includeChildren: true,
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching boundary relationships:", error);
-      // Optional: Handle fallback or notify user
-    }
-
-    const result = await response;
-    setBoundaryData(result);
-  };
-
-
 
   useEffect(() => {
     const jurisdictionsData = jurisdictions?.map((jurisdiction) => {
@@ -99,9 +63,6 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
       [...jurisdictionsData, ...inactiveJurisdictions].filter((value) => Object.keys(value).length !== 0)
     );
   }, [jurisdictions]);
-
-
-
 
   const reviseIndexKeys = () => {
     setjurisdictions((prev) => prev.map((unit, index) => ({ ...unit, key: index })));
@@ -150,15 +111,8 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   let boundaryTypeoption = [];
   const [focusIndex, setFocusIndex] = useState(-1);
 
-
-
-
   function gethierarchylistdata() {
-    return boundaryData?.["TenantBoundary"]?.map((ele, index) => ({
-      name: ele.hierarchyType,
-      // name: Digit.Utils.locale.convertToLocale(ele.hierarchyType, 'EGOV_LOCATION_BOUNDARYTYPE'),
-      code: ele.hierarchyType,
-    })) || [];
+    return data?.MdmsRes?.["egov-location"]["TenantBoundary"]?.map((ele) => ele.hierarchyType);
   }
 
   function getboundarydata() {
@@ -193,7 +147,6 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
           getboundarydata={getboundarydata}
           getroledata={getroledata}
           handleRemoveUnit={handleRemoveUnit}
-          boundaryData={boundaryData}
         />
       ))}
       <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
@@ -214,57 +167,21 @@ function Jurisdiction({
   getroledata,
   roleoption,
   index,
-  boundaryData
 }) {
 
-  // {
-  //       key: index,
-  //       hierarchy: {
-  //         code: ele?.hierarchy,
-  //         name: ele?.hierarchy,
-  //       },
-  //       boundaryType: { label: ele?.boundaryType, i18text: ele.boundaryType ? `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType?.toUpperCase()}` : null },
-  //       boundary: { code: ele?.boundary },
-  //       roles: ele?.roles,
-  //     }
-  const [BoundaryType, selectBoundaryType] = useState([
-    { label: "City", i18text: Digit.Utils.locale.convertToLocale("City", "EGOV_LOCATION_BOUNDARYTYPE") }
-  ]);
+
+  const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
   const { data: cities, isCityLoading } = Digit.Hooks.useTenants();
-
   useEffect(() => {
-    //   var boundaryDataTemp =  boundaryData;
-    //     const matched = boundaryDataTemp?.["TenantBoundary"]?.filter(
-    //   (ele) => ele?.hierarchyType?.code === jurisdiction?.hierarchy?.code
-    // );
-
-    // const boundaryTypeList = matched?.flatMap((item) => {
-    //   const boundaries = Object.values(item.boundary || {});
-    //   return boundaries.map((b) => ({
-    //     ...b,
-    //     i18text: Digit.Utils.locale.convertToLocale(
-    //       b.boundaryType,
-    //       "EGOV_LOCATION_BOUNDARYTYPE"
-    //     ),
-    //   }));
-    // });
-
-    // const uniqueByType = [];
-    // const seenTypes = new Set();
-
-    // for (const b of boundaryTypeList || []) {
-    //   if (!seenTypes.has(b.boundaryType)) {
-    //     seenTypes.add(b.boundaryType);
-    //     uniqueByType.push(b);
-    //   }
-    // }
-
-    // selectBoundaryType(uniqueByType);
-
+    selectBoundaryType(
+      data?.MdmsRes?.["egov-location"]["TenantBoundary"]
+        .filter((ele) => {
+          return ele?.hierarchyType?.code == jurisdiction?.hierarchy?.code;
+        })
+        .map((item) => { return { ...item.boundary, i18text: Digit.Utils.locale.convertToLocale(item.boundary.label, 'EGOV_LOCATION_BOUNDARYTYPE') } })
+    );
   }, [jurisdiction?.hierarchy, data?.MdmsRes]);
-
-
   const tenant = Digit.ULBService.getCurrentTenantId();
 
   const { data: TenantMngmtSearch, isLoading: isLoadingTenantMngmtSearch } = Digit.Hooks.useTenantManagementSearch({
@@ -274,31 +191,15 @@ function Jurisdiction({
       enabled: Digit.Utils.getMultiRootTenant()
     }
   });
+  //  const getSubTenants = () => TenantMngmtSearch?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
+  //  const subTenantList = getSubTenants();
 
   useEffect(() => {
     if (Digit.Utils.getMultiRootTenant()) {
       selectboundary(cities);
     }
     else {
-      const tenantList =
-        data?.MdmsRes?.tenant?.tenants
-          .filter((city) => city.code !== Digit.ULBService.getStateId())
-          .map((city) => ({
-            ...city,
-            i18text: Digit.Utils.locale.getCityLocale(city.code),
-          }));
-
-      selectboundary(tenantList);
-
-      let allTenant = data?.MdmsRes?.tenant?.tenants?.map((city) => ({
-        ...city,
-        i18text: Digit.Utils.locale.getCityLocale(city.code),
-      }))
-          
-      if ( data?.MdmsRes?.tenant?.tenants?.length === 1) {
-        selectboundary(allTenant);
-        selectedboundary(allTenant?.[0]);
-      }
+      selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
     }
   }, [jurisdiction?.boundaryType, data?.MdmsRes, cities]);
 
@@ -310,38 +211,18 @@ function Jurisdiction({
     }
   }, [Boundary]);
 
-  // const selectHierarchy = (value) => {
-  //   setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: value } : item)));
-  // };
-
   const selectHierarchy = (value) => {
-    const hierarchy = {
-      code: value?.code,
-      name: value?.name,
-    };
-    setjurisdictions((prev) =>
-      prev.map((item) =>
-        item.key === jurisdiction.key ? { ...item, hierarchy } : item
-      )
-    );
+    console.log("selectedHierarchy", value);
+    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: value } : item)));
   };
 
-
-
-
   const selectboundaryType = (value) => {
-    const boundaryType = {
-      label: value?.label,
-      i18text: value?.i18text,
-    };
-    setjurisdictions((prev) =>
-      prev.map((item) =>
-        item.key === jurisdiction.key ? { ...item, boundaryType } : item
-      )
-    );
+    console.log("selectboundaryType", value);
+    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundaryType: value } : item)));
   };
 
   const selectedboundary = (value) => {
+    console.log("selectedboundary", value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundary: value } : item)));
   };
 
@@ -361,7 +242,6 @@ function Jurisdiction({
 
     res?.forEach(resData => { resData.labelKey = 'ACCESSCONTROL_ROLES_ROLES_' + resData.code })
 
-
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
 
@@ -373,7 +253,6 @@ function Jurisdiction({
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: afterRemove } : item)));
 
   };
-
   return (
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
@@ -401,7 +280,7 @@ function Jurisdiction({
             isMandatory={true}
             option={gethierarchylistdata(hierarchylist) || []}
             select={selectHierarchy}
-            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "name"}
+            optionKey={Digit.Utils.getMultiRootTenant() ? "code" : "i18nKey"}
             t={t}
           />
         </LabelFieldPair>
@@ -424,10 +303,10 @@ function Jurisdiction({
             className="form-field"
             isMandatory={true}
             selected={jurisdiction?.boundary}
-            //disable={Boundary?.length === 0}
+            disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
-            optionKey={"name"}
+            optionKey={"i18nKey"}
             t={t}
           />
         </LabelFieldPair>

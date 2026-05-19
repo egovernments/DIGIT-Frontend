@@ -10,8 +10,8 @@
     "packages/modules/sandbox",
     "packages/modules/pgr",
     "packages/modules/dss",
-
-    "packages/modules/hrms"
+    "packages/modules/hrms",
+    "packages/modules/engagement"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -46,7 +46,7 @@
     "build:hrms": "cd packages/modules/hrms && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
     "buildD:utilities": "cd packages/modules/utilities && yarn build",
-    "buildD:engagement": "cd packages/modules/engagement && yarn build",
+    "build:engagement": "cd packages/modules/engagement && yarn build",
     "build:sandbox": "cd packages/modules/sandbox && yarn build",
     "build:pgr": "cd packages/modules/pgr && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
@@ -56,11 +56,11 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/babel-preset-react-app": "10.0.0",
-    "**/@babel/traverse":"7.25.9",
+    "**/@babel/traverse": "7.25.9",
     "**/ajv": "8.11.2",
     "**/ajv-formats": "2.1.1",
     "**/@jridgewell/gen-mapping": "0.3.5",
-    "fast-uri":"2.1.0",
+    "fast-uri": "2.1.0",
     "**/minimatch": "^3.0.4",
     "**/glob": "^7.1.2"
   },
@@ -77,8 +77,8 @@
   "dependencies": {
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
-    "@egovernments/digit-ui-react-components": "1.8.24",
-    "@egovernments/digit-ui-components":"0.2.0",
+    "@egovernments/digit-ui-react-components": "1.8.22",
+    "@egovernments/digit-ui-components": "0.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",

@@ -16,13 +16,158 @@ import PrivacyComponent from "./components/PrivacyComponent";
 import LoginSignupSelector from "./components/LoginSignupSelector";
 import ForgotOrganizationTooltip from "./components/ForgotOrganizationTooltip";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
+import EmailWithLinkComponent from "./pages/employee/SignUp-v2/EmailWithLinkComponent";
+import AccountNameWithLinkComponent from "./pages/employee/Login-v2/AccountNameWithLinkComponent";
+import EmailWithSignUpLinkComponent from "./pages/employee/Login-v2/EmailWithSignUpLinkComponent";
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding,allowedUserTypes }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
-  if (isLoading) {
+  const [processedInitData, setProcessedInitData] = React.useState(null);
+  const [isProcessing, setIsProcessing] = React.useState(false);
+  const hasProcessedRef = React.useRef(false); // Prevent multiple processing
+
+  React.useEffect(() => {
+    const fetchSignedUrls = async () => {
+      // Safety checks
+      if (!initData || !initData.stateInfo) {
+        setProcessedInitData(initData);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Only process once
+      if (hasProcessedRef.current) {
+        return;
+      }
+
+      // Only run for multi-root tenant setup
+      const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+      if (!isMultiRootTenant) {
+        console.log("Not multi-root tenant, skipping URL signing check");
+        setProcessedInitData(initData);
+        setIsProcessing(false);
+        return;
+      }
+
+      console.log("=== Module.js - Checking URLs for signing (Multi-root tenant) ===");
+      const logoUrl = initData?.stateInfo?.logoUrl;
+      const logoUrlWhite = initData?.stateInfo?.logoUrlWhite;
+      const bannerUrl = initData?.stateInfo?.bannerUrl;
+
+      console.log("Original logoUrl:", logoUrl);
+      console.log("Original logoUrlWhite:", logoUrlWhite);
+      console.log("Original bannerUrl:", bannerUrl);
+
+      // Check if URLs need to be re-fetched with signing
+      const needsRefetch = (url) => {
+        return url && url.includes(".s3.ap-south-1.amazonaws.com/") && !url.includes("X-Amz-");
+      };
+
+      // Check if any URL needs refetching
+      const anyNeedsRefetch = needsRefetch(logoUrl) || needsRefetch(logoUrlWhite) || needsRefetch(bannerUrl);
+
+      if (!anyNeedsRefetch) {
+        console.log("All URLs already have signed parameters or are not S3 URLs, no refetch needed");
+        setProcessedInitData(initData);
+        setIsProcessing(false);
+        return;
+      }
+
+      setIsProcessing(true);
+      hasProcessedRef.current = true; // Mark as processed
+
+      let newLogoUrl = logoUrl;
+      let newLogoUrlWhite = logoUrlWhite;
+      let newBannerUrl = bannerUrl;
+
+      // Extract fileStoreId from S3 URL
+      const extractFileStoreId = (url) => {
+        if (!url) return null;
+        // URL format: https://bucket.s3.region.amazonaws.com/tenant/path/fileStoreId.ext
+        const match = url.match(/\/([^\/]+)\.[^.]+$/);
+        if (match && match[1]) {
+          return match[1];
+        }
+        return null;
+      };
+
+      try {
+        // Refetch logoUrl if needed
+        if (needsRefetch(logoUrl)) {
+          const fileStoreId = extractFileStoreId(logoUrl);
+          console.log("Refetching logoUrl with fileStoreId:", fileStoreId);
+          if (fileStoreId) {
+            const response = await Digit.UploadServices.Filefetch([fileStoreId], stateCode);
+            newLogoUrl = response?.data?.fileStoreIds?.[0]?.url || logoUrl;
+            console.log("New signed logoUrl:", newLogoUrl);
+          }
+        }
+
+        // Refetch logoUrlWhite if needed
+        if (needsRefetch(logoUrlWhite)) {
+          const fileStoreId = extractFileStoreId(logoUrlWhite);
+          console.log("Refetching logoUrlWhite with fileStoreId:", fileStoreId);
+          if (fileStoreId) {
+            const response = await Digit.UploadServices.Filefetch([fileStoreId], stateCode);
+            newLogoUrlWhite = response?.data?.fileStoreIds?.[0]?.url || logoUrlWhite;
+            console.log("New signed logoUrlWhite:", newLogoUrlWhite);
+          }
+        }
+
+        // Refetch bannerUrl if needed
+        if (needsRefetch(bannerUrl)) {
+          const fileStoreId = extractFileStoreId(bannerUrl);
+          console.log("Refetching bannerUrl with fileStoreId:", fileStoreId);
+          if (fileStoreId) {
+            const response = await Digit.UploadServices.Filefetch([fileStoreId], stateCode);
+            newBannerUrl = response?.data?.fileStoreIds?.[0]?.url || bannerUrl;
+            console.log("New signed bannerUrl:", newBannerUrl);
+          }
+        }
+
+        console.log("=== Module.js - Final URLs ===");
+        console.log("Final logoUrl:", newLogoUrl);
+        console.log("Final logoUrlWhite:", newLogoUrlWhite);
+        console.log("Final bannerUrl:", newBannerUrl);
+
+        // Update initData with new URLs
+        const updatedInitData = {
+          ...initData,
+          stateInfo: {
+            ...initData.stateInfo,
+            logoUrl: newLogoUrl,
+            logoUrlWhite: newLogoUrlWhite,
+            bannerUrl: newBannerUrl,
+          }
+        };
+
+        setProcessedInitData(updatedInitData);
+      } catch (error) {
+        console.error("Error fetching signed URLs:", error);
+        setProcessedInitData(initData); // Use original data on error
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    if (initData && !isLoading && !hasProcessedRef.current) {
+      fetchSignedUrls();
+    } else if (initData && !isLoading && hasProcessedRef.current) {
+      // Already processed, just use initData
+      if (!processedInitData) {
+        setProcessedInitData(initData);
+      }
+    }
+  }, [initData, isLoading, stateCode]);
+
+  if (isLoading || (isProcessing && !processedInitData)) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
-  const data=getStore(initData, moduleReducers(initData)) || {};
+
+  // Use processedInitData if available, otherwise fall back to initData
+  const dataToUse = processedInitData || initData;
+
+  const data=getStore(dataToUse, moduleReducers(dataToUse)) || {};
   const i18n = getI18n();
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
@@ -33,22 +178,22 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
         <BodyContainer>
           {Digit.Utils.getMultiRootTenant() ? (
             <DigitAppWrapper
-              initData={initData}
+              initData={dataToUse}
               stateCode={stateCode}
-              modules={initData?.modules}
-              appTenants={initData.tenants}
-              logoUrl={initData?.stateInfo?.logoUrl}
-              logoUrlWhite={initData?.stateInfo?.logoUrlWhite}
+              modules={dataToUse?.modules}
+              appTenants={dataToUse.tenants}
+              logoUrl={dataToUse?.stateInfo?.logoUrl}
+              logoUrlWhite={dataToUse?.stateInfo?.logoUrlWhite}
               defaultLanding={defaultLanding}
               allowedUserTypes={allowedUserTypes}
             />
           ) : (
             <DigitApp
-              initData={initData}
+              initData={dataToUse}
               stateCode={stateCode}
-              modules={initData?.modules}
-              appTenants={initData.tenants}
-              logoUrl={initData?.stateInfo?.logoUrl}
+              modules={dataToUse?.modules}
+              appTenants={dataToUse.tenants}
+              logoUrl={dataToUse?.stateInfo?.logoUrl}
               defaultLanding={defaultLanding}
               allowedUserTypes={allowedUserTypes}
             />
@@ -161,6 +306,9 @@ const componentsToRegister = {
   ForgotOrganizationTooltip,
   PrivacyComponent,
   OtpComponent,
+  EmailWithLinkComponent,
+  AccountNameWithLinkComponent,
+  EmailWithSignUpLinkComponent,
 };
 
 export const initCoreComponents = () => {

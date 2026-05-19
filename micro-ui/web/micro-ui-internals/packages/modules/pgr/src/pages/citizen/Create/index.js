@@ -50,8 +50,8 @@ export const CreateComplaint = () => {
     if (nextStep === "sub-type" && compType.complaintType.key === "Others") {
       setParams({
         ...params,
-        complaintType: { key: "Others", name: t("SERVICEDEFS.OTHERS") },
-        subType: { key: "Others", name: t("SERVICEDEFS.OTHERS") },
+        complaintType: { key: "Others", name: t("SERVICEDEFS_OTHERS") },
+        subType: { key: "Others", name: t("SERVICEDEFS_OTHERS") },
       });
       nextStep = config.routes[nextStep].nextStep;
     }

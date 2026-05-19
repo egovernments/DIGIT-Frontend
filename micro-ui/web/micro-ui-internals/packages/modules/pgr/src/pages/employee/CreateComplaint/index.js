@@ -125,7 +125,7 @@ export const CreateComplaint = ({ parentUrl }) => {
       if (value.key === "Others") {
         setSubType({ name: "" });
         setComplaintType(value);
-        setSubTypeMenu([{ key: "Others", name: t("SERVICEDEFS.OTHERS") }]);
+        setSubTypeMenu([{ key: "Others", name: t("SERVICEDEFS_OTHERS") }]);
       } else {
         setSubType({ name: "" });
         setComplaintType(value);

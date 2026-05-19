@@ -21,7 +21,7 @@ const Landing = () => {
   return (
     <LandingComponent config={sandboxConfig} />
   );
-    
+
 };
 
 export default Landing;

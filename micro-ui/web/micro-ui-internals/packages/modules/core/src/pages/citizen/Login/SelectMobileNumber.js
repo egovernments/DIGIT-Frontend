@@ -1,111 +1,231 @@
-import { InputCard, TextBlock, FieldV1, LinkLabel } from "@egovernments/digit-ui-components";
-import React, { useMemo, useState } from "react";
+import { FormStep, CardLabelError, CardLabel } from "@egovernments/digit-ui-components";
+import React, { useState, useEffect, useMemo } from "react";
 
-const SelectMobileNumber = ({ t, onSelect, mobileNumber,emailId, onMobileChange,onEmailChange, config, canSubmit }) => {
-  const [isEmail, setIsEmail] = useState(emailId? true : false);
+const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMobileChange, config, canSubmit, whatsAppOptIn, onWhatsAppOptInChange, showWhatsAppOptIn, countryCode }) => {
+  const stateId = Digit.Utils.getMultiRootTenant()
+    ? Digit.ULBService.getCurrentTenantId()
+    : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = "common-masters";
+
+  // Fetch mobile validation config from MDMS
+  const { isLoading, data: mdmsData } = Digit.Hooks.useCustomMDMS(
+    stateId,
+    moduleName,
+    [{ name: "UserValidation" }],
+    {
+      select: (data) => {
+        const allValidations = data?.[moduleName]?.UserValidation || [];
+
+        const allConfigs = allValidations.map((item) => ({
+          fieldType: item.fieldType,
+          prefix: item.attributes?.prefix || "+91",
+          pattern: item.rules?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: item.rules?.maxLength || 10,
+          minLength: item.rules?.minLength || 10,
+          errorMessage: item.rules?.errorMessage || "CS_COMMON_MOBILE_ERROR",
+          allowedStartingCharacters: item.rules?.allowedStartingCharacters,
+          isActive: item.isActive,
+          isDefault: item.default === true || String(item.default).toLowerCase() === "true",
+        }));
+
+        const defaultConfig = allConfigs.find((config) => config.isDefault) || allConfigs[0] || {
+          prefix: "+91",
+          pattern: "^[6-9][0-9]{9}$",
+          maxLength: 10,
+          minLength: 10,
+          errorMessage: "CS_COMMON_MOBILE_ERROR",
+          allowedStartingCharacters: ["6", "7", "8", "9"],
+        };
+
+        return { defaultConfig, allConfigs };
+      },
+      staleTime: 300000,
+      enabled: !!stateId,
+    }
+  );
+
+  const globalConfig = window?.globalConfigs?.getConfig?.("CORE_MOBILE_CONFIGS") || {};
+
+  const validationRules = useMemo(() => {
+    const mdmsDefault = mdmsData?.defaultConfig || {};
+    return {
+      allowedStartingCharacters:
+        globalConfig?.mobileNumberAllowedStartingCharacters || mdmsDefault?.allowedStartingCharacters || ["6", "7", "8", "9"],
+      prefix: globalConfig?.mobilePrefix || mdmsDefault?.prefix || "+91",
+      pattern: globalConfig?.mobileNumberPattern || mdmsDefault?.pattern || "^[6-9][0-9]{9}$",
+      minLength: globalConfig?.mobileNumberLength || mdmsDefault?.minLength || 10,
+      maxLength: globalConfig?.mobileNumberLength || mdmsDefault?.maxLength || 10,
+      errorMessage: globalConfig?.mobileNumberErrorMessage || mdmsDefault?.errorMessage || "CS_COMMON_MOBILE_ERROR",
+    };
+  }, [mdmsData, globalConfig]);
+
+  const allValidationConfigs = mdmsData?.allConfigs || [];
+
+  const [selectedPrefix, setSelectedPrefix] = useState(countryCode || validationRules.prefix);
   const [error, setError] = useState("");
 
-  const core_mobile_config = window?.globalConfigs?.getConfig("CORE_MOBILE_CONFIGS") || {};
-  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const rawPattern = core_mobile_config?.mobileNumberPattern || "^\\d+$";
-  const mobileNumberPattern = new RegExp(rawPattern);
+  // Get active config based on selected prefix
+  const activeConfig = useMemo(() => {
+    return allValidationConfigs.find((c) => c.prefix === selectedPrefix) || validationRules;
+  }, [selectedPrefix, allValidationConfigs, validationRules]);
 
-  const isEmailValid = useMemo(() => EMAIL_REGEX.test(emailId), [emailId]);
-  const isMobileValid = useMemo(() => mobileNumberPattern.test(mobileNumber || ""), [mobileNumber, mobileNumberPattern]);
+  const maxLength = activeConfig?.maxLength || 10;
+  const minLength = activeConfig?.minLength || 10;
 
-  const handleSubmit = () => {
-    if (isEmail) {
-      if (!isEmailValid) {
-        setError(t("ERR_INVALID_EMAIL"));
-        return;
-      }
-      onSelect({ userName: emailId });
-    } else {
-      if (!isMobileValid) {
-        setError(t("ERR_INVALID_MOBILE_NUMBER"));
-        return;
-      }
-      onSelect({ mobileNumber });
+  const allPrefixes = useMemo(() => {
+    if (allValidationConfigs?.length > 0) {
+      return allValidationConfigs.map((c) => c.prefix);
     }
-  };
+    return [validationRules.prefix];
+  }, [allValidationConfigs, validationRules]);
 
-  const handleChange = (e) => {
-    const value = e.target.value;
+  useEffect(() => {
+    if (validationRules?.prefix && !countryCode) {
+      setSelectedPrefix(validationRules.prefix);
+    }
+  }, [validationRules?.prefix]);
+
+  useEffect(() => {
+    onMobileChange({ target: { value: "" } });
+  }, []);
+
+  const handlePrefixChange = (e) => {
+    setSelectedPrefix(e.target.value);
     setError("");
-    if (isEmail) {
-      onEmailChange(e)
-      if (value && !EMAIL_REGEX.test(value)) setError(t("ERR_INVALID_EMAIL"));
-    } else {
-      onMobileChange(e);
-      if (value && !mobileNumberPattern.test(value)) setError(t("ERR_INVALID_MOBILE_NUMBER"));
+    onMobileChange({ target: { value: "" } });
+  };
+
+  const handleMobileChange = (e) => {
+    const val = e.target.value.replace(/\D/g, "");
+    if (val.length <= maxLength) {
+      setError("");
+      onMobileChange({ target: { value: val } });
     }
   };
 
-  const switchMode = () => {
-    setIsEmail(!isEmail);
+  const handleSubmit = (data) => {
+    const errorMessage = activeConfig?.errorMessage || validationRules?.errorMessage || "CS_COMMON_MOBILE_ERROR";
+
+    if (!mobileNumber) {
+      setError(t("CS_COMMON_MOBILE_REQUIRED"));
+      return;
+    }
+    if (mobileNumber.length < minLength || mobileNumber.length > maxLength) {
+      setError(t(errorMessage));
+      return;
+    }
+    const allowedChars = activeConfig?.allowedStartingCharacters || validationRules?.allowedStartingCharacters;
+    if (allowedChars?.length > 0 && !allowedChars.includes(mobileNumber[0])) {
+      setError(t(errorMessage));
+      return;
+    }
+    const pattern = activeConfig?.pattern || validationRules?.pattern || `^[6-9][0-9]{${minLength - 1}}$`;
+    const regex = new RegExp(pattern);
+    if (!regex.test(mobileNumber)) {
+      setError(t(errorMessage));
+      return;
+    }
+
     setError("");
-    if(isEmail)
-      onEmailChange({ target: { value: "" } });
-    else
-      onMobileChange({ target: { value: "" } }); // clear mobile input
+    onSelect({ mobileNumber, prefix: selectedPrefix, countryCode: selectedPrefix });
   };
 
-  const isDisabled = useMemo(() => {
-    return isEmail ? !(isEmailValid && canSubmit) : !(isMobileValid && canSubmit);
-  }, [isEmail, isEmailValid, isMobileValid, canSubmit]);
+  const isMobileValid = mobileNumber.length >= minLength && mobileNumber.length <= maxLength;
 
-  const mobileViewStyles = {
-    marginLeft:"0px",
-    userSelect: "none",
-    color: "inherit",  
-    cursor: "pointer",      // keeps it clickable
-    textDecoration: "underline",
-  };
-
-  // Responsive label
-  const linkLabel = useMemo(() => {
-    if (window.innerWidth <= 768) {
-      return isEmail ? t("LOGIN_WITH_MOBILE") : t("LOGIN_WITH_EMAIL");
-    }
-    return isEmail ? t("CS_USE_MOBILE_INSTEAD") : t("CS_LOGIN_REGISTER_WITH_EMAIL");
-  }, [isEmail, t]);
+  // Strip inputs from config so FormStep doesn't render its own TextInput
+  const modifiedConfig = useMemo(() => {
+    return { ...config, inputs: [] };
+  }, [config]);
 
   return (
-    <InputCard
+    <FormStep
+      isDisabled={!(isMobileValid && canSubmit) || isLoading}
+      onSelect={handleSubmit}
+      config={modifiedConfig}
       t={t}
-      texts={config?.texts}
-      submit
-      onNext={handleSubmit}
-      isDisable={isDisabled}
+      childrenAtTheBottom={false}
     >
-      <div>
-        <FieldV1
-          key={isEmail ? "email" : "mobile"}
-          withoutLabel
-          charCount
-          error={error}
-          onChange={handleChange}
-          placeholder={isEmail ? t("ENTER_EMAIL_PLACEHOLDER") : t("ENTER_MOBILE_PLACEHOLDER")}
-          populators={{
-            name: isEmail ? "userName" : "mobileNumber",
-            prefix: isEmail ? "" : core_mobile_config?.mobilePrefix,
-            validation: {
-              maxlength: isEmail ? 256 : (core_mobile_config?.mobileNumberLength || 10),
-              pattern: isEmail ? EMAIL_REGEX : mobileNumberPattern,
-            },
+      <CardLabel>{t("CORE_COMMON_MOBILE_NUMBER")}</CardLabel>
+      <div
+        className="field-container"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          border: "1px solid #000000",
+          borderRadius: "4px",
+          overflow: "hidden",
+          backgroundColor: "#FFFFFF",
+        }}
+      >
+        <select
+          value={selectedPrefix}
+          onChange={handlePrefixChange}
+          style={{
+            border: "none",
+            borderRight: "1px solid #000000",
+            width: `calc(${selectedPrefix.length}ch + 36px)`,
+            padding: "10px 8px",
+            fontSize: "16px",
+            backgroundColor: "#EEEEEE",
+            cursor: "pointer",
+            outline: "none",
+            color: "#0B0C0C",
+            fontWeight: "500",
           }}
-          props={{ fieldStyle: { width: "100%" } }}
+        >
+          {allPrefixes.map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+        <input
           type="text"
-          value={isEmail ? emailId : mobileNumber}
+          value={mobileNumber}
+          onChange={(e) => handleMobileChange(e)}
+          placeholder={t("CS_COMMON_MOBILE_PLACEHOLDER")}
+          maxLength={maxLength}
+          style={{
+            flex: 1,
+            border: "none",
+            padding: "10px 12px",
+            fontSize: "16px",
+            outline: "none",
+            color: "#0B0C0C",
+            backgroundColor: "transparent",
+          }}
         />
       </div>
+      {error && <CardLabelError style={{ fontSize: "14px", marginTop: "8px" }}>{error}</CardLabelError>}
 
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem", marginTop: "-24px" }}>
-        <LinkLabel style={{ display: "inline", ...mobileViewStyles }} onClick={switchMode}>
-          {linkLabel}
-        </LinkLabel>
-      </div>
-    </InputCard>
+      {showWhatsAppOptIn && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            padding: "12px 0",
+            marginTop: "16px",
+            borderTop: "1px solid #D6D5D4",
+            cursor: "pointer",
+          }}
+          onClick={() => onWhatsAppOptInChange(!whatsAppOptIn)}
+        >
+          <input
+            type="checkbox"
+            checked={whatsAppOptIn}
+            onChange={() => onWhatsAppOptInChange(!whatsAppOptIn)}
+            style={{
+              width: "20px",
+              height: "20px",
+              accentColor: "#c84c0e",
+              cursor: "pointer",
+            }}
+          />
+          <span style={{ fontSize: "14px", fontWeight: "600", color: "#0B0C0C" }}>
+            {t("CS_WHATSAPP_LOGIN_CHECKBOX_LABEL")}
+          </span>
+        </div>
+      )}
+    </FormStep>
   );
 };
 

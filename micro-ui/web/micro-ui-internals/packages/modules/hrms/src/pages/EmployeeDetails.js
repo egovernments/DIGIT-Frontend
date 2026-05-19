@@ -78,13 +78,13 @@ const Details = () => {
                 text={
                   data?.Employees?.[0]?.isActive ? <div className="sla-cell-success"> {t("ACTIVE")} </div> : <div className="sla-cell-error">{t("INACTIVE")}</div>
                 }
-                textStyle={{ fontWeight: "bold", maxWidth: "6.5rem" }}
+                textStyle={{ fontWeight: "bold", maxWidth: "6.6rem" }}
               />
             </StatusTable>
             <CardSubHeader className="card-section-header">{t("HR_PERSONAL_DETAILS_FORM_HEADER")} </CardSubHeader>
             <StatusTable>
               <Row label={t("HR_NAME_LABEL")} text={data?.Employees?.[0]?.user?.name || "NA"} textStyle={{ whiteSpace: "pre" }} />
-              <Row label={t("HR_MOB_NO_LABEL")} text={data?.Employees?.[0]?.user?.mobileNumber || "NA"} textStyle={{ whiteSpace: "pre" }} />
+              <Row label={t("HR_MOB_NO_LABEL")} text={data?.Employees?.[0]?.user?.mobileNumber ? `${data?.Employees?.[0]?.user?.countryCode ? `${data.Employees[0].user.countryCode} ` : " "}${data.Employees[0].user.mobileNumber}` : "NA"} textStyle={{ whiteSpace: "pre" }} />
               <Row label={t("HR_GENDER_LABEL")} text={t(data?.Employees?.[0]?.user?.gender) || "NA"} />
               <Row label={t("HR_EMAIL_LABEL")} text={data?.Employees?.[0]?.user?.emailId || "NA"} />
               <Row label={t("HR_CORRESPONDENCE_ADDRESS_LABEL")} text={data?.Employees?.[0]?.user?.correspondenceAddress || "NA"} />

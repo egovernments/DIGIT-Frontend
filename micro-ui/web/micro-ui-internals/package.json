@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true  run-s build start:dev",
+    "start": "run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
@@ -92,7 +92,8 @@
     "**/styled-components": "5.0.0",
     "fast-uri": "2.1.0",
     "**/minimatch": "^3.0.4",
-    "**/glob": "^7.1.2"
+    "**/glob": "^7.1.2",
+    "**/axios": "0.27.2"
   },
   "devDependencies": {
     "husky": "7.0.4",
@@ -106,7 +107,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "0.2.0",
-    "@egovernments/digit-ui-react-components": "1.8.24",
+    "@egovernments/digit-ui-react-components": "1.8.22",
     "json-edit-react": "^1.22.6",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",

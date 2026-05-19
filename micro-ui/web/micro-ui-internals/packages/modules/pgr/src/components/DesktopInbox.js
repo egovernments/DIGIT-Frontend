@@ -42,7 +42,7 @@ const DesktopInbox = ({
               </span>
               {/* <a onClick={() => goTo(row.row.original["serviceRequestId"])}>{row.row.original["serviceRequestId"]}</a> */}
               <br />
-              <span className="complain-no-cell-text">{t(`SERVICEDEFS.${row.original["complaintSubType"].toUpperCase()}`)}</span>
+              <span className="complain-no-cell-text">{t(`SERVICEDEFS_${row.original["complaintSubType"].toUpperCase()}`)}</span>
             </div>
           );
         },

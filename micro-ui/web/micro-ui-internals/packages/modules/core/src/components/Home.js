@@ -6,10 +6,11 @@ import {
 
 import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { RoleBasedEmployeeHome } from "./RoleBasedEmployeeHome";
 import QuickSetupConfigComponent from "../pages/employee/QuickStart/Config";
+import WhatsAppNotificationPopup from "./Dialog/WhatsAppNotificationPopup";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -80,46 +81,120 @@ const iconSelector = (code) => {
       return <CustomSVG.PTIcon className="fill-path-primary-main" />;
   }
 };
-const CitizenHome = ({ getCitizenMenu, isLoading }) => {
+const CitizenHome = ({
+  modules,
+  getCitizenMenu,
+  fetchedCitizen,
+  isLoading,
+}) => {
+  const paymentModule = modules.filter(({ code }) => code === "Payment")[0];
+  const moduleArr = modules.filter(({ code }) => code !== "Payment");
+  const moduleArray = [paymentModule, ...moduleArr];
   const { t } = useTranslation();
+
+  const userInfo = Digit.UserService.getUser()?.info || {};
+  const isLoggedIn = !!Digit.UserService.getUser()?.access_token;
+  const tenant = Digit.ULBService.getCurrentTenantId();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const stateLvlTenantId = isMultiRootTenant
+    ? Digit.ULBService.getCurrentTenantId()
+    : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+
+  // const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false);
+
+  // // WhatsApp popup disabled — preference is now handled at login
+  // const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+  //   stateLvlTenantId,
+  //   moduleName,
+  //   [{ name: "UserPreferencesConfig" }],
+  //   {
+  //     select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+  //   },
+  //   { schemaCode: `${moduleName}.UserPreferencesConfig` }
+  // );
+
+  // const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
+  //   url: "/user-preference/v1/_search",
+  //   body: {
+  //     criteria: {
+  //       userId: userInfo?.uuid,
+  //       tenantId: tenant,
+  //       preferenceCode: "USER_NOTIFICATION_PREFERENCES",
+  //     },
+  //   },
+  //   changeQueryName: "whatsapp_popup_preference_search",
+  //   config: {
+  //     enabled: !!userInfo?.uuid && isLoggedIn && !!enableUserPreferences,
+  //     select: (data) => data?.preferences?.[0],
+  //     cacheTime: 0,
+  //     staleTime: 0,
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   if (!isLoggedIn || !enableUserPreferences || isPreferenceLoading) return;
+  //   const alreadyShown = sessionStorage.getItem("whatsapp_popup_shown");
+  //   if (alreadyShown) return;
+  //   const whatsappStatus = preferenceData?.payload?.consent?.WHATSAPP?.status;
+  //   if (whatsappStatus !== "GRANTED") {
+  //     setShowWhatsAppPopup(true);
+  //   }
+  // }, [isLoggedIn, enableUserPreferences, isPreferenceLoading, preferenceData]);
 
   if (isLoading) {
     return <Loader />;
   }
-
-  // Instead of using modules, taking all parent keys from getCitizenMenu
-  const parentModules = Object.keys(getCitizenMenu || {});
+  
 
   return (
-    <div className="citizen-all-services-wrapper">
-      {location.pathname.includes("sanitation-ui/citizen/all-services") ||
-      (location.pathname.includes("sandbox-ui") &&
-        location.pathname.includes("all-services")) ? null : (
-        <BackLink onClick={() => window.history.back()} />
-      )}
-
-      <div className="citizenAllServiceGrid">
-        {parentModules.map((code) => {
-          const mdmsDataObj = processLinkData(getCitizenMenu, code, t);
-
-          if (mdmsDataObj?.links?.length > 0) {
-            return (
-              <CitizenHomeCard
-                key={code}
-                header={t(mdmsDataObj?.header)}
-                links={mdmsDataObj?.links
-                  ?.filter((ele) => ele?.link)
-                  ?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
-                Icon={() => iconSelector(code)}
-                Info={null}
-                isInfo={false}
-              />
-            );
-          }
-          return null;
-        })}
+    <React.Fragment>
+      {/* WhatsApp popup disabled — preference is now handled at login */}
+      {/* {showWhatsAppPopup && <WhatsAppNotificationPopup onClose={() => setShowWhatsAppPopup(false)} />} */}
+      <div className="citizen-all-services-wrapper">
+        {location.pathname.includes(
+          "sanitation-ui/citizen/all-services"
+        ) || (location.pathname.includes("sandbox-ui") && location.pathname.includes("all-services")) ? null : (
+          <BackLink onClick={() => window.history.back()}/>
+        )}
+        <div className="citizenAllServiceGrid">
+          {moduleArray
+            .filter((mod) => mod)
+            .map(({ code }, index) => {
+              let mdmsDataObj;
+              if (fetchedCitizen)
+                mdmsDataObj = fetchedCitizen
+                  ? processLinkData(getCitizenMenu, code, t)
+                  : undefined;
+              if (mdmsDataObj?.links?.length > 0) {
+                return (
+                  <CitizenHomeCard
+                    header={t(mdmsDataObj?.header)}
+                    links={mdmsDataObj?.links
+                      ?.filter((ele) => ele?.link)
+                      ?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
+                    Icon={() => iconSelector(code)}
+                    Info={
+                      code === "OBPS"
+                        ? () => (
+                          <CitizenInfoLabel
+                            style={{ margin: "0px", padding: "10px" }}
+                            info={t("CS_FILE_APPLICATION_INFO_LABEL")}
+                            text={t(
+                              `BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`
+                            )}
+                          />
+                        )
+                        : null
+                    }
+                    isInfo={code === "OBPS" ? true : false}
+                  />
+                );
+              } else return <React.Fragment />;
+            })}
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 

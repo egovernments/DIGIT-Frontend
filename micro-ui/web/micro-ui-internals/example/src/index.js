@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
+import { PGRReducers } from "@egovernments/digit-ui-module-cms";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
@@ -9,7 +9,7 @@ import { initEngagementComponents } from "@egovernments/digit-ui-module-engageme
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initPGRComponents } from "@egovernments/digit-ui-module-cms";
 import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
 import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 
@@ -24,7 +24,8 @@ const enabledModules = [
   "DSS",
   "HRMS",
   "Workbench",
-  //  "Engagement", "NDSS","QuickPayLinks", "Payment",
+  "Engagement",
+  //  "NDSS","QuickPayLinks", "Payment",
   "Utilities",
   "PGR",
   //added to check fsm
@@ -48,10 +49,15 @@ const initTokens = (stateCode) => {
   window.Digit.SessionStorage.set("user_type", userTypeInfo);
   window.Digit.SessionStorage.set("userType", userTypeInfo);
 
-  if (userType !== "CITIZEN") {
-    window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
-  } else {
-    // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  // On localhost, skip overwriting if a valid user already exists in sessionStorage
+  const existingUser = isLocalhost ? window.Digit.SessionStorage.get("User") : null;
+  if (!isLocalhost || !existingUser || !existingUser.access_token || !existingUser.info) {
+    if (userType !== "CITIZEN") {
+      window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
+    } else {
+      // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
+    }
   }
 
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);
@@ -82,12 +88,6 @@ const initDigitUI = () => {
   };
   initEngagementComponents();
 
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    ...overrideComponents,
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
   initCoreComponents();
   initDSSComponents();
   initHRMSComponents();
@@ -96,6 +96,11 @@ const initDigitUI = () => {
   initPGRComponents();
   initOpenPaymentComponents();
   initSandboxComponents();
+
+  // Register override components AFTER module init so they take precedence
+  window?.Digit.ComponentRegistryService.setupRegistry({
+    ...overrideComponents,
+  });
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
@@ -110,7 +115,7 @@ const initDigitUI = () => {
       stateCode={stateCode}
       enabledModules={enabledModules}
       defaultLanding="employee"
-      allowedUserTypes={["employee","citizen"]}
+      allowedUserTypes={["employee", "citizen"]}
       moduleReducers={moduleReducers}
     />,
     document.getElementById("root")

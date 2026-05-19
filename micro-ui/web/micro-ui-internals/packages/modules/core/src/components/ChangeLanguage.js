@@ -2,8 +2,6 @@ import { Button, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-
-
 const ChangeLanguage = (prop) => {
   const isDropdown = prop.dropdown || false;
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();

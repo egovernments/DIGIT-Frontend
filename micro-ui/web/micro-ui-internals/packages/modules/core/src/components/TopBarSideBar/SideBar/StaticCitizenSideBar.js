@@ -31,7 +31,7 @@ import ImageComponent from "../../ImageComponent";
 /* 
 Feature :: Citizen Webview sidebar
 */
-const Profile = ({ info, stateName, t }) => (
+const Profile = ({ info, stateName, t, countryCode }) => (
   <div className="profile-section">
     <div className="imageloader imageloader-loaded">
       <ImageComponent className="img-responsive img-circle img-Profile" src={defaultImage} alt="Profile Logo" />
@@ -40,7 +40,7 @@ const Profile = ({ info, stateName, t }) => (
       <div className="label-text"> {info?.name} </div>
     </div>
     <div id="profile-location" className="label-container loc-Profile">
-      <div className="label-text"> {info?.mobileNumber} </div>
+      <div className="label-text"> {countryCode ? `${countryCode} ${info?.mobileNumber}` : info?.mobileNumber} </div>
     </div>
     {info?.emailId && (
       <div id="profile-emailid" className="label-container loc-Profile">
@@ -84,20 +84,36 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const [isEmployee, setisEmployee] = useState(false);
   const [isSidebarOpen, toggleSidebar] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [countryCode, setCountryCode] = useState(null);
+
+  useEffect(() => {
+    const fetchCountryCode = async () => {
+      const tenant = Digit.ULBService.getCurrentTenantId();
+      const uuid = user?.info?.uuid;
+      if (uuid) {
+        const res = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+        if (res?.user?.length) setCountryCode(res.user[0]?.countryCode || null);
+      }
+    };
+    fetchCountryCode();
+  }, [user?.info?.uuid]);
 
   const handleLogout = () => {
     toggleSidebar(false);
     setShowDialog(true);
   };
-  const handleOnSubmit = () => {
-    if (Digit.Utils.getMultiRootTenant()) {
-      Digit.UserService.logout();
-      setShowDialog(false);
-      window.location.href = `/${window?.contextPath}/citizen/login`;
-    } else {
-      Digit.UserService.logout();
-      setShowDialog(false);
+  const handleOnSubmit = async () => {
+    const savedDigitLocale = window.sessionStorage.getItem("Digit.locale");
+    try {
+      await Digit.UserService.logoutUser();
+    } catch (e) {}
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    if (savedDigitLocale) {
+      window.sessionStorage.setItem("Digit.locale", savedDigitLocale);
     }
+    setShowDialog(false);
+    window.location.replace(`/${window?.contextPath}/citizen`);
   };
   const handleOnCancel = () => {
     setShowDialog(false);
@@ -160,7 +176,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   let profileItem;
 
   if (isFetched && user && user.access_token && user?.info?.type === "CITIZEN") {
-    profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} />;
+    profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} countryCode={countryCode} />;
     menuItems = menuItems.filter((item) => item?.id !== "login-btn");
     menuItems = [
       ...menuItems,

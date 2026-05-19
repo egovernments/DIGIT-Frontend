@@ -76,7 +76,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-    const keys = config[0].body.map((field) => field.key);
+    // Filter out component fields that are not actual inputs (like links)
+    const keys = config[0].body
+      .filter((field) => field.isMandatory || (field.type !== "component"))
+      .map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
@@ -109,11 +112,16 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
+        height: "100vh",
+        maxHeight: "100vh",
       }}
     >
       <style>{`
         .sandbox-signup-form .label-container .info-icon:hover .infotext {
           margin-left: -6.25rem !important;
+        }
+        .sandbox-signup-form [style*="maxWidth: 540px"] {
+          align-self: stretch;
         }
       `}</style>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
@@ -127,7 +135,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         submitInForm
         config={config}
         label={propsConfig?.texts?.submitButtonLabel}
-        secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
         onFormValueChange={onFormValueChange}
         heading={propsConfig?.texts?.header}
         className="sandbox-signup-form"
@@ -136,7 +143,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         <SandBoxHeader showTenant={false} />
       </FormComposerV2>
       {showToast && <Toast type="error" label={t(showToast?.label)} onClose={closeToast} />}
-      <div className="employee-login-home-footer" style={{ backgroundColor: "unset", marginTop: "auto" }}>
+      <div className="employee-login-home-footer" style={{ backgroundColor: "unset", marginTop: "auto", paddingTop: "1.5rem", paddingBottom: "1rem" }}>
         <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}

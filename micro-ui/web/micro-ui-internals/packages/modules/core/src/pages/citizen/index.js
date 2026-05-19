@@ -1,7 +1,7 @@
 import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
 import { AppHome, processLinkData } from "../../components/Home";
@@ -71,6 +71,55 @@ const Home = ({
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
+  const location = useLocation();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const fromSandbox = new URLSearchParams(location.search).get("from") === "sandbox";
+  const _user = Digit.UserService.getUser();
+  const isLoggedIn = _user && _user.access_token && _user.info;
+  const sandboxLangSelectionPath = (() => {
+    if (!fromSandbox) return null;
+    const segs = location.pathname.split("/");
+    const citIdx = segs.indexOf("citizen");
+    const urlTenant = citIdx > 0 ? segs[citIdx - 1] : null;
+    const userTenant = _user?.info?.tenantId;
+    const isTenantMismatch = isLoggedIn && urlTenant && userTenant && userTenant !== urlTenant;
+    if (!isLoggedIn || isTenantMismatch) return `/${window?.globalPath}/user/login`;
+    return null;
+  })();
+
+  const citizenAuthWhitelist = ["/login", "/register", "/select-language", "/select-location"];
+  const isPublicCitizenRoute = citizenAuthWhitelist.some((seg) => location.pathname.includes(`/citizen${seg}`));
+  const unauthRedirect = !isLoggedIn && !isPublicCitizenRoute
+    ? (isMultiRootTenant
+        ? `/${window?.globalPath}/user/login`
+        : `/${window?.contextPath}/citizen/login`)
+    : null;
+
+  // Tenant-mismatch guard: a logged-in user manually editing the tenant slug in the
+  // URL (e.g. HARICCC -> HARIBBB) must not be able to view another tenant's pages.
+  // Clear the session and bounce to the sandbox login.
+  const urlTenant =
+    isMultiRootTenant && window?.contextPath && window?.globalPath && window.contextPath !== window.globalPath
+      ? window.contextPath.substring(window.globalPath.length + 1)
+      : null;
+  const loggedInTenant = _user?.info?.tenantId;
+  const isTenantMismatch =
+    isMultiRootTenant && isLoggedIn && !isPublicCitizenRoute && urlTenant && loggedInTenant && urlTenant !== loggedInTenant;
+
+  React.useEffect(() => {
+    if (!isTenantMismatch) return;
+    (async () => {
+      const savedDigitLocale = window.sessionStorage.getItem("Digit.locale");
+      try {
+        await Digit.UserService.logoutUser();
+      } catch (e) {}
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      if (savedDigitLocale) window.sessionStorage.setItem("Digit.locale", savedDigitLocale);
+      window.location.replace(`/${window?.globalPath}/user/login`);
+    })();
+  }, [isTenantMismatch]);
+
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
   };
@@ -161,6 +210,7 @@ const Home = ({
         )}
 
         <Switch>
+          {unauthRedirect && <Redirect to={unauthRedirect} />}
           <Route exact path={path}>
             <CitizenHome />
           </Route>
@@ -191,7 +241,7 @@ const Home = ({
           </Route>
 
           <Route path={`${path}/login`}>
-            <Login stateCode={stateCode} />
+            {sandboxLangSelectionPath ? <Redirect to={sandboxLangSelectionPath} /> : <Login stateCode={stateCode} />}
           </Route>
 
           <Route path={`${path}/register`}>

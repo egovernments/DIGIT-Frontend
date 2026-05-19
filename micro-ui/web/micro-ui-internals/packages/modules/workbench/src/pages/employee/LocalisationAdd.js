@@ -183,15 +183,6 @@ const LocalisationAdd = () => {
   });
 
   useEffect(() => {
-  if (showModuleDropdownModal) {
-    setIsDownloadDisabled(true);
-    setChoosendModule(null);
-    setJsonResult(null);
-    setJsonResultDefault(null);
-  }
-}, [showModuleDropdownModal]);
-
-  useEffect(() => {
     if (selectedLang && selectedModule) {
       dispatch({
         type: "CLEAR_STATE",

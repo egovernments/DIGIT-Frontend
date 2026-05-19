@@ -14,7 +14,7 @@ const MobileInbox = ({ data, onFilterChange, onSearch, isLoading, searchParams }
   const { t } = useTranslation();
   const localizedData = data?.map(({ locality, tenantId, serviceRequestId, complaintSubType, sla, status, taskOwner }) => ({
     [t("CS_COMMON_COMPLAINT_NO")]: serviceRequestId,
-    [t("CS_ADDCOMPLAINT_COMPLAINT_SUB_TYPE")]: t(`SERVICEDEFS.${complaintSubType.toUpperCase()}`),
+    [t("CS_ADDCOMPLAINT_COMPLAINT_SUB_TYPE")]: t(`SERVICEDEFS_${complaintSubType.toUpperCase()}`),
     [t("WF_INBOX_HEADER_LOCALITY")]: t(Digit.Utils.locale.getLocalityCode(locality, tenantId)),
     [t("CS_COMPLAINT_DETAILS_CURRENT_STATUS")]: t(`CS_COMMON_${status}`),
     [t("WF_INBOX_HEADER_CURRENT_OWNER")]: taskOwner,

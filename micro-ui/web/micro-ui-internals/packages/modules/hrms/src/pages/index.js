@@ -1,4 +1,4 @@
-import { PrivateRoute, Button } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation, useHistory } from "react-router-dom";
@@ -35,24 +35,29 @@ const EmployeeApp = ({ path, url, userType }) => {
     <Switch>
       <React.Fragment>
         <div className="ground-container">
-          {Digit.Utils.getMultiRootTenant() ? (
-            <div style={{ marginBottom: "16px", marginLeft: mobileView ? "1vw" : "0px" }}>
-              <Button
-                type="button"
-                variation="secondary"
-                label={`◄ ${t("CS_COMMON_BACK")}`}
-                onButtonClick={() => history.goBack()}
-                style={{ fontSize: "12px", padding: "0px 14px", height: "auto", borderRadius: "5px" }}
-              />
+          <div style={{ marginBottom: "16px", marginLeft: mobileView ? "1vw" : "0px" }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+              fontSize: "12px",
+              padding: "4px 14px",
+              borderRadius: "5px",
+              backgroundColor: "#efefef",
+              border: "1px solid #efefef",
+            }}>
+              <span
+                style={{ color: "#F47738", cursor: "pointer" }}
+                onClick={() => history.goBack()}
+              >
+                {t("CS_COMMON_HOME")}
+              </span>
+              <span style={{ color: "#333", margin: "0 2px" }}>/</span>
+              <span style={{ color: "#0B0C0C" }}>
+                {t("HR_COMMON_HEADER")}
+              </span>
             </div>
-          ) : (
-            <p className="breadcrumb" style={{ marginLeft: mobileView ? "1vw" : "0px" }}>
-              <Link to={`/${window?.contextPath}/employee`} style={{ cursor: "pointer", color: "#666" }}>
-                {t("HR_COMMON_BUTTON_HOME")}
-              </Link>{" "}
-              / <span>{location.pathname === `/${window?.contextPath}/employee/hrms/inbox` ? t("HR_COMMON_HEADER") : t("HR_COMMON_HEADER")}</span>
-            </p>
-          )}
+          </div>
           <PrivateRoute
             path={`${path}/inbox`}
             component={() => (

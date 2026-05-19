@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Card, CardHeader } from "..";
+import Card from "./Card";
+import CardHeader from "./CardHeader";
 
 const ULBHomeCard = (props) => {
   const { t } = useTranslation();

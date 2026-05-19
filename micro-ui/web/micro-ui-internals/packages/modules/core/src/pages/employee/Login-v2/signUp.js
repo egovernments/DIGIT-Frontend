@@ -17,6 +17,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const history = useHistory();
 
   function buildOtpUrl(contextPath, tenantId) {
+    if (window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT")) {
+      return `/${window?.globalPath}/${tenantId}/employee/user/login/otp`;
+    }
     const ctx = (contextPath || "").split("/").filter(Boolean).join("/");
     if (ctx.includes("/")) {
       return `/${ctx}/employee/user/login/otp`;
@@ -91,7 +94,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-    const keys = config[0].body.map((field) => field.key);
+    // Filter out component fields that are not actual inputs (like links)
+    const keys = config[0].body
+      .filter((field) => field.isMandatory || (field.type !== "component"))
+      .map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
@@ -114,7 +120,26 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
   // Render form section wrapped in a div (for mobile and desktop use)
   const renderFormSection = () => (
-    <div style={{ padding: isMobile ? "1rem" : "2rem", width: isMobile ? "100%" : "30%", backgroundColor: "#fff", overflowY: "auto", justifyContent: "center", display: "flex", alignItems: "center", flexDirection: "column" }}>
+    <div style={{
+      padding: isMobile ? "1rem" : "2rem",
+      width: isMobile ? "100%" : "30%",
+      backgroundColor: "#fff",
+      overflowY: "auto",
+      justifyContent: "center",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      height: "100vh",
+      maxHeight: "100vh"
+    }}>
+      <style>{`
+        .sandbox-signup-form .label-container .info-icon:hover .infotext {
+          margin-left: -6.25rem !important;
+        }
+        .sandbox-signup-form [style*="maxWidth: 540px"] {
+          align-self: stretch;
+        }
+      `}</style>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
         {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
@@ -126,7 +151,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         submitInForm
         config={config}
         label={propsConfig?.texts?.submitButtonLabel}
-        secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
         onFormValueChange={onFormValueChange}
         heading={propsConfig?.texts?.header}
         className="sandbox-signup-form"
@@ -135,7 +159,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         <SandBoxHeader showTenant={false} />
       </FormComposerV2>
       {showToast && <Toast type="error" label={t(showToast?.label)} onClose={closeToast} />}
-      <div className="employee-login-home-footer" style={{ backgroundColor: "unset", marginTop: "auto" }}>
+      <div className="employee-login-home-footer" style={{ backgroundColor: "unset", marginTop: "auto", paddingTop: "1.5rem", paddingBottom: "1rem" }}>
         <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}

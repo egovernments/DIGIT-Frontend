@@ -3,83 +3,44 @@ export const sandboxConfig = {
   url: "https://app.supademo.com/embed/cmdphco8t0001y90ikoa6o142?embed_v=2&utm_source=embed",
   subsections: [
     {
-      title: "SANDBOX_INTRODUCTION_TITLE",
-      type: "paragraph",
+      type: "introSection",
+      title: "SANDBOX_INTRO_TITLE",
       content: [
         {
-          text: "SANDBOX_INTRODUCTION_TEXT",
+          text: "SANDBOX_INTRO_DESCRIPTION",
         },
       ],
     },
     {
-      title: "SANDBOX_PRODUCTS_TITLE",
-      type: "both",
+      type: "stepsSection",
+      title: "SANDBOX_STEPS_TITLE",
       content: [
         {
           type: "paragraph",
-          text: "SANDBOX_PRODUCTS_DESCRIPTION",
+          text: "SANDBOX_STEPS_PARA_1",
         },
         {
           type: "step",
-          id: 1,
-          text: "SANDBOX_PRODUCTS_STEP_1",
+          text: "SANDBOX_STEPS_STEP_1",
         },
         {
           type: "step",
-          id: 2,
-          text: "SANDBOX_PRODUCTS_STEP_2",
+          text: "SANDBOX_STEPS_STEP_2",
         },
         {
           type: "step",
-          id: 3,
-          text: "SANDBOX_PRODUCTS_STEP_3",
+          text: "SANDBOX_STEPS_STEP_3",
         },
         {
           type: "step",
-          id: 4,
-          text: "SANDBOX_PRODUCTS_STEP_4",
+          text: "SANDBOX_STEPS_STEP_4",
         },
       ],
     },
     {
-      title: "SANDBOX_USER_CAPABILITIES_TITLE",
-      type: "both",
-      content: [
-        {
-          type: "step",
-          id: 1,
-          text: "SANDBOX_USER_CAPABILITIES_STEP_1",
-        },
-        {
-          type: "step",
-          id: 2,
-          text: "SANDBOX_USER_CAPABILITIES_STEP_2",
-        },
-        {
-          type: "step",
-          id: 3,
-          text: "SANDBOX_USER_CAPABILITIES_STEP_3",
-        },
-        {
-          type: "step",
-          id: 4,
-          text: "SANDBOX_USER_CAPABILITIES_STEP_4",
-        },
-        {
-          type: "step",
-          id: 5,
-          text: "SANDBOX_USER_CAPABILITIES_STEP_5",
-        },
-        {
-          type: "step",
-          id: 6,
-          text: "SANDBOX_USER_CAPABILITIES_STEP_6",
-        },
-        {
-          type: "paragraph",
-          text: "SANDBOX_CLICK_CONTINUE",
-        },
-      ],
+      type: "ButtonWrapper",
+      title: "SANDBOX_BUTTON_TITLE",
+      subtitle: "SANDBOX_BUTTON_SUBTITLE",
     },
   ],
 };

@@ -10,19 +10,39 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        include: (filePath) => {
+          const p = filePath.replace(/\\/g, "/");
+          return p.includes("/node_modules/axios/");
+        },
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-env", { targets: "ie 11" }]]
+          }
+        }
+      },
+      {
         test: /\.(js)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"]
+            plugins: [
+              "@babel/plugin-proposal-optional-chaining",
+              "@babel/plugin-proposal-nullish-coalescing-operator"
+            ]
           }
         },
       },
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf|otf)$/i,
+        use: ["file-loader"],
       }
     ],
   },

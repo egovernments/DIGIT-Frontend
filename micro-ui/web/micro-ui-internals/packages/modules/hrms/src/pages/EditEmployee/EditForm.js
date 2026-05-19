@@ -2,19 +2,22 @@ import { FormComposer, Toast, Loader } from "@egovernments/digit-ui-react-compon
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { newConfig } from "../../components/config/config";
 import { convertEpochToDate } from "../../components/Utils";
 
 const EditForm = ({ tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const queryClient = useQueryClient();
   const [canSubmit, setSubmitValve] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const [mobileNumber, setMobileNumber] = useState(null);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
-  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
@@ -25,6 +28,44 @@ const EditForm = ({ tenantId, data }) => {
     retry: false,
     enable: false,
   });
+
+  // Fetch mobile validation config from MDMS
+  // Fetch mobile validation config from MDMS
+  const stateLvlTenantId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getCurrentTenantId() : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit.Utils.getMultiRootTenant() ? "common-masters" : "commonUiConfig";
+  const { data: validationConfig, isLoading: isValidationLoading } = Digit.Hooks.useCustomMDMS(
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
+    {
+      select: (data) => {
+        const allItems = data?.[moduleName]?.UserValidation || [];
+        const mobileConfigs = allItems.filter((x) => x.fieldType === "mobile").map(item => ({
+          prefix: item?.attributes?.prefix,
+          pattern: item?.rules?.pattern,
+          maxLength: item?.rules?.maxLength,
+          minLength: item?.rules?.minLength,
+          errorMessage: item?.rules?.errorMessage,
+          isDefault: item?.default === true || String(item?.default).toLowerCase() === "true",
+        }));
+
+        const defaultItem = mobileConfigs.find((x) => x.isDefault) || mobileConfigs[0];
+        return {
+          mobileConfigs,
+          defaultConfig: defaultItem,
+          prefix: defaultItem?.prefix || "+91",
+          pattern: defaultItem?.pattern || "^[6-9][0-9]{9}$",
+          maxLength: defaultItem?.maxLength || 10,
+          minLength: defaultItem?.minLength || 10,
+          errorMessage: defaultItem?.errorMessage || "CORE_COMMON_MOBILE_ERROR",
+        };
+      },
+      staleTime: 300000,
+      enabled: !!stateLvlTenantId,
+    }
+  );
+
+
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
@@ -36,12 +77,20 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern("MobileNo"))) {
+    const currentSelectedCode = selectedCountryCode || validationConfig?.prefix || "+91";
+    const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === currentSelectedCode) || validationConfig;
+    const maxLength = currentValidation?.maxLength || 10;
+    const minLength = currentValidation?.minLength || 10;
+    const pattern = currentValidation?.pattern
+      ? new RegExp(currentValidation.pattern, 'i')
+      : Digit.Utils.getPattern('MobileNo');
+
+    if (mobileNumber && mobileNumber.length >= minLength && mobileNumber.length <= maxLength && mobileNumber.match(pattern)) {
       setShowToast(null);
       if (data.user.mobileNumber == mobileNumber) {
         setPhonecheck(true);
       } else {
-        Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
+        Digit.HRMSService.search(tenantId, null, { phone: mobileNumber, countryCode: currentSelectedCode }).then((result, err) => {
           if (result.Employees.length > 0) {
             setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
             setPhonecheck(false);
@@ -53,13 +102,18 @@ const EditForm = ({ tenantId, data }) => {
     } else {
       setPhonecheck(false);
     }
-  }, [mobileNumber]);
+  }, [mobileNumber, selectedCountryCode]);
 
   const defaultValues = {
     tenantId: tenantId,
     employeeStatus: "EMPLOYED",
     employeeType: data?.code,
-    SelectEmployeePhoneNumber: { mobileNumber: data?.user?.mobileNumber },
+    // Seed saved countryCode so the prefix dropdown reflects the persisted value
+    // (e.g. +251) instead of falling through to the MDMS default (+91).
+    SelectEmployeePhoneNumber: {
+      mobileNumber: data?.user?.mobileNumber,
+      countryCode: data?.user?.countryCode,
+    },
     SelectEmployeeId: { code: data?.code },
     SelectEmployeeName: { employeeName: data?.user?.name },
     SelectEmployeeEmailId: { emailId: data?.user?.emailId },
@@ -82,8 +136,11 @@ const EditForm = ({ tenantId, data }) => {
           name: ele.hierarchy,
         },
         boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
-        boundary: { code: ele.boundary },
-        roles: isMultiRootTenant?data?.user?.roles:data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
+        boundary: {
+          code: ele.boundary === "pg.citya" ? "citya" : ele.boundary,
+          i18nKey: Digit.Utils.locale.getCityLocale(ele.boundary === "pg.citya" ? "citya" : ele.boundary)
+        },
+        roles: Digit.Utils.getMultiRootTenant() ? data?.user?.roles : data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
     Assignments: data?.assignments.map((ele, index) => {
@@ -118,6 +175,7 @@ const EditForm = ({ tenantId, data }) => {
     } else {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
     }
+    setSelectedCountryCode(formData?.SelectEmployeePhoneNumber?.countryCode || null);
 
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
@@ -166,13 +224,48 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
+    // Validate mobile number before submission
+    const mobileNum = input?.SelectEmployeePhoneNumber?.mobileNumber;
+
+    if (mobileNum) {
+      // Get validation parameters from MDMS for the selected country code
+      const selectedCC = input?.SelectEmployeePhoneNumber?.countryCode || validationConfig?.prefix || "+91";
+      const currentValidation = validationConfig?.mobileConfigs?.find(c => c.prefix === selectedCC) || validationConfig;
+      const maxLength = currentValidation?.maxLength || 10;
+      const minLength = currentValidation?.minLength || 10;
+      const pattern = currentValidation?.pattern
+        ? new RegExp(currentValidation.pattern, 'i')
+        : Digit.Utils.getPattern('MobileNo');
+
+      // Check length
+      if (mobileNum.length < minLength || mobileNum.length > maxLength) {
+        setShowToast({
+          key: true,
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+
+      // Check pattern
+      if (!mobileNum.match(pattern)) {
+        setShowToast({
+          key: true,
+          label: currentValidation?.errorMessage || "CORE_COMMON_MOBILE_ERROR"
+        });
+        return;
+      }
+    }
+
     // if (input.Jurisdictions.filter((juris) => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
     //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
     //   return;
     // }
     input.Jurisdictions = input?.Jurisdictions?.map((juris) => {
+      const normalizedBoundary = juris?.boundary === "citya" ? "pg.citya" : juris?.boundary;
       return {
         ...juris,
+        boundaryType: juris?.boundaryType,
+        boundary: normalizedBoundary,
         tenantId: tenantId,
       };
     });
@@ -191,10 +284,10 @@ const EditForm = ({ tenantId, data }) => {
     }
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        if(isMultiRootTenant){
+        if (Digit.Utils.getMultiRootTenant()) {
           item["tenantId"] = tenantId;
         }
-        else{
+        else {
           item["tenantId"] = ele.boundary;
         }
         return item;
@@ -210,6 +303,7 @@ const EditForm = ({ tenantId, data }) => {
     requestdata.user.gender = input?.SelectEmployeeGender?.gender.code;
     requestdata.user.dob = Date.parse(input?.SelectDateofBirthEmployment?.dob);
     requestdata.user.mobileNumber = input?.SelectEmployeePhoneNumber?.mobileNumber;
+    requestdata.user.countryCode = (input?.SelectEmployeePhoneNumber?.countryCode || window?.Digit?.MDMSValidationPatterns?.mobileNumberValidation?.prefix || "+91");
     requestdata["user"]["name"] = input?.SelectEmployeeName?.employeeName;
     requestdata.user.correspondenceAddress = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
     requestdata.user.roles = roles.filter((role) => role && role.name);
@@ -230,6 +324,9 @@ const EditForm = ({ tenantId, data }) => {
           });
         },
         onSuccess: async (data) => {
+          Digit.SessionStorage.set("isupdate", Date.now());
+          queryClient.invalidateQueries("HRMS_SEARCH");
+          queryClient.invalidateQueries("HRMS_COUNT");
           navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
         },
       }

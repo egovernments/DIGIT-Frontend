@@ -8,8 +8,8 @@ const PGRCard = () => {
   const { t } = useTranslation();
 
   const allLinks = [
-    { text: t("ES_PGR_INBOX"), link: `/${window?.contextPath}/employee/pgr/inbox` },
-    { text: t("ES_PGR_NEW_COMPLAINT"), link: `/${window?.contextPath}/employee/pgr/complaint/create`, accessTo: ["CSR"] },
+    { text: t("ES_PGR_INBOX"), link: `/${window?.contextPath}/employee/pgr/inbox-v2` },
+    { text: t("ES_PGR_NEW_COMPLAINT"), link: `/${window?.contextPath}/employee/pgr/create-complaint`, accessTo: ["CSR"] },
   ];
 
   if (!Digit.Utils.pgrAccess()) {
@@ -30,7 +30,7 @@ if (Digit.Utils.getMultiRootTenant()) {
 let propsForCSR = [
   {
     label: t("ES_PGR_NEW_COMPLAINT"),
-    link: `/${window?.contextPath}/employee/pgr/complaint/create`,
+    link: `/${window?.contextPath}/employee/pgr/create-complaint`,
     roles: role
   }
 ];
@@ -53,17 +53,17 @@ let propsForSandbox = [
     kpis: [
         {
             label: t("TOTAL_PGR"),
-            link: `/${window?.contextPath}/employee/pgr/inbox`
+            link: `/${window?.contextPath}/employee/pgr/inbox-v2`
         },
         {
             label: t("TOTAL_NEARING_SLA"),
-            link: `/${window?.contextPath}/employee/pgr/inbox`
+            link: `/${window?.contextPath}/employee/pgr/inbox-v2`
         }
     ],
     links: [
     {
         label: t("ES_PGR_INBOX"),
-        link: `/${window?.contextPath}/employee/pgr/inbox`
+        link: `/${window?.contextPath}/employee/pgr/inbox-v2`
     },
     ...propsForCSR,
     ...propsForSandbox

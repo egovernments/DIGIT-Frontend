@@ -1,12 +1,13 @@
 import { FormComposer, Loader, Modal } from "@egovernments/digit-ui-react-components";
-import set from "lodash/set";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { configEmployeeActiveApplication } from "./Modal/EmployeeActivation";
 import { configEmployeeApplication } from "./Modal/EmployeeAppliaction";
 
 const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applicationData, billData }) => {
   const history = useHistory();
+  const queryClient = useQueryClient();
   const [config, setConfig] = useState({});
   const [file, setFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -116,6 +117,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     data.reasonForDeactivation = selectedReason.code;
     let Employees = [...applicationData.Employees];
     if (action !== "ACTIVATE_EMPLOYEE_HEAD") {
+      // DEACTIVATION
       if (file) {
         let documents = {
           referenceType: "DEACTIVATION",
@@ -125,11 +127,16 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         applicationData.Employees[0]["documents"].push(documents);
       }
 
-      set(Employees[0], 'deactivationDetails[0].effectiveFrom', data?.effectiveFrom);
-      set(Employees[0], 'deactivationDetails[0].orderNo', data?.orderNo);
-      set(Employees[0], 'deactivationDetails[0].reasonForDeactivation', data?.reasonForDeactivation);
-      set(Employees[0], 'deactivationDetails[0].remarks', data?.remarks);
+      // Add new deactivation entry (don't update existing ones)
+      const newDeactivationEntry = {
+        reasonForDeactivation: data?.reasonForDeactivation,
+        orderNo: data?.orderNo,
+        remarks: data?.remarks,
+        effectiveFrom: data?.effectiveFrom,
+        tenantId: tenantId,
+      };
 
+      Employees[0].deactivationDetails.push(newDeactivationEntry);
       Employees[0].isActive = false;
       mutationUpdate.mutate(
         {
@@ -143,12 +150,17 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             });
           },
           onSuccess: async (data) => {
-            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+            // Run cache-bust BEFORE navigating away so the component stays mounted long enough
+            // for react-query v3 to fire this callback (unmounting first would drop it).
+            Digit.SessionStorage.set("isupdate", Date.now());
+            queryClient.invalidateQueries("HRMS_SEARCH");
+            queryClient.invalidateQueries("HRMS_COUNT");
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees: data?.Employees || Employees, key: "UPDATE", action: "DEACTIVATION" });
           },
         }
       );
-      history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "DEACTIVATION" });
     } else {
+      // ACTIVATION
       if (file) {
         let documents = {
           referenceType: "ACTIVATION",
@@ -158,10 +170,17 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         applicationData.Employees[0]["documents"].push(documents);
       }
 
-      set(Employees[0], 'reactivationDetails[0].effectiveFrom', data?.effectiveFrom);
-      set(Employees[0], 'reactivationDetails[0].orderNo', data?.orderNo);
-      set(Employees[0], 'reactivationDetails[0].reasonForDeactivation', data?.reasonForDeactivation);
-      set(Employees[0], 'reactivationDetails[0].remarks', data?.remarks);
+      // Add new reactivation entry (don't update existing ones)
+      const newReactivationEntry = {
+        reasonForReactivation: null,
+        orderNo: data?.orderNo,
+        remarks: data?.remarks,
+        effectiveFrom: data?.effectiveFrom,
+        tenantId: tenantId,
+        reasonForDeactivation: data?.reasonForDeactivation,
+      };
+
+      Employees[0].reactivationDetails.push(newReactivationEntry);
       Employees[0].isActive = true;
 
       mutationUpdate.mutate(
@@ -176,12 +195,13 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             });
           },
           onSuccess: async (data) => {
-            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+            Digit.SessionStorage.set("isupdate", Date.now());
+            queryClient.invalidateQueries("HRMS_SEARCH");
+            queryClient.invalidateQueries("HRMS_COUNT");
+            history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees: data?.Employees || Employees, key: "UPDATE", action: "ACTIVATION" });
           },
         }
       );
-
-      history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "ACTIVATION" });
     }
   }
 
@@ -190,10 +210,10 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       headerBarMain={<Heading label={t(config?.label?.heading)} />}
       headerBarEnd={<CloseBtn onClick={closeModal} />}
       actionCancelOnSubmit={closeModal}
-      actionSaveLabel={t(config?.label?.submit)}
+      actionSaveLabel={mutationUpdate.isLoading ? t("CS_LOADING") : t(config?.label?.submit)}
       actionSaveOnSubmit={() => { }}
       formId="modal-action"
-      isDisabled={!selectedReason}
+      isDisabled={!selectedReason || mutationUpdate.isLoading}
     >
       <FormComposer config={config?.form} noBoxShadow inline disabled={true} childrenAtTheBottom onSubmit={submit} formId="modal-action" />
     </Modal>

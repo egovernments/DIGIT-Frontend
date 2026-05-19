@@ -15,12 +15,14 @@ import {
   Toast,
   ErrorMessage,
 } from "@egovernments/digit-ui-components";
-import { CameraIcon } from "@egovernments/digit-ui-react-components";
+import { CameraIcon, ToggleSwitch } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
+
+const DEFAULT_TENANT = Digit?.ULBService?.getStateId?.();
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -46,7 +48,7 @@ const defaultImage =
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
 const defaultValidationConfig = {
-  tenantId: `${Digit.ULBService.getStateId()}`,
+  tenantId: `${DEFAULT_TENANT}`,
   UserProfileValidationConfig: [
     {
       name: "/^[a-zA-Z ]+$/i",
@@ -55,6 +57,8 @@ const defaultValidationConfig = {
     },
   ],
 };
+
+const PREFERENCE_CODE = "USER_NOTIFICATION_PREFERENCES";
 
 const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const history = useHistory();
@@ -83,6 +87,15 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const isMobile = window.Digit.Utils.browser.isMobile();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
+  const [notificationConsent, setNotificationConsent] = useState({
+    SMS: { scope: "GLOBAL", status: "REVOKED" },
+    EMAIL: { scope: "GLOBAL", status: "REVOKED" },
+    WHATSAPP: { scope: "GLOBAL", status: "REVOKED" },
+  });
+  const [preferredLanguage, setPreferredLanguage] = useState(Digit.StoreData.getCurrentLanguage() || "en_IN");
+
+  const availableLanguages = Digit.SessionStorage.get("initData")?.languages;
+
   const mapConfigToRegExp = (config) => {
     return (
       config?.UserProfileValidationConfig?.[0] &&
@@ -94,7 +107,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               const lastSlashIndex = value.lastIndexOf("/");
               const pattern = value.slice(1, lastSlashIndex); // Extracting regex pattern
               const flags = value.slice(lastSlashIndex + 1); // Extracting regex flags
-  
+
               acc[key] = new RegExp(pattern, flags); // Converting properly
             } else {
               acc[key] = new RegExp(value); // Treating it as a normal regex pattern (no flags)
@@ -113,29 +126,191 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   const [validationConfig, setValidationConfig] = useState(mapConfigToRegExp(defaultValidationConfig) || {});
 
+  const activePrefix = userDetails?.countryCode || userInfo?.countryCode || validationConfig?.prefix || "+91";
+
+  const stateLvlTenantId = Digit.Utils.getMultiRootTenant()
+    ? Digit.ULBService.getCurrentTenantId()
+    : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+
+  // User Preferences - fetch enable flag from MDMS v2
+  const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserPreferencesConfig" }],
+    {
+      select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+    },
+    { schemaCode: `${moduleName}.UserPreferencesConfig` }
+  );
+
+  const { data: preferenceData, isLoading: isPreferenceLoading } = Digit.Hooks.useCustomAPIHook({
+    url: "/user-preference/v1/_search",
+    body: {
+      criteria: {
+        userId: userInfo?.uuid,
+        tenantId: tenant,
+        preferenceCode: PREFERENCE_CODE,
+      },
+    },
+    changeQueryName: "user_preference_search",
+    config: {
+      enabled: !!userInfo?.uuid && (userType === "citizen" || isMultiRootTenant) && !!enableUserPreferences,
+      select: (data) => data?.preferences?.[0],
+      cacheTime: 0,
+      staleTime: 0,
+    },
+  });
+
+  const preferenceUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
+    url: "/user-preference/v1/_upsert",
+  });
+
+  useEffect(() => {
+    if (preferenceData?.payload) {
+      const consent = preferenceData.payload.consent || {};
+      setNotificationConsent((prev) => ({
+        SMS: consent.SMS || prev.SMS,
+        EMAIL: consent.EMAIL || prev.EMAIL,
+        WHATSAPP: consent.WHATSAPP || prev.WHATSAPP,
+      }));
+      if (preferenceData.payload.preferredLanguage) {
+        setPreferredLanguage(preferenceData.payload.preferredLanguage);
+      }
+    }
+  }, [preferenceData]);
+
+  // Fetch enabled notification channels from config-service
+  const { data: channelConfigData } = Digit.Hooks.useCustomAPIHook({
+    url: "/config-service/config/v1/_search",
+    body: {
+      criteria: {
+        schemaCode: "NotificationChannel",
+        tenantId: tenant,
+      },
+    },
+    changeQueryName: "config_service_search",
+    config: {
+      enabled: !!enableUserPreferences && !!tenant,
+      select: (data) => {
+        const channels = {};
+        data?.configData?.forEach((item) => {
+          channels[item.uniqueIdentifier] = item.data?.enabled === true;
+        });
+        return channels;
+      },
+    },
+  });
+
+  const handleConsentToggle = (channel) => {
+    setNotificationConsent((prev) => ({
+      ...prev,
+      [channel]: {
+        ...prev[channel],
+        status: prev[channel].status === "GRANTED" ? "REVOKED" : "GRANTED",
+      },
+    }));
+  };
+
+  const saveUserPreferences = async () => {
+    try {
+      await preferenceUpsertMutation.mutateAsync({
+        body: {
+          preference: {
+            userId: userInfo?.uuid,
+            tenantId: tenant,
+            preferenceCode: PREFERENCE_CODE,
+            payload: {
+              consent: notificationConsent,
+              preferredLanguage: preferredLanguage,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw JSON.stringify({
+        type: "error",
+        message: error?.response?.data?.Errors?.[0]?.description || "CORE_COMMON_PROFILE_PREFERENCE_UPDATE_ERROR",
+      });
+    }
+  };
+
   const { data: mdmsValidationData, isValidationConfigLoading } = Digit.Hooks.useCustomMDMS(
-    stateCode,
-    "commonUiConfig",
-    [{ name: "UserProfileValidationConfig" }],
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserValidation" }],
     {
       select: (data) => {
-        return data?.commonUiConfig;
+        const validationData = data?.[moduleName]?.UserValidation?.find((x) => x.fieldType === "mobile");
+        const rules = validationData?.rules;
+        const attributes = validationData?.attributes;
+        return {
+          UserProfileValidationConfig: [
+            {
+              mobileNumber: rules?.pattern,
+            },
+          ],
+          prefix: attributes?.prefix || "+91",
+        };
       },
+      enabled: !!stateLvlTenantId,
     }
   );
 
   useEffect(() => {
     if (mdmsValidationData && mdmsValidationData?.UserProfileValidationConfig?.[0]) {
       const updatedValidationConfig = mapConfigToRegExp(mdmsValidationData);
-      setValidationConfig(updatedValidationConfig);
+      if (mdmsValidationData?.prefix) {
+        updatedValidationConfig.prefix = mdmsValidationData.prefix;
+      }
+      const filteredConfig = Object.fromEntries(
+        Object.entries(updatedValidationConfig).filter(([, v]) => v !== undefined && v !== null)
+      );
+      setValidationConfig((prev) => ({ ...prev, ...filteredConfig }));
     }
   }, [mdmsValidationData]);
 
   const getUserInfo = async () => {
     const uuid = userInfo?.uuid;
+    const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+
     if (uuid) {
-      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-      usersResponse && usersResponse.user && usersResponse.user.length && setUserDetails(usersResponse.user[0]);
+      if (individualServicePath) {
+        // New API using health-individual
+        const response = await Digit.CustomService.getResponse({
+          url: `${individualServicePath}/v1/_search`,
+          useCache: false,
+          method: "POST",
+          userService: true,
+          params: {
+            limit: 1000,
+            offset: 0,
+            tenantId: tenant,
+          },
+          body: {
+            Individual: {
+              userUuid: [uuid],
+              tenantId: tenant,
+            },
+          },
+        });
+
+        if (response?.Individual?.length) {
+          setUserDetails(response.Individual[0]);
+        } else {
+          // No Individual record found — fall back to old user service
+          const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+          if (usersResponse?.user?.length) {
+            setUserDetails(usersResponse.user[0]);
+          }
+        }
+      } else {
+        // Old API
+        const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+        if (usersResponse?.user?.length) {
+          setUserDetails(usersResponse.user[0]);
+        }
+      }
     }
   };
 
@@ -156,6 +331,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       code: userDetails?.gender,
       value: userDetails?.gender,
     });
+
+    if (userDetails?.mobileNumber) setMobileNo(userDetails.mobileNumber);
 
     const thumbs = userDetails?.photo?.split(",");
     setProfileImg(thumbs?.at(0));
@@ -282,16 +459,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const updateProfile = async () => {
     setLoading(true);
     try {
-      const requestData = {
-        ...userInfo,
-        name,
-        gender: gender?.value,
-        emailId: email,
-        photo: profilePic,
-      };
-
-      if(name){
-        setName((prev)=>prev.trim());
+      if (name) {
+        setName((prev) => prev.trim());
       }
 
       if (!validationConfig?.name.test(name) || name === "" || name.length > 50 || name.length < 1) {
@@ -301,7 +470,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         });
       }
 
-      if (userType === "employee" && !validationConfig?.mobileNumber.test(mobileNumber)) {
+      if (userType === "employee" && validationConfig?.mobileNumber && !validationConfig.mobileNumber.test(mobileNumber)) {
         throw JSON.stringify({
           type: "error",
           message: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"),
@@ -314,15 +483,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           message: t("CORE_COMMON_PROFILE_EMAIL_INVALID"),
         });
       }
+
       const trimmedCurrentPassword = currentPassword.trim();
       const trimmedNewPassword = newPassword.trim();
       const trimmedConfirmPassword = confirmPassword.trim();
 
-      // Updating state with trimmed values
       setCurrentPassword(trimmedCurrentPassword);
       setNewPassword(trimmedNewPassword);
       setConfirmPassword(trimmedConfirmPassword);
-      
 
       if (changepassword && (trimmedCurrentPassword && trimmedNewPassword && trimmedConfirmPassword)) {
         if (trimmedNewPassword !== trimmedConfirmPassword) {
@@ -347,7 +515,65 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         }
       }
 
-      const { responseInfo, user } = await Digit.UserService.updateUser(requestData, stateCode);
+      let responseInfo;
+      const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+
+      if (individualServicePath && userDetails?.individualId) {
+        // Build Individual object dynamically
+        const individualPayload = {
+          ...userDetails,
+          tenantId: tenant,
+          name: {
+            givenName: name.trim(),
+            familyName: userDetails?.name?.familyName,
+            otherNames: userDetails?.name?.otherNames,
+          },
+          mobileNumber: mobileNumber,
+          countryCode: activePrefix,
+          isDeleted: false,
+          isSystemUser: true,
+          isSystemUserActive: true,
+        };
+
+        // Only add optional fields if they have values
+        if (gender?.value) {
+          individualPayload.gender = gender.value;
+        }
+
+        if (email) {
+          individualPayload.email = email;
+        }
+
+        if (profilePic) {
+          individualPayload.photo = profilePic;
+        }
+
+        const response = await Digit.CustomService.getResponse({
+          url: `${individualServicePath}/v1/_update`,
+          useCache: false,
+          method: "POST",
+          userService: true,
+          body: {
+            Individual: individualPayload,
+          },
+        });
+        responseInfo = response?.responseInfo;
+      }
+      else {
+        // Old API
+        const requestData = {
+          ...userInfo,
+          name,
+          mobileNumber,
+          countryCode: activePrefix,
+          gender: gender?.value,
+          emailId: email,
+          photo: profilePic,
+        };
+        const response = await Digit.UserService.updateUser(requestData, tenant);
+        responseInfo = response?.responseInfo;
+      }
+
 
       if (responseInfo && responseInfo.status === "200") {
         const user = Digit.UserService.getUser();
@@ -400,10 +626,21 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           });
         }
       } else if (responseInfo?.status && responseInfo.status === "200") {
+        if ((userType === "citizen" || Digit.Utils.getMultiRootTenant()) && enableUserPreferences) {
+          await saveUserPreferences();
+        }
         showToast("success", t("CORE_COMMON_PROFILE_UPDATE_SUCCESS"), 5000);
       }
     } catch (error) {
-      const errorObj = JSON.parse(error);
+      let errorObj;
+      try {
+        errorObj = JSON.parse(error);
+      } catch (e) {
+        errorObj = {
+          type: "error",
+          message: error?.response?.data?.Errors?.[0]?.description || "CORE_COMMON_PROFILE_UPDATE_ERROR",
+        };
+      }
       showToast(errorObj.type, t(errorObj.message), 5000);
     }
 
@@ -550,7 +787,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>
                   {`${t("CORE_COMMON_PROFILE_NAME")}`}*
                 </CardLabel>
-                <div style={{ width: "40rem", maxWidth: "960px" }}>
+                <div style={{ width: "100%", maxWidth: "960px" }}>
                   <TextInput
                     t={t}
                     style={{ width: "100%" }}
@@ -590,7 +827,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_GENDER")}`}</CardLabel>
                 <Dropdown
-                  style={{ width: "40rem", fontSize: "1rem" }}
+                  style={{ width: "100%", fontSize: "1rem" }}
                   className="form-field profileDropdown"
                   selected={gender?.length === 1 ? gender[0] : gender}
                   disable={gender?.length === 1 || editScreen}
@@ -605,7 +842,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_EMAIL")}`}</CardLabel>
-                <div style={{ width: "40rem" }}>
+                <div style={{ width: "100%" }}>
                   <TextInput
                     t={t}
                     style={{ width: "100%" }}
@@ -629,6 +866,54 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                   )}
                 </div>
               </LabelFieldPair>
+
+              {/* Preferred Language Dropdown */}
+              {enableUserPreferences && availableLanguages?.length >= 1 ? (
+                <LabelFieldPair>
+                  <CardLabel className="user-profile">{t("CORE_COMMON_PREFERRED_LANGUAGE")}</CardLabel>
+                  <div style={{ width: "100%" }}>
+                    <Dropdown
+                      option={availableLanguages}
+                      optionKey="label"
+                      selected={availableLanguages?.find((lang) => lang.value === preferredLanguage)}
+                      select={(lang) => setPreferredLanguage(lang.value)}
+                      t={t}
+                    />
+                  </div>
+                </LabelFieldPair>
+              ) : null}
+
+              {/* Notification Preferences - controlled by ENABLE_USER_PREFERENCES global config and config-service channels */}
+              {enableUserPreferences ? (
+                [
+                  { key: "SMS", label: t("CORE_COMMON_SMS_NOTIFICATIONS") },
+                  { key: "EMAIL", label: t("CORE_COMMON_EMAIL_NOTIFICATIONS") },
+                  { key: "WHATSAPP", label: t("CORE_COMMON_WHATSAPP_NOTIFICATIONS") },
+                ].map((channel) => {
+                  const isChannelEnabled = channelConfigData?.[channel.key] === true;
+                  return (
+                    <LabelFieldPair key={channel.key}>
+                      <CardLabel className="user-profile" style={{ width: "30%", minWidth: "150px", ...(!isChannelEnabled ? { color: "#B1B4B6" } : {}) }}>
+                        {channel.label}
+                      </CardLabel>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: "10px" }}>
+                        <ToggleSwitch
+                          value={notificationConsent[channel.key].status === "GRANTED"}
+                          onChange={() => handleConsentToggle(channel.key)}
+                          disabled={!isChannelEnabled}
+                          name={`notification-${channel.key}`}
+                          style={{ margin: "0px", opacity: isChannelEnabled ? 1 : 0.4 }}
+                        />
+                        <span style={{ fontSize: "14px", marginBottom: "2px", color: isChannelEnabled ? "#505A5F" : "#B1B4B6" }}>
+                          {isChannelEnabled
+                            ? notificationConsent[channel.key].status === "GRANTED" ? t("CORE_COMMON_ENABLED") : t("CORE_COMMON_DISABLED")
+                            : t("CORE_COMMON_DISABLED")}
+                        </span>
+                      </div>
+                    </LabelFieldPair>
+                  );
+                })
+              ) : null}
 
               <button
                 onClick={updateProfile}
@@ -732,11 +1017,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 <div style={{ width: "100%" }}>
                   <MobileNumber
                     value={mobileNumber}
+                    prefix={activePrefix}
                     style={{ width: "100%" }}
                     name="mobileNumber"
                     placeholder="Enter a valid Mobile No."
                     onChange={(value) => setUserMobileNumber(value)}
-                    disable={Digit.Utils.getMultiRootTenant() ? false : true}
+                    disable={Digit.Utils.getMultiRootTenant() ? true : editScreen}
                     {...{
                       required: true,
                       pattern:
@@ -795,7 +1081,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                       label={t("CORE_COMMON_CHANGE_PASSWORD")}
                       variation={"teritiary"}
                       onClick={TogleforPassword}
-                      style={{ paddingLeft: "0rem" }}
+                      style={{ paddingLeft: "20rem" }}
                     ></Button>
                   ) : null}
                   {changepassword ? (

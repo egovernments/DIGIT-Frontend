@@ -38,7 +38,10 @@ const TopBar = ({
     }
   }, [profilePic !== null, userDetails?.info?.uuid]);
 
-  const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+  // For multi-root tenant, use tenant from URL; otherwise use selected home city
+  const CitizenHomePageTenantId = Digit.Utils.getMultiRootTenant() 
+    ? Digit.ULBService.getStateId() 
+    : Digit.ULBService.getCitizenCurrentTenant(true);
 
   let history = useHistory();
   const { pathname } = useLocation();

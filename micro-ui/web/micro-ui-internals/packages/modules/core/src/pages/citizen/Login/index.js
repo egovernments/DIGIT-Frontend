@@ -10,7 +10,7 @@ import SelectOtp from "./SelectOtp";
 const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
 const DEFAULT_USER = "digit-user";
-let DEFAULT_REDIRECT_URL = `/${window?.contextPath || window?.globalConfigs?.getConfig("CONTEXT_PATH")}/citizen`;
+const DEFAULT_REDIRECT_URL = `/${window?.contextPath}/citizen`;
 
 /* set citizen details to enable backward compatiable */
 const setCitizenDetail = (userObject, token, tenantId) => {
@@ -33,6 +33,8 @@ const getFromLocation = (state, searchParams) => {
   return state?.from || searchParams?.from || DEFAULT_REDIRECT_URL;
 };
 
+const PREFERENCE_CODE = "USER_NOTIFICATION_PREFERENCES";
+
 const Login = ({ stateCode, isUserRegistered = true }) => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -48,6 +50,24 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const [canSubmitName, setCanSubmitName] = useState(false);
   const [canSubmitOtp, setCanSubmitOtp] = useState(true);
   const [canSubmitNo, setCanSubmitNo] = useState(true);
+  const [whatsAppOptIn, setWhatsAppOptIn] = useState(true);
+
+  // Check if user preferences feature is enabled via MDMS
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const stateLvlTenantId = isMultiRootTenant
+    ? Digit.ULBService.getCurrentTenantId()
+    : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+  const moduleName = Digit?.Utils?.getConfigModuleName?.() || "commonUiConfig";
+
+  const { data: enableUserPreferences } = Digit.Hooks.useCustomMDMS(
+    stateLvlTenantId,
+    moduleName,
+    [{ name: "UserPreferencesConfig" }],
+    {
+      select: (data) => data?.[moduleName]?.UserPreferencesConfig?.[0]?.enableUserPreferences,
+    },
+    { schemaCode: `${moduleName}.UserPreferencesConfig` }
+  );
 
   useEffect(() => {
     let errorTimeout;
@@ -73,8 +93,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     Digit.SessionStorage.set("citizen.userRequestObject", user);
     Digit.UserService.setUser(user);
     setCitizenDetail(user?.info, user?.access_token, stateCode);
+
+    // Save WhatsApp preference after user session is established (fire-and-forget)
+    saveWhatsAppPreference(user?.info);
+
     const redirectPath = location.state?.from || DEFAULT_REDIRECT_URL;
-    if (!Digit.ULBService.getCitizenCurrentTenant()) {
+    if (!Digit.ULBService.getCitizenCurrentTenant(true)) {
       history.replace(`/${window?.contextPath}/citizen/select-location`, {
         redirectBackTo: redirectPath,
       });
@@ -105,11 +129,6 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const handleMobileChange = (event) => {
     const { value } = event.target;
     setParmas({ ...params, mobileNumber: value });
-  };
-
-  const handleEmailChange = (event) => {
-    const { value } = event.target;
-    setParmas({ ...params, userName: value });
   };
 
   const selectMobileNumber = async (mobileNumber) => {
@@ -169,11 +188,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     try {
       setIsOtpValid(true);
       setCanSubmitOtp(false);
-      const { mobileNumber, otp, name, userName } = params;
+      const { mobileNumber, otp, name, countryCode } = params;
       if (isUserRegistered) {
         const requestData = {
-          username: mobileNumber || userName,
+          username: mobileNumber,
           password: otp,
+          countryCode,
           tenantId: stateCode,
           userType: getUserType(),
         };
@@ -195,8 +215,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       } else if (!isUserRegistered) {
         const requestData = {
           name,
-          username: mobileNumber || userName,
+          username: mobileNumber,
           otpReference: otp,
+          countryCode,
           tenantId: stateCode,
         };
 
@@ -215,9 +236,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   };
 
   const resendOtp = async () => {
-    const { mobileNumber } = params;
+    const { mobileNumber, countryCode } = params;
     const data = {
       mobileNumber,
+      countryCode,
       tenantId: stateCode,
       userType: getUserType(),
     };
@@ -225,6 +247,35 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
     } else if (isUserRegistered) {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
+    }
+  };
+
+  const saveWhatsAppPreference = async (userInfo) => {
+    if (!enableUserPreferences) return;
+    if (sessionStorage.getItem("whatsapp_popup_shown")) return;
+
+    const locale = Digit.StoreData.getCurrentLanguage() || "en_IN";
+
+    try {
+      await Digit.CustomService.getResponse({
+        url: "/user-preference/v1/_upsert",
+        body: {
+          preference: {
+            userId: userInfo?.uuid,
+            tenantId: stateCode,
+            preferenceCode: PREFERENCE_CODE,
+            payload: {
+              consent: {
+                WHATSAPP: { scope: "GLOBAL", status: whatsAppOptIn ? "GRANTED" : "REVOKED" },
+              },
+              preferredLanguage: locale,
+            },
+          },
+        },
+      });
+      sessionStorage.setItem("whatsapp_popup_shown", "true");
+    } catch (error) {
+      console.error("Failed to save WhatsApp preference from login:", error);
     }
   };
 
@@ -241,18 +292,20 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     <div className="citizen-form-wrapper">
       <Switch>
         <AppContainer>
-          {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()}/>}
+          {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()} />}
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}
               config={stepItems[0]}
               mobileNumber={params.mobileNumber || ""}
-              emailId={params.userName || ""}
               onMobileChange={handleMobileChange}
-              onEmailChange={handleEmailChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
               t={t}
+              whatsAppOptIn={whatsAppOptIn}
+              onWhatsAppOptInChange={setWhatsAppOptIn}
+              showWhatsAppOptIn={!!enableUserPreferences}
+              countryCode={params.countryCode || ""}
             />
           </Route>
           <Route path={`${path}/otp`}>

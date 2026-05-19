@@ -48,8 +48,8 @@ const TopBar = ({
           {!hideNotificationIconOnSomeUrlsWhenNotLoggedIn ? (
             <div className="EventNotificationWrapper" onClick={onNotificationIconClick}>
               {notificationCountLoaded && notificationCount ? (
-                <span>
-                  <p>{notificationCount}</p>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <p style={{ margin: 0, lineHeight: 1, fontSize: "11px", color: "white", fontWeight: 600 }}>{notificationCount}</p>
                 </span>
               ) : null}
               <NotificationBell />

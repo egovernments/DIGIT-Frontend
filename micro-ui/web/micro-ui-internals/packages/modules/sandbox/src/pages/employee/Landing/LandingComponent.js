@@ -39,11 +39,12 @@ const LandingComponent = ({ config = {} }) => {
 
 
 
-  // Destructure key config fields with fallback defaults
+
+  // Destructure key config fields with fallback defaults from sandboxConfig
   const {
-    heading = "Sandbox",
-    url = "https://app.supademo.com/embed/cmdphco8t0001y90ikoa6o142?embed_v=2&utm_source=embed",
-    subsections = [],
+    heading = sandboxConfig.heading,
+    url = sandboxConfig.url,
+    subsections = sandboxConfig.subsections,
   } = config;
 
   // Define the redirect path for button click - will upate after the product page is ready
@@ -58,28 +59,8 @@ const LandingComponent = ({ config = {} }) => {
     history.push(redirectPathOtpLogin);
   };
 
-  // Logic to split stepsSection.title into two parts
-  const splitStepsTitle = () => {
-    const title = t(stepsSection.title);
-    const words = title.split(' ');
-    
-    if (words.length <= 1) {
-      return { firstPart: title, lastPart: '' };
-    }
-    
-    // Get the last word (end part)
-    const lastPart = words[words.length - 1];
-    // Get remaining words (everything except the last word)
-    const firstPart = words.slice(0, -1).join(' ');
-    
-    return { firstPart, lastPart };
-  };
+  const brandName = t(buttonSection?.subtitle);
 
-  const { firstPart, lastPart } = splitStepsTitle();
-
-  console.log("*** Log ===> ", stepsSection.title);
-  console.log("*** First Part ===> ", firstPart);
-  console.log("*** Last Part ===> ", lastPart);
 
   return (
     <div className="" style={{ "padding": "0px" }}>
@@ -124,8 +105,8 @@ const LandingComponent = ({ config = {} }) => {
           {/* Left Column - Heading with underline */}
           <div className="middle-left-column">
             <div className="custom-landing-header-grey middle-center-text">
-              <div>{firstPart}</div>
-              <span style={{ color: "#C84C0E", fontFamily: 'Roboto Condensed', fontWeight: 700, fontSize: '40px' }}>{lastPart}</span>
+              <div>{t(stepsSection.title)}</div>
+              <div style={{ color: "#C84C0E", fontFamily: 'Roboto Condensed', fontWeight: 700, fontSize: '40px', display: 'block' }}>{brandName}?</div>
             </div>
           </div>
 
@@ -150,7 +131,7 @@ const LandingComponent = ({ config = {} }) => {
             <div style={{ lineHeight: "1.2" }}>
               <span className="header-span">{t(buttonSection?.title)}</span>
               <br />
-              {t(buttonSection?.subtitle)}
+              {brandName}
             </div>
           </HeaderComponent>
 

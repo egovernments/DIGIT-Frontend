@@ -16,8 +16,19 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
   const location = useLocation();
 
   const user = Digit.UserService.getUser();
+  const isLoggedIn = user && user?.access_token && user?.info;
+  const fromSandbox = new URLSearchParams(location.search).get("from") === "sandbox";
 
-  if (!user || !user?.access_token || !user?.info) {
+  if (fromSandbox) {
+    const segs = location.pathname.split("/");
+    const empIdx = segs.indexOf("employee");
+    const urlTenant = empIdx > 0 ? segs[empIdx - 1] : null;
+    const userTenant = user?.info?.tenantId;
+    const isTenantMismatch = isLoggedIn && urlTenant && userTenant && userTenant !== urlTenant;
+    if (!isLoggedIn || isTenantMismatch) {
+      return <Redirect to={`/${window?.globalPath}/user/login`} />;
+    }
+  } else if (!isLoggedIn) {
     return <Redirect to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }} />;
   }
 
