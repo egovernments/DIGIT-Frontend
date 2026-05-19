@@ -87,6 +87,39 @@ const Home = ({
     return null;
   })();
 
+  const citizenAuthWhitelist = ["/login", "/register", "/select-language", "/select-location"];
+  const isPublicCitizenRoute = citizenAuthWhitelist.some((seg) => location.pathname.includes(`/citizen${seg}`));
+  const unauthRedirect = !isLoggedIn && !isPublicCitizenRoute
+    ? (isMultiRootTenant
+        ? `/${window?.globalPath}/user/login`
+        : `/${window?.contextPath}/citizen/login`)
+    : null;
+
+  // Tenant-mismatch guard: a logged-in user manually editing the tenant slug in the
+  // URL (e.g. HARICCC -> HARIBBB) must not be able to view another tenant's pages.
+  // Clear the session and bounce to the sandbox login.
+  const urlTenant =
+    isMultiRootTenant && window?.contextPath && window?.globalPath && window.contextPath !== window.globalPath
+      ? window.contextPath.substring(window.globalPath.length + 1)
+      : null;
+  const loggedInTenant = _user?.info?.tenantId;
+  const isTenantMismatch =
+    isMultiRootTenant && isLoggedIn && !isPublicCitizenRoute && urlTenant && loggedInTenant && urlTenant !== loggedInTenant;
+
+  React.useEffect(() => {
+    if (!isTenantMismatch) return;
+    (async () => {
+      const savedDigitLocale = window.sessionStorage.getItem("Digit.locale");
+      try {
+        await Digit.UserService.logoutUser();
+      } catch (e) {}
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      if (savedDigitLocale) window.sessionStorage.setItem("Digit.locale", savedDigitLocale);
+      window.location.replace(`/${window?.globalPath}/user/login`);
+    })();
+  }, [isTenantMismatch]);
+
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
   };
@@ -177,6 +210,7 @@ const Home = ({
         )}
 
         <Switch>
+          {unauthRedirect && <Redirect to={unauthRedirect} />}
           <Route exact path={path}>
             <CitizenHome />
           </Route>
