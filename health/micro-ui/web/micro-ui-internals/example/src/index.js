@@ -16,6 +16,7 @@ import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
 import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
 import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
+import { initCoreComponents } from "@egovernments/digit-ui-module-core";
 
 var Digit = window.Digit || {};
 
@@ -76,6 +77,15 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
+  initCoreComponents();
+  // core@1.9.x doesn't include EmployeeSSOLoginOptions; register a stub so
+  // FormComposerV2/FieldV1 doesn't crash with React error #130.
+  if (!Digit.ComponentRegistryService?.getComponent("EmployeeSSOLoginOptions")) {
+    Digit.ComponentRegistryService.setComponent("EmployeeSSOLoginOptions", () => null);
+  }
+  if (!Digit.Hooks?.useSSOConfig) {
+    Digit.Hooks.useSSOConfig = () => ({ data: [], isLoading: false });
+  }
   initUtilitiesComponents();
   initWorkbenchComponents();
   initWorkbenchHCMComponents();

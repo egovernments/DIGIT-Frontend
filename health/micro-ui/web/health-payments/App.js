@@ -28,6 +28,18 @@ const moduleReducers = (initData) => ({
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({
   });
+
+  // core@1.9.x doesn't register EmployeeSSOLoginOptions; register a stub so
+  // FormComposerV2 doesn't crash with React error #130 when the MDMS login
+  // config includes that field.
+  if (!Digit.ComponentRegistryService?.getComponent("EmployeeSSOLoginOptions")) {
+    Digit.ComponentRegistryService.setComponent("EmployeeSSOLoginOptions", () => null);
+  }
+  // Fallback for useSSOConfig in case libraries version doesn't export it.
+  if (!Digit.Hooks?.useSSOConfig) {
+    Digit.Hooks.useSSOConfig = () => ({ data: [], isLoading: false });
+  }
+
   initPaymentComponents();
   initHRMSComponents();
   initPGRComponents();
