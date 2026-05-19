@@ -1,4 +1,8 @@
 # Changelog
+## [1.9.24-cms]  [19-MAY-2026]
+- **Style**: Updated country code prefix UI in `SelectMobileNumber`.
+- **Fix**: Reduced WhatsApp consent checkbox size to `20×20px` and adjusted label margin accordingly.
+
 ## [1.9.23-cms]  [05-MAY-2026]
 - **Feature**: Added country code support for mobile numbers in citizen Login flow and UserProfile.
 - **Refactor**: Updated CitizenSideBar and StaticCitizenSideBar to correctly reflect and handle profile updates with country codes.

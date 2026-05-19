@@ -148,53 +148,66 @@ const SelectMobileNumber = ({
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                border: error ? "2px solid #d4351c" : "1px solid #464646",
+                alignItems: "stretch",
+                borderRadius: "2px",
                 overflow: "hidden",
                 backgroundColor: "#FFFFFF",
                 boxSizing: "border-box",
                 height: "2.5rem",
                 width: "100%",
+                ...(error
+                  ? { border: "1px solid #d4351c", outline: "none", boxShadow: "none" }
+                  : { border: "1px solid #464646" }),
               }}
             >
               {/* Prefix: dropdown when multiple options, static span when only one */}
               {showPrefixSelect ? (
-                <select
-                  value={selectedConfig?.prefix || prefix}
-                  onChange={handlePrefixChange}
-                  style={{
-                    border: "none",
-                    borderRight: error ? "2px solid #d4351c" : "1px solid #464646",
-                    padding: "0 8px",
-                    fontSize: "16px",
-                    backgroundColor: "#EEEEEE",
-                    cursor: "pointer",
-                    outline: "none",
-                    color: "#0B0C0C",
-                    fontWeight: "500",
-                    minWidth: "75px",
-                    height: "100%",
-                    appearance: "auto",
-                  }}
+                <div
+                  className="citizen-card-input--front"
+                  style={{ position: "relative", display: "flex", alignItems: "center", borderRight: "1px solid #d1d1d1", paddingRight: "0px", marginRight: "0px" }}
                 >
-                  {mobileConfigs.map((c) => (
-                    <option key={c.prefix} value={c.prefix}>
-                      {c.prefix}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    value={selectedConfig?.prefix || prefix}
+                    onChange={handlePrefixChange}
+                    style={{
+                      border: "none",
+                      padding: "0 28px 0 12px",
+                      fontSize: "16px",
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                      outline: "none",
+                      color: "#333",
+                      fontWeight: "600",
+                      width: `calc(${(selectedConfig?.prefix || prefix).length}ch + 40px)`,
+                      appearance: "none",
+                      zIndex: 1,
+                      height: "100%",
+                    }}
+                  >
+                    {mobileConfigs.map((c) => (
+                      <option key={c.prefix} value={c.prefix}>
+                        {c.prefix}
+                      </option>
+                    ))}
+                  </select>
+                  <div style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0 }}>
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 1L5 5L9 1" stroke="#333" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
               ) : (
                 <span
                   style={{
-                    padding: "0 10px",
+                    padding: "0 12px",
                     fontSize: "16px",
-                    fontWeight: "500",
-                    color: "#0B0C0C",
-                    borderRight: error ? "2px solid #d4351c" : "1px solid #464646",
+                    fontWeight: "600",
+                    color: "#333",
+                    borderRight: "1px solid #d1d1d1",
                     height: "100%",
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#EEEEEE",
+                    backgroundColor: "transparent",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -213,19 +226,22 @@ const SelectMobileNumber = ({
                 style={{
                   flex: 1,
                   border: "none",
-                  padding: "0 12px",
+                  padding: "0 15px",
                   fontSize: "16px",
                   outline: "none",
                   color: "#0B0C0C",
                   backgroundColor: "transparent",
+                  width: "100%",
                   height: "100%",
-                  minWidth: "0",
+                  margin: "0",
                 }}
               />
 
               {/* Character count — mirrors FieldV1 behaviour */}
               <span
                 style={{
+                  display: "flex",
+                  alignItems: "center",
                   padding: "0 8px",
                   fontSize: "12px",
                   color: "#6f777b",
@@ -284,6 +300,8 @@ const SelectMobileNumber = ({
             checked={whatsappConsent}
             label={t("CORE_COMMON_WHATSAPP_NOTIFICATIONS")}
             styles={{ display: "flex", alignItems: "center", textTransform: "capitalize" }}
+            checkboxWidth={{ width: "20px", height: "20px" }}
+            style={{ marginLeft: "30px" }}
           />
         )}
         <LinkLabel style={{ display: "inline", ...mobileViewStyles }} onClick={switchMode}>
