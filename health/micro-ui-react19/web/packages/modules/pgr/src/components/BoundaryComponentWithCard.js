@@ -123,12 +123,12 @@ const BoundaryDropdown = ({ label, data, onChange, selected, isMandatory }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="boundary-dropdown-wrapper">
-      <div className="comment-label-without-card">
+    <div className="boundary-dropdown-wrapper" style={{display:"flex",flexDirection:"row",gap:"1rem"}}>
+      <div className="comment-label-without-card" style={{width:"33%"}}>
         {label}
         {isMandatory && <span style={{ color: "#d4351c" }}> *</span>}
       </div>
-      <div className='digit-text-input-field-without-card'>
+      <div className='digit-field digit-text-input-field-without-card'>
         <Dropdown style={{marginBottom:"1.5rem"}} selected={selected} t={t} option={data} optionKey={"code"} select={(value) => onChange(value)} />
       </div>
     </div>

@@ -141,6 +141,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
           </div>
           <Dropdown
             style={{ width: "40rem" }}
+            isSearchable={true}
             t={t}
             option={hierarchies || []}
             optionKey={"hierarchyType"}

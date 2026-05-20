@@ -247,7 +247,7 @@ const PGRDetails = () => {
     if (toast?.show) {
       setTimeout(() => {
         handleToastClose();
-      }, 3000);
+      }, 5000);
     }
   }, [toast?.show]);
 
@@ -576,7 +576,7 @@ const PGRDetails = () => {
       />
 
       {/* Toast Message */}
-      {toast?.show && <Toast type={toast?.type} label={toast?.label} isDleteBtn onClose={handleToastClose} />}
+      {toast?.show && <Toast type={toast?.type} label={toast?.label} onClose={handleToastClose} style={{zIndex:"10001"}} />}
 
       {/* Workflow Modal for Actions */}
       {openModal && selectedAction && (

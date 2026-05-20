@@ -108,8 +108,8 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
 
   return (
     <LabelFieldPair removeMargin={true}>
-      <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-        {t("HRMS_BOUNDARY_LABEL")} {index}*
+      <CardLabel style={{ width: "33%" }} className="digit-card-label-smaller">
+        {t("HRMS_BOUNDARY_LABEL")} {index}<span style={{color:"#B91900"}}>*</span>
       </CardLabel>
       <div style={{ width: "100%",display:"flex",flexDirection:"column",gap:"1.5rem" }}>
         {levels.map((lvl) =>
