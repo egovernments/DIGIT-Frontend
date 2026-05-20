@@ -457,6 +457,31 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
   console.log("workerRatesData", workerRatesData);
 
+  const deliveryTargetMdmsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            moduleName: "HCM-ATTENDANCE",
+            masterDetails: [{ name: "DeliveryTarget" }],
+          },
+        ],
+      },
+    },
+    config: {
+      select: (mdmsData) => {
+        const selectedProject = Digit.SessionStorage.get("selectedProject");
+        const projectType = selectedProject?.projectType;
+        const targets = mdmsData?.MdmsRes?.["HCM-ATTENDANCE"]?.DeliveryTarget || [];
+        const match = targets.find((item) => item.projectType === projectType) || targets.find((item) => item.projectType === "DEFAULT");
+        return match ? match.target : null;
+      },
+    },
+  };
+  const { data: deliveryTargetPerUserPerDay } = Digit.Hooks.useCustomAPIHook(deliveryTargetMdmsCriteria);
+
   const attendeeUsernames = AllIndividualsData?.Individual?.map((ind) => ind?.userDetails?.username).filter(Boolean) || [];
 
   const kibanaMapConfig = Digit.SessionStorage.get("kibanaMapConfig");
@@ -661,7 +686,16 @@ const ViewAttendance = ({ editAttendance = false }) => {
         <Card type="primary" className="bottom-gap-card-payment">
           <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", padding: "1rem 0" }}>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>{t("ES_COMMON_NA")}</div>
+              <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "#0B4B66" }}>
+                {(() => {
+                  const targetPerUserPerDay = deliveryTargetPerUserPerDay || 0;
+                  const totalTarget = targetPerUserPerDay * (attendanceDuration || 0) * attendanceSummary.length;
+                  console.log("totalTarget", totalTarget, { targetPerUserPerDay, attendanceDuration, users: attendanceSummary.length });
+                  const actual = attendanceSummary.reduce((sum, row) => sum + (row[12] != null ? row[12] : 0), 0);
+                  if (totalTarget === 0) return t("ES_COMMON_NA");
+                  return `${Math.round((actual / totalTarget) * 100)}%`;
+                })()}
+              </div>
               <div style={{ fontSize: "0.875rem", color: "#505A5F", marginTop: "0.25rem" }}>{t("HCM_AM_TARGET_ACHIEVED")}</div>
             </div>
             <div style={{ width: "1px", height: "3rem", backgroundColor: "#D6D5D4" }} />
