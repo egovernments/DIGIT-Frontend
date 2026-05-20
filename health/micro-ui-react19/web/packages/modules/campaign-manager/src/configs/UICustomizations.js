@@ -380,8 +380,8 @@ export const UICustomizations = {
         isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: true,
-        startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
-        endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
+        startDate: Date.now(),
+        endDate: Date.now(),
         pagination: {
           sortBy: "createdTime",
           sortOrder: data?.state?.tableForm?.sortOrder || "desc",
@@ -1267,6 +1267,24 @@ export const UICustomizations = {
     },
     getCustomActionLabel: (obj, row) => {
       return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  CommodityProjectOngoing: {
+    preProcess: (data) => {
+      data.body.dateFilter = "ongoing";
+      return data;
+    },
+  },
+  CommodityProjectUpcoming: {
+    preProcess: (data) => {
+      data.body.dateFilter = "upcoming";
+      return data;
+    },
+  },
+  CommodityProjectCompleted: {
+    preProcess: (data) => {
+      data.body.dateFilter = "completed";
+      return data;
     },
   },
   CampaignTemplateConfig: {

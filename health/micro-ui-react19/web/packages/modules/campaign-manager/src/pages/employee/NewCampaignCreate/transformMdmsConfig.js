@@ -64,7 +64,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
       flow.pages.forEach((page, pageIndex) => {
         // Check if this is the last page
         const isLastPage = page === lastPage;
-        
+
         // Transform onAction to conditionalNavigateTo if:
         // 1. This is the last page
         // 2. onAction exists at flow level
@@ -72,14 +72,14 @@ export const transformMdmsToAppConfig = (mdmsData) => {
         // 4. This flow is configured for conditional navigate transformation
         let conditionalNavigateTo = page.conditionalNavigateTo;
         let conditionalNavigationProperties = page.conditionalNavigationProperties;
-        
+
         if (
           isLastPage &&
-          flow.onAction && 
-          !conditionalNavigateTo 
+          flow.onAction &&
+          !conditionalNavigateTo
         ) {
           conditionalNavigateTo = transformOnActionToConditionalNavigateTo(flow.onAction);
-          
+
           // Only add conditionalNavigationProperties if conditionalNavigateTo was successfully created
           if (conditionalNavigateTo && !conditionalNavigationProperties) {
             const targetPages = extractTargetPagesFromOnAction(flow.onAction);
@@ -102,17 +102,19 @@ export const transformMdmsToAppConfig = (mdmsData) => {
           page: page.page,
           type: page.type || "object",
           order: page.order !== undefined ? page.order : pageIndex + 1,
-          footer: transformActionLabelToFooter(page.actionLabel, page.navigateTo),
+          footer: transformActionLabelToFooter(page.actionLabel, page.navigateTo, page.secondaryActionLabel),
           heading: page.label,
           project: project,
           version: version,
           navigateTo: page.navigateTo,
           onAction: flow.onAction,
+          onSecondaryAction:flow.onSecondaryAction,
           summary: flow.summary || false,
           preventScreenCapture: page.preventScreenCapture || false,
           submitCondition: page.submitCondition || null,
           description: page.description,
           showAlertPopUp: page.showAlertPopUp,
+          showSecondaryAlertPopUp: page.showSecondaryAlertPopUp,
           conditionalNavigateTo: conditionalNavigateTo,
           conditionalNavigationProperties: conditionalNavigationProperties,
           showTabView: page?.multiEntityConfig !== null && page?.multiEntityConfig !== undefined ? Object.keys(page?.multiEntityConfig)?.length > 0 ? true : false : false,
@@ -320,10 +322,10 @@ const transformPropertiesToFields = (properties) => {
 /**
  * Transform actionLabel to footer format
  */
-const transformActionLabelToFooter = (actionLabel, navigateTo) => {
+const transformActionLabelToFooter = (actionLabel, navigateTo, secondaryActionLabel) => {
   if (!actionLabel) return [];
 
-  return [
+  const footer = [
     {
       label: actionLabel,
       format: "button",
@@ -343,6 +345,29 @@ const transformActionLabelToFooter = (actionLabel, navigateTo) => {
       },
     },
   ];
+
+  if (secondaryActionLabel) {
+    footer.push({
+      label: secondaryActionLabel,
+      format: "button",
+      onAction: navigateTo
+        ? [
+            {
+              actionType: "NAVIGATION",
+              properties: navigateTo,
+            },
+          ]
+        : [],
+      properties: {
+        size: "large",
+        type: "secondary",
+        mainAxisSize: "max",
+        mainAxisAlignment: "center",
+      },
+    });
+  }
+
+  return footer;
 };
 
 /**
@@ -469,12 +494,16 @@ export const extractFlowMetadata = (mdmsData) => {
  * Skips conditions with "DEFAULT" expression or missing expression
  */
 const transformOnActionToConditionalNavigateTo = (onAction) => {
-  if (!onAction || !Array.isArray(onAction)) return null;
+  if (!onAction || !Array.isArray(onAction)) {
+    return null;
+  }
 
   const conditionalNavigateTo = [];
 
-  onAction.forEach((item) => {
-    if (!item.actions || !Array.isArray(item.actions)) return;
+  onAction.forEach((item, index) => {
+    if (!item.actions || !Array.isArray(item.actions)) {
+      return;
+    }
 
     // Find NAVIGATION action in the actions array
     const navigationAction = item.actions.find(
@@ -495,6 +524,7 @@ const transformOnActionToConditionalNavigateTo = (onAction) => {
 
       if (name && type) {
         conditionalNavigateTo.push({
+          actionIndex: index,
           condition: condition,
           navigateTo: {
             name: name,

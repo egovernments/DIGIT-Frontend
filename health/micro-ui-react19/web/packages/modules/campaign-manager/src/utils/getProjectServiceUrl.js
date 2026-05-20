@@ -7,4 +7,9 @@ const getProjectServiceUrl = () => {
 
 // Export the function to be used in other parts of the application.
 
+export const getGeoJsonUrl = (boundaryType="ward") => {
+  let urls = window.globalConfigs?.getConfig("GEOJSONURLS") || {};
+  return urls?.[boundaryType];
+};
+
 export default getProjectServiceUrl;

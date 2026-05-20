@@ -10,6 +10,9 @@ import { getCustomPaginationOptions } from "../../utils";
 import CommentPopUp from "../commentPopUp";
 import { renderProjectPeriod } from "../../utils/time_conversion";
 
+const PENDING_TAB = { code: "PENDING", name: "HCM_AM_PENDING_FOR_APPROVAL" };
+const APPROVED_TAB = { code: "APPROVED", name: "HCM_AM_APPROVED" };
+
 const CustomInboxTable = ({
   handleTabChange,
   rowsPerPage,
@@ -21,15 +24,13 @@ const CustomInboxTable = ({
   statusCount,
   selectedProject,
   selectedPeriod,
+  fromBill = false,
 }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [commentLogs, setCommentLogs] = useState(false);
-  const [activeLink, setActiveLink] = useState({
-    code: "PENDING",
-    name: "HCM_AM_PENDING_FOR_APPROVAL",
-  });
+  const [activeLink, setActiveLink] = useState(fromBill ? APPROVED_TAB : PENDING_TAB);
   const [showToast, setShowToast] = useState(null);
   const [data, setData] = useState(null);
 
@@ -74,6 +75,8 @@ const CustomInboxTable = ({
     setCommentLogs(false);
   };
 
+  const nextState = fromBill ? { fromBill: true } : undefined;
+
   const columns = [
     {
       name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ID")}</div>,
@@ -88,21 +91,30 @@ const CustomInboxTable = ({
               const selectedP = Digit.SessionStorage.get("selectedPeriod");
               const endDate = selectedP?.periodEndDate;
 
-              if (endDate) {
+              if(fromBill){
+                  history.push(
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
+                    nextState
+                  )
+              }
+              else if (endDate) {
                 const currentDate = Date.now();
                 if (!(currentDate <= endDate)) {
                   history.push(
-                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
+                    nextState
                   );
                 } else {
                   history.push(
-                    `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+                    `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`,
+                    nextState
                   );
                 }
               } else {
                 console.warn("No endDate found in session storage");
                 history.push(
-                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
+                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
+                  nextState
                 );
               }
             }}
@@ -168,21 +180,29 @@ const CustomInboxTable = ({
     const selectedP = Digit.SessionStorage.get("selectedPeriod");
     const endDate = selectedP?.periodEndDate;
 
-    if (endDate) {
+    if(fromBill){
+      history.push(
+        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
+        nextState
+      )
+    }else if (endDate) {
       const currentDate = Date.now();
       if (!(currentDate <= endDate)) {
         history.push(
-          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
+          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
+          nextState
         );
       } else {
         history.push(
-          `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+          `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`,
+          nextState
         );
       }
     } else {
       console.warn("No endDate found in session storage");
       history.push(
-        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`
+        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${selectedPeriod?.periodDurationInDays}`,
+        nextState
       );
     }
 

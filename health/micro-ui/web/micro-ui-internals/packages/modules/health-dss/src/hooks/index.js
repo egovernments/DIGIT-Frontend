@@ -4,6 +4,7 @@ import useInboxSearch from "./useInboxSearch";
 import useAPIHook from "./useAPIHook";
 import useGetChartV2 from "./useGetChartV2";
 import useDSSGeoJson from "./useDSSGeoJson";
+import useUserActivityData from "./useUserActivityData";
 import useSearchCampaign from "./useSearchCampaign";
 
 const DSS = {
@@ -12,6 +13,7 @@ const DSS = {
   useAPIHook,
   useGetChartV2,
   useDSSGeoJson,
+  useUserActivityData,
   useSearchCampaign
 };
 

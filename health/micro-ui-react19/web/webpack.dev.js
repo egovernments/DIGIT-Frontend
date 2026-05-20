@@ -85,7 +85,9 @@ module.exports = merge(common, {
           "/product",
           "/health-service-request",
           "/excel-ingestion",
-          "/boundary-management"
+          "/boundary-management",
+          "/stock/v1",
+          "/attendance"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-dev.digit.org",
         changeOrigin: true,
@@ -121,6 +123,8 @@ module.exports = merge(common, {
   },
 
   performance: {
-    hints: false,
+    hints: 'warning',
+    maxAssetSize: 512000,
+    maxEntrypointSize: 1024000,
   },
 });
