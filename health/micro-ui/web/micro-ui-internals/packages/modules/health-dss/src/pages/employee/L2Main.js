@@ -600,10 +600,10 @@ const L2Main = ({}) => {
             </p>
           </div>
         )}
-        {filters?.filters?.state?.length > 0 && (
+        {Array.isArray(filters?.filters?.state) && filters?.filters?.state?.length > 0 && (
           <div className="digit-tag-container">
             {!showFilters &&
-              filters?.filters?.state &&
+              Array.isArray(filters?.filters?.state) &&
               filters.filters.state
                 .slice(0, 5)
                 .map((filter, id) => (
@@ -614,7 +614,7 @@ const L2Main = ({}) => {
                     hideClose={false}
                   />
                 ))}
-            {filters?.filters?.state?.length > 6 && (
+            {Array.isArray(filters?.filters?.state) && filters?.filters?.state?.length > 6 && (
               <>
                 {showFilters &&
                   filters.filters.state.map((filter, id) => (
