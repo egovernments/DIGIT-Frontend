@@ -7,7 +7,7 @@ import NoData from "./NoData";
 import { endOfToday, startOfToday } from "date-fns";
 import Icon from "./Icon";
 
-const BannerCard = ({ data }) => {
+const BannerCard = ({ data, nonSync=false }) => {
   const { t } = useTranslation();
   const { id, chartType } = data;
   const chartName = data?.name;
@@ -116,13 +116,13 @@ const BannerCard = ({ data }) => {
 
   return (
     <Card className="digit-banner-card digit-chart-item">
-      <div className="digit-banner-card-header">
+      {!nonSync && <div className="digit-banner-card-header">
         <Icon type={chartName} width="3rem" height="3rem" className="digit-dss-banner-card-icon" />
         <div className="digit-banner-heading">
           <div className="digit-banner-main-heading">{t(chartName)}</div>
           <div className="digit-banner-sub-heading">{getSubHeading()}</div>
         </div>
-      </div>
+      </div>}
       {isFetchingChart ? (
         <div style={{ margin: "auto" }}>
           <Loader className={"digit-center-loader"}/>

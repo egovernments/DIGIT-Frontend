@@ -13,6 +13,11 @@ import ProjectSelect from "./project_selection";
 import EditRegister from "./EditRegister";
 import InboxAttendeesSearch from "./AttendeeSearchAssign";
 import PaymentSetUpPage from "./payment_setup";
+import UploadAndFetchBillsCard from "./upload_and_fetch_bills";
+import VerifyAndGeneratePayments from "./verify_generate_payements";
+import BillPaymentDetails from "./bill_payment_details";
+import ManageBills from "./manage_bills";
+import EditBillOnExcel from "./EditBillOnExcel";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -66,7 +71,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        
+
         <PrivateRoute path={`${path}/attendee-inbox`} component={() => <InboxAttendeesSearch />} />
          <PrivateRoute path={`${path}/edit-register`} component={() => <EditRegister />} />
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
@@ -75,7 +80,19 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/attendance-approve-failed`} component={() => <Response />} />
         <PrivateRoute path={`${path}/registers-inbox`} component={() => <AttendanceInbox />} />
         <PrivateRoute path={`${path}/generate-bill`} component={() => <BillInbox />} />
+        <PrivateRoute path={`${path}/manage-bills-project-selection/:role`} component={() => <ProjectSelect nextScreen="manage-bills" />} />
+        <PrivateRoute path={`${path}/manage-bills/:role`} component={() => <ManageBills />} />
         <PrivateRoute path={`${path}/my-bills`} component={() => <MyBills />} />
+        <PrivateRoute path={`${path}/verify-bills`} component={() => <UploadAndFetchBillsCard />} />
+        <PrivateRoute path={`${path}/verify-and-generate-payments`} component={() => <VerifyAndGeneratePayments />} />
+        <PrivateRoute path={`${path}/edit-bills`} component={() => <VerifyAndGeneratePayments editBills={true} />} />
+        <PrivateRoute path={`${path}/edit-bill-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/verify-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/send-for-review-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/send-for-approval-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/view-bill-payment-details/:role`} component={() => <BillPaymentDetails />} />
+        <PrivateRoute path={`${path}/edit-bill-payment-details`} component={() => <BillPaymentDetails editBillDetails={true} />} />
+        <PrivateRoute path={`${path}/edit-bill-on-excel`} component={() => <EditBillOnExcel />} />
         <PrivateRoute path={`${path}/project-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/project-and-aggregation-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/payment-setup`} component={() => <PaymentSetUpPage />} />

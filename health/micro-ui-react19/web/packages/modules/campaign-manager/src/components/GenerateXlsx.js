@@ -1,5 +1,4 @@
 import React from "react";
-import * as XLSX from "xlsx-js-style";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -69,7 +68,7 @@ const GenerateXlsx = ({
    * @param {number} colCount - Number of columns
    * @param {number} protectedColIndex - Index of the column to mark as protected/read-only (optional)
    */
-  const applyTextWrapToWorksheet = (worksheet, rowCount, colCount, protectedColIndex = -1) => {
+  const applyTextWrapToWorksheet = (XLSX, worksheet, rowCount, colCount, protectedColIndex = -1) => {
     // Style for header row (first row)
     const headerStyle = {
       font: { bold: true, color: { rgb: "FFFFFF" } },
@@ -224,6 +223,7 @@ const GenerateXlsx = ({
    * Main export handler
    */
   const handleExport = async () => {
+    const XLSX = await import("xlsx-js-style");
     // Get all locales from languages
     const allLocales = languages?.length > 0
       ? languages.map((l) => l.value)
@@ -307,7 +307,7 @@ const GenerateXlsx = ({
       // Apply text wrap styling to all cells, with visual styling for first locale column (gray background)
       // Note: xlsx-js-style doesn't support column-level protection (only sheet-level)
       // The gray background visually indicates read-only, and upload logic enforces it by skipping first locale
-      applyTextWrapToWorksheet(worksheet, sheetData.length, displayHeaders.length, firstLocaleColIndex);
+      applyTextWrapToWorksheet(XLSX, worksheet, sheetData.length, displayHeaders.length, firstLocaleColIndex);
 
       // Use display name for sheet tab, sanitized for Excel
       const safeSheetName = sanitizeSheetName(moduleDisplayName);

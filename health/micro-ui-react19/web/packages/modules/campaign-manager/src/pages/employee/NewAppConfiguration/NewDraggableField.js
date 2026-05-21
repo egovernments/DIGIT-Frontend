@@ -26,10 +26,16 @@ function NewDraggableField({
   const ref = useRef(null);
 
   const customTranslate = useCustomTranslate();
-  const localizedLabel =
+  let localizedLabel =
   customTranslate(label)?.trim() ||
   customTranslate(rest?.fieldName)?.trim() ||
   rest.fieldName;
+
+  // Append role to label for dropdownTemplate fields with role (for visual disambiguation)
+  if (rest?.format === "dropdownTemplate" && rest?.role) {
+    const roleLabel = customTranslate(rest.role)?.trim() || rest.role;
+    localizedLabel = `${localizedLabel} - (${roleLabel})`;
+  }
 
   const isDragEnabled = typeof moveField === 'function' && !isTemplate;
   const [, drop] = useDrop({

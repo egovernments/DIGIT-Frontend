@@ -57,7 +57,9 @@ import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetai
 import AppPreview from "./components/AppPreview";
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
+import HCMCommodityRowCard from "./components/HCMCommodityRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
+import CommodityCampaigns from "./pages/employee/CommodityCampaigns";
 import QRButton from "./components/CreateCampaignComponents/QRButton";
 import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
 import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignNameInfo";
@@ -87,6 +89,17 @@ import TextInputTemplate from "./pages/employee/NewAppConfiguration/components/T
 import RadioListTemplate from "./pages/employee/NewAppConfiguration/components/RadioListTemplate";
 import ExpandableTemplate from "./pages/employee/NewAppConfiguration/components/ExpandableTemplate";
 import QRView from "./pages/employee/NewAppConfiguration/components/QRView";
+
+//Commodity Manamgement 
+import BulkStockUpload from "./components/CommodityManagement/BulkStockUpload";
+import StockComponent from "./components/CommodityManagement/StockComponent";
+import CommodityDashboard from "./components/CommodityManagement/CommodityDashboard";
+import CommodityShipmentPopup from "./components/CommodityManagement/CommodityShipmentPopup";
+import DataSyncCard from "./components/CommodityManagement/DataSyncCard";
+import SummaryCard from "./components/CommodityManagement/SummaryCard";
+import TransactionSummaryTab from "./components/CommodityManagement/TransactionSummaryTab";
+import StockSummaryTab from "./components/CommodityManagement/StockSummaryTab";
+import GenericChart from "./components/CommodityManagement/GenericChart";
 
 /**
  * MDMS Module name
@@ -255,7 +268,9 @@ const componentsToRegister = {
   ViewDetailComponent,
   CycleSelection,
   HCMMyCampaignRowCard,
+  HCMCommodityRowCard,
   MyCampaignNew,
+  CommodityCampaigns,
   QRButton,
   EqualHeightWrapper,
   CampaignNameInfo,
@@ -289,6 +304,17 @@ const componentsToRegister = {
   RadioListTemplate,
   ExpandableTemplate,
   QRView,
+
+  //CommodityManagement
+  BulkStockUpload,
+  StockComponent,
+  CommodityDashboard,
+  CommodityShipmentPopup,
+  DataSyncCard,
+  SummaryCard,
+  TransactionSummaryTab,
+  StockSummaryTab,
+  GenericChart
 };
 
 const overrideHooks = () => {

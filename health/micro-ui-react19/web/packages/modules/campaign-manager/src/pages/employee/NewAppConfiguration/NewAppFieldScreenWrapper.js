@@ -119,8 +119,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
   );
 
   const handleHideField = useCallback(
-    (fieldName, cardIndex) => {
-      dispatch(hideField({ fieldName, cardIndex }));
+    (fieldName, cardIndex, role) => {
+      dispatch(hideField({ fieldName, cardIndex, role }));
     },
     [dispatch]
   );
@@ -156,7 +156,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
     }
 
     // If it's a template (like your fields), include it and also look inside for nested templates
-    if (typeof node === "object" && node.type === "template") {
+    if (typeof node === "object" && node.type?.trim() === "template") {
       const fields = [node];
 
       // Extract primaryAction and secondaryAction if they exist
@@ -265,7 +265,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
               const actualCardIndex = isFooterField ? -1 : index; // Use -1 for footer fields
               const actualFieldIndex = isFooterField ? i - bodyFieldsCount : i;
               // Use id if available (for newly added fields), otherwise fall back to fieldName
-              const fieldKey = id || fieldName || `field-${actualCardIndex}-${actualFieldIndex}`;
+              // Include role in key for dropdownTemplate fields with same fieldName but different roles
+              const fieldKey = id || (rest?.role ? `${fieldName}-${rest.role}` : fieldName) || `field-${actualCardIndex}-${actualFieldIndex}`;
               return (
                 <NewDraggableField
                   key={`draggable-field-${fieldKey}`}
@@ -275,7 +276,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   required={required}
                   isDelete={deleteFlag === true ? true : false}
                   onDelete={viewMode ? null : () => handleDeleteField(actualFieldIndex, actualCardIndex)}
-                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex)}
+                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex, rest?.role)}
                   onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}

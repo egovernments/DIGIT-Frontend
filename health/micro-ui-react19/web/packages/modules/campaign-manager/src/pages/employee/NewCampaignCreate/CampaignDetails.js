@@ -4,7 +4,7 @@ import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit,Translate } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit, Translate, Assessment } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -266,6 +266,30 @@ const CampaignDetails = () => {
     return checklistData?.mdmsData?.some((item) => item?.ServiceRequest?.length > 0);
   }, [checklistData]);
 
+  // Check if reports configuration exists for this campaign
+  const { data: reportsConfigData } = Digit.Hooks.useCustomAPIHook({
+    url: `/${mdms_context_path}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: "airflow-configs.campaign-report-config",
+        isActive: true,
+        limit: 1,
+        filters: {
+          campaignIdentifier: campaignNumber,
+        },
+      },
+    },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => data?.mdms,
+    },
+  });
+
+  const isReportsConfigured = useMemo(() => {
+    return reportsConfigData?.length > 0;
+  }, [reportsConfigData]);
+
   useEffect(() => {
     if (campaignData) {
       sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
@@ -505,6 +529,28 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
+              headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_HEADING),
+              desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_DESC),
+              buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_BUTTON),
+              buttonId: "campaign-details-page-button-setup-attendance",
+              navLink: `setup-attendance?campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
+              type: "primary",
+              icon: <Groups fill={campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" ? "#C5C5C5" : "#C84C0E"} width={"40px"} height={"40px"} />,
+              // disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created" || campaignData?.parentId, //todo check
+              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status !== "created",
+
+            },
+          },
+        ],
+      },
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: {
               headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATION_DATA_HEADING),
               desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATION_DATA_DESC),
               buttonLabel: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_UPLOAD_LOCALIZATIONS_DATA_BUTTON),
@@ -535,6 +581,35 @@ const CampaignDetails = () => {
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
               icon: <ListAltCheck />,
             },
+          },
+        ],
+      },
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: (() => {
+              const isOngoingCampaign =
+                (campaignData?.status === "created" || campaignData?.parentId) &&
+                campaignData?.startDate < Date.now();
+              return {
+                headingName: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REPORTS_CONFIGURATION_HEADING),
+                desc: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REPORTS_CONFIGURATION_DESC),
+                buttonLabel: isReportsConfigured
+                    ? t(I18N_KEYS.CAMPAIGN_CREATE.HCM_EDIT_REPORTS_CONFIGURATION_BUTTON)
+                    : t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REPORTS_CONFIGURATION_BUTTON),
+                buttonId: isReportsConfigured
+                    ? `campaign-details-page-button-edit-reports-configuration`
+                    : `campaign-details-page-button-reports-configuration`,
+                type: isReportsConfigured ? "secondary" : "primary",
+                navLink: `reports-configuration?campaignNumber=${campaignData?.campaignNumber}&projectType=${campaignData?.projectType}&tenantId=${tenantId}${isReportsConfigured ? "&edit=true" : ""}`,
+                icon: <Assessment fill={isOngoingCampaign ? "#c5c5c5" : "#C84C0E"} width={"40px"} height={"40px"} />,
+                disabled: isOngoingCampaign,
+              };
+            })(),
           },
         ],
       },
