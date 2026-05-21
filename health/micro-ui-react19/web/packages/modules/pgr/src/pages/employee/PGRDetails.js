@@ -434,26 +434,31 @@ const PGRDetails = () => {
                     label: t("CS_COMPLAINT_DETAILS_COMPLAINT_NO"),
                     type: "text",
                     value: pgrData?.ServiceWrappers[0].service?.serviceRequestId || "NA",
+                    className:"summary-card-complaint-details"
                   },
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_COMPLAINT_TYPE"),
                     type: "text",
+                    className:"summary-card-complaint-details",
                     value: t(pgrData?.ServiceWrappers[0].service?.serviceCode || "NA"),
                   },
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_FILED_DATE"),
+                    className:"summary-card-complaint-details",
                     value: convertEpochFormateToDate(pgrData?.ServiceWrappers[0].service?.auditDetails?.createdTime) || t("NA"),
                   },
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_AREA"),
+                    className:"summary-card-complaint-details",
                     value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code?.split(".")?.pop() || "NA"),
                   },
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
+                    className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus
                       ? t(`WF_INBOX_${pgrData?.ServiceWrappers?.[0]?.service?.applicationStatus}`)
                       : t("WF_INBOX_PENDING_ASSIGNMENT"),
@@ -461,21 +466,25 @@ const PGRDetails = () => {
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_LANDMARK__DETAILS"),
+                    className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers[0].service?.address?.landmark || "NA",
                   },
                   {
                     inline: true,
+                    className:"summary-card-complaint-details",
                     label: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS_DESCRIPTION"),
                     value: pgrData?.ServiceWrappers[0].service?.description || "NA",
                   },
                   {
                     inline: true,
                     label: t("COMPLAINTS_COMPLAINANT_NAME"),
+                    className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers[0].service?.user?.name || "NA",
                   },
                   {
                     inline: true,
                     label: t("COMPLAINTS_COMPLAINANT_CONTACT_NUMBER"),
+                    className:"summary-card-complaint-details",
                     value: pgrData?.ServiceWrappers[0].service?.user?.mobileNumber || "NA",
                   },
                   ...(showMore && boundaryCode
@@ -485,15 +494,15 @@ const PGRDetails = () => {
                           type: "custom",
                           renderCustomContent: () => (
                             <div className="boundary-hierarchy-container" style={{ marginBottom: "0rem", marginTop: "0rem", paddingTop: "0rem",paddingBottom:"0rem" }}>
-                              <div style={{ fontWeight: "bold", fontSize:"20px", marginBottom: "0.5rem" }}>{t("CS_COMPLAINT_BOUNDARY_HIERARCHY")}</div>
+                              <div style={{ fontWeight: "bold", fontSize:"20px", marginBottom: "0.5rem" ,color:"#0B4B66"}}>{t("CS_COMPLAINT_BOUNDARY_HIERARCHY")}</div>
                               {isHierarchyLoading ? (
                                 <Loader />
                               ) : boundaryHierarchyPath.length > 0 ? (
-                                <div className="boundary-hierarchy-list" style={{ marginBottom: "0rem", paddingBottom:"0rem" }}>
+                                <div className="boundary-hierarchy-list view-card-field-pairs" style={{ marginBottom: "0rem", paddingBottom:"0rem" }}>
                                   {boundaryHierarchyPath.map((boundary, index) => (
-                                    <div key={index} className="boundary-hierarchy-item">
-                                      <span className="boundary-hierarchy-label">{t(boundary.label)}</span>
-                                      <span className="boundary-hierarchy-code">{t(boundary.code)}</span>
+                                    <div key={index} className="boundary-hierarchy-item digit-view-card-field-pair inline" style={{display:"flex",gap:"1rem"}}>
+                                      <span className="boundary-hierarchy-label digit-viewcard-label" style={{width:"40%"}}>{t(boundary.label)}</span>
+                                      <span className="boundary-hierarchy-code digit-viewcard-value" style={{width:"80%"}}>{t(boundary.code)}</span>
                                     </div>
                                   ))}
                                 </div>

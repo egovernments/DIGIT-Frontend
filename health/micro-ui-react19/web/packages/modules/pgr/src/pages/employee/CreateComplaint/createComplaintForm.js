@@ -80,24 +80,11 @@ const CreateComplaintForm = ({
     const { minLength, maxLength, min, max, pattern } = config?.populators?.validation || {};
     const stringValue = String(value || "");
 
-    // Check if value contains invalid characters like 'e', 'E', '+', '-'
     if (/[eE+\-]/.test(stringValue)) {
       return false;
     }
 
-    // Check pattern if provided
-    if (pattern && !stringValue.match(new RegExp(pattern))) {
-      return false;
-    }
-
-
-    // Check if value contains invalid characters like 'e', 'E', '+', '-'
-    if (/[eE+\-]/.test(stringValue)) {
-      return false;
-    }
-
-    // Check pattern if provided
-    if (pattern && !stringValue.match(new RegExp(pattern))) {
+    if (pattern && !new RegExp(pattern).test(stringValue)) {
       return false;
     }
 
@@ -181,7 +168,7 @@ const CreateComplaintForm = ({
       .find(field => field?.populators?.name === "ComplainantName");
     const namePattern = nameFieldConfig?.populators?.validation?.pattern;
 
-    if (ComplainantName && namePattern && !ComplainantName.match(new RegExp(namePattern))) {
+    if (ComplainantName && namePattern && !new RegExp(namePattern, 'u').test(ComplainantName)) {
       if (!formState.errors.ComplainantName) {
         setError("ComplainantName", {
           type: "custom",
