@@ -1,0 +1,107 @@
+name: Digit Admin Console Build workflow
+on:
+  push:
+    branches: [ 'develop','console','master']
+    paths:
+      - 'health/micro-ui/web/micro-ui-internals/**'
+  workflow_dispatch:
+jobs:
+  docker_image-build:
+    outputs:
+      run_job_digit_ui: ${{ steps.check_files.outputs.run_job_digit_ui }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v1
+        
+      - name: check modified files or manual trigger
+        id: check_files
+        run: |
+          echo "=============== Detecting trigger type ==============="
+          echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
+      
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "Manual trigger detected. Skipping diff check."
+            run_job_digit_ui=true
+          else
+            echo "Manual trigger not detected. Performing file diff check..."
+            git diff --name-only HEAD^ HEAD > files.txt
+            run_job_digit_ui=false
+            while IFS= read -r file
+            do
+              if [[ $file == health/micro-ui/* ]]; then
+                echo "This modified file is under the 'digit_ui' folder."
+                run_job_digit_ui=true
+              fi
+            done < files.txt
+          fi
+      
+          echo "::set-output name=run_job_digit_ui::$run_job_digit_ui"
+          echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Login to egovio docker Container Registry
+        env:
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |      
+          # Authenticate with Docker Hub
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Build and Push Docker images for digit-ui
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+        run: |
+          # workbench ui Docker build
+          IMAGE_NAME_1=workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME_1 -f web/workbench/Dockerfile . &
+
+          # microplan ui Docker build
+          IMAGE_NAME_2=core-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME_2 -f web/core/Dockerfile . &
+          
+          # Wait for both builds to complete
+          wait
+
+          # Tag and push Docker images after both builds complete
+          docker tag $IMAGE_NAME_1 egovio/$IMAGE_NAME_1
+          docker push egovio/$IMAGE_NAME_1
+
+
+          docker tag $IMAGE_NAME_2 egovio/$IMAGE_NAME_2
+          docker push egovio/$IMAGE_NAME_2
+          
+          # Set outputs for the summary
+          echo "IMAGE_NAME_1=egovio/$IMAGE_NAME_1" >> $GITHUB_ENV
+          echo "IMAGE_NAME_2=egovio/$IMAGE_NAME_2" >> $GITHUB_ENV          
+        working-directory: health/micro-ui
+
+      - name: Display Docker images in Actions tab
+        run: |
+          echo "First Docker image: ${{ env.IMAGE_NAME_1 }}"
+          echo "Second Docker image: ${{ env.IMAGE_NAME_2 }}"
+          echo "::set-output name=first_image::$IMAGE_NAME_1"
+          echo "::set-output name=second_image::$IMAGE_NAME_2"
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+
+      - name: Show Docker images in job summary
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+        run: |
+          echo "## Docker images built and pushed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ env.IMAGE_NAME_1 }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ env.IMAGE_NAME_2 }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Trigger Jenkins Deployment
+        run: |
+          curl -X POST "${{ vars.JENKINS_BASE_URL }}/${{ vars.JENKINS_DEPLOY_TO_DEV }}/buildWithParameters" \
+            --user ${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }} \
+            --data-urlencode "Images=${{ env.IMAGE_NAME_1 }}"
+
+
+
+
+
