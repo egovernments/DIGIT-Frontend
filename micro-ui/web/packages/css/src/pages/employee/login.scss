@@ -347,10 +347,15 @@ margin-top: 0.5rem !important;
   }
 }
 
+.employee-login-sso{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 .employee-login-sso-divider {
   display: flex;
   align-items: center;
-  margin: 20px 0;
+  margin: 0px;
   color: #505A5F;
   font-size: 14px;
 

@@ -74,7 +74,8 @@ export const loginConfig = [
           name: "employeeSsoLoginOptions"
         },
         isMandatory: false,
-        withoutLabel: true
+        withoutLabel: true,
+        renderAfterSubmit:true
       },
     ],
   },
