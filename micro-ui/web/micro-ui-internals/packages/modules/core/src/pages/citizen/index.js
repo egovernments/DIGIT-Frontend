@@ -87,38 +87,34 @@ const Home = ({
     return null;
   })();
 
-  const citizenAuthWhitelist = ["/login", "/register", "/select-language", "/select-location"];
-  const isPublicCitizenRoute = citizenAuthWhitelist.some((seg) => location.pathname.includes(`/citizen${seg}`));
-  const unauthRedirect = !isLoggedIn && !isPublicCitizenRoute
-    ? (isMultiRootTenant
-        ? `/${window?.globalPath}/user/login`
-        : `/${window?.contextPath}/citizen/login`)
-    : null;
-
-  // Tenant-mismatch guard: a logged-in user manually editing the tenant slug in the
-  // URL (e.g. HARICCC -> HARIBBB) must not be able to view another tenant's pages.
-  // Clear the session and bounce to the sandbox login.
-  const urlTenant =
-    isMultiRootTenant && window?.contextPath && window?.globalPath && window.contextPath !== window.globalPath
-      ? window.contextPath.substring(window.globalPath.length + 1)
-      : null;
-  const loggedInTenant = _user?.info?.tenantId;
-  const isTenantMismatch =
-    isMultiRootTenant && isLoggedIn && !isPublicCitizenRoute && urlTenant && loggedInTenant && urlTenant !== loggedInTenant;
-
+  // Manual tenant-slug edit guard on the citizen login URL. When the address bar
+  // looks like `/sandbox-ui/<urlTenant>/citizen/login?from=/sandbox-ui/<fromTenant>/...`
+  // and urlTenant differs from fromTenant, the user has hand-edited the tenant slug.
+  // Bounce them to the global sandbox login so they pick a tenant the normal way.
   React.useEffect(() => {
-    if (!isTenantMismatch) return;
-    (async () => {
-      const savedDigitLocale = window.sessionStorage.getItem("Digit.locale");
-      try {
-        await Digit.UserService.logoutUser();
-      } catch (e) {}
-      window.localStorage.clear();
-      window.sessionStorage.clear();
-      if (savedDigitLocale) window.sessionStorage.setItem("Digit.locale", savedDigitLocale);
-      window.location.replace(`/${window?.globalPath}/user/login`);
-    })();
-  }, [isTenantMismatch]);
+    if (!isMultiRootTenant) return;
+    if (!location.pathname.includes("/citizen/login")) return;
+    if (!window?.globalPath) return;
+    const segs = location.pathname.split("/");
+    const citIdx = segs.indexOf("citizen");
+    const urlTenant = citIdx > 0 ? segs[citIdx - 1] : null;
+    if (!urlTenant || urlTenant === window.globalPath) return;
+    const fromParam = new URLSearchParams(location.search).get("from") || "";
+    if (!fromParam) return;
+    let fromTenant = null;
+    try {
+      const decoded = decodeURIComponent(fromParam);
+      const prefix = `/${window.globalPath}/`;
+      if (decoded.startsWith(prefix)) {
+        const rest = decoded.substring(prefix.length);
+        const slash = rest.indexOf("/");
+        fromTenant = slash > 0 ? rest.substring(0, slash) : null;
+      }
+    } catch (e) {}
+    if (fromTenant && urlTenant !== fromTenant) {
+      window.location.replace(`/${window.globalPath}/user/login`);
+    }
+  }, [location.pathname, location.search, isMultiRootTenant]);
 
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
@@ -210,7 +206,6 @@ const Home = ({
         )}
 
         <Switch>
-          {unauthRedirect && <Redirect to={unauthRedirect} />}
           <Route exact path={path}>
             <CitizenHome />
           </Route>
