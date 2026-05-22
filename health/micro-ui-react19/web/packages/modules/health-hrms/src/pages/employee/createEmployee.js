@@ -79,9 +79,7 @@ const CreateEmployee = ({ editUser = false }) => {
     return true;
   };
 
-  const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
-
-
+  const onFormValueChange = (setValue, formData) => {
     if (isEdit) {
       if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
         setPhoneNumber(formData?.SelectEmployeePhoneNumber);
@@ -91,88 +89,13 @@ const CreateEmployee = ({ editUser = false }) => {
       }
     }
 
-    const SelectEmployeeName = formData?.SelectEmployeeName;
-    const EmployeeContactNumber = formData?.SelectEmployeePhoneNumber;
-
-    if (SelectEmployeeName && !SelectEmployeeName.match(Digit.Utils.getPattern("Name"))) {
-      if (!formState.errors.SelectEmployeeName) {
-        setError("SelectEmployeeName", { type: "custom", message: t("CORE_COMMON_APPLICANT_NAME_INVALID") }, { shouldFocus: false });
-      }
-    } else {
-      if (formState.errors.SelectEmployeeName) {
-        clearErrors("SelectEmployeeName");
-      }
-    }
-
-    const password = formData?.employeePassword;
-    const confirmPassword = formData?.employeeConfirmPassword;
-    const passwordPattern = getPattern("Password");
-
-    if (password && !password.match(passwordPattern)) {
-      if (!formState.errors.employeePassword) {
-        setError("employeePassword", {
-          type: "custom",
-          message: t("CORE_COMMON_APPLICANT_PASSWORD_INVALID"),
-        });
-      }
-    } else {
-      if (formState.errors.employeePassword) {
-        clearErrors("employeePassword");
-      }
-    }
-
-    if (confirmPassword && password !== confirmPassword) {
-      if (!formState.errors.employeeConfirmPassword) {
-        setError("employeeConfirmPassword", {
-          type: "custom",
-          message: t("CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID"),
-        });
-      }
-    } else {
-      if (formState.errors.employeeConfirmPassword) {
-        clearErrors("employeeConfirmPassword");
-      }
-    }
-
-    // validate email
-
-    const SelectEmployeeEmailId = formData?.SelectEmployeeEmailId;
-
-    const emailPattern = getPattern("Email");
-
-    if (SelectEmployeeEmailId && !SelectEmployeeEmailId.match(emailPattern)) {
-      if (!formState.errors.SelectEmployeeEmailId) {
-        setError("SelectEmployeeEmailId", {
-          type: "custom",
-          message: t("CS_PROFILE_EMAIL_ERRORMSG"),
-        });
-      }
-    } else {
-      if (formState.errors.SelectEmployeeEmailId) {
-        clearErrors("SelectEmployeeEmailId");
-      }
-    }
-
-    // Validate mobile number
-    const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
-      .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
-
-    if (EmployeeContactNumber && !validatePhoneNumber(EmployeeContactNumber, contactFieldConfig)) {
-      if (!formState.errors.SelectEmployeePhoneNumber) {
-        setError("SelectEmployeePhoneNumber", {
-          type: "custom",
-          message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
-        },);
-      }
-    } else if (formState.errors.SelectEmployeePhoneNumber) {
-      clearErrors("SelectEmployeePhoneNumber");
-    }
-
     if (
       formData?.SelectEmployeeName &&
       formData?.SelectEmployeeType?.code &&
-      formData?.SelectEmployeeId && formData?.SelectEmployeePhoneNumber &&
-      formData?.gender && formData?.SelectDateofBirthEmployment &&
+      formData?.SelectEmployeeId &&
+      formData?.SelectEmployeePhoneNumber &&
+      formData?.gender &&
+      formData?.SelectDateofBirthEmployment &&
       formData?.SelectDateofEmployment &&
       formData?.SelectEmployeeDepartment &&
       formData?.SelectEmployeeDesignation &&
@@ -211,7 +134,7 @@ const CreateEmployee = ({ editUser = false }) => {
                 fileName: res?.Employees?.[0],
                 description: t(`HRMS_CREATE_EMPLOYEE_INFO`),
                 message: t(`EMPLOYEE_RESPONSE_CREATE`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                back: t(`CORE_COMMON_GO_TO_HOME_CREATE_SUCCESS`),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -227,7 +150,7 @@ const CreateEmployee = ({ editUser = false }) => {
                 fileName: error?.Employees?.[0],
                 description: null,
                 message: t(`EMPLOYEE_RESPONSE_CREATE_ACTION_ERROR`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                back: t(`CORE_COMMON_GO_TO_HOME_CREATE_ERROR`),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -262,7 +185,7 @@ const CreateEmployee = ({ editUser = false }) => {
                 fileName: res?.Employees?.[0],
                 description: null,
                 message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                back: t(`CORE_COMMON_GO_TO_HOME_UPDATE_SUCCESS`),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -278,7 +201,7 @@ const CreateEmployee = ({ editUser = false }) => {
                 fileName: error?.Employees?.[0],
                 description: t(error ? `${error[0]?.code}` : ""),
                 message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
-                back: t(`CORE_COMMON_GO_TO_HOME`),
+                back: t(`CORE_COMMON_GO_TO_HOME_UPDATE_ERROR`),
                 backlink: `/${window.contextPath}/employee`,
               },
             });
@@ -317,6 +240,37 @@ const CreateEmployee = ({ editUser = false }) => {
   };
 
   const openModal = async (e) => {
+    // Check validations first — show specific toast and stop if any fail
+    if (!isEdit && e?.SelectEmployeeName && !e.SelectEmployeeName.match(Digit.Utils.getPattern("Name"))) {
+      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_NAME_INVALID", type: "error" });
+      return;
+    }
+
+    const password = e?.employeePassword;
+    const confirmPassword = e?.employeeConfirmPassword;
+    const passwordPattern = getPattern("Password");
+    if (password && !password.match(passwordPattern)) {
+      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_PASSWORD_INVALID", type: "error" });
+      return;
+    }
+    if (confirmPassword && password !== confirmPassword) {
+      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID", type: "error" });
+      return;
+    }
+
+    const emailPattern = getPattern("Email");
+    if (e?.SelectEmployeeEmailId && !e.SelectEmployeeEmailId.match(emailPattern)) {
+      setShowToast({ key: true, label: "CS_PROFILE_EMAIL_ERRORMSG", type: "error" });
+      return;
+    }
+
+    const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
+      .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
+    if (e?.SelectEmployeePhoneNumber && !validatePhoneNumber(e.SelectEmployeePhoneNumber, contactFieldConfig)) {
+      setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID", type: "error" });
+      return;
+    }
+
     if (isEdit && mobile) {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
@@ -345,7 +299,7 @@ const CreateEmployee = ({ editUser = false }) => {
     setShowModal(false);
   };
 
-  //const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+  // const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
   //const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
 
 
@@ -469,6 +423,7 @@ const CreateEmployee = ({ editUser = false }) => {
             onClose={() => {
               setShowToast(null);
             }}
+            style={{zIndex:10001}}
           />
         )}
         {showModal && <ActionPopUp headingMsg={"READY_TO_SUBMIT"} onClose={closeModal} onSubmit={() => onSubmit(createEmployeeData)} />}

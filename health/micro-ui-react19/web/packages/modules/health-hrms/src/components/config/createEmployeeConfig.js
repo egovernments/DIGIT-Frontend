@@ -24,7 +24,6 @@ export const CreateEmployeeConfig = {
                 name: "SelectEmployeeId",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 validation: {
-                  pattern: "/^[A-Za-z]+$/",
                   required: true,
                   ValidationRequired: true,
                 },
@@ -43,7 +42,6 @@ export const CreateEmployeeConfig = {
                 name: "employeePassword",
                 error: "CORE_COMMON_APPLICANT_PASSWORD_INVALID",
                 validation: {
-                  pattern: "/^[A-Za-z]+$/",
                   required: true,
                   type: "password",
                   ValidationRequired: true,
@@ -64,7 +62,6 @@ export const CreateEmployeeConfig = {
                 error: "CORE_COMMON_APPLICANT_CONFIRM_PASSWORD_INVALID",
                 validation: {
                   required: true,
-                  pattern: "/^[A-Za-z]+$/",
                   type: "password",
                   ValidationRequired: true,
                 },
@@ -86,7 +83,6 @@ export const CreateEmployeeConfig = {
                 required: true,
                 name: "SelectEmployeeName",
                 error: "HRMS_EMPLOYEE_NAME_VALIDATION_ERROR_MSG",
-                validation: { pattern: /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i },
               },
             },
       
@@ -166,7 +162,7 @@ export const CreateEmployeeConfig = {
                 name: "SelectEmployeeEmailId",
                 error: "EMAIL_VALIDATION",
                 validation: {
-                  pattern: /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/i,
+                  pattern: "^(?=^.{1,64}$)((([^<>()\\[\\]\\\\.,;:\\s$*@'\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@'\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,})))$"
                 },
               },
             },

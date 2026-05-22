@@ -585,7 +585,7 @@ const PGRDetails = () => {
       />
 
       {/* Toast Message */}
-      {toast?.show && <Toast type={toast?.type} label={toast?.label} onClose={handleToastClose} style={{zIndex:"10001"}} />}
+      {toast?.show && <Toast type={toast?.type} label={toast?.label} onClose={handleToastClose} style={{zIndex:10001}} />}
 
       {/* Workflow Modal for Actions */}
       {openModal && selectedAction && (
