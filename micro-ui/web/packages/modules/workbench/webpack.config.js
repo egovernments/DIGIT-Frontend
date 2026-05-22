@@ -69,6 +69,14 @@ module.exports = {
     "react-redux": "react-redux",
     redux: "redux",
     "redux-thunk": "redux-thunk",
+    "react/jsx-runtime": {
+      commonjs: "react/jsx-runtime",
+      commonjs2: "react/jsx-runtime",
+    },
+    "react/jsx-dev-runtime": {
+      commonjs: "react/jsx-dev-runtime",
+      commonjs2: "react/jsx-dev-runtime",
+    },
     // DIGIT UI cross-dependencies
     "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
     "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",

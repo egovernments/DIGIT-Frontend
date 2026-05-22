@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "2.0.0-dev-13",
+  "version": "2.0.0-dev-14",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -23,8 +23,8 @@
     "styled-components": "5.x"
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "2.0.0-dev-51",
-    "@egovernments/digit-ui-react-components": "2.0.0-dev-14",
+    "@egovernments/digit-ui-components": "2.0.0-dev-52",
+    "@egovernments/digit-ui-react-components": "2.0.0-dev-15",
     "@egovernments/digit-ui-libraries": "2.0.0-dev-11",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
