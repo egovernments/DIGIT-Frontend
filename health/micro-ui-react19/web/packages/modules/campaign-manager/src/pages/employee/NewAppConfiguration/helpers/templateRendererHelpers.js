@@ -17,12 +17,18 @@ export const getComponentName = (field, fieldTypeMasterData) => {
 
 /**
  * Check if a field is selected
+ * Uses role as additional discriminator when present (for dropdownTemplate fields with same fieldName)
  */
 export const isFieldSelected = (field, selectedField) => {
   if (!selectedField || !field) return false;
 
   if (field.fieldName && selectedField.fieldName) {
-    return field.fieldName === selectedField.fieldName;
+    const fieldNameMatch = field.fieldName === selectedField.fieldName;
+    // If either field has a role, require role match too (for dropdownTemplate disambiguation)
+    if (fieldNameMatch && (field.role || selectedField.role)) {
+      return field.role === selectedField.role;
+    }
+    return fieldNameMatch;
   }
 
   if (field.id && selectedField.id) {
@@ -49,7 +55,7 @@ export const renderTemplateComponent = (
   if (!field || field.hidden) return null;
 
   const isSelected = isFieldSelected(field, selectedField);
-  const uniqueKey = field.id || field.fieldName || `${sectionName}-${index}`;
+  const uniqueKey = field.id || (field.role ? `${field.fieldName}-${field.role}` : field.fieldName) || `${sectionName}-${index}`;
 
   // Get component name from field master
   const componentName = getComponentName(field, fieldTypeMasterData);

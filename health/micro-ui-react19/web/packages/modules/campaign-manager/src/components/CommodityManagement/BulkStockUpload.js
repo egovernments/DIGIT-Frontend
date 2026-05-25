@@ -695,6 +695,24 @@ const BulkStockUpload = () => {
         return;
       }
 
+      // Validate quantities before building payload
+      const validationErrors = [];
+      dataRows.forEach((row, rowIdx) => {
+        productColumns.forEach(({ idx, name: productName }) => {
+          const val = row[idx];
+          if (val === undefined || val === null || val === "") return;
+          const num = parseInt(val, 10);
+          if (num > 10000000) {
+            validationErrors.push(`Row ${rowIdx + 3}: "${productName}" quantity (${num}) exceeds maximum allowed (10,000,000)`);
+          }
+        });
+      });
+      if (validationErrors.length > 0) {
+        setShowToast({ key: "error", label: validationErrors[0] });
+        setIsSubmitting(false);
+        return;
+      }
+
       const stockPayload = [];
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
@@ -725,6 +743,7 @@ const BulkStockUpload = () => {
             quantity: quantity,
             referenceId: resolvedRefId,
             referenceIdType: "PROJECT",
+            campaignNumber: campaignNumber || "",
             transactionType: "DISPATCHED",
             transactionReason: "DISPATCHED",
             senderType: "WAREHOUSE",
@@ -746,6 +765,7 @@ const BulkStockUpload = () => {
                 { key: "administrativeArea", value: administrativeArea },
                 { key: "stockInHand", value: "0.0" },
                 { key: "mrnNumber", value: mrnNumber },
+                { key: "campaignNumber", value: campaignNumber || "" },
               ],
             },
             auditDetails: {

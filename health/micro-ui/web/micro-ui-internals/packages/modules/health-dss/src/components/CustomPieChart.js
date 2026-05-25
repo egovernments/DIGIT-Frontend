@@ -100,9 +100,12 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
 
   const renderLegend = (value) => <span className="digit-pie-chart-legend-text">{getTitleHeading(t(`${value}`))}</span>;
 
+  const isSwitchMode = response?.responseData?.plotLabel === "switch";
+
   const renderCustomLabel = (args) => {
     const { value, endAngle, startAngle, x, cx, y, cy, percent, name } = args;
     const diffAngle = endAngle - startAngle;
+    const displayValue = isSwitchMode ? `${Number(percent * 100).toFixed(1)}%` : value;
     if (diffAngle > 1.5 && diffAngle < 7) {
       return (
         <text
@@ -118,7 +121,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
           fontSize="14px"
           textAnchor={x > cx ? "start" : "end"}
         >
-          {value}
+          {displayValue}
         </text>
       );
     } else if (diffAngle < 1.5) {
@@ -138,14 +141,14 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
         fontSize="14px"
         textAnchor={x > cx ? "start" : "end"}
       >
-        {value}
+        {displayValue}
       </text>
     );
   };
 
   const renderTooltip = ({ payload, label }) => {
-    const labelValue = Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1);
-    const formattedValue = labelValue;
+    const percentValue = Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1);
+    const formattedNumber = `${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`;
     return (
       <div
         style={{
@@ -155,11 +158,21 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
           color: "#505A5F",
         }}
       >
-        <p className="recharts-tooltip-label">
-          <b>{`${t(`${payload?.[0]?.name}`)}`}</b> &nbsp;{" "}
-          {`${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`}
-        </p>
-        <p>{`(${formattedValue}%)`}</p>
+        {isSwitchMode ? (
+          <>
+            <p className="recharts-tooltip-label">
+              <b>{`${t(`${payload?.[0]?.name}`)}`}</b> &nbsp;{`${percentValue}%`}
+            </p>
+            <p>{`(${formattedNumber})`}</p>
+          </>
+        ) : (
+          <>
+            <p className="recharts-tooltip-label">
+              <b>{`${t(`${payload?.[0]?.name}`)}`}</b> &nbsp;{formattedNumber}
+            </p>
+            <p>{`(${percentValue}%)`}</p>
+          </>
+        )}
       </div>
     );
   };

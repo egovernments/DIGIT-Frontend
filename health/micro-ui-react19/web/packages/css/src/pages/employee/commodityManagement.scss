@@ -5,7 +5,7 @@
 /* --- Dashboard Layout --- */
 
 .cm-header {
-  margin: 0 0 24px 0;
+  margin: 0 0 1.5rem 0;
   font-family: var(--digitv2-fontFamily-rc);
   font-weight: var(--digitv2-fontWeight-bold);
   font-style: Bold;
@@ -14,7 +14,7 @@
 }
 
 .cm-header-tenant {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 400;
   color: #505A5F;
 }
@@ -23,8 +23,8 @@
 .cm-date-section {
   display: flex;
   align-items: flex-end;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -55,26 +55,26 @@
 
 /* --- Data Sync Card --- */
 .cm-data-sync-card {
-  border: 1px solid #C84C0E;
-  border-radius: 8px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
+  border: 0.063rem solid #C84C0E;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 1.5rem;
   background-color: #ffffff;
 }
 
 .cm-data-sync-label {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
   max-width: 40%;
 }
 
 .cm-data-sync-icon {
-  width: 48px;
-  height: 48px;
+  width: 3rem;
+  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,29 +85,30 @@
   color: var(--digitv2-lightTheme-text-primary);
   font-family: Roboto;
   font-weight: 700;
-  font-size: 28px;
-  letter-spacing: 0px;
+  font-size: 1.75rem;
+  letter-spacing: 0rem;
   word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .cm-data-sync-metrics {
   display: flex;
-  gap: 24px;
+  gap: 1.5rem;
   flex: 1;
   justify-content: space-around;
 }
 
 /* --- Summary Card --- */
 .cm-summary-card {
-  border: 1px solid #C84C0E;
-  border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 24px;
+  border: 0.063rem solid #C84C0E;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 3rem;
   background-color: #ffffff;
-  box-shadow: 0px 1px 2px 0px #00000029;
+  box-shadow: 0rem 0.063rem 0.125rem 0rem #00000029;
 }
 
 .cm-summary-title-block {
@@ -118,21 +119,22 @@
   color: var(--digitv2-lightTheme-text-primary);
   font-family: Roboto;
   font-weight: 700;
-  font-size: 28px;
-  letter-spacing: 0px;
+  font-size: 1.75rem;
+  letter-spacing: 0rem;
   word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .cm-summary-subtitle {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #C84C0E;
-  margin-top: 2px;
+  margin-top: 0.125rem;
 }
 
 .cm-summary-metrics {
   display: flex;
-  gap: 24px;
+  gap: 1.5rem;
   flex: 1;
   justify-content: space-around;
 }
@@ -143,7 +145,7 @@
   font-family: var(--digitv2-fontFamily-sans);
   font-style: var(--digitv2-fontStyle-normal);
   font-weight: var(--digitv2-fontWeight-regular);
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 
   @media (max-aspect-ratio: 9/16) {
     /* Media query for mobile */
@@ -166,39 +168,39 @@
   color: #183E4A;
   font-family: Roboto;
   font-weight: 700;
-  font-size: 28px;
-  letter-spacing: 0px;
+  font-size: 1.75rem;
+  letter-spacing: 0rem;
 
 }
 
 /* --- Table Card (wraps table + search + footer) --- */
 .cm-table-card {
   background-color: #fff;
-  border-radius: 8px;
-  border: 1px solid #D6D5D4;
-  padding: 20px;
+  border-radius: 0.5rem;
+  border: 0.063rem solid #D6D5D4;
+  padding: 1.25rem;
 }
 
 .cm-table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 .cm-table-title {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #0B4B66;
   margin: 0;
 }
 
 .cm-search-input {
-  padding: 8px 12px;
-  border: 1px solid #D6D5D4;
-  border-radius: 4px;
-  font-size: 14px;
-  width: 200px;
+  padding: 0.5rem 0.75rem;
+  border: 0.063rem solid #D6D5D4;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  width: 12.5rem;
   outline: none;
   font-family: "Roboto", sans-serif;
 }
@@ -210,19 +212,19 @@
 /* --- Table Footer --- */
 .cm-table-footer {
   display: flex;
-  gap: 24px;
-  padding: 12px 0;
-  border-top: 1px solid #D6D5D4;
-  margin-top: 8px;
+  gap: 1.5rem;
+  padding: 0.75rem 0;
+  border-top: 0.063rem solid #D6D5D4;
+  margin-top: 0.5rem;
 }
 
 /* Footer uses digit-dss-options-header-option-button from DSS module */
 
 /* --- Status Badge --- */
 .cm-status-badge {
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 13px;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  font-size: 0.813rem;
   font-weight: 500;
   display: inline-block;
 }
@@ -254,9 +256,9 @@
 
 /* --- Transaction Type Badge --- */
 .cm-tx-type-badge {
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 13px;
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  font-size: 0.813rem;
   font-weight: 500;
   display: inline-block;
 }
@@ -285,14 +287,14 @@
 
 /* --- Action Button (+ icon in stock table) --- */
 .cm-action-btn {
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   background-color: #C84C0E;
   color: #fff;
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.125rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -309,8 +311,8 @@
 .cm-stock-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 /* --- ReusableTableWrapper overrides --- */
@@ -324,17 +326,17 @@
 
 .cm-table-card .rdt_TableHead .rdt_TableHeadRow {
   background-color: #FAFAFA;
-  border-bottom: 1px solid #D6D5D4;
+  border-bottom: 0.063rem solid #D6D5D4;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #0B4B66;
   text-transform: uppercase;
 }
 
 .cm-table-card .rdt_TableBody .rdt_TableRow {
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 14px;
-  min-height: 48px;
+  border-bottom: 0.063rem solid #f0f0f0;
+  font-size: 0.875rem;
+  min-height: 3rem;
 }
 
 .cm-table-card .rdt_TableBody .rdt_TableRow:hover {
@@ -342,45 +344,46 @@
 }
 
 .cm-table-card .rdt_Pagination {
-  border-top: 1px solid #D6D5D4;
-  font-size: 13px;
+  border-top: 0.063rem solid #D6D5D4;
+  font-size: 0.813rem;
   color: #505A5F;
 }
 
-.commodity-management-inbox-table-wrapper{
-.commodity-management-inbox-table {
-  .rdt_TableBody {
-    border: none !important;
-    border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider) !important;
+.commodity-management-inbox-table-wrapper {
+  .commodity-management-inbox-table {
+    .rdt_TableBody {
+      border: none !important;
+      border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider) !important;
+    }
+
+    overflow-x: auto !important;
+    overflow-y: auto !important;
   }
-  overflow-x: auto !important;
-  overflow-y: auto !important;   
-}
 
-.rdt_Pagination{
-  width: 100%;
-  margin: 0rem;
-  padding: 0rem;
-  border-top: 0rem;
-}
+  .rdt_Pagination {
+    width: 100%;
+    margin: 0rem;
+    padding: 0rem;
+    border-top: 0rem;
+  }
 
-.rdt_TableCell{
-  text-align: left;
-  width: 100%;
-}
+  .rdt_TableCell {
+    text-align: left;
+    width: 100%;
+  }
 }
 
 /* --- Commodity Shipment Popup --- */
 .cm-shipment-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24PX;
+  gap: 1.5rem;
 }
 
 .cm-shipment-field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .cm-shipment-label {
@@ -388,27 +391,27 @@
   font-family: "Roboto";
   font-weight: 400;
   font-style: Regular;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
-.cm-shipment-commodity-row-heading{
+.cm-shipment-commodity-row-heading {
   font-family: "Roboto";
-font-weight: 700;
-font-style: Bold;
-font-size: 20px;
-color:#0B4B66;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 1.25rem;
+  color: #0B4B66;
 
 }
 
 .cm-shipment-error {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #d4351c;
 }
 
 .cm-shipment-checkbox-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
 
   .digit-checkbox-container {
     margin: 0;
@@ -424,48 +427,48 @@ color:#0B4B66;
 // Ensure toast renders above the popup overlay
 .cm-shipment-toast-wrapper {
   position: fixed;
-  top: 16px;
-  right: 16px;
+  top: 1rem;
+  right: 1rem;
   z-index: 10001;
 }
 
 .cm-shipment-commodity-section {
   background: #fafafa;
-  border-radius: 4px;
-  padding: 16px;
+  border-radius: 0.25rem;
+  padding: 1rem;
 }
 
 .cm-shipment-commodity-row {
   display: grid;
   grid-template-columns: 2fr 1fr auto;
-  gap: 24px;
+  gap: 1.5rem;
   align-items: flex-start;
 }
 
 .cm-shipment-items-list {
-  margin-top: 0px;
+  margin-top: 0rem;
 }
 
 .cm-shipment-items-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
-  border: 1px solid #d6d5d4;
+  font-size: 0.875rem;
+  border: 0.063rem solid #d6d5d4;
 
   th {
     text-align: left;
-    padding: 8px;
-    border-bottom: 1px solid #D6D5D4;
+    padding: 0.5rem;
+    border-bottom: 0.063rem solid #D6D5D4;
     color: #0B4B66;
     font-weight: 700;
     text-transform: uppercase;
-    border-right: 1px solid #D6D5D4;
+    border-right: 0.063rem solid #D6D5D4;
   }
 
   td {
-    padding: 8px;
-    border-bottom: 1px solid #f0f0f0;
-    border-right: 1px solid #D6D5D4;
+    padding: 0.5rem;
+    border-bottom: 0.063rem solid #f0f0f0;
+    border-right: 0.063rem solid #D6D5D4;
   }
 }
 
@@ -473,7 +476,7 @@ color:#0B4B66;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 0.25rem;
   display: flex;
   align-items: center;
 }
@@ -482,10 +485,10 @@ color:#0B4B66;
   width: 100%;
 }
 
-.digit-generic-chart-search-field{
-  &.commodity-management{
-    .digit-cursor-pointer{
-      margin-right: 8px;
+.digit-generic-chart-search-field {
+  &.commodity-management {
+    .digit-cursor-pointer {
+      margin-right: 0.5rem;
     }
   }
 }

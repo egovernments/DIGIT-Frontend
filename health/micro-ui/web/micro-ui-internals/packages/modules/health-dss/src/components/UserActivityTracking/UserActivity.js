@@ -2,9 +2,6 @@ import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, TextInput, Button, HeaderComponent, Tag, SVG, Loader, Dropdown } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
-// import { deviceData, MAX_SYNC_GAP_HOURS } from "./dummyData";
-// import { MAX_SYNC_GAP_HOURS } from "./dummyData";
-// import useUserTrackingData from "../../hooks/useUserTrackingData";
 import useUserActivityData from "../../hooks/useUserActivityData";
 import UserProfilePopup from "./UserProfilePopup";
 

@@ -1,13 +1,11 @@
 import React, { memo, useEffect, useRef, useState, Fragment } from "react";
-import L from "leaflet";
-import proj4 from "proj4";
 import "leaflet/dist/leaflet.css";
 import { Card, Button ,Dropdown ,Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import BoundaryFilter from "./BoundaryFilter";
 import MapFilterIndex from "./MapFilterIndex";
-import CustomScaleControl from "./CustomScaleControl"; 
+import CustomScaleControl from "./CustomScaleControl";
 import BaseMapSwitcher from "./BaseMapSwitcher";
 import { jsonReader } from "../utils/jsonReader";
 import { Header } from "@egovernments/digit-ui-react-components";
@@ -20,7 +18,7 @@ export const removeAllLayers = (map) => {
     console.error("Map or layers are undefined");
     return;
   }
-  
+
   Object.values(map._layers).forEach((layer) => {
     if (layer?.remove) {
       map.removeLayer(layer);
@@ -46,8 +44,27 @@ const ViewMap = ({filterOptions}) => {
   const [showToast, setShowToast] = useState(null);
   const EPSG_3857 = "EPSG:3857";
   const EPSG_4326 = "EPSG:4326";
-  // Effect to initialize map when data is fetched
+
+  // Dynamic library refs
+  const libsRef = useRef({ L: null, proj4: null });
+  const [libsLoaded, setLibsLoaded] = useState(false);
+
+  // Load leaflet and proj4 dynamically
   useEffect(() => {
+    let cancelled = false;
+    Promise.all([import("leaflet"), import("proj4")]).then(([leafletMod, proj4Mod]) => {
+      if (cancelled) return;
+      libsRef.current.L = leafletMod.default;
+      libsRef.current.proj4 = proj4Mod.default;
+      setLibsLoaded(true);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Effect to initialize map when libs are loaded
+  useEffect(() => {
+    if (!libsLoaded) return;
+    const L = libsRef.current.L;
     const BaseMapLayers = [
       {
         name: "Street Map",
@@ -102,12 +119,12 @@ const ViewMap = ({filterOptions}) => {
     setSelectedBaseMapName(defaultBaseMap?.name);
     setBaseMaps(baseMaps);
     if (!map) {
-      init(_mapNode, defaultBaseMap);
+      init(L, _mapNode, defaultBaseMap);
     }
-  }, []);
+  }, [libsLoaded]);
 
   // Function to initialize map
-  const init = (id, defaultBaseMap) => {
+  const init = (L, id, defaultBaseMap) => {
     if (mapRef.current) return;
 
     let mapConfig = {
@@ -146,15 +163,16 @@ const ViewMap = ({filterOptions}) => {
   };
 
 useEffect(() => {
-    if (map && geoJsonData) {
-    //   removeAllLayers(map);
-  
+    if (!libsLoaded || !map || !geoJsonData) return;
+    const L = libsRef.current.L;
+    const proj4 = libsRef.current.proj4;
+
       // Validate GeoJSON data before adding to the map
       if (isValidGeoJSON(geoJsonData)) {
         try {
           const geoJsonLayer = L.geoJSON(geoJsonData).addTo(map);
           const bounds = geoJsonLayer.getBounds();
-  
+
           if (bounds?.isValid()) {
             const southWest = proj4(EPSG_3857, EPSG_4326, [
               bounds._southWest.lng,
@@ -164,7 +182,7 @@ useEffect(() => {
               bounds._northEast.lng,
               bounds._northEast.lat,
             ]);
-  
+
             map.fitBounds([
               [southWest[1], southWest[0]],
               [northEast[1], northEast[0]],
@@ -177,9 +195,8 @@ useEffect(() => {
       } else {
         setShowToast({ label: t("INVALID_GEOJSON_FILE"), isError: "error" });
       }
-    }
-  }, [map, geoJsonData, selectedBaseMap]);
-  
+  }, [libsLoaded, map, geoJsonData, selectedBaseMap]);
+
 
   useEffect(() => {
     if ("scrollRestoration" in history) {
@@ -189,7 +206,7 @@ useEffect(() => {
 
   useEffect(() => {
     // Fetch the GeoJSON data from the URL
-  
+
     const fetchGeoJson = async () => {
       if (filterOptions) {
 
@@ -206,14 +223,14 @@ useEffect(() => {
           boundaryKey = countryBoundary ? countryBoundary[1] : null;
         }
         if (boundaryKey && boundaryKey.length > 0) {
-          const data = await jsonReader({ fileStoreId: boundaryKey[0] }); 
+          const data = await jsonReader({ fileStoreId: boundaryKey[0] });
           setGeoJsonData(data);
         } else {
           console.warn(`No data found for ${selectedBoundary}`);
         }
       }
     };
-  
+
     fetchGeoJson();
   }, [filterOptions, selectedBoundary]);
 

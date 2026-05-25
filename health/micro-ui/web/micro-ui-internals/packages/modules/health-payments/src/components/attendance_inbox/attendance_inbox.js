@@ -12,7 +12,7 @@ import { renderProjectPeriod } from "../../utils/time_conversion";
  * AttendanceInboxComponent: Displays a filterable and paginated inbox for attendance records.
  * It fetches data based on user interactions and selected criteria.
  */
-const AttendanceInboxComponent = () => {
+const AttendanceInboxComponent = ({ fromBill = false }) => {
   const { t } = useTranslation();
 
   // Context path for the attendance service
@@ -24,7 +24,7 @@ const AttendanceInboxComponent = () => {
   const [selectedProject, setSelectedProject] = useState(() => Digit.SessionStorage.get("selectedProject") || {});
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
-  const [selectedStatus, setSelectedStatus] = useState(StatusEnum.PENDING_FOR_APPROVAL);
+  const [selectedStatus, setSelectedStatus] = useState(fromBill ? StatusEnum.APPROVED : StatusEnum.PENDING_FOR_APPROVAL);
   const [card, setCard] = useState(false);
   const [childrenDataLoading, setChildrenDataLoading] = useState(false);
   const [childrenData, setchildrenData] = useState([]);
@@ -58,26 +58,32 @@ const AttendanceInboxComponent = () => {
       // Update display state with latest period
       setMarkPeriod(latestPeriod);
 
+      const params = {
+        tenantId: Digit.ULBService.getStateId(),
+        limit: totalRows || rowsPerPage,
+        offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
+        referenceId:
+          (userAssignedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id) ||
+          selectedProject?.id,
+        localityCode:
+          filterData?.code == undefined || filterData?.code == null
+            ? filterCriteria?.code == undefined || filterCriteria?.code == null
+              ? Digit.SessionStorage.get("paymentInbox").code
+              : filterCriteria?.code
+            : filterData?.code,
+        registerPeriodStatus: status == undefined ? selectedStatus : status,
+        isChildrenRequired: true,
+        billingPeriodId: periodId, // Use the latest period ID
+      };
+
+      if (!fromBill) {
+        params.staffId = Digit.SessionStorage.get("UserIndividual")?.[0]?.id;
+      }
+
       fetchRegisters.mutateAsync(
         {
           params: {
-            tenantId: Digit.ULBService.getStateId(),
-            limit: totalRows || rowsPerPage,
-            offset: totalNext == undefined ? (currentPage - 1) * rowsPerPage : (totalNext - 1) * totalRows,
-            referenceId:
-              (userAssignedProject?.id == undefined ? Digit.SessionStorage.get("paymentInbox").selectedProject?.id : selectedProject?.id) ||
-              selectedProject?.id,
-            staffId: Digit.SessionStorage.get("UserIndividual")?.[0]?.id,
-            localityCode:
-              filterData?.code == undefined || filterData?.code == null
-                ? filterCriteria?.code == undefined || filterCriteria?.code == null
-                  ? Digit.SessionStorage.get("paymentInbox").code
-                  : filterCriteria?.code
-                : filterData?.code,
-            // reviewStatus: status == undefined ? selectedStatus : status,
-            registerPeriodStatus: status == undefined ? selectedStatus : status,
-            isChildrenRequired: true,
-            billingPeriodId: periodId, // Use the latest period ID
+            ...params,
           },
         },
         {
@@ -302,6 +308,7 @@ const AttendanceInboxComponent = () => {
                   totalCount={childrenData?.totalCount}
                   selectedProject={selectedProject}
                   selectedPeriod={markPeriod}
+                  fromBill={fromBill}
                 ></CustomInboxTable>
               )}
             </div>

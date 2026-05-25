@@ -127,6 +127,7 @@ const HCMCommodityRowCard = ({ key, rowData, tabData }) => {
                         projectId: rowData?.id,
                         campaignStartDate: rowData?.startDate,
                         campaignEndDate: rowData?.endDate,
+                        projectCreatedTime: rowData?.auditDetails?.createdTime,
                         isCompleted,
                       },
                     }

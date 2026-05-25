@@ -176,37 +176,43 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         }
       } else if (stockEntryType === "ISSUED") {
         const status = stock.status || "";
-        if (status === "ACCEPTED") {
-          // Confirmed dispatch → counts as issued for sender
+        if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+          // ACCEPTED or IN_TRANSIT: stock has physically left sender, counts as issued
           if (userFacilityIds.has(stock.senderId)) {
             commodityMap[productName].totalIssued += qty;
           }
+          // Only ACCEPTED counts as received for receiver (confirmation required)
+          if (status === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
+            commodityMap[productName].totalReceived += qty;
+          }
         } else if (status === "REJECTED") {
-          // Rejected dispatch → stock came back to sender
+          // Rejected dispatch → sender's stock came back
           if (userFacilityIds.has(stock.senderId)) {
             commodityMap[productName].totalRejected += qty;
           }
+          // Receiver rejected incoming stock → also shows as rejected for them
+          if (userFacilityIds.has(stock.receiverId)) {
+            commodityMap[productName].totalRejected += qty;
+          }
         }
-        // IN_TRANSIT or other: not counted in summary yet
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
-        if (retStatus === "ACCEPTED") {
-          // Return confirmed: receiver (original sender) gets stock back
-          if (userFacilityIds.has(stock.receiverId)) {
+        if (retStatus === "ACCEPTED" || retStatus === "IN_TRANSIT") {
+          // Sender initiated the return → counts as their Total Returned (stock left)
+          if (userFacilityIds.has(stock.senderId)) {
             commodityMap[productName].totalReturned += qty;
           }
-          // Sender (the one returning) loses stock
-          if (userFacilityIds.has(stock.senderId)) {
-            commodityMap[productName].totalIssued += qty;
+          // ACCEPTED: receiver gets stock back → counts as received (not returned)
+          if (retStatus === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
+            commodityMap[productName].totalReceived += qty;
           }
         }
-        // IN_TRANSIT: return not confirmed yet, don't count in commodity
         // REJECTED: return rejected, stock stays with returner, no commodity impact
       }
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
-      balance: c.totalReceived - Math.max(0, c.totalIssued - c.totalReturned - c.totalRejected),
+      balance: c.totalReceived - c.totalIssued - c.totalReturned,
     }));
   }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
 
@@ -278,10 +284,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rawStatus: status,
         facilityId: userOwnFacilityId || senderId,
         productVariantId: stock.productVariantId,
+        createdTime: stock.auditDetails?.createdTime || 0,
       });
     });
 
-    return rows;
+    return rows.sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
@@ -306,6 +313,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         } else {
           // ACCEPTED or IN_TRANSIT: stock physically left sender
           if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
+          // ACCEPTED: receiver gained stock
+          if (status === "ACCEPTED" && stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
       } else if (stockEntryType === "RECEIPT") {
         // Receiver confirms receipt → gains stock
@@ -318,13 +327,14 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] -= qty; }
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
-        if (retStatus === "ACCEPTED") {
-          // Return confirmed: returner loses stock, original sender gains it back
+        if (retStatus === "REJECTED") {
+          // Return rejected by receiver, stock stays with returner, net zero
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock has physically left the returner
           if (stock.senderId) { init(stock.senderId, pvId); map[stock.senderId][pvId] -= qty; }
-          if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
+          // Only ACCEPTED: receiver (original sender) gains stock back
+          if (retStatus === "ACCEPTED" && stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
-        // IN_TRANSIT: return initiated but not confirmed, no stock movement
-        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;

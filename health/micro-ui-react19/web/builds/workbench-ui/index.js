@@ -1,7 +1,6 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
-import "@egovernments/digit-ui-health-css";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { Loader } from "@egovernments/digit-ui-components";
 

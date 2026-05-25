@@ -1,0 +1,72 @@
+{
+  "commodityFacilityStockByFacility": {
+    "chartName": "DSS_COMMODITY_FACILITY_STOCK_BY_FACILITY",
+    "queries": [
+      {
+        "module": "COMMON",
+        "dateRefField": "Data.dateOfEntry",
+        "requestQueryMap": "{\"campaignId\": \"Data.campaignId.keyword\", \"facilityId\": \"Data.facilityId.keyword\"}",
+        "indexName": "ba-stock-index-v1",
+        "transformData": "rawDocuments",
+        "transformKey": "facilityStockTransformer",
+        "aggrQuery": "{\"size\":10000,\"_source\":[\"Data.facilityId\",\"Data.transactingFacilityId\",\"Data.eventType\",\"Data.physicalCount\",\"Data.productVariant\",\"Data.productName\",\"Data.additionalDetails.stockEntryType\",\"Data.additionalDetails.status\",\"Data.campaignId\",\"Data.facilityName\",\"Data.transactingFacilityName\",\"Data.id\"]}"
+      },
+      {
+        "module": "COMMON",
+        "dateRefField": "Data.dateOfEntry",
+        "requestQueryMap": "{\"campaignId\": \"Data.campaignId.keyword\", \"facilityId\": \"Data.transactingFacilityId.keyword\"}",
+        "indexName": "ba-stock-index-v1",
+        "transformData": "rawDocuments",
+        "transformKey": "transactingStockTransformer",
+        "aggrQuery": "{\"size\":10000,\"_source\":[\"Data.facilityId\",\"Data.transactingFacilityId\",\"Data.eventType\",\"Data.physicalCount\",\"Data.productVariant\",\"Data.productName\",\"Data.additionalDetails.stockEntryType\",\"Data.additionalDetails.status\",\"Data.campaignId\",\"Data.facilityName\",\"Data.transactingFacilityName\",\"Data.id\"]}"
+      }
+    ],
+    "chartType": "rawResponse",
+    "transform": {
+      "facilityStockTransformer": {
+        "transformationMappings": [
+          {
+            "facilityId": "Data.facilityId",
+            "transactingFacilityId": "Data.transactingFacilityId",
+            "transactionType": "Data.eventType",
+            "quantity": "Data.physicalCount",
+            "productVariantId": "Data.productVariant",
+            "productName": "Data.productName",
+            "stockEntryType": "Data.additionalDetails.stockEntryType",
+            "status": "Data.additionalDetails.status",
+            "facilityName": "Data.facilityName",
+            "transactingFacilityName": "Data.transactingFacilityName",
+            "id": "Data.id"
+          }
+        ]
+      },
+      "transactingStockTransformer": {
+        "transformationMappings": [
+          {
+            "facilityId": "Data.facilityId",
+            "transactingFacilityId": "Data.transactingFacilityId",
+            "transactionType": "Data.eventType",
+            "quantity": "Data.physicalCount",
+            "productVariantId": "Data.productVariant",
+            "productName": "Data.productName",
+            "stockEntryType": "Data.additionalDetails.stockEntryType",
+            "status": "Data.additionalDetails.status",
+            "facilityName": "Data.facilityName",
+            "transactingFacilityName": "Data.transactingFacilityName",
+            "id": "Data.id"
+          }
+        ]
+      }
+    },
+    "filterKeys": [
+      { "key": "campaignId" },
+      { "key": "facilityId" }
+    ],
+    "documentType": "_doc",
+    "aggregationPaths": [
+      "facilityStockTransformer",
+      "transactingStockTransformer"
+    ],
+    "_comment": "Two queries: facilityId and transactingFacilityId, with status for rejection detection"
+  }
+}

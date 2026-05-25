@@ -115,7 +115,6 @@ module.exports = function (app) {
     "/filestore/v1/files/id",
     "/attendance/v1/_search",
     "/health-project/staff/v1/_search",
-    "/project/staff/v1/_search",
     "/health-project/v1/_search",
     "/health-individual",
     "/health-hrms/employees",
@@ -135,7 +134,16 @@ module.exports = function (app) {
     // payment v2
     "/health-expense-calculator/billing-config/v1/_search",
     "/health-expense-calculator/billing-config/v1/_create",
-    "/health-expense-calculator/billing-config/v1/_update"
+    "/health-expense-calculator/billing-config/v1/_update",
+    //go_deep
+    "/health-expense/bill/v1/_bulkupdate",
+    "/health-expense/bill/v1/_bulkupdatestatus",
+    "/health-expense/bill/v1/report/_generate",
+    "/health-expense/bill/v1/report/_search",
+    "/health-expense/bill/v1/billdetails/_update",
+    "/health-expense/bill/v1/billdetails/_generateTemplate",
+    "/health-expense/bill/v1/billdetails/_uploadTemplate",
+    "/airflow-trigger-api"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

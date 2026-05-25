@@ -137,17 +137,17 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
     } else if (stockEntryType === "LESS") {
       commodityMap[productName].totalReceived -= qty;
     } else if (stockEntryType === "ISSUED") {
-      if (status === "ACCEPTED") {
+      if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+        // ACCEPTED or IN_TRANSIT: stock has physically left the facility
         commodityMap[productName].totalIssued += qty;
       } else if (status === "REJECTED") {
         commodityMap[productName].totalRejected += qty;
       }
-      // IN_TRANSIT: not counted in commodity summary
     } else if (stockEntryType === "RETURNED") {
-      if (status === "ACCEPTED") {
+      if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+        // ACCEPTED or IN_TRANSIT: stock has physically left the returner
         commodityMap[productName].totalReturned += qty;
       }
-      // IN_TRANSIT: return not confirmed yet, don't count in commodity
       // REJECTED: return rejected, stock stays with returner, no commodity impact
     }
 
@@ -166,7 +166,7 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
 
   const commoditySummaries = Object.values(commodityMap).map((c) => ({
     ...c,
-    balance: c.totalReceived - Math.max(0, c.totalIssued - c.totalReturned - c.totalRejected),
+    balance: c.totalReceived - c.totalIssued - c.totalReturned,
   }));
 
   const totalFacilities = facilitySet.size;

@@ -215,10 +215,23 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       .sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [rawStockData, facilityNameMap, productNameMap, projectFacilityIds]);
 
+  // Compute summary stats from the facility-filtered tableData (not the unfiltered stockSummary)
+  const filteredSummaryStats = useMemo(() => {
+    const stats = { total: 0, completed: 0, pending: 0, rejected: 0, returned: 0 };
+    if (!tableData?.length) return stats;
+    tableData.forEach((row) => {
+      stats.total++;
+      if (row.status === "Completed") stats.completed++;
+      else if (row.status === "In-Transit" || row.status === "Return Initiated") stats.pending++;
+      else if (row.status === "Rejected" || row.status === "Return Rejected") stats.rejected++;
+      else if (row.status === "Returned") stats.returned++;
+    });
+    return stats;
+  }, [tableData]);
+
   const isLoading = stockLoading || facilitiesLoading || variantsLoading || productsLoading || projectFacilitiesLoading;
 
-  // Use pre-computed summary from stockSummary (computed in CommodityDashboard)
-  const { transactionSummary: summaryStats = { total: 0, completed: 0, pending: 0, rejected: 0, returned: 0 }, dataSyncStats: syncStats } = stockSummary || {};
+  const { dataSyncStats: syncStats } = stockSummary || {};
   const dataSyncStats = {
     totalManagers: syncStats?.totalFacilities || 0,
     syncedManagers: syncStats?.syncedFacilities || 0,
@@ -364,14 +377,15 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   );
 
   const columns = [
-  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px",sortable: true },
-  { label: t("HCM_CREATION_DATE"), key: "creationDate", grow: 1.5, minWidth: "200px",sortable: true },
-  { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px",sortable: true },
-  { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px",sortable: true },
-  { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1 ,sortable: true},
-  { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px",sortable: true },
-  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8 ,sortable: true},
-  { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1,sortable: true },
+  { label: t("HCM_TRN"), key: "trn", grow: 1, minWidth: "120px", sortable: false },
+  { label: t("HCM_CREATION_DATE"), key: "creationDate", sortKey: "createdTime", sortType: "numeric", grow: 1.5, minWidth: "200px", sortable: true },
+  { label: t("HCM_SENT_FROM"), key: "sentFrom", grow: 1, minWidth: "160px", sortable: false },
+  { label: t("HCM_SENT_TO"), key: "sentTo", grow: 1, minWidth: "160px", sortable: false },
+  { label: t("HCM_CREATED_BY"), key: "createdBy", grow: 1, sortable: false },
+  { label: t("HCM_STATUS"), key: "status", grow: 0.8, minWidth: "120px", sortable: false },
+  { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: false },
+  { label: t("HCM_QUANTITY"), key: "quantity", sortType: "numeric", grow: 0.6, minWidth: "100px", sortable: true },
+  { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1, sortable: false },
 ];
 
   // Helper to map status to CSS class
@@ -406,21 +420,26 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       </div>
     ),
     createdBy: (row) => {
+      const maskName = (name) => {
+        if (!name) return "";
+        if (name.length >= 4) return "****" + name.slice(-4);
+        if (name.length >= 2) return "**" + name.slice(-2);
+        return name;
+      };
+
       const displayName = row?.nameOfUser || "";
       const loginName = row?.userName || "";
 
-      // Mask userName: show last 4 chars, mask the rest with *
-      const maskLogin = (name) => {
-        if (!name) return "";
-        if (name.length <= 4) return name;
-        return "*".repeat(name.length - 4) + name.slice(-4);
-      };
-
-      if (displayName && loginName) {
-        return `${displayName} (${maskLogin(loginName)})`;
+      if (displayName || loginName) {
+        return (
+          <div>
+            <div>{displayName || maskName(loginName)}</div>
+            {displayName && loginName && (
+              <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{maskName(loginName)}</div>
+            )}
+          </div>
+        );
       }
-      if (displayName) return displayName;
-      if (loginName) return maskLogin(loginName);
 
       const userId = row?.createdBy;
       if (userId && userId !== "N/A") {
@@ -480,11 +499,11 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
       <SummaryCard
         title="HCM_TRANSACTION_SUMMARY"
         items={[
-          { label: "HCM_TOTAL_TRANSACTIONS", value: summaryStats.total },
-          { label: "HCM_TOTAL_COMPLETED", value: summaryStats.completed },
-          { label: "HCM_TOTAL_PENDING", value: summaryStats.pending },
-          { label: "HCM_TOTAL_REJECTED", value: summaryStats.rejected },
-          { label: "HCM_TOTAL_RETURNED", value: summaryStats.returned },
+          { label: "HCM_TOTAL_TRANSACTIONS", value: filteredSummaryStats.total },
+          { label: "HCM_TOTAL_COMPLETED", value: filteredSummaryStats.completed },
+          { label: "HCM_TOTAL_PENDING", value: filteredSummaryStats.pending },
+          { label: "HCM_TOTAL_REJECTED", value: filteredSummaryStats.rejected },
+          { label: "HCM_TOTAL_RETURNED", value: filteredSummaryStats.returned },
         ]}
       />
 
@@ -570,6 +589,8 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
           excelFileName="transaction_summary"
           className=""
           headerClassName=""
+          defaultSortField="creationDate"
+          defaultSortAsc={false}
         />
       </GenericChart>
 

@@ -33,18 +33,18 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
             interval: "day",
             title: "home",
           },
-          filters: { campaignId: campaignId || "" },
+          filters: { campaignNumber: campaignNumber || "" },
           aggregationFactors: null,
         },
         headers: { tenantId: tenantId || "" },
       },
       config: {
-        enabled: enabled && !!tenantId && !!campaignId,
+        enabled: enabled && !!tenantId && !!campaignNumber,
         select: (data) => data?.responseData?.customData?.rawResponse?.stockBalanceTransformer || [],
       },
-      changeQueryName: `stockSummary_${campaignId}_${startDate}_${endDate}`,
+      changeQueryName: `stockSummary_${campaignNumber}_${startDate}_${endDate}`,
     };
-  }, [tenantId, dateRange, campaignId, enabled]);
+  }, [tenantId, dateRange, campaignNumber, enabled]);
 
   const { data: rawRecords, isLoading, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
@@ -54,15 +54,27 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
     return rawRecords.map((record) => {
       const stockEntryType = record.stockEntryType || "";
       const eventType = record.eventType || record.transactionType || "";
-      // Direction based on transactionType (NOT stockEntryType):
+
+      // RETURNED: facilityId is always the returner (sender),
+      // transactingFacilityId is always the receiver (original sender getting stock back)
+      // For other types, direction based on transactionType:
       // RECEIVED: facilityId is receiver, transactingFacilityId is sender
       // DISPATCHED: facilityId is sender/dispatcher, transactingFacilityId is receiver
-      const isInbound = eventType === "RECEIVED";
+      let senderId, receiverId;
+      if (stockEntryType === "RETURNED") {
+        senderId = record.facilityId;
+        receiverId = record.transactingFacilityId;
+      } else {
+        const isInbound = eventType === "RECEIVED";
+        senderId = isInbound ? record.transactingFacilityId : record.facilityId;
+        receiverId = isInbound ? record.facilityId : record.transactingFacilityId;
+      }
+
       return {
         id: record.id,
         productVariantId: record.productVariantId,
-        senderId: isInbound ? record.transactingFacilityId : record.facilityId,
-        receiverId: isInbound ? record.facilityId : record.transactingFacilityId,
+        senderId,
+        receiverId,
         transactionType: record.transactionType || record.eventType,
         stockEntryType,
         quantity: record.quantity,
@@ -83,7 +95,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
   }, [rawRecords]);
 
   // Return error as null when loading or when there's no explicit error from the hook
-  const error = (!isLoading && enabled && !!tenantId && !!campaignId && rawRecords === undefined) ? new Error("getChartV2 stock request failed") : null;
+  const error = (!isLoading && enabled && !!tenantId && !!campaignNumber && rawRecords === undefined) ? new Error("getChartV2 stock request failed") : null;
 
   return {
     data: stockData,

@@ -6,13 +6,55 @@ import html2canvas from "html2canvas";
 // React 19 removed ReactDOM.findDOMNode, so Digit.Download.Image/PDF break.
 // All helpers use chart.current (already a DOM element) directly via html2canvas.
 
-const captureAsCanvas = (element) =>
-  html2canvas(element, {
+/**
+ * Temporarily sets overflow:visible on all scrollable descendants so
+ * html2canvas captures full content without clipping, then restores.
+ */
+const captureAsCanvas = (element) => {
+  // Save and override overflow on scrollable elements
+  const saved = [];
+  element.querySelectorAll("*").forEach((el) => {
+    const cs = window.getComputedStyle(el);
+    if (
+      cs.overflow !== "visible" ||
+      cs.overflowX !== "visible" ||
+      cs.overflowY !== "visible"
+    ) {
+      saved.push({
+        el,
+        overflow: el.style.overflow,
+        overflowX: el.style.overflowX,
+        overflowY: el.style.overflowY,
+      });
+      el.style.overflow = "visible";
+      el.style.overflowX = "visible";
+      el.style.overflowY = "visible";
+    }
+  });
+
+  const restore = () => {
+    saved.forEach(({ el, overflow, overflowX, overflowY }) => {
+      el.style.overflow = overflow;
+      el.style.overflowX = overflowX;
+      el.style.overflowY = overflowY;
+    });
+  };
+
+  return html2canvas(element, {
     scrollY: -window.scrollY,
     scrollX: 0,
     useCORS: true,
     scale: 1.5,
+    width: element.scrollWidth,
+    height: element.scrollHeight,
+  }).then((canvas) => {
+    restore();
+    return canvas;
+  }).catch((err) => {
+    restore();
+    throw err;
   });
+};
 
 const saveLink = (href, filename) => {
   const link = document.createElement("a");

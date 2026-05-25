@@ -60,7 +60,7 @@
   font-family: var(--digitv2-fontFamily-sans);
 
   &.commodity-management{
-    height: 40px;
+    height: 2.5rem;
   }
 }
 
@@ -92,7 +92,7 @@
   }
 
   &.commodity-management{
-    height: 40px;
+    height: 2.5rem;
     display: flex;
     align-items: center;
   }
@@ -897,10 +897,10 @@
       border: 0.063rem solid;
       padding: 0.375rem 0.625rem;
       display: block;
-      border: 1px solid var(--digitv2-lightTheme-input-border);
+      border: 0.063rem solid var(--digitv2-lightTheme-input-border);
 
       &:hover {
-        border: 2px solid var(--digitv2-lightTheme-primary);
+        border: 0.125rem solid var(--digitv2-lightTheme-primary);
       }
     }
   }

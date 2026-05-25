@@ -4,6 +4,7 @@
       border: none !important;
       border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider) !important;
     }
+    
     overflow-x: auto !important;
     overflow-y: auto !important;
   }
@@ -11,6 +12,22 @@
   .rdt_Pagination{
     margin-top: 0rem;
     width: 100%;
+  }
+
+  .rdt_TableRow{
+    .rdt_TableCell{
+      align-items: flex-start;
+
+      .digit-tag-wrapper{
+        word-break: normal;
+        overflow-wrap: anywhere;
+
+        .digit-tag-text{
+            word-break: normal;
+            overflow-wrap: anywhere;
+        }
+      }
+    }
   }
 }
 

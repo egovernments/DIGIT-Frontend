@@ -54,12 +54,12 @@ const MyBills = (props) => {
   
         ...(billID ? { billNumbers: [billID] } : {}),
   
-        ...(dateRange.startDate && dateRange.endDate
-          ? {
-              fromDate: new Date(dateRange.startDate).getTime(),
-              toDate: new Date(dateRange.endDate).getTime(),
-            }
-          : {}),
+        // ...(dateRange.startDate && dateRange.endDate
+        //   ? {
+        //       fromDate: new Date(dateRange.startDate).getTime(),
+        //       toDate: new Date(dateRange.endDate).getTime(),
+        //     }
+        //   : {}),
   
         pagination: {
           limit: limitAndOffset.limit,

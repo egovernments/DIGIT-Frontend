@@ -172,8 +172,10 @@ const CommodityShipmentPopup = ({
     const qty = parseInt(quantity, 10);
     if (!qty || qty <= 0) {
       newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_MUST_BE_POSITIVE);
+    } else if (qty > 10000000) {
+      newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_MAX) || "Quantity cannot exceed 10,000,000";
     }
-    if (!isTopLevel && selectedCommodity && qty > 0) {
+    if (!isTopLevel && selectedCommodity && qty > 0 && qty <= 10000000) {
       const available = warehouseStock[selectedCommodity.productVariantId] || 0;
       if (qty > available) {
         newErrors.quantity = `${t(
@@ -196,7 +198,7 @@ const CommodityShipmentPopup = ({
     ]);
     setSelectedCommodity(null);
     setQuantity("");
-    setErrors((prev) => ({ ...prev, commodity: null, quantity: null }));
+    setErrors((prev) => ({ ...prev, commodity: null, quantity: null, items: null }));
   }, [selectedCommodity, quantity, warehouseStock, t]);
 
   // Remove commodity from shipment list
@@ -220,12 +222,17 @@ const CommodityShipmentPopup = ({
     if (!toFacility) {
       newErrors.to = t(COMMODITY_KEYS.HCM_DESTINATION_REQUIRED);
     }
+    if (waybillNumber && (waybillNumber.length < 2 || waybillNumber.length > 200)) {
+      newErrors.waybillNumber = t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER_SIZE);
+    }
 
     // Auto-add current selection if user filled commodity + quantity but didn't click "Add"
     let effectiveItems = shipmentItems;
     if (selectedCommodity && quantity) {
       const qty = parseInt(quantity, 10);
-      if (qty > 0 && !shipmentItems.some((item) => item.productVariantId === selectedCommodity.productVariantId)) {
+      if (qty > 10000000) {
+        newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_MAX) || "Quantity cannot exceed 10,000,000";
+      } else if (qty > 0 && !shipmentItems.some((item) => item.productVariantId === selectedCommodity.productVariantId)) {
         const available = warehouseStock[selectedCommodity.productVariantId] || 0;
         if (!isTopLevel && available > 0 && qty > available) {
           newErrors.quantity = `${t(COMMODITY_KEYS.HCM_QUANTITY_EXCEEDS_STOCK)} (${available})`;
@@ -240,7 +247,13 @@ const CommodityShipmentPopup = ({
           setSelectedCommodity(null);
           setQuantity("");
         }
+      } else if (!(qty > 0)) {
+        newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_MUST_BE_POSITIVE);
       }
+    } else if (selectedCommodity && !quantity) {
+      newErrors.quantity = t(COMMODITY_KEYS.HCM_QUANTITY_MUST_BE_POSITIVE);
+    } else if (!selectedCommodity && parseInt(quantity, 10) > 0) {
+      newErrors.commodity = t(COMMODITY_KEYS.HCM_PLEASE_SELECT_COMMODITY);
     }
 
     if (!effectiveItems.length) {
@@ -280,13 +293,14 @@ const CommodityShipmentPopup = ({
         quantity: item.quantity,
         referenceId: resolvedRefId,
         referenceIdType: "PROJECT",
+        campaignNumber: campaignNumber,
         transactionType: "DISPATCHED",
         transactionReason: comment || "",
         senderType: "WAREHOUSE",
         senderId: fromFacility.id,
         receiverType: "WAREHOUSE",
         receiverId: toFacility.id,
-        waybillNumber: waybillNumber || "",
+        waybillNumber: waybillNumber || null,
         dateOfEntry: timestamp,
         nonRecoverableError: false,
         isDeleted: false,
@@ -300,6 +314,8 @@ const CommodityShipmentPopup = ({
             { key: "secondaryRole", value: "RECEIVER" },
             { key: "status", value: "IN_TRANSIT" },
             { key: "administrativeArea", value: administrativeArea },
+            ...(campaignNumber ? [{ key: "campaignNumber", value: campaignNumber || "" }] : []),
+            ...(comment ? [{ key: "comment", value: comment }] : []),
           ],
         },
         auditDetails: {
@@ -429,9 +445,18 @@ const CommodityShipmentPopup = ({
           </label>
           <TextInput
             value={waybillNumber}
-            onChange={(e) => setWaybillNumber(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setWaybillNumber(val);
+              if (val && (val.length < 2 || val.length > 200)) {
+                setErrors((prev) => ({ ...prev, waybillNumber: t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER_SIZE) }));
+              } else {
+                setErrors((prev) => ({ ...prev, waybillNumber: null }));
+              }
+            }}
             placeholder={t(COMMODITY_KEYS.HCM_WAYBILL_NUMBER)}
           />
+          {errors.waybillNumber && <ErrorMessage message={errors.waybillNumber} />}
         </div>
         {/* Row 2: From + To */}
         <Card type={"secondary"}>
@@ -504,6 +529,7 @@ const CommodityShipmentPopup = ({
                 }}
                 placeholder="0"
                 min="1"
+                max="10000000"
               />
               {errors.quantity && (
                 <ErrorMessage message={errors.quantity} showIcon={true} />
@@ -552,7 +578,7 @@ const CommodityShipmentPopup = ({
               </table>
             </div>
           )}
-          {errors.items && (
+          {errors.items && !shipmentItems.length && !selectedCommodity && (
             <ErrorMessage message={errors.items} showIcon={true} />
           )}
         </Card>

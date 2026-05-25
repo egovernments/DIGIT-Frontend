@@ -131,7 +131,7 @@ var useUserActivityData = function (params) {
         recordsToday: user.totalRecords != null ? user.totalRecords : 0,
         active: user.active === true,
         // TODO: backend will send inactive status explicitly when active is null
-        status: user.active === true ? "ONLINE" : "OFFLINE",
+        status: user.active === true || user.active === "ACTIVE" ? "ONLINE" : "OFFLINE",
         province: user.province,
         district: user.district,
       };

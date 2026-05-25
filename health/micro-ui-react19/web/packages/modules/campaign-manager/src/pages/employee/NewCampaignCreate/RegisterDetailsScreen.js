@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, Button, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
+import TagComponent from "../../../components/TagComponent";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 
 const BLUE = "#0B4B66";
@@ -307,15 +308,15 @@ const RegisterDetailsScreen = () => {
     );
 
   return (
-    <div>
+    <div style={{ paddingBottom: "4.5rem" }}>
       {/* ── Register Details Card ── */}
       <Card style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
         {campaignName && (
-          <div style={{ marginBottom: "0.75rem" }}>
-            <span style={{ display: "inline-block", border: "1px solid #adb5bd", borderRadius: "4px", padding: "3px 10px", fontSize: "0.75rem", color: "#505a5f", background: "#f3f3f3" }}>
-              {campaignName}
-            </span>
-          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          {campaignName && (
+            <TagComponent campaignName={campaignName} />
+          )}
+        </div>
         )}
 
         <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "1.25rem", lineHeight: "1.2" }}>
@@ -388,11 +389,12 @@ const RegisterDetailsScreen = () => {
         />
       </Card>
 
-      <div style={{ marginTop: "2rem" }}>
+      <div className="map-users-footer">
         <Button
           label={t(I18N_KEYS.COMMON.HCM_BACK)}
           variation="secondary"
           icon="ArrowBack"
+          type="button"
           onClick={handleBack}
         />
       </div>

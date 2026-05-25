@@ -13,8 +13,6 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
-import XLSX from "xlsx";
-import ExcelJS from "exceljs";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -542,13 +540,13 @@ const NewShipmentPopup = ({
         visualizationType: "metric",
         queryType: "",
         requestDate: { startDate: 0, endDate: Date.now(), interval: "day", title: "home" },
-        filters: { campaignId: campaignId || "", facilityId: fromFacilityId || "" },
+        filters: { campaignNumber: campaignNumber || "", facilityId: fromFacilityId || "" },
         aggregationFactors: null,
       },
       headers: { tenantId: tenantId || "" },
     },
     config: {
-      enabled: !isTopLevel && !!tenantId && !!campaignId && !!fromFacilityId,
+      enabled: !isTopLevel && !!tenantId && !!campaignNumber && !!fromFacilityId,
       select: (data) => {
         // Combine results from both queries and dedup by record id
         const r1 = data?.responseData?.customData?.rawResponse?.facilityStockTransformer || [];
@@ -564,8 +562,8 @@ const NewShipmentPopup = ({
         return combined;
       },
     },
-    changeQueryName: `stockBalance_shipment_${campaignId}_${fromFacilityId}`,
-  }), [tenantId, campaignId, isTopLevel, fromFacilityId]);
+    changeQueryName: `stockBalance_shipment_${campaignNumber}_${fromFacilityId}`,
+  }), [tenantId, campaignNumber, isTopLevel, fromFacilityId]);
 
   const { data: stockRecords } = Digit.Hooks.useCustomAPIHook(stockBalanceCriteria);
 
@@ -595,9 +593,15 @@ const NewShipmentPopup = ({
         const status = record.status || "";
         if (status === "REJECTED") {
           // Rejected dispatch: stock came back, net zero
-        } else if (senderId === fromFacilityId) {
-          // ACCEPTED or IN_TRANSIT: stock physically left my warehouse
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock physically left sender
+          if (senderId === fromFacilityId) {
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
+          }
+          // ACCEPTED: receiver gained stock
+          if (status === "ACCEPTED" && receiverId === fromFacilityId) {
+            init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
+          }
         }
       } else if (entryType === "RECEIPT") {
         if (receiverId === fromFacilityId) {
@@ -616,17 +620,18 @@ const NewShipmentPopup = ({
         }
       } else if (entryType === "RETURNED") {
         const retStatus = record.status || "";
-        if (retStatus === "ACCEPTED") {
-          // Return confirmed: returner loses stock, original sender gains it back
+        if (retStatus === "REJECTED") {
+          // Return rejected by receiver, stock stays with returner, net zero
+        } else {
+          // ACCEPTED or IN_TRANSIT: stock has physically left the returner
           if (senderId === fromFacilityId) {
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
           }
-          if (receiverId === fromFacilityId) {
+          // Only ACCEPTED: receiver (original sender) gains stock back
+          if (retStatus === "ACCEPTED" && receiverId === fromFacilityId) {
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
           }
         }
-        // IN_TRANSIT: return initiated but not confirmed, no stock movement
-        // REJECTED: return rejected by receiver, stock stays with returner, net zero
       }
     });
     return map;
@@ -719,6 +724,7 @@ const NewShipmentPopup = ({
   const handleDownloadTemplate = useCallback(async () => {
     setIsDownloading(true);
     try {
+      const ExcelJS = (await import("exceljs")).default;
       const { boundaryHeaders, stockHeaders } = getTemplateHeaders();
       const projectName = campaignName || "";
 
@@ -783,7 +789,7 @@ const NewShipmentPopup = ({
         ws.addRow(row);
       });
 
-      const dataRowCount = Math.max(selectedFacilities.length, 100);
+      const dataRowCount = selectedFacilities.length;
 
       // --- Options sheet (hidden) — 4 columns: From Codes, From Names, To Codes, To Names ---
       const optionsWs = wb.addWorksheet("Options", { state: "hidden" });
@@ -805,87 +811,32 @@ const NewShipmentPopup = ({
       const toCodeColIdx = stockHeaders.indexOf("To (Facility Code)");
       const toNameColIdx = stockHeaders.indexOf("To (Facility Name)");
 
-      // From Facility Name dropdown (Options column B = names)
-      if (fromNameColIdx >= 0 && fromFacNames.length > 0) {
-        const nameCol = colLetter(fromNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${nameCol}${r}`).dataValidation = {
-            type: "list",
-            allowBlank: true,
-            formulae: [`Options!$B$2:$B$${fromFacNames.length + 1}`],
-            showErrorMessage: true,
-            errorTitle: "Invalid facility",
-            error: "Please select a valid From Facility Name",
-          };
-        }
-      }
-
-      // From Facility Code auto-fill via INDEX/MATCH from name
-      if (fromCodeColIdx >= 0 && fromNameColIdx >= 0 && fromFacIds.length > 0) {
-        const codeCol = colLetter(fromCodeColIdx + 1);
-        const nameCol = colLetter(fromNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${codeCol}${r}`).value = {
-            formula: `IFERROR(INDEX(Options!$A$2:$A$${fromFacIds.length + 1},MATCH(${nameCol}${r},Options!$B$2:$B$${fromFacNames.length + 1},0)),"")`,
-          };
-        }
-      }
-
-      // To Facility Name dropdown (Options column D = names)
-      if (toNameColIdx >= 0 && toFacNames.length > 0) {
-        const nameCol = colLetter(toNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${nameCol}${r}`).dataValidation = {
-            type: "list",
-            allowBlank: true,
-            formulae: [`Options!$D$2:$D$${toFacNames.length + 1}`],
-            showErrorMessage: true,
-            errorTitle: "Invalid facility",
-            error: "Please select a valid To Facility Name",
-          };
-        }
-      }
-
-      // To Facility Code auto-fill via INDEX/MATCH from name
-      if (toCodeColIdx >= 0 && toNameColIdx >= 0 && toFacIds.length > 0) {
-        const codeCol = colLetter(toCodeColIdx + 1);
-        const nameCol = colLetter(toNameColIdx + 1);
-        for (let r = 3; r <= dataRowCount + 2; r++) {
-          ws.getCell(`${codeCol}${r}`).value = {
-            formula: `IFERROR(INDEX(Options!$C$2:$C$${toFacIds.length + 1},MATCH(${nameCol}${r},Options!$D$2:$D$${toFacNames.length + 1},0)),"")`,
-          };
-        }
-      }
-
       // --- Lock cells & protect sheet ---
-      // Unlock: Facility Name + Facility Code columns + product quantity cells
+      // Only unlock product quantity cells — all other columns (boundary, facility, campaign) are locked
       const firstProductCol = boundaryHeaders.length + 6 + 1; // 1-based col index (6 fixed: CampaignNumber, ProjectName, FromCode, FromName, ToCode, ToName)
       const lastProductCol = firstProductCol + productVariants.length - 1;
 
       for (let r = 3; r <= dataRowCount + 2; r++) {
-        // Unlock facility name and code columns
-        if (fromCodeColIdx >= 0) ws.getCell(r, fromCodeColIdx + 1).protection = { locked: false };
-        if (fromNameColIdx >= 0) ws.getCell(r, fromNameColIdx + 1).protection = { locked: false };
-        if (toCodeColIdx >= 0) ws.getCell(r, toCodeColIdx + 1).protection = { locked: false };
-        if (toNameColIdx >= 0) ws.getCell(r, toNameColIdx + 1).protection = { locked: false };
-        // Unlock product quantity cells
-        for (let c = firstProductCol; c <= lastProductCol; c++) {
-          ws.getCell(r, c).protection = { locked: false };
-        }
-      }
-
-      // --- Quantity validation on product cells ---
-      for (let r = 3; r <= dataRowCount + 2; r++) {
         for (let c = firstProductCol; c <= lastProductCol; c++) {
           const cell = ws.getCell(r, c);
+          // Unlock for editing
+          cell.protection = { locked: false };
+          // Force numeric format so Excel rejects non-numeric input
+          cell.numFmt = '0';
+          cell.value = null;
+          // Data validation: only whole numbers >= 0 and <= 10,000,000
           cell.dataValidation = {
             type: 'whole',
-            operator: 'greaterThanOrEqual',
-            formulae: [0],
+            operator: 'between',
+            formulae: [0, 10000000],
             allowBlank: true,
+            showInputMessage: true,
+            promptTitle: 'Quantity',
+            prompt: 'Enter a whole number between 0 and 10,000,000',
             showErrorMessage: true,
+            errorStyle: 'stop',
             errorTitle: 'Invalid quantity',
-            error: 'Please enter a whole number (0 or greater)',
+            error: 'Quantity must be a whole number between 0 and 10,000,000.',
           };
         }
       }
@@ -895,17 +846,15 @@ const NewShipmentPopup = ({
       const readmeLines = [
         "Instructions",
         "",
-        "1. Product quantity columns and facility columns are editable — all other columns are locked.",
-        "2. Select a facility name from the dropdown in the Facility Name columns; the Facility Code will auto-fill.",
-        "3. Boundary and Project Name columns have been pre-filled based on your selection and cannot be modified.",
+        "1. Only the product quantity columns are editable — all other columns are locked.",
+        "2. Each row corresponds to a selected facility. Do NOT add or delete rows.",
+        "3. Boundary, Campaign Number, Project Name, and Facility columns are pre-filled and cannot be modified.",
         "4. 'From' is the source warehouse and 'To' is the destination facility.",
-        "5. Each row represents one shipment between a From and To facility pair.",
-        "6. Enter a whole number (0 or greater) for each product quantity.",
-        "7. Leave a product quantity empty or 0 to skip that product for the row.",
-        "8. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
-        "9. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
-        "10. Do NOT add new rows — only the pre-filled rows will be processed on upload.",
-        "11. Save the file and upload it back on the stock upload screen.",
+        "5. Enter a whole number (0 or greater) for each product quantity.",
+        "6. Leave a product quantity empty or 0 to skip that product for the row.",
+        "7. Do NOT modify or delete the hidden row (row 2) — it contains product variant IDs.",
+        "8. Do NOT add, delete, or rearrange columns — the sheet structure is protected.",
+        "9. Save the file and upload it back on the stock upload screen.",
       ];
       readmeLines.forEach((line) => readmeWs.addRow([line]));
       readmeWs.getColumn(1).width = 80;
@@ -1002,6 +951,7 @@ const NewShipmentPopup = ({
     }
     setIsSubmitting(true);
     try {
+      const XLSX = (await import("xlsx")).default;
       const file = uploadedFileData[0]?.file;
       if (!file) {
         setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
@@ -1058,6 +1008,19 @@ const NewShipmentPopup = ({
       // Validate against the specific facilities selected in the popup, not all available
       const errors = [];
 
+      // Filter out completely empty rows (template may have trailing blanks)
+      const nonEmptyDataRows = dataRows.filter((row) => {
+        const hasAnyValue = row.some((cell) => cell !== undefined && cell !== null && cell !== "");
+        return hasAnyValue;
+      });
+
+      // Ensure uploaded rows don't exceed the number of selected facilities
+      if (nonEmptyDataRows.length > selectedFacilityIds.size) {
+        errors.push(
+          `File contains ${nonEmptyDataRows.length} data rows but only ${selectedFacilityIds.size} facilities were selected. Do not add extra rows.`
+        );
+      }
+
       dataRows.forEach((row, rowIdx) => {
         const rowNum = rowIdx + 3; // Excel row number
         const senderId = fromCodeIdx >= 0 ? String(row[fromCodeIdx] || "").trim() : "";
@@ -1093,13 +1056,15 @@ const NewShipmentPopup = ({
             const num = Number(val);
             if (!Number.isFinite(num) || num < 0 || !Number.isInteger(num)) {
               errors.push(`Row ${rowNum}: "${name}" must be a whole number >= 0`);
+            } else if (num > 10000000) {
+              errors.push(`Row ${rowNum}: "${name}" quantity (${num}) exceeds maximum allowed (10,000,000)`);
             }
           }
         });
       });
 
       // Stock balance validation: check that dispatched quantities don't exceed available stock
-      if (!isFromTopLevel && Object.keys(facilityStockMap).length > 0) {
+      if (!isFromTopLevel) {
         // Aggregate total quantities per senderId per productVariantId across all data rows
         const aggregatedQty = {};
         dataRows.forEach((row) => {
@@ -1161,6 +1126,7 @@ const NewShipmentPopup = ({
             quantity,
             referenceId: fromFacility?.projectId || projectId || campaignId,
             referenceIdType: "PROJECT",
+            campaignNumber: campaignNumber || "",
             transactionType: "DISPATCHED",
             senderType: "WAREHOUSE",
             senderId,
@@ -1178,6 +1144,7 @@ const NewShipmentPopup = ({
                 { key: "primaryRole", value: "SENDER" },
                 { key: "secondaryRole", value: "RECEIVER" },
                 { key: "status", value: "IN_TRANSIT" },
+                { key: "campaignNumber", value: campaignNumber || "" },
               ],
             },
             auditDetails: {

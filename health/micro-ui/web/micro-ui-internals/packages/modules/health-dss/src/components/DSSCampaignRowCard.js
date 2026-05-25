@@ -54,6 +54,18 @@ const getActionButtons = (rowData, tabData, history, t, boundaryCodeResponse, ca
     style: { height: "32px" },
   };
 
+  actions.reportsLink = {
+    label: "VIEW_REPORTS",
+    size: "medium",
+    onClick: () =>
+      history.push(
+        `/${window?.contextPath}/employee/dss/campaign-reports?campaignNumber=${rowData?.referenceID}&campaignName=${encodeURIComponent(rowData?.name || "")}`
+      ),
+    icon: "",
+    variation: "link",
+    style: { height: "32px" },
+  };
+
   return actions;
 };
 

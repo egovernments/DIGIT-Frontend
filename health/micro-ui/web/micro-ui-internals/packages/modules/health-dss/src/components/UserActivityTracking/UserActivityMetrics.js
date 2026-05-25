@@ -13,10 +13,36 @@ const UserActivityMetrics = ({ data }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const { campaignNumber } = Digit.Hooks.useQueryParams();
+  
+  const getValueFromPath = (obj, path) => {
+    if (!obj || !path || typeof path !== "string") return undefined;
+    const parts = path.split(".").map((p) => p.trim()).filter(Boolean);
+    let cur = obj;
+    for (let i = 0; i < parts.length; i++) {
+      if (cur == null) return undefined;
+      cur = cur[parts[i]];
+    }
+    return cur;
+  };
+
+  const formatCardValue = (raw, valueType) => {
+    const type = (valueType || "").toString().toUpperCase();
+    const rawStr = raw === undefined || raw === null ? "" : raw;
+    const baseNum = typeof raw === "number" ? raw : Number(String(rawStr).replace(/,/g, ""));
+    const safeNum = Number.isFinite(baseNum) ? baseNum : 0;
+
+    if (type === "PERCENTAGE") {
+      const fixed = Number(safeNum.toFixed(2));
+      const formatted = Digit.Utils.dss.formatter(fixed, "number", "Unit", true, t);
+      return `${formatted}%`;
+    }
+
+    return String(Digit.Utils.dss.formatter(safeNum, "number", "Unit", true, t));
+  };
 
   const chart = data?.charts?.[0];
   const aggregationRequestDto = {
-    visualizationCode: chart?.id || "overallUsersMetrics",
+    visualizationCode: chart?.id ,
     visualizationType: chart?.chartType || "metric",
     queryType: "",
     requestDate: {
@@ -31,43 +57,68 @@ const UserActivityMetrics = ({ data }) => {
 
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
-  const metrics = useMemo(() => {
+  const cards = useMemo(() => {
     if (!response) return null;
     const rd = response?.responseData;
-    const raw = rd?.customData?.rawResponse
-      || response?.customData?.rawResponse
-      || {};
-    return {
-      totalFieldWorkers: raw.totalUsersCreated != null ? raw.totalUsersCreated : 0,
-      onlineNow: raw.totalUsersActive != null ? raw.totalUsersActive : 0,
-      recordsToday: raw.totalRecordsCount != null ? raw.totalRecordsCount : 0,
-      syncWarnings: raw.inactiveUsers != null ? raw.inactiveUsers : 0,
-    };
+    const custom = rd?.customData || response?.customData || {};
+
+    if (Array.isArray(custom?.cardsList) && custom.cardsList.length) {
+      const rawResponse = (custom?.rawResponse || {});
+      return custom.cardsList.map((c) => {
+        if (!c) return c;
+        if (c.value !== undefined && c.value !== null) return c;
+        const v = getValueFromPath(rawResponse, c.valuePath);
+        return { ...c, value: v };
+      });
+    }
+
+    return [];
   }, [response]);
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (!metrics) return null;
+  if (!cards) return null;
 
-  const offlineCount = metrics.totalFieldWorkers - metrics.onlineNow;
-  const cards = [
-    { label: "TOTAL_FIELD_WORKERS", value: metrics.totalFieldWorkers, description: t("ACTIVE_CAMPAIGN") },
-    { label: "ONLINE_NOW", value: metrics.onlineNow, description: offlineCount + " " + t("OFFLINE").toLowerCase() },
-    { label: "RECORDS_TODAY", value: metrics.recordsToday, description: t("ACROSS_ALL_CDDS") },
-    { label: "SYNC_WARNINGS", value: metrics.syncWarnings, description: t("SYNC_GAP_DETECTED") },
-  ];
+  const columnsCount = Math.min(Array.isArray(cards) ? cards.length : 0, 5);
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: `repeat(${cards.length}, 1fr)`, gap: "24px", width: "100%" }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: columnsCount > 0 ? `repeat(${columnsCount}, minmax(0, 1fr))` : "1fr",
+        gap: "16px",
+        width: "100%",
+        alignItems: "stretch",
+      }}
+    >
       {cards.map((card, index) => {
-        const isWarning = index >= 3;
+        const labelKey = card?.labelKey || card?.label;
+        const descKey = labelKey ? `${labelKey}_DESCRIPTION` : "";
+        const descriptionParams = card?.descriptionParams || {};
+        const translated = descKey ? t(descKey, descriptionParams) : "";
+        const description = translated === descKey ? "" : translated;
+        const valueColor = card?.color || (index >= 3 ? "#C84C0E" : "#0B4B66");
+        const value = formatCardValue(card?.value, card?.valueType);
+
         return (
-          <Card key={card.label} style={{ borderRadius: "12px" }}>
-            <div style={{ fontSize: "14px", fontWeight: 700, color: "#505A5F" }}>{t(card.label)}</div>
-            <div style={{ fontSize: "32px", fontWeight: 700, color: isWarning ? "#C84C0E" : "#0B4B66" }}>{card.value}</div>
-            <div style={{ fontSize: "12px", color: "#787878" }}>{card.description}</div>
+          <Card key={card?.id || labelKey || index} style={{ borderRadius: "12px", minWidth: 0 }}>
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: 700,
+                color: "#505A5F",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                overflowWrap: "anywhere",
+                lineHeight: "18px",
+              }}
+            >
+              {labelKey ? t(labelKey) : ""}
+            </div>
+            <div style={{ fontSize: "32px", fontWeight: 700, color: valueColor }}>{value}</div>
+            <div style={{ fontSize: "12px", color: "#787878" }}>{description}</div>
           </Card>
         );
       })}

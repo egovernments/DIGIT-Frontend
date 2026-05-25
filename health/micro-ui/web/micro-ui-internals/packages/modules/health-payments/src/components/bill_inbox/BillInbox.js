@@ -127,7 +127,11 @@ const BillInboxComponent = () => {
       billCriteria: {
         tenantId: tenantId,
         localityCode: selectedBoundaryCode,
-        referenceIds: [project?.[0]?.id],
+        referenceIds: [
+          selectedProject == undefined
+            ? Digit.SessionStorage.get("paymentInbox")?.selectedProject?.id
+            : selectedProject?.id,
+        ],
         billingPeriodIds: pId === "AGGREGATE" ? [] : [pId],
         // TODO: added condtion to pass data in case of aggregate
         ...(pId === "AGGREGATE"
@@ -149,6 +153,7 @@ const BillInboxComponent = () => {
 
     // Fetch configurations for bill data
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching: isFetchingBill } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+    const isBillGenerated = (BillData?.bills?.length || 0) > 0;
 
     // Update attendance table data after attendance data is loaded
     useEffect(() => {
@@ -467,6 +472,7 @@ const BillInboxComponent = () => {
                           status={selectedPeriod?.id === "AGGREGATE" ? "PENDING" : activeLink.code}
                           infoDescription={infoDescription}
                           selectedPeriod={selectedPeriod}
+                          isBillGenerated={isBillGenerated}
                         />
                       </Card>
                     </div>

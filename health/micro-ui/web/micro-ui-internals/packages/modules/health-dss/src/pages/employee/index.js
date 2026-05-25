@@ -9,12 +9,15 @@ import L2Main from "./L2Main";
 import ViewDashboard from "./ViewDashboard";
 import Inbox from "./Inbox";
 import UserActivity from "../../components/UserActivityTracking/UserActivity";
+import ReportsListPage from "./ReportsListPage";
+import ReportDetailPage from "./ReportDetailPage";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const dashboardId = Digit.SessionStorage.get("dashboardData")?.[0]?.id || "";
   const selectedDashboard = Digit.SessionStorage.get("selectedDashboard");
   const campaignNumber = Digit.SessionStorage.get("campaignSelected")?.campaignNumber;
+  const campaignName = Digit.SessionStorage.get("campaignSelected")?.campaignName;
   const boundaryType = Digit.SessionStorage.get("projectSelected")?.project?.address?.boundaryType?.toLowerCase();
   const boundaryValue = Digit.SessionStorage.get("projectSelected")?.boundaryCodeResponse?.message || t(Digit.SessionStorage.get("projectSelected")?.project?.address?.boundary);
   const crumbs = [
@@ -39,7 +42,9 @@ const ProjectBreadCrumb = ({ location }) => {
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS" ||
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_ONE" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_TWO",
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").slice(-2, -1)[0]) === "LEVEL_TWO" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REPORT_DETAIL",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
@@ -69,6 +74,17 @@ const ProjectBreadCrumb = ({ location }) => {
       content: t("USER_ACTIVITY_TRACKING"),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "USER_ACTIVITY_TRACKING",
     },
+    {
+      internalLink: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS" ? "" : `/${window?.contextPath}/employee/dss/campaign-reports`,
+      content: t("HCM_CAMPAIGN_REPORTS"),
+      query: `campaignNumber=${campaignNumber}&campaignName=${campaignName}`,
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "CAMPAIGN_REPORTS" || Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REPORT_DETAIL",
+    },
+    {
+      internalLink: "",
+      content: t("HCM_REPORT_DETAIL"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REPORT_DETAIL",
+    },
   ];
   return <BreadCrumb crumbs={crumbs} />;
 };
@@ -91,6 +107,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/level-one/:moduleCode`} component={() => <L1Main />} />
         <PrivateRoute path={`${path}/level-two/:moduleCode`} component={() => <L2Main />} />
         <PrivateRoute path={`${path}/user-activity-tracking`} component={() => <UserActivity />} />
+        <PrivateRoute path={`${path}/campaign-reports`} component={() => <ReportsListPage />} />
+        <PrivateRoute path={`${path}/report-detail`} component={() => <ReportDetailPage />} />
       </AppContainer>
     </Switch>
   );
