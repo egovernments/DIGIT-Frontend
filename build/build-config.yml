@@ -61,9 +61,11 @@ config:
       
   - name: builds/Digit-Frontend/health/payments-ui
     build:
-    - work-dir: health/micro-ui/
-      dockerfile: health/micro-ui/web/health-payments/Dockerfile
-      image-name: payments-ui
+      - work-dir: health/micro-ui-react19/
+        dockerfile: health/micro-ui-react19/web/docker/Dockerfile
+        image-name: payments-ui
+        build-args:
+          BUILD_VARIANT: payments-ui
 
   - name: builds/Digit-Frontend/health/core-ui
     build:

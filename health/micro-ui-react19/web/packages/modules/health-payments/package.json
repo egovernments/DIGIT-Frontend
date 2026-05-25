@@ -1,0 +1,50 @@
+{
+  "name": "@egovernments/digit-ui-module-health-payments",
+  "version": "1.0.0",
+  "description": "Payments Module UI",
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "source": "src/Module.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "NODE_ENV=production ../../../node_modules/.bin/webpack --config webpack.config.js",
+    "build:dev": "NODE_ENV=development ../../../node_modules/.bin/webpack --config webpack.config.js",
+    "prepublish": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "react-router-dom": ">=5.0.0",
+    "react-i18next": ">=11.0.0",
+    "react-hook-form": ">=6.0.0",
+    "@tanstack/react-query": ">=4.0.0",
+    "@egovernments/digit-ui-react-components": "*",
+    "@egovernments/digit-ui-components": "2.0.0-dev-53"
+  },
+  "dependencies": {
+    "react-date-range": "^1.4.0",
+    "react-data-table-component": "7.6.2",
+    "date-fns": "^2.29.3",
+    "lodash": "^4.17.21",
+    "axios": "^1.3.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@tanstack/react-query": "^5.62.16",
+    "babel-loader": "^9.1.3",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "core-js": "^3.33.0",
+    "cross-env": "7.0.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "author": "Ramkrishna <ramkrishna.sahoo@egovernments.org>",
+  "license": "MIT"
+}

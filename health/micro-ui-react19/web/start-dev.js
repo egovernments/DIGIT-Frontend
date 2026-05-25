@@ -20,21 +20,25 @@ function log(message, color = colors.reset) {
 }
 
 function checkDistFiles() {
-  const campaignDist = path.join(__dirname, 'packages/modules/campaign-manager/dist/main.js');
-  const cssDist = path.join(__dirname, 'packages/css/dist/index.css');
-  
-  return fs.existsSync(campaignDist) && fs.existsSync(cssDist);
+  const required = [
+    'packages/modules/campaign-manager/dist/main.js',
+    'packages/css/dist/index.css',
+    'packages/modules/pgr/dist/main.js',
+    'packages/modules/health-hrms/dist/main.js',
+    'packages/modules/health-payments/dist/main.js',
+  ];
+  return required.every((p) => fs.existsSync(path.join(__dirname, p)));
 }
 
 async function buildPackages() {
   log('🔨 Building local packages...', colors.yellow);
-  
+
   return new Promise((resolve, reject) => {
     const buildProcess = spawn('npm', ['run', 'build:packages'], {
       stdio: 'inherit',
       cwd: __dirname
     });
-    
+
     buildProcess.on('close', (code) => {
       if (code === 0) {
         log('✅ Packages built successfully!', colors.green);
@@ -49,39 +53,42 @@ async function buildPackages() {
 
 async function startDevelopment() {
   log('🚀 Starting DIGIT Health Campaign Development Server...', colors.cyan);
-  
+
   try {
     // Check if dist files exist, if not build them
     if (!checkDistFiles()) {
       await buildPackages();
     }
-    
+
     log('🔄 Starting development servers...', colors.blue);
-    
+
     // Start the concurrent processes
     const devProcess = spawn('npx', [
       'concurrently',
-      '--names', 'CSS,Campaign,Webpack',
-      '--prefix-colors', 'yellow,magenta,cyan',
+      '--names', 'CSS,Campaign,HRMS,PGR,Payments,Webpack',
+      '--prefix-colors', 'yellow,magenta,green,blue,red,cyan',
       '"cd packages/css && npm run start"',
       '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
+      '"cd packages/modules/health-hrms && npm run build:dev -- --watch"',
+      '"cd packages/modules/pgr && npm run build:dev -- --watch"',
+      '"cd packages/modules/health-payments && npm run build:dev -- --watch"',
       '"webpack serve --config webpack.dev.js --port 3000"'
     ], {
       stdio: 'inherit',
       cwd: __dirname
     });
-    
+
     devProcess.on('close', (code) => {
       log(`Development server stopped with code ${code}`, colors.yellow);
     });
-    
+
     // Handle process termination
     process.on('SIGINT', () => {
       log('🛑 Stopping development servers...', colors.red);
       devProcess.kill('SIGINT');
       process.exit(0);
     });
-    
+
   } catch (error) {
     log(`❌ Error: ${error.message}`, colors.red);
     process.exit(1);
