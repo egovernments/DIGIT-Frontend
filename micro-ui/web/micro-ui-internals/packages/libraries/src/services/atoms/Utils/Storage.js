@@ -52,4 +52,3 @@ const getStorage = (storageClass) => ({
 });
 
 export const Storage = getStorage(window.sessionStorage);
-export const PersistantStorage = getStorage(window.localStorage);
