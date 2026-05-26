@@ -32,11 +32,11 @@ export const GetServiceDefinitions = {
         if (!Menu.find((e) => e.key === def.menuPath)) {
           def.menuPath === ""
             ? Menu.push({
-                name: t("SERVICEDEFS_OTHERS"),
+                name: t("SERVICEDEFS.OTHERS"),
                 key: def.menuPath,
               })
             : Menu.push({
-                name: t("SERVICEDEFS_" + def.menuPath.toUpperCase()),
+                name: t("SERVICEDEFS." + def.menuPath.toUpperCase()),
                 key: def.menuPath,
               });
         }
@@ -51,7 +51,7 @@ export const GetServiceDefinitions = {
       .filter((def) => def.menuPath === selectedType.key)
       .map((id) => ({
         key: id.serviceCode,
-        name: t("SERVICEDEFS_" + id.serviceCode.toUpperCase()),
+        name: t("SERVICEDEFS." + id.serviceCode.toUpperCase()),
       }));
   },
 };

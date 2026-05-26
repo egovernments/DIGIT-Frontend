@@ -13,13 +13,13 @@ const getThumbnails = async (ids, tenantId) => {
 const getDetailsRow = ({ id, service, complaintType }) => ({
   CS_COMPLAINT_DETAILS_COMPLAINT_NO: id,
   CS_COMPLAINT_DETAILS_APPLICATION_STATUS: `CS_COMMON_${service.applicationStatus}`,
-  CS_ADDCOMPLAINT_COMPLAINT_TYPE: complaintType === "" ? `SERVICEDEFS_OTHERS` : `SERVICEDEFS_${complaintType}`,
-  CS_ADDCOMPLAINT_COMPLAINT_SUB_TYPE: `SERVICEDEFS_${service.serviceCode.toUpperCase()}`,
+  CS_ADDCOMPLAINT_COMPLAINT_TYPE: complaintType === "" ? `SERVICEDEFS.OTHERS` : `SERVICEDEFS.${complaintType}`,
+  CS_ADDCOMPLAINT_COMPLAINT_SUB_TYPE: `SERVICEDEFS.${service.serviceCode.toUpperCase()}`,
   CS_COMPLAINT_ADDTIONAL_DETAILS: service.description,
   CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertTimestampToDate(service.auditDetails.createdTime),
   ES_CREATECOMPLAINT_ADDRESS: [
     service.address.landmark,
-    Digit.Utils.getMultiRootTenant() ? service.address.locality.code : Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
+    Digit.Utils.getMultiRootTenant() ? `${service.address.locality.code}` : Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
     `TENANT_TENANTS_${service?.tenantId?.toUpperCase?.()?.replace(".", "_")}`,
     service.address.pincode,
   ],
