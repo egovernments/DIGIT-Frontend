@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.9.7]  [26-May-2026]
+### Storage migration — PersistantStorage → HybridStorage
+- **Eliminates QuotaExceededError cliff** by moving locale + MDMS + API cache from
+  localStorage-only (5–10 MB hard cap) to a three-tier cache: in-memory Map +
+  localStorage L1 (LRU-bounded at 1.5 MB) + IndexedDB L2 (GB-scale archive)
+- Migrated `LocalizationService`, `MdmsService.getDataByCriteria`, and `ApiCacheService`
+  to use new `HybridStorage` API (sync first-paint preserved via in-memory Map)
+- Added `HybridStorage` and `LocaleStore` exports on `window.Digit`
+- One-shot `cleanupLegacy()` migrator removes stale `Digit.Locale.*`,
+  `Digit.MDMS.*`, and `Digit.cachingService` entries on first boot post-deploy
+- localStorage usage drops 71% on average (1,752 KB → ~500 KB in test deployment)
+- Synced workspace source to upstream npm 1.9.6 baseline (18 files)
+- Removed unused `PersistantStorage` from workspace exports
+- Removed `lz-string` dependency (no remaining importers)
+- Added `localforage@^1.10.0` (for IndexedDB access)
+- Added `jspdf@2.5.1` (pre-existing transitive requirement, now explicit)
+- Verified live with 5 stress tests: cap enforcement, oversize overflow,
+  LRU order, data integrity post-eviction, 1000-write performance
+- See [STORAGE_MIGRATION.md](./STORAGE_MIGRATION.md) for full architecture
+  details, diagnostic scripts, and stress test results
+
 ## [1.8.17]  [26-Jun-2025]
 - Checking useCustomAPIHook with the new version 
 

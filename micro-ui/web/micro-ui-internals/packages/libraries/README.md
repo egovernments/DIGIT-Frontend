@@ -52,6 +52,16 @@ const App = ({ deltaConfig, stateCode, cityCode, moduleCode }) => {
 export default App;
 ```
 
+## Storage Architecture
+
+As of v1.9.7, the locale, MDMS, and API cache layer uses a tiered `HybridStorage`
+(in-memory Map + localStorage L1 + IndexedDB L2) instead of the legacy
+`PersistantStorage` (localStorage only). This structurally eliminates
+`QuotaExceededError` and reduces localStorage usage by ~70% on average.
+
+See [STORAGE_MIGRATION.md](./STORAGE_MIGRATION.md) for the full architecture,
+public API, diagnostic scripts, stress test results, and troubleshooting guide.
+
 ## Changelog
 
 ### Summary for Version [1.8.2-beta.1] - 2024-06-05
