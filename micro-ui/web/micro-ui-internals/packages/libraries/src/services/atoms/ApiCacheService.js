@@ -1,9 +1,9 @@
-import { PersistantStorage } from "./Utils/Storage";
+import HybridStorage from "./Utils/HybridStorage";
 
 const defaultApiCachingSettings = [
   {
     serviceName: "localization",
-    cacheTimeInSecs: 86400,
+    cacheTimeInSecs: 3600, // Cache for 1 hour to reduce token dependency
   },
   {
     serviceName: "access/v1/actions",
@@ -15,7 +15,8 @@ const defaultApiCachingSettings = [
   },
   {
     serviceName: "egov-mdms-service",
-    cacheTimeInSecs: 3600,
+    cacheTimeInSecs: 0,
+    // cacheTimeInSecs: 3600,
     debounceTimeInMS: 100,
     moduleSettings: [
       {
@@ -26,7 +27,8 @@ const defaultApiCachingSettings = [
   },
   {
     serviceName: "mdms-v2",
-    cacheTimeInSecs: 3600,
+    cacheTimeInSecs: 0,
+    // cacheTimeInSecs: 3600,
     debounceTimeInMS: 100,
     moduleSettings: [
       {
@@ -42,7 +44,7 @@ const getCachedSetting = () => {
   if (Digit.ApiCacheSetting) {
     return Digit.ApiCacheSetting;
   }
-  const setting = PersistantStorage.get(storageKey) || defaultApiCachingSettings;
+  const setting = HybridStorage.getSync(storageKey) || defaultApiCachingSettings;
   Digit.ApiCacheSetting = setting;
   return setting;
 };
@@ -67,7 +69,7 @@ const getSetting = (serviceName, moduleName) => {
 };
 export const ApiCacheService = {
   saveSetting: (setting) => {
-    PersistantStorage.set(storageKey, setting || defaultApiCachingSettings);
+    HybridStorage.setSync(storageKey, setting || defaultApiCachingSettings);
   },
   getSettingByServiceUrl: (serviceUrl, moduleName) => {
     return getSetting(serviceUrl.split("/")[1], moduleName);
