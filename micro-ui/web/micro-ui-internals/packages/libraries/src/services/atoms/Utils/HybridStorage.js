@@ -6,9 +6,16 @@ import localforage from "localforage";
 
 const L1_PREFIX = "Digit.L1.";
 const L1_INDEX_KEY = "Digit.L1.__index__";
-const MIGRATION_FLAG = "Digit.HybridStorage.migrated";
+const LEGACY_CLEANUP_FLAG = "Digit.HybridStorage.cleanedLegacy";
 const DEFAULT_TTL_SECS = 86400;
 const DEFAULT_HOT_CAP_BYTES = 1.5 * 1024 * 1024;
+
+// Prefixes/keys written by the upstream npm getStorage-based PersistantStorage
+// (which prepends "Digit." to every key via its k() function). Once Localization
+// switches to HybridStorage, those entries become orphaned — cleanupLegacy()
+// removes them on first boot to free ~600 KB+ of localStorage.
+const LEGACY_PREFIXES = ["Digit.Locale.", "Digit.MDMS."];
+const LEGACY_KEYS = ["Digit.cachingService"];
 
 let hotCapBytes = DEFAULT_HOT_CAP_BYTES;
 
@@ -221,40 +228,38 @@ export const HybridStorage = {
     }
   },
 
-  // One-shot migration of legacy PersistantStorage `Locale.*` keys (LZ-compressed in localStorage)
-  // into L2 (uncompressed objects in IDB). Idempotent: writes a flag so subsequent runs no-op.
-  // Wired into boot by Phase 3.
-  async migrateLegacyLocaleKeys({ LZString, ttl = DEFAULT_TTL_SECS } = {}) {
-    if (localStorage.getItem(MIGRATION_FLAG)) return { skipped: true };
-    if (!LZString || typeof LZString.decompress !== "function") {
-      return { error: "LZString decompressor not provided" };
-    }
-    const moved = [];
-    const failed = [];
+  // One-shot cleanup of legacy PersistantStorage entries (Digit.Locale.*,
+  // Digit.MDMS.*, Digit.cachingService) that were written by upstream
+  // getStorage-based PersistantStorage. Once Localization swaps to HybridStorage
+  // those entries become unread dead weight — remove them on first boot to free
+  // ~600 KB+ of localStorage. Idempotent: gated by a flag so subsequent boots no-op.
+  cleanupLegacy() {
+    if (localStorage.getItem(LEGACY_CLEANUP_FLAG)) return { skipped: true };
+    let removed = 0;
+    let freedBytes = 0;
     try {
-      const keys = [];
+      const toRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (k && k.startsWith("Digit.Locale.")) keys.push(k);
-      }
-      for (const k of keys) {
-        try {
-          const raw = localStorage.getItem(k);
-          if (!raw) continue;
-          const decompressed = LZString.decompress(raw);
-          if (!decompressed) continue;
-          const value = JSON.parse(decompressed);
-          await idbStore.setItem(k, { value, expiry: Date.now() + ttl * 1000 });
-          localStorage.removeItem(k);
-          moved.push(k);
-        } catch (e) {
-          failed.push({ key: k, error: String(e?.message || e) });
+        if (!k) continue;
+        const isLegacyPrefixed = LEGACY_PREFIXES.some((p) => k.startsWith(p));
+        const isLegacyKey = LEGACY_KEYS.includes(k);
+        if (isLegacyPrefixed || isLegacyKey) {
+          const v = localStorage.getItem(k);
+          freedBytes += (k.length + (v ? v.length : 0)) * 2;
+          toRemove.push(k);
         }
       }
-      localStorage.setItem(MIGRATION_FLAG, String(Date.now()));
-      return { moved: moved.length, failed };
+      for (const k of toRemove) {
+        try {
+          localStorage.removeItem(k);
+          removed++;
+        } catch {}
+      }
+      localStorage.setItem(LEGACY_CLEANUP_FLAG, String(Date.now()));
+      return { removed, freedBytes };
     } catch (e) {
-      return { error: String(e?.message || e) };
+      return { error: String(e && e.message ? e.message : e) };
     }
   },
 };

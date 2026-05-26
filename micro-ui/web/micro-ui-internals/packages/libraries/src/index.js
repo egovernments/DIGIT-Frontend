@@ -6,6 +6,8 @@ import { initI18n } from "./translations/index";
 import { Request } from "./services/atoms/Utils/Request";
 
 import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
+import HybridStorage from "./services/atoms/Utils/HybridStorage";
+import LocaleStore from "./services/atoms/Utils/LocaleStore";
 import { UploadServices } from "./services/atoms/UploadServices";
 import JsDictionary from "./services/atoms/JsDictionary";
 
@@ -48,8 +50,16 @@ const setupLibraries = (Library, props) => {
 const initLibraries = () => {
   setupLibraries("SessionStorage", Storage);
   setupLibraries("PersistantStorage", PersistantStorage);
+  setupLibraries("HybridStorage", HybridStorage);
+  setupLibraries("LocaleStore", LocaleStore);
   setupLibraries("UserService", UserService);
   setupLibraries("ULBService", ULBService);
+
+  // One-shot cleanup of legacy prefixed PersistantStorage entries (Digit.Locale.*,
+  // Digit.MDMS.*, Digit.cachingService) — current code uses HybridStorage going
+  // forward. Async-hydrate the locale cache from IDB so language switches feel instant.
+  try { HybridStorage.cleanupLegacy(); } catch {}
+  LocaleStore.hydrate().catch(() => {});
 
   setupLibraries("Config", { mergeConfig });
   setupLibraries("Services", { useStore });
