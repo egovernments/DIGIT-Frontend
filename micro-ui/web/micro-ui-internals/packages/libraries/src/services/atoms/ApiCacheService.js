@@ -1,4 +1,4 @@
-import { PersistantStorage } from "./Utils/Storage";
+import HybridStorage from "./Utils/HybridStorage";
 
 const defaultApiCachingSettings = [
   {
@@ -44,7 +44,7 @@ const getCachedSetting = () => {
   if (Digit.ApiCacheSetting) {
     return Digit.ApiCacheSetting;
   }
-  const setting = PersistantStorage.get(storageKey) || defaultApiCachingSettings;
+  const setting = HybridStorage.getSync(storageKey) || defaultApiCachingSettings;
   Digit.ApiCacheSetting = setting;
   return setting;
 };
@@ -69,7 +69,7 @@ const getSetting = (serviceName, moduleName) => {
 };
 export const ApiCacheService = {
   saveSetting: (setting) => {
-    PersistantStorage.set(storageKey, setting || defaultApiCachingSettings);
+    HybridStorage.setSync(storageKey, setting || defaultApiCachingSettings);
   },
   getSettingByServiceUrl: (serviceUrl, moduleName) => {
     return getSetting(serviceUrl.split("/")[1], moduleName);

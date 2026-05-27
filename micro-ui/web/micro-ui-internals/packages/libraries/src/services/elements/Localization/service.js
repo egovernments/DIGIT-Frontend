@@ -1,5 +1,5 @@
 import Urls from "../../atoms/urls";
-import { PersistantStorage } from "../../atoms/Utils/Storage";
+import HybridStorage from "../../atoms/Utils/HybridStorage";
 import i18next from "i18next";
 import { Request } from "../../atoms/Utils/Request";
 import { ApiCacheService } from "../../atoms/ApiCacheService";
@@ -22,10 +22,10 @@ const getUnique = (arr) => {
 };
 
 const LocalizationStore = {
-  getCaheData: (key) => PersistantStorage.get(key),
+  getCaheData: (key) => HybridStorage.getSync(key),
   setCacheData: (key, value) => {
     const cacheSetting = ApiCacheService.getSettingByServiceUrl(Urls.localization);
-    PersistantStorage.set(key, value, cacheSetting.cacheTimeInSecs);
+    HybridStorage.setSync(key, value, cacheSetting.cacheTimeInSecs);
   },
   getList: (locale) => LocalizationStore.getCaheData(LOCALE_LIST(locale)) || [],
   setList: (locale, namespaces) => LocalizationStore.setCacheData(LOCALE_LIST(locale), namespaces),

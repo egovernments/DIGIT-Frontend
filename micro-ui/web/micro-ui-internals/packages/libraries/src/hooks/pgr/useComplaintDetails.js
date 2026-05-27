@@ -19,7 +19,7 @@ const getDetailsRow = ({ id, service, complaintType }) => ({
   CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertTimestampToDate(service.auditDetails.createdTime),
   ES_CREATECOMPLAINT_ADDRESS: [
     service.address.landmark,
-    Digit.Utils.getMultiRootTenant() ? service.address.locality.code : Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
+    Digit.Utils.getMultiRootTenant() ? `${service.address.locality.code}` : Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
     `TENANT_TENANTS_${service?.tenantId?.toUpperCase?.()?.replace(".", "_")}`,
     service.address.pincode,
   ],

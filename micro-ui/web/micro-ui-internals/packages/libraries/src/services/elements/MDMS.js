@@ -2,7 +2,7 @@
 import { ApiCacheService } from "../atoms/ApiCacheService";
 import Urls from "../atoms/urls";
 import { Request, ServiceRequest } from "../atoms/Utils/Request";
-import { PersistantStorage } from "../atoms/Utils/Storage";
+import HybridStorage from "../atoms/Utils/HybridStorage";
 
 // export const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
 //   if (searcher == "") return str;
@@ -1496,14 +1496,14 @@ export const MdmsService = {
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
     const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
-    const inStoreValue = PersistantStorage.get(key);
+    const inStoreValue = HybridStorage.getSync(key);
     if (inStoreValue) {
       return inStoreValue;
     }
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
     const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
     const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
-    PersistantStorage.set(key, responseValue, Digit.Utils.getMultiRootTenant() ? 0 : cacheSetting.cacheTimeInSecs);
+    HybridStorage.setSync(key, responseValue, Digit.Utils.getMultiRootTenant() ? 0 : cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {
