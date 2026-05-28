@@ -90,20 +90,17 @@ export const CreateEmployeeConfig = {
               label: "HR_MOB_NO_LABEL",
               isMandatory: true,
               key: "SelectEmployeePhoneNumber",
-              type: "number",
+              type: "mobileNumber",
               disable: false,
               populators: {
                 name: "SelectEmployeePhoneNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
-                componentInFront: "+91",
+                prefix: "+91",
+                maxLength: 10,
+                hideSpan: true,
                 validation: {
                   required: true,
-                  minLength: 10,
-                  maxLength: 10,
-                  min: 6000000000,
-                  max: 9999999999,
-                  
-                }, // 10-digit phone number validation
+                },
               },
             },
       

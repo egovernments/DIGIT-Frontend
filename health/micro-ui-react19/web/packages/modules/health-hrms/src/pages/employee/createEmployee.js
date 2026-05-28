@@ -63,20 +63,9 @@ const CreateEmployee = ({ editUser = false }) => {
   });
 
 
-  // Validate phone number based on config
-  const validatePhoneNumber = (value, config) => {
-    const { minLength, maxLength, min, max } = config?.populators?.validation || {};
+  const validatePhoneNumber = (value) => {
     const stringValue = String(value || "");
-
-    if (
-      (minLength && stringValue.length < minLength) ||
-      (maxLength && stringValue.length > maxLength) ||
-      (min && Number(value) < min) ||
-      (max && Number(value) > max)
-    ) {
-      return false;
-    }
-    return true;
+    return !!stringValue.match(getPattern("MobileNo"));
   };
 
   const onFormValueChange = (setValue, formData) => {
@@ -264,9 +253,7 @@ const CreateEmployee = ({ editUser = false }) => {
       return;
     }
 
-    const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
-      .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
-    if (e?.SelectEmployeePhoneNumber && !validatePhoneNumber(e.SelectEmployeePhoneNumber, contactFieldConfig)) {
+    if (e?.SelectEmployeePhoneNumber && !validatePhoneNumber(e.SelectEmployeePhoneNumber)) {
       setShowToast({ key: true, label: "CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID", type: "error" });
       return;
     }

@@ -102,7 +102,8 @@ const DatePickerComponent = ({ t, config, onSelect, formData, errors, setError, 
           border: hasError ? "1px solid #d4351c" : "1px solid #464646",
           backgroundColor: config?.disable ? "#e0e0e0" : "#fff",
           cursor: config?.disable ? "not-allowed" : "pointer",
-          position: "relative"
+          position: "relative",
+          borderRadius:"0.375rem"
         }}
         onClick={openDatePicker}
       >
