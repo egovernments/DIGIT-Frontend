@@ -69,6 +69,14 @@ module.exports = {
   externals: {
     react: "React",
     "react-dom": "ReactDOM",
+    "react/jsx-runtime": {
+        commonjs: "react/jsx-runtime",
+        commonjs2: "react/jsx-runtime",
+      },
+      "react/jsx-dev-runtime": {
+        commonjs: "react/jsx-dev-runtime",
+        commonjs2: "react/jsx-dev-runtime",
+    },
     "react-router-dom": "react-router-dom",
     "react-i18next": "react-i18next",
     "react-hook-form": "react-hook-form",

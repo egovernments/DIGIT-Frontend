@@ -33,20 +33,6 @@ const PGRWorkflowModal = ({
       heading={t(config?.label?.heading)}
       onOverlayClick={closeModal}
       equalWidthButtons={true}
-      children={[
-        <div key="form-composer">
-          <FormComposerV2
-            config={config.form}
-            noBoxShadow
-            inline
-            childrenAtTheBottom
-            onFormValueChange={onFormValueChange}
-            defaultValues={sessionFormData}
-            formId="modal-action"
-            className="complaint-details-popup-form"
-          />
-        </div>
-      ]}
       footerChildren={[
         <Button
           key="cancel-button"
@@ -69,7 +55,18 @@ const PGRWorkflowModal = ({
           onClick={() => onSubmit(sessionFormData)}
         />
       ]}
-    />
+    >
+       <FormComposerV2
+            config={config.form}
+            noBoxShadow
+            inline
+            childrenAtTheBottom
+            onFormValueChange={onFormValueChange}
+            defaultValues={sessionFormData}
+            formId="modal-action"
+            className="complaint-details-popup-form"
+          />
+    </PopUp>
   );
 };
 
