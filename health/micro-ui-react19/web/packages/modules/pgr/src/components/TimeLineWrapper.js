@@ -52,13 +52,13 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
               `${instance.assignes?.[0]?.name} - ${
                 instance?.assignes?.[0]?.roles
                   ?.map((role) => t(Digit.Utils.locale.getTransformedLocale(`ACCESSCONTROL_ROLES_ROLES_${role.code}`)))
-                  .join(", ") || t("NA")
+                  ?.join(", ") || t("NA")
               }`
             : instance?.assigner &&
               `${instance.assigner?.name} - ${
                 instance.assigner?.roles
                   ?.map((role) => t(Digit.Utils.locale.getTransformedLocale(`ACCESSCONTROL_ROLES_ROLES_${role.code}`)))
-                  .join(", ") || t("NA")
+                  ?.join(", ") || t("NA")
               }`,
           instance?.action === "ASSIGN"
             ? `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assignes?.[0]?.mobileNumber}`
