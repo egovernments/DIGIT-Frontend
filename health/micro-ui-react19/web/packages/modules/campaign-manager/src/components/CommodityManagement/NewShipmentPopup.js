@@ -25,6 +25,7 @@ const NewShipmentPopup = ({
   isTopLevel,
   onClose,
   onSuccess,
+  onBatchStart,
 }) => {
   const { t } = useTranslation();
   const moduleName = Digit.Utils.campaign.getModuleName();
@@ -521,13 +522,6 @@ const NewShipmentPopup = ({
         : [],
     [toFacilityList, selectedFacilityIds],
   );
-
-  const stockMutation = Digit.Hooks.useCustomAPIMutationHook({
-    url: `/stock/v1/bulk/_create`,
-    params: {},
-    body: {},
-    config: { enabled: false },
-  });
 
   // Fetch stock balance data for validation using 2-query config:
   // Query 1 filters Data.facilityId = fromFacilityId (covers RECEIPT/ISSUED)
@@ -1103,8 +1097,9 @@ const NewShipmentPopup = ({
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
       const stockPayload = [];
+      const clientRefToRowIndex = {};
 
-      dataRows.forEach((row) => {
+      dataRows.forEach((row, rowIndex) => {
         const senderId = (fromCodeIdx >= 0 ? row[fromCodeIdx] : "") || fromFacility?.id || "";
         const receiverId = (toCodeIdx >= 0 ? row[toCodeIdx] : "") || "";
 
@@ -1119,9 +1114,12 @@ const NewShipmentPopup = ({
           const matchedVariant = productVariants.find((pv) => pv.productVariantId === productVariantId);
           const productVariantSku = matchedVariant?.name || productVariantId;
 
+          const clientReferenceId = crypto.randomUUID();
+          clientRefToRowIndex[clientReferenceId] = rowIndex;
+
           stockPayload.push({
             tenantId,
-            clientReferenceId: crypto.randomUUID(),
+            clientReferenceId,
             productVariantId,
             quantity,
             referenceId: fromFacility?.projectId || projectId || campaignId,
@@ -1168,52 +1166,14 @@ const NewShipmentPopup = ({
         return;
       }
 
-      let failedCount = 0;
-      /*for (let i = 0; i < stockPayload.length; i++) {
-        try {
-          await stockMutation.mutateAsync({
-            url: `/stock/v1/_create`,
-            body: {
-              RequestInfo: {
-                authToken: Digit.UserService.getUser()?.access_token,
-              },
-              Stock: stockPayload[i],
-            },
-          });
-        } catch (error) {
-          console.error(`Stock create error for row ${i}:`, error);
-          failedCount++;
-        }
-      }*/
-           try {
-  await stockMutation.mutateAsync({
-    url: `/stock/v1/bulk/_create`,
-    body: {
-      Stock: stockPayload,
-    },
-  });
-} catch (error) {
-  console.error("Bulk stock create error:", error);
-  failedCount = stockPayload.length;
-}
-
-      if (failedCount > 0 && failedCount === stockPayload.length) {
-        throw new Error("All stock transactions failed");
-      }
-      if (failedCount > 0) {
-        setShowToast({
-          key: "warning",
-          label: `${stockPayload.length - failedCount}/${
-            stockPayload.length
-          } rows created. ${failedCount} failed.`,
-        });
-        return;
-      }
-
-      onSuccess?.();
+      // Hand off to parent for batched creation + verification
+      onBatchStart?.({
+        stockPayload,
+        sheetData: { headers, dataRows, variantIdRow },
+        clientRefToRowIndex,
+      });
     } catch (error) {
-      // console.error("Stock upload error:", error);
-      // setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
+      console.error("Stock upload error:", error);
       setViewState("error");
     } finally {
       setIsSubmitting(false);
@@ -1227,8 +1187,7 @@ const NewShipmentPopup = ({
     fromFacilityList,
     toFacilityList,
     productVariants,
-    stockMutation,
-    onSuccess,
+    onBatchStart,
     t,
     isFromTopLevel,
     facilityStockMap,
@@ -1509,6 +1468,8 @@ const NewShipmentPopup = ({
                                   chipKey: "code",
                                 }}
                                 isSearchable={true}
+                                addSelectAllCheck={true}
+                                addCategorySelectAllCheck={true}
                               />
                             </div>
                           );

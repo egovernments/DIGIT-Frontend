@@ -1,10 +1,11 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, HeaderComponent, Card, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
 import StockComponent from "./StockComponent";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
+import useBatchStockCreation from "../../hooks/useBatchStockCreation";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -31,6 +32,97 @@ const BulkStockUpload = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [showUploadPopup, setShowUploadPopup] = useState(false);
+
+  // Batch stock creation hook
+  const {
+    processBatches,
+    batchStatus,
+    isProcessing,
+    failedRecords: batchFailedRecords,
+    isComplete,
+    result: batchResult,
+    reset: resetBatchState,
+    abort: abortBatchProcessing,
+  } = useBatchStockCreation({ tenantId });
+
+  // Ref to store original sheet data for error sheet generation
+  const originalSheetDataRef = useRef(null);
+  // Ref to map clientReferenceId -> original row index
+  const clientRefToRowIndexRef = useRef({});
+
+  // Abort batch processing on unmount
+  useEffect(() => {
+    return () => {
+      abortBatchProcessing();
+    };
+  }, [abortBatchProcessing]);
+
+  // Handle batch completion
+  useEffect(() => {
+    if (!isComplete || !batchResult) return;
+
+    if (batchResult === "success") {
+      setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
+      setTimeout(() => {
+        navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+      }, 2000);
+    } else if (batchResult === "partial_failure") {
+      setShowToast({
+        key: "warning",
+        label: t("HCM_BATCH_PARTIAL_FAILURE_TOAST", {
+          succeeded: batchStatus.totalRecords - batchStatus.failedRecords,
+          total: batchStatus.totalRecords,
+          failed: batchStatus.failedRecords,
+        }),
+      });
+    } else if (batchResult === "all_failed") {
+      setShowToast({ key: "error", label: t("HCM_BATCH_ALL_FAILED_TOAST") });
+    }
+  }, [isComplete, batchResult]);
+
+  // Download error sheet for failed records
+  const downloadErrorSheet = useCallback(() => {
+    const sheetData = originalSheetDataRef.current;
+    const clientRefToRowIndex = clientRefToRowIndexRef.current;
+    if (!sheetData || !batchFailedRecords.length) return;
+
+    const { headers, dataRows, variantIdRow } = sheetData;
+
+    // Build set of failed clientReferenceIds
+    const failedClientRefIds = new Set(batchFailedRecords.map((f) => f.stockRecord.clientReferenceId));
+
+    // Build set of row indices that have failures
+    const failedRowIndices = new Set();
+    Object.entries(clientRefToRowIndex).forEach(([clientRefId, rowIndex]) => {
+      if (failedClientRefIds.has(clientRefId)) {
+        failedRowIndices.add(rowIndex);
+      }
+    });
+
+    // Build new sheet with CREATION_STATUS column
+    const newHeaders = [...headers, "CREATION_STATUS"];
+    const newVariantIdRow = [...variantIdRow, ""];
+    const newDataRows = dataRows.map((row, idx) => {
+      const paddedRow = [...row];
+      // Pad row to match header length if needed
+      while (paddedRow.length < headers.length) {
+        paddedRow.push("");
+      }
+      const status = failedRowIndices.has(idx) ? "CREATION_FAILED" : "SUCCESS";
+      return [...paddedRow, status];
+    });
+
+    const wsData = [newHeaders, newVariantIdRow, ...newDataRows];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws["!cols"] = newHeaders.map(() => ({ wch: 30 }));
+    ws["!rows"] = [null, { hidden: true }];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
+
+    XLSX.writeFile(wb, `Stock_Error_Report_${campaignName || "campaign"}.xlsx`);
+    setShowToast({ key: "warning", label: t("HCM_BATCH_ERROR_SHEET_DOWNLOADED", { failed: batchFailedRecords.length }) });
+  }, [batchFailedRecords, campaignName, t]);
 
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
@@ -440,18 +532,6 @@ const BulkStockUpload = () => {
     return toFacilityList.filter((f) => selectedFacilityIds.has(f.id));
   }, [toFacilityList, selectedFacilityIds]);
 
-  // Stock mutation hook
-  const stockMutationReq = {
-    url: `/stock/v1/bulk/_create`,
-    params: {},
-    body: {},
-    config: {
-      enabled: false,
-    },
-  };
-
-  const stockMutation = Digit.Hooks.useCustomAPIMutationHook(stockMutationReq);
-
   // Handle "From" hierarchy filter change (cascading + clear To filters)
   const handleFromHierarchyChange = useCallback((boundaryType, value) => {
     setFromHierarchyFilters((prev) => {
@@ -714,10 +794,11 @@ const BulkStockUpload = () => {
       }
 
       const stockPayload = [];
+      const clientRefToRowIndex = {};
       const userInfo = Digit.UserService.getUser()?.info;
       const timestamp = Date.now();
 
-      dataRows.forEach((row) => {
+      dataRows.forEach((row, rowIndex) => {
         const rowProjectId = (projectIdIdx >= 0 ? row[projectIdIdx] : "") || "";
         const senderId = (fromCodeIdx >= 0 ? row[fromCodeIdx] : "") || fromFacility?.id || "";
         const receiverId = (toCodeIdx >= 0 ? row[toCodeIdx] : "") || "";
@@ -735,9 +816,12 @@ const BulkStockUpload = () => {
           const quantity = parseInt(row[idx], 10);
           if (!quantity || quantity <= 0) return;
 
+          const clientReferenceId = crypto.randomUUID();
+          clientRefToRowIndex[clientReferenceId] = rowIndex;
+
           stockPayload.push({
             tenantId: tenantId,
-            clientReferenceId: crypto.randomUUID(),
+            clientReferenceId,
             facilityId: receiverId,
             productVariantId: productVariantId,
             quantity: quantity,
@@ -790,66 +874,23 @@ const BulkStockUpload = () => {
         return;
       }
 
-      let failedCount = 0;
-      /*for (let i = 0; i < stockPayload.length; i++) {
-        try {
-          await stockMutation.mutateAsync({
-            url: `/stock/v1/_create`,
-            body: {
-              RequestInfo: {
-                authToken: Digit.UserService.getUser()?.access_token,
-              },
-              Stock: stockPayload[i],
-            },
-          });
-        } catch (error) {
-          console.error(`Stock create error for row ${i}:`, error);
-          failedCount++;
-        }
-      }*/
+      // Store original sheet data and clientRef mapping for error sheet generation
+      originalSheetDataRef.current = { headers, dataRows, variantIdRow };
+      clientRefToRowIndexRef.current = clientRefToRowIndex;
 
-        try {
-  await stockMutation.mutateAsync({
-    url: `/stock/v1/bulk/_create`,
-    body: {
-      RequestInfo: {
-        apiId: "hcm",
-        ver: ".01",
-        ts: timestamp,
-        action: "_create",
-        did: "1",
-        key: "1",
-        authToken: Digit.UserService.getUser()?.access_token,
-        tenantId: tenantId,
-      },
-      Stock: stockPayload,
-    },
-  });
-} catch (error) {
-  console.error("Bulk stock create error:", error);
-  failedCount = stockPayload.length;
-}
+      // Close the popup and start batch processing in the background
+      setShowUploadPopup(false);
+      setUploadedFileData([]);
+      setIsSubmitting(false);
 
-      if (failedCount > 0 && failedCount === stockPayload.length) {
-        throw new Error("All stock transactions failed");
-      }
-
-      if (failedCount > 0) {
-        setShowToast({ key: "warning", label: `${stockPayload.length - failedCount}/${stockPayload.length} rows created. ${failedCount} failed.` });
-        return;
-      }
-
-      setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
-      setTimeout(() => {
-        navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
-      }, 2000);
+      // Start batch processing (non-blocking, updates state as it progresses)
+      processBatches(stockPayload);
     } catch (error) {
       console.error("Stock upload error:", error);
       setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
-    } finally {
       setIsSubmitting(false);
     }
-  }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, stockMutation, campaignNumber, navigate, t]);
+  }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, campaignNumber, navigate, t, processBatches, fromFacility, sortedHierarchy, projectBoundaryMap]);
 
   if (hierarchyTypeLoading || hierarchyLoading || campaignLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading) {
     return <Loader />;
@@ -870,6 +911,7 @@ const BulkStockUpload = () => {
             type="button"
             icon="FileUpload"
             onClick={() => setShowUploadPopup(true)}
+            isDisabled={isProcessing}
           />
           <Button
             label={t("HCM_BACK")}
@@ -879,6 +921,111 @@ const BulkStockUpload = () => {
           />
         </div>
       </div>
+
+      {/* Inline Batch Processing Status Card */}
+      {(isProcessing || isComplete) && (() => {
+        const { statusKey, statusParams } = batchStatus;
+        const sp = statusParams || {};
+        let statusText = "";
+        switch (statusKey) {
+          case "HCM_BATCH_STARTING": statusText = t("HCM_BATCH_STARTING"); break;
+          case "HCM_BATCH_CREATING": statusText = t("HCM_BATCH_CREATING", { current: sp.current, total: sp.total }); break;
+          case "HCM_BATCH_VERIFYING": statusText = t("HCM_BATCH_VERIFYING", { current: sp.current, total: sp.total, attempt: sp.attempt, maxAttempts: sp.maxAttempts }); break;
+          case "HCM_BATCH_ALL_SUCCESS": statusText = t("HCM_BATCH_ALL_SUCCESS"); break;
+          case "HCM_BATCH_PROCESSING_COMPLETE": statusText = t("HCM_BATCH_PROCESSING_COMPLETE", { failedCount: sp.failedCount }); break;
+          default: statusText = statusKey ? t(statusKey) : "";
+        }
+        return (
+        <Card style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+          {isProcessing && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                <span style={{ fontWeight: "600", fontSize: "1rem" }}>{statusText}</span>
+                <span style={{ fontSize: "0.875rem", color: "#505A5F" }}>
+                  {t("HCM_BATCH_PROGRESS_LABEL", { current: batchStatus.currentBatch, total: batchStatus.total })}
+                </span>
+              </div>
+              <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
+                <div
+                  style={{
+                    width: `${batchStatus.total > 0 ? (batchStatus.completed / batchStatus.total) * 100 : 0}%`,
+                    backgroundColor: "#F47738",
+                    height: "8px",
+                    borderRadius: "4px",
+                    transition: "width 0.3s ease",
+                  }}
+                />
+              </div>
+              <p style={{ fontSize: "0.875rem", color: "#505A5F" }}>
+                {t("HCM_BATCH_RECORDS_STATUS", {
+                  processed: batchStatus.processedRecords,
+                  total: batchStatus.totalRecords,
+                  failed: batchStatus.failedRecords,
+                })}
+              </p>
+            </div>
+          )}
+          {isComplete && batchResult === "success" && (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ color: "#00703C", fontWeight: "600" }}>
+                {t("HCM_BATCH_SUCCESS_MSG", { total: batchStatus.totalRecords })}
+              </p>
+              <Button
+                label={t("HCM_CLOSE")}
+                variation="secondary"
+                type="button"
+                onClick={resetBatchState}
+                style={{ marginLeft: "1rem" }}
+              />
+            </div>
+          )}
+          {isComplete && batchResult === "partial_failure" && (
+            <div>
+              <p style={{ color: "#B4762B", fontWeight: "600", marginBottom: "0.75rem" }}>
+                {t("HCM_BATCH_PARTIAL_FAILURE_MSG", { failed: batchStatus.failedRecords, total: batchStatus.totalRecords })}
+              </p>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Button
+                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  variation="primary"
+                  type="button"
+                  icon="FileDownload"
+                  onClick={downloadErrorSheet}
+                />
+                <Button
+                  label={t("HCM_CLOSE")}
+                  variation="secondary"
+                  type="button"
+                  onClick={resetBatchState}
+                />
+              </div>
+            </div>
+          )}
+          {isComplete && batchResult === "all_failed" && (
+            <div>
+              <p style={{ color: "#D4351C", fontWeight: "600", marginBottom: "0.75rem" }}>
+                {t("HCM_BATCH_ALL_FAILED_MSG", { total: batchStatus.totalRecords })}
+              </p>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Button
+                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  variation="primary"
+                  type="button"
+                  icon="FileDownload"
+                  onClick={downloadErrorSheet}
+                />
+                <Button
+                  label={t("HCM_CLOSE")}
+                  variation="secondary"
+                  type="button"
+                  onClick={resetBatchState}
+                />
+              </div>
+            </div>
+          )}
+        </Card>
+        );
+      })()}
 
       {/* Stock Transactions Table */}
       {allProjectIds?.length > 0 && <StockComponent allProjectIds={allProjectIds} />}

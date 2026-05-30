@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button, Toast } from "@egovernments/digit-ui-components";
+import { Toggle, HeaderComponent, LabelFieldPair, Loader, Button, Card, Toast } from "@egovernments/digit-ui-components";
 import TransactionSummaryTab from "./TransactionSummaryTab";
 import StockSummaryTab from "./StockSummaryTab";
 import PendingTransactionsTab from "./PendingTransactionsTab";
@@ -11,7 +11,60 @@ import { computeStockSummary } from "../../utils/stockDataProcessor";
 import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
 import { useCommodityProject } from "./CommodityProjectContext";
 import NewShipmentPopup from "./NewShipmentPopup";
+import useBatchStockCreation from "../../hooks/useBatchStockCreation";
 
+const SHEET_SESSION_KEY = "HCM_BATCH_SHEET_DATA";
+
+/**
+ * Persist sheet data + clientRefToRowIndex to sessionStorage
+ * so the result sheet can be regenerated after page refresh.
+ */
+const saveSheetToSession = (sheetData, clientRefToRowIndex) => {
+  try {
+    sessionStorage.setItem(SHEET_SESSION_KEY, JSON.stringify({ sheetData, clientRefToRowIndex }));
+  } catch (e) {
+    // ignore
+  }
+};
+
+const loadSheetFromSession = () => {
+  try {
+    const raw = sessionStorage.getItem(SHEET_SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const clearSheetSession = () => {
+  try {
+    sessionStorage.removeItem(SHEET_SESSION_KEY);
+  } catch (e) {
+    // ignore
+  }
+};
+
+/**
+ * Helper to resolve a statusKey + statusParams from the batch hook
+ * into a human-readable translated string.
+ */
+const resolveStatusText = (t, statusKey, statusParams = {}) => {
+  const { current, total, attempt, maxAttempts, failedCount } = statusParams;
+  switch (statusKey) {
+    case "HCM_BATCH_STARTING":
+      return t("HCM_BATCH_STARTING");
+    case "HCM_BATCH_CREATING":
+      return t("HCM_BATCH_CREATING", { current, total });
+    case "HCM_BATCH_VERIFYING":
+      return t("HCM_BATCH_VERIFYING", { current, total, attempt, maxAttempts });
+    case "HCM_BATCH_ALL_SUCCESS":
+      return t("HCM_BATCH_ALL_SUCCESS");
+    case "HCM_BATCH_PROCESSING_COMPLETE":
+      return t("HCM_BATCH_PROCESSING_COMPLETE", { failedCount });
+    default:
+      return statusKey ? t(statusKey) : "";
+  }
+};
 
 const CommodityDashboard = () => {
   const { t } = useTranslation();
@@ -54,7 +107,6 @@ const CommodityDashboard = () => {
   const { data: campaignSearchData, isLoading: campaignIdLoading } = Digit.Hooks.useCustomAPIHook(campaignReqCriteria);
 
   const campaignId = campaignIdFromUrl || campaignSearchData?.id;
-  // Use project auditDetails.createdTime (from nav state) as primary, campaign API createdTime as fallback
   const campaignCreatedDate = useMemo(
     () => {
       if (projectCreatedTime) return new Date(projectCreatedTime);
@@ -68,33 +120,189 @@ const CommodityDashboard = () => {
     [campaignEndEpoch]
   );
 
-  // Stock data source: true = Kibana/ES first (with stock API fallback), false = stock API only
   const useKibanaFlag = true;
 
   const [activeTab, setActiveTab] = useState("transaction");
   const [showNewShipmentPopup, setShowNewShipmentPopup] = useState(false);
   const [showToast, setShowToast] = useState(null);
-  // Default to cumulative: campaign start date → today
   const [dateRange, setDateRange] = useState({
     startDate: null,
     endDate: new Date(),
     preset: "cumulative",
   });
 
-  // Compute effective date range, resolving cumulative/null start dates to campaign created time
+  // --- Batch stock creation (lives here so it persists after popup closes) ---
+  const {
+    processBatches,
+    batchStatus,
+    isProcessing,
+    failedRecords: batchFailedRecords,
+    isComplete,
+    result: batchResult,
+    reset: resetBatchState,
+    abort: abortBatchProcessing,
+    isRecovered,
+  } = useBatchStockCreation({ tenantId });
+
+  // Store original sheet data and clientRef mapping for result sheet generation
+  const originalSheetDataRef = useRef(null);
+  const clientRefToRowIndexRef = useRef({});
+
+  // On mount, restore sheet data from sessionStorage if we have recovered batch data
+  useEffect(() => {
+    if (isRecovered) {
+      const saved = loadSheetFromSession();
+      if (saved) {
+        originalSheetDataRef.current = saved.sheetData;
+        clientRefToRowIndexRef.current = saved.clientRefToRowIndex;
+      }
+    }
+  }, [isRecovered]);
+
+  // --- beforeunload warning: prevent accidental refresh/tab close during processing ---
+  useEffect(() => {
+    if (!isProcessing) return;
+    const handler = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isProcessing]);
+
+  // --- Back/forward navigation warning during processing ---
+  // Uses popstate since this app uses legacy BrowserRouter (useBlocker requires data router)
+  useEffect(() => {
+    if (!isProcessing) return;
+
+    // Push a duplicate entry so pressing back triggers popstate instead of leaving
+    window.history.pushState(null, "", window.location.href);
+
+    const handler = () => {
+      const confirmed = window.confirm(t("HCM_BATCH_LEAVE_WARNING"));
+      if (!confirmed) {
+        // User chose to stay — re-push so back button can be caught again
+        window.history.pushState(null, "", window.location.href);
+      }
+      // If confirmed, the browser navigates away naturally
+    };
+
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, [isProcessing, t]);
+
+  // Abort batch processing on unmount
+  useEffect(() => {
+    return () => {
+      abortBatchProcessing();
+    };
+  }, [abortBatchProcessing]);
+
+  // Handle batch completion — refetch stock data on success
+  useEffect(() => {
+    if (!isComplete || !batchResult) return;
+    // Don't show toasts for recovered data (user already saw it before refresh)
+    if (isRecovered) return;
+
+    if (batchResult === "success") {
+      setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
+      refetchStockData?.();
+    } else if (batchResult === "partial_failure") {
+      setShowToast({
+        key: "warning",
+        label: t("HCM_BATCH_PARTIAL_FAILURE_TOAST", {
+          succeeded: batchStatus.totalRecords - batchStatus.failedRecords,
+          total: batchStatus.totalRecords,
+          failed: batchStatus.failedRecords,
+        }),
+      });
+      refetchStockData?.();
+    } else if (batchResult === "all_failed") {
+      setShowToast({ key: "error", label: t("HCM_BATCH_ALL_FAILED_TOAST") });
+    }
+  }, [isComplete, batchResult]);
+
+  // Called by NewShipmentPopup after validation passes
+  const handleBatchStart = useCallback(({ stockPayload, sheetData, clientRefToRowIndex }) => {
+    originalSheetDataRef.current = sheetData;
+    clientRefToRowIndexRef.current = clientRefToRowIndex;
+
+    // Persist sheet data to sessionStorage for recovery
+    saveSheetToSession(sheetData, clientRefToRowIndex);
+
+    // Close popup, start batch processing in background
+    setShowNewShipmentPopup(false);
+    processBatches(stockPayload);
+  }, [processBatches]);
+
+  // Clear both session stores on reset
+  const handleReset = useCallback(() => {
+    resetBatchState();
+    clearSheetSession();
+    originalSheetDataRef.current = null;
+    clientRefToRowIndexRef.current = {};
+  }, [resetBatchState]);
+
+  // Download result sheet with SUCCESS/CREATION_FAILED per row
+  const downloadResultSheet = useCallback(async () => {
+    const sheetData = originalSheetDataRef.current;
+    const clientRefToRowIndex = clientRefToRowIndexRef.current;
+    if (!sheetData) {
+      setShowToast({ key: "error", label: t("HCM_NO_SHIPMENT_DATA") });
+      return;
+    }
+
+    const XLSX = (await import("xlsx")).default;
+    const { headers, dataRows, variantIdRow } = sheetData;
+
+    const failedClientRefIds = new Set(batchFailedRecords.map((f) => f.stockRecord.clientReferenceId));
+
+    const failedRowIndices = new Set();
+    Object.entries(clientRefToRowIndex).forEach(([clientRefId, rowIndex]) => {
+      if (failedClientRefIds.has(clientRefId)) {
+        failedRowIndices.add(rowIndex);
+      }
+    });
+
+    const newHeaders = [...headers, "CREATION_STATUS"];
+    const newVariantIdRow = [...variantIdRow, ""];
+    const newDataRows = dataRows.map((row, idx) => {
+      const paddedRow = [...row];
+      while (paddedRow.length < headers.length) {
+        paddedRow.push("");
+      }
+      const hasRecords = Object.values(clientRefToRowIndex).includes(idx);
+      let status;
+      if (!hasRecords) {
+        status = "SKIPPED";
+      } else if (failedRowIndices.has(idx)) {
+        status = "CREATION_FAILED";
+      } else {
+        status = "SUCCESS";
+      }
+      return [...paddedRow, status];
+    });
+
+    const wsData = [newHeaders, newVariantIdRow, ...newDataRows];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws["!cols"] = newHeaders.map(() => ({ wch: 30 }));
+    ws["!rows"] = [null, { hidden: true }];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
+
+    XLSX.writeFile(wb, `Shipment_Result_${campaignNumber || "campaign"}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+  }, [batchFailedRecords, campaignNumber, t]);
+
+  const hasBatchActivity = isProcessing || isComplete;
+
   const effectiveDateRange = useMemo(() => {
     const now = new Date();
-    // Start: campaign auditDetails.createdTime, fallback to 90 days ago
     const fallbackStart = campaignCreatedDate || new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-    // End: today if before project endDate, otherwise project endDate
     const fallbackEnd = campaignEndDate && now < campaignEndDate ? now : (campaignEndDate || now);
 
     if (dateRange.preset === "cumulative") {
-      return {
-        startDate: fallbackStart,
-        endDate: fallbackEnd,
-        preset: "cumulative",
-      };
+      return { startDate: fallbackStart, endDate: fallbackEnd, preset: "cumulative" };
     }
     if (dateRange.preset === "today") {
       return { ...dateRange };
@@ -106,7 +314,6 @@ const CommodityDashboard = () => {
     };
   }, [dateRange, campaignCreatedDate, campaignEndDate]);
 
-  // Centralized stock data fetch (single call for both tabs)
   const { data: rawStockData, isLoading: stockLoading, metadata, source, refetch: refetchStockData } = useStockData({
     tenantId,
     dateRange: effectiveDateRange,
@@ -116,20 +323,17 @@ const CommodityDashboard = () => {
     useKibana: useKibanaFlag,
   });
 
-  // Compute summary stats from either ES aggregations or raw data
   const stockSummary = useMemo(
     () => computeStockSummary({ source, metadata, data: rawStockData }),
     [source, metadata, rawStockData]
   );
 
-  // Warehouse manager sync stats from project-staff + user-sync ES indexes
   const { totalManagers, syncedManagers, syncRate, isLoading: syncLoading } = useWarehouseManagerSync({
     enabled: useKibanaFlag,
     dateRange: effectiveDateRange,
     campaignNumber,
   });
 
-  // Override stockSummary.dataSyncStats with real ES data when available
   const enrichedStockSummary = useMemo(() => {
     if (!syncLoading && (totalManagers > 0 || syncedManagers > 0)) {
       return {
@@ -148,7 +352,6 @@ const CommodityDashboard = () => {
     });
   };
 
-  // Date range preset toggle options
   const datePresetOptions = [
     { code: "custom", name: t("HCM_CUSTOM_DATE_RANGE") },
     { code: "today", name: t("HCM_TODAY") },
@@ -169,7 +372,6 @@ const CommodityDashboard = () => {
     } else if (code === "cumulative") {
       setDateRange({ startDate: fallbackStart, endDate: fallbackEnd, preset: "cumulative" });
     } else {
-      // Custom: inherit current effective dates so the picker doesn't reset
       setDateRange((prev) => ({
         startDate: prev.startDate || fallbackStart,
         endDate: prev.endDate || fallbackEnd,
@@ -184,10 +386,11 @@ const CommodityDashboard = () => {
     { key: "pending", label: t("HCM_PENDING_TRANSACTIONS") },
   ];
 
-  // Show loader while campaignId is being fetched
   if (campaignIdLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
+
+  const statusText = resolveStatusText(t, batchStatus.statusKey, batchStatus.statusParams);
 
   return (
     <div className="cm-dashboard">
@@ -203,9 +406,146 @@ const CommodityDashboard = () => {
             label={t("HCM_NEW_SHIPMENT")}
             icon="AddIcon"
             onClick={() => setShowNewShipmentPopup(true)}
+            isDisabled={isProcessing}
           />
         )}
       </div>
+
+      {/* Inline Batch Processing Status Card */}
+      {hasBatchActivity && (
+        <Card style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+          {isProcessing && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                <span style={{ fontWeight: "600", fontSize: "1rem" }}>{statusText}</span>
+                <span style={{ fontSize: "0.875rem", color: "#505A5F" }}>
+                  {t("HCM_BATCH_PROGRESS_LABEL", { current: batchStatus.currentBatch, total: batchStatus.total })}
+                </span>
+              </div>
+              <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
+                <div
+                  style={{
+                    width: `${batchStatus.total > 0 ? (batchStatus.completed / batchStatus.total) * 100 : 0}%`,
+                    backgroundColor: "#F47738",
+                    height: "8px",
+                    borderRadius: "4px",
+                    transition: "width 0.3s ease",
+                  }}
+                />
+              </div>
+              <p style={{ fontSize: "0.875rem", color: "#505A5F" }}>
+                {t("HCM_BATCH_RECORDS_STATUS", {
+                  processed: batchStatus.processedRecords,
+                  total: batchStatus.totalRecords,
+                  failed: batchStatus.failedRecords,
+                })}
+              </p>
+            </div>
+          )}
+          {isComplete && batchResult === "success" && (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ color: "#00703C", fontWeight: "600" }}>
+                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t("HCM_BATCH_RECOVERED_LABEL")}</span>}
+                {t("HCM_BATCH_SUCCESS_MSG", { total: batchStatus.totalRecords })}
+              </p>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Button
+                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  variation="secondary"
+                  type="button"
+                  icon="FileDownload"
+                  onClick={downloadResultSheet}
+                />
+                <Button
+                  label={t("HCM_CLOSE")}
+                  variation="secondary"
+                  type="button"
+                  onClick={handleReset}
+                />
+              </div>
+            </div>
+          )}
+          {isComplete && batchResult === "partial_failure" && (
+            <div>
+              <p style={{ color: "#B4762B", fontWeight: "600", marginBottom: "0.75rem" }}>
+                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t("HCM_BATCH_RECOVERED_LABEL")}</span>}
+                {t("HCM_BATCH_PARTIAL_FAILURE_MSG", { failed: batchStatus.failedRecords, total: batchStatus.totalRecords })}
+              </p>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Button
+                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  variation="primary"
+                  type="button"
+                  icon="FileDownload"
+                  onClick={downloadResultSheet}
+                />
+                <Button
+                  label={t("HCM_CLOSE")}
+                  variation="secondary"
+                  type="button"
+                  onClick={handleReset}
+                />
+              </div>
+            </div>
+          )}
+          {isComplete && batchResult === "all_failed" && (
+            <div>
+              <p style={{ color: "#D4351C", fontWeight: "600", marginBottom: "0.75rem" }}>
+                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t("HCM_BATCH_RECOVERED_LABEL")}</span>}
+                {t("HCM_BATCH_ALL_FAILED_MSG", { total: batchStatus.totalRecords })}
+              </p>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Button
+                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  variation="primary"
+                  type="button"
+                  icon="FileDownload"
+                  onClick={downloadResultSheet}
+                />
+                <Button
+                  label={t("HCM_CLOSE")}
+                  variation="secondary"
+                  type="button"
+                  onClick={handleReset}
+                />
+              </div>
+            </div>
+          )}
+          {/* Recovered mid-processing state: batch was interrupted, show last known progress */}
+          {isRecovered && !isComplete && !isProcessing && batchStatus.completed > 0 && (
+            <div>
+              <p style={{ color: "#B4762B", fontWeight: "600", marginBottom: "0.5rem" }}>
+                {t("HCM_BATCH_INTERRUPTED_MSG")}
+              </p>
+              <p style={{ fontSize: "0.875rem", color: "#505A5F", marginBottom: "0.75rem" }}>
+                {t("HCM_BATCH_INTERRUPTED_DETAIL", {
+                  completed: batchStatus.completed,
+                  total: batchStatus.total,
+                  processed: batchStatus.processedRecords,
+                  totalRecords: batchStatus.totalRecords,
+                })}
+              </p>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                {originalSheetDataRef.current && (
+                  <Button
+                    label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                    variation="primary"
+                    type="button"
+                    icon="FileDownload"
+                    onClick={downloadResultSheet}
+                  />
+                )}
+                <Button
+                  label={t("HCM_DISMISS")}
+                  variation="secondary"
+                  type="button"
+                  onClick={handleReset}
+                />
+              </div>
+            </div>
+          )}
+        </Card>
+      )}
 
       <div className="cm-date-section">
         <LabelFieldPair vertical={true} removeMargin={true}>
@@ -310,13 +650,14 @@ const CommodityDashboard = () => {
             setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
             refetchStockData?.();
           }}
+          onBatchStart={handleBatchStart}
         />
       )}
 
       {showToast && (
         <Toast
           label={showToast.label}
-          type={showToast.key === "error" ? "error" : "success"}
+          type={showToast.key === "error" ? "error" : showToast.key === "warning" ? "warning" : "success"}
           isDleteBtn={true}
           onClose={() => setShowToast(null)}
           transitionTime={5000}
