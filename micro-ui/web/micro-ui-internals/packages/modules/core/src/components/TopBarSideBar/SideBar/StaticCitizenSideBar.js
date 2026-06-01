@@ -162,7 +162,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const whatsApp = {
     number: window?.globalConfigs?.getConfig?.("WHATSAPP_BUSINESS_NUMBER") || "917676472431",
     text: window?.globalConfigs?.getConfig?.("WHATSAPP_DEFAULT_TEXT") || "hi",
-    label: window?.globalConfigs?.getConfig?.("WHATSAPP_LABEL") || "WhatsApp Help",
+    label: window?.globalConfigs?.getConfig?.("WHATSAPP_LABEL") || "Contact us",
     displayNumber: window?.globalConfigs?.getConfig?.("WHATSAPP_DISPLAY_NUMBER") || "+91 76764 72431",
   };
 
