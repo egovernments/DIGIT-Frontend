@@ -58,6 +58,26 @@ const OTPInput = (props) => {
     }
   };
 
+  const handlePaste = (event) => {
+    event.preventDefault();
+    const pasted = (event.clipboardData || window.clipboardData)
+      .getData("text")
+      .replace(/\D/g, "") // keep digits only
+      .slice(0, props.length);
+
+    if (!pasted) return;
+
+    const otp = getOtpValue();
+    let index = activeInput; // start filling from the currently focused box
+    for (const char of pasted) {
+      if (index >= props.length) break;
+      otp[index] = char;
+      index += 1;
+    }
+    props.onChange(otp.join(""));
+    setActiveInput(Math.min(index, props.length - 1));
+  };
+
   function inputChange(event) {
     const { value } = event.target;
 
@@ -78,6 +98,7 @@ const OTPInput = (props) => {
         isFocus={activeInput === i}
         onChange={inputChange}
         onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
         onFocus={(e) => {
           setActiveInput(i);
           e.target.select();
