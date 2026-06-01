@@ -418,7 +418,6 @@ export const getFieldPanelMaster = createAsyncThunk(
                 masterDetails: [
                   {
                     name,
-                    limit,
                   },
                 ],
               },

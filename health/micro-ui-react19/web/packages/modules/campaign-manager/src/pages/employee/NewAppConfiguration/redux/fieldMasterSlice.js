@@ -24,7 +24,6 @@ export const getFieldMaster = createAsyncThunk(
                 masterDetails: [
                   {
                     name,
-                    limit,
                   },
                 ],
               },
