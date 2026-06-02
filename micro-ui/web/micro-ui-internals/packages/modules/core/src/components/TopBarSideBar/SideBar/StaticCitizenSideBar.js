@@ -160,10 +160,10 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
 
   // WhatsApp option config — read from global config if present, else defaults.
   const whatsApp = {
-    number: window?.globalConfigs?.getConfig?.("WHATSAPP_BUSINESS_NUMBER") || "917676472431",
+    number: window?.globalConfigs?.getConfig?.("WHATSAPP_BUSINESS_NUMBER") || "919880900990",
     text: window?.globalConfigs?.getConfig?.("WHATSAPP_DEFAULT_TEXT") || "hi",
     label: window?.globalConfigs?.getConfig?.("WHATSAPP_LABEL") || "Contact us",
-    displayNumber: window?.globalConfigs?.getConfig?.("WHATSAPP_DISPLAY_NUMBER") || "+91 76764 72431",
+    displayNumber: window?.globalConfigs?.getConfig?.("WHATSAPP_DISPLAY_NUMBER") || "+91 9880900990",
   };
 
   const MenuItem = ({ item }) => {
@@ -230,7 +230,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
         populators: { onClick: handleLogout },
       },
       {
-        // Opens WhatsApp for our business number (+91 76764 72431) with "hi"
+        // Opens WhatsApp for our business number (+91 9880900990) with "hi"
         // pre-filled. App-first: tries the WhatsApp Desktop app (no tab); if the
         // app isn't installed, falls back to WhatsApp Web in a NEW tab (DIGIT page
         // stays open). The fallback is skipped when the app takes over (detected
