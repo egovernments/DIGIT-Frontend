@@ -149,7 +149,7 @@ const MapUsersToRegistersScreen = () => {
   }
 
   const attendanceReqCriteria = {
-    url: `/attendance/v1/_search`,
+    url: `/health-attendance/v1/_search`,
     params: attendanceParams,
     body: {},
     config: {
@@ -173,7 +173,7 @@ const MapUsersToRegistersScreen = () => {
 
   // Mutation hook for deleting a register
   const deleteReqCriteria = {
-    url: `/attendance/v1/_delete`,
+    url: `/health-attendance/v1/_delete`,
     params: {},
     body: {},
     config: { enabled: false },
@@ -215,7 +215,7 @@ const MapUsersToRegistersScreen = () => {
     setDeletePopup(null);
     deleteMutation.mutate(
       {
-        url: `/attendance/v1/_delete`,
+        url: `/health-attendance/v1/_delete`,
         body: {
           attendanceRegister: [{ id: register.id, tenantId }],
         },

@@ -130,7 +130,7 @@ const RegisterDetailsScreen = () => {
 
   // Fetch register details using registerNumber
   const attendanceReqCriteria = {
-    url: `/attendance/v1/_search`,
+    url: `/health-attendance/v1/_search`,
     params: { tenantId, registerNumber },
     body: {},
     config: {
