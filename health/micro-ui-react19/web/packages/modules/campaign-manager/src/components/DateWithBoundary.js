@@ -107,37 +107,41 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { state } = useLocation();
   const historyState = window.history.state;
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+
+  // Fetch campaign data first so its hierarchyType can drive all hierarchy-dependent calls
+  const reqCriteriaProject = {
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        ids: [campaignId],
       },
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
-  );
+    config: {
+      enabled: !!campaignId,
+      select: (data) => {
+        return data?.CampaignDetails?.[0];
+      },
+    },
+  };
+  const { isLoading: campaignDataLoading, data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaProject);
+
+  // Campaign API is the authoritative source; session keys are fallbacks for the create flow
+  const BOUNDARY_HIERARCHY_TYPE =
+    campaignData?.hierarchyType ||
+    Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name ||
+    Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")?.hierarchyType;
   const { isLoading, data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
-      },
-    ],
+    [{ name: "HierarchySchema" }],
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  }, [HierarchySchema]);
+    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
+    return schemas.find((item) => item.hierarchy === BOUNDARY_HIERARCHY_TYPE)?.lowestHierarchy;
+  }, [HierarchySchema, BOUNDARY_HIERARCHY_TYPE]);
   const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [filteredBoundaries, setFilteredBoundaries] = useState([]);
@@ -223,24 +227,6 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       setHierarchyTypeDataresult(sortedHierarchyWithLocale);
     }
   }, [hierarchyDefinition]);
-
-  const reqCriteriaProject = {
-    url: `/project-factory/v1/project-type/search`,
-    body: {
-      CampaignDetails: {
-        tenantId: tenantId,
-        ids: [campaignId],
-      },
-    },
-    config: {
-      enabled: !!campaignId,
-      select: (data) => {
-        return data?.CampaignDetails?.[0];
-      },
-    },
-  };
-
-  const { isLoading: campaignDataLoading, data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaProject);
 
   useEffect(() => {
     if (state?.data) {

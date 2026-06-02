@@ -407,16 +407,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { isLoading: hierarchyLoading, data: lowestHierarchy } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: "[?(@.type=='console')]",
-      },
-    ],
+    [{ name: "HierarchySchema" }],
     {
       enabled: true,
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema?.[0]?.lowestHierarchy;
+        const hierarchyType = paramsData?.hierarchy?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
+        const schemas = data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema || [];
+        return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }

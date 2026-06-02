@@ -27,11 +27,13 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
  * triggers API calls to create or update the campaign
  */
 
-const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
+const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierarchyDataProp }) => {
   const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
   Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const storedHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+  const [hierarchyType, setDerivedHierarchyType] = useState(storedHierarchy?.name || hierarchyTypeProp);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
@@ -75,18 +77,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window?.Digit?.Utils?.campaign?.getModuleName()}')]`,
-      },
-    ],
+    [{ name: "HierarchySchema" }],
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  }, [HierarchySchema]);
+    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
+    return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+  }, [HierarchySchema, hierarchyType]);
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -116,6 +114,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   }, [tenantId, hierarchyType]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -129,6 +128,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       },
     },
   });
+
+  useEffect(() => {
+    if (draftData?.hierarchyType && draftData.hierarchyType !== hierarchyType) {
+      setDerivedHierarchyType(draftData.hierarchyType);
+      Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", { name: draftData.hierarchyType });
+    }
+  }, [draftData?.hierarchyType]);
 
   useEffect(() => {
     if (isPreview === "true") {

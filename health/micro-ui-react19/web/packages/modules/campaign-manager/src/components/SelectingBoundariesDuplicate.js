@@ -26,18 +26,13 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const queryParams = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
-  const hierarchyType = props?.props?.dataParams?.hierarchyType;
+  const hierarchyType = props?.props?.dataParams?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name;
   const campaignNumber = searchParams.get("campaignNumber");
   const draft = searchParams.get("draft");
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
-      },
-    ],
+    [{ name: "HierarchySchema" }],
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
@@ -49,8 +44,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` }
   );
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.lowestHierarchy;
-  }, [HierarchySchema]);
+    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
+    return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+  }, [HierarchySchema, hierarchyType]);
   // Initialize from session data to prevent losing data on re-render
   const [selectedData, setSelectedData] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []
@@ -257,7 +253,15 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         <div className="card-container-delivery">
           <Card>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <TagComponent campaignName={campaignName} />
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <TagComponent campaignName={campaignName} />
+                {hierarchyType && (
+                  <TagComponent
+                    campaignName={`${t("HCM_HIERARCHY_TYPE")} : ${hierarchyType}`}
+                    type="success"
+                  />
+                )}
+              </div>
               {/* Commenting Cancel Campaign feature */}
               {/* {isDraftCampaign ? (
                 <div className="digit-tag-container" style={{ margin: "0rem" }}>

@@ -18,12 +18,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
-      },
-    ],
+    [{ name: "HierarchySchema" }],
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );

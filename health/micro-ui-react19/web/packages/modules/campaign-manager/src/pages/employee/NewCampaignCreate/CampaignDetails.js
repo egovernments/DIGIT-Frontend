@@ -150,24 +150,7 @@ const CampaignDetails = () => {
   const [showQRPopUp, setShowQRPopUp] = useState(false);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
-  const moduleName = Digit.Utils.campaign.getModuleName();
-
-  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${moduleName}')]`,
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
-      },
-    },
-    { schemaCode: "HierarchySchema" }
-  );
+  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
 
   const hierarchyDefinitionReqCriteria = useMemo(() => {
     return {
@@ -321,6 +304,9 @@ const CampaignDetails = () => {
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
     Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", tranformedManagerUploadData);
+    if (campaignData?.hierarchyType) {
+      Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", { name: campaignData.hierarchyType });
+    }
     // Update HCM_CAMPAIGN_MANAGER_FORM_DATA with fresh campaign dates for CycleConfiguration
     const existingFormData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {};
     Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", {
@@ -645,7 +631,7 @@ const CampaignDetails = () => {
     setShowQRPopUp(true);
   };
 
-  if (isLoading || isFormConfigLoading || hierarchyTypeLoading ) {
+  if (isLoading || isFormConfigLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
@@ -687,15 +673,11 @@ const CampaignDetails = () => {
           )}
         </div>
       </div>
-      <div style={{ display: "flex", gap: "1rem"}}>
-        <div className="dates">{week}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+        <div className="dates" style={{fontSize:"16px"}}>{week}</div>
         <div
           className="hover"
-          style={{
-            height: "20px",
-            width: "20px",
-            alignSelf: "self-end",
-          }}
+          style={{ height: "20px", width: "20px",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"6px" }}
           onClick={() => {
             if (campaignData?.status === "created") {
               navigate(
@@ -708,6 +690,20 @@ const CampaignDetails = () => {
             }
           }}
           id={"campaign-details-edit-campaign-dates"}
+        >
+          <Edit width={"18"} height={"18"} />
+        </div>
+        <span style={{ color: "#D6D5D4", fontWeight: "300", fontSize: "32px", lineHeight: 1 }}>|</span>
+        <div className="dates" style={{fontSize:"16px"}}>{campaignData?.hierarchyType}</div>
+        <div
+          className="hover"
+          style={{ height: "20px", width: "20px",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"6px"}}
+          onClick={() => {
+            navigate(
+              `/${window.contextPath}/employee/campaign/create-campaign?key=4&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
+            );
+          }}
+          id={"campaign-details-edit-hierarchy"}
         >
           <Edit width={"18"} height={"18"} />
         </div>
