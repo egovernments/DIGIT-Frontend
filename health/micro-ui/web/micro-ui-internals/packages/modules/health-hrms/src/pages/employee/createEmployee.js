@@ -60,7 +60,7 @@ const CreateEmployee = ({ editUser = false }) => {
       return data?.["egov-hrms"]?.CreateEmployeeConfig?.[0];
     },
     retry: false,
-    enable: false,
+    enable: true,
   });
 
 

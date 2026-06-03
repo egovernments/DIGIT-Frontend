@@ -120,13 +120,13 @@ export const CreateComplaintConfig = {
                 name: "ComplainantContactNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
                 hideSpan: true,
-                maxLength: 10,
+                maxLength: 11,
                 validation: {
                   required: true,
-                  pattern: /^[0-9]{10}$/,
+                  pattern: /^[0-9]{11}$/,
                   validate: (value) => {
                     if (!value || value === "") return false; // Required field
-                    return /^[0-9]{10}$/.test(value); // Must be exactly 10 digits
+                    return /^[0-9]{11}$/.test(value); // Must be exactly 10 digits
                   }
                 }
               },
@@ -156,12 +156,12 @@ export const CreateComplaintConfig = {
                 name: "SupervisorContactNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
                 hideSpan: true,
-                maxLength: 10,
+                maxLength: 11,
                 validation: {
-                  pattern: /^[0-9]{10}$/,
+                  pattern: /^[0-9]{11}$/,
                   validate: (value) => {
                     if (!value || value === "") return true; // Allow empty since not mandatory
-                    return /^[0-9]{10}$/.test(value); // Must be exactly 10 digits if provided
+                    return /^[0-9]{11}$/.test(value); // Must be exactly 11 digits if provided
                   }
                 }
               },

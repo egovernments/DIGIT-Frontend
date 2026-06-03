@@ -102,12 +102,12 @@ export const CreateEmployeeConfig = {
                 componentInFront: "+91",
                 validation: {
                   required: true,
-                  minLength: 10,
-                  maxLength: 10,
-                  min: 6000000000,
-                  max: 9999999999,
+                  minLength: 11,
+                  maxLength: 11,
+                  min: 60000000000,
+                  max: 99999999999,
                   
-                }, // 10-digit phone number validation
+                }, // 11-digit phone number validation
               },
             },
       
