@@ -67,12 +67,14 @@ const getInitialRange = () => {
 
   let boundaries;
   if (campaignData && projectType) {
-    let data = campaignData[projectType];
-    if (data) {
-      let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
-      startDate = data?.[0].startDate ? new Date(data?.[0].startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
-      endDate = data?.[0].endDate ? new Date(data?.[0].endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
-      boundaries = data?.[0].boundaries;
+    let nestedData = campaignData[projectType];
+    let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
+
+    if (nestedData) {
+      // legacy nested format: { [projectType]: [{ startDate, endDate, boundaries }] }
+      startDate = nestedData?.[0].startDate ? new Date(nestedData?.[0].startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
+      endDate = nestedData?.[0].endDate ? new Date(nestedData?.[0].endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
+      boundaries = nestedData?.[0].boundaries;
       if (descendantDateRange?.[boundaryValue]) {
         startDate = new Date(descendantDateRange[boundaryValue]?.startDate);
         endDate = new Date(descendantDateRange[boundaryValue]?.endDate);
@@ -81,8 +83,19 @@ const getInitialRange = () => {
         startDate = new Date(filteredInfo[0]["startDate"]);
         endDate = new Date(filteredInfo[0]["endDate"]);
       }
-      return { startDate, endDate, title, interval, denomination, dateFilterSelected, tenantId, moduleLevel, boundaries };
+    } else if (campaignData.startDate) {
+      // flat campaign object: { startDate, endDate, ... }
+      startDate = new Date(campaignData.startDate);
+      endDate = new Date(campaignData.endDate);
+      if (descendantDateRange?.[boundaryValue]) {
+        startDate = new Date(descendantDateRange[boundaryValue]?.startDate);
+        endDate = new Date(descendantDateRange[boundaryValue]?.endDate);
+      }
     }
+
+    const resolvedTitle = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
+    const resolvedInterval = getDuration(startDate, endDate);
+    return { startDate, endDate, title: resolvedTitle, interval: resolvedInterval, denomination, dateFilterSelected, tenantId, moduleLevel, boundaries };
   }
   return { startDate, endDate, title, interval, denomination, dateFilterSelected, tenantId, moduleLevel };
 };
@@ -91,30 +104,28 @@ const overrideDescendantDateRange = (boundaryValue) => {
   let dssFilters = {};
   Object.assign(dssFilters, Digit.SessionStorage.get(key));
   let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
-if (
-  dssFilters?.filters &&
-  dssFilters?.range &&
-  descendantDateRange?.[boundaryValue]
-) {
-  const startRaw = descendantDateRange[boundaryValue]?.startDate;
-  const endRaw = descendantDateRange[boundaryValue]?.endDate;
-  const startDate = new Date(startRaw);
-  const endDate = new Date(endRaw);
-  const isStartValid = startDate instanceof Date && !isNaN(startDate);
-  const isEndValid = endDate instanceof Date && !isNaN(endDate);
-  if (isStartValid && isEndValid) {
-    dssFilters["filters"]["campaignStartDate"] = startRaw?.toString();
-    dssFilters["filters"]["campaignEndDate"] = endRaw?.toString();
-    dssFilters["range"]["startDate"] = startDate.toISOString();
-    dssFilters["range"]["endDate"] = endDate.toISOString();
-    Digit.SessionStorage.set(key, dssFilters);
-  } else {
-    console.warn("Invalid date range found in descendantDateRange", {
-      startRaw,
-      endRaw,
-    });
+  if (descendantDateRange?.[boundaryValue]) {
+    const startRaw = descendantDateRange[boundaryValue]?.startDate;
+    const endRaw = descendantDateRange[boundaryValue]?.endDate;
+    const startDate = new Date(startRaw);
+    const endDate = new Date(endRaw);
+    const isStartValid = startDate instanceof Date && !isNaN(startDate);
+    const isEndValid = endDate instanceof Date && !isNaN(endDate);
+    if (isStartValid && isEndValid) {
+      dssFilters.filters = dssFilters.filters || {};
+      dssFilters.range = dssFilters.range || {};
+      dssFilters.filters["campaignStartDate"] = startRaw?.toString();
+      dssFilters.filters["campaignEndDate"] = endRaw?.toString();
+      dssFilters.range["startDate"] = startDate.toISOString();
+      dssFilters.range["endDate"] = endDate.toISOString();
+      Digit.SessionStorage.set(key, dssFilters);
+    } else {
+      console.warn("Invalid date range found in descendantDateRange", {
+        startRaw,
+        endRaw,
+      });
+    }
   }
-}
 };
 
 function getProjectTypeIDFromURL() {
