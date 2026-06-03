@@ -182,6 +182,8 @@ export const FormComposer = (props) => {
                 value={props.value}
                 disable={disable}
                 {...props}
+                maxLength={populators?.maxLength}
+                hideSpan={populators?.hideSpan}
                 errorStyle={errors?.[populators.name]}
               />
             )}
