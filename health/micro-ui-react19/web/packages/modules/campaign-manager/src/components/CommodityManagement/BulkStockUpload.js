@@ -225,7 +225,7 @@ const BulkStockUpload = () => {
 
   const projectSearchCriteria = useMemo(() => ({
     url: `/project/v1/_search`,
-    params: { tenantId: tenantId, limit: 1000, offset: 0, includeDescendants: true },
+    params: { tenantId: tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: {
       Projects: [
         {

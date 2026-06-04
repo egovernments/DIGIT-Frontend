@@ -162,7 +162,7 @@ const NewShipmentPopup = ({
   const projectSearchCriteria = useMemo(
     () => ({
       url: `/project/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0, includeDescendants: true },
+      params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
       body: { Projects: [{ id: projectId, tenantId }] },
       config: {
         enabled: !!projectId,
@@ -1476,7 +1476,12 @@ const NewShipmentPopup = ({
                                 options={availableOptions.map((code) => ({ code, name: t(code) }))}
                                 optionsKey="code"
                                 selected={selectedCodes.map((code) => ({ code, name: t(code) }))}
-                                onSelect={() => {}}
+                                onSelect={(selectedArray) => {
+                                  const codes = (selectedArray || [])
+                                    .map((arr) => arr?.[1]?.code)
+                                    .filter(Boolean);
+                                  handleToHierarchyChange(h.boundaryType, codes);
+                                }}
                                 onClose={(selectedArray) => {
                                   const codes = (selectedArray || [])
                                     .map((arr) => arr?.[1]?.code)

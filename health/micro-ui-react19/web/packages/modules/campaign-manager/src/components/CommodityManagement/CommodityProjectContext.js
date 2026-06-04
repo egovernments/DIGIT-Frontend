@@ -33,7 +33,7 @@ const CommodityProjectProvider = ({ children }) => {
   // Step 2: Fetch project details for all staff-assigned projects (with descendants)
   const projectSearchCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/v1/_search`,
-    params: { tenantId, limit: staffProjectIds.length || 10, offset: 0, includeDescendants: true },
+    params: { tenantId, limit: staffProjectIds.length || 10, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: { Projects: staffProjectIds.map((id) => ({ id, tenantId })) },
     config: {
       enabled: !!staffProjectIds.length,
