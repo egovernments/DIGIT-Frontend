@@ -27,6 +27,7 @@ const BulkStockUpload = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [fromHierarchyFilters, setFromHierarchyFilters] = useState({});
   const [toHierarchyFilters, setToHierarchyFilters] = useState({});
+  const [accumulatedChildData, setAccumulatedChildData] = useState({ ids: [], boundaryMap: {} });
   const [uploadedFileData, setUploadedFileData] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -264,8 +265,138 @@ const BulkStockUpload = () => {
   }), [tenantId, projectId]);
 
   const { data: projectData, isLoading: projectsLoading } = Digit.Hooks.useCustomAPIHook(projectSearchCriteria);
-  const allProjectIds = projectData?.ids || [];
-  const projectBoundaryMap = projectData?.boundaryMap || {};
+  const initialProjectIds = projectData?.ids || [];
+  const initialBoundaryMap = projectData?.boundaryMap || {};
+
+  // Build sorted hierarchy (moved up before child search logic)
+  const sortedHierarchy = useMemo(() => {
+    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return [];
+    const sorted = [];
+    let current = boundaryHierarchy.find((item) => !item?.parentBoundaryType);
+    while (current) {
+      sorted.push(current);
+      const next = boundaryHierarchy.find((item) => item?.parentBoundaryType === current?.boundaryType);
+      if (!next) break;
+      current = next;
+    }
+    return sorted;
+  }, [hierarchyDefinition]);
+
+  // Determine which hierarchy level the "From" selection is at (the lowest level with a value)
+  const fromSelectedLevel = useMemo(() => {
+    let level = -1;
+    sortedHierarchy.forEach((h, idx) => {
+      if (fromHierarchyFilters[h.boundaryType]) level = idx;
+    });
+    return level;
+  }, [fromHierarchyFilters, sortedHierarchy]);
+
+  // "To" hierarchy only shows levels BELOW the "From" selected level
+  const toHierarchyLevels = useMemo(() => {
+    if (fromSelectedLevel < 0) return [];
+    return sortedHierarchy.slice(fromSelectedLevel + 1);
+  }, [sortedHierarchy, fromSelectedLevel]);
+
+  // Determine the lowest selected level in To filters
+  const toSelectedLevel = useMemo(() => {
+    let level = -1;
+    toHierarchyLevels.forEach((h) => {
+      if (toHierarchyFilters[h.boundaryType]) {
+        const idx = sortedHierarchy.findIndex((s) => s.boundaryType === h.boundaryType);
+        if (idx > level) level = idx;
+      }
+    });
+    return level;
+  }, [toHierarchyFilters, toHierarchyLevels, sortedHierarchy]);
+
+  // Merge initial + accumulated child project results
+  const allProjectIds = useMemo(() => {
+    return [...new Set([...initialProjectIds, ...accumulatedChildData.ids])];
+  }, [initialProjectIds, accumulatedChildData]);
+
+  const projectBoundaryMap = useMemo(() => ({
+    ...initialBoundaryMap,
+    ...accumulatedChildData.boundaryMap,
+  }), [initialBoundaryMap, accumulatedChildData]);
+
+  // Determine which parent-level project IDs need a child search.
+  // Searches the MERGED allProjectIds so multi-level cascading works.
+  const childSearchProjectIds = useMemo(() => {
+    const targetLevelIdx = toSelectedLevel >= 0 ? toSelectedLevel : (fromSelectedLevel >= 0 ? fromSelectedLevel + 1 : -1);
+    if (targetLevelIdx < 0 || targetLevelIdx >= sortedHierarchy.length) return [];
+    const targetBoundaryType = sortedHierarchy[targetLevelIdx]?.boundaryType;
+    if (!targetBoundaryType) return [];
+
+    // Check if target-level projects already exist in MERGED results
+    const hasTargetProjects = allProjectIds.some((pid) => {
+      const bInfo = projectBoundaryMap[pid];
+      return bInfo?.boundaryType === targetBoundaryType;
+    });
+    if (hasTargetProjects) return [];
+
+    // Find the parent level (one above target in sortedHierarchy)
+    if (targetLevelIdx <= 0) return [];
+    const parentBoundaryType = sortedHierarchy[targetLevelIdx - 1]?.boundaryType;
+    if (!parentBoundaryType) return [];
+
+    // Find parent-level projects from MERGED results. Only check From-level filters.
+    const fromFiltersOnly = { ...fromHierarchyFilters };
+    return allProjectIds.filter((pid) => {
+      const bInfo = projectBoundaryMap[pid];
+      if (!bInfo?.boundary || bInfo.boundaryType !== parentBoundaryType) return false;
+      const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
+      return Object.entries(fromFiltersOnly).every(([type, value]) => {
+        if (!value) return true;
+        return ancestors[type] === value;
+      });
+    });
+  }, [allProjectIds, projectBoundaryMap, sortedHierarchy, toSelectedLevel, fromSelectedLevel, fromHierarchyFilters, boundaryAncestorMap]);
+
+  // Dynamic child project search
+  const childProjectSearchCriteria = useMemo(() => ({
+    url: `/project/v1/_search`,
+    params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
+    body: { Projects: childSearchProjectIds.map((id) => ({ id, tenantId })) },
+    config: {
+      enabled: !!childSearchProjectIds.length,
+      select: (data) => {
+        const projects = data?.Project || [];
+        const idSet = new Set();
+        const boundaryMap = {};
+        const collectProject = (proj) => {
+          if (!proj?.id || idSet.has(proj.id)) return;
+          idSet.add(proj.id);
+          if (proj?.address?.boundary) {
+            boundaryMap[proj.id] = {
+              boundary: proj.address.boundary,
+              boundaryType: proj.address.boundaryType,
+            };
+          }
+          if (proj?.descendants) proj.descendants.forEach(collectProject);
+        };
+        projects.forEach(collectProject);
+        return { ids: [...idSet], boundaryMap };
+      },
+    },
+    changeQueryName: `childProjects_${childSearchProjectIds.join(",")}`,
+  }), [tenantId, childSearchProjectIds]);
+
+  const {
+    data: childProjectData,
+    isLoading: childProjectsLoading,
+  } = Digit.Hooks.useCustomAPIHook(childProjectSearchCriteria);
+
+  // Accumulate child project data so it persists across criteria changes
+  useEffect(() => {
+    if (!childProjectData?.ids?.length) return;
+    setAccumulatedChildData((prev) => {
+      const newIds = [...new Set([...prev.ids, ...(childProjectData.ids || [])])];
+      const newMap = { ...prev.boundaryMap, ...(childProjectData.boundaryMap || {}) };
+      if (newIds.length === prev.ids.length) return prev;
+      return { ids: newIds, boundaryMap: newMap };
+    });
+  }, [childProjectData]);
 
   // Fetch ALL project facilities to know which projects have facilities
   const allFacilityReqCriteria = useMemo(() => ({
@@ -291,21 +422,6 @@ const BulkStockUpload = () => {
 
   const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(allFacilityReqCriteria);
 
-  // Build sorted hierarchy
-  const sortedHierarchy = useMemo(() => {
-    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
-    if (!boundaryHierarchy.length) return [];
-    const sorted = [];
-    let current = boundaryHierarchy.find((item) => !item?.parentBoundaryType);
-    while (current) {
-      sorted.push(current);
-      const next = boundaryHierarchy.find((item) => item?.parentBoundaryType === current?.boundaryType);
-      if (!next) break;
-      current = next;
-    }
-    return sorted;
-  }, [hierarchyDefinition]);
-
   // Build hierarchy filter options only from projects that have facilities
   const hierarchyFilterOptions = useMemo(() => {
     if (!projectIdsWithFacilities?.size || !sortedHierarchy?.length) return {};
@@ -325,6 +441,39 @@ const BulkStockUpload = () => {
     return options;
   }, [projectIdsWithFacilities, projectBoundaryMap, sortedHierarchy, boundaryAncestorMap]);
 
+  // Build "To" hierarchy filter options from boundary tree (not project-data-based)
+  const toHierarchyFilterOptions = useMemo(() => {
+    const boundaries = boundaryRelationships?.TenantBoundary?.[0]?.boundary || [];
+    const options = {};
+    const traverse = (node) => {
+      if (node?.boundaryType && node?.code) {
+        if (!options[node.boundaryType]) options[node.boundaryType] = [];
+        if (!options[node.boundaryType].includes(node.code)) {
+          options[node.boundaryType].push(node.code);
+        }
+      }
+      (node?.children || []).forEach(traverse);
+    };
+    boundaries.forEach(traverse);
+    return options;
+  }, [boundaryRelationships]);
+
+  // Get cascading "To" options from boundary tree
+  const getToAvailableOptions = useCallback((boundaryType, filters) => {
+    const allOptions = toHierarchyFilterOptions[boundaryType] || [];
+    const currentLevelIdx = sortedHierarchy.findIndex((h) => h.boundaryType === boundaryType);
+    return allOptions.filter((code) => {
+      const ancestors = boundaryAncestorMap[code] || {};
+      return Object.entries(filters).every(([type, value]) => {
+        if (type === boundaryType) return true;
+        const filterLevelIdx = sortedHierarchy.findIndex((h) => h.boundaryType === type);
+        if (filterLevelIdx >= currentLevelIdx) return true;
+        if (!value) return true;
+        return ancestors[type] === value;
+      });
+    });
+  }, [toHierarchyFilterOptions, boundaryAncestorMap, sortedHierarchy]);
+
   // Get cascading options for a given filter set (only projects with facilities)
   const getAvailableOptions = useCallback((boundaryType, filters) => {
     const allOptions = hierarchyFilterOptions[boundaryType] || [];
@@ -340,21 +489,6 @@ const BulkStockUpload = () => {
       });
     });
   }, [hierarchyFilterOptions, projectBoundaryMap, projectIdsWithFacilities, boundaryAncestorMap]);
-
-  // Determine which hierarchy level the "From" selection is at (the lowest level with a value)
-  const fromSelectedLevel = useMemo(() => {
-    let level = -1;
-    sortedHierarchy.forEach((h, idx) => {
-      if (fromHierarchyFilters[h.boundaryType]) level = idx;
-    });
-    return level;
-  }, [fromHierarchyFilters, sortedHierarchy]);
-
-  // "To" hierarchy only shows levels BELOW the "From" selected level
-  const toHierarchyLevels = useMemo(() => {
-    if (fromSelectedLevel < 0) return [];
-    return sortedHierarchy.slice(fromSelectedLevel + 1);
-  }, [sortedHierarchy, fromSelectedLevel]);
 
   // Filter project IDs for "From" — only projects at the exact selected level
   const fromFilteredProjectIds = useMemo(() => {
@@ -372,18 +506,6 @@ const BulkStockUpload = () => {
       });
     });
   }, [allProjectIds, fromHierarchyFilters, fromSelectedLevel, sortedHierarchy, projectBoundaryMap, boundaryAncestorMap]);
-
-  // Determine the lowest selected level in To filters
-  const toSelectedLevel = useMemo(() => {
-    let level = -1;
-    toHierarchyLevels.forEach((h) => {
-      if (toHierarchyFilters[h.boundaryType]) {
-        const idx = sortedHierarchy.findIndex((s) => s.boundaryType === h.boundaryType);
-        if (idx > level) level = idx;
-      }
-    });
-    return level;
-  }, [toHierarchyFilters, toHierarchyLevels, sortedHierarchy]);
 
   // Filter project IDs for "To" — only projects at the exact selected To level
   const toFilteredProjectIds = useMemo(() => {
@@ -1151,9 +1273,9 @@ const BulkStockUpload = () => {
                   {toHierarchyLevels.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
                       {toHierarchyLevels.map((h) => {
-                        const options = hierarchyFilterOptions[h.boundaryType];
+                        const options = toHierarchyFilterOptions[h.boundaryType];
                         if (!options) return null;
-                        const availableOptions = getAvailableOptions(h.boundaryType, { ...fromHierarchyFilters, ...toHierarchyFilters });
+                        const availableOptions = getToAvailableOptions(h.boundaryType, { ...fromHierarchyFilters, ...toHierarchyFilters });
                         return (
                           <div key={h.boundaryType} style={{ minWidth: "180px", flex: "1" }}>
                             <label style={{ display: "block", fontWeight: "600", marginBottom: "0.25rem", fontSize: "0.875rem" }}>
@@ -1166,7 +1288,7 @@ const BulkStockUpload = () => {
                             >
                               <option value="">{t("ES_COMMON_ALL")}</option>
                               {availableOptions.map((code) => (
-                                <option key={code} value={code}>{code}</option>
+                                <option key={code} value={code}>{t(code)}</option>
                               ))}
                             </select>
                           </div>
@@ -1175,7 +1297,7 @@ const BulkStockUpload = () => {
                     </div>
                   )}
 
-                  {toFacilitiesLoading ? (
+                  {(toFacilitiesLoading || childProjectsLoading) ? (
                     <Loader />
                   ) : toFacilityList?.length > 0 ? (
                     <div style={{ marginBottom: "1rem" }}>
