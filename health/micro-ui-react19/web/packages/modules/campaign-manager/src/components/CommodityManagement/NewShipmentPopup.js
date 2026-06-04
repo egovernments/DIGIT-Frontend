@@ -1476,12 +1476,7 @@ const NewShipmentPopup = ({
                                 options={availableOptions.map((code) => ({ code, name: t(code) }))}
                                 optionsKey="code"
                                 selected={selectedCodes.map((code) => ({ code, name: t(code) }))}
-                                onSelect={(selectedArray) => {
-                                  const codes = (selectedArray || [])
-                                    .map((arr) => arr?.[1]?.code)
-                                    .filter(Boolean);
-                                  handleToHierarchyChange(h.boundaryType, codes);
-                                }}
+                                onSelect={() => {}}
                                 onClose={(selectedArray) => {
                                   const codes = (selectedArray || [])
                                     .map((arr) => arr?.[1]?.code)
