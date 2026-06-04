@@ -661,8 +661,16 @@ const NewShipmentPopup = ({
   // Handle "To" hierarchy filter change (cascading, multi-select arrays)
   const handleToHierarchyChange = useCallback((boundaryType, values) => {
     setToHierarchyFilters((prev) => {
+      const prevValues = prev[boundaryType] || [];
+      // Don't clear facilities if the selection hasn't actually changed
+      const isSame =
+        Array.isArray(prevValues) && Array.isArray(values) &&
+        prevValues.length === values.length &&
+        prevValues.every((v) => values.includes(v));
+      if (isSame) return prev;
+
       const next = { ...prev };
-      next[boundaryType] = values; // array of selected boundary codes
+      next[boundaryType] = values;
       // Clear all levels below the changed level
       let foundCurrent = false;
       toHierarchyLevels.forEach((h) => {
@@ -672,9 +680,10 @@ const NewShipmentPopup = ({
           delete next[h.boundaryType];
         }
       });
+      // Only clear facility selections when hierarchy actually changed
+      setSelectedFacilityIds(new Set());
       return next;
     });
-    setSelectedFacilityIds(new Set());
   }, [toHierarchyLevels]);
 
   const toggleFacility = useCallback((facilityId) => {
@@ -1469,7 +1478,6 @@ const NewShipmentPopup = ({
                                 }}
                                 isSearchable={true}
                                 addSelectAllCheck={true}
-                                addCategorySelectAllCheck={true}
                               />
                             </div>
                           );
@@ -1560,7 +1568,7 @@ const NewShipmentPopup = ({
                   type="button"
                   icon="DownloadIcon"
                   onClick={handleDownloadTemplate}
-                  isDisabled={isDownloading || fromSelectedLevel < 0 || toSelectedLevel < 0 || !fromFacilityId || selectedFacilityIds.size === 0}
+                  isDisabled={isDownloading || !fromFacilityId || selectedFacilityIds.size === 0}
                 />
               </Card>
 
