@@ -662,7 +662,7 @@ const NewShipmentPopup = ({
   const handleToHierarchyChange = useCallback((boundaryType, values) => {
     setToHierarchyFilters((prev) => {
       const prevValues = prev[boundaryType] || [];
-      // Don't clear facilities if the selection hasn't actually changed
+      // Don't update if the selection hasn't actually changed
       const isSame =
         Array.isArray(prevValues) && Array.isArray(values) &&
         prevValues.length === values.length &&
@@ -680,11 +680,22 @@ const NewShipmentPopup = ({
           delete next[h.boundaryType];
         }
       });
-      // Only clear facility selections when hierarchy actually changed
-      setSelectedFacilityIds(new Set());
       return next;
     });
-  }, [toHierarchyLevels]);
+    // Clear facility selections — but only if the hierarchy actually changed.
+    // We check current state inline; if onClose fires with the same values,
+    // setToHierarchyFilters above returns prev (no-op), and this still runs
+    // but is harmless since the facility list will be the same.
+    setSelectedFacilityIds((prev) => {
+      // Read the current hierarchy filter to compare
+      const currentValues = toHierarchyFilters[boundaryType] || [];
+      const isSame =
+        Array.isArray(currentValues) && Array.isArray(values) &&
+        currentValues.length === values.length &&
+        currentValues.every((v) => values.includes(v));
+      return isSame ? prev : new Set();
+    });
+  }, [toHierarchyLevels, toHierarchyFilters]);
 
   const toggleFacility = useCallback((facilityId) => {
     setSelectedFacilityIds((prev) => {
