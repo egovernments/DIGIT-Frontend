@@ -695,18 +695,20 @@ const CampaignDetails = () => {
         </div>
         <span style={{ color: "#D6D5D4", fontWeight: "300", fontSize: "32px", lineHeight: 1 }}>|</span>
         <div className="dates" style={{fontSize:"16px"}}>{campaignData?.hierarchyType}</div>
-        <div
-          className="hover"
-          style={{ height: "20px", width: "20px",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"6px"}}
-          onClick={() => {
-            navigate(
-              `/${window.contextPath}/employee/campaign/create-campaign?key=4&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
-            );
-          }}
-          id={"campaign-details-edit-hierarchy"}
-        >
-          <Edit width={"18"} height={"18"} />
-        </div>
+        {campaignData?.status !== "created" && (
+          <div
+            className="hover"
+            style={{ height: "20px", width: "20px",display:"flex",alignItems:"center",justifyContent:"center",marginTop:"6px"}}
+            onClick={() => {
+              navigate(
+                `/${window.contextPath}/employee/campaign/create-campaign?key=4&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
+              );
+            }}
+            id={"campaign-details-edit-hierarchy"}
+          >
+            <Edit width={"18"} height={"18"} />
+          </div>
+        )}
       </div>
       <div className="detail-desc">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_DETAILS_DESCRIPTION)}</div>
       <div className="campaign-summary-container">
