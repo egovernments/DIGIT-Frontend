@@ -423,7 +423,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     url: `/boundary-service/boundary-relationships/_search`,
     params: {
       tenantId: tenantId,
-      hierarchyType: paramsData?.hierarchy?.hierarchyType,
+      hierarchyType: paramsData?.hierarchy?.hierarchyType || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name,
       includeChildren: true,
       codes: allLowestHierarchyCodes?.join(","),
     },

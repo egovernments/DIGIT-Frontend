@@ -158,8 +158,6 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     return <Loader />;
   }
 
-  console.log(hierarchyOptions,"hierarchyOptions")
-
   return (
     <React.Fragment>
       <Card>

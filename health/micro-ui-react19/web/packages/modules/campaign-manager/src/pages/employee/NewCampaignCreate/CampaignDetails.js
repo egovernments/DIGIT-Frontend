@@ -150,27 +150,6 @@ const CampaignDetails = () => {
   const [showQRPopUp, setShowQRPopUp] = useState(false);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
-  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
-
-  const hierarchyDefinitionReqCriteria = useMemo(() => {
-    return {
-      url: `/boundary-service/boundary-hierarchy-definition/_search`,
-      changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
-      body: {
-        BoundaryTypeHierarchySearchCriteria: {
-          tenantId: tenantId,
-          limit: 2,
-          offset: 0,
-          hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-        },
-      },
-      config: {
-        enabled: !!BOUNDARY_HIERARCHY_TYPE,
-      },
-    };
-  }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
-
-  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
 
   // useEffect(() => {
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -199,6 +178,28 @@ const CampaignDetails = () => {
   };
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const BOUNDARY_HIERARCHY_TYPE = campaignData?.hierarchyType;
+
+  const hierarchyDefinitionReqCriteria = useMemo(() => {
+    return {
+      url: `/boundary-service/boundary-hierarchy-definition/_search`,
+      changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+      body: {
+        BoundaryTypeHierarchySearchCriteria: {
+          tenantId: tenantId,
+          limit: 2,
+          offset: 0,
+          hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+        },
+      },
+      config: {
+        enabled: !!BOUNDARY_HIERARCHY_TYPE,
+      },
+    };
+  }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
+
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
 
   // MDMS call for Form Config to check if all forms are configured
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
