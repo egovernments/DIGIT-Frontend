@@ -26,7 +26,15 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
     language,
     modulePrefix
   });
-  if (isLoading) {
+
+  const { isLoading: isHcmLoading } = Digit.Services.useStore({
+    stateCode,
+    moduleCode: ["campaignmanager"],
+    language,
+    modulePrefix: "hcm"
+  });
+
+  if (isLoading || isHcmLoading) {
     return  <Loader page={true} variant={"PageLoader"} />;
   }
 
