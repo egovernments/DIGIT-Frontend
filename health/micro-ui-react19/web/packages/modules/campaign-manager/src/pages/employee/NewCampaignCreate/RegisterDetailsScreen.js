@@ -150,7 +150,7 @@ const RegisterDetailsScreen = () => {
 
   // Fetch individual details (name, username, role, etc.)
   const individualReqCriteria = {
-    url: `/individual/v1/_search`,
+    url: `/health-individual/v1/_search`,
     params: { tenantId, limit: individualIds.length + 1, offset: 0 },
     body: { Individual: { id: individualIds } },
     config: {
