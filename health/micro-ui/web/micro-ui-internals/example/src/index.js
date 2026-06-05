@@ -98,5 +98,17 @@ const initDigitUI = () => {
 };
 
 initLibraries().then(() => {
+  const _originalFormatter = window.Digit.Utils.dss.formatter;
+  window.Digit.Utils.dss.formatter = (value, symbol, unit, commaSeparated = true, t) => {
+    if (!value && value !== 0) return "";
+    if (symbol === "number") {
+      if (!commaSeparated) return parseInt(value);
+      return new Intl.NumberFormat("en-US").format(value);
+    }
+    if (symbol === "percentage") {
+      return `${new Intl.NumberFormat("en-US", { maximumSignificantDigits: 3 }).format(Number(value).toFixed(2))} %`;
+    }
+    return _originalFormatter(value, symbol, unit, commaSeparated, t);
+  };
   initDigitUI();
 });
