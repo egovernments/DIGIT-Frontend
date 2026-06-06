@@ -1,9 +1,12 @@
+
+import { useState } from "react";
 import { Card, HeaderComponent, Loader, SVG, Button, Footer } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import EqualHeightWrapper from "../../../components/CreateCampaignComponents/WrapperModuleCard";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import AttendanceFeatureFlowPopup from "./AttendanceFeatureFlowPopup";
 
 const NewAppModule = () => {
   const { t } = useTranslation();
@@ -13,6 +16,7 @@ const NewAppModule = () => {
   const projectType = searchParams.get("projectType");
   const tenantId = searchParams.get("tenantId");
   const viewMode = searchParams.get("viewMode") === "true";
+  const [showAttendanceFlow, setShowAttendanceFlow] = useState(false);
 
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.FormConfig`;
   const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook(
@@ -97,9 +101,8 @@ const NewAppModule = () => {
                   label={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
                   title={viewMode && isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_CONFIGURATION) : isVisited ? t(I18N_KEYS.CAMPAIGN_CREATE.EDIT_CONFIGURATION) : isActive ? t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE) : t(I18N_KEYS.CAMPAIGN_CREATE.UPCOMING_MODULE)}
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click
+                    e.stopPropagation();
                     if (isActive) {
-                      // Handle button click for allowed modules
                       handleCardClick(item?.data?.name, item?.data?.version);
                     }
                   }}
@@ -113,6 +116,43 @@ const NewAppModule = () => {
               </Card>
             );
           })}
+
+          {/* Attendance Flow Card */}
+          <Card
+            key="attendance-flow-card"
+            className="module-card selected-card"
+            onClick={() => {}}
+            id="setup-mobile-app-card-attendance"
+            style={{
+              cursor: "pointer",
+              position: "relative",
+            }}
+          >
+            <HeaderComponent className="detail-header selected-header">
+              {t("ATTENDANCE")}
+            </HeaderComponent>
+            <hr style={{ border: "1px solid #D6D5D4", width: "100%", margin: "0" }} />
+            <p className="module-description">
+              {t("MODULE_DESCRIPTION_ATTENDANCE")}
+            </p>
+            <Button
+              type="button"
+              size="medium"
+              variation="primary"
+              className="campaign-module-button primaryButton"
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.CONFIGURE_MODULE)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAttendanceFlow(true);
+              }}
+              id="setup-mobile-app-card-attendance-btn"
+              style={{
+                marginTop: "1rem",
+                width: "100%",
+              }}
+            />
+          </Card>
         </div>
       </EqualHeightWrapper>
       <Footer
@@ -122,7 +162,6 @@ const NewAppModule = () => {
             label={t(I18N_KEYS.COMMON.GO_BACK)}
             title={t(I18N_KEYS.COMMON.GO_BACK)}
             onClick={() => {
-              // Handle back navigation - could go to module selection or previous screen
               navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
             }}
             type="button"
@@ -135,6 +174,16 @@ const NewAppModule = () => {
         ]}
         maxActionFieldsAllowed={5}
       />
+
+      {/* Attendance Feature Flow Popup */}
+      {showAttendanceFlow && (
+        <AttendanceFeatureFlowPopup
+          onClose={() => setShowAttendanceFlow(false)}
+          campaignNumber={campaignNumber}
+          projectType={projectType}
+          tenantId={tenantId}
+        />
+      )}
     </div>
   );
 };

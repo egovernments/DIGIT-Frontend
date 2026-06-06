@@ -1,0 +1,23 @@
+{
+    "id": "uuid-to-be-generated",
+    "tenantId": "mz",
+    "code": "HCM-ADMIN-CONSOLE.AttendanceFeatureConfig",
+    "description": "Stores additional attendance feature configuration like photo count and session timings",
+    "definition": {
+        "type": "object",
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "required": ["project", "module"],
+        "x-unique": ["project", "module"],
+        "properties": {
+            "project": { "type": "string" },
+            "module": { "type": "string" },
+            "projectType": { "type": "string" },
+            "selectedFormats": {
+                "type": "array",
+                "items": { "type": "string" }
+            },
+            "featureConfigs": { "type": "object" }
+        }
+    },
+    "isActive": true
+}
