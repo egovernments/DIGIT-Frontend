@@ -1013,7 +1013,13 @@ export const UICustomizations = {
   },
   MyBoundarySearchConfig: {
     preProcess: (data, additionalDetails) => {
-      data.body.BoundaryTypeHierarchySearchCriteria.hierarchyType = data?.state?.searchForm?.Name;
+      data.body = {
+        ...data.body,
+        BoundaryTypeHierarchySearchCriteria: {
+          ...data.body.BoundaryTypeHierarchySearchCriteria,
+          hierarchyType: data?.state?.searchForm?.Name,
+        },
+      };
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {

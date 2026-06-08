@@ -26,6 +26,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
     language,
     modulePrefix
   });
+
   if (isLoading) {
     return  <Loader page={true} variant={"PageLoader"} />;
   }
