@@ -115,7 +115,6 @@ export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
           name: "HCM_CAMPAIGN_DATE",
           subHead: "HCM_CAMPAIGN_DATE_DESC",
           sectionSubHeadClassName: "SubHeadingClass",
-          last: true,
           body: [
             {
               isMandatory: false,
@@ -137,6 +136,35 @@ export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
                 },
                 // optionsKey: "code",
                 error: "ES__REQUIRED_DATE",
+                required: true,
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "4",
+          key: "4",
+          name: "HCM_CAMPAIGN_HIERARCHY",
+          subHead: "HCM_CAMPAIGN_HIERARCHY_DESC",
+          sectionSubHeadClassName: "SubHeadingClass",
+          last: true,
+          body: [
+            {
+              isMandatory: true,
+              key: "SelectHierarchy",
+              type: "component",
+              component: "SelectHierarchy",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+              },
+              populators: {
+                name: "SelectHierarchy",
+                fieldPairClassName: "date-selection-field",
+                error: "ES__REQUIRED_HIERARCHY",
                 required: true,
               },
             },

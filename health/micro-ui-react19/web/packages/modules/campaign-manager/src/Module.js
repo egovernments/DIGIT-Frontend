@@ -52,6 +52,7 @@ import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
 import DateSelection from "./components/CreateCampaignComponents/DateSelection";
+import SelectHierarchy from "./components/CreateCampaignComponents/SelectHierarchy";
 import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
 //App config import
 import AppPreview from "./components/AppPreview";
@@ -252,6 +253,7 @@ const componentsToRegister = {
   DataUploadWrapper,
   AppPreview,
   DateSelection,
+  SelectHierarchy,
   ViewDetailComponent,
   CycleSelection,
   HCMMyCampaignRowCard,

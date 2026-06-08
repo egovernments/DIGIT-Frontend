@@ -7,7 +7,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
-const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
+const CreateCampaign = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -92,6 +92,11 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         startDate: draftData?.startDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.startDate)?.split("/")?.reverse()?.join("-") : "",
         endDate: draftData?.endDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.endDate)?.split("/")?.reverse()?.join("-") : "",
       },
+      SelectHierarchy: draftData?.hierarchyType
+        ? { hierarchy: Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")?.name === draftData.hierarchyType
+            ? Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY")
+            : { name: draftData.hierarchyType } }
+        : undefined,
     };
     return restructureFormData;
   };
@@ -109,6 +114,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   useEffect(() => {
     setTotalFormData(params);
   }, [params]);
+
+  useEffect(() => {
+    if (!id) {
+      Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+      Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
+    }
+  }, []);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -169,6 +181,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
+    const hierarchyType = formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
     setLoader(true);
     const isEdit = editName || campaignNumber;
     const mutation = isEdit ? mutationUpdate : mutationCreate;
@@ -304,8 +317,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
     const oldStartDate = normalizeDate(params?.startDate);
     const oldEndDate = normalizeDate(params?.endDate);
-    const newStartDate = formData?.DateSelection?.startDate;
-    const newEndDate = formData?.DateSelection?.endDate;
+    const newStartDate = formData?.DateSelection?.startDate ?? params?.DateSelection?.startDate;
+    const newEndDate = formData?.DateSelection?.endDate ?? params?.DateSelection?.endDate;
 
     const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
 
@@ -348,7 +361,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         />
       )}
       <Stepper
-        customSteps={["HCM_CAMPAIGN_TYPE_DETAILS", "HCM_CAMPAIGN_NAME_DETAILS", "HCM_CAMPAIGN_DATE_DETAILS"]}
+        customSteps={["HCM_CAMPAIGN_TYPE_DETAILS", "HCM_CAMPAIGN_NAME_DETAILS", "HCM_CAMPAIGN_DATE_DETAILS", "HCM_CAMPAIGN_HIERARCHY_DETAILS"]}
         currentStep={currentKey}
         onStepClick={onStepperClick}
         activeSteps={currentKey}
@@ -367,7 +380,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
-        noCardStyle={currentKey === 3}
+        noCardStyle={currentKey === 3 || currentKey === 4}
         onSecondayActionClick={onSecondayActionClick}
         isDisabled={isDataCreating}
         label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t(I18N_KEYS.COMMON.HCM_SUBMIT) : t(I18N_KEYS.COMMON.HCM_NEXT)}

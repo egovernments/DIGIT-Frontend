@@ -19,7 +19,7 @@ import { I18N_KEYS } from "../../utils/i18nKeyConstants";
  * triggers API calls to create or update the campaign
  */
 
-const UpdateCampaign = ({ hierarchyData }) => {
+const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
   const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
   Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
 
@@ -62,12 +62,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
-      },
-    ],
+    [{ name: "HierarchySchema" }],
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
@@ -122,6 +117,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   }, [tenantId, hierarchyType]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const { isLoading: draftLoading, data: draftData, error: draftError } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,

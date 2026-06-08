@@ -372,7 +372,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`app-config-save`} element={<AppConfigSaveLoader />} />
           <Route
             path={`create-campaign`}
-            element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+            element={<CreateCampaign />}
           />
           <Route path={`campaign-home`} element={<CampaignHome />} />
           <Route path={`view-details`} element={<CampaignDetails />} />

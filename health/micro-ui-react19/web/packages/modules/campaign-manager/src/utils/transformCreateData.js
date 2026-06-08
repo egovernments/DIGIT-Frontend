@@ -28,11 +28,17 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
     params?.additionalDetails?.cycleData?.cycleConfgureDate ||
     {};
 
+  // Detect hierarchy change — if the saved draft's hierarchyType differs from what the user just selected,
+  // boundaries and resources are no longer valid and must be cleared.
+  const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
+
   // Transform resource types for API - unified-console should be sent as unified-console-resources
-  const transformedResources = params?.resources?.map((resource) => ({
-    ...resource,
-    type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-  }));
+  const transformedResources = hierarchyChanged
+    ? []
+    : params?.resources?.map((resource) => ({
+        ...resource,
+        type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
+      }));
 
   // Check if resources contain unified-console-resources type
   const hasUnifiedResource = totalFormData?.additionalDetails?.isUnifiedCampaign || false;
@@ -49,8 +55,8 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
       id: id,
       campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.CampaignName || params?.CampaignName,
       resources: transformedResources,
-      boundaries: params?.boundaries,
-      deliveryRules: id && hasDateChanged ? [] : params?.deliveryRules,
+      boundaries: hierarchyChanged ? [] : params?.boundaries,
+      deliveryRules: id && (hasDateChanged || hierarchyChanged) ? [] : params?.deliveryRules,
       projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.CampaignType?.code || params?.CampaignType?.code || params?.CampaignType,
       endDate: endDate,
       startDate: startDate,
