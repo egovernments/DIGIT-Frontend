@@ -36,6 +36,7 @@ const NewShipmentPopup = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [fromHierarchyFilters, setFromHierarchyFilters] = useState({});
   const [toHierarchyFilters, setToHierarchyFilters] = useState({});
+  const [accumulatedChildData, setAccumulatedChildData] = useState({ ids: [], boundaryMap: {} });
   const [uploadedFileData, setUploadedFileData] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -162,7 +163,7 @@ const NewShipmentPopup = ({
   const projectSearchCriteria = useMemo(
     () => ({
       url: `/project/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0, includeDescendants: true },
+      params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
       body: { Projects: [{ id: projectId, tenantId }] },
       config: {
         enabled: !!projectId,
@@ -196,8 +197,8 @@ const NewShipmentPopup = ({
     data: projectData,
     isLoading: projectsLoading,
   } = Digit.Hooks.useCustomAPIHook(projectSearchCriteria);
-  const allProjectIds = projectData?.ids || [];
-  const projectBoundaryMap = projectData?.boundaryMap || {};
+  const initialProjectIds = projectData?.ids || [];
+  const initialBoundaryMap = projectData?.boundaryMap || {};
 
   const sortedHierarchy = useMemo(() => {
     const boundaryHierarchy =
@@ -308,6 +309,103 @@ const NewShipmentPopup = ({
     });
     return level;
   }, [toHierarchyFilters, toHierarchyLevels, effectiveHierarchy]);
+
+  // Merge initial + accumulated child project results
+  const allProjectIds = useMemo(() => {
+    return [...new Set([...initialProjectIds, ...accumulatedChildData.ids])];
+  }, [initialProjectIds, accumulatedChildData]);
+
+  const projectBoundaryMap = useMemo(() => ({
+    ...initialBoundaryMap,
+    ...accumulatedChildData.boundaryMap,
+  }), [initialBoundaryMap, accumulatedChildData]);
+
+  // Determine which parent-level project IDs need a child search.
+  // Searches the MERGED allProjectIds (initial + accumulated child data) so that
+  // multi-level cascading works (e.g., LGA parents found from a previous child search).
+  const childSearchProjectIds = useMemo(() => {
+    const targetLevelIdx = toSelectedLevel >= 0 ? toSelectedLevel : (fromSelectedLevel >= 0 ? fromSelectedLevel + 1 : -1);
+    if (targetLevelIdx < 0 || targetLevelIdx >= effectiveHierarchy.length) return [];
+    const targetBoundaryType = effectiveHierarchy[targetLevelIdx]?.boundaryType;
+    if (!targetBoundaryType) return [];
+
+    // Check if target-level projects already exist in MERGED results
+    const hasTargetProjects = allProjectIds.some((pid) => {
+      const bInfo = projectBoundaryMap[pid];
+      return bInfo?.boundaryType === targetBoundaryType;
+    });
+    if (hasTargetProjects) return [];
+
+    // Find the parent level (one above target in sortedHierarchy)
+    const targetIdxInSorted = sortedHierarchy.findIndex((h) => h.boundaryType === targetBoundaryType);
+    if (targetIdxInSorted <= 0) return [];
+    const parentBoundaryType = sortedHierarchy[targetIdxInSorted - 1]?.boundaryType;
+    if (!parentBoundaryType) return [];
+
+    // Find parent-level projects from MERGED results. Only check From-level filters.
+    const fromFiltersOnly = { ...fromHierarchyFilters };
+    return allProjectIds.filter((pid) => {
+      const bInfo = projectBoundaryMap[pid];
+      if (!bInfo?.boundary || bInfo.boundaryType !== parentBoundaryType) return false;
+      if (campaignNumber && bInfo.referenceId && bInfo.referenceId !== campaignNumber) return false;
+      const ancestors = boundaryAncestorMap[bInfo.boundary] || {};
+      return Object.entries(fromFiltersOnly).every(([type, value]) => {
+        if (!value) return true;
+        if (Array.isArray(value)) {
+          if (!value.length) return true;
+          return value.includes(ancestors[type]);
+        }
+        return ancestors[type] === value;
+      });
+    });
+  }, [allProjectIds, projectBoundaryMap, sortedHierarchy, effectiveHierarchy, toSelectedLevel, fromSelectedLevel, fromHierarchyFilters, boundaryAncestorMap, campaignNumber]);
+
+  // Dynamic child project search — uses includeDescendants to fetch all levels in one shot
+  const childProjectSearchCriteria = useMemo(() => ({
+    url: `/project/v1/_search`,
+    params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
+    body: { Projects: childSearchProjectIds.map((id) => ({ id, tenantId })) },
+    config: {
+      enabled: !!childSearchProjectIds.length,
+      select: (data) => {
+        const projects = data?.Project || [];
+        const idSet = new Set();
+        const boundaryMap = {};
+        const collectProject = (proj) => {
+          if (!proj?.id || idSet.has(proj.id)) return;
+          idSet.add(proj.id);
+          if (proj?.address?.boundary) {
+            boundaryMap[proj.id] = {
+              boundary: proj.address.boundary,
+              boundaryType: proj.address.boundaryType,
+              referenceId: proj.referenceId,
+            };
+          }
+          if (proj?.descendants) proj.descendants.forEach(collectProject);
+        };
+        projects.forEach(collectProject);
+        return { ids: [...idSet], boundaryMap };
+      },
+    },
+    changeQueryName: `childProjects_${childSearchProjectIds.join(",")}`,
+  }), [tenantId, childSearchProjectIds]);
+
+  const {
+    data: childProjectData,
+    isLoading: childProjectsLoading,
+  } = Digit.Hooks.useCustomAPIHook(childProjectSearchCriteria);
+
+  // Accumulate child project data so it persists across criteria changes
+  useEffect(() => {
+    if (!childProjectData?.ids?.length) return;
+    setAccumulatedChildData((prev) => {
+      const newIds = [...new Set([...prev.ids, ...(childProjectData.ids || [])])];
+      const newMap = { ...prev.boundaryMap, ...(childProjectData.boundaryMap || {}) };
+      if (newIds.length === prev.ids.length) return prev; // no change
+      return { ids: newIds, boundaryMap: newMap };
+    });
+  }, [childProjectData]);
+
 
   // From: show only the user's assigned boundary level (disabled, for context)
   const fromVisibleLevels = useMemo(() => {
@@ -661,8 +759,16 @@ const NewShipmentPopup = ({
   // Handle "To" hierarchy filter change (cascading, multi-select arrays)
   const handleToHierarchyChange = useCallback((boundaryType, values) => {
     setToHierarchyFilters((prev) => {
+      const prevValues = prev[boundaryType] || [];
+      // Don't update if the selection hasn't actually changed
+      const isSame =
+        Array.isArray(prevValues) && Array.isArray(values) &&
+        prevValues.length === values.length &&
+        prevValues.every((v) => values.includes(v));
+      if (isSame) return prev;
+
       const next = { ...prev };
-      next[boundaryType] = values; // array of selected boundary codes
+      next[boundaryType] = values;
       // Clear all levels below the changed level
       let foundCurrent = false;
       toHierarchyLevels.forEach((h) => {
@@ -674,8 +780,20 @@ const NewShipmentPopup = ({
       });
       return next;
     });
-    setSelectedFacilityIds(new Set());
-  }, [toHierarchyLevels]);
+    // Clear facility selections — but only if the hierarchy actually changed.
+    // We check current state inline; if onClose fires with the same values,
+    // setToHierarchyFilters above returns prev (no-op), and this still runs
+    // but is harmless since the facility list will be the same.
+    setSelectedFacilityIds((prev) => {
+      // Read the current hierarchy filter to compare
+      const currentValues = toHierarchyFilters[boundaryType] || [];
+      const isSame =
+        Array.isArray(currentValues) && Array.isArray(values) &&
+        currentValues.length === values.length &&
+        currentValues.every((v) => values.includes(v));
+      return isSame ? prev : new Set();
+    });
+  }, [toHierarchyLevels, toHierarchyFilters]);
 
   const toggleFacility = useCallback((facilityId) => {
     setSelectedFacilityIds((prev) => {
@@ -1454,7 +1572,7 @@ const NewShipmentPopup = ({
                                 disablePortal={true}
                                 t={t}
                                 options={availableOptions.map((code) => ({ code, name: t(code) }))}
-                                optionsKey="code"
+                                optionsKey="name"
                                 selected={selectedCodes.map((code) => ({ code, name: t(code) }))}
                                 onSelect={() => {}}
                                 onClose={(selectedArray) => {
@@ -1469,7 +1587,6 @@ const NewShipmentPopup = ({
                                 }}
                                 isSearchable={true}
                                 addSelectAllCheck={true}
-                                addCategorySelectAllCheck={true}
                               />
                             </div>
                           );
@@ -1477,7 +1594,7 @@ const NewShipmentPopup = ({
                       </div>
                     )}
 
-                    {toFacilitiesLoading ? (
+                    {(toFacilitiesLoading || childProjectsLoading) ? (
                       <Loader />
                     ) : toFacilityList?.length > 0 ? (
                       <div style={{ marginBottom: "1rem" }}>
@@ -1560,7 +1677,7 @@ const NewShipmentPopup = ({
                   type="button"
                   icon="DownloadIcon"
                   onClick={handleDownloadTemplate}
-                  isDisabled={isDownloading || fromSelectedLevel < 0 || toSelectedLevel < 0 || !fromFacilityId || selectedFacilityIds.size === 0}
+                  isDisabled={isDownloading || !fromFacilityId || selectedFacilityIds.size === 0}
                 />
               </Card>
 
