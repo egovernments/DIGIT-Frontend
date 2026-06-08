@@ -113,6 +113,6 @@ export { downloadExcelWithCustomName };
 export const PRIMARY_COLOR = "#C84C0E";
 
 // Batch stock creation configuration
-export const STOCK_BATCH_SIZE = 50;
-export const STOCK_SEARCH_MAX_RETRIES = 3;
+export const STOCK_BATCH_SIZE = 30;
+export const STOCK_SEARCH_MAX_RETRIES = 5;
 export const STOCK_SEARCH_RETRY_INTERVAL = 5000; // milliseconds
