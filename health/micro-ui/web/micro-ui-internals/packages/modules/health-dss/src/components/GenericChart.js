@@ -120,7 +120,7 @@ const GenericChart = ({
                   <TextInput className={"digit-generic-chart-search-field"} placeholder={t("DSS_SEARCH")} onChange={onChange} type={"search"} />
                 </div>
               )}
-              {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} />}
+              {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} style={{ cursor: "pointer" }} />}
             </span>
           )}
           {!showDownload && (
