@@ -13,6 +13,8 @@ import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [summarySearchQuery, setSummarySearchQuery] = useState("");
+  const [activeSubTab, setActiveSubTab] = useState("transactions");
   const [shipmentFacility, setShipmentFacility] = useState(null); // { id, name } for CommodityShipmentPopup
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
@@ -43,11 +45,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         const nameMap = {};
         const boundaryMap = {};
         const boundaryTypeMap = {};
+        const usageMap = {};
         (data?.Facilities || []).forEach(f => {
           if (f.id) {
             nameMap[f.id] = f.name || f.id;
             boundaryMap[f.id] = f.address?.locality?.code || "";
             boundaryTypeMap[f.id] = f.address?.locality?.type || f.address?.boundaryType || "";
+            usageMap[f.id] = f.usage || f.facilityType || "";
           }
         });
         // Disambiguate duplicate facility names by appending short ID suffix
@@ -61,7 +65,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             nameMap[id] = `${name} (${shortId})`;
           }
         });
-        return { nameMap, boundaryMap, boundaryTypeMap };
+        return { nameMap, boundaryMap, boundaryTypeMap, usageMap };
       },
     },
   }), [tenantId, facilityIds]);
@@ -69,6 +73,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const facilityNameMap = facilityMaps?.nameMap || {};
   const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
   const facilityBoundaryTypeMap = facilityMaps?.boundaryTypeMap || {};
+  const facilityUsageMap = facilityMaps?.usageMap || {};
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({
@@ -291,6 +296,81 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return rows.sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
+  // Per-child-facility, per-commodity aggregated summary — same logic as facilityCommoditySummaries
+  // but applied to every child facility individually (not just the user's own facility)
+  const facilityStockSummaryRows = useMemo(() => {
+    if (!finalStockData?.length) return [];
+
+    // Build name/type fallback from stock records (API carries facilityName + transactingFacilityName)
+    const namesFromData = {};
+    finalStockData.forEach((stock) => {
+      if (stock.facilityId && stock.facilityName) namesFromData[stock.facilityId] = stock.facilityName;
+      if (stock.transactingFacilityId && stock.transactingFacilityName) namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
+    });
+    const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || fId;
+
+    // facilityId -> pvId -> { productName, totalReceived, totalIssued, totalRejected, totalReturned }
+    const statsMap = {};
+    const getOrInit = (fId, pvId, productName) => {
+      if (!statsMap[fId]) statsMap[fId] = {};
+      if (!statsMap[fId][pvId]) statsMap[fId][pvId] = { productName, totalReceived: 0, totalIssued: 0, totalRejected: 0, totalReturned: 0 };
+      return statsMap[fId][pvId];
+    };
+
+    finalStockData.forEach((stock) => {
+      const stockEntryType = stock.stockEntryType || "";
+      const status = stock.status || "";
+      const qty = stock.quantity || 0;
+      const pvId = stock.productVariantId;
+      if (!pvId) return;
+      const productName = productNameMap[pvId] || stock.productName || "Unknown";
+
+      if (stockEntryType === "RECEIPT") {
+        if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+      } else if (stockEntryType === "EXCESS") {
+        if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+      } else if (stockEntryType === "LESS") {
+        if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived -= qty;
+      } else if (stockEntryType === "ISSUED") {
+        if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+          if (stock.senderId) getOrInit(stock.senderId, pvId, productName).totalIssued += qty;
+          if (status === "ACCEPTED" && stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+        } else if (status === "REJECTED") {
+          if (stock.senderId) getOrInit(stock.senderId, pvId, productName).totalRejected += qty;
+          if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalRejected += qty;
+        }
+      } else if (stockEntryType === "RETURNED") {
+        if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+          if (stock.senderId) getOrInit(stock.senderId, pvId, productName).totalReturned += qty;
+          if (status === "ACCEPTED" && stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+        }
+      }
+    });
+
+    const rows = [];
+    Object.entries(statsMap).forEach(([facilityId, products]) => {
+      // Exclude user's own facility — its summary is already shown in the SummaryCards above
+      if (!isTopLevel && userFacilityIds.size > 0 && userFacilityIds.has(facilityId)) return;
+      Object.entries(products).forEach(([pvId, stats]) => {
+        rows.push({
+          facilityId,
+          facilityName: resolveName(facilityId),
+          facilityType: facilityUsageMap[facilityId] || "—",
+          boundary: getBoundaryDisplay(facilityId),
+          productVariantId: pvId,
+          commodity: stats.productName,
+          totalReceived: stats.totalReceived,
+          totalIssued: stats.totalIssued,
+          totalRejected: stats.totalRejected,
+          totalReturned: stats.totalReturned,
+          balance: stats.totalReceived - stats.totalIssued - stats.totalReturned,
+        });
+      });
+    });
+
+    return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
+  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, isTopLevel, getBoundaryDisplay]);
+
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
   // Used for stock balance validation — deducts IN_TRANSIT (physically left warehouse)
   const facilityStockMap = useMemo(() => {
@@ -411,6 +491,42 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       sortable: false,
     }] : []),
   ];
+
+  // Stock Summary List tab — filtered data + columns + cell renderer
+  const summaryFilteredData = useMemo(() => {
+    if (!facilityStockSummaryRows?.length) return [];
+    return applyGenericFilters(facilityStockSummaryRows, { searchText: summarySearchQuery });
+  }, [facilityStockSummaryRows, summarySearchQuery]);
+
+  const summaryColumns = [
+    { label: t("HCM_CHILD_FACILITY"), key: "facilityName",  grow: 1.5, minWidth: "180px", sortable: true },
+    { label: t("HCM_TYPE"),           key: "facilityType",  grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t("HCM_BOUNDARY"),       key: "boundary",      grow: 1.2, minWidth: "160px", sortable: true },
+    { label: t("HCM_COMMODITY"),      key: "commodity",     grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t("HCM_TOTAL_RECEIVED"), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_ISSUED"),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_REJECTED"), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_RETURNED"), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_BALANCE"),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
+  ];
+
+  const summaryCellRenderer = {
+    facilityName: (row) => (
+      <div>
+        <div>{row.facilityName}</div>
+        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.facilityId}</div>
+      </div>
+    ),
+    totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
+    totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
+    totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
+    totalReturned: (row) => <span className="cm-cell-stock">{row.totalReturned?.toLocaleString()}</span>,
+    balance: (row) => (
+      <span className={`cm-cell-stock${row.balance < 0 ? " cm-balance-negative" : ""}`}>
+        {row.balance?.toLocaleString()}
+      </span>
+    ),
+  };
 
   // Download table data as Excel
   const handleExcelDownload = useCallback(() => {
@@ -694,29 +810,74 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         </div>
       </div> */}
 
-      <GenericChart
-        header={t("HCM_TRANSACTION_LIST")}
-        showSearch={true}
-        className={"digit-stock-transactions-summary-tab"}
-        subHeader={""}
-        onChange={handleSearch}
-      >
-        <ReusableTableWrapper
-          data={filteredData}
-          columns={columns}
-          isLoading={false}
-          noDataMessage="HCM_NO_STOCK_DATA_FOUND"
-          pagination={true}
-          manualPagination={true}
-          paginationPerPage={10}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          customCellRenderer={customCellRenderer}
-          enableExcelDownload={false}
-          excelFileName="stock_summary"
-          className=""
-          headerClassName=""
-        />
-      </GenericChart>
+      <div className="digit-dss-switch-tabs" style={{ marginBottom: "0" }}>
+        <div className="digit-dss-switch-tab-wrapper">
+          <div
+            className={activeSubTab === "transactions" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
+            onClick={() => setActiveSubTab("transactions")}
+          >
+            {t("HCM_TRANSACTION_LIST")}
+          </div>
+          <div
+            className={activeSubTab === "stockSummary" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
+            onClick={() => setActiveSubTab("stockSummary")}
+          >
+            {t("HCM_STOCK_SUMMARY_LIST")}
+          </div>
+        </div>
+      </div>
+
+      {activeSubTab === "transactions" && (
+        <GenericChart
+          header={""}
+          showSearch={true}
+          className={"digit-stock-transactions-summary-tab"}
+          subHeader={""}
+          onChange={handleSearch}
+        >
+          <ReusableTableWrapper
+            data={filteredData}
+            columns={columns}
+            isLoading={false}
+            noDataMessage="HCM_NO_STOCK_DATA_FOUND"
+            pagination={true}
+            manualPagination={true}
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            customCellRenderer={customCellRenderer}
+            enableExcelDownload={false}
+            excelFileName="stock_transactions"
+            className=""
+            headerClassName=""
+          />
+        </GenericChart>
+      )}
+
+      {activeSubTab === "stockSummary" && (
+        <GenericChart
+          header={""}
+          showSearch={true}
+          className={"digit-stock-transactions-summary-tab"}
+          subHeader={""}
+          onChange={(e) => setSummarySearchQuery(e.target.value)}
+        >
+          <ReusableTableWrapper
+            data={summaryFilteredData}
+            columns={summaryColumns}
+            isLoading={false}
+            noDataMessage="HCM_NO_STOCK_DATA_FOUND"
+            pagination={true}
+            manualPagination={true}
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            customCellRenderer={summaryCellRenderer}
+            enableExcelDownload={false}
+            excelFileName="stock_summary"
+            className=""
+            headerClassName=""
+          />
+        </GenericChart>
+      )}
 
       {shipmentFacility && (
         <CommodityShipmentPopup
