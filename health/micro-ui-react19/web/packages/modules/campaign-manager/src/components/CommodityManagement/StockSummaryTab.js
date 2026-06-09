@@ -296,12 +296,14 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return rows.sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
-  // Per-child-facility, per-commodity aggregated summary — same logic as facilityCommoditySummaries
-  // but applied to every child facility individually (not just the user's own facility)
+  // Per-descendant-facility, per-commodity aggregated summary.
+  // Only includes facilities BELOW the user in the dispatch hierarchy (children, grandchildren, etc.).
+  // Parent/upstream facilities are excluded because BFS only follows edges outward from the user's
+  // own facilities — upstream facilities that dispatched TO the user are never reachable.
   const facilityStockSummaryRows = useMemo(() => {
     if (!finalStockData?.length) return [];
 
-    // Build name/type fallback from stock records (API carries facilityName + transactingFacilityName)
+    // Build name fallback from stock records (each record embeds facilityName + transactingFacilityName)
     const namesFromData = {};
     finalStockData.forEach((stock) => {
       if (stock.facilityId && stock.facilityName) namesFromData[stock.facilityId] = stock.facilityName;
@@ -309,7 +311,45 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
     const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || fId;
 
-    // facilityId -> pvId -> { productName, totalReceived, totalIssued, totalRejected, totalReturned }
+    // Pass 1 — BFS to find all downstream facilities.
+    // ISSUED (DISPATCHED) records define a "parent dispatched to child" edge: senderId → receiverId.
+    // Starting from the user's own facilities and following these edges discovers all direct and
+    // indirect children. Upstream facilities that dispatched TO the user are not reachable this way.
+    const shippedTo = {};
+    finalStockData.forEach((stock) => {
+      if (stock.stockEntryType === "ISSUED" && stock.senderId && stock.receiverId) {
+        if (!shippedTo[stock.senderId]) shippedTo[stock.senderId] = new Set();
+        shippedTo[stock.senderId].add(stock.receiverId);
+      }
+    });
+
+    const descendantIds = new Set();
+    if (userFacilityIds.size > 0) {
+      const queue = [...userFacilityIds];
+      const visited = new Set([...userFacilityIds]);
+      while (queue.length) {
+        const current = queue.shift();
+        (shippedTo[current] || new Set()).forEach((childId) => {
+          if (!visited.has(childId)) {
+            visited.add(childId);
+            descendantIds.add(childId);
+            queue.push(childId);
+          }
+        });
+      }
+    } else {
+      // Fallback when user's facility is not yet known: include all IDs from stock data
+      // except anything that only appears as a sender (those are likely upstream)
+      const receiversInData = new Set();
+      finalStockData.forEach((stock) => {
+        if (stock.receiverId) receiversInData.add(stock.receiverId);
+      });
+      receiversInData.forEach((id) => descendantIds.add(id));
+    }
+
+    if (!descendantIds.size) return [];
+
+    // Pass 2 — compute per-facility, per-commodity stats using the same logic as facilityCommoditySummaries
     const statsMap = {};
     const getOrInit = (fId, pvId, productName) => {
       if (!statsMap[fId]) statsMap[fId] = {};
@@ -326,31 +366,38 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       const productName = productNameMap[pvId] || stock.productName || "Unknown";
 
       if (stockEntryType === "RECEIPT") {
-        if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+        if (stock.receiverId && descendantIds.has(stock.receiverId))
+          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
       } else if (stockEntryType === "EXCESS") {
-        if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+        if (stock.receiverId && descendantIds.has(stock.receiverId))
+          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
       } else if (stockEntryType === "LESS") {
-        if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived -= qty;
+        if (stock.receiverId && descendantIds.has(stock.receiverId))
+          getOrInit(stock.receiverId, pvId, productName).totalReceived -= qty;
       } else if (stockEntryType === "ISSUED") {
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
-          if (stock.senderId) getOrInit(stock.senderId, pvId, productName).totalIssued += qty;
-          if (status === "ACCEPTED" && stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+          if (stock.senderId && descendantIds.has(stock.senderId))
+            getOrInit(stock.senderId, pvId, productName).totalIssued += qty;
+          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId))
+            getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
         } else if (status === "REJECTED") {
-          if (stock.senderId) getOrInit(stock.senderId, pvId, productName).totalRejected += qty;
-          if (stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalRejected += qty;
+          if (stock.senderId && descendantIds.has(stock.senderId))
+            getOrInit(stock.senderId, pvId, productName).totalRejected += qty;
+          if (stock.receiverId && descendantIds.has(stock.receiverId))
+            getOrInit(stock.receiverId, pvId, productName).totalRejected += qty;
         }
       } else if (stockEntryType === "RETURNED") {
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
-          if (stock.senderId) getOrInit(stock.senderId, pvId, productName).totalReturned += qty;
-          if (status === "ACCEPTED" && stock.receiverId) getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+          if (stock.senderId && descendantIds.has(stock.senderId))
+            getOrInit(stock.senderId, pvId, productName).totalReturned += qty;
+          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId))
+            getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
         }
       }
     });
 
     const rows = [];
     Object.entries(statsMap).forEach(([facilityId, products]) => {
-      // Exclude user's own facility — its summary is already shown in the SummaryCards above
-      if (!isTopLevel && userFacilityIds.size > 0 && userFacilityIds.has(facilityId)) return;
       Object.entries(products).forEach(([pvId, stats]) => {
         rows.push({
           facilityId,
@@ -369,7 +416,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
 
     return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
-  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, isTopLevel, getBoundaryDisplay]);
+  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, getBoundaryDisplay]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
   // Used for stock balance validation — deducts IN_TRANSIT (physically left warehouse)
@@ -810,7 +857,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         </div>
       </div> */}
 
-      <div className="digit-dss-switch-tabs" style={{ marginBottom: "0" }}>
+      <div className="digit-dss-switch-tabs" style={{ marginBottom: "8px" }}>
         <div className="digit-dss-switch-tab-wrapper">
           <div
             className={activeSubTab === "transactions" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
