@@ -57,8 +57,8 @@ const CreateCampaign = () => {
 
   const onSecondayActionClick = () => {
   if (currentKey > 1) {
-    // Clear campaign name when going back to step 1
-    if (currentKey === 2) {
+    // Clear campaign name when going back to step 1 (only for new campaigns, not edit/clone)
+    if (currentKey === 2 && !editName && !campaignNumber) {
       setParams((prev) => {
         const { CampaignName, ...rest } = prev;
         return rest;
@@ -288,7 +288,7 @@ const CreateCampaign = () => {
 
     const isCampaignNameMissing = typeof params?.CampaignName === "object" || !params?.CampaignName;
 
-    if (isCampaignNameMissing || isProjectTypeChanged) {
+    if ((isCampaignNameMissing || isProjectTypeChanged) && !editName && !campaignNumber) {
       const formattedDate = new Date()
         .toLocaleDateString("en-GB", {
           month: "long",
@@ -323,10 +323,7 @@ const CreateCampaign = () => {
     const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
-      setShowToast(null);
-      setCurrentKey(currentKey + 1);
-    } else {
-      if (hasDateChanged && params?.deliveryRules) {
+      if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged && params?.deliveryRules) {
         setParams((prev) => ({
           ...prev,
           additionalDetails: {
@@ -339,6 +336,9 @@ const CreateCampaign = () => {
         setShowPopUp(true);
         return;
       }
+      setShowToast(null);
+      setCurrentKey(currentKey + 1);
+    } else {
       handleCampaignMutation(formData);
     }
   };
@@ -427,7 +427,9 @@ const CreateCampaign = () => {
               onClick={() => {
                 setShowPopUp(false);
                 if (pendingFormData) {
-                  handleCampaignMutation(pendingFormData, true);
+                  setShowToast(null);
+                  setCurrentKey(currentKey + 1);
+                  setPendingFormData(null);
                 }
               }}
             />,
