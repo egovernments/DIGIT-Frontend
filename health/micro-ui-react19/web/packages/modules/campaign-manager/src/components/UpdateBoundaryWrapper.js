@@ -261,7 +261,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
           />
         )}
       </Card>
-      <Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
+      {/*<Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
         <div
           style={{
             display: "flex",
@@ -282,7 +282,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
             onToggle={(checked) => setIsUnifiedCampaign(checked)}
           />
         </div>
-      </Card>
+      </Card>*/}
       <div style={{ marginTop: "1rem" }}>
         <AlertCard
           label="Info"
