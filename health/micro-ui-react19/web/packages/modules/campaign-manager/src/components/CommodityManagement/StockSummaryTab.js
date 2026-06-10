@@ -575,31 +575,44 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     ),
   };
 
-  // Download table data as Excel
-  const handleExcelDownload = useCallback(() => {
-    if (!filteredData?.length) return;
+  // Generic XLSX export — accepts any data array + column definitions
+  const exportTableToXlsx = useCallback((data, exportColumns, sheetName, fileName) => {
+    if (!data?.length) return;
     try {
       const XLSX = require("xlsx");
-      const exportColumns = columns.filter((col) => col.key !== "action");
-      const exportData = filteredData.map((row) => {
-        const exportRow = {};
-        exportColumns.forEach((col) => {
-          exportRow[col.label] =
-            row[col.key] !== undefined && row[col.key] !== null
-              ? String(row[col.key])
-              : "N/A";
-        });
-        return exportRow;
-      });
-      const ws = XLSX.utils.json_to_sheet(exportData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Stock Summary");
       const timestamp = new Date().toISOString().split("T")[0];
-      XLSX.writeFile(wb, `stock_summary_${timestamp}.xlsx`);
-    } catch (error) {
-      console.error("Error exporting stock summary:", error);
+      const rows = data.map((row) => {
+        const out = {};
+        exportColumns.forEach((col) => {
+          out[col.label] = row[col.key] !== undefined && row[col.key] !== null ? String(row[col.key]) : "N/A";
+        });
+        return out;
+      });
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      XLSX.writeFile(wb, `${fileName}_${timestamp}.xlsx`);
+    } catch (err) {
+      console.error("XLSX export error:", err);
     }
-  }, [filteredData]);
+  }, []);
+
+  // Transaction List export — called by onActionSelect (ES_DSS_DOWNLOAD_EXCEL) and the inline button
+  const handleExcelDownload = useCallback(() => {
+    const label = t("HCM_TRANSACTION_LIST");
+    exportTableToXlsx(
+      filteredData,
+      columns.filter((col) => col.key !== "action"),
+      label,
+      label
+    );
+  }, [filteredData, columns, exportTableToXlsx, t]);
+
+  // Stock Summary List export
+  const handleSummaryExport = useCallback(() => {
+    const label = t("HCM_STOCK_SUMMARY_LIST");
+    exportTableToXlsx(summaryFilteredData, summaryColumns, label, label);
+  }, [summaryFilteredData, summaryColumns, exportTableToXlsx, t]);
 
   // Share options - DSS pattern
   const shareOptions = navigator.share
@@ -881,6 +894,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           className={"digit-stock-transactions-summary-tab"}
           subHeader={""}
           onChange={handleSearch}
+          exportButton={
+            <Button
+              type="button"
+              variation="secondary"
+              label={t("HCM_EXPORT_XLSX")}
+              icon="FileDownload"
+              onClick={handleExcelDownload}
+              size="medium"
+            />
+          }
         >
           <ReusableTableWrapper
             data={filteredData}
@@ -907,6 +930,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           className={"digit-stock-transactions-summary-tab"}
           subHeader={""}
           onChange={(e) => setSummarySearchQuery(e.target.value)}
+          exportButton={
+            <Button
+              type="button"
+              variation="secondary"
+              label={t("HCM_EXPORT_XLSX")}
+              icon="FileDownload"
+              onClick={handleSummaryExport}
+              size="medium"
+            />
+          }
         >
           <ReusableTableWrapper
             data={summaryFilteredData}

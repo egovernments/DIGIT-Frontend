@@ -170,6 +170,7 @@ const GenericChart = ({
   updateChip,
   value = {},
   setDownloadChartsId = null,
+  exportButton = null,
 }) => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState(null);
@@ -292,8 +293,9 @@ const GenericChart = ({
         </div>
         <div className="digit-side-content">
           {chip && chip.length > 1 && <Chip items={chip} onClick={updateChip} t={t} />}
-          {(showSearch || showDownload) && (
-            <span className="digit-table-search-wrapper">
+          {(showSearch || showDownload || exportButton) && (
+            <span className="digit-table-search-wrapper" style={{width:"auto"}}>
+              {exportButton}
               {showSearch && (
                 <div className="digit-field">
                   <TextInput className={"digit-generic-chart-search-field commodity-management"} placeholder={t("GENERIC_CHART_SEARCH")} onChange={onChange} type={"search"} />
