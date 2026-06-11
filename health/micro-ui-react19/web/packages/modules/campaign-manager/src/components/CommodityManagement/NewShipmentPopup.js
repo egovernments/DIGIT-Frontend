@@ -43,6 +43,15 @@ const NewShipmentPopup = ({
   const [isDownloading, setIsDownloading] = useState(false);
   const [viewState, setViewState] = useState("form"); // "form" | "error"
 
+  // Fetch project types from MDMS to get resources for the current project type
+  const { data: projectTypeData, isLoading: projectTypeLoading } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
   const {
     data: BOUNDARY_HIERARCHY_TYPE,
@@ -138,27 +147,26 @@ const NewShipmentPopup = ({
   const projectId = campaignData?.projectId || projectIdProp;
   const campaignName = campaignData?.campaignName || "";
 
-  // Extract product variants from campaign delivery rules
+  // Extract product variants from MDMS project type resources
+  const campaignProjectType = campaignData?.projectType;
   const productVariants = useMemo(() => {
-    if (!campaignData?.deliveryRules) return [];
+    if (!projectTypeData || !campaignProjectType) return [];
+    const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
+    const matchedType = projectTypes.find((pt) => pt?.code === campaignProjectType);
+    if (!matchedType?.resources) return [];
     const variants = [];
     const seen = new Set();
-    campaignData.deliveryRules.forEach((rule) => {
-      (rule?.cycles || []).forEach((cycle) => {
-        (cycle?.deliveries || []).forEach((delivery) => {
-          (delivery?.doseCriteria || []).forEach((dose) => {
-            (dose?.ProductVariants || []).forEach((pv) => {
-              if (pv?.productVariantId && !seen.has(pv.productVariantId)) {
-                seen.add(pv.productVariantId);
-                variants.push({ productVariantId: pv.productVariantId, name: pv.name || pv.productVariantId });
-              }
-            });
-          });
+    matchedType.resources.forEach((r) => {
+      if (r?.productVariantId && !seen.has(r.productVariantId)) {
+        seen.add(r.productVariantId);
+        variants.push({
+          productVariantId: r.productVariantId,
+          name: r.name || r.productVariantId,
         });
-      });
+      }
     });
     return variants;
-  }, [campaignData]);
+  }, [projectTypeData, campaignProjectType]);
 
   const projectSearchCriteria = useMemo(
     () => ({
@@ -472,6 +480,8 @@ const NewShipmentPopup = ({
       body: { ProjectFacility: { projectId: fromFilteredProjectIds } },
       config: {
         enabled: !!fromFilteredProjectIds?.length,
+        staleTime: 0,
+        cacheTime: 0,
         select: (data) => {
           const projectFacilities = data?.ProjectFacilities || [];
           const seen = new Set();
@@ -1317,7 +1327,8 @@ const NewShipmentPopup = ({
     hierarchyTypeLoading ||
     hierarchyLoading ||
     boundaryRelLoading ||
-    projectsLoading;
+    projectsLoading ||
+    projectTypeLoading;
   const allVisibleSelected =
     filteredFacilities.length > 0 &&
     filteredFacilities.every((f) => selectedFacilityIds.has(f.id));

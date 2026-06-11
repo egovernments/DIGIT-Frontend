@@ -78,10 +78,14 @@ const CommodityDashboard = () => {
   const campaignIdFromUrl = searchParams.get("campaignId");
 
   // Read campaign data from navigation state (passed from HCMCommodityRowCard)
-  const { projectId, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, projectCreatedTime, isCompleted } = location.state || {};
+  const { projectId: projectIdFromState, campaignStartDate: campaignStartEpoch, campaignEndDate: campaignEndEpoch, projectCreatedTime, isCompleted } = location.state || {};
 
   // Read userBoundary, userBoundaries, and isTopLevel from context
-  const { userBoundary, userBoundaries, isTopLevel } = useCommodityProject();
+  const { userBoundary, userBoundaries, isTopLevel, projects: contextProjects } = useCommodityProject();
+
+  // Use projectId from navigation state; on page reload (state lost), fall back to
+  // the user's assigned project from context by matching referenceId to campaignNumber
+  const projectId = projectIdFromState || contextProjects?.find((p) => p.referenceId === campaignNumber)?.id;
 
   // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
   const campaignReqCriteria = useMemo(() => ({

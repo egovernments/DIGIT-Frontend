@@ -125,6 +125,15 @@ const BulkStockUpload = () => {
     setShowToast({ key: "warning", label: t("HCM_BATCH_ERROR_SHEET_DOWNLOADED", { failed: batchFailedRecords.length }) });
   }, [batchFailedRecords, campaignName, t]);
 
+  // Fetch project types from MDMS to get resources for the current project type
+  const { data: projectTypeData, isLoading: projectTypeLoading } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
+  );
+
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -603,24 +612,25 @@ const BulkStockUpload = () => {
     });
   }, [rawToFacilityList, projectBoundaryMap]);
 
-  // Extract product variants from campaign delivery rules
+  // Extract product variants from MDMS project type resources
   const productVariants = useMemo(() => {
-    if (!campaignData?.deliveryRules) return [];
+    if (!projectTypeData) return [];
+    const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
+    const matchedType = projectTypes.find((pt) => pt?.code === projectType);
+    if (!matchedType?.resources) return [];
     const variants = [];
     const seen = new Set();
-    campaignData.deliveryRules.forEach((rule) => {
-      rule?.resources?.forEach((r) => {
-        if (r?.productVariantId && !seen.has(r.productVariantId)) {
-          seen.add(r.productVariantId);
-          variants.push({
-            productVariantId: r.productVariantId,
-            name: r.name || r.productVariantId,
-          });
-        }
-      });
+    matchedType.resources.forEach((r) => {
+      if (r?.productVariantId && !seen.has(r.productVariantId)) {
+        seen.add(r.productVariantId);
+        variants.push({
+          productVariantId: r.productVariantId,
+          name: r.name || r.productVariantId,
+        });
+      }
     });
     return variants;
-  }, [campaignData]);
+  }, [projectTypeData, projectType]);
 
   // Filter "From" facilities by search
   const filteredFromFacilities = useMemo(() => {
@@ -1014,7 +1024,7 @@ const BulkStockUpload = () => {
     }
   }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, campaignNumber, navigate, t, processBatches, fromFacility, sortedHierarchy, projectBoundaryMap]);
 
-  if (hierarchyTypeLoading || hierarchyLoading || campaignLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading) {
+  if (hierarchyTypeLoading || hierarchyLoading || campaignLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading || projectTypeLoading) {
     return <Loader />;
   }
 
