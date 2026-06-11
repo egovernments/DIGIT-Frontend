@@ -13,6 +13,8 @@ import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [summarySearchQuery, setSummarySearchQuery] = useState("");
+  const [activeSubTab, setActiveSubTab] = useState("transactions");
   const [shipmentFacility, setShipmentFacility] = useState(null); // { id, name } for CommodityShipmentPopup
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
@@ -43,11 +45,13 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         const nameMap = {};
         const boundaryMap = {};
         const boundaryTypeMap = {};
+        const usageMap = {};
         (data?.Facilities || []).forEach(f => {
           if (f.id) {
             nameMap[f.id] = f.name || f.id;
             boundaryMap[f.id] = f.address?.locality?.code || "";
             boundaryTypeMap[f.id] = f.address?.locality?.type || f.address?.boundaryType || "";
+            usageMap[f.id] = f.usage || f.facilityType || "";
           }
         });
         // Disambiguate duplicate facility names by appending short ID suffix
@@ -61,7 +65,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             nameMap[id] = `${name} (${shortId})`;
           }
         });
-        return { nameMap, boundaryMap, boundaryTypeMap };
+        return { nameMap, boundaryMap, boundaryTypeMap, usageMap };
       },
     },
   }), [tenantId, facilityIds]);
@@ -69,6 +73,20 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const facilityNameMap = facilityMaps?.nameMap || {};
   const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
   const facilityBoundaryTypeMap = facilityMaps?.boundaryTypeMap || {};
+  const facilityUsageMap = facilityMaps?.usageMap || {};
+
+  // Map facilityId → boundaryHierarchyCode object sourced directly from stock records.
+  // Each record carries the boundary hierarchy for its own facilityId field, so collecting
+  // across all records covers every facility that ever appeared on the facilityId side of a transaction.
+  const facilityBoundaryHierarchyMap = useMemo(() => {
+    const map = {};
+    (finalStockData || []).forEach((stock) => {
+      if (stock.facilityId && stock.boundaryHierarchyCode) {
+        map[stock.facilityId] = stock.boundaryHierarchyCode;
+      }
+    });
+    return map;
+  }, [finalStockData]);
 
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({
@@ -291,6 +309,137 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return rows.sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
   }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
+  // Per-descendant-facility, per-commodity aggregated summary.
+  // Only includes facilities BELOW the user in the dispatch hierarchy (children, grandchildren, etc.).
+  // Parent/upstream facilities are excluded because BFS only follows edges outward from the user's
+  // own facilities — upstream facilities that dispatched TO the user are never reachable.
+  const facilityStockSummaryRows = useMemo(() => {
+    if (!finalStockData?.length) return [];
+
+    // Build name fallback from stock records (each record embeds facilityName + transactingFacilityName)
+    const namesFromData = {};
+    finalStockData.forEach((stock) => {
+      if (stock.facilityId && stock.facilityName) namesFromData[stock.facilityId] = stock.facilityName;
+      if (stock.transactingFacilityId && stock.transactingFacilityName) namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
+    });
+    const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || fId;
+
+    // Pass 1 — BFS to find all downstream facilities.
+    // ISSUED (DISPATCHED) records define a "parent dispatched to child" edge: senderId → receiverId.
+    // Starting from the user's own facilities and following these edges discovers all direct and
+    // indirect children. Upstream facilities that dispatched TO the user are not reachable this way.
+    const shippedTo = {};
+    finalStockData.forEach((stock) => {
+      if (stock.stockEntryType === "ISSUED" && stock.senderId && stock.receiverId) {
+        if (!shippedTo[stock.senderId]) shippedTo[stock.senderId] = new Set();
+        shippedTo[stock.senderId].add(stock.receiverId);
+      }
+    });
+
+    const descendantIds = new Set();
+    if (userFacilityIds.size > 0) {
+      const queue = [...userFacilityIds];
+      const visited = new Set([...userFacilityIds]);
+      while (queue.length) {
+        const current = queue.shift();
+        (shippedTo[current] || new Set()).forEach((childId) => {
+          if (!visited.has(childId)) {
+            visited.add(childId);
+            descendantIds.add(childId);
+            queue.push(childId);
+          }
+        });
+      }
+    } else {
+      // Fallback when user's facility is not yet known: include all IDs from stock data
+      // except anything that only appears as a sender (those are likely upstream)
+      const receiversInData = new Set();
+      finalStockData.forEach((stock) => {
+        if (stock.receiverId) receiversInData.add(stock.receiverId);
+      });
+      receiversInData.forEach((id) => descendantIds.add(id));
+    }
+
+    if (!descendantIds.size) return [];
+
+    // Pass 2 — compute per-facility, per-commodity stats using the same logic as facilityCommoditySummaries
+    const statsMap = {};
+    const getOrInit = (fId, pvId, productName) => {
+      if (!statsMap[fId]) statsMap[fId] = {};
+      if (!statsMap[fId][pvId]) statsMap[fId][pvId] = { productName, totalReceived: 0, totalIssued: 0, totalRejected: 0, totalReturned: 0 };
+      return statsMap[fId][pvId];
+    };
+
+    finalStockData.forEach((stock) => {
+      const stockEntryType = stock.stockEntryType || "";
+      const status = stock.status || "";
+      const qty = stock.quantity || 0;
+      const pvId = stock.productVariantId;
+      if (!pvId) return;
+      const productName = productNameMap[pvId] || stock.productName || "Unknown";
+
+      if (stockEntryType === "RECEIPT") {
+        if (stock.receiverId && descendantIds.has(stock.receiverId))
+          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+      } else if (stockEntryType === "EXCESS") {
+        if (stock.receiverId && descendantIds.has(stock.receiverId))
+          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+      } else if (stockEntryType === "LESS") {
+        if (stock.receiverId && descendantIds.has(stock.receiverId))
+          getOrInit(stock.receiverId, pvId, productName).totalReceived -= qty;
+      } else if (stockEntryType === "ISSUED") {
+        if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+          if (stock.senderId && descendantIds.has(stock.senderId))
+            getOrInit(stock.senderId, pvId, productName).totalIssued += qty;
+          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId))
+            getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+        } else if (status === "REJECTED") {
+          if (stock.senderId && descendantIds.has(stock.senderId))
+            getOrInit(stock.senderId, pvId, productName).totalRejected += qty;
+          if (stock.receiverId && descendantIds.has(stock.receiverId))
+            getOrInit(stock.receiverId, pvId, productName).totalRejected += qty;
+        }
+      } else if (stockEntryType === "RETURNED") {
+        if (status === "ACCEPTED" || status === "IN_TRANSIT") {
+          if (stock.senderId && descendantIds.has(stock.senderId))
+            getOrInit(stock.senderId, pvId, productName).totalReturned += qty;
+          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId))
+            getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+        }
+      }
+    });
+
+    const getBoundaryHierarchyDisplay = (fId) => {
+      const bhc = facilityBoundaryHierarchyMap[fId];
+      if (!bhc) return "N/A";
+      const codes = Object.values(bhc).filter(Boolean);
+      if (!codes.length) return "N/A";
+      return codes.map((code) => t(code)).join(", ");
+    };
+
+    const rows = [];
+    Object.entries(statsMap).forEach(([facilityId, products]) => {
+      Object.entries(products).forEach(([pvId, stats]) => {
+        rows.push({
+          facilityId,
+          facilityName: resolveName(facilityId),
+          facilityType: facilityUsageMap[facilityId] || "—",
+          boundary: getBoundaryDisplay(facilityId),
+          boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
+          productVariantId: pvId,
+          commodity: stats.productName,
+          totalReceived: stats.totalReceived,
+          totalIssued: stats.totalIssued,
+          totalRejected: stats.totalRejected,
+          totalReturned: stats.totalReturned,
+          balance: stats.totalReceived - stats.totalIssued - stats.totalReturned,
+        });
+      });
+    });
+
+    return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
+  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, getBoundaryDisplay, facilityBoundaryHierarchyMap, t]);
+
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
   // Used for stock balance validation — deducts IN_TRANSIT (physically left warehouse)
   const facilityStockMap = useMemo(() => {
@@ -412,31 +561,81 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     }] : []),
   ];
 
-  // Download table data as Excel
-  const handleExcelDownload = useCallback(() => {
-    if (!filteredData?.length) return;
+  // Stock Summary List tab — filtered data + columns + cell renderer
+  const summaryFilteredData = useMemo(() => {
+    if (!facilityStockSummaryRows?.length) return [];
+    return applyGenericFilters(facilityStockSummaryRows, { searchText: summarySearchQuery });
+  }, [facilityStockSummaryRows, summarySearchQuery]);
+
+  const summaryColumns = [
+    { label: t("HCM_CHILD_FACILITY"),      key: "facilityName",      grow: 1.5, minWidth: "180px", sortable: true },
+    { label: t("HCM_TYPE"),                key: "facilityType",      grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t("HCM_BOUNDARY"),            key: "boundary",          grow: 1.2, minWidth: "160px", sortable: true },
+    { label: t("HCM_BOUNDARY_HIERARCHY"),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
+    { label: t("HCM_COMMODITY"),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t("HCM_TOTAL_RECEIVED"), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_ISSUED"),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_REJECTED"), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_RETURNED"), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_BALANCE"),        key: "balance",       grow: 0.7, minWidth: "110px", sortable: true },
+  ];
+
+  const summaryCellRenderer = {
+    facilityName: (row) => (
+      <div>
+        <div>{row.facilityName}</div>
+        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.facilityId}</div>
+      </div>
+    ),
+    totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
+    totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
+    totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
+    totalReturned: (row) => <span className="cm-cell-stock">{row.totalReturned?.toLocaleString()}</span>,
+    balance: (row) => (
+      <span className={`cm-cell-stock${row.balance < 0 ? " cm-balance-negative" : ""}`}>
+        {row.balance?.toLocaleString()}
+      </span>
+    ),
+  };
+
+  // Generic XLSX export — accepts any data array + column definitions
+  const exportTableToXlsx = useCallback((data, exportColumns, sheetName, fileName) => {
+    if (!data?.length) return;
     try {
       const XLSX = require("xlsx");
-      const exportColumns = columns.filter((col) => col.key !== "action");
-      const exportData = filteredData.map((row) => {
-        const exportRow = {};
-        exportColumns.forEach((col) => {
-          exportRow[col.label] =
-            row[col.key] !== undefined && row[col.key] !== null
-              ? String(row[col.key])
-              : "N/A";
-        });
-        return exportRow;
-      });
-      const ws = XLSX.utils.json_to_sheet(exportData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Stock Summary");
       const timestamp = new Date().toISOString().split("T")[0];
-      XLSX.writeFile(wb, `stock_summary_${timestamp}.xlsx`);
-    } catch (error) {
-      console.error("Error exporting stock summary:", error);
+      const rows = data.map((row) => {
+        const out = {};
+        exportColumns.forEach((col) => {
+          out[col.label] = row[col.key] !== undefined && row[col.key] !== null ? String(row[col.key]) : "N/A";
+        });
+        return out;
+      });
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      XLSX.writeFile(wb, `${fileName}_${timestamp}.xlsx`);
+    } catch (err) {
+      console.error("XLSX export error:", err);
     }
-  }, [filteredData]);
+  }, []);
+
+  // Transaction List export — called by onActionSelect (ES_DSS_DOWNLOAD_EXCEL) and the inline button
+  const handleExcelDownload = useCallback(() => {
+    const label = t("HCM_TRANSACTION_LIST");
+    exportTableToXlsx(
+      filteredData,
+      columns.filter((col) => col.key !== "action"),
+      label,
+      label
+    );
+  }, [filteredData, columns, exportTableToXlsx, t]);
+
+  // Stock Summary List export
+  const handleSummaryExport = useCallback(() => {
+    const label = t("HCM_STOCK_SUMMARY_LIST");
+    exportTableToXlsx(summaryFilteredData, summaryColumns, label, label);
+  }, [summaryFilteredData, summaryColumns, exportTableToXlsx, t]);
 
   // Share options - DSS pattern
   const shareOptions = navigator.share
@@ -694,29 +893,94 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         </div>
       </div> */}
 
-      <GenericChart
-        header={t("HCM_TRANSACTION_LIST")}
-        showSearch={true}
-        className={"digit-stock-transactions-summary-tab"}
-        subHeader={""}
-        onChange={handleSearch}
-      >
-        <ReusableTableWrapper
-          data={filteredData}
-          columns={columns}
-          isLoading={false}
-          noDataMessage="HCM_NO_STOCK_DATA_FOUND"
-          pagination={true}
-          manualPagination={true}
-          paginationPerPage={10}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          customCellRenderer={customCellRenderer}
-          enableExcelDownload={false}
-          excelFileName="stock_summary"
-          className=""
-          headerClassName=""
-        />
-      </GenericChart>
+      <div className="digit-dss-switch-tabs" style={{ marginBottom: "8px" }}>
+        <div className="digit-dss-switch-tab-wrapper">
+          <div
+            className={activeSubTab === "transactions" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
+            onClick={() => setActiveSubTab("transactions")}
+          >
+            {t("HCM_TRANSACTION_LIST")}
+          </div>
+          <div
+            className={activeSubTab === "stockSummary" ? "digit-dss-switch-tab-selected" : "digit-dss-switch-tab-unselected"}
+            onClick={() => setActiveSubTab("stockSummary")}
+          >
+            {t("HCM_STOCK_SUMMARY_LIST")}
+          </div>
+        </div>
+      </div>
+
+      {activeSubTab === "transactions" && (
+        <GenericChart
+          header={""}
+          showSearch={true}
+          className={"digit-stock-transactions-summary-tab"}
+          subHeader={""}
+          onChange={handleSearch}
+          exportButton={
+            <Button
+              type="button"
+              variation="secondary"
+              label={t("HCM_EXPORT_XLSX")}
+              icon="FileDownload"
+              onClick={handleExcelDownload}
+              size="medium"
+            />
+          }
+        >
+          <ReusableTableWrapper
+            data={filteredData}
+            columns={columns}
+            isLoading={false}
+            noDataMessage="HCM_NO_STOCK_DATA_FOUND"
+            pagination={true}
+            manualPagination={true}
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            customCellRenderer={customCellRenderer}
+            enableExcelDownload={false}
+            excelFileName="stock_transactions"
+            className=""
+            headerClassName=""
+          />
+        </GenericChart>
+      )}
+
+      {activeSubTab === "stockSummary" && (
+        <GenericChart
+          header={""}
+          showSearch={true}
+          className={"digit-stock-transactions-summary-tab"}
+          subHeader={""}
+          onChange={(e) => setSummarySearchQuery(e.target.value)}
+          exportButton={
+            <Button
+              type="button"
+              variation="secondary"
+              label={t("HCM_EXPORT_XLSX")}
+              icon="FileDownload"
+              onClick={handleSummaryExport}
+              size="medium"
+            />
+          }
+        >
+          <ReusableTableWrapper
+            data={summaryFilteredData}
+            columns={summaryColumns}
+            isLoading={false}
+            noDataMessage="HCM_NO_STOCK_DATA_FOUND"
+            pagination={true}
+            manualPagination={true}
+            paginationPerPage={10}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            customCellRenderer={summaryCellRenderer}
+            enableExcelDownload={false}
+            excelFileName="stock_summary"
+            className=""
+            headerClassName=""
+          />
+        </GenericChart>
+      )}
 
       {shipmentFacility && (
         <CommodityShipmentPopup

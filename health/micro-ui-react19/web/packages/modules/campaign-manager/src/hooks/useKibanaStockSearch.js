@@ -90,6 +90,7 @@ const useKibanaStockSearch = ({ tenantId, dateRange, referenceId, campaignId, ca
         auditDetails: {
           createdTime: record.createdTime || record.dateOfEntry,
         },
+        boundaryHierarchyCode : record.boundaryHierarchyCode
       };
     });
   }, [rawRecords]);
