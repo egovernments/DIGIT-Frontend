@@ -140,7 +140,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
                 className={`select-hierarchy-campaign-selection-card ${isSelected ? "selected" : ""}`}
               >
                 <span className={`select-hierarchy-campaign-selection-card-name`}>
-                  {definition.hierarchyType}
+                  {t(definition.hierarchyType)}
                 </span>
                 {levels.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
