@@ -339,6 +339,11 @@ const CreateCampaign = () => {
       setShowToast(null);
       setCurrentKey(currentKey + 1);
     } else {
+      const hierarchySelected = formData?.SelectHierarchy?.hierarchy || params?.SelectHierarchy?.hierarchy;
+      if (!hierarchySelected) {
+        setShowToast({ key: "error", label: t("HCM_SELECT_HIERARCHY_REQUIRED") });
+        return;
+      }
       handleCampaignMutation(formData);
     }
   };

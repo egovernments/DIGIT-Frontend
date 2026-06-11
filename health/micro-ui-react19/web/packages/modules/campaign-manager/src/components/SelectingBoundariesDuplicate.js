@@ -243,7 +243,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     );
   };
 
-  if (draft && isLoading) {
+  const isBoundaryDataLoading = !!hierarchyType && props?.props?.hierarchyData === undefined;
+
+  if ((draft && isLoading) || isBoundaryDataLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
