@@ -75,6 +75,19 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   const facilityBoundaryTypeMap = facilityMaps?.boundaryTypeMap || {};
   const facilityUsageMap = facilityMaps?.usageMap || {};
 
+  // Map facilityId → boundaryHierarchyCode object sourced directly from stock records.
+  // Each record carries the boundary hierarchy for its own facilityId field, so collecting
+  // across all records covers every facility that ever appeared on the facilityId side of a transaction.
+  const facilityBoundaryHierarchyMap = useMemo(() => {
+    const map = {};
+    (finalStockData || []).forEach((stock) => {
+      if (stock.facilityId && stock.boundaryHierarchyCode) {
+        map[stock.facilityId] = stock.boundaryHierarchyCode;
+      }
+    });
+    return map;
+  }, [finalStockData]);
+
   // Fetch product variants
   const variantSearchCriteria = useMemo(() => ({
     url: `/product/variant/v1/_search`,
@@ -396,6 +409,14 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       }
     });
 
+    const getBoundaryHierarchyDisplay = (fId) => {
+      const bhc = facilityBoundaryHierarchyMap[fId];
+      if (!bhc) return "N/A";
+      const codes = Object.values(bhc).filter(Boolean);
+      if (!codes.length) return "N/A";
+      return codes.map((code) => t(code)).join(", ");
+    };
+
     const rows = [];
     Object.entries(statsMap).forEach(([facilityId, products]) => {
       Object.entries(products).forEach(([pvId, stats]) => {
@@ -404,6 +425,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           facilityName: resolveName(facilityId),
           facilityType: facilityUsageMap[facilityId] || "—",
           boundary: getBoundaryDisplay(facilityId),
+          boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
           productVariantId: pvId,
           commodity: stats.productName,
           totalReceived: stats.totalReceived,
@@ -416,7 +438,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
 
     return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
-  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, getBoundaryDisplay]);
+  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, getBoundaryDisplay, facilityBoundaryHierarchyMap, t]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
   // Used for stock balance validation — deducts IN_TRANSIT (physically left warehouse)
@@ -546,10 +568,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   }, [facilityStockSummaryRows, summarySearchQuery]);
 
   const summaryColumns = [
-    { label: t("HCM_CHILD_FACILITY"), key: "facilityName",  grow: 1.5, minWidth: "180px", sortable: true },
-    { label: t("HCM_TYPE"),           key: "facilityType",  grow: 0.8, minWidth: "120px", sortable: true },
-    { label: t("HCM_BOUNDARY"),       key: "boundary",      grow: 1.2, minWidth: "160px", sortable: true },
-    { label: t("HCM_COMMODITY"),      key: "commodity",     grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t("HCM_CHILD_FACILITY"),      key: "facilityName",      grow: 1.5, minWidth: "180px", sortable: true },
+    { label: t("HCM_TYPE"),                key: "facilityType",      grow: 0.8, minWidth: "120px", sortable: true },
+    { label: t("HCM_BOUNDARY"),            key: "boundary",          grow: 1.2, minWidth: "160px", sortable: true },
+    { label: t("HCM_BOUNDARY_HIERARCHY"),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
+    { label: t("HCM_COMMODITY"),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
     { label: t("HCM_TOTAL_RECEIVED"), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t("HCM_TOTAL_ISSUED"),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
     { label: t("HCM_TOTAL_REJECTED"), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
