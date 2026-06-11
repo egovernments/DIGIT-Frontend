@@ -150,7 +150,7 @@ export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
           last: true,
           body: [
             {
-              isMandatory: true,
+              isMandatory: false,
               key: "SelectHierarchy",
               type: "component",
               component: "SelectHierarchy",
@@ -165,7 +165,7 @@ export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
                 name: "SelectHierarchy",
                 fieldPairClassName: "date-selection-field",
                 error: "ES__REQUIRED_HIERARCHY",
-                required: true,
+                required: false,
               },
             },
           ],

@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, /*LabelFieldPair,*/ HeaderComponent, /*Dropdown,*/ Loader, PopUp, Button, CardText, Tag } from "@egovernments/digit-ui-components";
-
-const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
+import { Card, /*LabelFieldPair,*/ HeaderComponent, /*Dropdown,*/ Loader, PopUp, Button, CardText } from "@egovernments/digit-ui-components";
 
 const SESSION_KEYS_TO_CLEAR = [
   "HCM_CAMPAIGN_MANAGER_FORM_DATA",
@@ -42,62 +40,25 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  // All hierarchy types from MDMS
-  const { data: hierarchyOptions, isLoading: mdmsLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [{ name: "HierarchySchema" }],
-    {
-      select: (data) => {
-        const schemas = data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
-        return schemas.map((item) => ({
-          code: item.type,
-          name: item.hierarchy,
-        }));
+  // Single API call to get all hierarchies with their boundary levels
+  const { data: hierarchyData, isLoading } = Digit.Hooks.useCustomAPIHook({
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId,
+        limit: 500,
+        offset: 0,
       },
     },
-    { schemaCode: "HierarchySchema" }
-  );
+  });
 
-  // One targeted call per hierarchyType, all fired in parallel
-  const [allHierarchyDefinitions, setAllHierarchyDefinitions] = useState([]);
-  const [definitionsLoading, setDefinitionsLoading] = useState(false);
-
-  const fetchDefinition = useCallback(
-    async (hierarchyType) => {
-      const res = await Digit.CustomService.getResponse({
-        url: `/boundary-service/boundary-hierarchy-definition/_search`,
-        body: {
-          BoundaryTypeHierarchySearchCriteria: {
-            tenantId,
-            hierarchyType,
-            limit: 1,
-            offset: 0,
-          },
-        },
-      });
-      return res?.BoundaryHierarchy?.[0] || null;
-    },
-    [tenantId]
-  );
-
-  useEffect(() => {
-    if (!hierarchyOptions?.length) return;
-    setDefinitionsLoading(true);
-    Promise.all(hierarchyOptions.map((h) => fetchDefinition(h.name)))
-      .then((results) => {
-        setAllHierarchyDefinitions(results.filter(Boolean));
-        setDefinitionsLoading(false);
-      })
-      .catch(() => setDefinitionsLoading(false));
-  }, [hierarchyOptions, fetchDefinition]);
+  const allHierarchyDefinitions = hierarchyData?.BoundaryHierarchy || [];
 
   const [selected, setSelected] = useState(
     formData?.SelectHierarchy?.hierarchy || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY") || null
   );
   const [pendingSelection, setPendingSelection] = useState(null);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
-  // const [dropdownKey, setDropdownKey] = useState(0); // was needed for Dropdown internal state reset
 
   // If selected was initialized without a code (e.g. from session set by CampaignDetails which only stores name),
   // enrich it with the code from the dedicated code key — runs once on mount
@@ -154,7 +115,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     }
   }, [selected]);
 
-  if (mdmsLoading || definitionsLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -166,62 +127,33 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
         </HeaderComponent>
         <p className="dates-description digit-header-content SubHeadingClass">{t("HCM_SELECT_HIERARCHY_DESC")}</p>
 
-        {/* Old dropdown UI — kept for reference
-        <LabelFieldPair className={"boldLabel"} vertical={false} removeMargin={false}>
-          <div className="digit-header-content label" style={{ display: "flex", alignItems: "center", marginTop: "0.5rem" }}>
-            <div>{t("HCM_HIERARCHY_TYPE")}</div>
-            <span className="mandatory-date">*</span>
-          </div>
-          <Dropdown
-            key={dropdownKey}
-            t={t}
-            option={hierarchyOptions || []}
-            optionKey="name"
-            selected={selected}
-            select={onHierarchySelect}
-            isSearchable={true}
-          />
-        </LabelFieldPair>
-        */}
-
-        <div
-          className="select-hierarchy-campaign-selection-cards-wrap"
-        >
-          {hierarchyOptions?.map((hierarchy) => {
-            const definition = allHierarchyDefinitions?.find((d) => d.hierarchyType === hierarchy.name);
+        <div className="select-hierarchy-campaign-selection-cards-wrap">
+          {allHierarchyDefinitions.map((definition) => {
             const levels = sortBoundaryHierarchy(definition?.boundaryHierarchy || []);
+            const hierarchy = { name: definition.hierarchyType };
             const isSelected = isSameHierarchy(selected, hierarchy);
 
             return (
               <Card
-                key={`${hierarchy.code}-${hierarchy.name}`}
+                key={definition.id || definition.hierarchyType}
                 onClick={() => onHierarchySelect(hierarchy)}
                 className={`select-hierarchy-campaign-selection-card ${isSelected ? "selected" : ""}`}
               >
-                <span
-                  className={`select-hierarchy-campaign-selection-card-name`}
-                >
-                  {hierarchy.name}
+                <span className={`select-hierarchy-campaign-selection-card-name`}>
+                  {t(definition.hierarchyType)}
                 </span>
-                {hierarchy.code && (
-                    <Tag label={hierarchy.code} type="monochrome" stroke={true} />
-                )}
                 {levels.length > 0 ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "12px"}}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                     {levels.map((level, index) => (
                       <div
                         key={level.boundaryType}
                         className={`select-hierarchy-campaign-selection-card-level-wrap`}
                       >
-                        <div
-                          className={`select-hierarchy-campaign-selection-card-level-name`}
-                        >
+                        <div className={`select-hierarchy-campaign-selection-card-level-name`}>
                           L{index + 1}
                         </div>
-                        <div
-                          className="select-hierarchy-campaign-selection-card-level-name-value"
-                        >
-                          {t(`BOUNDARY_${level.boundaryType}`)}
+                        <div className="select-hierarchy-campaign-selection-card-level-name-value">
+                          {t(`${level.boundaryType}`)}
                         </div>
                       </div>
                     ))}
