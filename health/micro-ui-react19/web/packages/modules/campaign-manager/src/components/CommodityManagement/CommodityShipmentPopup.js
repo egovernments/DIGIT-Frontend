@@ -86,7 +86,7 @@ const CommodityShipmentPopup = ({
   const facilityMappingCriteria = useMemo(
     () => ({
       url: `/project/facility/v1/_search`,
-      params: { tenantId, limit: 1000, offset: 0 },
+      params: { tenantId, limit: 1500, offset: 0 },
       body: { ProjectFacility: { projectId: toProjectIds } },
       config: {
         enabled: !!toProjectIds?.length,

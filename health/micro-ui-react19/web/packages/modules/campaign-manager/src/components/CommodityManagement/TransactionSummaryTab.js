@@ -101,7 +101,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   // Fetch project facilities using user's staff project
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
-    params: { tenantId, limit: 100, offset: 0 },
+    params: { tenantId, limit: 1500, offset: 0 },
     body: { ProjectFacility: { projectId: [userStaffProjectId] } },
     config: {
       enabled: !!userStaffProjectId && !!tenantId,
