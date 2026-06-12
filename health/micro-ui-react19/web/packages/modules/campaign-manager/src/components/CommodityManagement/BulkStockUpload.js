@@ -6,6 +6,7 @@ import StockComponent from "./StockComponent";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
 import useBatchStockCreation from "../../hooks/useBatchStockCreation";
+import usePaginatedAPIHook from "../../hooks/usePaginatedAPIHook";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -124,15 +125,6 @@ const BulkStockUpload = () => {
     XLSX.writeFile(wb, `Stock_Error_Report_${campaignName || "campaign"}.xlsx`);
     setShowToast({ key: "warning", label: t("HCM_BATCH_ERROR_SHEET_DOWNLOADED", { failed: batchFailedRecords.length }) });
   }, [batchFailedRecords, campaignName, t]);
-
-  // Fetch project types from MDMS to get resources for the current project type
-  const { data: projectTypeData, isLoading: projectTypeLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "HCM-PROJECT-TYPES",
-    [{ name: "projectTypes" }],
-    { select: (MdmsRes) => MdmsRes },
-    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
-  );
 
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
@@ -273,7 +265,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, projectId]);
 
-  const { data: projectData, isLoading: projectsLoading } = Digit.Hooks.useCustomAPIHook(projectSearchCriteria);
+  const { data: projectData, isLoading: projectsLoading } = usePaginatedAPIHook(projectSearchCriteria);
   const initialProjectIds = projectData?.ids || [];
   const initialBoundaryMap = projectData?.boundaryMap || {};
 
@@ -394,7 +386,7 @@ const BulkStockUpload = () => {
   const {
     data: childProjectData,
     isLoading: childProjectsLoading,
-  } = Digit.Hooks.useCustomAPIHook(childProjectSearchCriteria);
+  } = usePaginatedAPIHook(childProjectSearchCriteria);
 
   // Accumulate child project data so it persists across criteria changes
   useEffect(() => {
@@ -429,7 +421,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, allProjectIds]);
 
-  const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(allFacilityReqCriteria);
+  const { data: projectIdsWithFacilities, isLoading: allFacilitiesLoading } = usePaginatedAPIHook(allFacilityReqCriteria);
 
   // Build hierarchy filter options only from projects that have facilities
   const hierarchyFilterOptions = useMemo(() => {
@@ -564,7 +556,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, fromFilteredProjectIds]);
 
-  const { data: rawFromFacilityList, isLoading: fromFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+  const { data: rawFromFacilityList, isLoading: fromFacilitiesLoading } = usePaginatedAPIHook(fromFacilityReqCriteria);
 
   // Enrich From facilities with boundary level info
   const fromFacilityList = useMemo(() => {
@@ -601,7 +593,7 @@ const BulkStockUpload = () => {
     },
   }), [tenantId, toFilteredProjectIds]);
 
-  const { data: rawToFacilityList, isLoading: toFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
+  const { data: rawToFacilityList, isLoading: toFacilitiesLoading } = usePaginatedAPIHook(toFacilityReqCriteria);
 
   // Enrich To facilities with boundary level info
   const toFacilityList = useMemo(() => {
@@ -612,25 +604,24 @@ const BulkStockUpload = () => {
     });
   }, [rawToFacilityList, projectBoundaryMap]);
 
-  // Extract product variants from MDMS project type resources
+  // Extract product variants from campaign delivery rules
   const productVariants = useMemo(() => {
-    if (!projectTypeData) return [];
-    const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
-    const matchedType = projectTypes.find((pt) => pt?.code === projectType);
-    if (!matchedType?.resources) return [];
+    if (!campaignData?.deliveryRules) return [];
     const variants = [];
     const seen = new Set();
-    matchedType.resources.forEach((r) => {
-      if (r?.productVariantId && !seen.has(r.productVariantId)) {
-        seen.add(r.productVariantId);
-        variants.push({
-          productVariantId: r.productVariantId,
-          name: r.name || r.productVariantId,
-        });
-      }
+    campaignData.deliveryRules.forEach((rule) => {
+      rule?.resources?.forEach((r) => {
+        if (r?.productVariantId && !seen.has(r.productVariantId)) {
+          seen.add(r.productVariantId);
+          variants.push({
+            productVariantId: r.productVariantId,
+            name: r.name || r.productVariantId,
+          });
+        }
+      });
     });
     return variants;
-  }, [projectTypeData, projectType]);
+  }, [campaignData]);
 
   // Filter "From" facilities by search
   const filteredFromFacilities = useMemo(() => {
@@ -1024,7 +1015,7 @@ const BulkStockUpload = () => {
     }
   }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, campaignNumber, navigate, t, processBatches, fromFacility, sortedHierarchy, projectBoundaryMap]);
 
-  if (hierarchyTypeLoading || hierarchyLoading || campaignLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading || projectTypeLoading) {
+  if (hierarchyTypeLoading || hierarchyLoading || campaignLoading || projectsLoading || boundaryRelLoading || allFacilitiesLoading) {
     return <Loader />;
   }
 

@@ -13,6 +13,7 @@ import {
   MultiSelectDropdown,
 } from "@egovernments/digit-ui-components";
 import BulkUpload from "../BulkUpload";
+import usePaginatedAPIHook from "../../hooks/usePaginatedAPIHook";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
@@ -42,15 +43,6 @@ const NewShipmentPopup = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [viewState, setViewState] = useState("form"); // "form" | "error"
-
-  // Fetch project types from MDMS to get resources for the current project type
-  const { data: projectTypeData, isLoading: projectTypeLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "HCM-PROJECT-TYPES",
-    [{ name: "projectTypes" }],
-    { select: (MdmsRes) => MdmsRes },
-    { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
-  );
 
   // Fetch BOUNDARY_HIERARCHY_TYPE from MDMS
   const {
@@ -147,26 +139,27 @@ const NewShipmentPopup = ({
   const projectId = campaignData?.projectId || projectIdProp;
   const campaignName = campaignData?.campaignName || "";
 
-  // Extract product variants from MDMS project type resources
-  const campaignProjectType = campaignData?.projectType;
+  // Extract product variants from campaign delivery rules
   const productVariants = useMemo(() => {
-    if (!projectTypeData || !campaignProjectType) return [];
-    const projectTypes = projectTypeData?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
-    const matchedType = projectTypes.find((pt) => pt?.code === campaignProjectType);
-    if (!matchedType?.resources) return [];
+    if (!campaignData?.deliveryRules) return [];
     const variants = [];
     const seen = new Set();
-    matchedType.resources.forEach((r) => {
-      if (r?.productVariantId && !seen.has(r.productVariantId)) {
-        seen.add(r.productVariantId);
-        variants.push({
-          productVariantId: r.productVariantId,
-          name: r.name || r.productVariantId,
+    campaignData.deliveryRules.forEach((rule) => {
+      (rule?.cycles || []).forEach((cycle) => {
+        (cycle?.deliveries || []).forEach((delivery) => {
+          (delivery?.doseCriteria || []).forEach((dose) => {
+            (dose?.ProductVariants || []).forEach((pv) => {
+              if (pv?.productVariantId && !seen.has(pv.productVariantId)) {
+                seen.add(pv.productVariantId);
+                variants.push({ productVariantId: pv.productVariantId, name: pv.name || pv.productVariantId });
+              }
+            });
+          });
         });
-      }
+      });
     });
     return variants;
-  }, [projectTypeData, campaignProjectType]);
+  }, [campaignData]);
 
   const projectSearchCriteria = useMemo(
     () => ({
@@ -204,7 +197,7 @@ const NewShipmentPopup = ({
   const {
     data: projectData,
     isLoading: projectsLoading,
-  } = Digit.Hooks.useCustomAPIHook(projectSearchCriteria);
+  } = usePaginatedAPIHook(projectSearchCriteria);
   const initialProjectIds = projectData?.ids || [];
   const initialBoundaryMap = projectData?.boundaryMap || {};
 
@@ -401,7 +394,7 @@ const NewShipmentPopup = ({
   const {
     data: childProjectData,
     isLoading: childProjectsLoading,
-  } = Digit.Hooks.useCustomAPIHook(childProjectSearchCriteria);
+  } = usePaginatedAPIHook(childProjectSearchCriteria);
 
   // Accumulate child project data so it persists across criteria changes
   useEffect(() => {
@@ -502,7 +495,7 @@ const NewShipmentPopup = ({
   const {
     data: fromFacilityList,
     isLoading: fromFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(fromFacilityReqCriteria);
+  } = usePaginatedAPIHook(fromFacilityReqCriteria);
 
   // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
@@ -532,7 +525,7 @@ const NewShipmentPopup = ({
   const {
     data: rawToFacilityList,
     isLoading: toFacilitiesLoading,
-  } = Digit.Hooks.useCustomAPIHook(toFacilityReqCriteria);
+  } = usePaginatedAPIHook(toFacilityReqCriteria);
 
   // Collect all unique facility IDs from both lists for name resolution
   const allFacilityIds = useMemo(() => {
@@ -559,7 +552,7 @@ const NewShipmentPopup = ({
     },
   }), [tenantId, allFacilityIds]);
 
-  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = Digit.Hooks.useCustomAPIHook(facilityNameSearchCriteria);
+  const { data: facilityNameMap = {}, isLoading: facilityNamesLoading } = usePaginatedAPIHook(facilityNameSearchCriteria);
 
   // Enrich facility lists with resolved names (dedup by id as safety net)
   const enrichedFromFacilityList = useMemo(() => {
@@ -1327,8 +1320,7 @@ const NewShipmentPopup = ({
     hierarchyTypeLoading ||
     hierarchyLoading ||
     boundaryRelLoading ||
-    projectsLoading ||
-    projectTypeLoading;
+    projectsLoading;
   const allVisibleSelected =
     filteredFacilities.length > 0 &&
     filteredFacilities.every((f) => selectedFacilityIds.has(f.id));
