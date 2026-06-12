@@ -175,7 +175,7 @@ const BulkStockUpload = () => {
     body: {},
     config: {
       enabled: !!BOUNDARY_HIERARCHY_TYPE,
-      cacheTime: 1500000,
+      cacheTime: 1000000,
     },
   }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
@@ -226,7 +226,7 @@ const BulkStockUpload = () => {
 
   const projectSearchCriteria = useMemo(() => ({
     url: `/project/v1/_search`,
-    params: { tenantId: tenantId, limit: 1500, offset: 0, includeDescendants: false, includeImmediateChildren: true },
+    params: { tenantId: tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: {
       Projects: [
         {
@@ -356,7 +356,7 @@ const BulkStockUpload = () => {
   // Dynamic child project search
   const childProjectSearchCriteria = useMemo(() => ({
     url: `/project/v1/_search`,
-    params: { tenantId, limit: 1500, offset: 0, includeDescendants: false, includeImmediateChildren: true },
+    params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: { Projects: childSearchProjectIds.map((id) => ({ id, tenantId })) },
     config: {
       enabled: !!childSearchProjectIds.length,
@@ -904,7 +904,7 @@ const BulkStockUpload = () => {
           const val = row[idx];
           if (val === undefined || val === null || val === "") return;
           const num = parseInt(val, 10);
-          if (num > 15000000) {
+          if (num > 10000000) {
             validationErrors.push(`Row ${rowIdx + 3}: "${productName}" quantity (${num}) exceeds maximum allowed (10,000,000)`);
           }
         });
