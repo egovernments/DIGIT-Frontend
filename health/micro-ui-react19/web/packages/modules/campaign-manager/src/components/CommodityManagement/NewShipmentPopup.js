@@ -100,7 +100,7 @@ const NewShipmentPopup = ({
     body: {},
     config: {
       enabled: !!BOUNDARY_HIERARCHY_TYPE,
-      cacheTime: 1500000,
+      cacheTime: 1000000,
     },
   }), [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
@@ -172,7 +172,7 @@ const NewShipmentPopup = ({
   const projectSearchCriteria = useMemo(
     () => ({
       url: `/${projectServicePath}/v1/_search`,
-      params: { tenantId, limit: 1500, offset: 0, includeDescendants: false, includeImmediateChildren: true },
+      params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
       body: { Projects: [{ id: projectId, tenantId }] },
       config: {
         enabled: !!projectId,
@@ -372,7 +372,7 @@ const NewShipmentPopup = ({
   // Dynamic child project search — uses includeDescendants to fetch all levels in one shot
   const childProjectSearchCriteria = useMemo(() => ({
     url: `/${projectServicePath}/v1/_search`,
-    params: { tenantId, limit: 1500, offset: 0, includeDescendants: false, includeImmediateChildren: true },
+    params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: { Projects: childSearchProjectIds.map((id) => ({ id, tenantId })) },
     config: {
       enabled: !!childSearchProjectIds.length,
@@ -951,7 +951,7 @@ const NewShipmentPopup = ({
           cell.dataValidation = {
             type: 'whole',
             operator: 'between',
-            formulae: [0, 15000000],
+            formulae: [0, 10000000],
             allowBlank: true,
             showInputMessage: true,
             promptTitle: 'Quantity',
@@ -1179,7 +1179,7 @@ const NewShipmentPopup = ({
             const num = Number(val);
             if (!Number.isFinite(num) || num < 0 || !Number.isInteger(num)) {
               errors.push(`Row ${rowNum}: "${name}" must be a whole number >= 0`);
-            } else if (num > 15000000) {
+            } else if (num > 10000000) {
               errors.push(`Row ${rowNum}: "${name}" quantity (${num}) exceeds maximum allowed (10,000,000)`);
             }
           }
