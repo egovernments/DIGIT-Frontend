@@ -69,7 +69,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     }
   }, []);
 
-  Digit.Hooks.campaign.useBoundaryRelationshipSearch({
+  const boundaryData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({
     BOUNDARY_HIERARCHY_TYPE: selected?.name,
     tenantId,
   });
@@ -111,9 +111,12 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     if (selected) {
       Digit.SessionStorage.set("HCM_CAMPAIGN_SELECTED_HIERARCHY", selected);
       if (selected.code) Digit.SessionStorage.set(HIERARCHY_CODE_KEY, selected.code);
-      onSelect("SelectHierarchy", { hierarchy: selected });
+      onSelect("SelectHierarchy", {
+        hierarchy: selected,
+        hasBoundaryData: !!(boundaryData && boundaryData.length > 0),
+      });
     }
-  }, [selected]);
+  }, [selected, boundaryData]);
 
   if (isLoading) {
     return <Loader />;

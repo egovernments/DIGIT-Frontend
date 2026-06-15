@@ -68,8 +68,16 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
   );
   const [hierarchyType, setHierarchyType] = useState();
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-  }, [HierarchySchema, hierarchyType]);
+    // Try MDMS first
+    const fromMdms = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    if (fromMdms) return fromMdms;
+    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return undefined;
+    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
+    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
+    return leaf?.boundaryType;
+  }, [HierarchySchema, hierarchyType, hierarchyDefinition]);
   const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-PROJECT-TYPES",

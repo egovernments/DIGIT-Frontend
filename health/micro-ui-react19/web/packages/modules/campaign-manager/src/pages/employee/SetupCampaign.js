@@ -82,9 +82,17 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
   const lowestHierarchy = useMemo(() => {
+    // Try MDMS first
     const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
-    return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-  }, [HierarchySchema, hierarchyType]);
+    const fromMdms = schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    if (fromMdms) return fromMdms;
+    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return undefined;
+    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
+    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
+    return leaf?.boundaryType;
+  }, [HierarchySchema, hierarchyType, hierarchyDefinition]);
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,

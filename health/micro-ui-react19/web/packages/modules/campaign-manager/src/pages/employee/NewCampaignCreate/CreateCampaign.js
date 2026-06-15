@@ -344,6 +344,11 @@ const CreateCampaign = () => {
         setShowToast({ key: "error", label: t("HCM_SELECT_HIERARCHY_REQUIRED") });
         return;
       }
+      const hasBoundaryData = formData?.SelectHierarchy?.hasBoundaryData ?? params?.SelectHierarchy?.hasBoundaryData;
+      if (!hasBoundaryData) {
+        setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
+        return;
+      }
       handleCampaignMutation(formData);
     }
   };
