@@ -278,6 +278,12 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
   useEffect(() => {
     async function reqUpdate() {
       if (shouldUpdate === true) {
+        // Block campaign update if no boundary data exists for the selected hierarchy type
+        if (hierarchyType && (!hierarchyData || hierarchyData.length === 0)) {
+          setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
+          setShouldUpdate(false);
+          return;
+        }
         if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
           return;
         } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {

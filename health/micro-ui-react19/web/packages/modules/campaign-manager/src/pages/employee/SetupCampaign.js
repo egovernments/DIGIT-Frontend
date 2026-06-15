@@ -253,6 +253,12 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
   useEffect(() => {
     async function handleUpdate() {
       if (shouldUpdate === true) {
+        // Block campaign create/update if no boundary data exists for the selected hierarchy type
+        if (hierarchyType && (!hierarchyData || hierarchyData.length === 0)) {
+          setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
+          setShouldUpdate(false);
+          return;
+        }
         if (isChangeDates === "true") {
           const reqCreate = async () => {
             let payloadData = { ...draftData };
