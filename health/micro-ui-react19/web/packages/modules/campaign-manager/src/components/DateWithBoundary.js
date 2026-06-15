@@ -138,29 +138,6 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
-  const lowestHierarchy = useMemo(() => {
-    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
-    return schemas.find((item) => item.hierarchy === BOUNDARY_HIERARCHY_TYPE)?.lowestHierarchy;
-  }, [HierarchySchema, BOUNDARY_HIERARCHY_TYPE]);
-  const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
-  const [selectedLevel, setSelectedLevel] = useState(null);
-  const [filteredBoundaries, setFilteredBoundaries] = useState([]);
-  const [targetBoundary, setTargetBoundary] = useState([]);
-  const [projectData, setProjectData] = useState(null);
-  const [dateReducer, dateReducerDispatch] = useReducer(reducer, initialState(projectData));
-  const [showToast, setShowToast] = useState(null);
-
-  useEffect(() => {
-    onSelect("dateWithBoundary", dateReducer);
-  }, [dateReducer]);
-  useEffect(() => {
-    if (projectData) {
-      dateReducerDispatch({
-        type: "RELOAD",
-        projectData: projectData,
-      });
-    }
-  }, [projectData]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -181,6 +158,38 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     },
   };
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const lowestHierarchy = useMemo(() => {
+    // Try MDMS first
+    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
+    const fromMdms = schemas.find((item) => item.hierarchy === BOUNDARY_HIERARCHY_TYPE)?.lowestHierarchy;
+    if (fromMdms) return fromMdms;
+    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const boundaryHierarchy = hierarchyDefinition?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return undefined;
+    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
+    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
+    return leaf?.boundaryType;
+  }, [HierarchySchema, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition]);
+  const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [filteredBoundaries, setFilteredBoundaries] = useState([]);
+  const [targetBoundary, setTargetBoundary] = useState([]);
+  const [projectData, setProjectData] = useState(null);
+  const [dateReducer, dateReducerDispatch] = useReducer(reducer, initialState(projectData));
+  const [showToast, setShowToast] = useState(null);
+
+  useEffect(() => {
+    onSelect("dateWithBoundary", dateReducer);
+  }, [dateReducer]);
+  useEffect(() => {
+    if (projectData) {
+      dateReducerDispatch({
+        type: "RELOAD",
+        projectData: projectData,
+      });
+    }
+  }, [projectData]);
 
   useEffect(() => {
     const timer = showToast && setTimeout(() => setShowToast(null), 5000);

@@ -44,9 +44,17 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.mailConfig` }
   );
   const lowestHierarchy = useMemo(() => {
+    // Try MDMS first
     const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
-    return schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-  }, [HierarchySchema, hierarchyType]);
+    const fromMdms = schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    if (fromMdms) return fromMdms;
+    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const boundaryHierarchy = props?.props?.dataParams?.hierarchy?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return undefined;
+    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
+    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
+    return leaf?.boundaryType;
+  }, [HierarchySchema, hierarchyType, props?.props?.dataParams?.hierarchy]);
   // Initialize from session data to prevent losing data on re-render
   const [selectedData, setSelectedData] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []
@@ -144,15 +152,24 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     // Show popup on initial load if there's upload data and user hasn't made a choice yet
     if (restrictSelection !== null) return;
 
-    if (
+    const hasUploadData =
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0 ||
-      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
-    ) {
-      setRestrictSelection(true);
-      setShowPopUp(true);
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0;
+
+    if (!hasUploadData) return;
+
+    // If boundaries are empty but upload data exists, data is stale (e.g., hierarchy type changed).
+    // Auto-clear without showing the popup.
+    const hasBoundaries = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0;
+    if (!hasBoundaries) {
+      setRestrictSelection(false);
+      return;
     }
+
+    setRestrictSelection(true);
+    setShowPopUp(true);
   }, [props?.props?.sessionData, restrictSelection]);
 
   const handleBoundaryChange = (value) => {

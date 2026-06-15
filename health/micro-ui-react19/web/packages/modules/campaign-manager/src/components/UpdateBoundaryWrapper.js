@@ -35,9 +35,35 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign || false
   );
+  const reqCriteriaHierarchy = useMemo(() => ({
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `${hierarchyType}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType,
+      },
+    },
+    config: {
+      enabled: !!hierarchyType,
+      cacheTime: 1000000,
+    },
+  }), [tenantId, hierarchyType]);
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteriaHierarchy);
+
   const lowestHierarchy = useMemo(() => {
-    return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-  }, [HierarchySchema, hierarchyType]);
+    // Try MDMS first
+    const fromMdms = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    if (fromMdms) return fromMdms;
+    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return undefined;
+    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
+    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
+    return leaf?.boundaryType;
+  }, [HierarchySchema, hierarchyType, hierarchyDefinition]);
 
   const reqCriteriaCampaign = {
     url: `/project-factory/v1/project-type/search`,
@@ -206,15 +232,24 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     // restrictSelection === null means user hasn't clicked Yes or No
     if (restrictSelection !== null) return;
 
-    if (
+    const hasUploadData =
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0 ||
-      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0
-    ) {
-      setRestrictSelection(true);
-      setShowPopUp(true);
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified?.uploadedFile?.length > 0;
+
+    if (!hasUploadData) return;
+
+    // If boundaries are empty but upload data exists, data is stale (e.g., hierarchy type changed).
+    // Auto-clear without showing the popup.
+    const hasBoundaries = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0;
+    if (!hasBoundaries) {
+      setRestrictSelection(false);
+      return;
     }
+
+    setRestrictSelection(true);
+    setShowPopUp(true);
   }, [props?.props?.sessionData, restrictSelection]);
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
