@@ -81,18 +81,6 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
-  const lowestHierarchy = useMemo(() => {
-    // Try MDMS first
-    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
-    const fromMdms = schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
-    if (fromMdms) return fromMdms;
-    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
-    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
-    if (!boundaryHierarchy.length) return undefined;
-    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
-    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
-    return leaf?.boundaryType;
-  }, [HierarchySchema, hierarchyType, hierarchyDefinition]);
 
   const { data: DeliveryConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -123,6 +111,19 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
+
+  const lowestHierarchy = useMemo(() => {
+    // Try MDMS first
+    const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
+    const fromMdms = schemas.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
+    if (fromMdms) return fromMdms;
+    // Fallback: derive from boundary hierarchy definition (leaf = type not used as any other's parent)
+    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+    if (!boundaryHierarchy.length) return undefined;
+    const typesUsedAsParent = new Set(boundaryHierarchy.map((b) => b.parentBoundaryType).filter(Boolean));
+    const leaf = boundaryHierarchy.find((b) => !typesUsedAsParent.has(b.boundaryType));
+    return leaf?.boundaryType;
+  }, [HierarchySchema, hierarchyType, hierarchyDefinition]);
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,

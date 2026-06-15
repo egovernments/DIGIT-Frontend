@@ -138,6 +138,27 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
   );
+
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      },
+    },
+    config: {
+      enabled: !!BOUNDARY_HIERARCHY_TYPE,
+      select: (data) => {
+        return data?.BoundaryHierarchy?.[0];
+      },
+    },
+  };
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
   const lowestHierarchy = useMemo(() => {
     // Try MDMS first
     const schemas = HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema || [];
@@ -169,26 +190,6 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       });
     }
   }, [projectData]);
-
-  const reqCriteria = {
-    url: `/boundary-service/boundary-hierarchy-definition/_search`,
-    changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
-    body: {
-      BoundaryTypeHierarchySearchCriteria: {
-        tenantId: tenantId,
-        limit: 2,
-        offset: 0,
-        hierarchyType: BOUNDARY_HIERARCHY_TYPE,
-      },
-    },
-    config: {
-      enabled: !!BOUNDARY_HIERARCHY_TYPE,
-      select: (data) => {
-        return data?.BoundaryHierarchy?.[0];
-      },
-    },
-  };
-  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
     const timer = showToast && setTimeout(() => setShowToast(null), 5000);
