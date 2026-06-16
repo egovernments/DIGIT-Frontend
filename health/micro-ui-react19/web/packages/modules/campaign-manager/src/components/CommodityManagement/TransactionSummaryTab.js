@@ -28,8 +28,9 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     productName !== "N/A" ? productName : "N/A";
 
   // Derive display status from stockEntryType + status
-  const stockEntryType = stock?.stockEntryType || "";
-  const rawStatus = stock?.status || "";
+  // Fall back to additionalFields for stock API responses where these are not top-level
+  const stockEntryType = stock?.stockEntryType || getFieldValue("stockEntryType");
+  const rawStatus = stock?.status || getFieldValue("status");
   let status = "N/A";
   if (stockEntryType === "ISSUED") {
     if (rawStatus === "ACCEPTED") status = "Completed";

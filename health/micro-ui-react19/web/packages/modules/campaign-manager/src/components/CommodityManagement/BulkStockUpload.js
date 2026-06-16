@@ -978,7 +978,7 @@ const BulkStockUpload = () => {
                 { key: "stockEntryType", value: "ISSUED" },
                 { key: "primaryRole", value: "RECEIVER" },
                 { key: "secondaryRole", value: "SENDER" },
-                { key: "status", value: "IN_TRANSIT" },
+                { key: "status", value: fromSelectedLevel === 0 ? "ACCEPTED" : "IN_TRANSIT" },
                 { key: "administrativeArea", value: administrativeArea },
                 { key: "stockInHand", value: "0.0" },
                 { key: "mrnNumber", value: mrnNumber },
