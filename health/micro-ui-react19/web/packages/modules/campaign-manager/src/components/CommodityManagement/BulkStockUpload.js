@@ -232,9 +232,10 @@ const BulkStockUpload = () => {
 
   // Step 1: Fetch all project IDs for this campaign
   const projectId = campaignData?.projectId;
+  const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
 
   const projectSearchCriteria = useMemo(() => ({
-    url: `/project/v1/_search`,
+    url: `/${projectServicePath}/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: {
       Projects: [
@@ -364,7 +365,7 @@ const BulkStockUpload = () => {
 
   // Dynamic child project search
   const childProjectSearchCriteria = useMemo(() => ({
-    url: `/project/v1/_search`,
+    url: `/${projectServicePath}/v1/_search`,
     params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: { Projects: childSearchProjectIds.map((id) => ({ id, tenantId })) },
     config: {
@@ -409,7 +410,7 @@ const BulkStockUpload = () => {
 
   // Fetch ALL project facilities to know which projects have facilities
   const allFacilityReqCriteria = useMemo(() => ({
-    url: `/project/facility/v1/_search`,
+    url: `/${projectServicePath}/facility/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
     body: {
       ProjectFacility: {
@@ -540,7 +541,7 @@ const BulkStockUpload = () => {
 
   // Fetch "From" facilities
   const fromFacilityReqCriteria = useMemo(() => ({
-    url: `/project/facility/v1/_search`,
+    url: `/${projectServicePath}/facility/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
     body: {
       ProjectFacility: {
@@ -577,7 +578,7 @@ const BulkStockUpload = () => {
 
   // Fetch "To" facilities
   const toFacilityReqCriteria = useMemo(() => ({
-    url: `/project/facility/v1/_search`,
+    url: `/${projectServicePath}/facility/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
     body: {
       ProjectFacility: {

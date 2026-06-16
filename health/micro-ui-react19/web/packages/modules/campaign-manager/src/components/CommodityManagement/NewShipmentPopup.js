@@ -146,6 +146,7 @@ const NewShipmentPopup = ({
 
   const projectId = campaignData?.projectId || projectIdProp;
   const campaignName = campaignData?.campaignName || "";
+  const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
 
   // Extract product variants from MDMS project type resources
   const campaignProjectType = campaignData?.projectType;
@@ -170,7 +171,7 @@ const NewShipmentPopup = ({
 
   const projectSearchCriteria = useMemo(
     () => ({
-      url: `/project/v1/_search`,
+      url: `/${projectServicePath}/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
       body: { Projects: [{ id: projectId, tenantId }] },
       config: {
@@ -370,7 +371,7 @@ const NewShipmentPopup = ({
 
   // Dynamic child project search — uses includeDescendants to fetch all levels in one shot
   const childProjectSearchCriteria = useMemo(() => ({
-    url: `/project/v1/_search`,
+    url: `/${projectServicePath}/v1/_search`,
     params: { tenantId, limit: 1000, offset: 0, includeDescendants: false, includeImmediateChildren: true },
     body: { Projects: childSearchProjectIds.map((id) => ({ id, tenantId })) },
     config: {
@@ -475,7 +476,7 @@ const NewShipmentPopup = ({
   // Fetch "From" facilities using filtered project IDs
   const fromFacilityReqCriteria = useMemo(
     () => ({
-      url: `/project/facility/v1/_search`,
+      url: `/${projectServicePath}/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
       body: { ProjectFacility: { projectId: fromFilteredProjectIds } },
       config: {
@@ -507,7 +508,7 @@ const NewShipmentPopup = ({
   // Fetch "To" facilities using filtered project IDs
   const toFacilityReqCriteria = useMemo(
     () => ({
-      url: `/project/facility/v1/_search`,
+      url: `/${projectServicePath}/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
       body: { ProjectFacility: { projectId: toFilteredProjectIds } },
       config: {

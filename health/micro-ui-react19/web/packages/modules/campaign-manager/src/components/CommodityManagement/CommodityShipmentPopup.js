@@ -60,6 +60,9 @@ const CommodityShipmentPopup = ({
   const [showToast, setShowToast] = useState(null);
   const [errors, setErrors] = useState({});
 
+  const projectServicePath = window.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || `health-project`;
+
+
   // Stock mutation (bulk create like BulkStockUpload)
   const stockMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/stock/v1/bulk/_create`,
@@ -85,7 +88,7 @@ const CommodityShipmentPopup = ({
   // Fetch project-facility mappings for descendant projects
   const facilityMappingCriteria = useMemo(
     () => ({
-      url: `/project/facility/v1/_search`,
+      url: `/${projectServicePath}/facility/v1/_search`,
       params: { tenantId, limit: 1000, offset: 0 },
       body: { ProjectFacility: { projectId: toProjectIds } },
       config: {
@@ -119,7 +122,7 @@ const CommodityShipmentPopup = ({
   // Fetch facility details (names) for the To facilities
   const facilityDetailsCriteria = useMemo(
     () => ({
-      url: `/facility/v1/_search`,
+      url: `/${projectServicePath}/facility/v1/_search`,
       params: {
         tenantId,
         limit: toFacilityIds.length || 10,
