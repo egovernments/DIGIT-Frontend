@@ -92,8 +92,10 @@ const computeFromRawData = (stockData, productNameMap = {}) => {
   const facilitySet = new Set();
 
   stockData.forEach((stock) => {
-    const stockEntryType = stock.stockEntryType || "";
-    const status = stock.status || "";
+    // Fall back to additionalFields for stock API responses where these are not top-level
+    const getAdditionalField = (key) => stock?.additionalFields?.fields?.find((f) => f.key === key)?.value || "";
+    const stockEntryType = stock.stockEntryType || getAdditionalField("stockEntryType");
+    const status = stock.status || getAdditionalField("status");
 
     // Transaction summary categorization (status-based, no pair-matching)
     if (stockEntryType === "ISSUED") {
