@@ -1270,7 +1270,7 @@ const NewShipmentPopup = ({
                 { key: "stockEntryType", value: "ISSUED" },
                 { key: "primaryRole", value: "SENDER" },
                 { key: "secondaryRole", value: "RECEIVER" },
-                { key: "status", value: "IN_TRANSIT" },
+                { key: "status", value: isTopLevel ? "ACCEPTED" : "IN_TRANSIT" },
                 { key: "campaignNumber", value: campaignNumber || "" },
               ],
             },

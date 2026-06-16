@@ -315,7 +315,7 @@ const CommodityShipmentPopup = ({
             { key: "stockEntryType", value: "ISSUED" },
             { key: "primaryRole", value: "SENDER" },
             { key: "secondaryRole", value: "RECEIVER" },
-            { key: "status", value: "IN_TRANSIT" },
+            { key: "status", value: isTopLevel ? "ACCEPTED" : "IN_TRANSIT" },
             { key: "administrativeArea", value: administrativeArea },
             ...(campaignNumber ? [{ key: "campaignNumber", value: campaignNumber || "" }] : []),
             ...(comment ? [{ key: "comment", value: comment }] : []),
