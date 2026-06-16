@@ -183,7 +183,7 @@ const CreateCampaign = () => {
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
     const hierarchyType = formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
     setLoader(true);
-    const isEdit = editName || campaignNumber;
+    const isEdit = !!(editName || campaignNumber || id);
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
     const payload = transformCreateData({
@@ -349,7 +349,7 @@ const CreateCampaign = () => {
         setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
         return;
       }
-      handleCampaignMutation(formData);
+      handleCampaignMutation(formData, hasDateChanged);
     }
   };
   const onStepperClick = (step) => {
