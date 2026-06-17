@@ -15,8 +15,8 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
 
   return dateObj.getTime(); // Epoch in milliseconds
 }
-  const startDate =  getStartDateEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || params?.campaignDates?.startDate || params?.DateSelection?.startDate || formData?.DateSelection?.startDate);
-  const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || params?.campaignDates?.endDate || params?.DateSelection?.endDate || formData?.DateSelection?.endDate);
+  const startDate =  getStartDateEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || params?.campaignDates?.startDate || params?.DateSelection?.startDate || formData?.DateSelection?.startDate || formData?.campaignDates?.startDate);
+  const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.endDate || params?.campaignDates?.endDate || params?.DateSelection?.endDate || formData?.DateSelection?.endDate || formData?.campaignDates?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // Use explicit hierarchyChanged if provided by caller; otherwise detect from params.
   const hierarchyChanged = hierarchyChangedOverride ?? !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);

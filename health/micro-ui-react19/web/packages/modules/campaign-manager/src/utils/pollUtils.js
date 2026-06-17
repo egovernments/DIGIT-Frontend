@@ -72,8 +72,8 @@ export const callTemplateDownloadByUntilCompleted = async (hierarchyType, campai
   await pollForTemplateGeneration(
     () => downloadTemplate(hierarchyType, campaignId, tenantId, type),
     conditionForTermination,
-    5000,
+    10000,
     10,
-    10000
+    20000
   );
 };

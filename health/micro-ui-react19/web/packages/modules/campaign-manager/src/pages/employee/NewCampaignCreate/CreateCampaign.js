@@ -183,18 +183,72 @@ const CreateCampaign = () => {
     return res?.CampaignDetails;
   };
 
+  const fetchLatestCampaignData = async () => {
+    if (!id) return null;
+    const res = await Digit.CustomService.getResponse({
+      url: `/project-factory/v1/project-type/search`,
+      body: {
+        CampaignDetails: {
+          tenantId: tenantId,
+          ids: [id],
+        },
+      },
+    });
+    return res?.CampaignDetails?.[0];
+  };
+
+  const cleanupSessionAndNavigate = (campNumber, campTenantId) => {
+    Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
+    Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
+    Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+    Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
+    Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+    Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
+    Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+    Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
+    const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campNumber}&tenantId=${campTenantId}`;
+    navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
+  };
+
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
-    const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
-    setLoader(true);
     const isEdit = !!(editName || campaignNumber || id);
+    const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
+
+    // For edit campaigns with no hierarchy change, skip the update call entirely
+    if (isEdit && !hierarchyChanged) {
+      setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS) });
+      queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
+      setTimeout(() => {
+        cleanupSessionAndNavigate(campaignNumber || params?.campaignNumber, tenantId);
+      }, 2000);
+      return;
+    }
+
+    setLoader(true);
+
+    // For edit campaigns with hierarchy change, fetch fresh campaign data from server
+    // to avoid using stale params (e.g. after a recent date update)
+    let effectiveParams = params;
+    if (isEdit && hierarchyChanged && id) {
+      try {
+        const freshData = await fetchLatestCampaignData();
+        if (freshData) {
+          effectiveParams = transformDraftDataToFormData(freshData);
+        }
+      } catch (e) {
+        // Fall back to params if fetch fails
+      }
+    }
+
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
+
     const payload = transformCreateData({
       totalFormData,
       hierarchyType,
-      params,
+      params: effectiveParams,
       formData,
       ...(isEdit ? { id } : {}),
       hasDateChanged,
@@ -215,16 +269,7 @@ const CreateCampaign = () => {
           });
           queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
           setTimeout(() => {
-            Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
-            Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
-            Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-            Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
-            Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-            Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
-            Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
-            Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
-            const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`;
-            navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
+            cleanupSessionAndNavigate(result?.CampaignDetails?.campaignNumber, result?.CampaignDetails?.tenantId);
             setLoader(false);
           }, 2000);
         },
@@ -243,9 +288,12 @@ const CreateCampaign = () => {
     setLoader(true);
 
     const newDates = pendingFormData?.campaignDates || pendingFormData?.DateSelection;
+
     const updatedParams = {
       ...params,
       ...pendingFormData,
+      CampaignName: params?.CampaignName,
+      CampaignType: params?.CampaignType,
       DateSelection: newDates
         ? { startDate: newDates.startDate, endDate: newDates.endDate }
         : params?.DateSelection,
@@ -392,21 +440,23 @@ const CreateCampaign = () => {
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged) {
-        // Clear cycle data for any date change
-        setParams((prev) => ({
-          ...prev,
-          ...dateSync,
-          additionalDetails: {
-            ...(prev?.additionalDetails || {}),
-            cycleData: [],
-            cycleConfgureDate: undefined,
-          },
-        }));
-        // Only show popup if delivery rules need clearing
-        if (params?.deliveryRules?.length > 0) {
-          setPendingFormData(formData);
-          setShowPopUp(true);
-          return;
+        // Only clear cycle data / show popup when there's existing data to clear (edit campaigns)
+        const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
+        if (hasExistingData) {
+          setParams((prev) => ({
+            ...prev,
+            ...dateSync,
+            additionalDetails: {
+              ...(prev?.additionalDetails || {}),
+              cycleData: [],
+              cycleConfgureDate: undefined,
+            },
+          }));
+          if (params?.deliveryRules?.length > 0) {
+            setPendingFormData(formData);
+            setShowPopUp(true);
+            return;
+          }
         }
       }
       setShowToast(null);
