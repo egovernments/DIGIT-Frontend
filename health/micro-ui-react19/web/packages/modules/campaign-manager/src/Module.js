@@ -180,7 +180,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
     { schemaCode: "HierarchySchema" }
   );
 
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
+  const { data: hierarchyData } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
   useEffect(() => {

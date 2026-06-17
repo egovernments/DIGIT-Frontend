@@ -114,7 +114,7 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
   }, [tenantId, hierarchyType]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
+  const { data: hierarchyData, isLoading: isBoundaryLoading } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const lowestHierarchy = useMemo(() => {
     // Try MDMS first
@@ -279,6 +279,11 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
   useEffect(() => {
     async function reqUpdate() {
       if (shouldUpdate === true) {
+        // Wait for boundary search to finish before validating
+        if (isBoundaryLoading) {
+          setShouldUpdate(false);
+          return;
+        }
         // Block campaign update if no boundary data exists for the selected hierarchy type
         if (hierarchyType && (!hierarchyData || hierarchyData.length === 0)) {
           setShowToast({ key: "error", label: t("HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY") });
