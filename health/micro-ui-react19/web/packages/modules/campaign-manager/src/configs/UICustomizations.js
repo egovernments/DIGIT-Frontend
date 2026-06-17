@@ -1269,6 +1269,24 @@ export const UICustomizations = {
       return "TQM_VIEW_TEST_DETAILS";
     },
   },
+  CommodityProjectOngoing: {
+    preProcess: (data) => {
+      data.body.dateFilter = "ongoing";
+      return data;
+    },
+  },
+  CommodityProjectUpcoming: {
+    preProcess: (data) => {
+      data.body.dateFilter = "upcoming";
+      return data;
+    },
+  },
+  CommodityProjectCompleted: {
+    preProcess: (data) => {
+      data.body.dateFilter = "completed";
+      return data;
+    },
+  },
   CampaignTemplateConfig: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit?.ULBService?.getCurrentTenantId();

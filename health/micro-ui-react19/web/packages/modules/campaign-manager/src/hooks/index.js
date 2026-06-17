@@ -16,6 +16,7 @@ import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
 import useMDMSServiceSearch from "./useMDMSServiceSearch";
+import useCommodityProjectSearch from "./useCommodityProjectSearch";
 import useFetchFromMicroplan from "./useFetchFromMicroplan";
 import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
 import { useSearchLocalisation } from "./useSearchLocalisation";
@@ -26,6 +27,9 @@ import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
 import useUpdateAppConfig from "./useUpdateAppConfig";
 import useUpdateAppConfigForFeatures from "./useUpdateAppConfigForFeatures";
 import { useProcessData } from "./useProcessData";
+import useBatchStockCreation from "./useBatchStockCreation";
+import useStockData from "./useStockData";
+import useWarehouseManagerSync from "./useWarehouseManagerSync";
 
 const UserService = {};
 
@@ -51,6 +55,7 @@ const campaign = {
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
   useMDMSServiceSearch,
+  useCommodityProjectSearch,
   useFetchFromMicroplan,
   useReadExcelData,
   useUpdateAndUploadExcel,
@@ -61,7 +66,10 @@ const campaign = {
   useUpdateAppConfig,
   useUpsertSchemaConfig,
   useUpdateAppConfigForFeatures,
-  useProcessData
+  useProcessData,
+  useBatchStockCreation,
+  useStockData,
+  useWarehouseManagerSync,
 };
 
 const Hooks = {
