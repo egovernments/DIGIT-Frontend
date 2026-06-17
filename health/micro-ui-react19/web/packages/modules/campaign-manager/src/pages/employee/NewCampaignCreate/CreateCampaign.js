@@ -392,21 +392,23 @@ const CreateCampaign = () => {
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged) {
-        // Clear cycle data for any date change
-        setParams((prev) => ({
-          ...prev,
-          ...dateSync,
-          additionalDetails: {
-            ...(prev?.additionalDetails || {}),
-            cycleData: [],
-            cycleConfgureDate: undefined,
-          },
-        }));
-        // Only show popup if delivery rules need clearing
-        if (params?.deliveryRules?.length > 0) {
-          setPendingFormData(formData);
-          setShowPopUp(true);
-          return;
+        // Only clear cycle data / show popup when there's existing data to clear (edit campaigns)
+        const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
+        if (hasExistingData) {
+          setParams((prev) => ({
+            ...prev,
+            ...dateSync,
+            additionalDetails: {
+              ...(prev?.additionalDetails || {}),
+              cycleData: [],
+              cycleConfgureDate: undefined,
+            },
+          }));
+          if (params?.deliveryRules?.length > 0) {
+            setPendingFormData(formData);
+            setShowPopUp(true);
+            return;
+          }
         }
       }
       setShowToast(null);
