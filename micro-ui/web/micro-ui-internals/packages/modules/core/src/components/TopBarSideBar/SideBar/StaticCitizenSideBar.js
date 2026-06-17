@@ -160,10 +160,10 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
 
   // WhatsApp option config — read from global config if present, else defaults.
   const whatsApp = {
-    number: window?.globalConfigs?.getConfig?.("WHATSAPP_BUSINESS_NUMBER") || "919880900990",
+    number: window?.globalConfigs?.getConfig?.("WHATSAPP_BUSINESS_NUMBER") || "917676472431",
     text: window?.globalConfigs?.getConfig?.("WHATSAPP_DEFAULT_TEXT") || "hi",
     label: window?.globalConfigs?.getConfig?.("WHATSAPP_LABEL") || "Contact us",
-    displayNumber: window?.globalConfigs?.getConfig?.("WHATSAPP_DISPLAY_NUMBER") || "+91 9880900990",
+    displayNumber: window?.globalConfigs?.getConfig?.("WHATSAPP_DISPLAY_NUMBER") || "+91 7676472431",
   };
 
   const MenuItem = ({ item }) => {
