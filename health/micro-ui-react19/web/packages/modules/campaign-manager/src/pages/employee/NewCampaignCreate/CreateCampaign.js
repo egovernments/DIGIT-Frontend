@@ -107,6 +107,10 @@ const CreateCampaign = () => {
     if (fromTemplate) return;
     // if (Object.keys(params).length !== 0) return;
     // if (!draftData) return;
+    console.log("[Campaign Debug] useEffect[draftData] - resetting params from draftData", {
+      startDate: draftData?.startDate,
+      endDate: draftData?.endDate,
+    });
     const restructureFormData = transformDraftDataToFormData(draftData);
     setParams({ ...restructureFormData });
   }, [draftData]);
@@ -186,6 +190,15 @@ const CreateCampaign = () => {
     const isEdit = !!(editName || campaignNumber || id);
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
+    console.log("[Campaign Debug] handleCampaignMutation called", {
+      hasDateChanged,
+      isEdit,
+      "params.DateSelection": params?.DateSelection,
+      "params.campaignDates": params?.campaignDates,
+      "params.startDate (epoch)": params?.startDate,
+      "formData.DateSelection": formData?.DateSelection,
+      "totalFormData.HCM_CAMPAIGN_DATE": totalFormData?.HCM_CAMPAIGN_DATE,
+    });
     const payload = transformCreateData({
       totalFormData,
       hierarchyType,
@@ -193,6 +206,12 @@ const CreateCampaign = () => {
       formData,
       ...(isEdit ? { id } : {}),
       hasDateChanged,
+    });
+    console.log("[Campaign Debug] Payload dates:", {
+      startDate: payload?.CampaignDetails?.startDate,
+      endDate: payload?.CampaignDetails?.endDate,
+      deliveryRules: payload?.CampaignDetails?.deliveryRules,
+      hierarchyType: payload?.CampaignDetails?.hierarchyType,
     });
 
     await mutation.mutate(
@@ -228,9 +247,81 @@ const CreateCampaign = () => {
     );
   };
 
+  const handleDateUpdateOnPopup = async () => {
+    setShowPopUp(false);
+    if (!pendingFormData) return;
+
+    console.log("[Campaign Debug] Popup Submit - calling update API for date change");
+    setLoader(true);
+
+    // Build params with dates synced from campaignDates (the CampaignDates component output)
+    const newDates = pendingFormData?.campaignDates || pendingFormData?.DateSelection;
+    const updatedParams = {
+      ...params,
+      ...pendingFormData,
+      DateSelection: newDates
+        ? { startDate: newDates.startDate, endDate: newDates.endDate }
+        : params?.DateSelection,
+    };
+
+    const hierarchyType = updatedParams?.SelectHierarchy?.hierarchy?.name || updatedParams?.hierarchyType;
+
+    const payload = transformCreateData({
+      totalFormData,
+      hierarchyType,
+      params: updatedParams,
+      formData: pendingFormData,
+      id,
+      hasDateChanged: true,
+    });
+
+    console.log("[Campaign Debug] Popup payload:", JSON.stringify(payload, null, 2));
+
+    await mutationUpdate.mutate(
+      {
+        url: `/project-factory/v1/project-type/update`,
+        body: payload,
+        config: { enable: true },
+      },
+      {
+        onSuccess: async (result) => {
+          console.log("[Campaign Debug] Date update successful:", result?.CampaignDetails?.campaignNumber);
+          setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS) });
+          // Update params from server response to keep data in sync
+          const updatedCampaign = result?.CampaignDetails;
+          if (updatedCampaign) {
+            const restructuredData = transformDraftDataToFormData(updatedCampaign);
+            setParams({ ...restructuredData });
+          }
+          setLoader(false);
+          setPendingFormData(null);
+          setCurrentKey(currentKey + 1);
+        },
+        onError: (error) => {
+          console.error("[Campaign Debug] Date update failed:", error);
+          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
+          setLoader(false);
+          setPendingFormData(null);
+        },
+      }
+    );
+  };
+
   const onSubmit = async (formData) => {
     const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
     const name = filteredCreateConfig?.[0]?.form?.[0]?.name;
+    console.log("[Campaign Debug] onSubmit", {
+      stepName: name,
+      currentKey,
+      isLastStep: filteredCreateConfig?.[0]?.form?.[0]?.last,
+      formDataKeys: Object.keys(formData || {}),
+      "formData.campaignDates": formData?.campaignDates,
+      "formData.DateSelection": formData?.DateSelection,
+      "params.DateSelection": params?.DateSelection,
+      "params.campaignDates": params?.campaignDates,
+      "params.startDate (epoch)": params?.startDate,
+      "params.endDate (epoch)": params?.endDate,
+    });
 
     // Check if project type changed early - before other validations
     const prevProjectType = prevProjectTypeRef.current;
@@ -286,6 +377,11 @@ const CreateCampaign = () => {
       }
     }
 
+    // Sync campaignDates (from CampaignDates component) to DateSelection so downstream code reads correct dates
+    const dateSync = formData?.campaignDates
+      ? { DateSelection: { startDate: formData.campaignDates.startDate, endDate: formData.campaignDates.endDate } }
+      : {};
+
     const isCampaignNameMissing = typeof params?.CampaignName === "object" || !params?.CampaignName;
 
     if ((isCampaignNameMissing || isProjectTypeChanged) && !editName && !campaignNumber) {
@@ -299,7 +395,7 @@ const CreateCampaign = () => {
 
       const campaignName = `${projectType}_${formattedDate}`;
 
-      setParams({ ...params, ...formData, CampaignName: campaignName });
+      setParams({ ...params, ...formData, ...dateSync, CampaignName: campaignName });
 
       // Update the formData itself if needed
       setTotalFormData((prevData) => ({
@@ -310,22 +406,28 @@ const CreateCampaign = () => {
         },
       }));
     } else {
-      setParams({ ...params, ...formData });
+      setParams({ ...params, ...formData, ...dateSync });
     }
 
     prevProjectTypeRef.current = projectType;
 
     const oldStartDate = normalizeDate(params?.startDate);
     const oldEndDate = normalizeDate(params?.endDate);
-    const newStartDate = formData?.DateSelection?.startDate ?? params?.DateSelection?.startDate;
-    const newEndDate = formData?.DateSelection?.endDate ?? params?.DateSelection?.endDate;
+    const newStartDate = formData?.campaignDates?.startDate ?? formData?.DateSelection?.startDate ?? params?.DateSelection?.startDate;
+    const newEndDate = formData?.campaignDates?.endDate ?? formData?.DateSelection?.endDate ?? params?.DateSelection?.endDate;
 
     const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
+    console.log("[Campaign Debug] Date comparison:", {
+      oldStartDate, oldEndDate, newStartDate, newEndDate, hasDateChanged,
+      "params.deliveryRules length": params?.deliveryRules?.length,
+      willShowPopup: name === "HCM_CAMPAIGN_DATE" && hasDateChanged && !!params?.deliveryRules,
+    });
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged && params?.deliveryRules) {
         setParams((prev) => ({
           ...prev,
+          ...dateSync,
           additionalDetails: {
             ...(prev?.additionalDetails || {}),
             cycleData: [],
@@ -406,7 +508,11 @@ const CreateCampaign = () => {
           heading={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS)}
           children={[
             <div>
-              <CardText style={{ margin: 0 }}>{t(I18N_KEYS.COMMON.ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT) + " "}</CardText>
+              <CardText style={{ margin: 0 }}>
+                {t("ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION") !== "ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION"
+                  ? t("ES_CAMPAIGN_DATE_CHANGE_DESCRIPTION")
+                  : "Updating the campaign dates will clear all existing delivery rules and cycle configurations. You will need to reconfigure them after the update."}
+              </CardText>
             </div>,
           ]}
           onOverlayClick={() => {
@@ -434,14 +540,7 @@ const CreateCampaign = () => {
               variation={"primary"}
               label={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
               title={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
-              onClick={() => {
-                setShowPopUp(false);
-                if (pendingFormData) {
-                  setShowToast(null);
-                  setCurrentKey(currentKey + 1);
-                  setPendingFormData(null);
-                }
-              }}
+              onClick={handleDateUpdateOnPopup}
             />,
           ]}
           sortFooterChildren={true}

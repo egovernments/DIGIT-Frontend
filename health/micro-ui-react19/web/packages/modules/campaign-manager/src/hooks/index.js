@@ -27,6 +27,9 @@ import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
 import useUpdateAppConfig from "./useUpdateAppConfig";
 import useUpdateAppConfigForFeatures from "./useUpdateAppConfigForFeatures";
 import { useProcessData } from "./useProcessData";
+import useBatchStockCreation from "./useBatchStockCreation";
+import useStockData from "./useStockData";
+import useWarehouseManagerSync from "./useWarehouseManagerSync";
 
 const UserService = {};
 
@@ -63,7 +66,10 @@ const campaign = {
   useUpdateAppConfig,
   useUpsertSchemaConfig,
   useUpdateAppConfigForFeatures,
-  useProcessData
+  useProcessData,
+  useBatchStockCreation,
+  useStockData,
+  useWarehouseManagerSync,
 };
 
 const Hooks = {

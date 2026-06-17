@@ -15,8 +15,8 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
 
   return dateObj.getTime(); // Epoch in milliseconds
 }
-  const startDate =  getStartDateEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || formData?.DateSelection?.startDate || params?.DateSelection?.startDate);
-  const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || formData?.DateSelection?.endDate || params?.DateSelection?.endDate);
+  const startDate =  getStartDateEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || params?.campaignDates?.startDate || params?.DateSelection?.startDate || formData?.DateSelection?.startDate);
+  const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || params?.campaignDates?.endDate || params?.DateSelection?.endDate || formData?.DateSelection?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const cycleDataFromForm =
     totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleData ||
