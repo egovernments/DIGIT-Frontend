@@ -183,20 +183,6 @@ const CreateCampaign = () => {
     return res?.CampaignDetails;
   };
 
-  const fetchLatestCampaignData = async () => {
-    if (!id) return null;
-    const res = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/project-type/search`,
-      body: {
-        CampaignDetails: {
-          tenantId: tenantId,
-          ids: [id],
-        },
-      },
-    });
-    return res?.CampaignDetails?.[0];
-  };
-
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
@@ -205,31 +191,11 @@ const CreateCampaign = () => {
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
 
-    // For edit campaigns, fetch fresh server data and overlay user's wizard changes on top
-    let effectiveParams = params;
-    if (isEdit && id) {
-      try {
-        const freshData = await fetchLatestCampaignData();
-        if (freshData) {
-          const freshBase = transformDraftDataToFormData(freshData);
-          effectiveParams = {
-            ...freshBase,
-            // Preserve user's wizard changes that may not have been sent to server yet
-            CampaignName: params?.CampaignName ?? freshBase?.CampaignName,
-            CampaignType: params?.CampaignType ?? freshBase?.CampaignType,
-            DateSelection: params?.DateSelection?.startDate ? params.DateSelection : freshBase?.DateSelection,
-          };
-        }
-      } catch (e) {
-        // If fresh fetch fails, fall back to existing params
-      }
-    }
-
-    const hierarchyChanged = !!(effectiveParams?.hierarchyType && hierarchyType && effectiveParams.hierarchyType !== hierarchyType);
+    const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
     const payload = transformCreateData({
       totalFormData,
       hierarchyType,
-      params: effectiveParams,
+      params,
       formData,
       ...(isEdit ? { id } : {}),
       hasDateChanged,
@@ -279,32 +245,14 @@ const CreateCampaign = () => {
 
     const newDates = pendingFormData?.campaignDates || pendingFormData?.DateSelection;
 
-    // Fetch fresh server data so the date update doesn't lose other user changes (e.g., name)
-    let baseParams = params;
-    if (id) {
-      try {
-        const freshData = await fetchLatestCampaignData();
-        if (freshData) {
-          const freshBase = transformDraftDataToFormData(freshData);
-          baseParams = {
-            ...freshBase,
-            CampaignName: params?.CampaignName ?? freshBase?.CampaignName,
-            CampaignType: params?.CampaignType ?? freshBase?.CampaignType,
-          };
-        }
-      } catch (e) {
-        // fall back to params
-      }
-    }
-
     const updatedParams = {
-      ...baseParams,
+      ...params,
       ...pendingFormData,
-      CampaignName: baseParams?.CampaignName,
-      CampaignType: baseParams?.CampaignType,
+      CampaignName: params?.CampaignName,
+      CampaignType: params?.CampaignType,
       DateSelection: newDates
         ? { startDate: newDates.startDate, endDate: newDates.endDate }
-        : baseParams?.DateSelection,
+        : params?.DateSelection,
     };
 
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
