@@ -110,7 +110,7 @@ const SetupCampaign = ({ hierarchyType: hierarchyTypeProp, hierarchyData: hierar
   }, [tenantId, hierarchyType]);
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
+  const { data: hierarchyData } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const lowestHierarchy = useMemo(() => {
     // Try MDMS first

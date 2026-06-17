@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
 import { Stepper, Toast, Button, Footer, Loader, FormComposerV2, PopUp, CardText } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -34,6 +35,8 @@ const CreateCampaign = () => {
   const [pendingFormData, setPendingFormData] = useState(null);
 
   const prevProjectTypeRef = useRef();
+  const hasLoadedDraft = useRef(false);
+  const queryClient = useQueryClient();
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -103,14 +106,10 @@ const CreateCampaign = () => {
 
   useEffect(() => {
     if (draftLoading) return;
-    // Don't overwrite session data if coming from template - use template data instead
     if (fromTemplate) return;
-    // if (Object.keys(params).length !== 0) return;
-    // if (!draftData) return;
-    console.log("[Campaign Debug] useEffect[draftData] - resetting params from draftData", {
-      startDate: draftData?.startDate,
-      endDate: draftData?.endDate,
-    });
+    if (hasLoadedDraft.current) return;
+    if (!draftData) return;
+    hasLoadedDraft.current = true;
     const restructureFormData = transformDraftDataToFormData(draftData);
     setParams({ ...restructureFormData });
   }, [draftData]);
@@ -185,20 +184,13 @@ const CreateCampaign = () => {
   };
 
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
-    const hierarchyType = formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
+    const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+    const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
+    const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
     setLoader(true);
     const isEdit = !!(editName || campaignNumber || id);
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
-    console.log("[Campaign Debug] handleCampaignMutation called", {
-      hasDateChanged,
-      isEdit,
-      "params.DateSelection": params?.DateSelection,
-      "params.campaignDates": params?.campaignDates,
-      "params.startDate (epoch)": params?.startDate,
-      "formData.DateSelection": formData?.DateSelection,
-      "totalFormData.HCM_CAMPAIGN_DATE": totalFormData?.HCM_CAMPAIGN_DATE,
-    });
     const payload = transformCreateData({
       totalFormData,
       hierarchyType,
@@ -206,12 +198,7 @@ const CreateCampaign = () => {
       formData,
       ...(isEdit ? { id } : {}),
       hasDateChanged,
-    });
-    console.log("[Campaign Debug] Payload dates:", {
-      startDate: payload?.CampaignDetails?.startDate,
-      endDate: payload?.CampaignDetails?.endDate,
-      deliveryRules: payload?.CampaignDetails?.deliveryRules,
-      hierarchyType: payload?.CampaignDetails?.hierarchyType,
+      hierarchyChanged,
     });
 
     await mutation.mutate(
@@ -226,14 +213,16 @@ const CreateCampaign = () => {
             key: "success",
             label: t(editName ? I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS : I18N_KEYS.PAGES.HCM_DRAFT_SUCCESS),
           });
+          queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
           setTimeout(() => {
-            // Clear session storage before navigating to ensure fresh data is fetched
             Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
             Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
             Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
             Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
             Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
             Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
+            Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+            Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
             const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`;
             navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
             setLoader(false);
@@ -251,10 +240,8 @@ const CreateCampaign = () => {
     setShowPopUp(false);
     if (!pendingFormData) return;
 
-    console.log("[Campaign Debug] Popup Submit - calling update API for date change");
     setLoader(true);
 
-    // Build params with dates synced from campaignDates (the CampaignDates component output)
     const newDates = pendingFormData?.campaignDates || pendingFormData?.DateSelection;
     const updatedParams = {
       ...params,
@@ -264,7 +251,8 @@ const CreateCampaign = () => {
         : params?.DateSelection,
     };
 
-    const hierarchyType = updatedParams?.SelectHierarchy?.hierarchy?.name || updatedParams?.hierarchyType;
+    const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+    const hierarchyType = sessionHierarchy?.name || updatedParams?.SelectHierarchy?.hierarchy?.name || updatedParams?.hierarchyType;
 
     const payload = transformCreateData({
       totalFormData,
@@ -273,9 +261,8 @@ const CreateCampaign = () => {
       formData: pendingFormData,
       id,
       hasDateChanged: true,
+      hierarchyChanged: false,
     });
-
-    console.log("[Campaign Debug] Popup payload:", JSON.stringify(payload, null, 2));
 
     await mutationUpdate.mutate(
       {
@@ -285,9 +272,7 @@ const CreateCampaign = () => {
       },
       {
         onSuccess: async (result) => {
-          console.log("[Campaign Debug] Date update successful:", result?.CampaignDetails?.campaignNumber);
           setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS) });
-          // Update params from server response to keep data in sync
           const updatedCampaign = result?.CampaignDetails;
           if (updatedCampaign) {
             const restructuredData = transformDraftDataToFormData(updatedCampaign);
@@ -298,7 +283,6 @@ const CreateCampaign = () => {
           setCurrentKey(currentKey + 1);
         },
         onError: (error) => {
-          console.error("[Campaign Debug] Date update failed:", error);
           setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
           setLoader(false);
           setPendingFormData(null);
@@ -310,18 +294,6 @@ const CreateCampaign = () => {
   const onSubmit = async (formData) => {
     const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
     const name = filteredCreateConfig?.[0]?.form?.[0]?.name;
-    console.log("[Campaign Debug] onSubmit", {
-      stepName: name,
-      currentKey,
-      isLastStep: filteredCreateConfig?.[0]?.form?.[0]?.last,
-      formDataKeys: Object.keys(formData || {}),
-      "formData.campaignDates": formData?.campaignDates,
-      "formData.DateSelection": formData?.DateSelection,
-      "params.DateSelection": params?.DateSelection,
-      "params.campaignDates": params?.campaignDates,
-      "params.startDate (epoch)": params?.startDate,
-      "params.endDate (epoch)": params?.endDate,
-    });
 
     // Check if project type changed early - before other validations
     const prevProjectType = prevProjectTypeRef.current;
@@ -417,14 +389,10 @@ const CreateCampaign = () => {
     const newEndDate = formData?.campaignDates?.endDate ?? formData?.DateSelection?.endDate ?? params?.DateSelection?.endDate;
 
     const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
-    console.log("[Campaign Debug] Date comparison:", {
-      oldStartDate, oldEndDate, newStartDate, newEndDate, hasDateChanged,
-      "params.deliveryRules length": params?.deliveryRules?.length,
-      willShowPopup: name === "HCM_CAMPAIGN_DATE" && hasDateChanged && !!params?.deliveryRules,
-    });
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
-      if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged && params?.deliveryRules) {
+      if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged) {
+        // Clear cycle data for any date change
         setParams((prev) => ({
           ...prev,
           ...dateSync,
@@ -434,16 +402,25 @@ const CreateCampaign = () => {
             cycleConfgureDate: undefined,
           },
         }));
-        setPendingFormData(formData);
-        setShowPopUp(true);
-        return;
+        // Only show popup if delivery rules need clearing
+        if (params?.deliveryRules?.length > 0) {
+          setPendingFormData(formData);
+          setShowPopUp(true);
+          return;
+        }
       }
       setShowToast(null);
       setCurrentKey(currentKey + 1);
     } else {
-      const hierarchySelected = formData?.SelectHierarchy?.hierarchy || params?.SelectHierarchy?.hierarchy;
+      const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
+      const hierarchySelected = sessionHierarchy || formData?.SelectHierarchy?.hierarchy || params?.SelectHierarchy?.hierarchy;
       if (!hierarchySelected) {
         setShowToast({ key: "error", label: t("HCM_SELECT_HIERARCHY_REQUIRED") });
+        return;
+      }
+      const isBoundaryLoading = formData?.SelectHierarchy?.isBoundaryLoading ?? params?.SelectHierarchy?.isBoundaryLoading;
+      if (isBoundaryLoading) {
+        setShowToast({ key: "info", label: t("HCM_BOUNDARY_DATA_LOADING") });
         return;
       }
       const hasBoundaryData = formData?.SelectHierarchy?.hasBoundaryData ?? params?.SelectHierarchy?.hasBoundaryData;

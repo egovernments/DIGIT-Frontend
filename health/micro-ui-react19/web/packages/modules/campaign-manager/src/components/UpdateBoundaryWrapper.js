@@ -232,6 +232,15 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
     // restrictSelection === null means user hasn't clicked Yes or No
     if (restrictSelection !== null) return;
 
+    // If the current campaign's hierarchy type differs from the parent campaign's hierarchy type,
+    // the data is stale — auto-dismiss without showing the popup.
+    const parentHierarchy = CampaignData?.CampaignDetails?.[0]?.hierarchyType;
+    const currentHierarchy = props?.props?.hierarchyType;
+    if (parentHierarchy && currentHierarchy && parentHierarchy !== currentHierarchy) {
+      setRestrictSelection(false);
+      return;
+    }
+
     const hasUploadData =
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
@@ -250,9 +259,9 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
 
     setRestrictSelection(true);
     setShowPopUp(true);
-  }, [props?.props?.sessionData, restrictSelection]);
+  }, [props?.props?.sessionData, restrictSelection, CampaignData]);
 
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
+  const { data: hierarchyData } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);

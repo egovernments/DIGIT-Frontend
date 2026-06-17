@@ -7,6 +7,7 @@ const SESSION_KEYS_TO_CLEAR = [
   "HCM_CAMPAIGN_MANAGER_UPLOAD_ID",
   "HCM_ADMIN_CONSOLE_SET_UP",
   "HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE",
+  "HCM_ADMIN_CONSOLE_UPLOAD_DATA",
 ];
 const HIERARCHY_CODE_KEY = "HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE";
 
@@ -69,7 +70,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     }
   }, []);
 
-  const boundaryData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({
+  const { data: boundaryData, isLoading: isBoundaryLoading } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({
     BOUNDARY_HIERARCHY_TYPE: selected?.name,
     tenantId,
   });
@@ -114,9 +115,10 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
       onSelect("SelectHierarchy", {
         hierarchy: selected,
         hasBoundaryData: !!(boundaryData && boundaryData.length > 0),
+        isBoundaryLoading,
       });
     }
-  }, [selected, boundaryData]);
+  }, [selected, boundaryData, isBoundaryLoading]);
 
   if (isLoading) {
     return <Loader />;

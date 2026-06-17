@@ -1,4 +1,4 @@
-export const transformCreateData = ({totalFormData, hierarchyType , params , formData ,id , hasDateChanged}) => {
+export const transformCreateData = ({totalFormData, hierarchyType , params , formData ,id , hasDateChanged, hierarchyChanged: hierarchyChangedOverride}) => {
   function getStartDateEpoch(rawDate) {
   if (!rawDate) return null;
 
@@ -18,19 +18,20 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
   const startDate =  getStartDateEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || params?.campaignDates?.startDate || params?.DateSelection?.startDate || formData?.DateSelection?.startDate);
   const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || params?.campaignDates?.endDate || params?.DateSelection?.endDate || formData?.DateSelection?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const cycleDataFromForm =
-    totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleData ||
-    params?.additionalDetails?.cycleData?.cycleData ||
-    [];
+  // Use explicit hierarchyChanged if provided by caller; otherwise detect from params.
+  const hierarchyChanged = hierarchyChangedOverride ?? !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
 
-  const cycleConfgureDateFromForm =
-    totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleConfgureDate ||
-    params?.additionalDetails?.cycleData?.cycleConfgureDate ||
-    {};
+  const cycleDataFromForm = (hasDateChanged || hierarchyChanged)
+    ? []
+    : (totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleData ||
+       params?.additionalDetails?.cycleData?.cycleData ||
+       []);
 
-  // Detect hierarchy change — if the saved draft's hierarchyType differs from what the user just selected,
-  // boundaries and resources are no longer valid and must be cleared.
-  const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
+  const cycleConfgureDateFromForm = (hasDateChanged || hierarchyChanged)
+    ? {}
+    : (totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleConfgureDate ||
+       params?.additionalDetails?.cycleData?.cycleConfgureDate ||
+       {});
 
   // Transform resource types for API - unified-console should be sent as unified-console-resources
   const transformedResources = hierarchyChanged

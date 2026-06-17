@@ -15,6 +15,6 @@ export const useBoundaryRelationshipSearch = ({BOUNDARY_HIERARCHY_TYPE , tenantI
       };
     
     const { data: hierarchyData, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-    return hierarchyData?.TenantBoundary?.[0]?.boundary;
+    return { data: hierarchyData?.TenantBoundary?.[0]?.boundary, isLoading };
   };
   
