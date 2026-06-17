@@ -13,13 +13,14 @@ import {
   Toast,
   LoaderScreen,
   LoaderComponent,
+  Timeline,
 } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
 import _ from "lodash";
-import { formatTimestampToDate, downloadFileWithName } from "../../utils";
-import CommentPopUp from "../../components/commentPopUp";
+import { formatTimestampToDate, downloadFileWithName, formatTimestampToDateTime } from "../../utils";
+// import CommentPopUp from "../../components/commentPopUp";
 
 import EditAttendeePopUp from "../../components/editAttendeesPopUp";
 import AttendeeDetailsPopUp from "../../components/attendeeDetailsPopUp";
@@ -65,7 +66,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showToast, setShowToast] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
-  const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+  // const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
   const [showMapPopup, setShowMapPopup] = useState(false);
   const [hasMusterRoll, setHasMusterRoll] = useState(false);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
@@ -111,6 +112,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
   const isRegisterApproved = AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED";
   const canCampaignSupervisorEdit = fromCampaignSupervisor && !isBillGenerated && isRegisterApproved;
+
+  const musterRollNumber = data?.[0]?.musterRollNumber;
+  const { data: workflowData } = Digit.Hooks.useCustomAPIHook({
+    url: "/egov-workflow-v2/egov-wf/process/_search",
+    params: { tenantId, businessIds: musterRollNumber },
+    config: { enabled: !!musterRollNumber },
+    changeQueryName: musterRollNumber,
+  });
 
   /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
 
@@ -633,13 +642,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const closeActionBarPopUp = () => {
     setOpenEditAlertPopUp(false);
   };
-  const handleCommentLogClick = () => {
-    setShowCommentLogPopup(true);
-  };
+  // const handleCommentLogClick = () => {
+  //   setShowCommentLogPopup(true);
+  // };
 
-  const onCommentLogClose = () => {
-    setShowCommentLogPopup(false);
-  };
+  // const onCommentLogClose = () => {
+  //   setShowCommentLogPopup(false);
+  // };
 
   // INFO:: To de-enroll , add new attendee
   const handleDeEnrollClick = () => {
@@ -809,7 +818,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <Card>
             <div className="card-heading">
               <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
+              {/* <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
                   className="custom-class"
                   icon="Visibility"
@@ -823,11 +832,21 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
                   variation="secondary"
                 />
-              </div>
+              </div> */}
             </div>
+            {workflowData?.ProcessInstances?.[0]?.comment && (
+              <div style={{ marginTop: "0.5rem" }}>
+                <Timeline
+                  label={<span style={{ fontWeight: "normal" }}>{t(`${workflowData.ProcessInstances[0].comment}`) || "NA"}</span>}
+                  subElements={[formatTimestampToDateTime(workflowData.ProcessInstances[0].auditDetails?.lastModifiedTime)]}
+                  variant={"completed"}
+                  showConnector={false}
+                />
+              </div>
+            )}
             {data?.[0]?.additionalDetails?.attendanceSupportingDocuments?.length > 0 && (
               <div style={{ marginTop: "1rem" }}>
-                <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>{t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}</span>
+<span style={{ fontWeight: 600, fontSize: "0.875rem" }}>{t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}</span>
                 <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {data[0].additionalDetails.attendanceSupportingDocuments.map((doc, index) => (
                     <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -848,9 +867,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
           </Card>
         )}
 
-        {showCommentLogPopup && (
+        {/* {showCommentLogPopup && (
           <CommentPopUp onClose={onCommentLogClose} businessId={data?.[0]?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
-        )}
+        )} */}
 
         {showMapPopup && (
           <PopUp
