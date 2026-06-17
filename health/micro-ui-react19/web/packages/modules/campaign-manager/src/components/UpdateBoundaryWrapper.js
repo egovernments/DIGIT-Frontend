@@ -228,18 +228,20 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
 
   useEffect(() => {
-    // Show popup when there's upload data and user hasn't made a choice yet
-    // restrictSelection === null means user hasn't clicked Yes or No
-    if (restrictSelection !== null) return;
-
     // If the current campaign's hierarchy type differs from the parent campaign's hierarchy type,
     // the data is stale — auto-dismiss without showing the popup.
+    // This check runs regardless of restrictSelection so it can override a prior decision.
     const parentHierarchy = CampaignData?.CampaignDetails?.[0]?.hierarchyType;
     const currentHierarchy = props?.props?.hierarchyType;
     if (parentHierarchy && currentHierarchy && parentHierarchy !== currentHierarchy) {
       setRestrictSelection(false);
+      setShowPopUp(false);
       return;
     }
+
+    // Show popup when there's upload data and user hasn't made a choice yet
+    // restrictSelection === null means user hasn't clicked Yes or No
+    if (restrictSelection !== null) return;
 
     const hasUploadData =
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
