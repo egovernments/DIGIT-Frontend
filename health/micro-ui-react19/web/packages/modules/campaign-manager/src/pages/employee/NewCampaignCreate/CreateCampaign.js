@@ -88,15 +88,15 @@ const CreateCampaign = () => {
   });
   const transformDraftDataToFormData = (draftData) => {
     const restructureFormData = {
-      // Only pick fields needed by the wizard and transformCreateData
+      // Only pick fields needed by the wizard — exclude large arrays (boundaries, resources)
+      // to prevent session storage quota exceeded errors on repeated hierarchy changes.
+      // transformCreateData reads these from params but clears them on hierarchy change anyway.
       hierarchyType: draftData?.hierarchyType,
       campaignName: draftData?.campaignName,
       campaignNumber: draftData?.campaignNumber,
       projectType: draftData?.projectType,
       startDate: draftData?.startDate,
       endDate: draftData?.endDate,
-      resources: draftData?.resources,
-      boundaries: draftData?.boundaries,
       deliveryRules: draftData?.deliveryRules,
       additionalDetails: draftData?.additionalDetails,
       status: draftData?.status,
@@ -234,7 +234,12 @@ const CreateCampaign = () => {
       try {
         const freshData = await fetchLatestCampaignData();
         if (freshData) {
-          effectiveParams = transformDraftDataToFormData(freshData);
+          effectiveParams = {
+            ...transformDraftDataToFormData(freshData),
+            // Include resources/boundaries from API for payload (not persisted to session storage)
+            resources: freshData?.resources,
+            boundaries: freshData?.boundaries,
+          };
         }
       } catch (e) {
         // Fall back to params if fetch fails
@@ -294,13 +299,33 @@ const CreateCampaign = () => {
 
     setLoader(true);
 
+    // Clear cycle data after user confirms (deferred from onSubmit to avoid clearing on popup cancel)
+    if (dateChanged) {
+      const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
+      if (hasExistingData) {
+        setParams((prev) => ({
+          ...prev,
+          additionalDetails: {
+            ...(prev?.additionalDetails || {}),
+            cycleData: [],
+            cycleConfgureDate: undefined,
+          },
+        }));
+      }
+    }
+
     // Fetch fresh campaign data from server to get latest name/dates/etc
     let baseParams = params;
+    let freshResources = params?.resources;
+    let freshBoundaries = params?.boundaries;
     if (id) {
       try {
         const freshData = await fetchLatestCampaignData();
         if (freshData) {
           baseParams = transformDraftDataToFormData(freshData);
+          // Keep resources/boundaries from API for payload but NOT in session storage params
+          freshResources = freshData?.resources;
+          freshBoundaries = freshData?.boundaries;
         }
       } catch (e) {
       }
@@ -317,6 +342,9 @@ const CreateCampaign = () => {
       DateSelection: newDates
         ? { startDate: newDates.startDate, endDate: newDates.endDate }
         : baseParams?.DateSelection,
+      // Include resources/boundaries for API payload (not persisted to session storage)
+      resources: freshResources,
+      boundaries: freshBoundaries,
     };
 
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
@@ -471,26 +499,12 @@ const CreateCampaign = () => {
       }
 
       if (name === "HCM_CAMPAIGN_DATE") {
-        if (hasDateChanged) {
-          // Clear cycle data if any exists
-          const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
-          if (hasExistingData) {
-            setParams((prev) => ({
-              ...prev,
-              ...dateSync,
-              additionalDetails: {
-                ...(prev?.additionalDetails || {}),
-                cycleData: [],
-                cycleConfgureDate: undefined,
-              },
-            }));
-          }
-          if (params?.deliveryRules?.length > 0) {
-            // Show popup for confirmation when delivery rules will be cleared
-            setPendingFormData(formData);
-            setShowPopUp(true);
-            return;
-          }
+        if (hasDateChanged && params?.deliveryRules?.length > 0) {
+          // Show popup for confirmation when delivery rules will be cleared
+          // Cycle data clearing is deferred to handleEditStepUpdate after user confirms
+          setPendingFormData(formData);
+          setShowPopUp(true);
+          return;
         }
         if (isEdit) {
           // For edit campaigns, always make update call to persist date changes
