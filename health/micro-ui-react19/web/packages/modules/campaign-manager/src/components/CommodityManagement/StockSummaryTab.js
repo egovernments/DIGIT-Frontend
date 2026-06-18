@@ -10,6 +10,11 @@ import CommodityShipmentPopup from "./CommodityShipmentPopup";
 import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
+const toCamelCase = (str) =>
+  str.split(" ")
+    .map((word, i) => (i === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()))
+    .join("");
+
 const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, campaignId, campaignNumber, projectId, refetchStockData, isCompleted, userBoundary, userBoundaries, isTopLevel }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +39,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return { facilityIds: [...fIds], productVariantIds: [...pvIds] };
   }, [finalStockData]);
 
-  // Fetch facility details by IDs (name + boundary from address.locality.code)
+  // Fetch facility details by IDs (name + usage/type)
   const facilitySearchCriteria = useMemo(() => ({
     url: `/facility/v1/_search`,
     params: { tenantId, limit: facilityIds.length || 10, offset: 0 },
@@ -43,14 +48,10 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       enabled: !!facilityIds.length && !!tenantId,
       select: (data) => {
         const nameMap = {};
-        const boundaryMap = {};
-        const boundaryTypeMap = {};
         const usageMap = {};
         (data?.Facilities || []).forEach(f => {
           if (f.id) {
             nameMap[f.id] = f.name || f.id;
-            boundaryMap[f.id] = f.address?.locality?.code || "";
-            boundaryTypeMap[f.id] = f.address?.locality?.type || f.address?.boundaryType || "";
             usageMap[f.id] = f.usage || f.facilityType || "";
           }
         });
@@ -65,24 +66,36 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
             nameMap[id] = `${name} (${shortId})`;
           }
         });
-        return { nameMap, boundaryMap, boundaryTypeMap, usageMap };
+        return { nameMap, usageMap };
       },
     },
   }), [tenantId, facilityIds]);
   const { data: facilityMaps, isLoading: facilitiesLoading } = Digit.Hooks.useCustomAPIHook(facilitySearchCriteria);
   const facilityNameMap = facilityMaps?.nameMap || {};
-  const facilityBoundaryMap = facilityMaps?.boundaryMap || {};
-  const facilityBoundaryTypeMap = facilityMaps?.boundaryTypeMap || {};
   const facilityUsageMap = facilityMaps?.usageMap || {};
 
-  // Map facilityId → boundaryHierarchyCode object sourced directly from stock records.
-  // Each record carries the boundary hierarchy for its own facilityId field, so collecting
-  // across all records covers every facility that ever appeared on the facilityId side of a transaction.
+  // Map facilityId/senderId/receiverId → boundaryHierarchyCode object from stock records.
+  // First occurrence wins (avoids overwriting with a less relevant record).
   const facilityBoundaryHierarchyMap = useMemo(() => {
     const map = {};
     (finalStockData || []).forEach((stock) => {
-      if (stock.facilityId && stock.boundaryHierarchyCode) {
-        map[stock.facilityId] = stock.boundaryHierarchyCode;
+      if (stock.boundaryHierarchyCode) {
+        if (stock.facilityId && !map[stock.facilityId]) map[stock.facilityId] = stock.boundaryHierarchyCode;
+        if (stock.senderId && !map[stock.senderId]) map[stock.senderId] = stock.boundaryHierarchyCode;
+        if (stock.receiverId && !map[stock.receiverId]) map[stock.receiverId] = stock.boundaryHierarchyCode;
+      }
+    });
+    return map;
+  }, [finalStockData]);
+
+  // Map staff/user IDs → display name from stock records (nameOfUser field).
+  // facilityId on each record is the creator's own ID (staff UUID for staff members).
+  // Used as fallback when facilityNameMap (from facility API) has no entry for an ID.
+  const userNameMap = useMemo(() => {
+    const map = {};
+    (finalStockData || []).forEach((stock) => {
+      if (stock.nameOfUser && stock.facilityId && !map[stock.facilityId]) {
+        map[stock.facilityId] = stock.nameOfUser;
       }
     });
     return map;
@@ -128,7 +141,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   }, [productVariants, products]);
 
   // Get user's staff project from context (the project the user is directly assigned to)
-  const { projects: contextProjects } = useCommodityProject();
+  const { projects: contextProjects, sortedHierarchy } = useCommodityProject();
   const userStaffProjectId = useMemo(() => {
     if (!contextProjects?.length) return null;
     // First project is the user's directly assigned staff project
@@ -243,19 +256,21 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     syncRate: syncStats?.syncRate || 0,
   };
 
-  // Helper: build boundary display string with type in brackets
+  // Helper: build boundary display string using boundaryHierarchyCode from stock records.
+  // Iterates from the lowest hierarchy level upward to find the most specific boundary available.
   const getBoundaryDisplay = useCallback((facilityId) => {
-    const boundaryCode = facilityBoundaryMap[facilityId];
-    if (!boundaryCode) return "N/A";
-    let boundaryType = facilityBoundaryTypeMap[facilityId];
-    // Fallback: if this facility's boundary matches userBoundary, use its type
-    if (!boundaryType && boundaryCode === userBoundary?.boundary) {
-      boundaryType = userBoundary.boundaryType;
+    const bhc = facilityBoundaryHierarchyMap[facilityId];
+    if (!bhc || !sortedHierarchy?.length) return "N/A";
+
+    // Search from lowest hierarchy level upward for the first available boundary
+    for (let i = sortedHierarchy.length - 1; i >= 0; i--) {
+      const key = toCamelCase(sortedHierarchy[i].boundaryType);
+      if (bhc[key]) {
+        return `${t(bhc[key])} (${t(sortedHierarchy[i].boundaryType)})`;
+      }
     }
-    return boundaryType
-      ? `${t(boundaryCode)} (${t(boundaryType)})`
-      : t(boundaryCode);
-  }, [facilityBoundaryMap, facilityBoundaryTypeMap, userBoundary, t]);
+    return "N/A";
+  }, [facilityBoundaryHierarchyMap, sortedHierarchy, t]);
 
   // Per-transaction rows: all ISSUED transactions where user's facility is the sender
   const warehouseData = useMemo(() => {
@@ -286,15 +301,22 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           ?.value || "Unknown";
       const qty = stock.quantity || 0;
 
+      // Determine type: if sender/receiver is not in facility API response, it's a staff member
+      let rowType;
+      if (!facilityNameMap[senderId] && !facilityNameMap[receiverId]) {
+        rowType = t("HCM_STAFF");
+      } else if (stock.senderType === "WAREHOUSE" || stock.receiverType === "WAREHOUSE") {
+        rowType = "Warehouse";
+      } else {
+        rowType = "Facility";
+      }
+
       rows.push({
-        warehouseName: facilityNameMap[senderId] || senderId || "N/A",
+        warehouseName: facilityNameMap[senderId] || userNameMap[senderId] || senderId || "N/A",
         fromFacilityId: senderId || "N/A",
-        toFacility: facilityNameMap[receiverId] || receiverId || "N/A",
+        toFacility: facilityNameMap[receiverId] || userNameMap[receiverId] || receiverId || "N/A",
         toFacilityId: receiverId || "N/A",
-        type:
-          stock.senderType === "WAREHOUSE" || stock.receiverType === "WAREHOUSE"
-            ? "Warehouse"
-            : "Facility",
+        type: rowType,
         boundary: getBoundaryDisplay(senderId),
         commodity: productName,
         quantity: qty,
@@ -307,7 +329,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
 
     return rows.sort((a, b) => (b.createdTime || 0) - (a.createdTime || 0));
-  }, [finalStockData, facilityNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
+  }, [finalStockData, facilityNameMap, userNameMap, productNameMap, userFacilityIds, userOwnFacilityId, getBoundaryDisplay]);
 
   // Per-descendant-facility, per-commodity aggregated summary.
   // Only includes facilities BELOW the user in the dispatch hierarchy (children, grandchildren, etc.).
@@ -322,7 +344,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (stock.facilityId && stock.facilityName) namesFromData[stock.facilityId] = stock.facilityName;
       if (stock.transactingFacilityId && stock.transactingFacilityName) namesFromData[stock.transactingFacilityId] = stock.transactingFacilityName;
     });
-    const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || fId;
+    const resolveName = (fId) => facilityNameMap[fId] || namesFromData[fId] || userNameMap[fId] || fId;
 
     // Pass 1 — BFS to find all downstream facilities.
     // ISSUED (DISPATCHED) records define a "parent dispatched to child" edge: senderId → receiverId.
@@ -423,7 +445,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         rows.push({
           facilityId,
           facilityName: resolveName(facilityId),
-          facilityType: facilityUsageMap[facilityId] || "—",
+          facilityType: facilityUsageMap[facilityId] || (!facilityNameMap[facilityId] ? t("HCM_STAFF") : "—"),
           boundary: getBoundaryDisplay(facilityId),
           boundaryHierarchy: getBoundaryHierarchyDisplay(facilityId),
           productVariantId: pvId,
@@ -438,7 +460,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
 
     return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
-  }, [finalStockData, facilityNameMap, facilityUsageMap, productNameMap, userFacilityIds, getBoundaryDisplay, facilityBoundaryHierarchyMap, t]);
+  }, [finalStockData, facilityNameMap, facilityUsageMap, userNameMap, productNameMap, userFacilityIds, getBoundaryDisplay, facilityBoundaryHierarchyMap, t]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
   // Used for stock balance validation — deducts IN_TRANSIT (physically left warehouse)
@@ -581,12 +603,17 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
   ];
 
   const summaryCellRenderer = {
-    facilityName: (row) => (
-      <div>
-        <div>{row.facilityName}</div>
-        <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>{row.facilityId}</div>
-      </div>
-    ),
+    facilityName: (row) => {
+      const isStaff = !facilityNameMap[row.facilityId];
+      return (
+        <div>
+          <div>{row.facilityName}</div>
+          <div style={{ fontSize: "0.75rem", color: "#505A5F" }}>
+            {isStaff ? (userNameMap[row.facilityId] || row.facilityId) : row.facilityId}
+          </div>
+        </div>
+      );
+    },
     totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
     totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
     totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
