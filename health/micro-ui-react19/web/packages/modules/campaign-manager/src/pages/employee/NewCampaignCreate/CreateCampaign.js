@@ -227,12 +227,11 @@ const CreateCampaign = () => {
     const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
     setLoader(true);
     const isEdit = !!(editName || campaignNumber || id);
-    const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
 
-    // For edit campaigns with hierarchy change, fetch fresh campaign data from server
-    // to avoid using stale params (e.g. after a recent date update)
+    // For edit campaigns, always fetch fresh campaign data from server
+    // to avoid stale name/dates in params (e.g. after a recent date/name update)
     let effectiveParams = params;
-    if (isEdit && hierarchyChanged && id) {
+    if (isEdit && id) {
       try {
         const freshData = await fetchLatestCampaignData();
         if (freshData) {
@@ -242,6 +241,9 @@ const CreateCampaign = () => {
         // Fall back to params if fetch fails
       }
     }
+
+    // Compute hierarchy change using fresh data for reliable comparison
+    const hierarchyChanged = !!(effectiveParams?.hierarchyType && hierarchyType && effectiveParams.hierarchyType !== hierarchyType);
 
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
