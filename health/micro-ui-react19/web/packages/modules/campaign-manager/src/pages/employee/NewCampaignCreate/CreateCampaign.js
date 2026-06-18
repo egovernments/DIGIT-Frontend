@@ -228,8 +228,7 @@ const CreateCampaign = () => {
     setLoader(true);
     const isEdit = !!(editName || campaignNumber || id);
 
-    // For edit campaigns, always fetch fresh campaign data from server
-    // to avoid stale name/dates in params (e.g. after a recent date/name update)
+    // For edit campaigns, fetch fresh data from server to get latest name/dates
     let effectiveParams = params;
     if (isEdit && id) {
       try {
@@ -242,7 +241,6 @@ const CreateCampaign = () => {
       }
     }
 
-    // Compute hierarchy change using fresh data for reliable comparison
     const hierarchyChanged = !!(effectiveParams?.hierarchyType && hierarchyType && effectiveParams.hierarchyType !== hierarchyType);
 
     const mutation = isEdit ? mutationUpdate : mutationCreate;
@@ -276,31 +274,49 @@ const CreateCampaign = () => {
             setLoader(false);
           }, 2000);
         },
-        onError: () => {
-          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
+        onError: (error) => {
+          const errorCode = error?.message;
+          const localised = errorCode ? t(errorCode) : null;
+          const errorLabel = localised && localised !== errorCode ? localised : t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION);
+          setShowToast({ key: "error", label: errorLabel });
           setLoader(false);
         },
       }
     );
   };
 
-  const handleDateUpdateOnPopup = async (dateFormData) => {
+  const handleEditStepUpdate = async (dateFormData, dateChanged = true, isNameStep = false) => {
     setShowPopUp(false);
     const formDataToUse = dateFormData || pendingFormData;
-    if (!formDataToUse) return;
+    if (!formDataToUse) {
+      return;
+    }
 
     setLoader(true);
 
+    // Fetch fresh campaign data from server to get latest name/dates/etc
+    let baseParams = params;
+    if (id) {
+      try {
+        const freshData = await fetchLatestCampaignData();
+        if (freshData) {
+          baseParams = transformDraftDataToFormData(freshData);
+        }
+      } catch (e) {
+      }
+    }
+
     const newDates = formDataToUse?.campaignDates || formDataToUse?.DateSelection;
 
+    // Merge fresh server data with current form changes
     const updatedParams = {
-      ...params,
+      ...baseParams,
       ...formDataToUse,
-      CampaignName: params?.CampaignName,
-      CampaignType: params?.CampaignType,
+      CampaignName: isNameStep ? (formDataToUse?.CampaignName || baseParams?.CampaignName) : baseParams?.CampaignName,
+      CampaignType: baseParams?.CampaignType,
       DateSelection: newDates
         ? { startDate: newDates.startDate, endDate: newDates.endDate }
-        : params?.DateSelection,
+        : baseParams?.DateSelection,
     };
 
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
@@ -312,7 +328,7 @@ const CreateCampaign = () => {
       params: updatedParams,
       formData: formDataToUse,
       id,
-      hasDateChanged: true,
+      hasDateChanged: dateChanged,
       hierarchyChanged: false,
     });
 
@@ -335,7 +351,10 @@ const CreateCampaign = () => {
           setCurrentKey(currentKey + 1);
         },
         onError: (error) => {
-          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
+          const errorCode = error?.message;
+          const localised = errorCode ? t(errorCode) : null;
+          const errorLabel = localised && localised !== errorCode ? localised : t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION);
+          setShowToast({ key: "error", label: errorLabel });
           setLoader(false);
           setPendingFormData(null);
         },
@@ -362,8 +381,8 @@ const CreateCampaign = () => {
       [name]: formData,
     }));
 
-    // Skip campaign name validation if project type changed (name will be reset)
-    if (formData?.CampaignName && !editName && !campaignNumber && !isProjectTypeChanged) {
+    // Only validate campaign name on the name step, skip for date/hierarchy steps
+    if (name === "HCM_CAMPAIGN_NAME" && formData?.CampaignName && !editName && !campaignNumber && !isProjectTypeChanged) {
       const campaignNamePattern = /^(?!.*[ _-]{2})(?!^[\s_-])(?!.*[\s_-]$)(?=^[A-Za-z][A-Za-z0-9 _\-\(\)]{4,29}$)^.*$/;
       if (!campaignNamePattern.test(formData?.CampaignName)) {
         setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.CAMPAIGN_NAME_INVALID_FORMAT) });
@@ -443,30 +462,39 @@ const CreateCampaign = () => {
     const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
-      if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged) {
-        const isEdit = !!(editName || campaignNumber || id);
-        // Clear cycle data if any exists
-        const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
-        if (hasExistingData) {
-          setParams((prev) => ({
-            ...prev,
-            ...dateSync,
-            additionalDetails: {
-              ...(prev?.additionalDetails || {}),
-              cycleData: [],
-              cycleConfgureDate: undefined,
-            },
-          }));
-        }
-        if (params?.deliveryRules?.length > 0) {
-          // Show popup for confirmation when delivery rules will be cleared
-          setPendingFormData(formData);
-          setShowPopUp(true);
-          return;
+      const isEdit = !!(editName || campaignNumber || id);
+
+      // For edit campaigns on name step, persist name change via update call
+      if (name === "HCM_CAMPAIGN_NAME" && isEdit) {
+        handleEditStepUpdate(formData, false, true);
+        return;
+      }
+
+      if (name === "HCM_CAMPAIGN_DATE") {
+        if (hasDateChanged) {
+          // Clear cycle data if any exists
+          const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
+          if (hasExistingData) {
+            setParams((prev) => ({
+              ...prev,
+              ...dateSync,
+              additionalDetails: {
+                ...(prev?.additionalDetails || {}),
+                cycleData: [],
+                cycleConfgureDate: undefined,
+              },
+            }));
+          }
+          if (params?.deliveryRules?.length > 0) {
+            // Show popup for confirmation when delivery rules will be cleared
+            setPendingFormData(formData);
+            setShowPopUp(true);
+            return;
+          }
         }
         if (isEdit) {
-          // For edit campaigns, still make update call to persist date changes even without delivery rules
-          handleDateUpdateOnPopup(formData);
+          // For edit campaigns, always make update call to persist date changes
+          handleEditStepUpdate(formData, hasDateChanged);
           return;
         }
       }
@@ -578,7 +606,7 @@ const CreateCampaign = () => {
               variation={"primary"}
               label={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
               title={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
-              onClick={() => handleDateUpdateOnPopup()}
+              onClick={() => handleEditStepUpdate()}
             />,
           ]}
           sortFooterChildren={true}
