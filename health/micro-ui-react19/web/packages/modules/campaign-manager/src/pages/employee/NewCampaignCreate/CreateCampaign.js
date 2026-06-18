@@ -88,7 +88,19 @@ const CreateCampaign = () => {
   });
   const transformDraftDataToFormData = (draftData) => {
     const restructureFormData = {
-      ...draftData,
+      // Only pick fields needed by the wizard and transformCreateData
+      hierarchyType: draftData?.hierarchyType,
+      campaignName: draftData?.campaignName,
+      campaignNumber: draftData?.campaignNumber,
+      projectType: draftData?.projectType,
+      startDate: draftData?.startDate,
+      endDate: draftData?.endDate,
+      resources: draftData?.resources,
+      boundaries: draftData?.boundaries,
+      deliveryRules: draftData?.deliveryRules,
+      additionalDetails: draftData?.additionalDetails,
+      status: draftData?.status,
+      parentId: draftData?.parentId,
       CampaignType: typeof draftData?.projectType === "string" ? { code: draftData.projectType } : draftData?.projectType,
       CampaignName: draftData?.campaignName,
       DateSelection: {
@@ -213,20 +225,9 @@ const CreateCampaign = () => {
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
+    setLoader(true);
     const isEdit = !!(editName || campaignNumber || id);
     const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
-
-    // For edit campaigns with no hierarchy change, skip the update call entirely
-    if (isEdit && !hierarchyChanged) {
-      setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS) });
-      queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
-      setTimeout(() => {
-        cleanupSessionAndNavigate(campaignNumber || params?.campaignNumber, tenantId);
-      }, 2000);
-      return;
-    }
-
-    setLoader(true);
 
     // For edit campaigns with hierarchy change, fetch fresh campaign data from server
     // to avoid using stale params (e.g. after a recent date update)
@@ -281,17 +282,18 @@ const CreateCampaign = () => {
     );
   };
 
-  const handleDateUpdateOnPopup = async () => {
+  const handleDateUpdateOnPopup = async (dateFormData) => {
     setShowPopUp(false);
-    if (!pendingFormData) return;
+    const formDataToUse = dateFormData || pendingFormData;
+    if (!formDataToUse) return;
 
     setLoader(true);
 
-    const newDates = pendingFormData?.campaignDates || pendingFormData?.DateSelection;
+    const newDates = formDataToUse?.campaignDates || formDataToUse?.DateSelection;
 
     const updatedParams = {
       ...params,
-      ...pendingFormData,
+      ...formDataToUse,
       CampaignName: params?.CampaignName,
       CampaignType: params?.CampaignType,
       DateSelection: newDates
@@ -306,7 +308,7 @@ const CreateCampaign = () => {
       totalFormData,
       hierarchyType,
       params: updatedParams,
-      formData: pendingFormData,
+      formData: formDataToUse,
       id,
       hasDateChanged: true,
       hierarchyChanged: false,
@@ -440,7 +442,8 @@ const CreateCampaign = () => {
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged) {
-        // Only clear cycle data / show popup when there's existing data to clear (edit campaigns)
+        const isEdit = !!(editName || campaignNumber || id);
+        // Clear cycle data if any exists
         const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
         if (hasExistingData) {
           setParams((prev) => ({
@@ -452,11 +455,17 @@ const CreateCampaign = () => {
               cycleConfgureDate: undefined,
             },
           }));
-          if (params?.deliveryRules?.length > 0) {
-            setPendingFormData(formData);
-            setShowPopUp(true);
-            return;
-          }
+        }
+        if (params?.deliveryRules?.length > 0) {
+          // Show popup for confirmation when delivery rules will be cleared
+          setPendingFormData(formData);
+          setShowPopUp(true);
+          return;
+        }
+        if (isEdit) {
+          // For edit campaigns, still make update call to persist date changes even without delivery rules
+          handleDateUpdateOnPopup(formData);
+          return;
         }
       }
       setShowToast(null);
@@ -567,7 +576,7 @@ const CreateCampaign = () => {
               variation={"primary"}
               label={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
               title={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
-              onClick={handleDateUpdateOnPopup}
+              onClick={() => handleDateUpdateOnPopup()}
             />,
           ]}
           sortFooterChildren={true}
