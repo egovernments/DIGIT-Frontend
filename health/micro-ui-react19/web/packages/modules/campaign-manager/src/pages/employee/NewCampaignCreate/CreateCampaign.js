@@ -275,7 +275,7 @@ const CreateCampaign = () => {
           }, 2000);
         },
         onError: (error) => {
-          const errorCode = error?.message;
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
           const localised = errorCode ? t(errorCode) : null;
           const errorLabel = localised && localised !== errorCode ? localised : t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION);
           setShowToast({ key: "error", label: errorLabel });
@@ -351,7 +351,7 @@ const CreateCampaign = () => {
           setCurrentKey(currentKey + 1);
         },
         onError: (error) => {
-          const errorCode = error?.message;
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
           const localised = errorCode ? t(errorCode) : null;
           const errorLabel = localised && localised !== errorCode ? localised : t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION);
           setShowToast({ key: "error", label: errorLabel });
