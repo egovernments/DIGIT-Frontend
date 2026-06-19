@@ -98,10 +98,8 @@ export const transformUpdateCreateData = ({ campaignData }) => {
     type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
   }));
 
-  // Check if resources contain unified-console-resources type
-  const hasUnifiedResource = transformedResources?.some(
-    (r) => r?.type === "unified-console" || r?.type === "unified-console-resources"
-  );
+  // isUnifiedCampaign is always true (user toggle removed, unified mode is the default)
+  const hasUnifiedResource = campaignData?.additionalDetails?.isUnifiedCampaign ?? true;
 
   return {
     CampaignDetails: {

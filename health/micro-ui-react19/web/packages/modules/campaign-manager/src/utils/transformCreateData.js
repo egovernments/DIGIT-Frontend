@@ -41,11 +41,8 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
         type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
       }));
 
-  // Check if resources contain unified-console-resources type
-  const hasUnifiedResource = totalFormData?.additionalDetails?.isUnifiedCampaign || false;
-  // transformedResources?.some(
-  //   (r) => r?.type === "unified-console" || r?.type === "unified-console-resources"
-  // );
+  // isUnifiedCampaign is always true (user toggle removed, unified mode is the default)
+  const hasUnifiedResource = totalFormData?.additionalDetails?.isUnifiedCampaign ?? params?.additionalDetails?.isUnifiedCampaign ?? true;
 
   return {
     CampaignDetails: {

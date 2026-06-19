@@ -327,11 +327,11 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
                 null
               );
             } else {
-              // Fall back to CampaignData resources
-              temp = CampaignData?.CampaignDetails?.[0].resources?.map((resource) => ({
+              // Fall back to current draft resources (not parent) to avoid stale data after hierarchy change
+              temp = draftData?.resources?.map((resource) => ({
                 ...resource,
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-              }));
+              })) || [];
             }
             const hasUnifiedResource = temp?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.resources = temp;
@@ -352,7 +352,7 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
+            payloadData.deliveryRules = draftData?.deliveryRules;
             if (compareIdentical(draftData, payloadData) === false) {
               setIsDataCreating(true);
 
@@ -421,11 +421,11 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
                 null
               );
             } else {
-              const temp = CampaignData?.CampaignDetails?.[0].resources;
-              tempResources = temp?.map((resource) => ({
+              // Fall back to current draft resources (not parent) to avoid stale data after hierarchy change
+              tempResources = draftData?.resources?.map((resource) => ({
                 ...resource,
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-              }));
+              })) || [];
             }
             const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
             payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
@@ -446,7 +446,11 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
             } else {
               payloadData.additionalDetails.cycleData = {};
             }
-            payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
+            // Use parent's delivery rules only if hierarchy hasn't changed; otherwise clear them
+            const parentHierarchy = CampaignData?.CampaignDetails?.[0]?.hierarchyType;
+            payloadData.deliveryRules = (parentHierarchy && parentHierarchy !== hierarchyType)
+              ? []
+              : CampaignData?.CampaignDetails?.[0]?.deliveryRules;
             setIsDataCreating(true);
 
             await mutate(payloadData, {
@@ -506,11 +510,11 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
                 null
               );
             } else {
-              const temp = CampaignData?.CampaignDetails?.[0].resources;
-              tempResources = temp?.map((resource) => ({
+              // Fall back to current draft resources (not parent) to avoid stale data after hierarchy change
+              tempResources = draftData?.resources?.map((resource) => ({
                 ...resource,
                 type: resource?.type === "unified-console" ? "unified-console-resources" : resource?.type,
-              }));
+              })) || [];
             }
             const hasUnifiedResource = tempResources?.some((r) => r?.type === "unified-console" || r?.type === "unified-console-resources");
 
@@ -533,7 +537,7 @@ const UpdateCampaign = ({ hierarchyData: hierarchyDataProp }) => {
               payloadData.additionalDetails.cycleData = {};
             }
 
-            payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
+            payloadData.deliveryRules = draftData?.deliveryRules;
             if (!payloadData?.startDate && !payloadData?.endDate) {
               delete payloadData?.startDate;
               delete payloadData?.endDate;

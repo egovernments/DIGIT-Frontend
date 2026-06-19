@@ -33,7 +33,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const [showPopUp, setShowPopUp] = useState(false);
   const [restrictSelection, setRestrictSelection] = useState(null);
   const [isUnifiedCampaign, setIsUnifiedCampaign] = useState(
-    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign || false
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.isUnifiedCampaign ?? true
   );
   const reqCriteriaHierarchy = useMemo(() => ({
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -205,7 +205,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
 
       setBoundaryOptions(rootOptions);
     }
-    setIsUnifiedCampaign(CampaignData?.CampaignDetails?.[0]?.additionalDetails?.isUnifiedCampaign || false);
+    setIsUnifiedCampaign(CampaignData?.CampaignDetails?.[0]?.additionalDetails?.isUnifiedCampaign ?? true);
     SetHierarchyType(CampaignData?.CampaignDetails?.[0]?.hierarchyType);
     // const tranformedManagerUploadData = transformCampaignData(CampaignData);
     // Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);

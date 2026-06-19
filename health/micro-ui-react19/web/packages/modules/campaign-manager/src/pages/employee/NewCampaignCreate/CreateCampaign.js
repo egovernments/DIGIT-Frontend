@@ -88,7 +88,19 @@ const CreateCampaign = () => {
   });
   const transformDraftDataToFormData = (draftData) => {
     const restructureFormData = {
-      ...draftData,
+      // Only pick fields needed by the wizard — exclude large arrays (boundaries, resources)
+      // to prevent session storage quota exceeded errors on repeated hierarchy changes.
+      // transformCreateData reads these from params but clears them on hierarchy change anyway.
+      hierarchyType: draftData?.hierarchyType,
+      campaignName: draftData?.campaignName,
+      campaignNumber: draftData?.campaignNumber,
+      projectType: draftData?.projectType,
+      startDate: draftData?.startDate,
+      endDate: draftData?.endDate,
+      deliveryRules: draftData?.deliveryRules,
+      additionalDetails: draftData?.additionalDetails,
+      status: draftData?.status,
+      parentId: draftData?.parentId,
       CampaignType: typeof draftData?.projectType === "string" ? { code: draftData.projectType } : draftData?.projectType,
       CampaignName: draftData?.campaignName,
       DateSelection: {
@@ -213,34 +225,28 @@ const CreateCampaign = () => {
   const handleCampaignMutation = async (formData, hasDateChanged = false) => {
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     const hierarchyType = sessionHierarchy?.name || formData?.SelectHierarchy?.hierarchy?.name || params?.SelectHierarchy?.hierarchy?.name;
-    const isEdit = !!(editName || campaignNumber || id);
-    const hierarchyChanged = !!(params?.hierarchyType && hierarchyType && params.hierarchyType !== hierarchyType);
-
-    // For edit campaigns with no hierarchy change, skip the update call entirely
-    if (isEdit && !hierarchyChanged) {
-      setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_UPDATE_SUCCESS) });
-      queryClient.invalidateQueries({ queryKey: ["SEARCH_CAMPAIGN"] });
-      setTimeout(() => {
-        cleanupSessionAndNavigate(campaignNumber || params?.campaignNumber, tenantId);
-      }, 2000);
-      return;
-    }
-
     setLoader(true);
+    const isEdit = !!(editName || campaignNumber || id);
 
-    // For edit campaigns with hierarchy change, fetch fresh campaign data from server
-    // to avoid using stale params (e.g. after a recent date update)
+    // For edit campaigns, fetch fresh data from server to get latest name/dates
     let effectiveParams = params;
-    if (isEdit && hierarchyChanged && id) {
+    if (isEdit && id) {
       try {
         const freshData = await fetchLatestCampaignData();
         if (freshData) {
-          effectiveParams = transformDraftDataToFormData(freshData);
+          effectiveParams = {
+            ...transformDraftDataToFormData(freshData),
+            // Include resources/boundaries from API for payload (not persisted to session storage)
+            resources: freshData?.resources,
+            boundaries: freshData?.boundaries,
+          };
         }
       } catch (e) {
         // Fall back to params if fetch fails
       }
     }
+
+    const hierarchyChanged = !!(effectiveParams?.hierarchyType && hierarchyType && effectiveParams.hierarchyType !== hierarchyType);
 
     const mutation = isEdit ? mutationUpdate : mutationCreate;
     const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
@@ -273,30 +279,72 @@ const CreateCampaign = () => {
             setLoader(false);
           }, 2000);
         },
-        onError: () => {
-          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
+        onError: (error) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          const localised = errorCode ? t(errorCode) : null;
+          const errorLabel = localised && localised !== errorCode ? localised : t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION);
+          setShowToast({ key: "error", label: errorLabel });
           setLoader(false);
         },
       }
     );
   };
 
-  const handleDateUpdateOnPopup = async () => {
+  const handleEditStepUpdate = async (dateFormData, dateChanged = true, isNameStep = false) => {
     setShowPopUp(false);
-    if (!pendingFormData) return;
+    const formDataToUse = dateFormData || pendingFormData;
+    if (!formDataToUse) {
+      return;
+    }
 
     setLoader(true);
 
-    const newDates = pendingFormData?.campaignDates || pendingFormData?.DateSelection;
+    // Clear cycle data after user confirms (deferred from onSubmit to avoid clearing on popup cancel)
+    if (dateChanged) {
+      const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
+      if (hasExistingData) {
+        setParams((prev) => ({
+          ...prev,
+          additionalDetails: {
+            ...(prev?.additionalDetails || {}),
+            cycleData: [],
+            cycleConfgureDate: undefined,
+          },
+        }));
+      }
+    }
 
+    // Fetch fresh campaign data from server to get latest name/dates/etc
+    let baseParams = params;
+    let freshResources = params?.resources;
+    let freshBoundaries = params?.boundaries;
+    if (id) {
+      try {
+        const freshData = await fetchLatestCampaignData();
+        if (freshData) {
+          baseParams = transformDraftDataToFormData(freshData);
+          // Keep resources/boundaries from API for payload but NOT in session storage params
+          freshResources = freshData?.resources;
+          freshBoundaries = freshData?.boundaries;
+        }
+      } catch (e) {
+      }
+    }
+
+    const newDates = formDataToUse?.campaignDates || formDataToUse?.DateSelection;
+
+    // Merge fresh server data with current form changes
     const updatedParams = {
-      ...params,
-      ...pendingFormData,
-      CampaignName: params?.CampaignName,
-      CampaignType: params?.CampaignType,
+      ...baseParams,
+      ...formDataToUse,
+      CampaignName: isNameStep ? (formDataToUse?.CampaignName || baseParams?.CampaignName) : baseParams?.CampaignName,
+      CampaignType: baseParams?.CampaignType,
       DateSelection: newDates
         ? { startDate: newDates.startDate, endDate: newDates.endDate }
-        : params?.DateSelection,
+        : baseParams?.DateSelection,
+      // Include resources/boundaries for API payload (not persisted to session storage)
+      resources: freshResources,
+      boundaries: freshBoundaries,
     };
 
     const sessionHierarchy = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
@@ -306,9 +354,9 @@ const CreateCampaign = () => {
       totalFormData,
       hierarchyType,
       params: updatedParams,
-      formData: pendingFormData,
+      formData: formDataToUse,
       id,
-      hasDateChanged: true,
+      hasDateChanged: dateChanged,
       hierarchyChanged: false,
     });
 
@@ -331,7 +379,10 @@ const CreateCampaign = () => {
           setCurrentKey(currentKey + 1);
         },
         onError: (error) => {
-          setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION) });
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          const localised = errorCode ? t(errorCode) : null;
+          const errorLabel = localised && localised !== errorCode ? localised : t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION);
+          setShowToast({ key: "error", label: errorLabel });
           setLoader(false);
           setPendingFormData(null);
         },
@@ -358,8 +409,8 @@ const CreateCampaign = () => {
       [name]: formData,
     }));
 
-    // Skip campaign name validation if project type changed (name will be reset)
-    if (formData?.CampaignName && !editName && !campaignNumber && !isProjectTypeChanged) {
+    // Only validate campaign name on the name step, skip for date/hierarchy steps
+    if (name === "HCM_CAMPAIGN_NAME" && formData?.CampaignName && !editName && !campaignNumber && !isProjectTypeChanged) {
       const campaignNamePattern = /^(?!.*[ _-]{2})(?!^[\s_-])(?!.*[\s_-]$)(?=^[A-Za-z][A-Za-z0-9 _\-\(\)]{4,29}$)^.*$/;
       if (!campaignNamePattern.test(formData?.CampaignName)) {
         setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.CAMPAIGN_NAME_INVALID_FORMAT) });
@@ -439,24 +490,26 @@ const CreateCampaign = () => {
     const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
-      if (name === "HCM_CAMPAIGN_DATE" && hasDateChanged) {
-        // Only clear cycle data / show popup when there's existing data to clear (edit campaigns)
-        const hasExistingData = params?.deliveryRules?.length > 0 || params?.additionalDetails?.cycleData?.cycleData?.length > 0;
-        if (hasExistingData) {
-          setParams((prev) => ({
-            ...prev,
-            ...dateSync,
-            additionalDetails: {
-              ...(prev?.additionalDetails || {}),
-              cycleData: [],
-              cycleConfgureDate: undefined,
-            },
-          }));
-          if (params?.deliveryRules?.length > 0) {
-            setPendingFormData(formData);
-            setShowPopUp(true);
-            return;
-          }
+      const isEdit = !!(editName || campaignNumber || id);
+
+      // For edit campaigns on name step, persist name change via update call
+      if (name === "HCM_CAMPAIGN_NAME" && isEdit) {
+        handleEditStepUpdate(formData, false, true);
+        return;
+      }
+
+      if (name === "HCM_CAMPAIGN_DATE") {
+        if (hasDateChanged && params?.deliveryRules?.length > 0) {
+          // Show popup for confirmation when delivery rules will be cleared
+          // Cycle data clearing is deferred to handleEditStepUpdate after user confirms
+          setPendingFormData(formData);
+          setShowPopUp(true);
+          return;
+        }
+        if (isEdit) {
+          // For edit campaigns, always make update call to persist date changes
+          handleEditStepUpdate(formData, hasDateChanged);
+          return;
         }
       }
       setShowToast(null);
@@ -567,7 +620,7 @@ const CreateCampaign = () => {
               variation={"primary"}
               label={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
               title={t(I18N_KEYS.CAMPAIGN_CREATE.ES_CAMPAIGN_DELIVERY_SUBMIT)}
-              onClick={handleDateUpdateOnPopup}
+              onClick={() => handleEditStepUpdate()}
             />,
           ]}
           sortFooterChildren={true}
