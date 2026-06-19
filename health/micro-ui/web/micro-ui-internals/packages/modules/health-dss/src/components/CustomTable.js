@@ -186,17 +186,25 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
 
   useEffect(() => {
     if (tableData) {
+      const parentCols = filterStack.slice(1).reduce((acc, filter) => {
+        if (filter.label && filter.name) acc[filter.label] = filter.name;
+        return acc;
+      }, {});
+      const snKey = t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale("S.N.")}`);
       const result = tableData?.map((row) => {
-        return Object.keys(row).reduce((acc, key) => {
+        const rowData = Object.keys(row).reduce((acc, key) => {
           if (key === "key") return acc;
           acc[key] = typeof row?.[key] === "object" ? row?.[key]?.value : row?.[key];
           return acc;
         }, {});
+        const { [snKey]: snValue, ...rest } = rowData;
+        return snValue !== undefined
+          ? { [snKey]: snValue, ...parentCols, ...rest }
+          : { ...parentCols, ...rowData };
       });
       setChartData(result);
     } else {
-      const result = [];
-      setChartData(result);
+      setChartData([]);
     }
   }, [tableData]);
 

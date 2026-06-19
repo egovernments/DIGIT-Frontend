@@ -9,8 +9,8 @@ const FilterByCycleDropdown = ({ handleItemClick }) => {
 
   const dropdownItems =
   projectData?.project?.additionalDetails?.projectType?.cycles?.map((item) => ({
-      code: item.id,
-      name: `${t("CYCLE")} 0${item.id}`,
+      code: String(item.id).padStart(2, "0"),
+      name: `${t("CYCLE")} ${String(item.id).padStart(2, "0")}`,
       id: item.id,
     })) || [];
 
