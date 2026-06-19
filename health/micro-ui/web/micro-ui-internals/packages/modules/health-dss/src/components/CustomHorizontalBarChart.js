@@ -226,6 +226,11 @@ const CustomHorizontalBarChart = ({
       let hoverItem;
       if (payload.length > 1) {
         hoverItem = renderLegend(payload[hoverBarId]?.dataKey);
+        if (symbolKeyMap && symbolKeyMap[payload[0]?.payload?.name] === "percentage") {
+          value = Digit.Utils.dss.formatter(value, "percentage", value?.denomination, true, t);
+        } else {
+          value = Digit.Utils.dss.formatter(Math.round((value + Number.EPSILON) * 100) / 100, "number", value?.denomination, true, t);
+        }
       } else if (symbolKeyMap && symbolKeyMap[payload[0]?.payload?.name] === "percentage") {
         value = Digit.Utils.dss.formatter(value, "percentage", value?.denomination, true, t);
       } else {
