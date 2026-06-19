@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
+import {parse, format} from "date-fns";
 
 /**
  * A React component for displaying a paginated table of frontline workers
@@ -46,9 +47,18 @@ const AttendanceManagementTable = ({ ...props }) => {
         </div>
       ),
       selector: (row) => {
-        return (
+        const name = String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"));
+        return props.onAttendeeClick ? (
+          <span
+            className="ellipsis-cell"
+            style={{ color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => props.onAttendeeClick(row)}
+          >
+            {name}
+          </span>
+        ) : (
           <span className="ellipsis-cell">
-            {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
+            {name}
           </span>
         );
       },
@@ -62,8 +72,8 @@ const AttendanceManagementTable = ({ ...props }) => {
       ),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={row?.[2] || t("NA")}>
-            {row?.[2] || t("NA")}
+          <div  className="ellipsis-cell" title={row?.[2] || t("NA")}>
+            {row?.[2] || t("ES_COMMON_NA")}
           </div>
         );
       },
@@ -75,14 +85,32 @@ const AttendanceManagementTable = ({ ...props }) => {
         </div>
       ),
       selector: (row) => {
+        const roleText = row?.[3] ? t(row?.[3]) : t("ES_COMMON_NA");
         return (
-          <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
-            {t(row?.[3]) || t("NA")}
+          <div className="ellipsis-cell" title={roleText}>
+            {roleText}
           </div>
         );
       },
     },
-
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start", whiteSpace: "normal", wordBreak: "break-word" }}>
+          {t("HCM_AM_PERFORMANCE_METRIC")}
+        </div>
+      ),
+      selector: (row) => {
+        const value = row?.[12] != null ? String(row[12]) : t("ES_COMMON_NA");
+        return (
+          <div className="ellipsis-cell" title={value}>
+            {value}
+          </div>
+        );
+      },
+      style: {
+        justifyContent: "flex-end",
+      },
+    },
     {
       name: t("HCM_AM_NO_OF_DAYS_WORKED"),
       selector: (row) => {
@@ -144,7 +172,7 @@ const AttendanceManagementTable = ({ ...props }) => {
     // Update the data directly using the parent's setState
     const updatedData = props.data.map((worker) => {
       if (worker[2] === workerId) {
-        return [worker[0], worker[1], worker[2], worker[3], value || 0]; // Update the daysWorked value
+        const updated = [...worker]; updated[4] = value || 0; return updated; // Update the daysWorked value
       }
       return worker; // Keep other rows unchanged
     });
