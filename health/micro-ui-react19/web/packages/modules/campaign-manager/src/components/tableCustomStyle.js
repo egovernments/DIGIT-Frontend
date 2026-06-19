@@ -71,6 +71,9 @@ export const tableCustomStyle = {
       padding: "16px",
       lineHeight: "1.14rem",
       zIndex: 10,
+      whiteSpace: "normal",
+      wordBreak: "break-word",
+      overflow: "visible",
     },
   },
   cells: {
@@ -194,6 +197,9 @@ export const getTableCustomStyle = (freezeFirstColumn = false) => ({
       color: "#0B4B66",
       padding: "16px",
       lineHeight: "1.14rem",
+      whiteSpace: "normal",
+      wordBreak: "break-word",
+      overflow: "visible",
     },
   },
   cells: {
