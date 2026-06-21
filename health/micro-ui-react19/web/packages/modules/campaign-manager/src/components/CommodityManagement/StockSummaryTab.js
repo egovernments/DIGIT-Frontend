@@ -459,7 +459,8 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       });
     });
 
-    return rows.sort((a, b) => a.facilityName.localeCompare(b.facilityName));
+    // Hide staff user rows — only show facilities known to the facility API
+    return rows.filter((row) => !!facilityNameMap[row.facilityId]).sort((a, b) => a.facilityName.localeCompare(b.facilityName));
   }, [finalStockData, facilityNameMap, facilityUsageMap, userNameMap, productNameMap, userFacilityIds, getBoundaryDisplay, facilityBoundaryHierarchyMap, t]);
 
   // Compute per-facility stock map: { facilityId: { productVariantId: currentStock } }
