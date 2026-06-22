@@ -57,9 +57,15 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
     const shouldHideLabels = !field && props?.field;
 
     // Allow empty labels - only use defaults if undefined/null
-    const dropdownLabel = shouldHideLabels
+    let dropdownLabel = shouldHideLabels
       ? ""
       : (selectedField?.label !== undefined && selectedField?.label !== null ? (field ? t : props?.t)(selectedField?.label) : "");
+
+    // Append role to label for identification when role exists (dropdownTemplate disambiguation)
+    if (!shouldHideLabels && selectedField?.role && dropdownLabel) {
+      const roleLabel = (field ? t : props?.t)(selectedField.role) || selectedField.role;
+      dropdownLabel = `${dropdownLabel} - (${roleLabel})`;
+    }
 
     if (isLoading) return <Loader />;
 

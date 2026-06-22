@@ -146,6 +146,12 @@
   overflow-y: auto;
 }
 
+.label-pair {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
 .view-label-heading {
   @include typography-heading-s;
   color: var(--digitv2-lightTheme-text-primary);
@@ -159,4 +165,16 @@
   @include typography-body-s;
   color: var(--digitv2-lightTheme-text-primary);
   width: 80%;
+}
+
+.small-loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.25rem; 
+}
+
+.scaled-loader {
+  transform: scale(0.25);
+  transform-origin: left center;
 }

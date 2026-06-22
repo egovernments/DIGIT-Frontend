@@ -11,6 +11,11 @@ import ProjectSelect from "./project_selection";
 import EditRegister from "./EditRegister";
 import InboxAttendeesSearch from "./AttendeeSearchAssign";
 import PaymentSetUpPage from "./payment_setup";
+import UploadAndFetchBillsCard from "./upload_and_fetch_bills";
+import VerifyAndGeneratePayments from "./verify_generate_payements";
+import BillPaymentDetails from "./bill_payment_details";
+import ManageBills from "./manage_bills";
+import EditBillOnExcel from "./EditBillOnExcel";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -75,6 +80,18 @@ const App = ({ stateCode, userType, tenants }) => {
         <Route path="payment-setup" element={<PaymentSetUpPage />} />
         <Route path="payment-setup-success" element={<Response />} />
         <Route path="payment-setup-failed" element={<Response />} />
+        <Route path="manage-bills-project-selection/:role" element={<ProjectSelect nextScreen="manage-bills" />} />
+        <Route path="manage-bills/:role" element={<ManageBills />} />
+        <Route path="verify-bills" element={<UploadAndFetchBillsCard />} />
+        <Route path="verify-and-generate-payments" element={<VerifyAndGeneratePayments />} />
+        <Route path="edit-bills" element={<VerifyAndGeneratePayments editBills={true} />} />
+        <Route path="edit-bill-success" element={<Response />} />
+        <Route path="verify-success" element={<Response />} />
+        <Route path="send-for-review-success" element={<Response />} />
+        <Route path="send-for-approval-success" element={<Response />} />
+        <Route path="view-bill-payment-details/:role" element={<BillPaymentDetails />} />
+        <Route path="edit-bill-payment-details" element={<BillPaymentDetails editBillDetails={true} />} />
+        <Route path="edit-bill-on-excel" element={<EditBillOnExcel />} />
       </Routes>
     </div>
   );

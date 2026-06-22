@@ -111,7 +111,10 @@ module.exports = merge(common, {
           "/health-expense-calculator",
           "/product",
           "/excel-ingestion",
-          "/census-service",
+          "/boundary-management",
+          "/stock/v1",
+          "/attendance",
+          "/census-service"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-uat.digit.org",
         changeOrigin: true,
@@ -147,6 +150,8 @@ module.exports = merge(common, {
   },
 
   performance: {
-    hints: false,
+    hints: 'warning',
+    maxAssetSize: 512000,
+    maxEntrypointSize: 1024000,
   },
 });

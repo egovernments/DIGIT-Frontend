@@ -42,7 +42,21 @@ const setupLibraries = (Library, service, method) => {
 /* To Overide any existing config/middlewares  we need to use similar method */
 export const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
+  const _originalFormatter = window?.Digit?.Utils?.dss?.formatter;
+  setupLibraries("Utils", "dss", {
+    ...window?.Digit?.Utils?.dss,
+    formatter: (value, symbol, unit, commaSeparated = true, t) => {
+      if (!value && value !== 0) return "";
+      if (symbol === "number") {
+        if (!commaSeparated) return parseInt(value);
+        return new Intl.NumberFormat("en-US").format(value);
+      }
+      if (symbol === "percentage") {
+        return `${new Intl.NumberFormat("en-US", { maximumSignificantDigits: 3 }).format(Number(value).toFixed(2))} %`;
+      }
+      return _originalFormatter ? _originalFormatter(value, symbol, unit, commaSeparated, t) : "";
+    },
+  });
 };
 
 export default {};

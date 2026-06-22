@@ -44,7 +44,12 @@ export const updateCustomConfigs = () => {
 };
 
 /// Util function to downloads files with type as pdf or excel
-export const downloadFileWithName = ({ fileStoreId = null, customName = null, type = "excel" }) => {
+export const downloadFileWithName = ({
+  fileStoreId = null,
+  customName = null,
+  type = "excel",
+  blobData = null,
+}) => {
   const downloadFile = (blob, fileName, extension) => {
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -55,20 +60,26 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
     setTimeout(() => URL.revokeObjectURL(link.href), 7000);
   };
 
+  const fileTypeMapping = {
+    excel: { mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", extension: "xlsx" },
+    xls:   { mimeType: "application/vnd.ms-excel", extension: "xls" },
+    csv:   { mimeType: "text/csv", extension: "csv" },
+    pdf:   { mimeType: "application/pdf", extension: "pdf" },
+    png:   { mimeType: "image/png", extension: "png" },
+    jpg:   { mimeType: "image/jpeg", extension: "jpg" },
+    jpeg:  { mimeType: "image/jpeg", extension: "jpeg" },
+  };
+
+  const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"];
+
+  // Case 1: Direct blob
+  if (blobData) {
+    downloadFile(blobData, customName || "download", extension);
+    return;
+  }
+
+  // Case 2: FileStoreId (existing logic)
   if (fileStoreId) {
-    const fileTypeMapping = {
-      excel: {
-        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        extension: "xlsx",
-      },
-      pdf: {
-        mimeType: "application/pdf",
-        extension: "pdf",
-      },
-    };
-
-    const { mimeType, extension } = fileTypeMapping[type] || fileTypeMapping["excel"]; // Default to Excel if type is invalid
-
     axios
       .get("/filestore/v1/files/id", {
         responseType: "arraybuffer",
@@ -153,5 +164,20 @@ export const getCustomPaginationOptions = (t) => ({
   rowsPerPageText: t("HCM_AM_ROWS_PER_PAGE"),
   rangeSeparatorText: t("HCM_AM_OF"),
 });
+
+export {//todo check
+  getPayableAmount,
+  hasPayableHead,
+  perDayFromPayable,
+  sumPayableAmounts,
+  applyPerDayToPayables,
+  FEES_HEAD_CODE,
+  getFeesFieldConfig,
+  getBaseHeadCodes,
+  getFeesAmount,
+  sumPayableForHeads,
+  computeFeePercent,
+  upsertFeesInPayables,
+} from "./billPayableLineItems";
 
 export default {};

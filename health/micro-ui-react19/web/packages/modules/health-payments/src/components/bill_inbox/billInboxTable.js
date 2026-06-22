@@ -92,9 +92,12 @@ const BillInboxTable = ({ ...props }) => {
                 ? () => {}
                 : () =>
                     navigate(
-                      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`,
+                      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${props?.selectedPeriod?.periodDurationInDays}`,
                       {
-                        fromCampaignSupervisor: true,
+                        state: {
+                          fromCampaignSupervisor: true,
+                          isBillGenerated: props?.isBillGenerated,
+                        },
                       }
                     )
             }
@@ -168,8 +171,11 @@ const BillInboxTable = ({ ...props }) => {
   }
 
   const handleRowClick = (row) => {
-    navigate(`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`, {
-      fromCampaignSupervisor: true,
+    navigate(`/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&periodDurationInDays=${props?.selectedPeriod?.periodDurationInDays}`, {
+      state: {
+        fromCampaignSupervisor: true,
+        isBillGenerated: props?.isBillGenerated,
+      },
     });
   };
 

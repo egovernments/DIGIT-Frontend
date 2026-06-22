@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
+import SupportingDocumentUpload from "./attendance_file_upload/SupportingDocumentUpload";
 
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
@@ -18,6 +19,7 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
     // state variables
     const [comment, setComment] = useState(null);
     const [showToast, setShowToast] = useState(null);
+    const [supportingDocs, setSupportingDocs] = useState([]);
 
 
     const handleTextAreaChange = (e) => {
@@ -39,6 +41,10 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
         setShowToast(null);
         // Call the onSubmit function with the valid comment
         onSubmit(comment);
+        onSubmit({
+            comment,
+            supportingDocs
+        });
     };
 
     const handleKeyPress = (e) => {
@@ -64,7 +70,17 @@ const ApproveCommentPopUp = ({ onClose, onSubmit }) => {
                             onChange={handleTextAreaChange}
                             onKeyPress={handleKeyPress}
                         />
+                    </div>,
+                    <div key="supporting-doc" style={{ marginTop: "1rem" }}>
+                    <div className="comment-label">
+                      {t("HCM_AM_SUPPORTING_DOCUMENT_LABEL")}
                     </div>
+                
+                    <SupportingDocumentUpload
+                      multiple={false}
+                      onUpload={(files) => setSupportingDocs(files)}
+                    />
+                  </div>
                 ]}
                 onOverlayClick={onClose}
                 equalWidthButtons={true}

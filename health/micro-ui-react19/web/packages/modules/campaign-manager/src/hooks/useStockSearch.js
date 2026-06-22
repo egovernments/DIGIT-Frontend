@@ -23,16 +23,7 @@ const useStockSearch = ({ tenantId, dateRange, transformFn, referenceId, enabled
         enabled: enabled && !!tenantId,
         select: (data) => {
           const stocks = data?.Stock || [];
-          // Normalize: promote additionalFields values to top-level to match Kibana response shape
-          const normalized = stocks.map((stock) => {
-            const getField = (key) => stock?.additionalFields?.fields?.find((f) => f.key === key)?.value || "";
-            return {
-              ...stock,
-              stockEntryType: stock.stockEntryType || getField("stockEntryType"),
-              status: stock.status || getField("status"),
-            };
-          });
-          return transformFn ? transformFn(normalized) : normalized;
+          return transformFn ? transformFn(stocks) : stocks;
         },
       },
     };
