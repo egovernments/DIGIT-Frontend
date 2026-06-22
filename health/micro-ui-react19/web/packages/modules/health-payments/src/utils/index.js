@@ -1,10 +1,9 @@
 import _ from "lodash";
 import axios from "axios";
-import { CustomisedHooks } from "../hooks";
 
 
 
-export const overrideHooks = () => {
+export const overrideHooks = (CustomisedHooks) => {
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
       Object.keys(CustomisedHooks[ele]).map((hook) => {

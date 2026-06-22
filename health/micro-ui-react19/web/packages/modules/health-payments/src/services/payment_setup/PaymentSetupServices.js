@@ -94,4 +94,4 @@ export const PaymentSetUpService = {
   },
 };
 
-export default ProjectService;
+export default PaymentSetUpService;
