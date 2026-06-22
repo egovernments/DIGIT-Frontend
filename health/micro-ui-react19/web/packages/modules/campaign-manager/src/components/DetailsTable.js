@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { useTable } from "react-table";
 import { useTranslation } from "react-i18next";
 import { CardLabel, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { operators } from "ajv/dist/compile/codegen";
 
 const DetailsTable = ({ className = "", columnsData, rowsData, summaryRows, cardHeader }) => {
 

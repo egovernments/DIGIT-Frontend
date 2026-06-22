@@ -216,6 +216,9 @@ const CreateCampaign = () => {
     Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
     Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     Digit.SessionStorage.del("CAMPAIGN_NAME_INFO_VISIBLE");
+    Digit.SessionStorage.del("HCM_ATTENDANCE_REGISTER_DATA");
+    Digit.SessionStorage.del("HCM_ATTENDANCE_UPLOAD_DATA");
+    Digit.SessionStorage.del("HCM_CREATE_REGISTERS_DATA");
     Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     Digit.SessionStorage.del("HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE");
     const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campNumber}&tenantId=${campTenantId}`;
