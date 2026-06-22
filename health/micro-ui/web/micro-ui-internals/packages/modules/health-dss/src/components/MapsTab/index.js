@@ -1,25 +1,19 @@
-import React, { useState, useCallback, useContext } from "react";
-import FilterContext from "../FilterContext";
+import React, { useState } from "react";
 import BoundaryFilters from "./BoundaryFilters";
 import LeafletHeatMap from "./LeafletHeatMap";
 
 const MapsTab = ({ chartId, visualizer, pageZoom }) => {
-  const { value } = useContext(FilterContext);
-  const [selectedBoundary, setSelectedBoundary] = useState(null);
-
-  const handleBoundarySelect = useCallback((boundary) => {
-    setSelectedBoundary(boundary);
-  }, []);
+  const [activeFilter, setActiveFilter] = useState(null);
 
   return (
     <div className="digit-maps-tab-wrapper">
-      <BoundaryFilters onSelect={handleBoundarySelect} />
+      <BoundaryFilters activeFilter={activeFilter} onSelect={setActiveFilter} />
       <LeafletHeatMap
         chartId={chartId}
         visualizer={visualizer}
-        selectedBoundary={selectedBoundary}
+        activeFilter={activeFilter}
+        onDrillDown={setActiveFilter}
         pageZoom={pageZoom}
-        filterContextValue={value}
       />
     </div>
   );

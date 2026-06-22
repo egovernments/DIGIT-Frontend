@@ -19,7 +19,7 @@ const COLOR_RANGE = ["#FF7373", "#FF8565", "#FFC42E", "#FFAA45", "#9ACC49", "#01
 
 const toFilterCase = (str) => (str ? str.toLowerCase() : str);
 
-const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => {
+const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZoom }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const copyOfValue = Object.assign({}, value);
@@ -33,10 +33,10 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
 
   const boundaryType = getQueryParam("boundaryType");
   const boundaryValue = getQueryParam("boundaryValue");
-  const boundaryLevelMap = Digit.SessionStorage.get("levelMap") || {};
+  const boundaryLevelMap = useRef(Digit.SessionStorage.get("levelMap") || {}).current;
   const { campaignNumber } = Digit.Hooks.useQueryParams();
 
-  const projectSelected = Digit.SessionStorage.get("projectSelected");
+  const projectSelected = useRef(Digit.SessionStorage.get("projectSelected")).current;
   const nationalMap =
     projectSelected?.boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
   const isLevelOne = isLevelOneBoundary(boundaryLevelMap, boundaryType);
@@ -98,6 +98,43 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const authToken = Digit.UserService.getUser()?.access_token || null;
 
+  // Boundary relationship data — same cache key as BoundaryFilters, no extra network request.
+  // Used to resolve GeoJSON boundary codes → human-readable display names for the chart API filter.
+  const campaignSelected = Digit.SessionStorage.get("campaignSelected");
+  const hierarchyType = campaignSelected?.hierarchyType || "ADMIN";
+  const { data: boundaryTree } = Digit.Hooks.useCustomAPIHook({
+    url: `/boundary-service/boundary-relationships/_search`,
+    changeQueryName: `maps-tab-boundary-${tenantId}-${hierarchyType}`,
+    params: { tenantId, hierarchyType, boundaryType: "Ward", includeParents: true, includeChildren: true },
+    config: { select: (data) => data?.["TenantBoundary"]?.[0]?.boundary || [] },
+  });
+
+  // Maps getTitleHeading(boundaryCode) → displayName so feature clicks send human-readable names.
+  const codeToNameRef = useRef({});
+  // Maps getTitleHeading(boundaryCode) → canonical node.code (boundary service code, proper case).
+  const codeToServiceCodeRef = useRef({});
+  // Maps node.name.toLowerCase() → canonical node.code for name-based reverse lookup.
+  const nameToServiceCodeRef = useRef({});
+  useEffect(() => {
+    if (!boundaryTree?.length) return;
+    const nameMap = {};
+    const codeMap = {};
+    const serviceCodeMap = {};
+    const traverse = (node) => {
+      if (node.code) {
+        const titleKey = getTitleHeading(node.code);
+        codeMap[titleKey] = node.name || node.code;
+        serviceCodeMap[titleKey] = node.code;
+        if (node.name) nameMap[node.name.toLowerCase()] = node.code;
+      }
+      (node.children || []).forEach(traverse);
+    };
+    boundaryTree.forEach((root) => traverse(root));
+    codeToNameRef.current = codeMap;
+    codeToServiceCodeRef.current = serviceCodeMap;
+    nameToServiceCodeRef.current = nameMap;
+  }, [boundaryTree]);
+
   const chartReqCriteria = {
     url: `/dashboard-analytics/dashboard/getChartV2`,
     changeQueryName: `leaflet-chart-${chartKey}-${JSON.stringify(filterStack?.value?.filters)}-${JSON.stringify(filterFeature)}`,
@@ -147,8 +184,15 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
   }, [chartResponse]);
 
   // ── Drill-down logic (mirrors HeatMapChart / Map.js) ─────────────────────
+  // Only reset to base chart when at state (level-two) or above — at LGA (level-three) the
+  // drillDownStack effect manages chartKey so we must not override it here.
   useEffect(() => {
-    setChartKey(chartId);
+    const activeLevel = filterStack?.value?.filters?.boundaryType
+      ? boundaryLevelMap?.[filterStack.value.filters.boundaryType]
+      : null;
+    if (!activeLevel || activeLevel === "level-one" || activeLevel === "level-two") {
+      setChartKey(chartId);
+    }
   }, [filterStack, chartId]);
 
   useEffect(() => {
@@ -175,36 +219,77 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
     }
   }, [filterStack]);
 
+  // Tracks whether the last activeFilter change originated inside this component
+  // (map click or chip removal) so the effect that watches activeFilter can skip
+  // re-applying what was already applied internally.
+  const internalDrillRef = useRef(false);
+
   // A ref updated on every render so Leaflet click handlers never go stale.
   // This avoids the stale-closure problem where event handlers bound during
   // layer construction keep capturing old drillDownChart / boundaryLevelMap values.
   const featureClickRef = useRef(null);
-  featureClickRef.current = (locationName, level, hasCoordinatesDown) => {
+  featureClickRef.current = (locationName, rawCode, level, hasCoordinatesDown) => {
+    // locationName = getTitleHeading(rawCode) — used for GeoJSON key matching
+    // rawCode = feature.properties.name — the boundary code, used for parent-chain lookup in BoundaryFilters
+    // displayName — human-readable name resolved from boundary data, sent to the chart API filter
     if (drillDownChart === "none") return;
     if (!hasCoordinatesDown) {
       if (level === 4) setFilterFeature({ finalFilter: locationName });
       else return;
     }
 
+    // Resolve human-readable name. Priority:
+    // 1. i18n: boundary codes are keys in hcm-boundary-{hierarchyType} loaded at module start
+    // 2. boundary service node.name (codeToNameRef)
+    // 3. fall back to the title-cased code (locationName)
+    const tResult = rawCode ? t(rawCode) : null;
+    const displayName = (tResult && tResult !== rawCode)
+      ? tResult
+      : (codeToNameRef.current[locationName] || locationName);
+
+    // Resolve GeoJSON rawCode to the boundary service canonical code so BoundaryFilters can
+    // match it exactly in its dropdown options (which are keyed on boundary service codes).
+    // codeToServiceCodeRef handles same-code-different-case; nameToServiceCodeRef handles
+    // the case where boundary service stores human-readable names and codes differ from GeoJSON.
+    const serviceCode = codeToServiceCodeRef.current[locationName]
+      || (displayName && nameToServiceCodeRef.current[displayName.toLowerCase()])
+      || rawCode;
+
     if (level === 2) {
       const bl = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
-      setFilterStack({ value: { filters: { boundaryType: bl, [bl]: locationName } } });
+      // Mirror the activeFilter effect: base on baseFilterRef so all context filters
+      // (campaign dates, tenantId, etc.) are preserved and parent boundary names stay clean.
+      setFilterStack({
+        value: {
+          ...baseFilterRef.current,
+          filters: {
+            ...(baseFilterRef.current?.filters || {}),
+            boundaryType: bl,
+            [bl]: displayName,
+          },
+        },
+      });
       setBoundaryLevel(toFilterCase(bl));
+      internalDrillRef.current = true;
+      onDrillDown?.({ type: bl, code: serviceCode || locationName, name: displayName, level: "level-two" });
     }
     if (level === 3) {
       const bl = getBoundaryTypeByLevel("level-three", boundaryLevelMap);
-      setFilterStack((prev) => ({
-        ...prev,
+      // Mirror the activeFilter effect: base on baseFilterRef so the state filter
+      // always uses the URL-resolved name ("Oyo") not whatever code may be in live filterStack.
+      setFilterStack({
         value: {
-          ...prev.value,
+          ...baseFilterRef.current,
           filters: {
-            ...prev.value?.filters,
+            ...(baseFilterRef.current?.filters || {}),
             boundaryType: bl,
-            [bl]: locationName,
+            [bl]: displayName,
           },
         },
-      }));
+      });
       setBoundaryLevel(toFilterCase(bl));
+      internalDrillRef.current = true;
+      onDrillDown?.({ type: bl, code: serviceCode || locationName, name: displayName, level: "level-three" });
     }
 
     setChartKey(drillDownChart);
@@ -212,7 +297,7 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
       ...prev,
       {
         id: drillDownChart,
-        label: locationName,
+        label: displayName,
         boundary:
           level === 2
             ? getBoundaryTypeByLevel("level-two", boundaryLevelMap)
@@ -239,6 +324,19 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
     if (fs.value?.filters) delete fs.value.filters.boundaryType;
     if (Object.keys(fs.value?.filters || {}).length === 0) fs.value = undefined;
     setFilterStack(fs);
+
+    internalDrillRef.current = true;
+    if (kept.length <= 1) {
+      onDrillDown?.(null);
+    } else {
+      const top = kept[kept.length - 1];
+      onDrillDown?.({
+        type: top.boundary,
+        code: top.label,
+        name: top.label,
+        level: boundaryLevelMap[top.boundary],
+      });
+    }
   };
 
   // ── Leaflet initialisation ────────────────────────────────────────────────
@@ -313,7 +411,7 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
           { sticky: true, className: "digit-leaflet-tooltip" }
         );
 
-        featureLayer.on("click", () => featureClickRef.current(name, level, hasCoordinatesDown));
+        featureLayer.on("click", () => featureClickRef.current(name, feature.properties?.name, level, hasCoordinatesDown));
       },
     }).addTo(map);
 
@@ -326,32 +424,72 @@ const LeafletHeatMap = ({ chartId, visualizer, selectedBoundary, pageZoom }) => 
   }, [mapData, chartResponse]);
 
   // ── Panel boundary selection → filterStack + chart API + map zoom ─────────
-  // When a boundary is picked from the filter panel, push it into filterStack so:
-  //   1. The chart API is called with the new boundary filter
-  //   2. The existing filterStack → mapSelector effect reloads the GeoJSON for that level
-  //   3. The GeoJSON rebuild effect calls fitBounds, zooming the map automatically
+  // Fires when activeFilter changes from outside (dropdown panel).
+  // Skipped when the change originated internally (map click or chip removal)
+  // since those handlers apply filterStack directly to avoid double-updates.
   useEffect(() => {
-    if (!selectedBoundary) {
-      // Cleared — reset to the base national view
+    if (internalDrillRef.current) {
+      internalDrillRef.current = false;
+      return;
+    }
+    if (!activeFilter) {
       setFilterStack({ value: baseFilterRef.current });
       setBoundaryLevel(boundaryType ? toFilterCase(boundaryType) : "");
       setMapSelector(nationalMap);
       setDrillDownStack([{ id: chartId, label: nationalMap, boundary: boundaryType || "" }]);
       return;
     }
-    const { type, code } = selectedBoundary;
+    const { type, code, name } = activeFilter;
+    const boundaryName = name || code;
     setFilterStack({
       value: {
         ...baseFilterRef.current,
         filters: {
           ...(baseFilterRef.current?.filters || {}),
           boundaryType: type,
-          [type]: code,
+          [type]: boundaryName,
         },
       },
     });
-    setDrillDownStack([{ id: chartId, label: code, boundary: type }]);
-  }, [selectedBoundary]);
+    // At LGA level, switch to the district drilldown chart if already available.
+    // If province chart hasn't responded yet (drillDownChart = "none"), the
+    // useEffect([drillDownChart]) watcher below will switch once it becomes available.
+    const levelStr = boundaryLevelMap?.[type];
+    const targetId =
+      levelStr === "level-three" && drillDownChart && drillDownChart !== "none"
+        ? drillDownChart
+        : chartId;
+    // At LGA level push two entries so the chip bar renders (same as map drill-down).
+    // Index 0 is the base (state level, not shown as a chip); index 1 is the LGA (shown as chip).
+    if (levelStr === "level-three") {
+      setDrillDownStack([
+        drillDownStack[0] || { id: chartId, label: mapSelector, boundary: boundaryType || "" },
+        { id: targetId, label: boundaryName, boundary: type },
+      ]);
+    } else {
+      setDrillDownStack([{ id: targetId, label: boundaryName, boundary: type }]);
+    }
+  }, [activeFilter]);
+
+  // When province chart loads AFTER an LGA was selected from dropdown (race condition:
+  // drillDownChart was "none" at selection time so drillDownStack got chartId instead of
+  // drillDownChart), auto-switch to the district chart now that we have its ID.
+  useEffect(() => {
+    if (!drillDownChart || drillDownChart === "none") return;
+    const activeLevel = filterStack?.value?.filters?.boundaryType
+      ? boundaryLevelMap?.[filterStack.value.filters.boundaryType]
+      : null;
+    if (activeLevel === "level-three" && chartKey === chartId) {
+      setChartKey(drillDownChart);
+      setDrillDownStack((prev) => {
+        const last = prev[prev.length - 1];
+        return last?.id === chartId
+          ? [...prev.slice(0, -1), { ...last, id: drillDownChart }]
+          : prev;
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drillDownChart]);
 
   // ── Recenter ──────────────────────────────────────────────────────────────
   const handleRecenter = () => {
