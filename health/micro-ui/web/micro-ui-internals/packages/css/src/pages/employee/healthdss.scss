@@ -1619,3 +1619,323 @@
     }
   }
 }
+
+.digit-maps-tab-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  min-height: 560px;
+}
+
+.digit-maps-boundary-filters {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 260px;
+  flex: 0 0 260px;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.digit-maps-boundary-filters-header {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid #e8e8e8;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 0.5rem;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-maps-boundary-filters-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0b0c0c;
+  margin: 0;
+}
+
+.digit-maps-boundary-filters-body {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.25rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.digit-maps-boundary-filters-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.digit-maps-boundary-filters-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.digit-maps-boundary-filters-body::-webkit-scrollbar-thumb {
+  background: #b1b4b6;
+  border-radius: 2px;
+}
+
+.digit-maps-boundary-filters-footer {
+  padding: 0.625rem 1.25rem;
+  border-top: 1px solid #e8e8e8;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-maps-boundary-filter-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.digit-maps-boundary-filter-row--indent-0 {
+  padding-left: 0;
+}
+
+.digit-maps-boundary-filter-row--indent-1 {
+  padding-left: 0.75rem;
+  border-left: 2px solid #e8e8e8;
+}
+
+.digit-maps-boundary-filter-row--indent-2 {
+  padding-left: 1.5rem;
+  border-left: 2px solid #e0e0e0;
+}
+
+.digit-maps-boundary-filter-row--indent-3 {
+  padding-left: 2.25rem;
+  border-left: 2px solid #d6d5d4;
+}
+
+.digit-maps-boundary-filter-row--indent-4 {
+  padding-left: 3rem;
+  border-left: 2px solid #d6d5d4;
+}
+
+.digit-maps-boundary-filter-row--indent-5 {
+  padding-left: 3.75rem;
+  border-left: 2px solid #d6d5d4;
+}
+
+.digit-maps-boundary-filter-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #505a5f;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.digit-maps-boundary-filter-select {
+  width: 100%;
+  padding: 0.375rem 2rem 0.375rem 0.625rem;
+  border: 1px solid #b1b4b6;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #0b0c0c;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23505a5f' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  background-size: 10px 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  -webkit-transition: border-color 0.15s;
+  transition: border-color 0.15s;
+}
+
+.digit-maps-boundary-filter-select:hover {
+  border-color: #0b0c0c;
+}
+
+.digit-maps-boundary-filter-select:focus {
+  outline: 3px solid #ffdd00;
+  outline-offset: 0;
+  border-color: #0b0c0c;
+}
+
+.digit-maps-boundary-filter-locked {
+  width: 100%;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #505a5f;
+  background-color: #f3f2f1;
+  cursor: not-allowed;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.digit-maps-boundary-clear-btn {
+  background: none;
+  border: none;
+  font-size: 0.8125rem;
+  color: #d4351c;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 600;
+}
+
+.digit-maps-boundary-clear-btn:hover {
+  text-decoration: underline;
+}
+
+.digit-leaflet-heatmap-container {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 0px;
+  flex: 1 1 0;
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.digit-leaflet-map-wrapper {
+  position: relative;
+  width: 100%;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 0px;
+  flex: 1 1 0;
+  min-height: 460px;
+  border: 1px solid #d6d5d4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.digit-leaflet-map {
+  width: 100%;
+  height: 100%;
+}
+
+.digit-leaflet-map-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.digit-leaflet-map-controls .digit-heat-map-recenter {
+  margin: 0;
+}
+
+.digit-leaflet-loader-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.digit-leaflet-gradient-scale {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 0.75rem;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.digit-leaflet-gradient-bar {
+  height: 12px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  border-radius: 2px;
+  background: -webkit-gradient(linear, right top, left top, from(#01D66F), color-stop(46.03%, #FFC42E), to(#FF7373));
+  background: linear-gradient(270deg, #01D66F 0%, #FFC42E 46.03%, #FF7373 101.5%);
+}
+
+.digit-leaflet-gradient-label {
+  font-size: 0.75rem;
+  color: #505a5f;
+  white-space: nowrap;
+}
+
+.digit-leaflet-tooltip {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .digit-maps-tab-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .digit-maps-boundary-filters {
+    -webkit-box-flex: 0;
+    -ms-flex: none;
+    flex: none;
+    width: 100%;
+  }
+}

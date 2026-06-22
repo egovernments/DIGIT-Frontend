@@ -7,12 +7,15 @@ import FilterContext from "../../components/FilterContext";
 import Filters from "../../components/Filters";
 import FiltersNational from "../../components/FiltersNational";
 import Layout from "../../components/Layout";
+import MapsTab from "../../components/MapsTab";
 import ProgressBar from "../../components/ProgressBar";
 import { getTitleHeading } from "../../utils/locale";
 import { Loader, Chip, Button } from "@egovernments/digit-ui-components";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
 import { getDuration } from "../../utils/getDuration";
 import { PDFDownload } from "../../utils/PDFDownload";
+
+const MAPS_TAB_KEY = "MAPS_TAB";
 
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
@@ -397,6 +400,18 @@ const L2Main = ({}) => {
     }, {}) || {};
   let tabArray = Object.keys(tabArrayObj).map((key) => key);
 
+  // Find the first heatmap chart in the dashboard config so the Maps tab can reuse it
+  const heatmapChart = dashboardConfig?.[0]?.visualizations
+    ?.flatMap((tab) => tab.vizArray || [])
+    ?.flatMap((item) => item.charts || [])
+    ?.find((chart) => chart.chartType === "heatmap");
+
+  // Append the Maps tab only once real tabs are present — prevents defaulting to Maps
+  // on the first render before dashboardConfig has loaded (tabArray would otherwise be ["MAPS_TAB"])
+  if (tabArray.length > 0 && !tabArray.includes(MAPS_TAB_KEY)) {
+    tabArray = [...tabArray, MAPS_TAB_KEY];
+  }
+
   useEffect(() => {
     if (tabArray?.length > 0 && tabState == "") {
       setTabState(tabArray[0]);
@@ -760,11 +775,15 @@ const L2Main = ({}) => {
             </div>
           )}
         </div>
-        {dashboardConfig?.[0]?.visualizations
-          .filter((row) => row.name === tabState)
-          .map((row, key) => {
-            return <Layout rowData={row} key={key} pageZoom={pageZoom} />;
-          })}
+        {tabState === MAPS_TAB_KEY ? (
+          <MapsTab chartId={heatmapChart?.id} visualizer={heatmapChart} pageZoom={pageZoom} />
+        ) : (
+          dashboardConfig?.[0]?.visualizations
+            .filter((row) => row.name === tabState)
+            .map((row, key) => {
+              return <Layout rowData={row} key={key} pageZoom={pageZoom} />;
+            })
+        )}
       </div>
     </FilterContext.Provider>
   );
