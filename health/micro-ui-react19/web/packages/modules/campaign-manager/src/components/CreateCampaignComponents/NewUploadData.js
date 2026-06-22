@@ -403,7 +403,6 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         const isAttendanceType = false; //todo check
         if (isAttendanceType && resourceDetailsFromSearch.length > 0) {
           const fromResource = resourceDetailsFromSearch[0];
-          console.log("fromResourceDetails search:", fromResource);
           return {
             uploadedFile: [{
               ...fromResource,

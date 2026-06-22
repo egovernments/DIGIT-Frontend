@@ -461,7 +461,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
     }
   };
   const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
-  console.log("workerRatesData", workerRatesData);
 
   const deliveryTargetMdmsCriteria = {
     url: `/${mdms_context_path}/v1/_search`,
@@ -520,7 +519,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
     return `${baseUrl}&_g=${gState}&hide-filter-bar=true`;
   };
   const mapLink = buildMapLink();
-  console.log("mapLink", mapLink);
 
   function getUserAttendanceSummary(data, individualsData, t) {
     const attendees = AttendanceData?.attendanceRegister?.[0]?.attendees || [];
@@ -696,7 +694,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 {(() => {
                   const targetPerUserPerDay = deliveryTargetPerUserPerDay || 0;
                   const totalTarget = targetPerUserPerDay * (attendanceDuration || 0) * attendanceSummary.length;
-                  console.log("totalTarget", totalTarget, { targetPerUserPerDay, attendanceDuration, users: attendanceSummary.length });
                   const actual = attendanceSummary.reduce((sum, row) => sum + (row[12] != null ? row[12] : 0), 0);
                   if (totalTarget === 0) return t("ES_COMMON_NA");
                   return `${Math.round((actual / totalTarget) * 100)}%`;

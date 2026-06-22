@@ -568,7 +568,6 @@ const ManageBillsTable = ({ ...props }) => {
         onClose={() => setShowApprovalPopup(false)} // Close the popup
         onSubmit={async (data) => {
             await triggerSendForApproval(selectedBill, data);
-            console.log("Submitted data:", data);
             setShowApprovalPopup(false);
         }}
     />

@@ -78,7 +78,6 @@ const VerifyAndGeneratePaymentsTable = ({
                 });             
             },
             onError: (error) => {
-              console.log("12Error updating bill detail workflow:", error);
                     setShowToast({
                         key: "error",
                         label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"),//TODO UPDATE TOAST MSG
@@ -88,7 +87,6 @@ const VerifyAndGeneratePaymentsTable = ({
         }, 
           )
         }catch (error) {
-            console.log("Error updating bill detail workflow:", error);
             setShowToast({
                 key: "error",
                 label: t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"), //TODO UPDATE TOAST MSG
@@ -132,7 +130,6 @@ const VerifyAndGeneratePaymentsTable = ({
     });
 
     const triggerVerifyBill = async (bill) => {
-        console.log("triggerVerifyBill", bill);
     try {
         await verifyBillMutation.mutateAsync(
             {
@@ -140,7 +137,6 @@ const VerifyAndGeneratePaymentsTable = ({
             },
             {
                 onSuccess: async (verifyResponse) => {
-                    console.log("Verify Response", verifyResponse);
                     const taskId = verifyResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
@@ -222,7 +218,6 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
     });
 
     const triggerGeneratePayment = async (bill) => {
-        console.log("triggerGeneratePayment", bill);
     try {
         await generatePaymentMutation.mutateAsync(
             {
@@ -230,7 +225,6 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
             },
             {
                 onSuccess: async (paymentResponse) => {
-                    console.log("Payment Response", paymentResponse);
                     const taskId = paymentResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
@@ -251,7 +245,6 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                                     } 
                                     },
                             });
-                            console.log("Status ResponsePayment", statusResponse);
 
                             const status = statusResponse?.task?.status;
                             setTaskStatus?.(status);

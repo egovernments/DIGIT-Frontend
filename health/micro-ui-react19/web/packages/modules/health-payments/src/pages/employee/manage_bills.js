@@ -377,7 +377,6 @@ const ManageBills = () => {
       }
 
       setIsBillReportLoading(true);
-      console.log("Fetching advisory reports for bills:", billIds);
       try {
         const res = await billReportSearchMutation.mutateAsync({
           body: {

@@ -131,7 +131,6 @@ const MyBills = (props) => {
     }
   };
     const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
-    console.log("workerRatesData", workerRatesData);
     Digit.SessionStorage.set("workerRatesData", workerRatesData);
 
     const handlePageChange = (page, totalRows) => {
@@ -202,7 +201,6 @@ const MyBills = (props) => {
         if (!selectedBills || selectedBills.length === 0) return 0;
         return selectedBills.reduce((total, bill) => total + (bill?.totalAmount || 0), 0);
     }
-    console.log("totalAmt",getTotalAmount(props?.selectedBills));
 
     useEffect(() => {
         if (BillData) {

@@ -13,7 +13,6 @@ import { Dropdown } from "@egovernments/digit-ui-react-components";
  * @returns {JSX.Element} - The pop-up component.
  */
 const SendForEditPopUp = ({ ...props }) => {
-    console.log("props", props.isEditTrue);
     const { t } = useTranslation();
 
     // state variables

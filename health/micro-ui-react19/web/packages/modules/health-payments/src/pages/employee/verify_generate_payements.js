@@ -17,7 +17,6 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
     // const selectedBills = useSelector((state) => state.payments.selectedBills);
 const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 
-    console.log("selectedBillIds", selectedBillIds);
     // context path variables
     const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
 
@@ -182,18 +181,15 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                     }
                 },
                 });
-                console.log("Task status response for billId:", billId, res);
 
                 if (res?.task?.status === "IN_PROGRESS") {
                     setInProgressBillsTransfer(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Transfer") {
-                        console.log("Polling started for billId:", billId);
                         if (!transferPollTimers[billId]) {
                             pollTaskUntilDone(billId, "Transfer", res);
                             }
                     }
                 } else {
-                    console.log("inside else 2")
                     setInProgressBillsTransfer(prev => ({ ...prev, [billId]: false }));
                 }
             } catch (e) {
@@ -211,18 +207,15 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                     }
                 },
                 });
-                console.log("Task status response for billId:", billId, res);
 
                 if (res?.task?.status === "IN_PROGRESS") {
                     setInProgressBillsVerify(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Verify") {
-                        console.log("Polling started for billId:", billId);
                         if (!verifyPollTimers[billId]) {
                             pollTaskUntilDone(billId, "Verify", res);
                             }
                     }
                 } else {
-                    console.log("inside else 2")
                     setInProgressBillsVerify(prev => ({ ...prev, [billId]: false }));
                 }
             } catch (e) {

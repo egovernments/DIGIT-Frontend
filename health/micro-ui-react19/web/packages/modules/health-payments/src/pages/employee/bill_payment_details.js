@@ -248,7 +248,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     if (Array.isArray(billDetails)) {
       const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
       setIndividualIds(ids);
-      console.log("Individual IDs:", ids);
     }
   }
 
@@ -279,7 +278,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   //   }
   // };
   // const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
-  console.log("workerRatesData", workerRatesData);
 
   
 
@@ -480,7 +478,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   });
 
   const triggerIndividualBulkUpdate = async (individualsData, selectedRows, bill) => {
-    console.log("triggerIndividualBulkUpdate called with:", individualsData, selectedRows, bill);
     const selectedIds = selectedRows.map(row => row?.payee?.identifier);
     const updatedIndividualsList = individualsData?.Individual?.filter(individual =>
       selectedIds.includes(individual.id)
@@ -585,7 +582,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           },
           onError: (error) => {
             // Selection cleared (no-op — row selection removed)
-                console.log("Error updating bill detail workflow:", error);
             setShowToast({
               key: "error",
               label: error?.response?.data?.Errors?.[0]?.message || t(`HCM_AM_BILL_DETAILS_${wfAction}_ERROR`),//TODO UPDATE TOAST MSG
@@ -596,7 +592,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       )
       
     } catch (error) {
-      console.log("Error updating bill detail workflow:", error);
       // Selection cleared (no-op — row selection removed)
        setShowToast({
         key: "error",
@@ -830,7 +825,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     url: `/health-expense/v1/bill/_verify`,
   });
   const triggerVerifyBill = async (bill, billDetails) => {
-    console.log("triggerVerifyBill", bill);
     try {
       await verifyBillMutation.mutateAsync(
         {
@@ -844,7 +838,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         {
           onSuccess: async (verifyResponse) => {
             // Selection cleared (no-op — row selection removed)
-            console.log("Verify Response", verifyResponse);
             const taskId = verifyResponse?.taskId;
             if (!taskId) {
               setIsLoading(false);
@@ -1019,7 +1012,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   };
 
   const triggerGeneratePayment = async (bill, billDetails) => {
-    console.log("triggerGeneratePayment", bill);
     try {
       await generatePaymentMutation.mutateAsync(
         {
@@ -1033,7 +1025,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         {
           onSuccess: async (paymentResponse) => {
             // Selection cleared (no-op — row selection removed)
-            console.log("Payment Response", paymentResponse);
             const taskId = paymentResponse?.taskId;
             if (!taskId) {
               setIsLoading(false);
@@ -1054,7 +1045,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     }
                   },
                 });
-                console.log("Status ResponsePayment", statusResponse);
 
                 const status = statusResponse?.task?.status;
                 // setTaskStatus?.(status);
@@ -1114,7 +1104,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   };
   
    const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => {
-    console.log("Polling...", billId);
 
     const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
    
@@ -1397,12 +1386,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     bulkUpdateMutation.isLoading ||
     billDetailPartialUpdateMutation.isLoading
   ) {
-    console.log("Loading bill data or individual data...");
     return renderCenteredLoader("16rem");
   }
-
-  console.log("Rendering buttons for:", activeLink?.code);
-  console.log("mob num:", tableData);
 
  
 
@@ -2036,7 +2021,6 @@ const downloadOptions = [
               },
             };
             triggerUpdateBillWithPayload(updatedBill, "SEND_FOR_APPROVAL");
-            console.log("Send for approval:", { comment, supportingDocs, billID });
           }}
         />
       )}
