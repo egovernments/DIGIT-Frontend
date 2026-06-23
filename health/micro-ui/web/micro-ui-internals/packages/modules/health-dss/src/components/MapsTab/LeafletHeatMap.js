@@ -30,6 +30,7 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
   const baseLayerRefs = useRef({ satellite: null, standard: null });
 
   const [isSatellite, setIsSatellite] = useState(true);
+  const [isGeoJsonVisible, setIsGeoJsonVisible] = useState(true);
 
   const boundaryType = getQueryParam("boundaryType");
   const boundaryValue = getQueryParam("boundaryValue");
@@ -376,6 +377,7 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
       geoJsonLayerRef.current.remove();
       geoJsonLayerRef.current = null;
     }
+    setIsGeoJsonVisible(true);
 
     const data = buildChartData();
 
@@ -440,7 +442,8 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
       return;
     }
     const { type, code, name } = activeFilter;
-    const boundaryName = name || code;
+    const tName = code ? t(code) : null;
+    const boundaryName = (tName && tName !== code) ? tName : (name || code);
     setFilterStack({
       value: {
         ...baseFilterRef.current,
@@ -467,7 +470,13 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
         { id: targetId, label: boundaryName, boundary: type },
       ]);
     } else {
-      setDrillDownStack([{ id: targetId, label: boundaryName, boundary: type }]);
+      // Use functional update: if the single entry already has the same chart id, return prev
+      // unchanged so the drillDownStack effect doesn't fire and reset drillDownChart to "none"
+      // (which would kill drill-down when the chart response is served from React Query cache).
+      setDrillDownStack((prev) => {
+        if (prev.length === 1 && prev[0]?.id === targetId) return prev;
+        return [{ id: targetId, label: boundaryName, boundary: type }];
+      });
     }
   }, [activeFilter]);
 
@@ -515,6 +524,18 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
     setIsSatellite((prev) => !prev);
   };
 
+  const toggleGeoJson = () => {
+    const map = mapRef.current;
+    const layer = geoJsonLayerRef.current;
+    if (!map || !layer) return;
+    if (isGeoJsonVisible) {
+      layer.remove();
+    } else {
+      layer.addTo(map);
+    }
+    setIsGeoJsonVisible((prev) => !prev);
+  };
+
   const isLoading = isGeoJsonLoading || isGeoLoading || isFetchingChart;
   const noData = !isLoading && !mapData?.geoJSON;
 
@@ -558,6 +579,15 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
             icon="AssistantNavigation"
             className="digit-heat-map-recenter"
             onClick={handleRecenter}
+          />
+          <Button
+            type="button"
+            label={isGeoJsonVisible ? t("DSS_MAP_HIDE_BOUNDARIES") : t("DSS_MAP_SHOW_BOUNDARIES")}
+            title={isGeoJsonVisible ? t("DSS_MAP_HIDE_BOUNDARIES") : t("DSS_MAP_SHOW_BOUNDARIES")}
+            variation="secondary"
+            size="small"
+            icon="Layers"
+            onClick={toggleGeoJson}
           />
         </div>
 
