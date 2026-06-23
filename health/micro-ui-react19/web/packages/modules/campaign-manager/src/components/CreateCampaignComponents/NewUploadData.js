@@ -1345,6 +1345,20 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         return null; // timeout
       };
 
+      // Post-init variant: does not exit on null — in prod the record may not be
+      // visible in search immediately after _init fires (async write / propagation delay)
+      const pollUntilDoneAfterInit = async () => {
+        const startTime = Date.now();
+        while (Date.now() - startTime < maxPollTime) {
+          await new Promise((resolve) => setTimeout(resolve, pollRetryInterval));
+          const resource = await searchGeneration();
+          if (resource?.status === "completed" || resource?.status === "failed") {
+            return resource;
+          }
+        }
+        return null; // timeout
+      };
+
       // Helper: trigger generate
       const triggerGenerate = async () => {
         await Digit.CustomService.getResponse({
@@ -1411,8 +1425,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         // If failed or no resource found, trigger generate
         await triggerGenerate();
 
-        // Then search + poll again
-        resource = await pollUntilDone();
+        // Then search + poll again — use post-init variant that tolerates null
+        resource = await pollUntilDoneAfterInit();
 
         setLoader(false);
 
