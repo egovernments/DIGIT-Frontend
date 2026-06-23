@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button, Dropdown, Toast, HeaderComponent } from "@egovernments/digit-ui-components";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
+import { Card, Header, Button, Dropdown, Toast, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import { MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 
 /* --------------------------- Media Query Hook --------------------------- */
@@ -172,13 +171,11 @@ const ProjectSelect = ({ nextScreen }) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
-        <Card type="primary" className="bottom-gap-card-payment" style={{ gap: "1.5rem" }}>
-          <HeaderComponent>
-            <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>
+        <Card type="primary" className="bottom-gap-card-payment">
+          <HeaderComponent className="payment-screen-headers">
               {billScreen ? t("HCM_AM_PAYEMENT_BILL_AGGREGATION_HEAD") : t("HCM_AM_PAYEMENT_PROJECT_HEAD")}
-            </span>
           </HeaderComponent>
-          <div style={{ marginBottom: "0.5rem" }}>
+          <div>
             {billScreen
               ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION")
               : manageBillsScreen
@@ -229,25 +226,27 @@ const ProjectSelect = ({ nextScreen }) => {
         </Card>
       </div>
 
-      <ActionBar className="mc_back" style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button
-          icon="ArrowBack"
-          label={t("HCM_AM_BACK_LABEL")}
-          onClick={() => navigate(`/${window.contextPath}/employee`)}
-          style={{ marginLeft: "2.5rem", minWidth: "10rem" }}
-          type="button"
-          variation="secondary"
-        />
-        <Button
-          icon="ArrowForward"
-          isSuffix
-          label={t("HCM_AM_NEXT_LABEL")}
-          onClick={handleNextClick}
-          style={{ minWidth: "10rem" }}
-          type="button"
-          variation="primary"
-        />
-      </ActionBar>
+      <Footer
+        actionFields={[
+          <Button
+            icon="ArrowBack"
+            label={t("HCM_AM_BACK_LABEL")}
+            onClick={() => navigate(`/${window.contextPath}/employee`)}
+            style={{ marginLeft: "2.5rem", minWidth: "10rem" }}
+            type="button"
+            variation="secondary"
+          />,
+          <Button
+            icon="ArrowForward"
+            isSuffix
+            label={t("HCM_AM_NEXT_LABEL")}
+            onClick={handleNextClick}
+            style={{ minWidth: "10rem" }}
+            type="button"
+            variation="primary"
+          />,
+        ]}
+      />
 
       {showToast && (
         <Toast

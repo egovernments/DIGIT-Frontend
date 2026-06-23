@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
-import { Button, Card, AlertCard as InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
+import { Button, Card, AlertCard as InfoCard, Loader, Tab, Toast, Footer } from "@egovernments/digit-ui-components";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
-import { LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
@@ -501,28 +501,25 @@ const BillInboxComponent = () => {
       )}
 
       {showGenerateBillAction && BillData?.bills?.length === 0 && !isBillLoading && !isFetchingBill && billGenerationStatus == null && (
-        <ActionBar
-          className="mc_back"
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            icon="CheckCircle"
-            label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
-            onClick={() => {
-              setOpenAlertPopUp(true);
-            }}
-            style={{
-              minWidth: "14rem",
-              opacity: billGenerationStatus != null ? 0.5 : 1,
-            }}
-            type="button"
-            variation="primary"
-            isDisabled={generateBillMutation.isLoading}
-          />
-        </ActionBar>
+        <Footer
+          setactionFieldsToRight={true}
+          actionFields={[
+            <Button
+              icon="CheckCircle"
+              label={t(`HCM_AM_GENERATE_BILL_LABEL`)}
+              onClick={() => {
+                setOpenAlertPopUp(true);
+              }}
+              style={{
+                minWidth: "14rem",
+                opacity: billGenerationStatus != null ? 0.5 : 1,
+              }}
+              type="button"
+              variation="primary"
+              isDisabled={generateBillMutation.isLoading}
+            />,
+          ]}
+        />
       )}
       {showToast && (
         <Toast

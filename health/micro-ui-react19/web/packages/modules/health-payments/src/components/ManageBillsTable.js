@@ -142,7 +142,6 @@ const ManageBillsTable = ({ ...props }) => {
     
                     return reportDetails?.status === "COMPLETED" ? (
                         <Button
-                            className="custom-class"
                             iconFill=""
                             size="medium"
                             icon="FileDownload"
@@ -227,7 +226,6 @@ const ManageBillsTable = ({ ...props }) => {
     
                     return advisoryReport?.status === "GENERATED" && advisoryReport?.fileStoreId ? (
                         <Button
-                            className="custom-class"
                             iconFill=""
                             size="medium"
                             icon="FileDownload"
@@ -239,6 +237,7 @@ const ManageBillsTable = ({ ...props }) => {
                             }}
                             style={{ whiteSpace: "nowrap" }}
                             variation="secondary"
+                            type="button"
                         />
                     ) : (
                         <div title={advisoryReport?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}>

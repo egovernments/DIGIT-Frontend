@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
+import { ActionBar } from "@egovernments/digit-ui-react-components";
 import {
   Loader,
   Divider,
@@ -13,6 +13,7 @@ import {
   Toast,
   LoaderScreen,
   LoaderComponent,
+  HeaderComponent
 } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
@@ -682,9 +683,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
-        <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          <span style={{ color: "#0B4B66" }}>{editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}</span>
-        </Header>
+        <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers pop-inbox-header">
+              {editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}
+        </HeaderComponent>
 
         {/* Metrics Summary Card */}
         <Card type="primary" className="bottom-gap-card-payment">
@@ -814,7 +815,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
               <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
-                  className="custom-class"
                   icon="Visibility"
                   iconFill=""
                   label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
@@ -825,6 +825,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   style={{}}
                   title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
                   variation="secondary"
+                  type="button"
                 />
               </div>
             </div>
@@ -1028,7 +1029,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               }}
             >
               <Button
-                className="custom-class"
+
                 iconFill=""
                 label={t(`HCM_AM_ACTIONS`)}
                 menuStyles={{ bottom: "40px" }}
@@ -1046,6 +1047,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                     name: t(`HCM_AM_ACTIONS_APPROVE`),
                   },
                 ]}
+                variation={"primary"}
                 optionsKey="name"
                 style={{ minWidth: "14rem" }}
                 type="actionButton"

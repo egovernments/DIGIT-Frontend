@@ -7,8 +7,8 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { Card, NoResultsFound, Loader, Toast } from "@egovernments/digit-ui-components";
-import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { Card, NoResultsFound, Loader, Toast,HeaderComponent } from "@egovernments/digit-ui-components";
+import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 
 
 import _ from "lodash";
@@ -257,15 +257,8 @@ const MyBills = (props) => {
     const totalAmount = getTotalAmount(props?.selectedBills);
     return (
         <React.Fragment>
-            {
-                    <Header styles={{ fontSize: "32px" }}>
-                      <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MY_BILLS")}</span>
-                    </Header>
-                  }
-
-
+            <HeaderComponent className="payment-screen-headers">{t("HCM_AM_MY_BILLS")}</HeaderComponent>
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
-
             <Card>
                 {isFetching ? ( <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />
 ) : tableData.length === 0 ? (<NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />)

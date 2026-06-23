@@ -7,9 +7,7 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import { findAllOverlappingPeriods } from "../../utils/time_conversion";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
 import { formatDate } from "../../utils/time_conversion";
-import { AlertCard as InfoCard, Card, NoResultsFound, Loader, Toast, Tab, Tag } from "@egovernments/digit-ui-components";
-import { Header, ActionBar } from "@egovernments/digit-ui-react-components";
-import { Button } from "@egovernments/digit-ui-components";
+import { AlertCard as InfoCard, Card, NoResultsFound, Loader, Toast, Tab, Tag, Button, Footer,HeaderComponent } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { getManageBillsRole, getManageBillsConfig, MANAGE_BILLS_ROLE_STORAGE_KEY, normalizeManageBillsRoleParam } from "../../utils/roleUtils";
 import { MANAGE_BILLS_ROLES } from "../../config/manageBillsRoleConfig";
@@ -514,9 +512,7 @@ const ManageBills = () => {
   if (!roleConfig) {
     return (
       <React.Fragment>
-        <Header styles={{ fontSize: "32px" }}>
-          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
-        </Header>
+        <HeaderComponent className="payment-screen-headers">{t("HCM_AM_MANAGE_BILLS")}</HeaderComponent>
         <Card>
           <NoResultsFound text={t("HCM_AM_NO_ACCESS")} />
         </Card>
@@ -531,9 +527,7 @@ const ManageBills = () => {
   if (!selectedProject?.id) {
     return (
       <React.Fragment>
-        <Header styles={{ fontSize: "32px" }}>
-          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
-        </Header>
+        <HeaderComponent className="payment-screen-headers">{t("HCM_AM_MANAGE_BILLS")}</HeaderComponent>
         <Card>
           <NoResultsFound text={t("HCM_AM_PROJECT_SELECTION_IS_MANDATORY")} />
         </Card>
@@ -564,9 +558,9 @@ const ManageBills = () => {
             {projectName && (
               <Tag label={t(projectName)} type="monochrome" showIcon={false} className="campaign-tag" style={{ marginBottom: "0.5rem" }} />
             )}
-            <Header styles={{ fontSize: "32px", marginBottom: "0.5rem" }}>
-              <span style={{ color: "#0B4B66" }}>{t("HCM_AM_MANAGE_BILLS")}</span>
-            </Header>
+            <HeaderComponent styles={{ marginBottom: "0.5rem" }} className="payment-screen-headers">
+              {t("HCM_AM_MANAGE_BILLS")}
+            </HeaderComponent>
             <p style={{ color: "#505A5F", fontSize: "16px", lineHeight: "1.5", marginBottom: "0.5rem" }}>
               {t("HCM_AM_MANAGE_BILLS_DESCRIPTION")}
             </p>
@@ -662,36 +656,28 @@ const ManageBills = () => {
         />
       )}
 
-      <ActionBar style={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
-        <Button
-          variation="secondary"
-          label={t("HCM_AM_BACK")}
-          icon="ArrowBack"
-          onClick={() => navigate(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
-          style={{
-            flexShrink: 0,
-            minWidth: "10rem",
-            whiteSpace: "normal",
-            marginLeft: "2rem", 
-          }}
-        />
-        {currentCTA && (
+      <Footer
+        actionFields={[
           <Button
-            variation="primary"
-            label={t(currentCTA.label)}
-            isDisabled={selectedBills.length === 0}
-            onClick={() => handleCTAAction(currentCTA.action)}
-            style={{
-              flexShrink: 0,
-              // width: "max-content",
-              minWidth: "18rem",
-              maxWidth: "28rem",
-              whiteSpace: "normal",
-              marginRight: "2rem", 
-            }}
-          />
-        )}
-      </ActionBar>
+            variation="secondary"
+            label={t("HCM_AM_BACK")}
+            icon="ArrowBack"
+            onClick={() => navigate(`/${window.contextPath}/employee/payments/manage-bills-project-selection/${resolvedRole}`)}
+            style={{ flexShrink: 0, minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
+          />,
+          ...(currentCTA
+            ? [
+                <Button
+                  variation="primary"
+                  label={t(currentCTA.label)}
+                  isDisabled={selectedBills.length === 0}
+                  onClick={() => handleCTAAction(currentCTA.action)}
+                  style={{ flexShrink: 0, minWidth: "18rem", maxWidth: "28rem", whiteSpace: "normal", marginRight: "2rem" }}
+                />,
+              ]
+            : []),
+        ]}
+      />
 
       {activePopUpAction && (() => {
         const popUpConfig = {

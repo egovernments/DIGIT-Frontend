@@ -153,7 +153,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           ) : (
             // Show 'Disable User' button for active attendees
             <Button
-              className="custom-class"
+              type='button'
               icon="Edit"
               label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
               onClick={() => {
@@ -261,6 +261,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         fixedHeader={true}
         fixedHeaderScrollHeight={props.height ? props.height : "70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
+        className={props.className}
       />
 
       {/* Toast Notification */}

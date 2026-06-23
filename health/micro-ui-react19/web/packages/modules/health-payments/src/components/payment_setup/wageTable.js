@@ -13,6 +13,8 @@ const RoleWageTable = ({
   onDataChange,
   existingRatesData = null,
   disabled = false,
+  className,
+  styles
 }) => {
   const { t } = useTranslation();
 
@@ -253,8 +255,8 @@ const RoleWageTable = ({
   }
 
   return (
-    <div style={{ marginTop: "1rem" }}>
-      <DataTable columns={columns} data={roles} customStyles={tableCustomStyle(false)} highlightOnHover dense />
+    <div style={{marginTop: "1rem",...styles }}>
+      <DataTable columns={columns} data={roles} customStyles={tableCustomStyle(false)} dense  className={className}/>
     </div>
   );
 };

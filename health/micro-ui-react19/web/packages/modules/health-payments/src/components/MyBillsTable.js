@@ -177,7 +177,6 @@ const MyBillsTable = ({ ...props }) => {
 
           return reportDetails?.status === "COMPLETED" ? (
             <Button
-              className="custom-class"
               iconFill=""
               size="medium"
               icon="FileDownload"

@@ -268,8 +268,8 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
       </div>
 
       {/* Submit Button */}
-      <div style={{ justifyContent: "center", marginTop: "auto", paddingTop: "16px" }}>
-        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} disabled={!boundary} />
+      <div style={{ justifyContent: "center", marginTop: "auto", paddingTop: "16px" ,width:"100%"}}>
+        <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} disabled={!boundary} style={{width:"100%"}} />
       </div>
       {showToast && (
         <Toast

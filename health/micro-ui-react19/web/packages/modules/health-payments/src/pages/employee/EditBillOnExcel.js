@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Header, ActionBar, Loader } from "@egovernments/digit-ui-react-components";
-import { Card, Button, Toast } from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Button, Toast, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import BulkUpload from "../../components/BulkUpload";
 import { downloadFileWithName } from "../../utils";
 
@@ -163,9 +163,9 @@ const EditBillOnExcel = () => {
   if (!billID) {
     return (
       <React.Fragment>
-        <Header styles={{ fontSize: "32px" }}>
-          <span style={{ color: "#0B4B66" }}>{t("HCM_AM_EDIT_ON_EXCEL")}</span>
-        </Header>
+        <HeaderComponent className="payment-screen-headers">
+          {t("HCM_AM_EDIT_ON_EXCEL")}
+        </HeaderComponent>
         <Card>
           <p>{t("HCM_AM_NO_BILL_SELECTED")}</p>
         </Card>
@@ -177,9 +177,9 @@ const EditBillOnExcel = () => {
     <React.Fragment>
       {isValidating && <Loader variant="OverlayLoader" className="digit-center-loader" />}
 
-      <Header styles={{ fontSize: "32px" }}>
-        <span style={{ color: "#0B4B66" }}>{t("HCM_AM_EDIT_ON_EXCEL")}</span>
-      </Header>
+      <HeaderComponent className="payment-screen-headers">
+        {t("HCM_AM_EDIT_ON_EXCEL")}
+      </HeaderComponent>
 
       <Card>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
@@ -227,22 +227,24 @@ const EditBillOnExcel = () => {
         />
       )}
 
-      <ActionBar style={{ display: "flex", justifyContent: "space-between", gap: "1rem" }}>
-        <Button
-          variation="secondary"
-          label={t("HCM_AM_BACK")}
-          icon="ArrowBack"
-          style={{ minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
-          onClick={() => navigate(-1)}
-        />
-        <Button
-          variation="primary"
-          label={t("HCM_AM_SUBMIT")}
-          style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" }}
-          isDisabled={uploadedFile.length === 0}
-          onClick={handleSubmit}
-        />
-      </ActionBar>
+      <Footer
+        actionFields={[
+          <Button
+            variation="secondary"
+            label={t("HCM_AM_BACK")}
+            icon="ArrowBack"
+            style={{ minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
+            onClick={() => navigate(-1)}
+          />,
+          <Button
+            variation="primary"
+            label={t("HCM_AM_SUBMIT")}
+            style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "1rem" }}
+            isDisabled={uploadedFile.length === 0}
+            onClick={handleSubmit}
+          />,
+        ]}
+      />
     </React.Fragment>
   );
 };
