@@ -31,6 +31,7 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
 
   const [isSatellite, setIsSatellite] = useState(true);
   const [isGeoJsonVisible, setIsGeoJsonVisible] = useState(true);
+  const [isLayersPanelOpen, setIsLayersPanelOpen] = useState(false);
 
   const boundaryType = getQueryParam("boundaryType");
   const boundaryValue = getQueryParam("boundaryValue");
@@ -565,13 +566,6 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
         <div className="digit-leaflet-map-controls">
           <Button
             type="button"
-            label={isSatellite ? t("DSS_MAP_STANDARD_VIEW") : t("DSS_MAP_SATELLITE_VIEW")}
-            variation="secondary"
-            size="small"
-            onClick={toggleLayer}
-          />
-          <Button
-            type="button"
             label={t("DSS_MAP_RECENTRE")}
             title={t("DSS_MAP_RECENTRE")}
             variation="secondary"
@@ -580,15 +574,34 @@ const LeafletHeatMap = ({ chartId, visualizer, activeFilter, onDrillDown, pageZo
             className="digit-heat-map-recenter"
             onClick={handleRecenter}
           />
-          <Button
-            type="button"
-            label={isGeoJsonVisible ? t("DSS_MAP_HIDE_BOUNDARIES") : t("DSS_MAP_SHOW_BOUNDARIES")}
-            title={isGeoJsonVisible ? t("DSS_MAP_HIDE_BOUNDARIES") : t("DSS_MAP_SHOW_BOUNDARIES")}
-            variation="secondary"
-            size="small"
-            icon="Layers"
-            onClick={toggleGeoJson}
-          />
+          <div className="digit-leaflet-layers-wrap">
+            <button
+              className={`digit-leaflet-layers-btn${isLayersPanelOpen ? " digit-leaflet-layers-btn--active" : ""}`}
+              title={t("DSS_MAP_LAYERS")}
+              onClick={() => setIsLayersPanelOpen((p) => !p)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
+            </button>
+            {isLayersPanelOpen && (
+              <div className="digit-leaflet-layers-panel">
+                <button className="digit-leaflet-layers-item" onClick={toggleLayer}>
+                  <span>{isSatellite ? t("DSS_MAP_STANDARD_VIEW") : t("DSS_MAP_SATELLITE_VIEW")}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+                <button className="digit-leaflet-layers-item" onClick={toggleGeoJson}>
+                  <span>{isGeoJsonVisible ? t("DSS_MAP_HIDE_BOUNDARIES") : t("DSS_MAP_SHOW_BOUNDARIES")}</span>
+                  {isGeoJsonVisible
+                    ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  }
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Loading overlay */}
