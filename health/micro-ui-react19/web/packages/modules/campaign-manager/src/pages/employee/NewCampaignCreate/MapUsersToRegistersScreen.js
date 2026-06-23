@@ -53,6 +53,7 @@ const MapUsersToRegistersScreen = () => {
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
+  const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
 
   // Fetch campaign data to get id and serviceCode
   const reqCriteria = {
@@ -149,7 +150,7 @@ const MapUsersToRegistersScreen = () => {
   }
 
   const attendanceReqCriteria = {
-    url: `/health-attendance/v1/_search`,
+    url: `/${attendanceContextPath}/v1/_search`,
     params: attendanceParams,
     body: {},
     config: {
@@ -173,7 +174,7 @@ const MapUsersToRegistersScreen = () => {
 
   // Mutation hook for deleting a register
   const deleteReqCriteria = {
-    url: `/health-attendance/v1/_delete`,
+    url: `/${attendanceContextPath}/v1/_delete`,
     params: {},
     body: {},
     config: { enabled: false },
@@ -215,7 +216,7 @@ const MapUsersToRegistersScreen = () => {
     setDeletePopup(null);
     deleteMutation.mutate(
       {
-        url: `/health-attendance/v1/_delete`,
+        url: `/${attendanceContextPath}/v1/_delete`,
         body: {
           attendanceRegister: [{ id: register.id, tenantId }],
         },
