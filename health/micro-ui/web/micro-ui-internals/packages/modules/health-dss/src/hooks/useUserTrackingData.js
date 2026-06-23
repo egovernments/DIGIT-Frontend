@@ -59,7 +59,7 @@ const USER_SYNC_AGGS = {
  * Returns aggregated data per user: latest sync time, record count, role, boundary.
  */
 const useUserSyncData = ({ campaignId, enabled = true }) => {
-  const indexName = getKibanaDetails("userSyncIndex") || "ba-user-sync-index-v1";
+  const indexName = getKibanaDetails("userSyncIndex") || "user-sync-index-v1";
 
   const query = useMemo(() => {
     if (campaignId) {
@@ -94,7 +94,7 @@ const useUserSyncData = ({ campaignId, enabled = true }) => {
  * Hook to fetch project staff metadata for given user IDs.
  */
 const useProjectStaffData = ({ userIds = [], campaignId, enabled = true }) => {
-  const indexName = getKibanaDetails("projectStaffIndex") || "ba-project-staff-index-v1";
+  const indexName = getKibanaDetails("projectStaffIndex") || "project-staff-index-v1";
 
   const query = useMemo(() => {
     const mustClauses = [];
