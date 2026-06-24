@@ -4,6 +4,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ListAltCheck, Groups, Visibility } from "@egovernments/digit-ui-svg-components";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { NonWorkingDaysIcon } from "../../../components/icons/NonWorkingDaysIcon";
 
 const SetupAttendanceScreen = () => {
   const { t } = useTranslation();
@@ -34,6 +35,17 @@ const SetupAttendanceScreen = () => {
       onClick: () => {
         navigate(
           `/${window.contextPath}/employee/campaign/map-users-to-registers?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
+        );
+      },
+    },
+    {
+      id: "setup-attendance-mark-non-working-days",
+      icon: <NonWorkingDaysIcon />,
+      heading: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MARK_NON_WORKING_DAYS_HEADING),
+      description: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MARK_NON_WORKING_DAYS_DESC),
+      onClick: () => {
+        navigate(
+          `/${window.contextPath}/employee/campaign/mark-non-working-days?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
         );
       },
     },

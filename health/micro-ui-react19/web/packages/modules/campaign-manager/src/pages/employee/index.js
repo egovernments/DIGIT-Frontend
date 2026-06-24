@@ -146,6 +146,13 @@ const MapAttendeesScreen = lazyWithFallback(
   { loaderText: "Loading Map Attendees..." }
 );
 
+const MarkNonWorkingDaysScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "mark-non-working-days" */ "./NewCampaignCreate/MarkNonWorkingDaysScreen"),
+  () => require("./NewCampaignCreate/MarkNonWorkingDaysScreen").default,
+  { loaderText: "Loading Mark Non-Working Days..." }
+);
+
+
 const CampaignTemplates = lazyWithFallback(
   () => import(/* webpackChunkName: "campaign-templates" */ "./campaignTemplateScreens/CampaignTemplates"),
   () => require("./campaignTemplateScreens/CampaignTemplates").default,
@@ -262,6 +269,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.includes("map-users-to-registers") ||
         pathVar.includes("register-details") ||
         pathVar.includes("map-attendees-screen") ||
+        pathVar.includes("mark-non-working-days") ||
         pathVar.includes("update-dates-boundary") ||
         pathVar.includes("delivery-details-preview") ||
         pathVar.includes("localization-add") ||
@@ -303,12 +311,12 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink:
-        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen")
+        pathVar.includes("setup-attendance") && !pathVar.includes("create-registers-screen") && !pathVar.includes("map-users-to-registers") && !pathVar.includes("register-details") && !pathVar.includes("map-attendees-screen") && !pathVar.includes("mark-non-working-days")
           ? ""
           : `/${window?.contextPath}/employee/campaign/setup-attendance`,
       content: t(I18N_KEYS.PAGES.SETUP_ATTENDANCE),
       query: `campaignName=${name}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") ? true : false,
+      show: pathVar.includes("setup-attendance") || pathVar.includes("create-registers-screen") || pathVar.includes("map-users-to-registers") || pathVar.includes("register-details") || pathVar.includes("map-attendees-screen") || pathVar.includes("mark-non-working-days") ? true : false,
     },
     {
       internalLink: "",
@@ -331,6 +339,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       internalLink: "",
       content: t(I18N_KEYS.PAGES.MAP_ATTENDEES),
       show: pathVar.includes("map-attendees-screen") ? true : false,
+    },
+    {
+      internalLink: "",
+      content: t(I18N_KEYS.PAGES.MARK_NON_WORKING_DAYS),
+      show: pathVar.includes("mark-non-working-days") ? true : false,
     },
     {
       internalLink: pathVar.includes("checklist/view") ? "" : `/${window?.contextPath}/employee/campaign/checklist/view`,
@@ -519,6 +532,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`map-users-to-registers`} element={<MapUsersToRegistersScreen />} />
           <Route path={`register-details`} element={<RegisterDetailsScreen />} />
           <Route path={`map-attendees-screen`} element={<MapAttendeesScreen />} />
+          <Route path={`mark-non-working-days`} element={<MarkNonWorkingDaysScreen />} />
           <Route path={`app-config-init`} element={<AppConfigInitializer />} />
           <Route path={`localization-add`} element={<LocalisationAdd />} />
           <Route path={`campaign-templates`} element={<CampaignTemplates />} />

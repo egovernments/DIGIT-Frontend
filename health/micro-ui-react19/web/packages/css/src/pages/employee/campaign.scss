@@ -1396,3 +1396,255 @@
     padding-top: 0 !important;
   }
 }
+
+// ── Mark Non-Working Days screen ──────────────────────────────────────────────
+
+.nonwd-field-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.nonwd-field-label {
+  min-width: 220px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0b0c0c;
+  white-space: nowrap;
+  padding-top: 9px; /* visually align label text with input text */
+}
+
+.nonwd-picker-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 480px;
+}
+
+.nonwd-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #b1b4b6;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  cursor: pointer;
+  min-height: 40px;
+
+  &:focus {
+    outline: 2px solid #0b0c0c;
+    outline-offset: 2px;
+  }
+}
+
+.nonwd-input-text {
+  font-size: 0.875rem;
+  color: #0b0c0c;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nonwd-calendar-icon {
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nonwd-popup {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 1000;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 1rem;
+  min-width: 560px;
+}
+
+.nonwd-exclude-weekends {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #0b0c0c;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #c84c0e;
+  }
+}
+
+.nonwd-calendars {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nonwd-month {
+  flex: 1;
+}
+
+.nonwd-month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.nonwd-month-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0b0c0c;
+  text-align: center;
+}
+
+.nonwd-nav-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #0b0c0c;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+}
+
+.nonwd-nav-placeholder {
+  width: 28px;
+  display: inline-block;
+}
+
+.nonwd-day-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 2px;
+}
+
+.nonwd-day-label {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #505a5f;
+  padding: 4px 0;
+}
+
+.nonwd-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.nonwd-day {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #0b0c0c;
+  cursor: pointer;
+
+  &:hover:not(.nonwd-day-other):not(.nonwd-day-selected) {
+    background: #fbeee8;
+  }
+
+  &.nonwd-day-other {
+    color: #b1b4b6;
+    cursor: default;
+  }
+
+  &.nonwd-day-selected {
+    background: #c84c0e;
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.nonwd-selected-footer {
+  margin-top: 1rem;
+}
+
+.nonwd-selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nonwd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f0f0;
+  color: #505a5f;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 6px 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #d6d5d4;
+}
+
+.nonwd-chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d6d5d4;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #505a5f;
+  flex-shrink: 0;
+
+  svg {
+    display: block;
+  }
+
+  &:hover {
+    background: #b1b4b6;
+    color: #0b0c0c;
+  }
+}
+
+.nonwd-day-weekend-excluded {
+  color: #b1b4b6 !important;
+  background: none !important;
+  cursor: not-allowed !important;
+  opacity: 0.5;
+
+  &:hover {
+    background: none !important;
+  }
+}
+
+.nonwd-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: 2.5rem;
+  padding: 1rem 2rem;
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.16);
+  display: flex;
+  justify-content: space-between;
+  z-index: 500;
+}
+
