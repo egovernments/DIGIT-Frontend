@@ -11,6 +11,7 @@ import MetricChart from "./MetricChart";
 import Summary from "./Summary";
 import RichSummary from "./RichSummary";
 import HeatMapChart from "./AdvancedMapCharts/HeatMap";
+import MapsTab from "./MapsTab";
 import BannerCard from "./BannerCard";
 import LatLongMapChart from "./AdvancedMapCharts/LatLongMap"
 import KibanaCard from "./KibanaCard";
@@ -60,6 +61,8 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         );
       case "heatmap":
         return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
+      case "leafletHeatmap":
+        return <MapsTab chartId={chart?.id} visualizer={chart} pageZoom={pageZoom} />;
       case "bar":
       case "sideBySideBar":
         return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} pageZoom={pageZoom} downloadChartsId={downloadChartsId} />;
