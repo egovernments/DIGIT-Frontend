@@ -882,21 +882,23 @@ const PaymentSetUpPage = () => {
             icon={edit ? "" : "ArrowForward"}
             isSuffix={edit ? false : true}
             isDisabled={
-              !isFormModified ||
-              !tableError ||
-              !selectedCampaign ||
-              !billingCycle ||
-              (billingCycle?.code === "CUSTOM" &&
-                (Number(customDays) < Number(billingCycle?.minDuration) ||
-                  Number(customDays) >
-                    Number(
-                      getMaxBillingDuration({
-                        campaignStartEpoch: selectedCampaign.startDate,
-                        campaignEndEpoch: selectedCampaign.endDate,
-                        billingCycleMaxDuration: billingCycle?.maxDuration,
-                      })
-                    ))) ||
-              !skillsData
+              !isCampaignStarted && (
+                !isFormModified ||
+                !tableError ||
+                !selectedCampaign ||
+                !billingCycle ||
+                (billingCycle?.code === "CUSTOM" &&
+                  (Number(customDays) < Number(billingCycle?.minDuration) ||
+                    Number(customDays) >
+                      Number(
+                        getMaxBillingDuration({
+                          campaignStartEpoch: selectedCampaign.startDate,
+                          campaignEndEpoch: selectedCampaign.endDate,
+                          billingCycleMaxDuration: billingCycle?.maxDuration,
+                        })
+                      ))) ||
+                !skillsData
+              )
             }
           />,
         ]}
