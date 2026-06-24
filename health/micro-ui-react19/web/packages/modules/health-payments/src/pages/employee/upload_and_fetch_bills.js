@@ -1,7 +1,7 @@
 import React, { useEffect,useState, } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button, Dropdown, Toast, PopUp, Footer } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Button, Dropdown, Toast, PopUp, Footer } from "@egovernments/digit-ui-components";
 import MyBills from "./my_bills";
 import FetchBills from "./fetch_bills";
 import { CloudDownload } from "./svg_components/CloudDownload";
@@ -53,7 +53,7 @@ const UploadAndFetchBillsCard = () => {
           }}
         >
 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", marginTop: "1rem", width: "100%" }}>
-<Header className="pop-inbox-header">{t("HCM_AM_UPLOAD_OR_FETCH_BILLS")}</Header>
+<HeaderComponent className="pop-inbox-header payment-screen-headers">{t("HCM_AM_UPLOAD_OR_FETCH_BILLS")}</HeaderComponent>
           <div className="label-pair">{t("HCM_AM_PLEASE_SELECT_ONE_VERIFY")}</div>
           </div>
           <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginTop: "1rem" }}>

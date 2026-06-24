@@ -16,13 +16,15 @@ const AttendeeAssignCell = ({ row, t }) => {
 
   const handleCreate = () => {
     setLoading(true);
+    const sessionTypeNum = Number(sessionType);
+    const validSessionType = sessionTypeNum === 0 || sessionTypeNum === 2 ? sessionTypeNum : 2;
     createMapping(
       {
         attendees: [
           {
             registerId,
             individualId: row.id,
-            enrollmentDate: enrolmentTimeWithSession(Number(sessionType), new Date().getTime()),
+            enrollmentDate: enrolmentTimeWithSession(validSessionType, new Date().getTime()),
             tenantId: row.tenantId,
             ...(tag !== "" ? { tag } : {}),
           },

@@ -243,7 +243,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     <>
       {/* Main Data Table */}
       <DataTable
-        className="search-component-table"
+        className={`search-component-table ${props.className}`}
         columns={columns}
         data={paginatedData}
         progressPending={false}
@@ -261,7 +261,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         fixedHeader={true}
         fixedHeaderScrollHeight={props.height ? props.height : "70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
-        className={props.className}
       />
 
       {/* Toast Notification */}

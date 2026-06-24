@@ -982,7 +982,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
       ) : (
         <Footer
           actionFields={[
-            ...(!(editAttendance && fromCampaignSupervisor) ? [
+            ...(!(editAttendance && fromCampaignSupervisor && canCampaignSupervisorEdit) ? [
               <Button
                 label={t(`HCM_AM_GO_BACK`)}
                 title={t(`HCM_AM_GO_BACK`)}

@@ -182,7 +182,7 @@ const AttendanceManagementTable = ({ ...props }) => {
   return (
     <>
       <DataTable
-        className="search-component-table"
+        className={`search-component-table ${props.className}`}
         columns={columns}
         data={paginatedData}
         progressPending={false}
@@ -200,7 +200,6 @@ const AttendanceManagementTable = ({ ...props }) => {
         fixedHeader={true}
         fixedHeaderScrollHeight={"70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
-        className={props.className}
       />
       {showToast && (
         <Toast
