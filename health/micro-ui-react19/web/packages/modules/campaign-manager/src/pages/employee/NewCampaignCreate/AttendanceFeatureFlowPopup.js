@@ -137,17 +137,12 @@ const FeatureSelectionStep = ({
 }) => {
   const { t } = useTranslation();
 
-  const featureRows = [];
-  for (let i = 0; i < features.length; i += 3) {
-    featureRows.push(features.slice(i, i + 3));
-  }
-
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "2rem",
+        gap: "1.5rem",
         padding: "2rem",
         background: "#FFFFFF",
         borderRadius: "0.75rem",
@@ -157,67 +152,58 @@ const FeatureSelectionStep = ({
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
+          flexDirection: "column",
+          gap: "0.5rem",
         }}
       >
-        <div
+        <h2
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            flex: 1,
+            fontSize: "1.75rem",
+            fontWeight: 700,
+            lineHeight: "120%",
+            color: "#0B4B66",
+            margin: 0,
+            fontFamily: "Roboto, sans-serif",
           }}
         >
-          <HeaderComponent
-            style={{
-              fontSize: "2rem",
-              lineHeight: "114%",
-              color: "#0B4B66",
-              margin: 0,
-            }}
-          >
-            {t(I18N_KEYS.CAMPAIGN_CREATE.MODULE_FEATURES)}
-          </HeaderComponent>
-          <TextBlock
-            body={t(I18N_KEYS.CAMPAIGN_CREATE.MODULE_FEATURES_DESCRIPTION)}
-            bodyStyle={{
-              color: "#787878",
-              fontSize: "1rem",
-              lineHeight: "137%",
-              margin: 0,
-            }}
-          />
-        </div>
+          {t(I18N_KEYS.CAMPAIGN_CREATE.MODULE_FEATURES)}
+        </h2>
+        <TextBlock
+          body={t(I18N_KEYS.CAMPAIGN_CREATE.MODULE_FEATURES_DESCRIPTION)}
+          bodyStyle={{
+            color: "#505A5F",
+            fontSize: "0.9375rem",
+            lineHeight: "150%",
+            margin: 0,
+          }}
+        />
       </div>
 
       {/* Feature Cards Grid */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-        {featureRows.map((row, rowIndex) => (
-          <div key={rowIndex} style={{ display: "flex", gap: "1.5rem" }}>
-            {row.map((feature) => {
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+        {features.map((feature) => {
               const isSelected = selectedFeatures.includes(feature.format);
               const isDisabled = feature.disabled;
               return (
-                <Card
+                <div
                   key={feature.code}
-                  className={`module-card ${isSelected ? "selected-card" : ""}`}
-                  onClick={() =>  onToggleFeature(feature.format)}
+                  onClick={() => !isDisabled && onToggleFeature(feature.format)}
                   style={{
                     cursor: isDisabled ? "not-allowed" : "pointer",
                     opacity: isDisabled ? 0.5 : 1,
                     position: "relative",
-                    width: "319px",
+                    display: "flex",
+                    flexDirection: "column",
                     border: isSelected
-                      ? "2.5px solid #C84C0E"
-                      : "1px solid #787878",
+                      ? "2px solid #C84C0E"
+                      : "1px solid #D6D5D4",
                     borderRadius: "0.75rem",
-                    padding: "1.5rem",
-                    filter: isSelected
-                      ? "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.16))"
+                    padding: "1rem 1.25rem",
+                    boxShadow: isSelected
+                      ? "0px 4px 8px rgba(200, 76, 14, 0.12)"
                       : "none",
                     background: "#FFFFFF",
-                    height: "206px",
+                    boxSizing: "border-box",
                   }}
                 >
                   {isSelected ? (
@@ -229,6 +215,7 @@ const FeatureSelectionStep = ({
                         position: "absolute",
                         right: "1rem",
                         top: "1rem",
+                        flexShrink: 0,
                       }}
                     />
                   ) : (
@@ -237,10 +224,13 @@ const FeatureSelectionStep = ({
                         position: "absolute",
                         right: "1rem",
                         top: "1rem",
-                        width: "1.5rem",
-                        height: "1.5rem",
-                        background: "#D9D9D9",
+                        width: "1.25rem",
+                        height: "1.25rem",
+                        background: "transparent",
                         borderRadius: "50%",
+                        border: "1.5px solid #BDBDBD",
+                        boxSizing: "border-box",
+                        flexShrink: 0,
                       }}
                     />
                   )}
@@ -248,27 +238,30 @@ const FeatureSelectionStep = ({
                     style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "1rem",
+                      gap: "0.5rem",
                     }}
                   >
-                    <HeaderComponent
+                    <h3
                       style={{
-                        fontSize: "1.25rem",
-                        lineHeight: "114%",
+                        fontSize: "1.125rem",
+                        fontWeight: 700,
+                        lineHeight: "130%",
                         color: "#0B4B66",
                         margin: 0,
+                        paddingRight: "1.75rem",
+                        fontFamily: "Roboto, sans-serif",
                       }}
                     >
                       {t(feature.code)}
-                    </HeaderComponent>
+                    </h3>
                     <FeatureTag isSetup={feature.requiresSetup} />
                     <p
                       style={{
                         fontFamily: "Roboto, sans-serif",
                         fontWeight: 400,
-                        fontSize: "0.875rem",
-                        lineHeight: "137%",
-                        color: "#787878",
+                        fontSize: "0.8125rem",
+                        lineHeight: "150%",
+                        color: "#505A5F",
                         margin: 0,
                       }}
                     >
@@ -279,43 +272,44 @@ const FeatureSelectionStep = ({
                         display: "flex",
                         alignItems: "center",
                         gap: "0.25rem",
+                        marginTop: "auto",
                       }}
                     >
                       <span
                         style={{
-                          fontWeight: 400,
-                          fontSize: "1rem",
+                          fontWeight: 500,
+                          fontSize: "0.875rem",
                           lineHeight: "137%",
                           textDecoration: "underline",
+                          textUnderlineOffset: "2px",
                           color: "#C84C0E",
+                          cursor: "pointer",
                         }}
                       >
                         {t(I18N_KEYS.CAMPAIGN_CREATE.VIEW_FEATURE_DETAILS)}
                       </span>
                       <SVG.ArrowForward
                         fill="#C84C0E"
-                        width="1.5rem"
-                        height="1.5rem"
+                        width="1.125rem"
+                        height="1.125rem"
                       />
                     </div>
                   </div>
-                </Card>
+                </div>
               );
             })}
-          </div>
-        ))}
       </div>
 
       {/* Footer Buttons */}
       <div
-        style={{ display: "flex", justifyContent: "flex-end", gap: "1.25rem" }}
+        style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", paddingTop: "0.5rem" }}
       >
         <Button
           label={t(I18N_KEYS.CAMPAIGN_CREATE.SKIP)}
           title={t(I18N_KEYS.CAMPAIGN_CREATE.SKIP)}
           variation="secondary"
           onClick={onSkip}
-          style={{ minWidth: "15.0625rem", height: "2.5rem" }}
+          style={{ minWidth: "12rem", height: "2.5rem" }}
         />
         <Button
           label={t(I18N_KEYS.CAMPAIGN_CREATE.NEXT)}
@@ -323,7 +317,7 @@ const FeatureSelectionStep = ({
           variation="primary"
           onClick={onNext}
           isDisabled={selectedFeatures.length === 0}
-          style={{ minWidth: "15.0625rem", height: "2.5rem" }}
+          style={{ minWidth: "12rem", height: "2.5rem" }}
         />
       </div>
     </div>
@@ -1063,7 +1057,7 @@ const AttendanceFeatureFlowPopup = ({
   if (isModuleSchemaLoading) {
     return (
       <PopUp
-        style={{ maxWidth: "70rem", width: "100%", padding: 0 }}
+        style={{ maxWidth: "76rem", width: "100%", padding: 0 }}
         type="default"
         className="attendance-feature-flow-popup"
         onOverlayClick={onClose}
@@ -1078,7 +1072,7 @@ const AttendanceFeatureFlowPopup = ({
   return (
     <>
       <PopUp
-        style={{ maxWidth: "70rem", width: "100%", padding: 0 }}
+        style={{ maxWidth: "76rem", width: "100%", padding: 0 }}
         type="default"
         className="attendance-feature-flow-popup"
         onOverlayClick={onClose}

@@ -1384,3 +1384,15 @@
   justify-content: flex-start;
   z-index: 500;
 }
+
+.attendance-feature-flow-popup {
+  .digit-popup-header {
+    border-bottom: none !important;
+    box-shadow: none !important;
+    min-height: unset !important;
+    padding-bottom: 0 !important;
+  }
+  .digit-popup-children-wrap {
+    padding-top: 0 !important;
+  }
+}
