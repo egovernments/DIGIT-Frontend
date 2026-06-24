@@ -54,13 +54,13 @@ const RegisterDetailsScreen = () => {
   const registerNumber = searchParams.get("registerNumber");
   const registerName = searchParams.get("registerName");
   const boundaryCode = searchParams.get("boundaryCode");
-
+  const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
   const [showToast, setShowToast] = useState(null);
   const [deletePopup, setDeletePopup] = useState(null);
 
   // Mutation hook for de-enrolling an attendee
   const deenrollReqCriteria = {
-    url: `/attendance/attendee/v1/_delete`,
+    url: `/${attendanceContextPath}/attendee/v1/_delete`,
     params: {},
     body: {},
     config: { enabled: false },
@@ -130,7 +130,7 @@ const RegisterDetailsScreen = () => {
 
   // Fetch register details using registerNumber
   const attendanceReqCriteria = {
-    url: `/health-attendance/v1/_search`,
+    url: `/${attendanceContextPath}/v1/_search`,
     params: { tenantId, registerNumber },
     body: {},
     config: {
@@ -199,7 +199,7 @@ const RegisterDetailsScreen = () => {
     setDeletePopup(null);
     deenrollMutation.mutate(
       {
-        url: `/attendance/attendee/v1/_delete`,
+        url: `/${attendanceContextPath}/attendee/v1/_delete`,
         body: {
           attendees: [
             {

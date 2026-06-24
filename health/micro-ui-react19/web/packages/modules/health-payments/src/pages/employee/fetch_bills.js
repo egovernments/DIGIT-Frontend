@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, LoaderScreen, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
@@ -147,9 +147,9 @@ const FetchBills = (props) => {
 
     return (
         <React.Fragment>
-            <Header styles={{ fontSize: "32px" }}>
+            <HeaderComponent className="payment-screen-headers">
                 {t("HCM_AM_FETCH_BILLS")}
-            </Header>
+            </HeaderComponent>
 
 
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} 

@@ -269,7 +269,7 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         }}
       >
         {selectedProject?.address?.boundary && selectedLevel && (
-          <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} />
+          <SubmitBar onSubmit={handleApplyFilter} className="w-fullwidth" label={t("HCM_AM_COMMON_APPLY")} style={{width:"100%"}}/>
         )}
         {showToast && <Toast style={{ zIndex: 10001 }} label={showToast.label} type={showToast.key} onClose={() => setShowToast(null)} />}
       </div>

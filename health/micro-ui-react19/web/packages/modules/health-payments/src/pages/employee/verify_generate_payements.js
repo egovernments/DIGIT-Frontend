@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, Loader as LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, Loader as LoaderScreen, NoResultsFound,HeaderComponent } from "@egovernments/digit-ui-components";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
@@ -256,9 +256,9 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 
     return (
         <React.Fragment>
-            <Header styles={{ fontSize: "32px" }}>
+            <HeaderComponent className="payment-screen-headers">
                 {!editBills ? t("HCM_AM_VERIFY_AND_GENERATE_PAYMENTS") : t("HCM_AM_EDIT_BILL")}
-            </Header>
+            </HeaderComponent>
 
 
             <VerifyBillsSearch onSubmit={onSubmit} onClear={onClear} />

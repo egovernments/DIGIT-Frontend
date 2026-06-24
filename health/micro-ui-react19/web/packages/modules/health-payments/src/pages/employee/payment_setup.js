@@ -11,8 +11,8 @@ import {
   Button,
   Loader,
   NoResultsFound,
+  Footer,
 } from "@egovernments/digit-ui-components";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
 import RoleWageTable from "../../components/payment_setup/wageTable";
 import ProjectService from "../../services/project/ProjectService";
 import { PaymentSetUpService } from "../../services/payment_setup/PaymentSetupServices";
@@ -434,28 +434,31 @@ const PaymentSetUpPage = () => {
           onError: (error) => {
             setLoading(false);
             navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-              state: "error",
-              info: "",
-              fileName: "",
-              description: "",
-              message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-              back: t("GO_BACK_TO_HOME"),
-              backlink: `/${window.contextPath}/employee`,
-              showFooter: false,
+              state: {
+                state: "error",
+                info: "",
+                fileName: "",
+                description: "",
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
+              },
             });
           },
           onSuccess: (responseData) => {
             setLoading(false);
             const camData = `<strong>${selectedCampaign?.name}</strong>`;
             navigate(`/${window.contextPath}/employee/payments/payment-setup-success`, {
-              state: "success",
-              info: "",
-              fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
-              message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
-              back: t("GO_BACK_TO_HOME"),
-              backlink: `/${window.contextPath}/employee`,
-              showFooter: false,
+              state: {
+                state: "success",
+                info: "",
+                fileName: "",
+                description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+              },
             });
           },
         }
@@ -463,14 +466,16 @@ const PaymentSetUpPage = () => {
     } catch (err) {
       setLoading(false);
       navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-        state: "error",
-        info: "",
-        fileName: "",
-        description: "",
-        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-        back: t("GO_BACK_TO_HOME"),
-        backlink: `/${window.contextPath}/employee`,
-        showFooter: false,
+        state: {
+          state: "error",
+          info: "",
+          fileName: "",
+          description: "",
+          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+          back: t("GO_BACK_TO_HOME"),
+          backlink: `/${window.contextPath}/employee`,
+          showFooter: false,
+        },
       });
     }
   }, [mDMSRatesCreate, wagePayload, history, t, selectedCampaign]);
@@ -484,28 +489,31 @@ const PaymentSetUpPage = () => {
           onError: (error) => {
             setLoading(false);
             navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-              state: "error",
-              info: "",
-              fileName: "",
-              description: "",
-              message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-              back: t("GO_BACK_TO_HOME"),
-              backlink: `/${window.contextPath}/employee`,
-              showFooter: false,
+              state: {
+                state: "error",
+                info: "",
+                fileName: "",
+                description: "",
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
+              },
             });
           },
           onSuccess: (responseData) => {
             setLoading(false);
             const camData = `<strong>${selectedCampaign?.name}</strong>`;
             navigate(`/${window.contextPath}/employee/payments/payment-setup-success`, {
-              state: "success",
-              info: "",
-              fileName: "",
-              description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
-              message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
-              back: t("GO_BACK_TO_HOME"),
-              backlink: `/${window.contextPath}/employee`,
-              showFooter: false,
+              state: {
+                state: "success",
+                info: "",
+                fileName: "",
+                description: `${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_1")} ${camData}. ${t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS_PART_2")}`,
+                message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+              },
             });
           },
         }
@@ -513,14 +521,16 @@ const PaymentSetUpPage = () => {
     } catch (err) {
       setLoading(false);
       navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-        state: "error",
-        info: "",
-        fileName: "",
-        description: "",
-        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-        back: t("GO_BACK_TO_HOME"),
-        backlink: `/${window.contextPath}/employee`,
-        showFooter: false,
+        state: {
+          state: "error",
+          info: "",
+          fileName: "",
+          description: "",
+          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+          back: t("GO_BACK_TO_HOME"),
+          backlink: `/${window.contextPath}/employee`,
+          showFooter: false,
+        },
       });
     }
   }, [mDMSRatesUpdate, wagePayload, history, t, selectedCampaign]);
@@ -557,14 +567,16 @@ const PaymentSetUpPage = () => {
             onError: (error) => {
               setLoading(false);
               navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-                state: "error",
-                info: "",
-                fileName: "",
-                description: "",
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                back: t("GO_BACK_TO_HOME"),
-                backlink: `/${window.contextPath}/employee`,
-                showFooter: false,
+                state: {
+                  state: "error",
+                  info: "",
+                  fileName: "",
+                  description: "",
+                  message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+                  back: t("GO_BACK_TO_HOME"),
+                  backlink: `/${window.contextPath}/employee`,
+                  showFooter: false,
+                },
               });
             },
             onSuccess: async (responseData) => {
@@ -594,14 +606,16 @@ const PaymentSetUpPage = () => {
           {
             onError: (error) => {
               navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-                state: "error",
-                info: "",
-                fileName: "",
-                description: "",
-                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-                back: t("GO_BACK_TO_HOME"),
-                backlink: `/${window.contextPath}/employee`,
-                showFooter: false,
+                state: {
+                  state: "error",
+                  info: "",
+                  fileName: "",
+                  description: "",
+                  message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+                  back: t("GO_BACK_TO_HOME"),
+                  backlink: `/${window.contextPath}/employee`,
+                  showFooter: false,
+                },
               });
             },
             onSuccess: async (responseData) => {
@@ -616,14 +630,16 @@ const PaymentSetUpPage = () => {
       }
     } catch (err) {
       navigate(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
-        state: "error",
-        info: "",
-        fileName: "",
-        description: "",
-        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
-        back: t("GO_BACK_TO_HOME"),
-        backlink: `/${window.contextPath}/employee`,
-        showFooter: false,
+        state: {
+          state: "error",
+          info: "",
+          fileName: "",
+          description: "",
+          message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
+          back: t("GO_BACK_TO_HOME"),
+          backlink: `/${window.contextPath}/employee`,
+          showFooter: false,
+        },
       });
     }
   }, [
@@ -708,21 +724,23 @@ const PaymentSetUpPage = () => {
         </Card>
 
         {/* Action Bar */}
-        <ActionBar className="mc_back">
-          <Button
-            style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "14rem" }}
-            variation="primary"
-            label={t("GO_BACK_TO_HOME")}
-            title={t("GO_BACK_TO_HOME")}
-            onClick={() => {
-              navigate(`/${window.contextPath}/employee`);
-              return;
-            }}
-            icon={"ArrowBack"}
-            isSuffix={false}
-            isDisabled={false}
-          />
-        </ActionBar>
+        <Footer
+          actionFields={[
+            <Button
+              style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "14rem" }}
+              variation="primary"
+              label={t("GO_BACK_TO_HOME")}
+              title={t("GO_BACK_TO_HOME")}
+              onClick={() => {
+                navigate(`/${window.contextPath}/employee`);
+                return;
+              }}
+              icon={"ArrowBack"}
+              isSuffix={false}
+              isDisabled={false}
+            />,
+          ]}
+        />
       </div>
     );
   }
@@ -732,9 +750,7 @@ const PaymentSetUpPage = () => {
       {/* Payment Setup Card */}
       <Card type="primary" className="bottom-gap-card-payment">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <HeaderComponent>
-            <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>{t("HCM_AM_PAYEMENT_SETUP_HEAD")}</span>
-          </HeaderComponent>
+          <HeaderComponent className="payment-screen-headers">{t("HCM_AM_PAYEMENT_SETUP_HEAD")}</HeaderComponent>
         </div>
 
         <CardText>{t("HCM_AM_PAYEMENT_SETUP_SUB_HEAD")}</CardText>
@@ -809,10 +825,7 @@ const PaymentSetUpPage = () => {
       {/* Role Wages Setup Card */}
       {selectedCampaign ? (
         <Card>
-          <HeaderComponent>
-            {" "}
-            <span style={{ color: "#0B4B66", fontWeight: "inherit" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</span>
-          </HeaderComponent>
+          <HeaderComponent className="payment-screen-headers">{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</HeaderComponent>
           <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
 
           {/* Conditional Rendering */}
@@ -828,8 +841,10 @@ const PaymentSetUpPage = () => {
               rateMaxLimitSchema={skillsData.rateMaxLimitSchema}
               onDataChange={handleWageDataChange}
               campaignId={selectedCampaign?.projectId}
+              className={"payment-setup-table"}
               campaignName={selectedCampaign?.name}
               existingRatesData={skillsData ? skillsData.existingRatesData : null}
+              styles={{marginTop:"0rem"}}
             />
           ) : selectedCampaign ? (
             <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
@@ -842,48 +857,53 @@ const PaymentSetUpPage = () => {
       )}
 
       {/* Action Bar */}
-      <ActionBar className="mc_back">
-        <Button
-          style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "12rem" }}
-          variation="primary"
-          label={
-            isCampaignStarted
-              ? t("GO_BACK_TO_HOME")
-              : // edit ? t("HCM_AM_BTN_EDIT") :
-              update
-              ? t("HCM_AM_BTN_UPDATE")
-              : t("HCM_AM_BTN_SUBMIT")
-          }
-          title={
-            isCampaignStarted
-              ? t("GO_BACK_TO_HOME")
-              : //  edit ? t("HCM_AM_BTN_EDIT") :
-              update
-              ? t("HCM_AM_BTN_UPDATE")
-              : t("HCM_AM_BTN_SUBMIT")
-          }
-          onClick={handlePrimaryButtonClick}
-          icon={edit ? "" : "ArrowForward"}
-          isSuffix={edit ? false : true}
-          isDisabled={
-            !isFormModified ||
-            !tableError ||
-            !selectedCampaign ||
-            !billingCycle ||
-            (billingCycle?.code === "CUSTOM" &&
-              (Number(customDays) < Number(billingCycle?.minDuration) ||
-                Number(customDays) >
-                  Number(
-                    getMaxBillingDuration({
-                      campaignStartEpoch: selectedCampaign.startDate,
-                      campaignEndEpoch: selectedCampaign.endDate,
-                      billingCycleMaxDuration: billingCycle?.maxDuration,
-                    })
-                  ))) ||
-            !skillsData
-          }
-        />
-      </ActionBar>
+      <Footer
+        actionFields={[
+          <Button
+            style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "12rem" }}
+            variation="primary"
+            label={
+              isCampaignStarted
+                ? t("GO_BACK_TO_HOME")
+                : // edit ? t("HCM_AM_BTN_EDIT") :
+                update
+                ? t("HCM_AM_BTN_UPDATE")
+                : t("HCM_AM_BTN_SUBMIT")
+            }
+            title={
+              isCampaignStarted
+                ? t("GO_BACK_TO_HOME")
+                : //  edit ? t("HCM_AM_BTN_EDIT") :
+                update
+                ? t("HCM_AM_BTN_UPDATE")
+                : t("HCM_AM_BTN_SUBMIT")
+            }
+            onClick={handlePrimaryButtonClick}
+            icon={edit ? "" : "ArrowForward"}
+            isSuffix={edit ? false : true}
+            isDisabled={
+              !isCampaignStarted && (
+                !isFormModified ||
+                !tableError ||
+                !selectedCampaign ||
+                !billingCycle ||
+                (billingCycle?.code === "CUSTOM" &&
+                  (Number(customDays) < Number(billingCycle?.minDuration) ||
+                    Number(customDays) >
+                      Number(
+                        getMaxBillingDuration({
+                          campaignStartEpoch: selectedCampaign.startDate,
+                          campaignEndEpoch: selectedCampaign.endDate,
+                          billingCycleMaxDuration: billingCycle?.maxDuration,
+                        })
+                      ))) ||
+                !skillsData
+              )
+            }
+          />,
+        ]}
+        setactionFieldsToRight={true}
+      />
 
       {popup && (
         <ActionPopUp

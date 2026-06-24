@@ -153,7 +153,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           ) : (
             // Show 'Disable User' button for active attendees
             <Button
-              className="custom-class"
+              type='button'
               icon="Edit"
               label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
               onClick={() => {
@@ -243,7 +243,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     <>
       {/* Main Data Table */}
       <DataTable
-        className="search-component-table"
+        className={`search-component-table ${props.className}`}
         columns={columns}
         data={paginatedData}
         progressPending={false}

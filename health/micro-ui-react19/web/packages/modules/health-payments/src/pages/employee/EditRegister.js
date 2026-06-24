@@ -268,6 +268,7 @@ const EditRegister = ({ editAttendance = false }) => {
             duration={attendanceDuration}
             editAttendance={editAttendance}
             editAction={false}
+            className={"edit-attendance-mangement-table"}
           />
         </Card>
 

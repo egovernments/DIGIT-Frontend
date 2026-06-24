@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
-import { Loader,Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Loader,Divider, Button, PopUp, AlertCard as InfoCard, Card, Link, ViewCardFieldPair, Toast, Tab, NoResultsFound, TooltipWrapper, HeaderComponent, Footer } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import SendForEditPopUp from "../../components/sendForEditPopUp";
@@ -1498,33 +1498,18 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 //   };
 
 const renderActionBar = (ctaButton) => (
-  <ActionBar
-    style={{
-      display: "flex",
-      alignItems: "center",
-      width: "100%",
-    }}
-  >
-    {/* LEFT: Back */}
-    <Button
-      variation="secondary"
-      label={t("HCM_AM_BACK")}
-      icon="ArrowBack"
-      onClick={() => navigate(-1)}
-      style={{
-        flexShrink: 0,
-        minWidth: "10rem",
-        whiteSpace: "normal",
-        marginLeft: "2rem", 
-      }}
-    />
-
-    {/* Spacer */}
-    <div style={{ flex: 1 }} />
-
-    {/* RIGHT: CTA */}
-    {ctaButton}
-  </ActionBar>
+  <Footer
+    actionFields={[
+      <Button
+        variation="secondary"
+        label={t("HCM_AM_BACK")}
+        icon="ArrowBack"
+        onClick={() => navigate(-1)}
+        style={{ flexShrink: 0, minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
+      />,
+      ...(ctaButton ? [ctaButton] : []),
+    ]}
+  />
 );
 
 const downloadOptions = [
@@ -1602,14 +1587,12 @@ const downloadOptions = [
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
-        <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          <span style={{ color: "#0B4B66" }}>
-            {editBillDetails
+        <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers pop-inbox-header">
+          {editBillDetails
               ? t('HCM_AM_EDIT_BILL')
               : t('HCM_AM_VIEW_BILL')
-            }
-          </span>
-        </Header>
+          }
+        </HeaderComponent>
         {/* Summary cards row */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
           {[
@@ -2225,16 +2208,19 @@ const downloadOptions = [
 
         if (isReviewerEditView) {
           return (
-            <ActionBar style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-              <Button
-                label={t(`HCM_AM_SAVE_CHANGES`)}
-                onClick={() => setOpenSaveChangesPopUp(true)}
-                style={ctaStyle}
-                textStyles={ctaTextStyles}
-                type="button"
-                variation="primary"
-              />
-            </ActionBar>
+            <Footer
+              setactionFieldsToRight={true}
+              actionFields={[
+                <Button
+                  label={t(`HCM_AM_SAVE_CHANGES`)}
+                  onClick={() => setOpenSaveChangesPopUp(true)}
+                  style={ctaStyle}
+                  textStyles={ctaTextStyles}
+                  type="button"
+                  variation="primary"
+                />,
+              ]}
+            />
           );
         }
 

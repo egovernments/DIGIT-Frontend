@@ -520,7 +520,6 @@ const getAvailableActions = (status) => {
                         {!props?.editBill ? (
                             !isInProgress ? (
                                 <Button
-                                    className="custom-class"
                                     iconFill=""
                                     icon="ArrowDropDown"
                                     size="medium"
@@ -578,8 +577,8 @@ const getAvailableActions = (status) => {
                             )
                         ) : (
                             <Button
-                                className="custom-class"
                                 iconFill=""
+                                type="button"
                                 variation="secondary"
                                 icon="Edit"
                                 size="small"

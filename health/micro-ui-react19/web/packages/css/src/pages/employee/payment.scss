@@ -178,3 +178,28 @@
   transform: scale(0.25);
   transform-origin: left center;
 }
+
+.payment-screen-headers{
+  color: var(--digitv2-lightTheme-primary-2);
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  white-space: nowrap;
+}
+
+.edit-attendance-mangement-table{
+  .rdt_TableBody{
+    border: none !important;
+  }
+}
+
+.payment-setup-table{
+  .rdt_TableBody{
+    border: none !important;
+    border-bottom: 1px solid #d6d5d4 !important;
+  }
+}
+
+.attendance-management-table{
+  .rdt_TableBody{
+    border: none !important;
+  }
+}

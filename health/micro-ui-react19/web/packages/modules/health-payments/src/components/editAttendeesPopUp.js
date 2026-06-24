@@ -365,6 +365,7 @@ const EditAttendeePopUp = ({
                                 registerNumber={registerId}
                                 editAction={true}
                                 sessionType={sessionType}
+                                className={"edit-attendance-mangement-table"}
                             />
 
                             {/* Action section for searching new users and bulk edit */}

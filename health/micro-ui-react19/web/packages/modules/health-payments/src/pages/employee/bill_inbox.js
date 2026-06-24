@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header } from "@egovernments/digit-ui-react-components";
+import { HeaderComponent } from "@egovernments/digit-ui-components";
 import { useLocation } from "react-router-dom";
 import BillInboxComponent from "../../components/bill_inbox/BillInbox";
 
@@ -39,9 +39,7 @@ const BillInbox = () => {
 
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>
-        <span style={{ color: "#0B4B66" }}>{t("HCM_AM_BILL_INBOX")}</span>
-      </Header>
+      <HeaderComponent className="payment-screen-headers" styles={{marginBottom:"1.5rem"}}>{t("HCM_AM_BILL_INBOX")}</HeaderComponent>
       <div className="inbox-search-wrapper">
         <BillInboxComponent></BillInboxComponent>
       </div>

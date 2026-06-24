@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
 import {
   Loader,
   Divider,
@@ -13,6 +12,8 @@ import {
   Toast,
   LoaderScreen,
   LoaderComponent,
+  HeaderComponent,
+  Footer,
 } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
@@ -682,9 +683,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
-        <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          <span style={{ color: "#0B4B66" }}>{editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}</span>
-        </Header>
+        <HeaderComponent styles={{ marginBottom: "1rem" }} className="payment-screen-headers pop-inbox-header">
+              {editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}
+        </HeaderComponent>
 
         {/* Metrics Summary Card */}
         <Card type="primary" className="bottom-gap-card-payment">
@@ -806,6 +807,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
             duration={parseInt(periodDurationInDays ? periodDurationInDays : "0", 10) || 0}
             editAttendance={editAttendance}
             onAttendeeClick={(row) => setSelectedAttendee(row)}
+            className="attendance-management-table"
           />
         </Card>
         {showLogs && (
@@ -814,7 +816,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
               <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
-                  className="custom-class"
                   icon="Visibility"
                   iconFill=""
                   label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
@@ -825,6 +826,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
                   style={{}}
                   title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
                   variation="secondary"
+                  type="button"
                 />
               </div>
             </div>
@@ -903,6 +905,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           submitLabel={t(`HCM_AM_PROCEED`)}
           cancelLabel={t(`HCM_AM_CANCEL`)}
           onPrimaryAction={() => {
+            closeActionBarPopUp();
             navigate(
               `/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
               { state: { fromCampaignSupervisor } }
@@ -921,8 +924,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
           alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
           submitLabel={t(`HCM_AM_APPROVE`)}
           cancelLabel={t(`HCM_AM_CANCEL`)}
+          isDisabled={approveMutation.isLoading}
           onPrimaryAction={() => {
             triggerMusterRollApprove();
+            setOpenApproveAlertPopUp(false);
           }}
         />
       )}
@@ -948,112 +953,82 @@ const ViewAttendance = ({ editAttendance = false }) => {
       )}
 
       {/* action bar for bill generation*/}
-      {
-        <ActionBar
-          className="mc_back"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            gap: "1rem",
-          }}
-        >
-          {!(editAttendance && fromCampaignSupervisor) && (
+      {editAttendance && canCampaignSupervisorEdit ? (
+        <Footer
+          setactionFieldsToRight={true}
+          actionFields={[
             <Button
-              label={t(`HCM_AM_GO_BACK`)}
-              title={t(`HCM_AM_GO_BACK`)}
-              onClick={handleGoBack}
+              label={t("HCM_AM_CANCEL")}
+              title={t("HCM_AM_CANCEL")}
+              onClick={() => navigate(
+                `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
+                { state: { fromCampaignSupervisor } }
+              )}
+              style={{ minWidth: "10rem", whiteSpace: "normal", marginLeft: "2rem" }}
               type="button"
-              style={{ minWidth: "13rem" }}
               variation="secondary"
-              icon="ArrowBack"
-            />
-          )}
-
-          {(disabledAction && !(editAttendance && canCampaignSupervisorEdit)) || fromBill ? (
-            <div />
-          ) : editAttendance && canCampaignSupervisorEdit ? (
-            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "1rem", marginLeft: "auto", flex: "0 0 auto" }}>
-                <Button
-                  label={t("HCM_AM_CANCEL")}
-                  title={t("HCM_AM_CANCEL")}
-                  onClick={() => {
-                    navigate(
-                      `/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}&periodDurationInDays=${periodDurationInDays}`,
-                      { state: { fromCampaignSupervisor } }
-                    );
-                  }}
-                  style={{ minWidth: "10rem", width: "auto", flex: "0 0 auto" }}
-                  type="button"
-                  variation="secondary"
-                />
-                <Button
-                  label={t("HCM_AM_SAVE_CHANGES")}
-                  title={t("HCM_AM_SAVE_CHANGES")}
-                  onClick={() => {
-                    setUpdateDisabled(true);
-                    triggerMusterRollUpdate();
-                  }}
-                  style={{ minWidth: "14rem", width: "auto", flex: "0 0 auto" }}
-                  type="button"
-                  variation="primary"
-                  isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-                />
-              </div>
-            </div>
-          ) : editAttendance ? (
+            />,
             <Button
-              label={t(`HCM_AM_SUBMIT_LABEL`)}
-              title={t(`HCM_AM_SUBMIT_LABEL`)}
-              onClick={() => {
-                setUpdateDisabled(true);
-                triggerMusterRollUpdate();
-              }}
-              style={{ minWidth: "14rem" }}
+              label={t("HCM_AM_SAVE_CHANGES")}
+              title={t("HCM_AM_SAVE_CHANGES")}
+              onClick={() => { setUpdateDisabled(true); triggerMusterRollUpdate(); }}
+              style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "2rem" }}
               type="button"
               variation="primary"
               isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-            />
-          ) : fromCampaignSupervisor ? (
-            <div />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                width: "15%",
-              }}
-            >
+            />,
+          ]}
+        />
+      ) : (
+        <Footer
+          actionFields={[
+            ...(!(editAttendance && fromCampaignSupervisor && canCampaignSupervisorEdit) ? [
               <Button
-                className="custom-class"
-                iconFill=""
-                label={t(`HCM_AM_ACTIONS`)}
-                menuStyles={{ bottom: "40px" }}
-                onOptionSelect={(value) => {
-                  if (value.code === "EDIT_ATTENDANCE") setOpenEditAlertPopUp(true);
-                  if (value.code === "APPROVE") setOpenApproveCommentPopUp(true);
-                }}
-                options={[
-                  {
-                    code: "EDIT_ATTENDANCE",
-                    name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`),
-                  },
-                  {
-                    code: "APPROVE",
-                    name: t(`HCM_AM_ACTIONS_APPROVE`),
-                  },
-                ]}
-                optionsKey="name"
-                style={{ minWidth: "14rem" }}
-                type="actionButton"
-              />
-            </div>
-          )}
-        </ActionBar>
-      }
+                label={t(`HCM_AM_GO_BACK`)}
+                title={t(`HCM_AM_GO_BACK`)}
+                onClick={handleGoBack}
+                type="button"
+                style={{ minWidth: "13rem", whiteSpace: "normal", marginLeft: "2rem" }}
+                variation="secondary"
+                icon="ArrowBack"
+              />,
+            ] : []),
+            ...((disabledAction && !(editAttendance && canCampaignSupervisorEdit)) || fromBill || fromCampaignSupervisor
+              ? []
+              : editAttendance
+              ? [
+                <Button
+                  label={t(`HCM_AM_SUBMIT_LABEL`)}
+                  title={t(`HCM_AM_SUBMIT_LABEL`)}
+                  onClick={() => { setUpdateDisabled(true); triggerMusterRollUpdate(); }}
+                  style={{ minWidth: "14rem", whiteSpace: "normal", marginRight: "2rem" }}
+                  type="button"
+                  variation="primary"
+                  isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
+                />,
+              ]
+              : [
+                <Button
+                  label={t(`HCM_AM_ACTIONS`)}
+                  menuStyles={{ bottom: "40px" }}
+                  onOptionSelect={(value) => {
+                    if (value.code === "EDIT_ATTENDANCE") setOpenEditAlertPopUp(true);
+                    if (value.code === "APPROVE") setOpenApproveCommentPopUp(true);
+                  }}
+                  options={[
+                    { code: "EDIT_ATTENDANCE", name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`) },
+                    { code: "APPROVE", name: t(`HCM_AM_ACTIONS_APPROVE`) },
+                  ]}
+                  variation={"primary"}
+                  optionsKey="name"
+                  style={{ whiteSpace: "normal" }}
+                  type="actionButton"
+                />,
+              ]
+            ),
+          ]}
+        />
+      )}
 
       {showToast && (
         <Toast
