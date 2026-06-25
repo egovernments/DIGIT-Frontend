@@ -22,25 +22,44 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 .header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
 .header .version { background: var(--surface2); color: var(--subtext); font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
 .status-bar { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--subtext); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .status-dot.ok { background: var(--green); }
 .status-dot.off { background: var(--overlay); }
 
 /* ─── Layout ─── */
 .app { display: flex; height: calc(100vh - 45px); }
-.sidebar { width: 280px; min-width: 280px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+.sidebar { width: 300px; min-width: 300px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
 .main { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* ─── Mode Selector ─── */
+.mode-selector { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+.mode-btn { flex: 1; padding: 10px 4px; font-size: 11px; text-align: center; cursor: pointer; color: var(--subtext); border-bottom: 2px solid transparent; transition: all .15s; background: none; border-left: none; border-right: none; border-top: none; font-weight: 500; letter-spacing: 0.3px; }
+.mode-btn:hover { color: var(--text); background: rgba(137,180,250,.05); }
+.mode-btn.active { color: var(--blue); border-bottom-color: var(--blue); background: rgba(137,180,250,.08); }
 
 /* ─── Sidebar ─── */
 .sidebar-section { padding: 12px 16px; border-bottom: 1px solid var(--border); }
 .sidebar-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--subtext); margin-bottom: 8px; font-weight: 600; }
 .sidebar-section .btn-full { width: 100%; margin-bottom: 6px; }
 
-.drop-area { border: 2px dashed var(--overlay); border-radius: 8px; padding: 24px 16px; text-align: center; cursor: pointer; transition: all .15s; }
+.mode-panel { display: none; }
+.mode-panel.active { display: block; }
+
+.drop-area { border: 2px dashed var(--overlay); border-radius: 8px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all .15s; }
 .drop-area:hover, .drop-area.over { border-color: var(--blue); background: rgba(137,180,250,.05); }
 .drop-area p { font-size: 13px; color: var(--subtext); }
 .drop-area .icon { font-size: 28px; margin-bottom: 6px; opacity: .5; }
 input[type="file"] { display: none; }
+
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-size: 11px; color: var(--subtext); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input, .form-group select { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 7px 10px; border-radius: 6px; font-size: 13px; font-family: inherit; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: var(--blue); }
+.form-group select { cursor: pointer; }
+.form-group .hint { font-size: 10px; color: var(--overlay); margin-top: 2px; }
+
+.cred-group { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.cred-group-title { font-size: 11px; font-weight: 600; color: var(--peach); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
 
 .module-list { list-style: none; flex: 1; overflow-y: auto; }
 .module-item { padding: 8px 16px; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; transition: all .1s; }
@@ -59,6 +78,8 @@ input[type="file"] { display: none; }
 .btn-primary:hover { filter: brightness(1.1); }
 .btn-green { background: var(--green); color: var(--surface); border-color: var(--green); }
 .btn-green:hover { filter: brightness(1.1); }
+.btn-red { background: var(--red); color: var(--surface); border-color: var(--red); }
+.btn-red:hover { filter: brightness(1.1); }
 .btn-sm { padding: 4px 10px; font-size: 12px; }
 .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -118,14 +139,30 @@ input[type="file"] { display: none; }
 .diff-label { font-size: 11px; padding: 6px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); font-weight: 600; }
 .diff-label.old { color: var(--red); }
 .diff-label.new { color: var(--green); }
-.diff-sep { width: 1px; background: var(--border); }
 
-/* ─── Loader ─── */
+/* ─── Loader / Progress overlay ─── */
 .loader-overlay { position: fixed; inset: 0; background: rgba(17,17,27,.85); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(4px); }
 .loader-spinner { width: 40px; height: 40px; border: 3px solid var(--surface2); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loader-text { margin-top: 16px; font-size: 14px; color: var(--subtext); }
 .loader-sub { font-size: 12px; color: var(--overlay); margin-top: 4px; }
+.progress-bar-wrap { width: 300px; height: 6px; background: var(--surface2); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width .3s; width: 0%; }
+
+/* ─── Error banner ─── */
+.error-banner { background: rgba(243,139,168,.1); border: 1px solid var(--red); color: var(--red); padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+.error-banner .close-btn { cursor: pointer; background: none; border: none; color: var(--red); font-size: 16px; padding: 0 4px; }
+
+/* ─── Confirmation dialog ─── */
+.confirm-overlay { position: fixed; inset: 0; background: rgba(17,17,27,.85); display: flex; align-items: center; justify-content: center; z-index: 300; backdrop-filter: blur(4px); }
+.confirm-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 480px; width: 90%; }
+.confirm-box h3 { font-size: 16px; margin-bottom: 12px; color: var(--yellow); }
+.confirm-box p { font-size: 13px; color: var(--subtext); margin-bottom: 16px; line-height: 1.6; }
+.confirm-box .confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ─── Format hint ─── */
+.format-hint { font-size: 11px; color: var(--overlay); margin-top: 8px; line-height: 1.5; }
+.format-hint code { background: var(--surface2); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
 
 /* ─── Empty state ─── */
 .empty { text-align: center; padding: 80px 40px; }
@@ -141,7 +178,7 @@ input[type="file"] { display: none; }
 <div class="header">
   <div class="header-left">
     <h1>FormConfig Corrector</h1>
-    <span class="version">v1.0</span>
+    <span class="version">v2.0</span>
   </div>
   <div class="status-bar">
     <span id="claudeStatus"><span class="status-dot off"></span> Checking Claude...</span>
@@ -153,20 +190,165 @@ input[type="file"] { display: none; }
 <div class="app">
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-title">Input</div>
-      <div class="drop-area" id="dropArea">
-        <div class="icon">{ }</div>
-        <p>Drop JSON file or click to browse</p>
+    <!-- Mode Selector -->
+    <div class="mode-selector">
+      <button class="mode-btn active" data-mode="file" onclick="switchMode('file')">File</button>
+      <button class="mode-btn" data-mode="online" onclick="switchMode('online')">Online Correct</button>
+      <button class="mode-btn" data-mode="migrate-env" onclick="switchMode('migrate-env')">Migrate Env</button>
+      <button class="mode-btn" data-mode="migrate-schema" onclick="switchMode('migrate-schema')">Migrate Schema</button>
+    </div>
+
+    <!-- Mode A: File -->
+    <div class="mode-panel active" id="panel-file">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Input</div>
+        <div class="drop-area" id="dropArea">
+          <div class="icon">{ }</div>
+          <p>Drop JSON file or click to browse</p>
+        </div>
+        <input type="file" id="fileInput" accept=".json">
+        <div class="format-hint" style="margin-top:8px">
+          Accepted: <code>{"name":"...","flows":[...]}</code> single module,
+          <code>{"mdms":[...]}</code> MDMS response,
+          <code>[{...},...]</code> array of modules
+        </div>
       </div>
-      <input type="file" id="fileInput" accept=".json">
+      <div class="sidebar-section">
+        <label class="check-row"><input type="checkbox" id="chkAutoFix" checked> Auto-fix issues</label>
+        <button class="btn btn-primary btn-full" id="btnAnalyze" disabled>Analyze</button>
+        <button class="btn btn-full" id="btnPaste">Paste from Clipboard</button>
+      </div>
     </div>
-    <div class="sidebar-section">
-      <label class="check-row"><input type="checkbox" id="chkAutoFix" checked> Auto-fix issues</label>
-      <label class="check-row"><input type="checkbox" id="chkAI"> AI-enhance messages</label>
-      <button class="btn btn-primary btn-full" id="btnAnalyze" disabled>Analyze</button>
-      <button class="btn btn-full" id="btnPaste">Paste from Clipboard</button>
+
+    <!-- Mode B: Online Correct -->
+    <div class="mode-panel" id="panel-online">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Connection</div>
+        <div class="form-group">
+          <label>Environment URL</label>
+          <input type="text" id="olUrl" placeholder="https://unified-uat.digit.org">
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="olUser" placeholder="SATYA">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="olPass" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label>Tenant ID</label>
+          <input type="text" id="olTenant" placeholder="mz">
+        </div>
+        <div class="form-group">
+          <label>Project (optional)</label>
+          <input type="text" id="olProject" placeholder="MR-DN">
+        </div>
+        <div class="form-group">
+          <label>Schema</label>
+          <select id="olSchema">
+            <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
+            <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
+          </select>
+        </div>
+        <div class="form-group" id="olCampaignGroup" style="display:none">
+          <label>Campaign Number</label>
+          <input type="text" id="olCampaign" placeholder="CMP-2026-06-15-006194">
+        </div>
+        <label class="check-row"><input type="checkbox" id="olAutoFix" checked> Auto-fix issues</label>
+        <button class="btn btn-primary btn-full" id="btnFetch" onclick="onlineFetch()">Connect & Fetch</button>
+      </div>
     </div>
+
+    <!-- Mode C: Migrate Env -->
+    <div class="mode-panel" id="panel-migrate-env">
+      <div class="sidebar-section" style="padding-bottom:6px">
+        <div class="sidebar-title">Source Environment</div>
+        <div class="cred-group">
+          <div class="form-group"><label>URL</label><input type="text" id="meSrcUrl" placeholder="https://unified-uat.digit.org"></div>
+          <div class="form-group"><label>Username</label><input type="text" id="meSrcUser" placeholder="SATYA"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="meSrcPass"></div>
+          <div class="form-group"><label>Tenant</label><input type="text" id="meSrcTenant" placeholder="mz"></div>
+          <div class="form-group"><label>Project</label><input type="text" id="meSrcProject" placeholder="MR-DN"></div>
+          <div class="form-group"><label>Schema</label>
+            <select id="meSrcSchema">
+              <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
+              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
+            </select>
+          </div>
+          <div class="form-group" id="meSrcCampaignGroup" style="display:none">
+            <label>Campaign #</label><input type="text" id="meSrcCampaign" placeholder="CMP-...">
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Target Environment</div>
+        <div class="cred-group">
+          <div class="form-group"><label>URL</label><input type="text" id="meTgtUrl" placeholder="https://unified-dev.digit.org"></div>
+          <div class="form-group"><label>Username</label><input type="text" id="meTgtUser" placeholder="SATYA"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="meTgtPass"></div>
+          <div class="form-group"><label>Tenant</label><input type="text" id="meTgtTenant" placeholder="mz"></div>
+          <div class="form-group"><label>Project</label><input type="text" id="meTgtProject" placeholder="MR-DN"></div>
+          <div class="form-group"><label>Schema</label>
+            <select id="meTgtSchema">
+              <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
+              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
+            </select>
+          </div>
+          <div class="form-group" id="meTgtCampaignGroup" style="display:none">
+            <label>Campaign #</label><input type="text" id="meTgtCampaign" placeholder="CMP-...">
+          </div>
+        </div>
+        <label class="check-row"><input type="checkbox" id="meAutoFix" checked> Auto-fix issues</label>
+        <button class="btn btn-primary btn-full" onclick="migrateEnvFetch()">Connect & Fetch Both</button>
+      </div>
+    </div>
+
+    <!-- Mode D: Migrate Schema -->
+    <div class="mode-panel" id="panel-migrate-schema">
+      <div class="sidebar-section" style="padding-bottom:6px">
+        <div class="sidebar-title">Source</div>
+        <div class="cred-group">
+          <div class="form-group"><label>URL</label><input type="text" id="msSrcUrl" placeholder="https://unified-uat.digit.org"></div>
+          <div class="form-group"><label>Username</label><input type="text" id="msSrcUser"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="msSrcPass"></div>
+          <div class="form-group"><label>Tenant</label><input type="text" id="msSrcTenant" placeholder="mz"></div>
+          <div class="form-group"><label>Project</label><input type="text" id="msSrcProject" placeholder="MR-DN"></div>
+          <div class="form-group"><label>Source Schema</label>
+            <select id="msSrcSchema">
+              <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
+              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
+            </select>
+          </div>
+          <div class="form-group" id="msSrcCampaignGroup" style="display:none">
+            <label>Campaign #</label><input type="text" id="msSrcCampaign" placeholder="CMP-...">
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Target</div>
+        <div class="cred-group">
+          <div class="form-group"><label>URL (defaults to source)</label><input type="text" id="msTgtUrl" placeholder="Same as source"></div>
+          <div class="form-group"><label>Username (defaults to source)</label><input type="text" id="msTgtUser" placeholder="Same"></div>
+          <div class="form-group"><label>Password (defaults to source)</label><input type="password" id="msTgtPass" placeholder="Same"></div>
+          <div class="form-group"><label>Tenant (defaults to source)</label><input type="text" id="msTgtTenant" placeholder="Same"></div>
+          <div class="form-group"><label>Project (defaults to source)</label><input type="text" id="msTgtProject" placeholder="Same"></div>
+          <div class="form-group"><label>Target Schema</label>
+            <select id="msTgtSchema">
+              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
+              <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
+            </select>
+          </div>
+          <div class="form-group" id="msTgtCampaignGroup" style="display:none">
+            <label>Campaign #</label><input type="text" id="msTgtCampaign" placeholder="CMP-...">
+          </div>
+        </div>
+        <label class="check-row"><input type="checkbox" id="msAutoFix" checked> Auto-fix issues</label>
+        <button class="btn btn-primary btn-full" onclick="migrateSchemaFetch()">Connect & Fetch</button>
+      </div>
+    </div>
+
+    <!-- Module list (shared across all modes) -->
     <div class="sidebar-section" style="flex-shrink:0">
       <div class="sidebar-title">Modules</div>
     </div>
@@ -178,12 +360,15 @@ input[type="file"] { display: none; }
     <div class="empty" id="emptyState">
       <div class="icon">{ }</div>
       <h2>No config loaded</h2>
-      <p>Drop a FormConfig JSON file in the sidebar, paste from clipboard, or use the file browser. Supports single configs, arrays, and MDMS response format.</p>
+      <p>Choose a mode from the sidebar. Drop a JSON file, connect to an environment, or set up a migration.</p>
     </div>
+
+    <div id="errorBanner" class="hidden"></div>
 
     <!-- Results (hidden until analysis) -->
     <div id="resultsArea" class="hidden">
       <div class="stats" id="statsBar"></div>
+      <div id="actionButtons" class="hidden" style="margin-bottom:16px"></div>
       <div id="moduleDetail"></div>
     </div>
   </div>
@@ -194,6 +379,19 @@ input[type="file"] { display: none; }
   <div class="loader-spinner"></div>
   <div class="loader-text" id="loaderText">Analyzing...</div>
   <div class="loader-sub" id="loaderSub"></div>
+  <div class="progress-bar-wrap hidden" id="progressBarWrap"><div class="progress-bar-fill" id="progressBarFill"></div></div>
+</div>
+
+<!-- Confirm dialog (inserted dynamically) -->
+<div class="confirm-overlay hidden" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3 id="confirmTitle">Confirm</h3>
+    <p id="confirmMsg"></p>
+    <div class="confirm-actions">
+      <button class="btn" onclick="confirmResolve(false)">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -219,7 +417,7 @@ function smartLocMsg(code,ft,cfn,pn,mod){if(!code)return'';if(code.includes(' ')
 
 function analyzeAndFix(configData, opts = {}) {
   const { autoFix = true, existingLocCodes = new Map() } = opts;
-  const data = autoFix ? JSON.parse(JSON.stringify(configData)) : JSON.parse(JSON.stringify(configData));
+  const data = JSON.parse(JSON.stringify(configData));
   const originalData = JSON.parse(JSON.stringify(configData));
   const moduleName = data.name || 'UNKNOWN';
   const report = { moduleName, totalIssues: 0, fixes: [], warnings: [], missingLocalizations: [] };
@@ -269,17 +467,201 @@ function analyzeAndFix(configData, opts = {}) {
 
 let rawInput = null;
 let results = [];
-let activeModule = null;
+let activeMode = 'file';
 let claudeAvailable = false;
 
+// Online mode state
+let onlineToken = null;
+let onlineEnvUrl = null;
+let onlineTenant = null;
+let onlineProject = null;
+let onlineSchema = null;
+let onlineCampaign = null;
+let onlineLocale = null;
+let onlineRecords = []; // raw MDMS records
+
+// Migration state
+let migrateCtx = null; // { src: {...}, tgt: {...}, srcRecords, tgtRecords, srcToken, tgtToken }
+
+// Confirmation dialog state
+let confirmResolveFn = null;
+
 // ════════════════════════════════════════════════════════════════
-// UI LOGIC
+// HELPERS
 // ════════════════════════════════════════════════════════════════
 
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
+function tick() { return new Promise(r => setTimeout(r, 10)); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// Check server status
+function showLoader(text, sub) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; $('#progressBarWrap').classList.add('hidden'); }
+function showProgress(text, sub, pct) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; $('#progressBarWrap').classList.remove('hidden'); $('#progressBarFill').style.width = `${pct}%`; }
+function hideLoader() { $('#loader').classList.add('hidden'); }
+
+function showError(msg) {
+  const el = $('#errorBanner');
+  el.className = 'error-banner';
+  el.innerHTML = `<span>${esc(msg)}</span><button class="close-btn" onclick="this.parentElement.classList.add('hidden')">&times;</button>`;
+}
+function clearError() { $('#errorBanner').className = 'hidden'; }
+
+function showConfirm(title, msg) {
+  return new Promise(resolve => {
+    confirmResolveFn = resolve;
+    $('#confirmTitle').textContent = title;
+    $('#confirmMsg').innerHTML = msg;
+    $('#confirmOverlay').classList.remove('hidden');
+  });
+}
+function confirmResolve(val) {
+  $('#confirmOverlay').classList.add('hidden');
+  if (confirmResolveFn) { confirmResolveFn(val); confirmResolveFn = null; }
+}
+
+// ════════════════════════════════════════════════════════════════
+// API HELPERS
+// ════════════════════════════════════════════════════════════════
+
+async function apiAuth(envUrl, username, password, tenantId) {
+  const resp = await fetch('/api/auth', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envUrl, username, password, tenantId }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  if (!data.access_token) throw new Error('No access_token in response');
+  return data.access_token;
+}
+
+async function apiMdmsSearch(envUrl, tenantId, schemaCode, filters, token, locale) {
+  const resp = await fetch('/api/mdms/search', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envUrl, tenantId, schemaCode, filters: filters || {}, token, locale }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data.mdms || [];
+}
+
+async function apiMdmsUpdate(envUrl, schemaCode, record, token, locale) {
+  const resp = await fetch('/api/mdms/update', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envUrl, schemaCode, record, token, locale }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+async function apiMdmsCreate(envUrl, schemaCode, record, token, locale) {
+  const resp = await fetch('/api/mdms/create', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envUrl, schemaCode, record, token, locale }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+async function apiLocSearch(envUrl, moduleName, tenantId, locale, token) {
+  const resp = await fetch('/api/loc/search', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envUrl, module: moduleName, tenantId, locale, token }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data.messages || [];
+}
+
+async function apiLocUpsert(envUrl, tenantId, messages, token, locale) {
+  const resp = await fetch('/api/loc/upsert', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envUrl, tenantId, messages, token, locale }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+function getLocModule(schemaCode, moduleName, project, campaign) {
+  const mn = moduleName.toLowerCase();
+  const pj = (project || '').toLowerCase();
+  if (schemaCode.includes('FormConfigTemplate')) {
+    return `hcm-base-${mn}-${pj}`;
+  } else {
+    return `hcm-${mn}-${campaign || pj}`;
+  }
+}
+
+function buildRequestInfo(token, locale, action) {
+  return { apiId: 'Rainmaker', ver: '.01', action, did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } };
+}
+
+// ════════════════════════════════════════════════════════════════
+// AI ENHANCEMENT (always runs when Claude available)
+// ════════════════════════════════════════════════════════════════
+
+async function aiEnhance(resultsList) {
+  if (!claudeAvailable) return;
+  for (let i = 0; i < resultsList.length; i++) {
+    const r = resultsList[i];
+    if (r.newLocalizations.length === 0) continue;
+    showLoader(`AI-enhancing ${r.report.moduleName}...`, `${r.newLocalizations.length} messages`);
+    await tick();
+    try {
+      const BATCH = 30;
+      for (let b = 0; b < r.newLocalizations.length; b += BATCH) {
+        const batch = r.newLocalizations.slice(b, b + BATCH);
+        const resp = await fetch('/api/enhance', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
+        });
+        const data = await resp.json();
+        if (data.improved) {
+          for (const loc of batch) {
+            if (data.improved[loc.code]) loc.message = data.improved[loc.code];
+          }
+        }
+      }
+    } catch (e) { console.warn('AI enhancement failed:', e); }
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// MODE SWITCHING
+// ════════════════════════════════════════════════════════════════
+
+function switchMode(mode) {
+  activeMode = mode;
+  $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  $$('.mode-panel').forEach(p => p.classList.remove('active'));
+  $(`#panel-${mode}`).classList.add('active');
+}
+
+// Show/hide campaign number field based on schema selection
+document.addEventListener('change', e => {
+  if (e.target.id === 'olSchema') {
+    $('#olCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  }
+  if (e.target.id === 'meSrcSchema') {
+    $('#meSrcCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  }
+  if (e.target.id === 'meTgtSchema') {
+    $('#meTgtCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  }
+  if (e.target.id === 'msSrcSchema') {
+    $('#msSrcCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  }
+  if (e.target.id === 'msTgtSchema') {
+    $('#msTgtCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// CHECK STATUS
+// ════════════════════════════════════════════════════════════════
+
 async function checkStatus() {
   try {
     const r = await fetch('/api/status');
@@ -287,18 +669,19 @@ async function checkStatus() {
     claudeAvailable = d.claude;
     $('#claudeStatus').innerHTML = d.claude
       ? `<span class="status-dot ok"></span> Claude ${d.claudeVersion}`
-      : `<span class="status-dot off"></span> Claude not found`;
+      : `<span class="status-dot off"></span> Claude not found (AI disabled)`;
     $('#platformInfo').textContent = d.platform;
-    if (!d.claude) $('#chkAI').disabled = true;
   } catch {
-    $('#claudeStatus').innerHTML = '<span class="status-dot off"></span> Local server';
+    $('#claudeStatus').innerHTML = '<span class="status-dot off"></span> Server offline';
     $('#platformInfo').textContent = 'Standalone mode';
-    $('#chkAI').disabled = true;
   }
 }
 checkStatus();
 
-// File input
+// ════════════════════════════════════════════════════════════════
+// MODE A: FILE
+// ════════════════════════════════════════════════════════════════
+
 $('#dropArea').onclick = () => $('#fileInput').click();
 $('#dropArea').ondragover = e => { e.preventDefault(); $('#dropArea').classList.add('over'); };
 $('#dropArea').ondragleave = () => $('#dropArea').classList.remove('over');
@@ -309,7 +692,7 @@ $('#btnPaste').onclick = async () => {
   try {
     const text = await navigator.clipboard.readText();
     if (text) { rawInput = text; $('#dropArea').querySelector('p').textContent = 'Pasted from clipboard'; $('#btnAnalyze').disabled = false; }
-  } catch { alert('Clipboard access denied. Paste manually into a .json file and drop it.'); }
+  } catch { showError('Clipboard access denied. Paste manually into a .json file and drop it.'); }
 };
 
 function loadFile(file) {
@@ -322,12 +705,12 @@ function loadFile(file) {
   reader.readAsText(file);
 }
 
-// Analyze
 $('#btnAnalyze').onclick = async () => {
   if (!rawInput) return;
+  clearError();
   showLoader('Parsing JSON...');
-
   await tick();
+
   let configs;
   try {
     const raw = JSON.parse(rawInput);
@@ -337,7 +720,7 @@ $('#btnAnalyze').onclick = async () => {
     else if (raw.mdms) configs = raw.mdms.map(r => r.data);
     else throw new Error('Unrecognized format');
     configs = configs.filter(c => c?.flows);
-  } catch (e) { hideLoader(); alert('Invalid JSON: ' + e.message); return; }
+  } catch (e) { hideLoader(); showError('Invalid JSON: ' + e.message); return; }
 
   showLoader(`Analyzing ${configs.length} config(s)...`);
   await tick();
@@ -345,40 +728,481 @@ $('#btnAnalyze').onclick = async () => {
   const autoFix = $('#chkAutoFix').checked;
   results = configs.map(c => analyzeAndFix(c, { autoFix }));
 
-  // AI enhancement
-  if ($('#chkAI').checked && claudeAvailable) {
-    for (let i = 0; i < results.length; i++) {
-      const r = results[i];
-      if (r.newLocalizations.length === 0) continue;
-      showLoader(`AI-enhancing ${r.report.moduleName}...`, `${r.newLocalizations.length} messages`);
+  // Always AI-enhance
+  await aiEnhance(results);
+
+  hideLoader();
+  onlineRecords = [];
+  migrateCtx = null;
+  renderResults();
+};
+
+// ════════════════════════════════════════════════════════════════
+// MODE B: ONLINE CORRECT
+// ════════════════════════════════════════════════════════════════
+
+async function onlineFetch() {
+  clearError();
+  const envUrl = $('#olUrl').value.trim().replace(/\/+$/, '');
+  const user = $('#olUser').value.trim();
+  const pass = $('#olPass').value.trim();
+  const tenant = $('#olTenant').value.trim();
+  const project = $('#olProject').value.trim();
+  const schema = $('#olSchema').value;
+  const campaign = $('#olCampaign').value.trim();
+
+  if (!envUrl || !user || !pass || !tenant) { showError('Fill in URL, Username, Password, and Tenant'); return; }
+  if (schema.includes('FormConfig') && !schema.includes('Template') && !campaign) { showError('Campaign Number is required for FormConfig schema'); return; }
+
+  try {
+    showLoader('Authenticating...');
+    await tick();
+    onlineToken = await apiAuth(envUrl, user, pass, tenant);
+    onlineEnvUrl = envUrl;
+    onlineTenant = tenant;
+    onlineProject = project;
+    onlineSchema = schema;
+    onlineCampaign = campaign;
+    onlineLocale = `en_${tenant.toUpperCase()}`;
+
+    showLoader('Fetching configs...');
+    await tick();
+    const filters = project ? { project } : {};
+    onlineRecords = await apiMdmsSearch(envUrl, tenant, schema, filters, onlineToken, onlineLocale);
+
+    if (onlineRecords.length === 0) { hideLoader(); showError('No records found for the given filters'); return; }
+
+    // Run corrector on each record
+    const autoFix = $('#olAutoFix').checked;
+    results = [];
+    for (let i = 0; i < onlineRecords.length; i++) {
+      const rec = onlineRecords[i];
+      if (!rec.data?.flows) continue;
+
+      showProgress(`Analyzing ${rec.data.name || 'module'}...`, `${i+1}/${onlineRecords.length}`, ((i+1)/onlineRecords.length)*70);
+      await tick();
+
+      // Fetch existing locs for this module
+      const locModule = getLocModule(schema, rec.data.name, project, campaign);
+      let existingLocCodes = new Map();
+      try {
+        const msgs = await apiLocSearch(envUrl, locModule, tenant, onlineLocale, onlineToken);
+        existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
+      } catch (e) { /* no existing locs */ }
+
+      const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
+      result._record = rec; // keep reference to original record for updates
+      result._locModule = locModule;
+      results.push(result);
+    }
+
+    // AI enhance
+    await aiEnhance(results);
+
+    hideLoader();
+    migrateCtx = null;
+    renderResults();
+
+  } catch (e) {
+    hideLoader();
+    showError('Error: ' + e.message);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// MODE C: MIGRATE ENV
+// ════════════════════════════════════════════════════════════════
+
+async function migrateEnvFetch() {
+  clearError();
+  const src = {
+    url: $('#meSrcUrl').value.trim().replace(/\/+$/, ''),
+    user: $('#meSrcUser').value.trim(),
+    pass: $('#meSrcPass').value.trim(),
+    tenant: $('#meSrcTenant').value.trim(),
+    project: $('#meSrcProject').value.trim(),
+    schema: $('#meSrcSchema').value,
+    campaign: $('#meSrcCampaign').value.trim(),
+  };
+  const tgt = {
+    url: $('#meTgtUrl').value.trim().replace(/\/+$/, ''),
+    user: $('#meTgtUser').value.trim(),
+    pass: $('#meTgtPass').value.trim(),
+    tenant: $('#meTgtTenant').value.trim(),
+    project: $('#meTgtProject').value.trim(),
+    schema: $('#meTgtSchema').value,
+    campaign: $('#meTgtCampaign').value.trim(),
+  };
+
+  if (!src.url || !src.user || !src.pass || !src.tenant) { showError('Fill in Source credentials'); return; }
+  if (!tgt.url || !tgt.user || !tgt.pass || !tgt.tenant) { showError('Fill in Target credentials'); return; }
+
+  try {
+    showLoader('Authenticating to Source...');
+    await tick();
+    const srcToken = await apiAuth(src.url, src.user, src.pass, src.tenant);
+
+    showLoader('Authenticating to Target...');
+    await tick();
+    const tgtToken = await apiAuth(tgt.url, tgt.user, tgt.pass, tgt.tenant);
+
+    showLoader('Fetching Source configs...');
+    await tick();
+    const srcFilters = src.project ? { project: src.project } : {};
+    const srcRecords = await apiMdmsSearch(src.url, src.tenant, src.schema, srcFilters, srcToken, `en_${src.tenant.toUpperCase()}`);
+
+    showLoader('Fetching Target configs...');
+    await tick();
+    const tgtFilters = tgt.project ? { project: tgt.project } : {};
+    const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+
+    // Build target name->record map for create vs update
+    const tgtMap = new Map();
+    for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
+
+    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords, tgtRecords, tgtMap };
+
+    const autoFix = $('#meAutoFix').checked;
+    results = [];
+    for (let i = 0; i < srcRecords.length; i++) {
+      const rec = srcRecords[i];
+      if (!rec.data?.flows) continue;
+
+      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${srcRecords.length}`, ((i+1)/srcRecords.length)*70);
+      await tick();
+
+      // Transform tenant/project references
+      const dataCopy = JSON.parse(JSON.stringify(rec.data));
+      if (src.project && tgt.project && src.project !== tgt.project) {
+        const json = JSON.stringify(dataCopy);
+        const transformed = json.replace(new RegExp(escRegex(src.project), 'g'), tgt.project);
+        Object.assign(dataCopy, JSON.parse(transformed));
+      }
+
+      // Fetch source locs
+      const srcLocModule = getLocModule(src.schema, rec.data.name, src.project, src.campaign);
+      let existingLocCodes = new Map();
+      try {
+        const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, `en_${src.tenant.toUpperCase()}`, srcToken);
+        existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
+      } catch (e) { /* no existing locs */ }
+
+      const result = analyzeAndFix(dataCopy, { autoFix, existingLocCodes });
+      result._record = rec;
+      result._srcLocModule = srcLocModule;
+      result._tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
+      result._existingLocs = existingLocCodes;
+      result._isUpdate = tgtMap.has(rec.data.name);
+      result._tgtRecord = tgtMap.get(rec.data.name) || null;
+      results.push(result);
+    }
+
+    await aiEnhance(results);
+
+    hideLoader();
+    onlineRecords = [];
+    renderResults();
+
+  } catch (e) {
+    hideLoader();
+    showError('Migration error: ' + e.message);
+  }
+}
+
+function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+// ════════════════════════════════════════════════════════════════
+// MODE D: MIGRATE SCHEMA
+// ════════════════════════════════════════════════════════════════
+
+async function migrateSchemaFetch() {
+  clearError();
+  const src = {
+    url: $('#msSrcUrl').value.trim().replace(/\/+$/, ''),
+    user: $('#msSrcUser').value.trim(),
+    pass: $('#msSrcPass').value.trim(),
+    tenant: $('#msSrcTenant').value.trim(),
+    project: $('#msSrcProject').value.trim(),
+    schema: $('#msSrcSchema').value,
+    campaign: $('#msSrcCampaign').value.trim(),
+  };
+  const tgt = {
+    url: $('#msTgtUrl').value.trim().replace(/\/+$/, '') || src.url,
+    user: $('#msTgtUser').value.trim() || src.user,
+    pass: $('#msTgtPass').value.trim() || src.pass,
+    tenant: $('#msTgtTenant').value.trim() || src.tenant,
+    project: $('#msTgtProject').value.trim() || src.project,
+    schema: $('#msTgtSchema').value,
+    campaign: $('#msTgtCampaign').value.trim(),
+  };
+
+  if (!src.url || !src.user || !src.pass || !src.tenant) { showError('Fill in Source credentials'); return; }
+
+  try {
+    showLoader('Authenticating to Source...');
+    await tick();
+    const srcToken = await apiAuth(src.url, src.user, src.pass, src.tenant);
+
+    let tgtToken = srcToken;
+    if (tgt.url !== src.url || tgt.user !== src.user) {
+      showLoader('Authenticating to Target...');
+      await tick();
+      tgtToken = await apiAuth(tgt.url, tgt.user, tgt.pass, tgt.tenant);
+    }
+
+    showLoader('Fetching Source configs...');
+    await tick();
+    const srcFilters = src.project ? { project: src.project } : {};
+    const srcRecords = await apiMdmsSearch(src.url, src.tenant, src.schema, srcFilters, srcToken, `en_${src.tenant.toUpperCase()}`);
+
+    showLoader('Fetching Target configs...');
+    await tick();
+    const tgtFilters = tgt.project ? { project: tgt.project } : {};
+    const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+
+    const tgtMap = new Map();
+    for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
+
+    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords, tgtRecords, tgtMap };
+
+    const autoFix = $('#msAutoFix').checked;
+    results = [];
+    for (let i = 0; i < srcRecords.length; i++) {
+      const rec = srcRecords[i];
+      if (!rec.data?.flows) continue;
+
+      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${srcRecords.length}`, ((i+1)/srcRecords.length)*70);
+      await tick();
+
+      const srcLocModule = getLocModule(src.schema, rec.data.name, src.project, src.campaign);
+      let existingLocCodes = new Map();
+      try {
+        const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, `en_${src.tenant.toUpperCase()}`, srcToken);
+        existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
+      } catch (e) {}
+
+      const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
+      result._record = rec;
+      result._srcLocModule = srcLocModule;
+      result._tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
+      result._existingLocs = existingLocCodes;
+      result._isUpdate = tgtMap.has(rec.data.name);
+      result._tgtRecord = tgtMap.get(rec.data.name) || null;
+      results.push(result);
+    }
+
+    await aiEnhance(results);
+
+    hideLoader();
+    onlineRecords = [];
+    renderResults();
+
+  } catch (e) {
+    hideLoader();
+    showError('Schema migration error: ' + e.message);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// PUSH / UPSERT ACTIONS
+// ════════════════════════════════════════════════════════════════
+
+async function pushConfigFixes() {
+  const fixCount = results.reduce((s,r) => s + r.report.fixes.length, 0);
+  if (fixCount === 0) { showError('No fixes to push'); return; }
+
+  const env = onlineEnvUrl || '';
+  const ok = await showConfirm('Push Config Fixes',
+    `Push <b>${fixCount} fixes</b> across <b>${results.length} modules</b> to<br><code>${esc(env)}</code>?`);
+  if (!ok) return;
+
+  showLoader('Pushing config fixes...');
+  let pushed = 0, errors = 0;
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    if (r.report.fixes.length === 0) continue;
+    showProgress(`Updating ${r.report.moduleName}...`, `${i+1}/${results.length}`, ((i+1)/results.length)*100);
+    await tick();
+    try {
+      const rec = r._record;
+      const updateRec = {
+        id: rec.id, tenantId: rec.tenantId, schemaCode: onlineSchema,
+        uniqueIdentifier: rec.uniqueIdentifier, data: r.correctedData, isActive: true,
+        auditDetails: rec.auditDetails || null,
+      };
+      await apiMdmsUpdate(onlineEnvUrl, onlineSchema, updateRec, onlineToken, onlineLocale);
+      pushed++;
+    } catch (e) {
+      errors++;
+      showError(`Failed to update ${r.report.moduleName}: ${e.message}`);
+    }
+  }
+  hideLoader();
+  showError(`Pushed ${pushed} modules. ${errors ? errors + ' errors.' : 'All successful.'}`);
+  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+}
+
+async function upsertLocalizations() {
+  const locCount = results.reduce((s,r) => s + r.newLocalizations.length, 0);
+  if (locCount === 0) { showError('No localizations to upsert'); return; }
+
+  const env = onlineEnvUrl || '';
+  const ok = await showConfirm('Upsert Localizations',
+    `Upsert <b>${locCount} localization messages</b> across <b>${results.length} modules</b> to<br><code>${esc(env)}</code>?<br><br>Batch size: 50 messages per request.`);
+  if (!ok) return;
+
+  showLoader('Upserting localizations...');
+  let upserted = 0, errors = 0;
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    if (r.newLocalizations.length === 0) continue;
+
+    const locModule = r._locModule || getLocModule(onlineSchema, r.report.moduleName, onlineProject, onlineCampaign);
+    const tagged = r.newLocalizations.map(m => ({ code: m.code, message: m.message, module: locModule, locale: onlineLocale }));
+
+    // Upsert in batches of 50
+    for (let b = 0; b < tagged.length; b += 50) {
+      const batch = tagged.slice(b, b + 50);
+      showProgress(`Upserting ${locModule}...`, `${b+batch.length}/${tagged.length} messages`, ((i + (b+batch.length)/tagged.length) / results.length) * 100);
       await tick();
       try {
-        const BATCH = 30;
-        for (let b = 0; b < r.newLocalizations.length; b += BATCH) {
-          const batch = r.newLocalizations.slice(b, b + BATCH);
-          const resp = await fetch('/api/enhance', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
-          });
-          const data = await resp.json();
-          if (data.improved) {
-            for (const loc of batch) {
-              if (data.improved[loc.code]) loc.message = data.improved[loc.code];
-            }
-          }
-        }
-      } catch (e) { console.warn('AI enhancement failed:', e); }
+        await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale);
+        upserted += batch.length;
+      } catch (e) { errors++; showError(`Upsert failed for ${locModule}: ${e.message}`); }
+    }
+
+    // Also upsert to hcm-appconfiguration
+    const appConfigTagged = r.newLocalizations.map(m => ({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale }));
+    for (let b = 0; b < appConfigTagged.length; b += 50) {
+      const batch = appConfigTagged.slice(b, b + 50);
+      try { await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale); } catch (e) { /* continue */ }
+    }
+  }
+  hideLoader();
+  showError(`Upserted ${upserted} messages. ${errors ? errors + ' errors.' : 'All successful.'}`);
+  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+}
+
+async function pushAllToTarget() {
+  if (!migrateCtx) return;
+  const { tgt, tgtToken, tgtMap } = migrateCtx;
+  const total = results.length;
+  const createCount = results.filter(r => !r._isUpdate).length;
+  const updateCount = results.filter(r => r._isUpdate).length;
+  const locCount = results.reduce((s,r) => s + r.newLocalizations.length + (r._existingLocs?.size || 0), 0);
+
+  const ok = await showConfirm('Push All to Target',
+    `Push <b>${total} modules</b> to <code>${esc(tgt.url)}</code><br>
+     Create: ${createCount}, Update: ${updateCount}<br>
+     Localizations: ~${locCount} messages<br><br>
+     Target schema: <code>${esc(tgt.schema)}</code>`);
+  if (!ok) return;
+
+  showLoader('Pushing to target...');
+  let pushed = 0, locUpserted = 0, errors = 0;
+
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    showProgress(`${r._isUpdate ? 'Updating' : 'Creating'} ${r.report.moduleName}...`, `${i+1}/${total}`, ((i+1)/total)*80);
+    await tick();
+
+    try {
+      if (r._isUpdate && r._tgtRecord) {
+        const updateRec = {
+          id: r._tgtRecord.id, tenantId: r._tgtRecord.tenantId, schemaCode: tgt.schema,
+          uniqueIdentifier: r._tgtRecord.uniqueIdentifier, data: r.correctedData, isActive: true,
+          auditDetails: r._tgtRecord.auditDetails || null,
+        };
+        await apiMdmsUpdate(tgt.url, tgt.schema, updateRec, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+      } else {
+        const createRec = {
+          tenantId: tgt.tenant, schemaCode: tgt.schema,
+          uniqueIdentifier: r._record.uniqueIdentifier || `${tgt.tenant}-${r.correctedData.name}`,
+          data: r.correctedData, isActive: true,
+        };
+        await apiMdmsCreate(tgt.url, tgt.schema, createRec, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+      }
+      pushed++;
+    } catch (e) {
+      errors++;
+      showError(`${r._isUpdate ? 'Update' : 'Create'} failed for ${r.report.moduleName}: ${e.message}`);
+    }
+
+    // Upsert locs to target
+    const tgtLocModule = r._tgtLocModule;
+    const allLocs = [];
+
+    // Include existing source locs
+    if (r._existingLocs) {
+      for (const [code, message] of r._existingLocs) {
+        allLocs.push({ code, message, module: tgtLocModule, locale: `en_${tgt.tenant.toUpperCase()}` });
+      }
+    }
+    // Include new locs
+    for (const loc of r.newLocalizations) {
+      allLocs.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: `en_${tgt.tenant.toUpperCase()}` });
+    }
+
+    for (let b = 0; b < allLocs.length; b += 50) {
+      const batch = allLocs.slice(b, b + 50);
+      try {
+        await apiLocUpsert(tgt.url, tgt.tenant, batch, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+        locUpserted += batch.length;
+      } catch (e) { /* continue */ }
+    }
+
+    // Also upsert to hcm-appconfiguration on target
+    const appLocs = allLocs.map(l => ({ ...l, module: 'hcm-appconfiguration' }));
+    for (let b = 0; b < appLocs.length; b += 50) {
+      try { await apiLocUpsert(tgt.url, tgt.tenant, appLocs.slice(b, b + 50), tgtToken, `en_${tgt.tenant.toUpperCase()}`); } catch (e) { /* continue */ }
     }
   }
 
   hideLoader();
-  renderResults();
-};
+  showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations. ${errors ? errors + ' errors.' : ''}`);
+  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+}
 
-function tick() { return new Promise(r => setTimeout(r, 10)); }
-function showLoader(text, sub) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; }
-function hideLoader() { $('#loader').classList.add('hidden'); }
+// ════════════════════════════════════════════════════════════════
+// LOCALIZATION SHEET (CSV)
+// ════════════════════════════════════════════════════════════════
+
+function downloadLocSheet() {
+  const rows = [['Module', 'Code', 'Message', 'Locale']];
+  const locale = onlineLocale || 'en_IN';
+
+  for (const r of results) {
+    const moduleName = r.report.moduleName;
+    const locModule = r._locModule || r._tgtLocModule || getLocModule(
+      onlineSchema || 'HCM-ADMIN-CONSOLE.FormConfigTemplate',
+      moduleName,
+      onlineProject || migrateCtx?.tgt?.project || '',
+      onlineCampaign || migrateCtx?.tgt?.campaign || ''
+    );
+
+    // Existing locs
+    if (r._existingLocs) {
+      for (const [code, message] of r._existingLocs) {
+        rows.push([locModule, code, message, locale]);
+      }
+    }
+    // New locs
+    for (const loc of r.newLocalizations) {
+      rows.push([locModule, loc.code, loc.message, locale]);
+    }
+  }
+
+  if (rows.length <= 1) { showError('No localizations to export'); return; }
+
+  // Build CSV
+  const csv = rows.map(row => row.map(cell => `"${(cell||'').replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `localizations-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
 // ════════════════════════════════════════════════════════════════
 // RENDERING
@@ -398,6 +1222,33 @@ function renderResults() {
     <div class="stat"><div class="num num-warn">${tWarns}</div><div class="lbl">Warnings</div></div>
     <div class="stat"><div class="num num-loc">${tLocs}</div><div class="lbl">Localizations</div></div>`;
 
+  // Action buttons based on mode
+  const ab = $('#actionButtons');
+  ab.innerHTML = '';
+  ab.classList.remove('hidden');
+
+  if (activeMode === 'online' && onlineToken) {
+    ab.innerHTML = `
+      <div class="btn-group">
+        <button class="btn btn-green" onclick="pushConfigFixes()">Push Config Fixes</button>
+        <button class="btn btn-primary" onclick="upsertLocalizations()">Upsert Localizations</button>
+        <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
+      </div>`;
+  } else if ((activeMode === 'migrate-env' || activeMode === 'migrate-schema') && migrateCtx) {
+    ab.innerHTML = `
+      <div class="btn-group">
+        <button class="btn btn-green" onclick="pushAllToTarget()">Push All to Target</button>
+        <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
+      </div>`;
+  } else {
+    // File mode
+    ab.innerHTML = `
+      <div class="btn-group">
+        <button class="btn" onclick="downloadAllJson()">Download All Corrected JSON</button>
+        <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
+      </div>`;
+  }
+
   // Module list
   const list = $('#moduleList');
   list.innerHTML = '';
@@ -411,7 +1262,7 @@ function renderResults() {
     if (n > 0) badge = `<span class="badge badge-fix">${n} fixes</span>`;
     else if (l > 0) badge = `<span class="badge badge-loc">${l} locs</span>`;
     else badge = `<span class="badge badge-clean">Clean</span>`;
-    li.innerHTML = `<span>${r.report.moduleName}</span>${badge}`;
+    li.innerHTML = `<span>${esc(r.report.moduleName)}</span>${badge}`;
     li.onclick = () => { $$('.module-item').forEach(x=>x.classList.remove('active')); li.classList.add('active'); renderModule(i); };
     list.appendChild(li);
   });
@@ -438,14 +1289,14 @@ function renderModule(idx) {
 
     <!-- Summary -->
     <div class="tab-panel active" id="tp-summary">
-      <div style="margin-bottom:16px;display:flex;gap:8px">
+      <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-sm" onclick="copyModJson(${idx})">Copy Corrected JSON</button>
         <button class="btn btn-sm" onclick="downloadModJson(${idx})">Download JSON</button>
         <button class="btn btn-sm" onclick="copyModLocs(${idx})">Copy Localizations</button>
       </div>`;
 
   if (fixes.length === 0) {
-    html += `<p style="color:var(--teal);padding:20px 0">No structural issues found in ${moduleName}.</p>`;
+    html += `<p style="color:var(--teal);padding:20px 0">No structural issues found in ${esc(moduleName)}.</p>`;
   } else {
     for (const [rule, items] of Object.entries(byRule)) {
       html += `<div class="fix-group"><div class="fix-group-header"><span>${esc(rule)}</span><span>${items.length}</span></div><div class="fix-group-body">`;
@@ -489,7 +1340,7 @@ function renderModule(idx) {
     <!-- JSON -->
     <div class="tab-panel" id="tp-json">
       <div class="code-viewer">
-        <div class="code-header"><span>${moduleName}-corrected.json</span>
+        <div class="code-header"><span>${esc(moduleName)}-corrected.json</span>
           <div class="btn-group"><button class="btn btn-sm" onclick="copyModJson(${idx})">Copy</button><button class="btn btn-sm" onclick="downloadModJson(${idx})">Download</button></div>
         </div>
         <div class="code-body"><pre>${esc(JSON.stringify(correctedData, null, 2))}</pre></div>
@@ -509,8 +1360,6 @@ function renderModule(idx) {
   });
 }
 
-function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
 function updateLocMsg(idx, locIdx, val) { results[idx].newLocalizations[locIdx].message = val; }
 
 function copyModJson(idx) {
@@ -524,6 +1373,12 @@ function downloadModJson(idx) {
 }
 function copyModLocs(idx) {
   navigator.clipboard.writeText(JSON.stringify(results[idx].newLocalizations, null, 2));
+}
+function downloadAllJson() {
+  const all = results.map(r => r.correctedData);
+  const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `all-corrected-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href);
 }
 </script>
 </body>

@@ -53,20 +53,46 @@ async function main() {
     allGood = false;
   }
 
-  // Check Claude Code CLI
+  // Check Claude Code CLI (REQUIRED)
   const claudeVersion = checkCommand('claude', ['--version']);
   if (claudeVersion) {
     ok(`Claude Code CLI: ${claudeVersion}`);
   } else {
-    warn(`Claude Code CLI not found`);
-    log(`  Installing Claude Code CLI...`);
+    warn(`Claude Code CLI not found - attempting install...`);
     try {
       execSync('npm install -g @anthropic-ai/claude-code', { stdio: 'inherit', timeout: 120000 });
-      ok(`Claude Code CLI installed`);
+      const verifyVersion = checkCommand('claude', ['--version']);
+      if (verifyVersion) {
+        ok(`Claude Code CLI installed: ${verifyVersion}`);
+      } else {
+        fail(`Claude Code CLI not found (REQUIRED)`);
+        log(`  Install manually: npm install -g @anthropic-ai/claude-code`);
+        allGood = false;
+      }
     } catch (e) {
-      fail(`Could not install Claude Code CLI: ${e.message}`);
+      fail(`Claude Code CLI not found (REQUIRED)`);
       log(`  Install manually: npm install -g @anthropic-ai/claude-code`);
-      log(`  The tool will still work without AI - just use rule-based message generation`);
+      allGood = false;
+    }
+  }
+
+  // Check Claude authentication
+  if (claudeVersion || checkCommand('claude', ['--version'])) {
+    const authCheck = spawnSync('claude', ['-p', '--output-format', 'text'], {
+      input: 'Reply with just the word OK',
+      encoding: 'utf-8',
+      timeout: 30000,
+      shell: true,
+    });
+    if (authCheck.status === 0 && (authCheck.stdout || '').includes('OK')) {
+      ok(`Claude CLI authenticated`);
+    } else {
+      fail(`Claude CLI not authenticated (REQUIRED)`);
+      log(`  Run this command in your terminal to authenticate:`);
+      log(`    claude`);
+      log(`  This will open a browser window for Anthropic login.`);
+      log(`  After authenticating, re-run: node setup.js`);
+      allGood = false;
     }
   }
 
@@ -87,11 +113,12 @@ async function main() {
     allGood = false;
   }
 
-  const htmlPath = path.join(__dirname, 'index.html');
+  const htmlPath = path.join(__dirname, 'corrector.html');
   if (fs.existsSync(htmlPath)) {
-    ok(`index.html (web UI) found`);
+    ok(`corrector.html (web UI) found`);
   } else {
-    warn(`index.html not found - web UI won't be available`);
+    fail(`corrector.html not found - web UI won't be available`);
+    allGood = false;
   }
 
   // Summary
@@ -103,19 +130,15 @@ async function main() {
   }
   console.log(`========================================\n`);
 
-  console.log(`USAGE EXAMPLES:\n`);
-  console.log(`  Analyze a config file (no changes):`);
+  console.log(`USAGE:\n`);
+  console.log(`  Web UI (recommended):`);
+  console.log(`    node corrector.js\n`);
+  console.log(`  CLI - Analyze a config file:`);
   console.log(`    node cli.js --file ../response.json\n`);
-  console.log(`  Analyze + fix a config file:`);
-  console.log(`    node cli.js --file ../response.json --fix\n`);
-  console.log(`  Fix with AI-enhanced messages (uses Claude Code CLI):`);
+  console.log(`  CLI - Fix with AI-enhanced messages:`);
   console.log(`    node cli.js --file ../response.json --fix --ai claude\n`);
-  console.log(`  Online mode (fetch from MDMS, analyze + fix + upsert):`);
-  console.log(`    node cli.js --online --url https://unified-uat.digit.org --tenant mz --project MR-DN --user SATYA --pass eGov@123 --fix --upsert-locs\n`);
-  console.log(`  Online mode with AI enhancement:`);
-  console.log(`    node cli.js --online --url https://unified-uat.digit.org --tenant mz --project MR-DN --user SATYA --pass eGov@123 --fix --upsert-locs --ai claude\n`);
-  console.log(`  Web UI:`);
-  console.log(`    Open index.html in your browser\n`);
+  console.log(`  CLI - Online mode:`);
+  console.log(`    node cli.js --online --url https://unified-uat.digit.org --tenant mz --project MR-DN --user USER --pass PASS --fix --upsert-locs\n`);
 }
 
 main().catch(console.error);
