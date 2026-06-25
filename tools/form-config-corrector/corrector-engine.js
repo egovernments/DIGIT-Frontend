@@ -16,6 +16,7 @@
  *   9. Icon missing in properties when icon at component level
  *  10. Localization: collect all text codes, generate smart messages for missing ones
  *  11. labelPairList keys need localizations
+ *  12. enum/dropDownOptions name values need localizations
  */
 
 const MAX_WALK_DEPTH = 50;
@@ -661,6 +662,22 @@ function collectLocalizationCodes(data, moduleName) {
           if (pair && pair[keyField] && typeof pair[keyField] === 'string' && isCode(pair[keyField])) {
             if (!codes.has(pair[keyField])) {
               codes.set(pair[keyField], { fieldType: 'labelPairList', message: smartMessageFromCode(pair[keyField], moduleName) });
+            }
+          }
+        }
+      }
+    }
+
+    // enums and dropDownOptions (dropdown/dropdownTemplate components)
+    for (const enumArr of ['enums', 'dropDownOptions']) {
+      if (Array.isArray(obj[enumArr])) {
+        for (const en of obj[enumArr]) {
+          if (en && en.name && typeof en.name === 'string' && en.name.trim()) {
+            const nc = en.name.trim();
+            if (nc.includes(' ') && !nc.includes('_')) continue;
+            if (nc.startsWith('{{')) continue;
+            if (!codes.has(nc)) {
+              codes.set(nc, { fieldType: 'enum', message: generateSmartLocMessage(nc, 'enum', obj.fieldName || null, c.pageName, moduleName) });
             }
           }
         }
