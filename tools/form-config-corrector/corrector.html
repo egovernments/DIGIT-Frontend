@@ -128,25 +128,28 @@ input[type="file"] { display: none; }
 .loc-type { color: var(--subtext); font-size: 11px; }
 
 /* ─── JSON tree viewer ─── */
-.json-tree { font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 20px; overflow: auto; max-height: 600px; padding: 8px 0; counter-reset: jline; }
-.json-tree .jt-row { display: flex; align-items: flex-start; min-height: 20px; padding: 0 8px 0 0; }
-.json-tree .jt-row:hover { background: rgba(137,180,250,.06); }
-.json-tree .jt-ln { width: 42px; min-width: 42px; text-align: right; color: var(--gutter); font-size: 11px; padding-right: 8px; user-select: none; -webkit-user-select: none; flex-shrink: 0; }
-.json-tree .jt-toggle { width: 16px; min-width: 16px; text-align: center; cursor: pointer; user-select: none; -webkit-user-select: none; color: var(--subtext); flex-shrink: 0; font-size: 10px; line-height: 20px; }
-.json-tree .jt-toggle:hover { color: var(--blue); }
-.json-tree .jt-content { white-space: pre-wrap; word-break: break-word; flex: 1; }
-.json-tree .jt-key { color: #89b4fa; }
-.json-tree .jt-str { color: #a6e3a1; }
-.json-tree .jt-num { color: #fab387; }
-.json-tree .jt-bool { color: #cba6f7; }
-.json-tree .jt-null { color: #6c7086; font-style: italic; }
-.json-tree .jt-bracket { color: var(--subtext); }
-.json-tree .jt-comma { color: var(--subtext); }
-.json-tree .jt-ellipsis { color: var(--blue); cursor: pointer; font-style: italic; font-size: 11px; }
-.json-tree .jt-collapsed { display: none; }
-.json-tree .jt-copy { opacity: 0; color: var(--blue); cursor: pointer; font-size: 10px; margin-left: 6px; user-select: none; -webkit-user-select: none; }
-.json-tree .jt-row:hover .jt-copy { opacity: .6; }
-.json-tree .jt-copy:hover { opacity: 1; }
+.jt { font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 20px; overflow: auto; max-height: 600px; padding: 8px 0; }
+.jt-node { position: relative; }
+.jt-line { display: flex; align-items: flex-start; min-height: 20px; padding-right: 8px; }
+.jt-line:hover { background: rgba(137,180,250,.06); }
+.jt-indent { flex-shrink: 0; }
+.jt-tog { width: 14px; min-width: 14px; text-align: center; cursor: pointer; user-select: none; color: var(--subtext); flex-shrink: 0; font-size: 9px; line-height: 20px; }
+.jt-tog:hover { color: var(--blue); }
+.jt-tog.leaf { cursor: default; visibility: hidden; }
+.jt-val { flex: 1; white-space: pre-wrap; word-break: break-word; }
+.jt-k { color: #89b4fa; }
+.jt-s { color: #a6e3a1; }
+.jt-n { color: #fab387; }
+.jt-b { color: #cba6f7; }
+.jt-nl { color: #6c7086; font-style: italic; }
+.jt-br { color: var(--subtext); }
+.jt-cm { color: var(--subtext); }
+.jt-preview { color: var(--subtext); font-size: 11px; font-style: italic; }
+.jt-children { }
+.jt-children.collapsed { display: none; }
+.jt-cp { opacity: 0; color: var(--blue); cursor: pointer; font-size: 10px; margin-left: 6px; user-select: none; }
+.jt-line:hover .jt-cp { opacity: .6; }
+.jt-cp:hover { opacity: 1 !important; }
 
 /* ─── Code viewer (diff) ─── */
 .code-viewer { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
@@ -725,211 +728,129 @@ function renderSplitDiff(oldText, newText) {
   return html;
 }
 
-// Interactive JSON tree with collapsible nodes
-let _jtId = 0;
-function renderJsonTree(data, containerId) {
-  const lines = []; // {indent, html, groupId?, isOpen?, isClose?, closePeer?}
-  let gid = 0;
+// JSON tree viewer — nested containers for O(1) collapse/expand
+// Each object/array wraps children in a single div; toggling hides that one div.
+let _jtNodeData = new Map(); // nodeId -> jsonValue for copy
 
-  function addLine(indent, html, opts = {}) {
-    lines.push({ indent, html, ...opts });
-  }
+function renderJsonTree(data) {
+  _jtNodeData = new Map();
+  let nodeId = 0;
 
   function renderVal(val, indent, key, isLast) {
-    const comma = isLast ? '' : '<span class="jt-comma">,</span>';
-    const keyHtml = key !== null ? `<span class="jt-key">"${esc(String(key))}"</span>: ` : '';
+    const comma = isLast ? '' : '<span class="jt-cm">,</span>';
+    const pad = '<span class="jt-indent" style="width:' + (indent * 16) + 'px;display:inline-block"></span>';
+    const keyHtml = key !== null ? `<span class="jt-k">"${esc(String(key))}"</span>: ` : '';
 
     if (val === null) {
-      addLine(indent, `${keyHtml}<span class="jt-null">null</span>${comma}`);
-    } else if (typeof val === 'boolean') {
-      addLine(indent, `${keyHtml}<span class="jt-bool">${val}</span>${comma}`);
-    } else if (typeof val === 'number') {
-      addLine(indent, `${keyHtml}<span class="jt-num">${val}</span>${comma}`);
-    } else if (typeof val === 'string') {
-      addLine(indent, `${keyHtml}<span class="jt-str">"${esc(val)}"</span>${comma}`);
-    } else if (Array.isArray(val)) {
-      if (val.length === 0) {
-        addLine(indent, `${keyHtml}<span class="jt-bracket">[]</span>${comma}`);
-      } else {
-        const g = gid++;
-        const preview = val.length <= 3 && val.every(v => typeof v !== 'object' || v === null)
-          ? val.map(v => v === null ? 'null' : typeof v === 'string' ? `"${esc(v)}"` : String(v)).join(', ')
-          : `${val.length} items`;
-        addLine(indent, `${keyHtml}<span class="jt-bracket">[</span>`, { groupId: g, isOpen: true, preview, closeBracket: ']', comma });
-        for (let i = 0; i < val.length; i++) {
-          renderVal(val[i], indent + 1, null, i === val.length - 1);
-        }
-        addLine(indent, `<span class="jt-bracket">]</span>${comma}`, { groupId: g, isClose: true });
+      return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-nl">null</span>${comma}</span></div>`;
+    }
+    if (typeof val === 'boolean') {
+      return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-b">${val}</span>${comma}</span></div>`;
+    }
+    if (typeof val === 'number') {
+      return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-n">${val}</span>${comma}</span></div>`;
+    }
+    if (typeof val === 'string') {
+      return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-s">"${esc(val)}"</span>${comma}</span></div>`;
+    }
+
+    const isArr = Array.isArray(val);
+    const open = isArr ? '[' : '{';
+    const close = isArr ? ']' : '}';
+    const entries = isArr ? val : Object.keys(val);
+
+    if (entries.length === 0) {
+      return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-br">${open}${close}</span>${comma}</span></div>`;
+    }
+
+    const nid = nodeId++;
+    _jtNodeData.set(nid, val);
+
+    // Preview text for collapsed state
+    let preview;
+    if (isArr) {
+      preview = `${val.length} item${val.length !== 1 ? 's' : ''}`;
+    } else {
+      const keys = Object.keys(val);
+      preview = keys.length <= 3 ? keys.join(', ') : `${keys.slice(0, 2).join(', ')}, +${keys.length - 2}`;
+    }
+
+    let html = `<div class="jt-node">`;
+    // Opening line
+    html += `<div class="jt-line">`;
+    html += pad;
+    html += `<span class="jt-tog" onclick="jtToggle(this)">&#9660;</span>`;
+    html += `<span class="jt-val">${keyHtml}<span class="jt-br">${open}</span>`;
+    html += `<span class="jt-preview" style="display:none"> ${esc(preview)} ${close}</span>`;
+    html += `<span class="jt-cp" onclick="jtCopy(${nid},this)">copy</span>`;
+    html += `</span></div>`;
+
+    // Children container — single div to toggle
+    html += `<div class="jt-children">`;
+    if (isArr) {
+      for (let i = 0; i < val.length; i++) {
+        html += renderVal(val[i], indent + 1, null, i === val.length - 1);
       }
     } else {
       const keys = Object.keys(val);
-      if (keys.length === 0) {
-        addLine(indent, `${keyHtml}<span class="jt-bracket">{}</span>${comma}`);
-      } else {
-        const g = gid++;
-        const firstKey = keys[0];
-        const preview = keys.length <= 2
-          ? keys.map(k => `${k}: ...`).join(', ')
-          : `${firstKey}: ..., +${keys.length - 1} more`;
-        addLine(indent, `${keyHtml}<span class="jt-bracket">{</span>`, { groupId: g, isOpen: true, preview, closeBracket: '}', comma, copyPath: key });
-        for (let i = 0; i < keys.length; i++) {
-          renderVal(val[keys[i]], indent + 1, keys[i], i === keys.length - 1);
-        }
-        addLine(indent, `<span class="jt-bracket">}</span>${comma}`, { groupId: g, isClose: true });
+      for (let i = 0; i < keys.length; i++) {
+        html += renderVal(val[keys[i]], indent + 1, keys[i], i === keys.length - 1);
       }
     }
+    html += `</div>`;
+
+    // Closing line
+    html += `<div class="jt-line jt-close-line">`;
+    html += `<span class="jt-indent" style="width:${indent * 16}px;display:inline-block"></span>`;
+    html += `<span class="jt-tog leaf"></span>`;
+    html += `<span class="jt-val"><span class="jt-br">${close}</span>${comma}</span>`;
+    html += `</div>`;
+
+    html += `</div>`;
+    return html;
   }
 
-  renderVal(data, 0, null, true);
-
-  // Build HTML
-  const treeId = `jt_${_jtId++}`;
-  let html = `<div class="json-tree" id="${treeId}">`;
-  let lineNum = 1;
-
-  for (let i = 0; i < lines.length; i++) {
-    const ln = lines[i];
-    const pad = '  '.repeat(ln.indent);
-
-    if (ln.isOpen) {
-      const gName = `${treeId}_g${ln.groupId}`;
-      // Opening line with toggle
-      html += `<div class="jt-row" data-g="${gName}">`;
-      html += `<div class="jt-ln">${lineNum++}</div>`;
-      html += `<div class="jt-toggle" onclick="toggleJtGroup('${gName}')">&#9660;</div>`;
-      html += `<div class="jt-content">${pad}${ln.html}`;
-      // Collapsed preview (hidden by default)
-      html += `<span class="jt-ellipsis ${gName}-preview" style="display:none" onclick="toggleJtGroup('${gName}')">${esc(ln.preview)}</span>`;
-      html += `<span class="${gName}-preview" style="display:none"><span class="jt-bracket">${ln.closeBracket}</span>${ln.comma || ''}</span>`;
-      html += `<span class="jt-copy" onclick="copyJtNode(this, ${i}, '${treeId}')" title="Copy this node">copy</span>`;
-      html += `</div></div>`;
-    } else if (ln.isClose) {
-      const gName = `${treeId}_g${ln.groupId}`;
-      html += `<div class="jt-row ${gName}-body">`;
-      html += `<div class="jt-ln">${lineNum++}</div>`;
-      html += `<div class="jt-toggle"></div>`;
-      html += `<div class="jt-content">${pad}${ln.html}</div></div>`;
-    } else {
-      // Check if inside a group
-      html += `<div class="jt-row">`;
-      html += `<div class="jt-ln">${lineNum++}</div>`;
-      html += `<div class="jt-toggle"></div>`;
-      html += `<div class="jt-content">${pad}${ln.html}</div></div>`;
-    }
-  }
-  html += '</div>';
-
-  // Tag body rows with their group classes for collapse/expand
-  // We need a post-process: mark rows between open and close with the group body class
-  // Do this via JS after render
-  html += `<script>
-  (function(){
-    const tree = document.getElementById('${treeId}');
-    if (!tree) return;
-    const rows = tree.querySelectorAll('.jt-row');
-    const stack = [];
-    rows.forEach(row => {
-      const g = row.dataset.g;
-      if (g) { stack.push(g); return; }
-      // Check if this row is a close row for any group
-      for (const cls of row.classList) {
-        if (cls.endsWith('-body')) {
-          const gName = cls.replace('-body', '');
-          while (stack.length && stack[stack.length-1] !== gName) stack.pop();
-          if (stack.length) stack.pop();
-          return;
-        }
-      }
-      // Mark with all current group body classes
-      for (const s of stack) row.classList.add(s + '-body');
-    });
-  })();
-  <\/script>`;
-
-  return html;
+  return `<div class="jt">${renderVal(data, 0, null, true)}</div>`;
 }
 
-function toggleJtGroup(gName) {
-  const bodies = document.querySelectorAll('.' + gName + '-body');
-  const previews = document.querySelectorAll('.' + gName + '-preview');
-  const isCollapsed = bodies.length > 0 && bodies[0].style.display === 'none';
+function jtToggle(togEl) {
+  const node = togEl.closest('.jt-node');
+  if (!node) return;
+  const children = node.querySelector(':scope > .jt-children');
+  const closeLine = node.querySelector(':scope > .jt-close-line');
+  const preview = togEl.closest('.jt-line').querySelector('.jt-preview');
+  if (!children) return;
 
-  bodies.forEach(el => el.style.display = isCollapsed ? '' : 'none');
-  previews.forEach(el => el.style.display = isCollapsed ? 'none' : '');
-
-  // Update toggle arrow
-  const opener = document.querySelector(`[data-g="${gName}"] .jt-toggle`);
-  if (opener) opener.innerHTML = isCollapsed ? '&#9660;' : '&#9654;';
+  const collapsed = children.classList.toggle('collapsed');
+  if (closeLine) closeLine.style.display = collapsed ? 'none' : '';
+  if (preview) preview.style.display = collapsed ? '' : 'none';
+  togEl.innerHTML = collapsed ? '&#9654;' : '&#9660;';
 }
 
-function copyJtNode(el, lineIdx, treeId) {
-  // Walk up to find the data-g attribute for the group
-  const row = el.closest('.jt-row');
-  const gName = row?.dataset?.g;
-  if (!gName) return;
-
-  // Find the group index from gName, extract the node JSON from results
-  // Simpler approach: find all visible text in the group and reconstruct
-  // Better: use the stored data
-  const modIdx = parseInt(document.querySelector('.module-item.active')?.dataset?.idx || '0');
-  const r = results[modIdx];
-  if (!r) return;
-
-  // Navigate JSON path from the tree structure
-  // For simplicity, copy the reconstructed JSON from the group's text
-  const bodies = document.querySelectorAll('.' + gName + '-body');
-  const opener = row.querySelector('.jt-content');
-  let text = '';
-  // Get the key from the opener
-  const keyMatch = opener?.textContent?.match(/"([^"]+)":\s*[\[{]/);
-  if (keyMatch) {
-    const key = keyMatch[1];
-    // Navigate to that key in the data
-    function findByKey(obj, targetKey) {
-      if (!obj || typeof obj !== 'object') return undefined;
-      if (Array.isArray(obj)) {
-        for (const item of obj) { const r = findByKey(item, targetKey); if (r !== undefined) return r; }
-      } else {
-        if (targetKey in obj) return obj[targetKey];
-        for (const v of Object.values(obj)) { const r = findByKey(v, targetKey); if (r !== undefined) return r; }
-      }
-      return undefined;
-    }
-    const node = findByKey(r.correctedData, key);
-    if (node !== undefined) {
-      text = JSON.stringify(node, null, 2);
-    }
-  }
-  if (!text) {
-    text = JSON.stringify(r.correctedData, null, 2);
-  }
-  navigator.clipboard.writeText(text);
+function jtCopy(nid, el) {
+  const val = _jtNodeData.get(nid);
+  if (val === undefined) return;
+  navigator.clipboard.writeText(JSON.stringify(val, null, 2));
   el.textContent = 'copied!';
   setTimeout(() => { el.textContent = 'copy'; }, 1500);
 }
 
 function collapseAllJt() {
-  const tree = document.querySelector('#tp-json .json-tree');
+  const tree = document.querySelector('#tp-json .jt');
   if (!tree) return;
-  tree.querySelectorAll('[data-g]').forEach(row => {
-    const gName = row.dataset.g;
-    document.querySelectorAll('.' + gName + '-body').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.' + gName + '-preview').forEach(el => el.style.display = '');
-    const toggle = row.querySelector('.jt-toggle');
-    if (toggle) toggle.innerHTML = '&#9654;';
-  });
+  tree.querySelectorAll('.jt-children').forEach(el => el.classList.add('collapsed'));
+  tree.querySelectorAll('.jt-close-line').forEach(el => el.style.display = 'none');
+  tree.querySelectorAll('.jt-preview').forEach(el => el.style.display = '');
+  tree.querySelectorAll('.jt-tog:not(.leaf)').forEach(el => el.innerHTML = '&#9654;');
 }
 
 function expandAllJt() {
-  const tree = document.querySelector('#tp-json .json-tree');
+  const tree = document.querySelector('#tp-json .jt');
   if (!tree) return;
-  tree.querySelectorAll('[data-g]').forEach(row => {
-    const gName = row.dataset.g;
-    document.querySelectorAll('.' + gName + '-body').forEach(el => el.style.display = '');
-    document.querySelectorAll('.' + gName + '-preview').forEach(el => el.style.display = 'none');
-    const toggle = row.querySelector('.jt-toggle');
-    if (toggle) toggle.innerHTML = '&#9660;';
-  });
+  tree.querySelectorAll('.jt-children').forEach(el => el.classList.remove('collapsed'));
+  tree.querySelectorAll('.jt-close-line').forEach(el => el.style.display = '');
+  tree.querySelectorAll('.jt-preview').forEach(el => el.style.display = 'none');
+  tree.querySelectorAll('.jt-tog:not(.leaf)').forEach(el => el.innerHTML = '&#9660;');
 }
 
 function showLoader(text, sub) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; $('#progressBarWrap').classList.add('hidden'); }
