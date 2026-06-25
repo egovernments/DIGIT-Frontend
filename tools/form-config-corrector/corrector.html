@@ -458,7 +458,8 @@ function analyzeAndFix(configData, opts = {}) {
   if(data.flows){for(const fl of data.flows){for(const s of['body','header','footer'])for(let i=0;i<(fl[s]||[]).length;i++)pComp(fl[s][i],fl.name,`${s}[${i}]`);for(let pi=0;pi<(fl.pages||[]).length;pi++){const pg=fl.pages[pi];for(let pri=0;pri<(pg.properties||[]).length;pri++)pComp(pg.properties[pri],fl.name,`pages[${pi}].properties[${pri}]`);}}}
 
   // R8: table headers
-  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);if(o.format==='table'&&o.data&&Array.isArray(o.data.columns)){for(let ci=0;ci<o.data.columns.length;ci++){const col=o.data.columns[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
+  const appConfigCodes = new Set(); // Track codes that belong to hcm-appconfiguration only
+  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);if(o.format==='table'&&o.data&&Array.isArray(o.data.columns)){for(let ci=0;ci<o.data.columns.length;ci++){const col=o.data.columns[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);appConfigCodes.add(nc);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);appConfigCodes.add(nc);}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
   wTH(data,'data',0);
 
   // R9: icon in properties
@@ -466,16 +467,16 @@ function analyzeAndFix(configData, opts = {}) {
   wIc(data,'data',0);
 
   // R10: collect loc codes
-  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();if(cd.includes(' ')&&!cd.includes('_'))continue;if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])&&!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)wLoc(v,c,d+1);}}
+  const APP_CONFIG_FIELDS = new Set(['fieldName','labelPairList']);
+  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();if(cd.includes(' ')&&!cd.includes('_'))continue;if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])){appConfigCodes.add(pr[kf]);if(!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)wLoc(v,c,d+1);}}
   wLoc(data,{},0);
 
-  // R12: APP_CONFIG category and flow localization codes (for hcm-appconfiguration)
-  const appConfigCodes = new Map();
-  if(data.flows){const categories=new Set(),flowNames=new Set();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){if(pg.category)categories.add(pg.category);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=humanize(cat);allNew.set(cd,msg);appConfigCodes.set(cd,msg);}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=humanize(fn);allNew.set(cd,msg);appConfigCodes.set(cd,msg);}}}
+  // R12: APP_CONFIG category, flow, and page localization codes (for hcm-appconfiguration)
+  if(data.flows){const categories=new Set(),flowNames=new Set(),pageNames=new Set();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){if(pg.category)categories.add(pg.category);if(pg.page||pg.name)pageNames.add(pg.page||pg.name);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(fn));}}for(const pn of pageNames){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(pn));}}}
 
   report.totalIssues=report.fixes.length+report.warnings.length;
   const newLocalizations = Array.from(allNew.entries()).map(([code,message])=>({code,message}));
-  // Tag APP_CONFIG codes so they route to hcm-appconfiguration
+  // Tag codes that belong to hcm-appconfiguration
   for(const loc of newLocalizations){if(appConfigCodes.has(loc.code))loc._appConfig=true;}
   return { correctedData:data, originalData, report, newLocalizations };
 }
@@ -1428,10 +1429,10 @@ async function upsertLocalizations() {
       } catch (e) { errors++; showError(`Upsert failed for ${locModule}: ${e.message}`); }
     }
 
-    // Also upsert to hcm-appconfiguration
-    const appConfigTagged = r.newLocalizations.map(m => ({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale }));
-    for (let b = 0; b < appConfigTagged.length; b += 50) {
-      const batch = appConfigTagged.slice(b, b + 50);
+    // Upsert only app-config codes (fieldName, labelPairList, table headers, flow/category/page codes) to hcm-appconfiguration
+    const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => ({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale }));
+    for (let b = 0; b < appConfigOnly.length; b += 50) {
+      const batch = appConfigOnly.slice(b, b + 50);
       try { await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale); } catch (e) { /* continue */ }
     }
   }
@@ -1508,10 +1509,12 @@ async function pushAllToTarget() {
       } catch (e) { /* continue */ }
     }
 
-    // Also upsert to hcm-appconfiguration on target
-    const appLocs = allLocs.map(l => ({ ...l, module: 'hcm-appconfiguration' }));
-    for (let b = 0; b < appLocs.length; b += 50) {
-      try { await apiLocUpsert(tgt.url, tgt.tenant, appLocs.slice(b, b + 50), tgtToken, `en_${tgt.tenant.toUpperCase()}`); } catch (e) { /* continue */ }
+    // Also upsert _appConfig-tagged entries to hcm-appconfiguration on target
+    const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => ({
+      code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: `en_${tgt.tenant.toUpperCase()}`
+    }));
+    for (let b = 0; b < appConfigOnly.length; b += 50) {
+      try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, `en_${tgt.tenant.toUpperCase()}`); } catch (e) { /* continue */ }
     }
   }
 
