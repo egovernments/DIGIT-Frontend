@@ -155,7 +155,7 @@ input[type="file"] { display: none; }
 
 /* ─── Confirmation dialog ─── */
 .confirm-overlay { position: fixed; inset: 0; background: rgba(17,17,27,.85); display: flex; align-items: center; justify-content: center; z-index: 300; backdrop-filter: blur(4px); }
-.confirm-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 480px; width: 90%; }
+.confirm-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 520px; width: 90%; }
 .confirm-box h3 { font-size: 16px; margin-bottom: 12px; color: var(--yellow); }
 .confirm-box p { font-size: 13px; color: var(--subtext); margin-bottom: 16px; line-height: 1.6; }
 .confirm-box .confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
@@ -171,6 +171,18 @@ input[type="file"] { display: none; }
 .empty p { font-size: 13px; color: var(--overlay); max-width: 400px; margin: 0 auto; line-height: 1.6; }
 
 .hidden { display: none !important; }
+
+/* ─── Module Selector ─── */
+.module-select-list { max-height: 400px; overflow-y: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+.module-select-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; font-size: 13px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; }
+.module-select-item:last-child { border-bottom: none; }
+.module-select-item:hover { background: rgba(137,180,250,.05); }
+.module-select-item input { accent-color: var(--blue); flex-shrink: 0; }
+.module-select-item .mod-name { flex: 1; }
+.module-select-item .mod-flows { font-size: 11px; color: var(--subtext); }
+.select-actions { display: flex; gap: 8px; margin-bottom: 8px; }
+.select-actions button { padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); color: var(--subtext); cursor: pointer; transition: all .15s; }
+.select-actions button:hover { color: var(--text); background: var(--overlay); }
 </style>
 </head>
 <body>
@@ -428,10 +440,9 @@ function analyzeAndFix(configData, opts = {}) {
   function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
   chkTF(data,'data',null,0);
 
-  // R3: dup fieldNames
-  const visited3 = new WeakSet();
-  function cfn(o,p,e,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return e;if(Array.isArray(o)){o.forEach((x,i)=>cfn(x,`${p}[${i}]`,e,d+1));return e;}if(visited3.has(o))return e;visited3.add(o);if(o.fieldName&&typeof o.fieldName==='string'&&o.fieldName.trim())e.push({obj:o,fieldName:o.fieldName,path:p});for(const[k,v]of Object.entries(o)){if(k==='fieldName')continue;if(typeof v==='object'&&v!==null)cfn(v,p?`${p}.${k}`:k,e,d+1);}return e;}
-  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){let x=2,nn=`${e.fieldName}${x}`;const all=new Set(entries.map(z=>z.obj.fieldName));while(all.has(nn)){x++;nn=`${e.fieldName}${x}`;}e.obj.fieldName=nn;report.fixes.push({rule:'duplicate-fieldName',screen:n,old:e.fieldName.replace(/\d+$/,''),new:nn,path:e.path,fixed:`"${e.fieldName.replace(/\d+$/,'')}" \u2192 "${nn}"`});}else seen.set(e.fieldName,true);}}}}
+  // R3: dup fieldNames (per-page scope — same fieldName on different pages is valid)
+  function cfn(o,p,e,d,vis){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return e;if(Array.isArray(o)){o.forEach((x,i)=>cfn(x,`${p}[${i}]`,e,d+1,vis));return e;}if(vis.has(o))return e;vis.add(o);if(o.fieldName&&typeof o.fieldName==='string'&&o.fieldName.trim())e.push({obj:o,fieldName:o.fieldName,path:p});for(const[k,v]of Object.entries(o)){if(k==='fieldName')continue;if(typeof v==='object'&&v!==null)cfn(v,p?`${p}.${k}`:k,e,d+1,vis);}return e;}
+  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0,new WeakSet());const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){let x=2,nn=`${e.fieldName}${x}`;const all=new Set(entries.map(z=>z.obj.fieldName));while(all.has(nn)){x++;nn=`${e.fieldName}${x}`;}e.obj.fieldName=nn;report.fixes.push({rule:'duplicate-fieldName',screen:n,old:e.fieldName.replace(/\d+$/,''),new:nn,path:e.path,fixed:`"${e.fieldName.replace(/\d+$/,'')}" \u2192 "${nn}"`});}else seen.set(e.fieldName,true);}}}}
 
   // R4: flow categories
   if(data.flows){for(const fl of data.flows){if((fl.screenType||fl.body)&&(!fl.category||!fl.category.trim())){fl.category=fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:fl.name,fixed:`category \u2192 "${fl.category}"`});}if(fl.pages){for(const pg of fl.pages){if((pg.screenType||pg.body)&&(!pg.category||!pg.category.trim())){pg.category=pg.name||pg.page||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:`${fl.name}/${pg.page||pg.name}`,fixed:`category \u2192 "${pg.category}"`});}}}}}
@@ -519,6 +530,66 @@ function confirmResolve(val) {
   if (confirmResolveFn) { confirmResolveFn(val); confirmResolveFn = null; }
 }
 
+function showModuleSelector(records) {
+  return new Promise(resolve => {
+    const modules = records.filter(r => r.data?.flows).map(r => ({
+      name: r.data.name || 'UNKNOWN',
+      flowCount: (r.data.flows || []).length,
+      record: r,
+    }));
+    if (modules.length === 0) { resolve(null); return; }
+
+    const box = document.querySelector('.confirm-box');
+    const overlay = $('#confirmOverlay');
+    box.innerHTML = `
+      <h3>Select Modules</h3>
+      <p>Found <b>${modules.length}</b> modules. Select which to process:</p>
+      <div class="select-actions">
+        <button id="msSelAll">Select All</button>
+        <button id="msSelNone">Select None</button>
+      </div>
+      <div class="module-select-list" id="msModList">
+        ${modules.map((m, i) => `
+          <label class="module-select-item">
+            <input type="checkbox" checked data-ms-idx="${i}">
+            <span class="mod-name">${esc(m.name)}</span>
+            <span class="mod-flows">${m.flowCount} flows</span>
+          </label>`).join('')}
+      </div>
+      <div class="confirm-actions">
+        <button class="btn" id="msBtnCancel">Cancel</button>
+        <button class="btn btn-primary" id="msBtnProceed">Proceed (${modules.length})</button>
+      </div>`;
+    overlay.classList.remove('hidden');
+
+    const checkboxes = () => box.querySelectorAll('input[data-ms-idx]');
+    const updateCount = () => {
+      const cnt = [...checkboxes()].filter(c => c.checked).length;
+      const btn = $('#msBtnProceed');
+      btn.textContent = `Proceed (${cnt})`;
+      btn.disabled = cnt === 0;
+    };
+
+    box.querySelector('#msSelAll').onclick = () => { checkboxes().forEach(c => c.checked = true); updateCount(); };
+    box.querySelector('#msSelNone').onclick = () => { checkboxes().forEach(c => c.checked = false); updateCount(); };
+    box.addEventListener('change', updateCount);
+
+    box.querySelector('#msBtnCancel').onclick = () => {
+      overlay.classList.add('hidden');
+      // Restore confirm box to default structure
+      box.innerHTML = `<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>`;
+      resolve(null);
+    };
+    box.querySelector('#msBtnProceed').onclick = () => {
+      const selected = [...checkboxes()].filter(c => c.checked).map(c => modules[+c.dataset.msIdx].record);
+      overlay.classList.add('hidden');
+      // Restore confirm box to default structure
+      box.innerHTML = `<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>`;
+      resolve(selected);
+    };
+  });
+}
+
 // ════════════════════════════════════════════════════════════════
 // API HELPERS
 // ════════════════════════════════════════════════════════════════
@@ -604,15 +675,31 @@ function buildRequestInfo(token, locale, action) {
 
 async function aiEnhance(resultsList) {
   if (!claudeAvailable) return;
+  const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.length, 0);
+  if (totalMessages === 0) return;
+  let processedMessages = 0;
+  const BATCH = 30;
+
   for (let i = 0; i < resultsList.length; i++) {
     const r = resultsList[i];
     if (r.newLocalizations.length === 0) continue;
-    showLoader(`AI-enhancing ${r.report.moduleName}...`, `${r.newLocalizations.length} messages`);
-    await tick();
+    const totalBatches = Math.ceil(r.newLocalizations.length / BATCH);
+
     try {
-      const BATCH = 30;
-      for (let b = 0; b < r.newLocalizations.length; b += BATCH) {
+      for (let b = 0, batchNum = 1; b < r.newLocalizations.length; b += BATCH, batchNum++) {
         const batch = r.newLocalizations.slice(b, b + BATCH);
+        const sampleCodes = batch.slice(0, 3).map(l => {
+          const parts = l.code.split('_');
+          return parts.slice(-2).join('_').toLowerCase();
+        }).join(', ');
+        const pct = Math.round((processedMessages / totalMessages) * 100);
+        showProgress(
+          `AI-enhancing ${r.report.moduleName}`,
+          `Batch ${batchNum}/${totalBatches} \u2022 ${processedMessages}/${totalMessages} messages \u2022 ${sampleCodes}`,
+          pct
+        );
+        await tick();
+
         const resp = await fetch('/api/enhance', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
@@ -623,9 +710,12 @@ async function aiEnhance(resultsList) {
             if (data.improved[loc.code]) loc.message = data.improved[loc.code];
           }
         }
+        processedMessages += batch.length;
       }
     } catch (e) { console.warn('AI enhancement failed:', e); }
   }
+  showProgress('AI enhancement complete', `${totalMessages} messages processed`, 100);
+  await tick();
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -772,14 +862,19 @@ async function onlineFetch() {
 
     if (onlineRecords.length === 0) { hideLoader(); showError('No records found for the given filters'); return; }
 
-    // Run corrector on each record
+    // Module selection
+    hideLoader();
+    const selectedRecords = await showModuleSelector(onlineRecords);
+    if (!selectedRecords) return; // user cancelled
+
+    // Run corrector on selected records
     const autoFix = $('#olAutoFix').checked;
     results = [];
-    for (let i = 0; i < onlineRecords.length; i++) {
-      const rec = onlineRecords[i];
+    for (let i = 0; i < selectedRecords.length; i++) {
+      const rec = selectedRecords[i];
       if (!rec.data?.flows) continue;
 
-      showProgress(`Analyzing ${rec.data.name || 'module'}...`, `${i+1}/${onlineRecords.length}`, ((i+1)/onlineRecords.length)*70);
+      showProgress(`Analyzing ${rec.data.name || 'module'}...`, `${i+1}/${selectedRecords.length}`, ((i+1)/selectedRecords.length)*70);
       await tick();
 
       // Fetch existing locs for this module
@@ -860,15 +955,20 @@ async function migrateEnvFetch() {
     const tgtMap = new Map();
     for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
 
-    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords, tgtRecords, tgtMap };
+    // Module selection
+    hideLoader();
+    const selectedRecords = await showModuleSelector(srcRecords);
+    if (!selectedRecords) return; // user cancelled
+
+    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords: selectedRecords, tgtRecords, tgtMap };
 
     const autoFix = $('#meAutoFix').checked;
     results = [];
-    for (let i = 0; i < srcRecords.length; i++) {
-      const rec = srcRecords[i];
+    for (let i = 0; i < selectedRecords.length; i++) {
+      const rec = selectedRecords[i];
       if (!rec.data?.flows) continue;
 
-      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${srcRecords.length}`, ((i+1)/srcRecords.length)*70);
+      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${selectedRecords.length}`, ((i+1)/selectedRecords.length)*70);
       await tick();
 
       // Transform tenant/project references
@@ -963,15 +1063,20 @@ async function migrateSchemaFetch() {
     const tgtMap = new Map();
     for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
 
-    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords, tgtRecords, tgtMap };
+    // Module selection
+    hideLoader();
+    const selectedRecords = await showModuleSelector(srcRecords);
+    if (!selectedRecords) return; // user cancelled
+
+    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords: selectedRecords, tgtRecords, tgtMap };
 
     const autoFix = $('#msAutoFix').checked;
     results = [];
-    for (let i = 0; i < srcRecords.length; i++) {
-      const rec = srcRecords[i];
+    for (let i = 0; i < selectedRecords.length; i++) {
+      const rec = selectedRecords[i];
       if (!rec.data?.flows) continue;
 
-      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${srcRecords.length}`, ((i+1)/srcRecords.length)*70);
+      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${selectedRecords.length}`, ((i+1)/selectedRecords.length)*70);
       await tick();
 
       const srcLocModule = getLocModule(src.schema, rec.data.name, src.project, src.campaign);
