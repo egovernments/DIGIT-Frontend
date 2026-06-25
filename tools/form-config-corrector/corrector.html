@@ -2109,8 +2109,21 @@ function showFilePushDialog() {
       box.querySelector('#fpCampaignGroup').style.display = isFormConfig ? '' : 'none';
       if (!isFormConfig) fpFetchProjects(); else fpRevertProject();
     };
-    // Auto-fetch on dialog open if schema is Template
+    // Auto-fetch on dialog open if schema is Template and URL/tenant are cached
     if (schemaEl.value.includes('FormConfigTemplate')) fpFetchProjects();
+
+    // Re-fetch project types when URL, tenant, or context path changes
+    ['#fpUrl', '#fpTenant', '#fpContextPath'].forEach(sel => {
+      const el = box.querySelector(sel);
+      if (el) {
+        el.addEventListener('blur', () => {
+          if (schemaEl.value.includes('FormConfigTemplate')) fpFetchProjects();
+        });
+        if (el.tagName === 'SELECT') el.addEventListener('change', () => {
+          if (schemaEl.value.includes('FormConfigTemplate')) fpFetchProjects();
+        });
+      }
+    });
 
     const restoreBox = () => {
       overlay.classList.add('hidden');
