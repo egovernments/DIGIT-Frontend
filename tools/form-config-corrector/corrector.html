@@ -78,6 +78,8 @@ input[type="file"] { display: none; }
 .btn-primary:hover { filter: brightness(1.1); }
 .btn-green { background: var(--green); color: var(--surface); border-color: var(--green); }
 .btn-green:hover { filter: brightness(1.1); }
+.btn-blue { background: var(--blue); color: var(--surface); border-color: var(--blue); }
+.btn-blue:hover { filter: brightness(1.1); }
 .btn-red { background: var(--red); color: var(--surface); border-color: var(--red); }
 .btn-red:hover { filter: brightness(1.1); }
 .btn-sm { padding: 4px 10px; font-size: 12px; }
@@ -150,6 +152,11 @@ input[type="file"] { display: none; }
 .jt-cp { opacity: 0; color: var(--blue); cursor: pointer; font-size: 10px; margin-left: 6px; user-select: none; }
 .jt-line:hover .jt-cp { opacity: .6; }
 .jt-cp:hover { opacity: 1 !important; }
+.jt-editable { outline: none; border-bottom: 1px dashed var(--overlay); padding: 0 2px; border-radius: 2px; cursor: text; min-width: 20px; display: inline-block; }
+.jt-editable:focus { background: rgba(137,180,250,.15); border-bottom-color: var(--blue); }
+.jt-toggle { cursor: pointer; user-select: none; }
+.jt-toggle:hover { filter: brightness(1.2); }
+.jt-editing .jt-cp { display: none; }
 
 /* ─── Code viewer (diff) ─── */
 .code-viewer { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
@@ -505,8 +512,8 @@ function analyzeAndFix(configData, opts = {}) {
   function cfn(o,p,e,d,vis,isPage){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return e;if(Array.isArray(o)){o.forEach((x,i)=>cfn(x,`${p}[${i}]`,e,d+1,vis,false));return e;}if(vis.has(o))return e;vis.add(o);if(o.fieldName&&typeof o.fieldName==='string'&&o.fieldName.trim())e.push({obj:o,fieldName:o.fieldName,path:p});for(const[k,v]of Object.entries(o)){if(k==='fieldName')continue;if(isPage&&k==='properties'&&Array.isArray(v))continue;if(typeof v==='object'&&v!==null)cfn(v,p?`${p}.${k}`:k,e,d+1,vis,false);}return e;}
   if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0,new WeakSet(),true);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){let x=2,nn=`${e.fieldName}${x}`;const all=new Set(entries.map(z=>z.obj.fieldName));while(all.has(nn)){x++;nn=`${e.fieldName}${x}`;}e.obj.fieldName=nn;report.fixes.push({rule:'duplicate-fieldName',screen:n,old:e.fieldName.replace(/\d+$/,''),new:nn,path:e.path,fixed:`"${e.fieldName.replace(/\d+$/,'')}" \u2192 "${nn}"`});}else seen.set(e.fieldName,true);}}}}
 
-  // R4: flow categories (default to moduleName)
-  if(data.flows){for(const fl of data.flows){if((fl.screenType||fl.body)&&(!fl.category||!fl.category.trim())){fl.category=moduleName||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:fl.name,fixed:`category \u2192 "${fl.category}"`});}if(fl.pages){for(const pg of fl.pages){if((pg.screenType||pg.body)&&(!pg.category||!pg.category.trim())){pg.category=moduleName||pg.name||pg.page||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:`${fl.name}/${pg.page||pg.name}`,fixed:`category \u2192 "${pg.category}"`});}}}}}
+  // R4: flow categories (inherit from previous flow, then moduleName)
+  if(data.flows){let lastCategory='';for(const fl of data.flows){if(fl.category&&fl.category.trim()){lastCategory=fl.category;}else if((fl.screenType||fl.body)&&(!fl.category||!fl.category.trim())){fl.category=lastCategory||moduleName||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:fl.name,fixed:`category \u2192 "${fl.category}"`});}}}
 
   // R4b: FORM screenType should not have body (body is only for TEMPLATE pages)
   if(autoFix&&data.flows){for(const fl of data.flows){if(fl.screenType==='FORM'&&fl.body){delete fl.body;report.fixes.push({rule:'form-has-body',flow:fl.name,path:fl.name,fixed:'Removed body from FORM flow'});}if(fl.pages){for(const pg of fl.pages){if(pg.screenType==='FORM'&&pg.body){delete pg.body;report.fixes.push({rule:'form-has-body',flow:fl.name,path:`${fl.name}/${pg.page||pg.name}`,fixed:'Removed body from FORM page'});}}}}}
@@ -535,7 +542,7 @@ function analyzeAndFix(configData, opts = {}) {
   wLoc(data,{},0);
 
   // R12: APP_CONFIG category, flow, and page localization codes (for hcm-appconfiguration)
-  if(data.flows){const categories=new Set(),flowNames=new Set(),pageNames=new Set();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){if(pg.category)categories.add(pg.category);if(pg.page||pg.name)pageNames.add(pg.page||pg.name);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(fn));}}for(const pn of pageNames){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(pn));}}}
+  if(data.flows){const categories=new Set(),flowNames=new Set(),pageNames=new Set();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){if(pg.page||pg.name)pageNames.add(pg.page||pg.name);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(fn));}}for(const pn of pageNames){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(pn));}}}
 
   report.totalIssues=report.fixes.length+report.warnings.length;
   const newLocalizations = Array.from(allNew.entries()).map(([code,message])=>({code,message}));
@@ -782,26 +789,43 @@ function renderSplitDiff(oldText, newText) {
 // JSON tree viewer — nested containers for O(1) collapse/expand
 // Each object/array wraps children in a single div; toggling hides that one div.
 let _jtNodeData = new Map(); // nodeId -> jsonValue for copy
+let _jtLeafData = []; // [{parent, key, type}] for inline editing
 
-function renderJsonTree(data) {
+function renderJsonTree(data, editable) {
   _jtNodeData = new Map();
+  _jtLeafData = [];
   let nodeId = 0;
 
-  function renderVal(val, indent, key, isLast) {
+  function renderVal(val, indent, displayKey, isLast, parentObj, dataKey) {
     const comma = isLast ? '' : '<span class="jt-cm">,</span>';
     const pad = '<span class="jt-indent" style="width:' + (indent * 16) + 'px;display:inline-block"></span>';
-    const keyHtml = key !== null ? `<span class="jt-k">"${esc(String(key))}"</span>: ` : '';
+    const keyHtml = displayKey !== null ? `<span class="jt-k">"${esc(String(displayKey))}"</span>: ` : '';
 
     if (val === null) {
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-nl">null</span>${comma}</span></div>`;
     }
     if (typeof val === 'boolean') {
+      if (editable && parentObj) {
+        const lid = nodeId++;
+        _jtLeafData[lid] = {parent: parentObj, key: dataKey, type: 'boolean'};
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-b jt-editable jt-toggle" data-jte="${lid}" onclick="jtToggleBool(this)">${val}</span>${comma}</span></div>`;
+      }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-b">${val}</span>${comma}</span></div>`;
     }
     if (typeof val === 'number') {
+      if (editable && parentObj) {
+        const lid = nodeId++;
+        _jtLeafData[lid] = {parent: parentObj, key: dataKey, type: 'number'};
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-n"><span contenteditable="true" data-jte="${lid}" class="jt-editable">${val}</span></span>${comma}</span></div>`;
+      }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-n">${val}</span>${comma}</span></div>`;
     }
     if (typeof val === 'string') {
+      if (editable && parentObj) {
+        const lid = nodeId++;
+        _jtLeafData[lid] = {parent: parentObj, key: dataKey, type: 'string'};
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-s">"<span contenteditable="true" data-jte="${lid}" class="jt-editable">${esc(val)}</span>"</span>${comma}</span></div>`;
+      }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-s">"${esc(val)}"</span>${comma}</span></div>`;
     }
 
@@ -827,7 +851,6 @@ function renderJsonTree(data) {
     }
 
     let html = `<div class="jt-node">`;
-    // Opening line
     html += `<div class="jt-line">`;
     html += pad;
     html += `<span class="jt-tog" onclick="jtToggle(this)">&#9660;</span>`;
@@ -836,21 +859,19 @@ function renderJsonTree(data) {
     html += `<span class="jt-cp" onclick="jtCopy(${nid},this)">copy</span>`;
     html += `</span></div>`;
 
-    // Children container — single div to toggle
     html += `<div class="jt-children">`;
     if (isArr) {
       for (let i = 0; i < val.length; i++) {
-        html += renderVal(val[i], indent + 1, null, i === val.length - 1);
+        html += renderVal(val[i], indent + 1, null, i === val.length - 1, val, i);
       }
     } else {
       const keys = Object.keys(val);
       for (let i = 0; i < keys.length; i++) {
-        html += renderVal(val[keys[i]], indent + 1, keys[i], i === keys.length - 1);
+        html += renderVal(val[keys[i]], indent + 1, keys[i], i === keys.length - 1, val, keys[i]);
       }
     }
     html += `</div>`;
 
-    // Closing line
     html += `<div class="jt-line jt-close-line">`;
     html += `<span class="jt-indent" style="width:${indent * 16}px;display:inline-block"></span>`;
     html += `<span class="jt-tog leaf"></span>`;
@@ -861,7 +882,7 @@ function renderJsonTree(data) {
     return html;
   }
 
-  return `<div class="jt">${renderVal(data, 0, null, true)}</div>`;
+  return `<div class="jt${editable ? ' jt-editing' : ''}">${renderVal(data, 0, null, true, null, null)}</div>`;
 }
 
 function jtToggle(togEl) {
@@ -884,6 +905,46 @@ function jtCopy(nid, el) {
   navigator.clipboard.writeText(JSON.stringify(val, null, 2));
   el.textContent = 'copied!';
   setTimeout(() => { el.textContent = 'copy'; }, 1500);
+}
+
+function jtToggleBool(el) {
+  el.textContent = el.textContent.trim() === 'true' ? 'false' : 'true';
+}
+
+function jsonDiffFixes(a, b, path) {
+  const fixes = [];
+  const trunc = s => s.length > 80 ? s.slice(0, 77) + '...' : s;
+  function walk(x, y, p) {
+    if (x === y) return;
+    if (x === null || y === null || typeof x !== typeof y || typeof x !== 'object') {
+      if (x === undefined) fixes.push({rule:'added',path:p,fixed:trunc(JSON.stringify(y))});
+      else if (y === undefined) fixes.push({rule:'removed',path:p,fixed:trunc(JSON.stringify(x))});
+      else fixes.push({rule:'changed',path:p,fixed:`${trunc(JSON.stringify(x))} \u2192 ${trunc(JSON.stringify(y))}`});
+      return;
+    }
+    if (Array.isArray(x) !== Array.isArray(y)) {
+      fixes.push({rule:'changed',path:p,fixed:`${Array.isArray(x)?'array':'object'} \u2192 ${Array.isArray(y)?'array':'object'}`});
+      return;
+    }
+    if (Array.isArray(x)) {
+      for (let i = 0; i < Math.max(x.length, y.length); i++) {
+        const cp = `${p}[${i}]`;
+        if (i >= x.length) walk(undefined, y[i], cp);
+        else if (i >= y.length) walk(x[i], undefined, cp);
+        else walk(x[i], y[i], cp);
+      }
+    } else {
+      const allKeys = new Set([...Object.keys(x), ...Object.keys(y)]);
+      for (const k of allKeys) {
+        const cp = p ? `${p}.${k}` : k;
+        if (!(k in x)) walk(undefined, y[k], cp);
+        else if (!(k in y)) walk(x[k], undefined, cp);
+        else walk(x[k], y[k], cp);
+      }
+    }
+  }
+  walk(a, b, path);
+  return fixes;
 }
 
 function collapseAllJt() {
@@ -3093,7 +3154,8 @@ function renderModule(idx) {
   activeModuleIdx = idx;
   const r = results[idx];
   const { report, newLocalizations, correctedData, originalData } = r;
-  const { moduleName, fixes } = report;
+  const { moduleName } = report;
+  const fixes = r.manuallyEdited ? jsonDiffFixes(originalData, correctedData, '') : report.fixes;
 
   // Group fixes by rule
   const byRule = {};
@@ -3114,6 +3176,10 @@ function renderModule(idx) {
         <button class="btn btn-sm" onclick="downloadModJson(${idx})">Download JSON</button>
         <button class="btn btn-sm" onclick="copyModLocs(${idx})">Copy Localizations</button>
       </div>`;
+
+  if (r.manuallyEdited) {
+    html += `<div style="padding:8px 12px;background:rgba(137,180,250,.1);border:1px solid var(--blue);border-radius:6px;margin-bottom:12px;font-size:13px;color:var(--blue)">Showing all differences between original and manually edited JSON.</div>`;
+  }
 
   if (fixes.length === 0) {
     html += `<p style="color:var(--teal);padding:20px 0">No structural issues found in ${esc(moduleName)}.</p>`;
@@ -3163,11 +3229,15 @@ function renderModule(idx) {
           <div class="btn-group">
             <button class="btn btn-sm" onclick="collapseAllJt()">Collapse All</button>
             <button class="btn btn-sm" onclick="expandAllJt()">Expand All</button>
+            <button class="btn btn-sm btn-blue" id="btnEditJson" onclick="editModJson(${idx})">Edit</button>
+            <button class="btn btn-green" id="btnSaveJson" style="display:none" onclick="saveModJson(${idx})">Save</button>
+            <button class="btn btn-sm" id="btnCancelJson" style="display:none" onclick="cancelEditJson(${idx})">Cancel</button>
             <button class="btn btn-sm" onclick="copyModJson(${idx})">Copy</button>
             <button class="btn btn-sm" onclick="downloadModJson(${idx})">Download</button>
           </div>
         </div>
-        ${renderJsonTree(correctedData)}
+        <div id="jsonTreeWrap">${renderJsonTree(correctedData)}</div>
+        <div id="jsonEditError" style="display:none;color:var(--red);padding:4px 12px;font-size:13px"></div>
       </div>
     </div>`;
 
@@ -3195,6 +3265,46 @@ function downloadModJson(idx) {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = `${r.report.moduleName}-corrected.json`; a.click(); URL.revokeObjectURL(a.href);
 }
+function editModJson(idx) {
+  const wrap = document.getElementById('jsonTreeWrap');
+  wrap.innerHTML = renderJsonTree(results[idx].correctedData, true);
+  document.getElementById('btnEditJson').style.display = 'none';
+  document.getElementById('btnSaveJson').style.display = '';
+  document.getElementById('btnCancelJson').style.display = '';
+  document.getElementById('jsonEditError').style.display = 'none';
+}
+function saveModJson(idx) {
+  const errEl = document.getElementById('jsonEditError');
+  try {
+    document.querySelectorAll('[data-jte]').forEach(el => {
+      const lid = parseInt(el.dataset.jte);
+      const info = _jtLeafData[lid];
+      if (!info || !info.parent) return;
+      const text = el.textContent;
+      switch (info.type) {
+        case 'string': info.parent[info.key] = text; break;
+        case 'number':
+          const n = Number(text);
+          if (isNaN(n)) throw new Error('Invalid number: "' + text + '"');
+          info.parent[info.key] = n;
+          break;
+        case 'boolean':
+          info.parent[info.key] = text.trim() === 'true';
+          break;
+      }
+    });
+    results[idx].manuallyEdited = true;
+    errEl.style.display = 'none';
+    renderModule(idx);
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  }
+}
+function cancelEditJson(idx) {
+  renderModule(idx);
+}
+
 function copyModLocs(idx) {
   navigator.clipboard.writeText(JSON.stringify(results[idx].newLocalizations, null, 2));
 }
