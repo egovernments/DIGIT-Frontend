@@ -1517,6 +1517,8 @@ async function refreshMgTgtProjectOptions() {
   const el = $(`#${id}`);
   if (el) el.addEventListener('blur', () => {
     if ($('#mgSrcSchema').value.includes('FormConfigTemplate')) refreshProjectOptions('mgSrc');
+    // Also refresh target project when target uses source env
+    if (!$('#mgDiffEnv')?.checked && $('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
   });
 });
 ['mgTgtUrl', 'mgTgtTenant'].forEach(id => {
@@ -1524,6 +1526,11 @@ async function refreshMgTgtProjectOptions() {
   if (el) el.addEventListener('blur', () => {
     if ($('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
   });
+});
+// Also refresh target project when source context path changes (target may use source ctx)
+const mgSrcCtxEl = $('#mgSrcContextPath');
+if (mgSrcCtxEl) mgSrcCtxEl.addEventListener('change', () => {
+  if (!$('#mgDiffEnv')?.checked && $('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
 });
 
 // ════════════════════════════════════════════════════════════════
