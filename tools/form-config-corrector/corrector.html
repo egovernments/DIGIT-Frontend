@@ -202,6 +202,7 @@ input[type="file"] { display: none; }
 .select-actions button { padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); color: var(--subtext); cursor: pointer; transition: all .15s; }
 .select-actions button:hover { color: var(--text); background: var(--overlay); }
 </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -1712,12 +1713,14 @@ async function pushAllToTarget() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// LOCALIZATION SHEET (CSV)
+// LOCALIZATION SHEET (XLSX)
 // ════════════════════════════════════════════════════════════════
 
 function downloadLocSheet() {
-  const rows = [['Module', 'Code', 'Message', 'Locale']];
   const locale = onlineLocale || 'en_IN';
+
+  // Group localizations by module
+  const moduleMap = new Map(); // locModule -> [{code, message, module, locale}]
 
   for (const r of results) {
     const moduleName = r.report.moduleName;
@@ -1728,28 +1731,66 @@ function downloadLocSheet() {
       onlineCampaign || migrateCtx?.tgt?.campaign || ''
     );
 
+    if (!moduleMap.has(locModule)) moduleMap.set(locModule, []);
+    const arr = moduleMap.get(locModule);
+
     // Existing locs
     if (r._existingLocs) {
       for (const [code, message] of r._existingLocs) {
-        rows.push([locModule, code, message, locale]);
+        arr.push({ code, message, module: locModule, locale });
       }
     }
     // New locs
     for (const loc of r.newLocalizations) {
-      rows.push([locModule, loc.code, loc.message, locale]);
+      const mod = loc._appConfig ? 'hcm-appconfiguration' : locModule;
+      const key = loc._appConfig ? 'hcm-appconfiguration' : locModule;
+      if (!moduleMap.has(key)) moduleMap.set(key, []);
+      moduleMap.get(key).push({ code: loc.code, message: loc.message, module: mod, locale });
     }
   }
 
-  if (rows.length <= 1) { showError('No localizations to export'); return; }
+  if (moduleMap.size === 0) { showError('No localizations to export'); return; }
 
-  // Build CSV
-  const csv = rows.map(row => row.map(cell => `"${(cell||'').replace(/"/g, '""')}"`).join(',')).join('\n');
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `localizations-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.csv`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const wb = XLSX.utils.book_new();
+
+  for (const [locModule, entries] of moduleMap) {
+    // Deduplicate by code
+    const seen = new Set();
+    const unique = [];
+    for (const e of entries) {
+      if (!seen.has(e.code)) { seen.add(e.code); unique.push(e); }
+    }
+
+    // Build sheet data: headers + rows
+    const header = ['Code', 'English Message', 'Module', 'Locale', 'EN JSONS'];
+    const rows = unique.map((e, i) => {
+      const rowNum = i + 2; // 1-indexed, row 1 is header
+      // Formula: builds JSON like {"code":"...","message":"...","locale":"...","module":"..."},
+      const formula = `"{\""&"code\""&":\""&"""&A${rowNum}&"""&",\""&"message\""&":\""&"""&B${rowNum}&"""&",\""&"locale\""&":\""&"""&D${rowNum}&"""&",\""&"module\""&":\""&"""&C${rowNum}&"""&"},"`;
+      return [e.code, e.message, e.module, e.locale, { f: formula }];
+    });
+
+    const wsData = [header, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 50 },  // Code
+      { wch: 40 },  // English Message
+      { wch: 35 },  // Module
+      { wch: 12 },  // Locale
+      { wch: 120 }, // EN JSONS
+    ];
+
+    // Sheet name: truncate to 31 chars (Excel limit), replace invalid chars
+    let sheetName = locModule.replace(/[\\\/\?\*\[\]:]/g, '-');
+    if (sheetName.length > 31) sheetName = sheetName.substring(0, 31);
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  }
+
+  // Download
+  const ts = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+  XLSX.writeFile(wb, `localizations-${ts}.xlsx`);
 }
 
 // ════════════════════════════════════════════════════════════════
