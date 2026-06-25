@@ -1761,17 +1761,21 @@ function downloadLocSheet() {
       if (!seen.has(e.code)) { seen.add(e.code); unique.push(e); }
     }
 
-    // Build sheet data: headers + rows
+    // Build sheet data: headers + data rows (EN JSONS left blank, filled with formulas below)
     const header = ['Code', 'English Message', 'Module', 'Locale', 'EN JSONS'];
-    const rows = unique.map((e, i) => {
-      const rowNum = i + 2; // 1-indexed, row 1 is header
-      // Formula: builds JSON like {"code":"...","message":"...","locale":"...","module":"..."},
-      const formula = `"{\""&"code\""&":\""&"""&A${rowNum}&"""&",\""&"message\""&":\""&"""&B${rowNum}&"""&",\""&"locale\""&":\""&"""&D${rowNum}&"""&",\""&"module\""&":\""&"""&C${rowNum}&"""&"},"`;
-      return [e.code, e.message, e.module, e.locale, { f: formula }];
-    });
+    const rows = unique.map(e => [e.code, e.message, e.module, e.locale, '']);
 
     const wsData = [header, ...rows];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Set EN JSONS formula cells directly on the worksheet
+    // Excel formula uses "" to produce literal " inside strings
+    for (let i = 0; i < unique.length; i++) {
+      const rowNum = i + 2;
+      const cellRef = XLSX.utils.encode_cell({ r: rowNum - 1, c: 4 }); // column E (0-indexed: 4)
+      const f = '"{""code"":""" & A' + rowNum + ' & """,""message"":""" & B' + rowNum + ' & """,""locale"":""" & D' + rowNum + ' & """,""module"":""" & C' + rowNum + ' & """},"';
+      ws[cellRef] = { t: 'str', f: f };
+    }
 
     // Set column widths
     ws['!cols'] = [
