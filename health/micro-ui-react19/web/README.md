@@ -57,7 +57,7 @@ yarn start:dev
 PORT=3001 yarn start
 ```
 
-The application will be available at: `http://localhost:3000/workbench-ui`
+The application will be available at: `http://localhost:3000/hcm-digit-ui`
 
 ### Environment Variables
 
