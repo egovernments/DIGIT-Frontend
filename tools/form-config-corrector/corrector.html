@@ -412,6 +412,7 @@ input[type="file"] { display: none; }
 // ════════════════════════════════════════════════════════════════
 
 const MAX_WALK_DEPTH = 50;
+const LFPC_SCHEMA = 'HCM-ADMIN-CONSOLE.LabelFieldPairConfig';
 const LOCALIZATION_FIELDS = ['fieldName','label','heading','title','description','message','helpText','infoText','actionLabel','primaryActionLabel','secondaryActionLabel','expandLabel','collapseLabel','innerLabel','tooltip','errorMessage','key'];
 
 const DOMAIN_WORDS = ['ACKNOWLEDGEMENT','RECONCILIATION','REGISTRATION','CONFIGURATION','BENEFICIARY','COMMUNITY','COMPLAINTS','COMPLAINT','CHECKLIST','DASHBOARD','HOUSEHOLD','INVENTORY','INDIVIDUAL','NAVIGATION','PERMISSION','SELECTION','SETTLEMENT','TRANSPORT','WAREHOUSE','ATTENDANCE','CAMPAIGN','CATEGORY','COMMENTS','DELIVERY','DETAILS','DAMAGED','EXPIRY','FACILITY','HANDLER','LOCATION','MULTIPLE','OVERVIEW','PREVIEW','PRODUCTS','PRODUCT','QUANTITY','RECEIVE','REPORTS','REQUIRED','SCANNER','SUCCESS','VEHICLE','ACTIONS','BUTTON','CANCEL','CLOSE','COORD','CREATE','DELETE','ENTER','FIELD','GENDER','MANAGE','MEMBER','NUMBER','RECORD','REPORT','RETURN','SCREEN','SEARCH','SELECT','STOCK','SUBMIT','BATCH','DATE','EDIT','FLOW','FORM','HEAD','HOME','ITEM','LIST','LOST','MARK','NAME','NEXT','OPEN','PAGE','SCAN','SENT','TEAM','TEXT','TYPE','UNABLE','VIEW','AREA','BACK','CARD','CODE','DONE','FROM','HELP','INFO','LATLNG','PANEL','SAVE','WHICH','ADD','AGE','NEW','QR','TO','MONITORING','MONITOR','SURVEYOR','SURVEY','CLUSTER','LOT','CHILDREN','VACCINATED','REFUSAL','ABSENCE','CAREGIVER','AWARENESS','DESIGNATION','COVERED','FINGER','MARKED','DOSES','REASON','SPECIFY','INFORMED','MISSED','ASLEEP','ROUTINE','POORLY','FINAL','COUNT','CASE','VISITED','REVISITED','PRESENT','PHYSICAL','CALCULATED','EXCESS','ISSUED','RETURNED','RECEIVED','WAYBILL','ENTRY','MRN','TOTAL','MEMBERS','LABEL','STATUS','DESCRIPTION','CONTACT','INBOX','COMPLAINANT','REFERRAL','SYMPTOM','ERROR','MOBILE'].sort((a,b)=>b.length-a.length);
@@ -493,6 +494,9 @@ let onlineRecords = []; // raw MDMS records
 
 // Migration state
 let migrateCtx = null; // { src: {...}, tgt: {...}, srcRecords, tgtRecords, srcToken, tgtToken }
+
+// LFPC state
+let lfpcState = null; // { updatedRecords, newRecords, report }
 
 // Confirmation dialog state
 let confirmResolveFn = null;
@@ -670,6 +674,204 @@ function buildRequestInfo(token, locale, action) {
 }
 
 // ════════════════════════════════════════════════════════════════
+// LFPC (LabelFieldPairConfig) VALIDATION & SYNC
+// ════════════════════════════════════════════════════════════════
+
+function inferEntityFromPath(jsonPath) {
+  if (!jsonPath) return null;
+  const m = jsonPath.match(/(\w+Model)/);
+  return m ? m[1] : null;
+}
+
+function extractFieldKey(jsonPath) {
+  if (!jsonPath) return 'unknown';
+  let clean = jsonPath.replace(/\{\{/g, '').replace(/\}\}/g, '').trim();
+  // Handle fn:xxx(...) wrappers
+  const fnMatch = clean.match(/fn:\w+\(([^,)]+)/);
+  if (fnMatch) clean = fnMatch[1].trim();
+  const segments = clean.split('.').filter(Boolean);
+  return segments[segments.length - 1] || 'unknown';
+}
+
+// Walk a FormConfig and collect all labelPairList entries with page context
+function collectLabelPairEntries(data) {
+  const entries = [];
+  const moduleName = data.name || 'UNKNOWN';
+  const visited = new WeakSet();
+  function walk(obj, pageName, depth) {
+    if (depth > MAX_WALK_DEPTH || !obj || typeof obj !== 'object') return;
+    if (Array.isArray(obj)) { obj.forEach(x => walk(x, pageName, depth + 1)); return; }
+    if (visited.has(obj)) return;
+    visited.add(obj);
+    const pn = obj.page || (obj.screenType ? obj.name : null) || pageName;
+    if (obj.format === 'labelPairList' && Array.isArray(obj.labelPairList)) {
+      for (const pair of obj.labelPairList) {
+        if (pair && pair.key && typeof pair.key === 'string') {
+          entries.push({
+            key: pair.key,
+            value: pair.value || '',
+            pageName: pn || '',
+            moduleName,
+            entity: inferEntityFromPath(pair.value),
+            fieldKey: extractFieldKey(pair.value),
+          });
+        }
+      }
+    }
+    for (const [k, v] of Object.entries(obj)) {
+      if (typeof v === 'object' && v !== null) walk(v, pn, depth + 1);
+    }
+  }
+  if (data.flows) {
+    for (const fl of data.flows) {
+      walk(fl, fl.name || '', 0);
+    }
+  }
+  return entries;
+}
+
+// Reconcile FormConfig labelPairList entries against LFPC records.
+// Adds missing entries, updates changed jsonPaths.
+// Returns { updatedRecords, newRecords, report }
+function reconcileLfpc(allResults, lfpcRecords, tenant) {
+  // Build lookup: name -> [{entity, record, labelField}]
+  const lfpcByName = new Map();
+  for (const rec of lfpcRecords) {
+    if (!rec.data || !Array.isArray(rec.data.labelFields)) continue;
+    for (const lf of rec.data.labelFields) {
+      if (!lfpcByName.has(lf.name)) lfpcByName.set(lf.name, []);
+      lfpcByName.get(lf.name).push({ entity: rec.data.entity, record: rec, labelField: lf });
+    }
+  }
+  // entity -> record
+  const lfpcByEntity = new Map();
+  for (const rec of lfpcRecords) {
+    if (rec.data?.entity) lfpcByEntity.set(rec.data.entity, rec);
+  }
+
+  const modifiedRecords = new Set();
+  const newRecords = [];
+  const report = [];
+
+  for (const result of allResults) {
+    const entries = collectLabelPairEntries(result.correctedData);
+    for (const entry of entries) {
+      if (!entry.entity) continue; // can't determine entity from path
+      const existing = lfpcByName.get(entry.key);
+
+      if (existing && existing.length > 0) {
+        // Key exists in LFPC — check jsonPath and module/page
+        for (const ex of existing) {
+          // Check jsonPath match, update if changed
+          if (entry.value && ex.labelField.jsonPath !== entry.value) {
+            ex.labelField.jsonPath = entry.value;
+            modifiedRecords.add(ex.record);
+            report.push({ action: 'update-jsonPath', key: entry.key, entity: ex.entity, module: entry.moduleName, page: entry.pageName, jsonPath: entry.value });
+          }
+          // Check module/page enabled
+          let pageFound = false;
+          if (Array.isArray(ex.labelField.modules)) {
+            for (const modObj of ex.labelField.modules) {
+              const modPages = modObj[entry.moduleName];
+              if (modPages && Array.isArray(modPages.enabledPages)) {
+                if (modPages.enabledPages.includes(entry.pageName)) {
+                  pageFound = true;
+                } else {
+                  modPages.enabledPages.push(entry.pageName);
+                  modifiedRecords.add(ex.record);
+                  report.push({ action: 'add-page', key: entry.key, entity: ex.entity, module: entry.moduleName, page: entry.pageName });
+                  pageFound = true;
+                }
+                break;
+              }
+            }
+            if (!pageFound) {
+              ex.labelField.modules.push({ [entry.moduleName]: { enabledPages: [entry.pageName] } });
+              modifiedRecords.add(ex.record);
+              report.push({ action: 'add-module', key: entry.key, entity: ex.entity, module: entry.moduleName, page: entry.pageName });
+            }
+          }
+        }
+      } else {
+        // Key NOT in LFPC — add new labelField entry
+        const newLabelField = {
+          name: entry.key,
+          modules: [{ [entry.moduleName]: { enabledPages: [entry.pageName] } }],
+          fieldKey: entry.fieldKey,
+          jsonPath: entry.value,
+          mandatory: 'false',
+        };
+
+        let entityRecord = lfpcByEntity.get(entry.entity);
+        if (entityRecord) {
+          entityRecord.data.labelFields.push(newLabelField);
+          modifiedRecords.add(entityRecord);
+        } else {
+          // Check pending new records
+          let pending = newRecords.find(r => r.data.entity === entry.entity);
+          if (!pending) {
+            pending = {
+              tenantId: tenant || lfpcRecords[0]?.tenantId || 'default',
+              schemaCode: LFPC_SCHEMA,
+              uniqueIdentifier: entry.entity,
+              data: { entity: entry.entity, modules: [], labelFields: [] },
+              isActive: true, _isNew: true,
+            };
+            newRecords.push(pending);
+            lfpcByEntity.set(entry.entity, pending);
+          }
+          pending.data.labelFields.push(newLabelField);
+          if (!pending.data.modules.includes(entry.moduleName)) pending.data.modules.push(entry.moduleName);
+        }
+        // Update lookup for subsequent iterations
+        if (!lfpcByName.has(entry.key)) lfpcByName.set(entry.key, []);
+        lfpcByName.get(entry.key).push({ entity: entry.entity, record: entityRecord || newRecords[newRecords.length - 1], labelField: newLabelField });
+        report.push({ action: 'add-entry', key: entry.key, entity: entry.entity, module: entry.moduleName, page: entry.pageName, jsonPath: entry.value });
+      }
+    }
+  }
+  return { updatedRecords: [...modifiedRecords], newRecords, report };
+}
+
+// Push LFPC changes to an environment
+async function pushLfpcChanges(envUrl, token, locale, tenant) {
+  if (!lfpcState || (lfpcState.updatedRecords.length === 0 && lfpcState.newRecords.length === 0)) return { pushed: 0, errors: 0 };
+  let pushed = 0, errors = 0;
+  const total = lfpcState.updatedRecords.length + lfpcState.newRecords.length;
+
+  for (let i = 0; i < lfpcState.updatedRecords.length; i++) {
+    const rec = lfpcState.updatedRecords[i];
+    showProgress(`Updating LFPC ${rec.data.entity}...`, `${i + 1}/${total}`, ((i + 1) / total) * 100);
+    await tick();
+    try {
+      const updateRec = {
+        id: rec.id, tenantId: rec.tenantId, schemaCode: LFPC_SCHEMA,
+        uniqueIdentifier: rec.uniqueIdentifier, data: rec.data, isActive: true,
+        auditDetails: rec.auditDetails || null,
+      };
+      await apiMdmsUpdate(envUrl, LFPC_SCHEMA, updateRec, token, locale);
+      pushed++;
+    } catch (e) { errors++; console.warn('LFPC update failed:', e); }
+  }
+
+  for (let i = 0; i < lfpcState.newRecords.length; i++) {
+    const rec = lfpcState.newRecords[i];
+    const idx = lfpcState.updatedRecords.length + i;
+    showProgress(`Creating LFPC ${rec.data.entity}...`, `${idx + 1}/${total}`, ((idx + 1) / total) * 100);
+    await tick();
+    try {
+      const createRec = {
+        tenantId: tenant || rec.tenantId, schemaCode: LFPC_SCHEMA,
+        uniqueIdentifier: rec.uniqueIdentifier, data: rec.data, isActive: true,
+      };
+      await apiMdmsCreate(envUrl, LFPC_SCHEMA, createRec, token, locale);
+      pushed++;
+    } catch (e) { errors++; console.warn('LFPC create failed:', e); }
+  }
+  return { pushed, errors };
+}
+
+// ════════════════════════════════════════════════════════════════
 // AI ENHANCEMENT (always runs when Claude available)
 // ════════════════════════════════════════════════════════════════
 
@@ -824,6 +1026,7 @@ $('#btnAnalyze').onclick = async () => {
   hideLoader();
   onlineRecords = [];
   migrateCtx = null;
+  lfpcState = null;
   renderResults();
 };
 
@@ -862,6 +1065,12 @@ async function onlineFetch() {
 
     if (onlineRecords.length === 0) { hideLoader(); showError('No records found for the given filters'); return; }
 
+    // Fetch LFPC records
+    showLoader('Fetching LabelFieldPairConfig...');
+    await tick();
+    let lfpcRecs = [];
+    try { lfpcRecs = await apiMdmsSearch(envUrl, tenant, LFPC_SCHEMA, {}, onlineToken, onlineLocale); } catch (e) { /* no LFPC */ }
+
     // Module selection
     hideLoader();
     const selectedRecords = await showModuleSelector(onlineRecords);
@@ -888,8 +1097,13 @@ async function onlineFetch() {
       const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
       result._record = rec; // keep reference to original record for updates
       result._locModule = locModule;
+      // Stamp module/locale on each localization entry
+      for (const loc of result.newLocalizations) { loc.module = locModule; loc.locale = onlineLocale; }
       results.push(result);
     }
+
+    // Reconcile LFPC
+    lfpcState = reconcileLfpc(results, lfpcRecs, tenant);
 
     // AI enhance
     await aiEnhance(results);
@@ -951,6 +1165,12 @@ async function migrateEnvFetch() {
     const tgtFilters = tgt.project ? { project: tgt.project } : {};
     const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
 
+    // Fetch LFPC from source
+    showLoader('Fetching LabelFieldPairConfig...');
+    await tick();
+    let lfpcRecs = [];
+    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, `en_${src.tenant.toUpperCase()}`); } catch (e) { /* no LFPC */ }
+
     // Build target name->record map for create vs update
     const tgtMap = new Map();
     for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
@@ -990,12 +1210,19 @@ async function migrateEnvFetch() {
       const result = analyzeAndFix(dataCopy, { autoFix, existingLocCodes });
       result._record = rec;
       result._srcLocModule = srcLocModule;
-      result._tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
+      const tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
+      result._tgtLocModule = tgtLocModule;
       result._existingLocs = existingLocCodes;
       result._isUpdate = tgtMap.has(rec.data.name);
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
+      // Stamp module/locale on each localization entry
+      const tgtLocale = `en_${tgt.tenant.toUpperCase()}`;
+      for (const loc of result.newLocalizations) { loc.module = tgtLocModule; loc.locale = tgtLocale; }
       results.push(result);
     }
+
+    // Reconcile LFPC
+    lfpcState = reconcileLfpc(results, lfpcRecs, tgt.tenant);
 
     await aiEnhance(results);
 
@@ -1060,6 +1287,12 @@ async function migrateSchemaFetch() {
     const tgtFilters = tgt.project ? { project: tgt.project } : {};
     const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
 
+    // Fetch LFPC from source
+    showLoader('Fetching LabelFieldPairConfig...');
+    await tick();
+    let lfpcRecs = [];
+    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, `en_${src.tenant.toUpperCase()}`); } catch (e) { /* no LFPC */ }
+
     const tgtMap = new Map();
     for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
 
@@ -1089,12 +1322,19 @@ async function migrateSchemaFetch() {
       const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
       result._record = rec;
       result._srcLocModule = srcLocModule;
-      result._tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
+      const tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
+      result._tgtLocModule = tgtLocModule;
       result._existingLocs = existingLocCodes;
       result._isUpdate = tgtMap.has(rec.data.name);
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
+      // Stamp module/locale on each localization entry
+      const tgtLocale = `en_${tgt.tenant.toUpperCase()}`;
+      for (const loc of result.newLocalizations) { loc.module = tgtLocModule; loc.locale = tgtLocale; }
       results.push(result);
     }
+
+    // Reconcile LFPC
+    lfpcState = reconcileLfpc(results, lfpcRecs, tgt.tenant);
 
     await aiEnhance(results);
 
@@ -1126,7 +1366,7 @@ async function pushConfigFixes() {
   for (let i = 0; i < results.length; i++) {
     const r = results[i];
     if (r.report.fixes.length === 0) continue;
-    showProgress(`Updating ${r.report.moduleName}...`, `${i+1}/${results.length}`, ((i+1)/results.length)*100);
+    showProgress(`Updating ${r.report.moduleName}...`, `${i+1}/${results.length}`, ((i+1)/results.length)*90);
     await tick();
     try {
       const rec = r._record;
@@ -1142,9 +1382,14 @@ async function pushConfigFixes() {
       showError(`Failed to update ${r.report.moduleName}: ${e.message}`);
     }
   }
+
+  // Push LFPC changes
+  const lfpcResult = await pushLfpcChanges(onlineEnvUrl, onlineToken, onlineLocale, onlineTenant);
+
   hideLoader();
-  showError(`Pushed ${pushed} modules. ${errors ? errors + ' errors.' : 'All successful.'}`);
-  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+  const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
+  showError(`Pushed ${pushed} modules.${lfpcMsg} ${errors || lfpcResult.errors ? (errors + lfpcResult.errors) + ' errors.' : 'All successful.'}`);
+  if (!errors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
 async function upsertLocalizations() {
@@ -1263,9 +1508,13 @@ async function pushAllToTarget() {
     }
   }
 
+  // Push LFPC changes to target
+  const lfpcResult = await pushLfpcChanges(tgt.url, tgtToken, `en_${tgt.tenant.toUpperCase()}`, tgt.tenant);
+
   hideLoader();
-  showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations. ${errors ? errors + ' errors.' : ''}`);
-  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+  const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
+  showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg} ${errors ? errors + ' errors.' : ''}`);
+  if (!errors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1320,12 +1569,14 @@ function renderResults() {
   const tFixes = results.reduce((s,r) => s + r.report.fixes.length, 0);
   const tWarns = results.reduce((s,r) => s + r.report.warnings.length, 0);
   const tLocs = results.reduce((s,r) => s + r.newLocalizations.length, 0);
+  const tLfpc = lfpcState ? lfpcState.report.length : 0;
 
   $('#statsBar').innerHTML = `
     <div class="stat"><div class="num num-mod">${results.length}</div><div class="lbl">Modules</div></div>
     <div class="stat"><div class="num num-fix">${tFixes}</div><div class="lbl">Fixes</div></div>
     <div class="stat"><div class="num num-warn">${tWarns}</div><div class="lbl">Warnings</div></div>
-    <div class="stat"><div class="num num-loc">${tLocs}</div><div class="lbl">Localizations</div></div>`;
+    <div class="stat"><div class="num num-loc">${tLocs}</div><div class="lbl">Localizations</div></div>
+    ${tLfpc > 0 ? `<div class="stat"><div class="num" style="color:var(--peach)">${tLfpc}</div><div class="lbl">LFPC Changes</div></div>` : ''}`;
 
   // Action buttons based on mode
   const ab = $('#actionButtons');
@@ -1418,10 +1669,18 @@ function renderModule(idx) {
   if (newLocalizations.length === 0) {
     html += `<p style="color:var(--teal);padding:20px 0">All localization codes already have messages.</p>`;
   } else {
-    html += `<table class="loc-table"><thead><tr><th style="width:40%">Code</th><th style="width:45%">Message</th><th style="width:15%">Type</th></tr></thead><tbody>`;
-    newLocalizations.forEach((l, li) => {
-      html += `<tr><td class="loc-code">${esc(l.code)}</td><td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${li},this.value)"></td><td class="loc-type">${l.fieldType || ''}</td></tr>`;
-    });
+    const hasModule = newLocalizations.some(l => l.module);
+    if (hasModule) {
+      html += `<table class="loc-table"><thead><tr><th style="width:25%">Code</th><th style="width:30%">Message</th><th style="width:20%">Module</th><th style="width:15%">Locale</th><th style="width:10%">Type</th></tr></thead><tbody>`;
+      newLocalizations.forEach((l, li) => {
+        html += `<tr><td class="loc-code">${esc(l.code)}</td><td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${li},this.value)"></td><td class="loc-type">${esc(l.module || '')}</td><td class="loc-type">${esc(l.locale || '')}</td><td class="loc-type">${l.fieldType || ''}</td></tr>`;
+      });
+    } else {
+      html += `<table class="loc-table"><thead><tr><th style="width:40%">Code</th><th style="width:45%">Message</th><th style="width:15%">Type</th></tr></thead><tbody>`;
+      newLocalizations.forEach((l, li) => {
+        html += `<tr><td class="loc-code">${esc(l.code)}</td><td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${li},this.value)"></td><td class="loc-type">${l.fieldType || ''}</td></tr>`;
+      });
+    }
     html += `</tbody></table>`;
   }
   html += `</div>
