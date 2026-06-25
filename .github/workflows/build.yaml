@@ -12,6 +12,7 @@ on:
           - digit-ui
           - core-ui
           - workbench-ui
+          - hcm-digit-ui
           - sandbox-ui
           - microplan-ui
           - console
@@ -31,9 +32,6 @@ env:
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-permissions:
-  contents: read
-  
 jobs:
   resolve-config:
     name: Resolve ${{ github.event.inputs.pipeline_name }} config

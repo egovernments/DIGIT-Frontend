@@ -1,5 +1,5 @@
 export const TourSteps = {
-  '/workbench-ui/employee/workbench/manage-master-data':[
+  [`/${window?.contextPath}/employee/workbench/manage-master-data`]:[
     {
       content:
         'Welcome to Manage Master Data screen. Here you can search and update any master data that is configured for the logged in user tenant',
@@ -26,7 +26,7 @@ export const TourSteps = {
       title:"Manage Master Data"
     },
   ],
-  '/workbench-ui/employee/workbench/mdms-search-v2':[
+  [`/${window?.contextPath}/employee/workbench/mdms-search-v2`]:[
     {
       content:
         'Welcome to the master data search screen. Here you can search the master data added under this master',
@@ -61,7 +61,7 @@ export const TourSteps = {
     },
     
   ],
-  '/workbench-ui/employee/workbench/mdms-add-v2':[
+  [`/${window?.contextPath}/employee/workbench/mdms-add-v2`]:[
     {
       content:
         'Welcome to the master data search screen. Here you can search the master data added under this master',
@@ -88,7 +88,7 @@ export const TourSteps = {
     },
     
   ],
-  '/workbench-ui/employee/workbench/mdms-view':[
+  [`/${window?.contextPath}/employee/workbench/mdms-view`]:[
     {
       content:
         'Welcome to the master data search screen. Here you can search the master data added under this master',
@@ -106,7 +106,7 @@ export const TourSteps = {
       title:"Manage Master Data"
     }  
   ],
-  '/workbench-ui/employee/workbench/localisation-search':[
+  [`/${window?.contextPath}/employee/workbench/localisation-search`]:[
     {
       content:
         'Welcome to the master data search screen. Here you can search the master data added under this master',
