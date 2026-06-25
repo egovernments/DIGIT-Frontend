@@ -1774,7 +1774,7 @@ function downloadLocSheet() {
       const rowNum = i + 2;
       const cellRef = XLSX.utils.encode_cell({ r: rowNum - 1, c: 4 }); // column E (0-indexed: 4)
       const f = '"{""code"":""" & A' + rowNum + ' & """,""message"":""" & B' + rowNum + ' & """,""locale"":""" & D' + rowNum + ' & """,""module"":""" & C' + rowNum + ' & """},"';
-      ws[cellRef] = { t: 'str', f: f };
+      ws[cellRef] = { t: 's', v: '', f: f };
     }
 
     // Set column widths
