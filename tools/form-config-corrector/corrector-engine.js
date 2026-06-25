@@ -610,8 +610,9 @@ function checkAndFixIcons(data) {
 // Rule 10: Collect all localization codes and generate messages
 // ──────────────────────────────────────────────────────────────
 
-function collectLocalizationCodes(data, moduleName) {
+function collectLocalizationCodes(data, moduleName, autoFix = false) {
   const codes = new Map(); // code -> { fieldType, suggested message }
+  const fixes = []; // fixes from enum name replacements
   const visited = new WeakSet();
 
   function walk(obj, ctx, depth) {
@@ -673,9 +674,19 @@ function collectLocalizationCodes(data, moduleName) {
       if (Array.isArray(obj[enumArr])) {
         for (const en of obj[enumArr]) {
           if (en && en.name && typeof en.name === 'string' && en.name.trim()) {
-            const nc = en.name.trim();
-            if (nc.includes(' ') && !nc.includes('_')) continue;
+            let nc = en.name.trim();
             if (nc.startsWith('{{')) continue;
+            // Plain text name (has spaces, no underscores) -> generate a code and replace
+            if (nc.includes(' ') && !nc.includes('_') && autoFix) {
+              const origName = nc;
+              nc = moduleName.toUpperCase() + '_ENUM_' + nc.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/_+$/, '');
+              en.name = nc;
+              fixes.push({ rule: 'hardcoded-enum-name', path: enumArr, fixed: `"${origName}" \u2192 "${nc}"` });
+              if (!codes.has(nc)) {
+                codes.set(nc, { fieldType: 'enum', message: origName });
+              }
+              continue;
+            }
             if (!codes.has(nc)) {
               codes.set(nc, { fieldType: 'enum', message: generateSmartLocMessage(nc, 'enum', obj.fieldName || null, c.pageName, moduleName) });
             }
@@ -690,7 +701,7 @@ function collectLocalizationCodes(data, moduleName) {
   }
 
   walk(data, {}, 0);
-  return codes;
+  return { codes, fixes };
 }
 
 function generateSmartLocMessage(code, fieldType, componentFieldName, pageName, moduleName) {
@@ -826,10 +837,11 @@ function analyzeAndFix(configData, options = {}) {
   const iconFixes = checkAndFixIcons(data);
   report.fixes.push(...iconFixes);
 
-  // Rule 10: Collect all localization codes
-  const allLocCodes = collectLocalizationCodes(data, moduleName);
+  // Rule 10: Collect all localization codes (+ fix hardcoded enum names)
+  const locResult = collectLocalizationCodes(data, moduleName, autoFix);
+  report.fixes.push(...locResult.fixes);
   const missingLocs = [];
-  for (const [code, info] of allLocCodes) {
+  for (const [code, info] of locResult.codes) {
     if (!existingLocCodes.has(code) && !allNewLocCodes.has(code)) {
       missingLocs.push({ code, ...info });
       allNewLocCodes.set(code, info.message);
