@@ -324,8 +324,11 @@ input[type="file"] { display: none; }
           <input type="text" id="olTenant" placeholder="mz">
         </div>
         <div class="form-group">
-          <label>Project (optional)</label>
-          <input type="text" id="olProject" placeholder="MR-DN">
+          <label>MDMS Context Path</label>
+          <select id="olContextPath">
+            <option value="egov-mdms-service" selected>egov-mdms-service</option>
+            <option value="mdms-v2">mdms-v2</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Schema</label>
@@ -334,16 +337,13 @@ input[type="file"] { display: none; }
             <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
           </select>
         </div>
+        <div class="form-group" id="olProjectGroup">
+          <label>Project</label>
+          <input type="text" id="olProject" placeholder="MR-DN">
+        </div>
         <div class="form-group" id="olCampaignGroup" style="display:none">
           <label>Campaign Number</label>
-          <input type="text" id="olCampaign" placeholder="CMP-2026-06-15-006194">
-        </div>
-        <div class="form-group">
-          <label>MDMS Context Path</label>
-          <select id="olContextPath">
-            <option value="egov-mdms-service" selected>egov-mdms-service</option>
-            <option value="mdms-v2">mdms-v2</option>
-          </select>
+          <input type="text" id="olCampaign" placeholder="CMP-...">
         </div>
         <label class="check-row"><input type="checkbox" id="olAutoFix" checked> Auto-fix issues</label>
         <button class="btn btn-primary btn-full" id="btnFetch" onclick="onlineFetch()">Connect & Fetch</button>
@@ -359,22 +359,23 @@ input[type="file"] { display: none; }
           <div class="form-group"><label>Username</label><input type="text" id="mgSrcUser" placeholder="SATYA"></div>
           <div class="form-group"><label>Password</label><input type="password" id="mgSrcPass"></div>
           <div class="form-group"><label>Tenant</label><input type="text" id="mgSrcTenant" placeholder="mz"></div>
-          <div class="form-group"><label>Project</label><input type="text" id="mgSrcProject" placeholder="MR-DN"></div>
+          <div class="form-group"><label>MDMS Context Path</label>
+            <select id="mgSrcContextPath">
+              <option value="egov-mdms-service" selected>egov-mdms-service</option>
+              <option value="mdms-v2">mdms-v2</option>
+            </select>
+          </div>
           <div class="form-group"><label>Schema</label>
             <select id="mgSrcSchema">
               <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
               <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
             </select>
           </div>
+          <div class="form-group" id="mgSrcProjectGroup">
+            <label>Project</label><input type="text" id="mgSrcProject" placeholder="MR-DN">
+          </div>
           <div class="form-group" id="mgSrcCampaignGroup" style="display:none">
             <label>Campaign #</label><input type="text" id="mgSrcCampaign" placeholder="CMP-...">
-          </div>
-          <div class="form-group">
-            <label>MDMS Context Path</label>
-            <select id="mgSrcContextPath">
-              <option value="egov-mdms-service" selected>egov-mdms-service</option>
-              <option value="mdms-v2">mdms-v2</option>
-            </select>
           </div>
         </div>
       </div>
@@ -394,12 +395,14 @@ input[type="file"] { display: none; }
               </select>
             </div>
           </div>
-          <div class="form-group"><label>Project (defaults to source)</label><input type="text" id="mgTgtProject" placeholder="Same as source"></div>
           <div class="form-group"><label>Target Schema</label>
             <select id="mgTgtSchema">
               <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
               <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
             </select>
+          </div>
+          <div class="form-group" id="mgTgtProjectGroup">
+            <label>Project (defaults to source)</label><input type="text" id="mgTgtProject" placeholder="Same as source">
           </div>
           <div class="form-group" id="mgTgtCampaignGroup" style="display:none">
             <label>Campaign #</label><input type="text" id="mgTgtCampaign" placeholder="CMP-...">
@@ -1122,15 +1125,6 @@ async function refreshProjectOptions(prefix) {
   }
 }
 
-// Revert project field to text input (for FormConfig schema)
-function revertProjectToInput(prefix) {
-  const el = $(`#${prefix}Project`);
-  if (!el || el.tagName === 'INPUT') return;
-  const inp = document.createElement('input');
-  inp.type = 'text'; inp.id = el.id; inp.placeholder = 'MR-DN';
-  el.replaceWith(inp);
-}
-
 function buildRequestInfo(token, locale, action) {
   return { apiId: 'Rainmaker', ver: '.01', action, did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } };
 }
@@ -1462,22 +1456,25 @@ function switchMode(mode) {
   $(`#panel-${mode}`).classList.add('active');
 }
 
-// Show/hide campaign number field + refresh project dropdown based on schema selection
+// Toggle Project dropdown vs Campaign text based on schema selection
 document.addEventListener('change', e => {
   if (e.target.id === 'olSchema') {
     const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
+    $('#olProjectGroup').style.display = isFormConfig ? 'none' : '';
     $('#olCampaignGroup').style.display = isFormConfig ? '' : 'none';
-    if (!isFormConfig) refreshProjectOptions('ol'); else revertProjectToInput('ol');
+    if (!isFormConfig) refreshProjectOptions('ol');
   }
   if (e.target.id === 'mgSrcSchema') {
     const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
+    $('#mgSrcProjectGroup').style.display = isFormConfig ? 'none' : '';
     $('#mgSrcCampaignGroup').style.display = isFormConfig ? '' : 'none';
-    if (!isFormConfig) refreshProjectOptions('mgSrc'); else revertProjectToInput('mgSrc');
+    if (!isFormConfig) refreshProjectOptions('mgSrc');
   }
   if (e.target.id === 'mgTgtSchema') {
     const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
+    $('#mgTgtProjectGroup').style.display = isFormConfig ? 'none' : '';
     $('#mgTgtCampaignGroup').style.display = isFormConfig ? '' : 'none';
-    if (!isFormConfig) refreshMgTgtProjectOptions(); else revertProjectToInput('mgTgt');
+    if (!isFormConfig) refreshMgTgtProjectOptions();
   }
 });
 
@@ -2041,6 +2038,7 @@ function showFilePushDialog() {
     const overlay = $('#confirmOverlay');
     const cached = filePushEnv || {};
 
+    const cachedIsFormConfig = cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig';
     box.innerHTML = `
       <h3 style="color:var(--green)">Push to Environment</h3>
       <p>Enter target environment credentials to push corrected configs and localizations.</p>
@@ -2049,21 +2047,23 @@ function showFilePushDialog() {
         <div class="form-group"><label>Username</label><input type="text" id="fpUser" placeholder="SATYA" value="${esc(cached.user || '')}"></div>
         <div class="form-group"><label>Password</label><input type="password" id="fpPass" value="${esc(cached.pass || '')}"></div>
         <div class="form-group"><label>Tenant ID</label><input type="text" id="fpTenant" placeholder="mz" value="${esc(cached.tenant || '')}"></div>
-        <div class="form-group"><label>Project</label><input type="text" id="fpProject" placeholder="MR-DN" value="${esc(cached.project || '')}"></div>
-        <div class="form-group"><label>Schema</label>
-          <select id="fpSchema">
-            <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate" ${cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig' ? '' : 'selected'}>FormConfigTemplate</option>
-            <option value="HCM-ADMIN-CONSOLE.FormConfig" ${cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig' ? 'selected' : ''}>FormConfig</option>
-          </select>
-        </div>
-        <div class="form-group" id="fpCampaignGroup" style="display:${cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig' ? '' : 'none'}">
-          <label>Campaign Number</label><input type="text" id="fpCampaign" placeholder="CMP-2026-06-15-006194" value="${esc(cached.campaign || '')}">
-        </div>
         <div class="form-group"><label>MDMS Context Path</label>
           <select id="fpContextPath">
             <option value="egov-mdms-service" ${(!cached.contextPath || cached.contextPath === 'egov-mdms-service') ? 'selected' : ''}>egov-mdms-service</option>
             <option value="mdms-v2" ${cached.contextPath === 'mdms-v2' ? 'selected' : ''}>mdms-v2</option>
           </select>
+        </div>
+        <div class="form-group"><label>Schema</label>
+          <select id="fpSchema">
+            <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate" ${cachedIsFormConfig ? '' : 'selected'}>FormConfigTemplate</option>
+            <option value="HCM-ADMIN-CONSOLE.FormConfig" ${cachedIsFormConfig ? 'selected' : ''}>FormConfig</option>
+          </select>
+        </div>
+        <div class="form-group" id="fpProjectGroup" style="display:${cachedIsFormConfig ? 'none' : ''}">
+          <label>Project</label><input type="text" id="fpProject" placeholder="MR-DN" value="${esc(cached.project || '')}">
+        </div>
+        <div class="form-group" id="fpCampaignGroup" style="display:${cachedIsFormConfig ? '' : 'none'}">
+          <label>Campaign Number</label><input type="text" id="fpCampaign" placeholder="CMP-..." value="${esc(cached.campaign || '')}">
         </div>
       </div>
       <div class="confirm-actions">
@@ -2072,14 +2072,13 @@ function showFilePushDialog() {
       </div>`;
     overlay.classList.remove('hidden');
 
-    // Toggle campaign visibility + fetch project types on schema change
+    // Toggle Project vs Campaign based on schema + fetch project types
     const schemaEl = box.querySelector('#fpSchema');
     const fpFetchProjects = async () => {
       const url = box.querySelector('#fpUrl').value.trim().replace(/\/+$/, '');
       const tenant = box.querySelector('#fpTenant').value.trim();
       const ctx = box.querySelector('#fpContextPath').value;
-      const schema = box.querySelector('#fpSchema').value;
-      if (!url || !tenant || !schema.includes('FormConfigTemplate')) return;
+      if (!url || !tenant) return;
       const projectEl = box.querySelector('#fpProject');
       if (projectEl.tagName === 'INPUT') {
         const sel = document.createElement('select');
@@ -2098,18 +2097,11 @@ function showFilePushDialog() {
         sel.replaceWith(inp);
       }
     };
-    const fpRevertProject = () => {
-      const el = box.querySelector('#fpProject');
-      if (el && el.tagName === 'SELECT') {
-        const inp = document.createElement('input');
-        inp.type = 'text'; inp.id = 'fpProject'; inp.placeholder = 'MR-DN';
-        el.replaceWith(inp);
-      }
-    };
     schemaEl.onchange = () => {
       const isFormConfig = schemaEl.value.includes('FormConfig') && !schemaEl.value.includes('Template');
+      box.querySelector('#fpProjectGroup').style.display = isFormConfig ? 'none' : '';
       box.querySelector('#fpCampaignGroup').style.display = isFormConfig ? '' : 'none';
-      if (!isFormConfig) fpFetchProjects(); else fpRevertProject();
+      if (!isFormConfig) fpFetchProjects();
     };
     // Auto-fetch on dialog open if schema is Template and URL/tenant are cached
     if (schemaEl.value.includes('FormConfigTemplate')) fpFetchProjects();
@@ -2143,9 +2135,10 @@ function showFilePushDialog() {
       const campaign = box.querySelector('#fpCampaign').value.trim();
       const contextPath = box.querySelector('#fpContextPath').value;
 
+      const isFormConfig = schema.includes('FormConfig') && !schema.includes('Template');
       if (!url || !user || !pass || !tenant) { showError('Fill in URL, Username, Password, and Tenant'); return; }
-      if (!project) { showError('Project is required'); return; }
-      if (schema.includes('FormConfig') && !schema.includes('Template') && !campaign) { showError('Campaign Number is required for FormConfig schema'); return; }
+      if (!isFormConfig && !project) { showError('Project is required for FormConfigTemplate'); return; }
+      if (isFormConfig && !campaign) { showError('Campaign Number is required for FormConfig'); return; }
 
       restoreBox();
 
@@ -2239,11 +2232,14 @@ async function pushFileToEnv() {
     // Search target for existing configs filtered by project
     showLoader('Searching target configs...');
     await tick();
-    const tgtRecords = await apiMdmsSearch(url, tenant, schema, { project }, token, locale, contextPath);
+    const searchFilters = project ? { project } : {};
+    const tgtRecords = await apiMdmsSearch(url, tenant, schema, searchFilters, token, locale, contextPath);
     // Build map only from records whose data.project matches target project
     const tgtMap = new Map();
     for (const r of tgtRecords) {
-      if (r.data?.name && r.data.project === project) tgtMap.set(r.data.name, r);
+      if (!r.data?.name) continue;
+      if (project && r.data.project !== project) continue;
+      tgtMap.set(r.data.name, r);
     }
 
     // Build module list with update/create status
