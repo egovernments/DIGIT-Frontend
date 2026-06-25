@@ -1980,7 +1980,6 @@ async function pushAllToTarget() {
       } else {
         const createRec = {
           tenantId: tgt.tenant, schemaCode: tgt.schema,
-          uniqueIdentifier: r._record.uniqueIdentifier || `${tgt.tenant}-${r.correctedData.name}`,
           data: r.correctedData, isActive: true,
         };
         await apiMdmsCreate(tgt.url, tgt.schema, createRec, tgtToken, tgtLocale, tgt.contextPath);
@@ -2304,7 +2303,6 @@ async function pushFileToEnv() {
           const createRec = {
             tenantId: tenant,
             schemaCode: schema,
-            uniqueIdentifier: `${tenant}-${mod.name}-${project}`,
             data: dataCopy,
             isActive: true,
           };
