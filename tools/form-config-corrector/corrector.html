@@ -997,65 +997,75 @@ function showModuleSelector(records, tgtMap) {
 // API HELPERS
 // ════════════════════════════════════════════════════════════════
 
+// Common fetch wrapper with proper error handling
+async function apiFetch(endpoint, body, label) {
+  let resp;
+  try {
+    resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    throw new Error(`${label}: Network error - check if the local server is running`);
+  }
+  let data;
+  try {
+    data = await resp.json();
+  } catch (e) {
+    throw new Error(`${label}: Invalid response from server (HTTP ${resp.status})`);
+  }
+  if (!resp.ok || data.error) {
+    const msg = data.error
+      || data.Errors?.[0]?.message
+      || data.Errors?.[0]?.description
+      || data.error_description
+      || (typeof data === 'string' && data.length < 200 ? data : null)
+      || `HTTP ${resp.status}`;
+    throw new Error(`${label}: ${msg}`);
+  }
+  return data;
+}
+
 async function apiAuth(envUrl, username, password, tenantId) {
-  const resp = await fetch('/api/auth', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, username, password, tenantId }),
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
-  if (!data.access_token) throw new Error('No access_token in response');
+  const data = await apiFetch('/api/auth', { envUrl, username, password, tenantId }, 'Authentication');
+  if (!data.access_token) throw new Error('Authentication: No access token received - check credentials');
   return data.access_token;
 }
 
 async function apiMdmsSearch(envUrl, tenantId, schemaCode, filters, token, locale, contextPath) {
-  const resp = await fetch('/api/mdms/search', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, tenantId, schemaCode, filters: filters || {}, token, locale, contextPath: contextPath || undefined }),
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
+  const shortSchema = schemaCode.split('.').pop() || schemaCode;
+  const data = await apiFetch('/api/mdms/search',
+    { envUrl, tenantId, schemaCode, filters: filters || {}, token, locale, contextPath: contextPath || undefined },
+    `MDMS search (${shortSchema})`);
   return data.mdms || [];
 }
 
 async function apiMdmsUpdate(envUrl, schemaCode, record, token, locale, contextPath) {
-  const resp = await fetch('/api/mdms/update', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, schemaCode, record, token, locale, contextPath: contextPath || undefined }),
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+  const shortSchema = schemaCode.split('.').pop() || schemaCode;
+  return apiFetch('/api/mdms/update',
+    { envUrl, schemaCode, record, token, locale, contextPath: contextPath || undefined },
+    `MDMS update (${shortSchema})`);
 }
 
 async function apiMdmsCreate(envUrl, schemaCode, record, token, locale, contextPath) {
-  const resp = await fetch('/api/mdms/create', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, schemaCode, record, token, locale, contextPath: contextPath || undefined }),
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+  const shortSchema = schemaCode.split('.').pop() || schemaCode;
+  return apiFetch('/api/mdms/create',
+    { envUrl, schemaCode, record, token, locale, contextPath: contextPath || undefined },
+    `MDMS create (${shortSchema})`);
 }
 
 async function apiLocSearch(envUrl, moduleName, tenantId, locale, token) {
-  const resp = await fetch('/api/loc/search', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, module: moduleName, tenantId, locale, token }),
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
+  const data = await apiFetch('/api/loc/search',
+    { envUrl, module: moduleName, tenantId, locale, token },
+    `Localization search (${moduleName})`);
   return data.messages || [];
 }
 
 async function apiLocUpsert(envUrl, tenantId, messages, token, locale) {
-  const resp = await fetch('/api/loc/upsert', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, tenantId, messages, token, locale }),
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+  return apiFetch('/api/loc/upsert',
+    { envUrl, tenantId, messages, token, locale },
+    'Localization upsert');
 }
 
 function getLocModule(schemaCode, moduleName, project, campaign) {
@@ -1684,7 +1694,7 @@ async function onlineFetch() {
     showLoader('Fetching LabelFieldPairConfig...');
     await tick();
     let lfpcRecs = [];
-    try { lfpcRecs = await apiMdmsSearch(envUrl, tenant, LFPC_SCHEMA, {}, onlineToken, onlineLocale, contextPath); } catch (e) { /* no LFPC */ }
+    try { lfpcRecs = await apiMdmsSearch(envUrl, tenant, LFPC_SCHEMA, {}, onlineToken, onlineLocale, contextPath); } catch (e) { console.warn('LFPC fetch skipped:', e.message); }
 
     // Module selection
     hideLoader();
@@ -1707,7 +1717,7 @@ async function onlineFetch() {
       try {
         const msgs = await apiLocSearch(envUrl, locModule, tenant, onlineLocale, onlineToken);
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
-      } catch (e) { /* no existing locs */ }
+      } catch (e) { console.warn(`Loc search skipped for ${locModule}:`, e.message); }
 
       const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
       result._record = rec; // keep reference to original record for updates
@@ -1729,7 +1739,7 @@ async function onlineFetch() {
 
   } catch (e) {
     hideLoader();
-    showError('Error: ' + e.message);
+    showError(e.message);
   }
 }
 
@@ -1814,7 +1824,7 @@ async function migrateFetch() {
     showLoader('Fetching LabelFieldPairConfig...');
     await tick();
     let lfpcRecs = [];
-    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, srcLocale, src.contextPath); } catch (e) { /* no LFPC */ }
+    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, srcLocale, src.contextPath); } catch (e) { console.warn('LFPC fetch skipped:', e.message); }
 
     // Build map only from records whose data.project matches target project
     const tgtMap = new Map();
@@ -1855,7 +1865,7 @@ async function migrateFetch() {
       try {
         const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, srcLocale, srcToken);
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
-      } catch (e) {}
+      } catch (e) { console.warn(`Loc search skipped for ${srcLocModule}:`, e.message); }
 
       const result = analyzeAndFix(dataCopy, { autoFix, existingLocCodes });
       result._record = rec;
@@ -1880,7 +1890,7 @@ async function migrateFetch() {
 
   } catch (e) {
     hideLoader();
-    showError('Migration error: ' + e.message);
+    showError(e.message);
   }
 }
 
@@ -1965,11 +1975,11 @@ async function upsertLocalizations() {
     const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => ({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale }));
     for (let b = 0; b < appConfigOnly.length; b += 50) {
       const batch = appConfigOnly.slice(b, b + 50);
-      try { await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale); } catch (e) { /* continue */ }
+      try { await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale); } catch (e) { errors++; console.warn('AppConfig loc upsert failed:', e.message); }
     }
   }
   hideLoader();
-  showError(`Upserted ${upserted} messages. ${errors ? errors + ' errors.' : 'All successful.'}`);
+  showError(`Upserted ${upserted} messages. ${errors ? errors + ' batch errors (some localizations may not have been saved).' : 'All successful.'}`);
   if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
@@ -1990,7 +2000,7 @@ async function pushAllToTarget() {
   if (!ok) return;
 
   showLoader('Pushing to target...');
-  let pushed = 0, locUpserted = 0, errors = 0;
+  let pushed = 0, locUpserted = 0, locErrors = 0, errors = 0;
 
   for (let i = 0; i < results.length; i++) {
     const r = results[i];
@@ -2038,7 +2048,7 @@ async function pushAllToTarget() {
       try {
         await apiLocUpsert(tgt.url, tgt.tenant, batch, tgtToken, tgtLocale);
         locUpserted += batch.length;
-      } catch (e) { /* continue */ }
+      } catch (e) { locErrors++; console.warn(`Loc upsert failed for ${tgtLocModule}:`, e.message); }
     }
 
     // Also upsert _appConfig-tagged entries to hcm-appconfiguration on target
@@ -2046,7 +2056,7 @@ async function pushAllToTarget() {
       code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: tgtLocale
     }));
     for (let b = 0; b < appConfigOnly.length; b += 50) {
-      try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, tgtLocale); } catch (e) { /* continue */ }
+      try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, tgtLocale); } catch (e) { locErrors++; console.warn('AppConfig loc upsert failed:', e.message); }
     }
   }
 
@@ -2055,8 +2065,9 @@ async function pushAllToTarget() {
 
   hideLoader();
   const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
-  showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg} ${errors ? errors + ' errors.' : ''}`);
-  if (!errors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+  const locErrMsg = locErrors ? ` ${locErrors} localization batch(es) failed.` : '';
+  showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : ''}`);
+  if (!errors && !locErrors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -2187,7 +2198,7 @@ function showFilePushDialog() {
         resolve(filePushEnv);
       } catch (e) {
         hideLoader();
-        showError('Connection failed: ' + e.message);
+        showError(e.message);
         resolve(null);
       }
     };
@@ -2294,7 +2305,7 @@ async function pushFileToEnv() {
     const srcProject = results[0]?.correctedData?.project || '';
 
     showLoader('Pushing to target...');
-    let pushed = 0, locUpserted = 0, errors = 0;
+    let pushed = 0, locUpserted = 0, locErrors = 0, errors = 0;
     const total = selectedModules.length;
 
     for (let si = 0; si < selectedModules.length; si++) {
@@ -2372,7 +2383,7 @@ async function pushFileToEnv() {
         try {
           await apiLocUpsert(url, tenant, batch, token, locale);
           locUpserted += batch.length;
-        } catch (e) { /* continue */ }
+        } catch (e) { locErrors++; console.warn(`Loc upsert failed for ${locModule}:`, e.message); }
       }
 
       // Also upsert _appConfig entries to hcm-appconfiguration
@@ -2385,7 +2396,7 @@ async function pushFileToEnv() {
         return { code: locCode, message: locMsg, module: 'hcm-appconfiguration', locale };
       });
       for (let b = 0; b < appConfigOnly.length; b += 50) {
-        try { await apiLocUpsert(url, tenant, appConfigOnly.slice(b, b + 50), token, locale); } catch (e) { /* continue */ }
+        try { await apiLocUpsert(url, tenant, appConfigOnly.slice(b, b + 50), token, locale); } catch (e) { locErrors++; console.warn('AppConfig loc upsert failed:', e.message); }
       }
     }
 
@@ -2394,8 +2405,9 @@ async function pushFileToEnv() {
 
     hideLoader();
     const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
-    showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg} ${errors ? errors + ' errors.' : 'All successful.'}`);
-    if (!errors && !lfpcResult.errors) {
+    const locErrMsg = locErrors ? ` ${locErrors} localization batch(es) failed.` : '';
+    showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : 'All successful.'}`);
+    if (!errors && !locErrors && !lfpcResult.errors) {
       const el = $('#errorBanner');
       el.className = 'error-banner';
       el.style.borderColor = 'var(--green)';
@@ -2404,7 +2416,7 @@ async function pushFileToEnv() {
     }
   } catch (e) {
     hideLoader();
-    showError('Push failed: ' + e.message);
+    showError(e.message);
   }
 }
 
@@ -2748,7 +2760,7 @@ function showFileTranslateDialog() {
         resolve(fileTranslateEnv);
       } catch (e) {
         hideLoader();
-        showError('Connection failed: ' + e.message);
+        showError(e.message);
         resolve(null);
       }
     };
@@ -2880,7 +2892,7 @@ async function startTranslation(selectedLanguages, envUrl, token, tenant, contex
           if (appConfigMsgs.length > 0) {
             try {
               await apiLocUpsert(envUrl, tenant, appConfigMsgs, token, langLocale);
-            } catch (e) { /* continue */ }
+            } catch (e) { translationState.errors.push('AppConfig upsert: ' + e.message); }
           }
 
           langTranslated += translatedCount;

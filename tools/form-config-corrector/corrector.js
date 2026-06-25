@@ -51,13 +51,35 @@ async function proxyRequest(url, method, headers, body) {
   if (body !== undefined && body !== null) {
     opts.body = typeof body === 'string' ? body : JSON.stringify(body);
   }
-  const resp = await fetch(url, opts);
+  let host;
+  try { host = new URL(url).hostname; } catch { host = url; }
+  let resp;
+  try {
+    resp = await fetch(url, opts);
+  } catch (e) {
+    const msg = e.message || String(e);
+    if (msg.includes('ENOTFOUND') || msg.includes('getaddrinfo'))
+      throw new Error(`Cannot resolve host "${host}" - check the URL`);
+    if (msg.includes('ECONNREFUSED'))
+      throw new Error(`Connection refused by ${host} - the service may be down`);
+    if (msg.includes('ETIMEDOUT') || msg.includes('TIMEOUT') || msg.includes('UND_ERR_CONNECT_TIMEOUT'))
+      throw new Error(`Connection to ${host} timed out - the service may be slow or unreachable`);
+    if (msg.includes('ECONNRESET'))
+      throw new Error(`Connection to ${host} was reset - the service may have crashed`);
+    if (msg.includes('CERT') || msg.includes('SSL') || msg.includes('certificate'))
+      throw new Error(`SSL/certificate error connecting to ${host}: ${msg}`);
+    throw new Error(`Cannot connect to ${host}: ${msg}`);
+  }
   const contentType = resp.headers.get('content-type') || '';
   let data;
-  if (contentType.includes('json')) {
-    data = await resp.json();
-  } else {
-    data = await resp.text();
+  try {
+    if (contentType.includes('json')) {
+      data = await resp.json();
+    } else {
+      data = await resp.text();
+    }
+  } catch (e) {
+    throw new Error(`Invalid response from ${host} (HTTP ${resp.status})`);
   }
   return { status: resp.status, data };
 }
