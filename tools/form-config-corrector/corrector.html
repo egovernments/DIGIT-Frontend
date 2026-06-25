@@ -469,8 +469,15 @@ function analyzeAndFix(configData, opts = {}) {
   const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();if(cd.includes(' ')&&!cd.includes('_'))continue;if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])&&!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)wLoc(v,c,d+1);}}
   wLoc(data,{},0);
 
+  // R12: APP_CONFIG category and flow localization codes (for hcm-appconfiguration)
+  const appConfigCodes = new Map();
+  if(data.flows){const categories=new Set(),flowNames=new Set();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){if(pg.category)categories.add(pg.category);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=humanize(cat);allNew.set(cd,msg);appConfigCodes.set(cd,msg);}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=humanize(fn);allNew.set(cd,msg);appConfigCodes.set(cd,msg);}}}
+
   report.totalIssues=report.fixes.length+report.warnings.length;
-  return { correctedData:data, originalData, report, newLocalizations:Array.from(allNew.entries()).map(([code,message])=>({code,message})) };
+  const newLocalizations = Array.from(allNew.entries()).map(([code,message])=>({code,message}));
+  // Tag APP_CONFIG codes so they route to hcm-appconfiguration
+  for(const loc of newLocalizations){if(appConfigCodes.has(loc.code))loc._appConfig=true;}
+  return { correctedData:data, originalData, report, newLocalizations };
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1098,7 +1105,7 @@ async function onlineFetch() {
       result._record = rec; // keep reference to original record for updates
       result._locModule = locModule;
       // Stamp module/locale on each localization entry
-      for (const loc of result.newLocalizations) { loc.module = locModule; loc.locale = onlineLocale; }
+      for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : locModule; loc.locale = onlineLocale; }
       results.push(result);
     }
 
@@ -1217,7 +1224,7 @@ async function migrateEnvFetch() {
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
       // Stamp module/locale on each localization entry
       const tgtLocale = `en_${tgt.tenant.toUpperCase()}`;
-      for (const loc of result.newLocalizations) { loc.module = tgtLocModule; loc.locale = tgtLocale; }
+      for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
       results.push(result);
     }
 
@@ -1329,7 +1336,7 @@ async function migrateSchemaFetch() {
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
       // Stamp module/locale on each localization entry
       const tgtLocale = `en_${tgt.tenant.toUpperCase()}`;
-      for (const loc of result.newLocalizations) { loc.module = tgtLocModule; loc.locale = tgtLocale; }
+      for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
       results.push(result);
     }
 
