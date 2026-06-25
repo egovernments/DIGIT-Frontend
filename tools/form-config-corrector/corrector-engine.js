@@ -9,6 +9,7 @@
  *   2. Missing `fieldName` on components with `format`
  *   3. Duplicate fieldNames within a page/screen
  *   4. Missing flow `category`
+ *  4b. FORM screenType should not have body (body is only for TEMPLATE)
  *   5. primaryAction/secondaryAction missing type, format, fieldName, properties.type
  *   6. Empty/missing errorMessage on components with validations
  *   7. Validation message: empty or hardcoded English -> localization codes
@@ -262,11 +263,11 @@ function fixTypeAndFieldName(issues) {
 // Rule 3: Duplicate fieldNames within a page/screen
 // ──────────────────────────────────────────────────────────────
 
-function collectFieldNames(data, pathStr = '', entries = [], visited = null) {
+function collectFieldNames(data, pathStr = '', entries = [], visited = null, isPage = false) {
   if (!visited) visited = new WeakSet();
   if (!data || typeof data !== 'object') return entries;
   if (Array.isArray(data)) {
-    data.forEach((item, idx) => collectFieldNames(item, `${pathStr}[${idx}]`, entries, visited));
+    data.forEach((item, idx) => collectFieldNames(item, `${pathStr}[${idx}]`, entries, visited, false));
     return entries;
   }
   if (visited.has(data)) return entries;
@@ -276,8 +277,10 @@ function collectFieldNames(data, pathStr = '', entries = [], visited = null) {
   }
   for (const [key, value] of Object.entries(data)) {
     if (key === 'fieldName') continue;
+    // Skip page-level 'properties' array (summary/review fields that intentionally share fieldNames with body)
+    if (isPage && key === 'properties' && Array.isArray(value)) continue;
     if (typeof value === 'object' && value !== null) {
-      collectFieldNames(value, pathStr ? `${pathStr}.${key}` : key, entries, visited);
+      collectFieldNames(value, pathStr ? `${pathStr}.${key}` : key, entries, visited, false);
     }
   }
   return entries;
@@ -299,7 +302,7 @@ function checkAndFixDuplicateFieldNames(data) {
     }
 
     for (const { screen, name } of screens) {
-      const entries = collectFieldNames(screen);
+      const entries = collectFieldNames(screen, '', [], null, true);
       const seen = new Map();
       for (const entry of entries) {
         const fn = entry.fieldName;
@@ -336,6 +339,30 @@ function checkAndFixFlowCategories(data) {
         if ((pg.screenType || pg.body) && (!pg.category || typeof pg.category !== 'string' || pg.category.trim() === '')) {
           pg.category = pg.name || pg.page || flow.name || 'UNKNOWN';
           fixes.push({ rule: 'missing-page-category', flow: flow.name, page: pg.page || pg.name, fixed: `category -> "${pg.category}"` });
+        }
+      }
+    }
+  }
+  return fixes;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Rule 4b: FORM screenType should not have body
+// ──────────────────────────────────────────────────────────────
+
+function removeBodyFromFormPages(data) {
+  if (!data?.flows) return [];
+  const fixes = [];
+  for (const flow of data.flows) {
+    if (flow.screenType === 'FORM' && flow.body) {
+      delete flow.body;
+      fixes.push({ rule: 'form-has-body', flow: flow.name, fixed: 'Removed body from FORM flow' });
+    }
+    if (flow.pages && Array.isArray(flow.pages)) {
+      for (const pg of flow.pages) {
+        if (pg.screenType === 'FORM' && pg.body) {
+          delete pg.body;
+          fixes.push({ rule: 'form-has-body', flow: flow.name, page: pg.page || pg.name, fixed: 'Removed body from FORM page' });
         }
       }
     }
@@ -812,6 +839,12 @@ function analyzeAndFix(configData, options = {}) {
   const catFixes = checkAndFixFlowCategories(data);
   report.fixes.push(...catFixes);
 
+  // Rule 4b: Remove body from FORM pages
+  if (autoFix) {
+    const formBodyFixes = removeBodyFromFormPages(data);
+    report.fixes.push(...formBodyFixes);
+  }
+
   // Rule 5: primaryAction/secondaryAction
   const actionFixes = checkAndFixActions(data);
   report.fixes.push(...actionFixes);
@@ -877,6 +910,7 @@ if (typeof module !== 'undefined' && module.exports) {
     fixTypeAndFieldName,
     checkAndFixDuplicateFieldNames,
     checkAndFixFlowCategories,
+    removeBodyFromFormPages,
     checkAndFixActions,
     checkAndFixValidations,
     checkTableHeaders,
