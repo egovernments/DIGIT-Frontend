@@ -928,20 +928,24 @@ function confirmResolve(val) {
   if (confirmResolveFn) { confirmResolveFn(val); confirmResolveFn = null; }
 }
 
-function showModuleSelector(records) {
+function showModuleSelector(records, tgtMap) {
   return new Promise(resolve => {
     const modules = records.filter(r => r.data?.flows).map(r => ({
       name: r.data.name || 'UNKNOWN',
+      project: r.data.project || '',
       flowCount: (r.data.flows || []).length,
       record: r,
+      isUpdate: tgtMap ? tgtMap.has(r.data.name) : false,
     }));
     if (modules.length === 0) { resolve(null); return; }
 
+    const nCreate = modules.filter(m => !m.isUpdate).length;
+    const nUpdate = modules.filter(m => m.isUpdate).length;
     const box = document.querySelector('.confirm-box');
     const overlay = $('#confirmOverlay');
     box.innerHTML = `
       <h3>Select Modules</h3>
-      <p>Found <b>${modules.length}</b> modules. Select which to process:</p>
+      <p>Found <b>${modules.length}</b> modules${tgtMap ? ` (${nUpdate} update, ${nCreate} create)` : ''}. Select which to process:</p>
       <div class="select-actions">
         <button id="msSelAll">Select All</button>
         <button id="msSelNone">Select None</button>
@@ -951,7 +955,8 @@ function showModuleSelector(records) {
           <label class="module-select-item">
             <input type="checkbox" checked data-ms-idx="${i}">
             <span class="mod-name">${esc(m.name)}</span>
-            <span class="mod-flows">${m.flowCount} flows</span>
+            <span class="mod-flows">${m.project ? esc(m.project) + ' &middot; ' : ''}${m.flowCount} flows</span>
+            ${tgtMap ? `<span style="color:${m.isUpdate ? 'var(--blue,#3b82f6)' : 'var(--green,#22c55e)'};font-weight:600;font-size:.85em">${m.isUpdate ? 'Update' : 'Create'}</span>` : ''}
           </label>`).join('')}
       </div>
       <div class="confirm-actions">
@@ -1462,19 +1467,34 @@ document.addEventListener('change', e => {
     const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
     $('#olProjectGroup').style.display = isFormConfig ? 'none' : '';
     $('#olCampaignGroup').style.display = isFormConfig ? '' : 'none';
-    if (!isFormConfig) refreshProjectOptions('ol');
+    if (isFormConfig) {
+      const p = $('#olProject'); if (p) p.value = '';
+    } else {
+      const c = $('#olCampaign'); if (c) c.value = '';
+      refreshProjectOptions('ol');
+    }
   }
   if (e.target.id === 'mgSrcSchema') {
     const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
     $('#mgSrcProjectGroup').style.display = isFormConfig ? 'none' : '';
     $('#mgSrcCampaignGroup').style.display = isFormConfig ? '' : 'none';
-    if (!isFormConfig) refreshProjectOptions('mgSrc');
+    if (isFormConfig) {
+      const p = $('#mgSrcProject'); if (p) p.value = '';
+    } else {
+      const c = $('#mgSrcCampaign'); if (c) c.value = '';
+      refreshProjectOptions('mgSrc');
+    }
   }
   if (e.target.id === 'mgTgtSchema') {
     const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
     $('#mgTgtProjectGroup').style.display = isFormConfig ? 'none' : '';
     $('#mgTgtCampaignGroup').style.display = isFormConfig ? '' : 'none';
-    if (!isFormConfig) refreshMgTgtProjectOptions();
+    if (isFormConfig) {
+      const p = $('#mgTgtProject'); if (p) p.value = '';
+    } else {
+      const c = $('#mgTgtCampaign'); if (c) c.value = '';
+      refreshMgTgtProjectOptions();
+    }
   }
 });
 
@@ -1730,7 +1750,7 @@ async function migrateFetch() {
     user: $('#mgSrcUser').value.trim(),
     pass: $('#mgSrcPass').value.trim(),
     tenant: $('#mgSrcTenant').value.trim(),
-    project: $('#mgSrcProject').value.trim(),
+    project: $('#mgSrcSchema').value.includes('Template') ? $('#mgSrcProject').value.trim() : '',
     schema: $('#mgSrcSchema').value,
     campaign: $('#mgSrcCampaign').value.trim(),
     contextPath: srcContextPath,
@@ -1742,7 +1762,7 @@ async function migrateFetch() {
     user: diffEnv ? $('#mgTgtUser').value.trim() : src.user,
     pass: diffEnv ? $('#mgTgtPass').value.trim() : src.pass,
     tenant: diffEnv ? $('#mgTgtTenant').value.trim() : src.tenant,
-    project: $('#mgTgtProject').value.trim() || src.project,
+    project: $('#mgTgtSchema').value.includes('Template') ? ($('#mgTgtProject').value.trim() || src.project) : '',
     schema: $('#mgTgtSchema').value,
     campaign: $('#mgTgtCampaign').value.trim(),
     contextPath: diffEnv ? $('#mgTgtContextPath').value : srcContextPath,
@@ -1804,7 +1824,11 @@ async function migrateFetch() {
 
     // Module selection
     hideLoader();
-    const selectedRecords = await showModuleSelector(srcRecords);
+    if (srcRecords.filter(r => r.data?.flows).length === 0) {
+      showError(`No form config modules found in source. Check schema, ${src.schema.includes('Template') ? 'project' : 'campaign'}, and credentials.`);
+      return;
+    }
+    const selectedRecords = await showModuleSelector(srcRecords, tgtMap);
     if (!selectedRecords) return;
 
     migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords: selectedRecords, tgtRecords, tgtMap, srcLocale, tgtLocale };
