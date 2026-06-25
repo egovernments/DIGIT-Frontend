@@ -161,6 +161,60 @@ Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
       return;
     }
 
+    // API: Call Claude CLI for translation
+    if (url.pathname === '/api/translate' && req.method === 'POST') {
+      const body = await readBody(req);
+      try {
+        const { messages, targetLanguage, targetLocale } = JSON.parse(body);
+        if (!messages || !Array.isArray(messages) || messages.length === 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'No messages provided' }));
+          return;
+        }
+
+        const codeList = messages.map(m => `  "${m.code}": "${m.message}"`).join('\n');
+        const isRTL = ['ARABIC', 'HEBREW', 'URDU', 'PERSIAN', 'FARSI'].includes((targetLanguage || '').toUpperCase());
+        const rtlNote = isRTL ? '\n- This is an RTL language. Ensure translated text reads naturally in right-to-left direction.' : '';
+
+        const prompt = `You are a professional translator for a Health Campaign Management (HCM) mobile app used by health workers.
+
+Translate the following English localization messages to ${targetLanguage} (locale: ${targetLocale}).
+
+Messages to translate (JSON key = code, value = English message):
+{
+${codeList}
+}
+
+Rules:
+- Keep all codes (keys) exactly as-is. Only translate the message values.
+- Preserve technical terms and acronyms as-is: OPV, AFP, LQA, QR, GPS, HCM, MRN, ID, IHM
+- Labels should remain concise (1-4 words where possible)
+- Error messages should be clear and helpful
+- Help text should be brief guidance
+- Maintain the same tone: labels are concise Title Case, errors are Sentence case
+- Do not add or remove any codes${rtlNote}
+
+Return ONLY valid JSON mapping each code to its translated message. No markdown, no explanation, no wrapping.
+Example: {"CODE_1": "Translated message", "CODE_2": "Another translation"}`;
+
+        const result = callClaude(prompt);
+        const jsonMatch = result.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'No JSON in Claude response', raw: result.substring(0, 500) }));
+          return;
+        }
+
+        const translated = JSON.parse(jsonMatch[0]);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ translated, count: Object.keys(translated).length }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
+
     // ─── Proxy: Authenticate ─────────────────────────────────
     if (url.pathname === '/api/auth' && req.method === 'POST') {
       const body = await readBody(req);
@@ -185,8 +239,9 @@ Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
     if (url.pathname === '/api/mdms/search' && req.method === 'POST') {
       const body = await readBody(req);
       try {
-        const { envUrl, tenantId, schemaCode, filters, token, locale } = JSON.parse(body);
-        const targetUrl = `${envUrl.replace(/\/+$/, '')}/egov-mdms-service/v2/_search`;
+        const { envUrl, tenantId, schemaCode, filters, token, locale, contextPath } = JSON.parse(body);
+        const mdmsPath = contextPath || 'egov-mdms-service';
+        const targetUrl = `${envUrl.replace(/\/+$/, '')}/${mdmsPath}/v2/_search`;
         const payload = {
           MdmsCriteria: { tenantId, schemaCode, filters: filters || {}, limit: 20000, isActive: true },
           RequestInfo: { apiId: 'Rainmaker', ver: '.01', action: '_search', did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } },
@@ -205,8 +260,9 @@ Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
     if (url.pathname === '/api/mdms/update' && req.method === 'POST') {
       const body = await readBody(req);
       try {
-        const { envUrl, schemaCode, record, token, locale } = JSON.parse(body);
-        const targetUrl = `${envUrl.replace(/\/+$/, '')}/egov-mdms-service/v2/_update/${encodeURIComponent(schemaCode)}`;
+        const { envUrl, schemaCode, record, token, locale, contextPath } = JSON.parse(body);
+        const mdmsPath = contextPath || 'egov-mdms-service';
+        const targetUrl = `${envUrl.replace(/\/+$/, '')}/${mdmsPath}/v2/_update/${encodeURIComponent(schemaCode)}`;
         const payload = {
           Mdms: record,
           RequestInfo: { apiId: 'Rainmaker', ver: '.01', action: '_update', did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } },
@@ -225,8 +281,9 @@ Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
     if (url.pathname === '/api/mdms/create' && req.method === 'POST') {
       const body = await readBody(req);
       try {
-        const { envUrl, schemaCode, record, token, locale } = JSON.parse(body);
-        const targetUrl = `${envUrl.replace(/\/+$/, '')}/egov-mdms-service/v2/_create/${encodeURIComponent(schemaCode)}`;
+        const { envUrl, schemaCode, record, token, locale, contextPath } = JSON.parse(body);
+        const mdmsPath = contextPath || 'egov-mdms-service';
+        const targetUrl = `${envUrl.replace(/\/+$/, '')}/${mdmsPath}/v2/_create/${encodeURIComponent(schemaCode)}`;
         const payload = {
           Mdms: record,
           RequestInfo: { apiId: 'Rainmaker', ver: '.01', action: '_create', did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } },

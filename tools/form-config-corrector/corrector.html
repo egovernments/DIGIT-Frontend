@@ -225,6 +225,35 @@ input[type="file"] { display: none; }
 .select-actions { display: flex; gap: 8px; margin-bottom: 8px; }
 .select-actions button { padding: 4px 10px; font-size: 11px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); color: var(--subtext); cursor: pointer; transition: all .15s; }
 .select-actions button:hover { color: var(--text); background: var(--overlay); }
+
+/* ─── Translation Progress Panel ─── */
+.trans-panel { position: fixed; top: 57px; right: 24px; z-index: 150; font-size: 13px; }
+.trans-pill { background: var(--surface); border: 1px solid var(--blue); border-radius: 20px; padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text); box-shadow: 0 4px 12px rgba(0,0,0,.3); transition: all .15s; }
+.trans-pill:hover { filter: brightness(1.1); }
+.trans-pill .trans-pill-bar { width: 80px; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.trans-pill .trans-pill-fill { height: 100%; background: var(--blue); border-radius: 3px; transition: width .3s; }
+.trans-expanded { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 380px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.trans-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.trans-header span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); }
+.trans-header-btns { display: flex; gap: 4px; }
+.trans-header-btns button { background: none; border: none; color: var(--subtext); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
+.trans-header-btns button:hover { color: var(--text); background: var(--surface2); }
+.trans-body { padding: 12px 14px; }
+.trans-stat-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--subtext); margin-bottom: 4px; }
+.trans-stat-row .val { color: var(--text); font-weight: 500; }
+.trans-progress-bar { width: 100%; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; margin: 8px 0; }
+.trans-progress-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width .3s; }
+.trans-log { max-height: 140px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; margin-top: 8px; font-family: 'JetBrains Mono', 'Cascadia Code', monospace; font-size: 11px; line-height: 1.5; background: var(--bg); }
+.trans-log-entry { color: var(--subtext); }
+.trans-log-entry.info { color: var(--text); }
+.trans-log-entry.error { color: var(--red); }
+.trans-log-entry.success { color: var(--green); }
+.trans-footer { padding: 8px 14px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+.trans-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--subtext); margin: 12px 0 8px 0; font-weight: 600; border-top: 1px solid var(--border); padding-top: 10px; }
+
+/* ─── File mode target env dialog ─── */
+.trans-env-dialog { padding: 16px; }
+.trans-env-dialog .form-group { margin-bottom: 8px; }
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -249,8 +278,7 @@ input[type="file"] { display: none; }
     <div class="mode-selector">
       <button class="mode-btn active" data-mode="file" onclick="switchMode('file')">File</button>
       <button class="mode-btn" data-mode="online" onclick="switchMode('online')">Online Correct</button>
-      <button class="mode-btn" data-mode="migrate-env" onclick="switchMode('migrate-env')">Migrate Env</button>
-      <button class="mode-btn" data-mode="migrate-schema" onclick="switchMode('migrate-schema')">Migrate Schema</button>
+      <button class="mode-btn" data-mode="migrate" onclick="switchMode('migrate')">Migrate</button>
     </div>
 
     <!-- Mode A: File -->
@@ -310,96 +338,75 @@ input[type="file"] { display: none; }
           <label>Campaign Number</label>
           <input type="text" id="olCampaign" placeholder="CMP-2026-06-15-006194">
         </div>
+        <div class="form-group">
+          <label>MDMS Context Path</label>
+          <select id="olContextPath">
+            <option value="egov-mdms-service" selected>egov-mdms-service</option>
+            <option value="mdms-v2">mdms-v2</option>
+          </select>
+        </div>
         <label class="check-row"><input type="checkbox" id="olAutoFix" checked> Auto-fix issues</label>
         <button class="btn btn-primary btn-full" id="btnFetch" onclick="onlineFetch()">Connect & Fetch</button>
       </div>
     </div>
 
-    <!-- Mode C: Migrate Env -->
-    <div class="mode-panel" id="panel-migrate-env">
+    <!-- Mode C: Migrate -->
+    <div class="mode-panel" id="panel-migrate">
       <div class="sidebar-section" style="padding-bottom:6px">
         <div class="sidebar-title">Source Environment</div>
         <div class="cred-group">
-          <div class="form-group"><label>URL</label><input type="text" id="meSrcUrl" placeholder="https://unified-uat.digit.org"></div>
-          <div class="form-group"><label>Username</label><input type="text" id="meSrcUser" placeholder="SATYA"></div>
-          <div class="form-group"><label>Password</label><input type="password" id="meSrcPass"></div>
-          <div class="form-group"><label>Tenant</label><input type="text" id="meSrcTenant" placeholder="mz"></div>
-          <div class="form-group"><label>Project</label><input type="text" id="meSrcProject" placeholder="MR-DN"></div>
+          <div class="form-group"><label>URL</label><input type="text" id="mgSrcUrl" placeholder="https://unified-uat.digit.org"></div>
+          <div class="form-group"><label>Username</label><input type="text" id="mgSrcUser" placeholder="SATYA"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="mgSrcPass"></div>
+          <div class="form-group"><label>Tenant</label><input type="text" id="mgSrcTenant" placeholder="mz"></div>
+          <div class="form-group"><label>Project</label><input type="text" id="mgSrcProject" placeholder="MR-DN"></div>
           <div class="form-group"><label>Schema</label>
-            <select id="meSrcSchema">
+            <select id="mgSrcSchema">
               <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
               <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
             </select>
           </div>
-          <div class="form-group" id="meSrcCampaignGroup" style="display:none">
-            <label>Campaign #</label><input type="text" id="meSrcCampaign" placeholder="CMP-...">
+          <div class="form-group" id="mgSrcCampaignGroup" style="display:none">
+            <label>Campaign #</label><input type="text" id="mgSrcCampaign" placeholder="CMP-...">
           </div>
-        </div>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">Target Environment</div>
-        <div class="cred-group">
-          <div class="form-group"><label>URL</label><input type="text" id="meTgtUrl" placeholder="https://unified-dev.digit.org"></div>
-          <div class="form-group"><label>Username</label><input type="text" id="meTgtUser" placeholder="SATYA"></div>
-          <div class="form-group"><label>Password</label><input type="password" id="meTgtPass"></div>
-          <div class="form-group"><label>Tenant</label><input type="text" id="meTgtTenant" placeholder="mz"></div>
-          <div class="form-group"><label>Project</label><input type="text" id="meTgtProject" placeholder="MR-DN"></div>
-          <div class="form-group"><label>Schema</label>
-            <select id="meTgtSchema">
-              <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
-              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
+          <div class="form-group">
+            <label>MDMS Context Path</label>
+            <select id="mgSrcContextPath">
+              <option value="egov-mdms-service" selected>egov-mdms-service</option>
+              <option value="mdms-v2">mdms-v2</option>
             </select>
-          </div>
-          <div class="form-group" id="meTgtCampaignGroup" style="display:none">
-            <label>Campaign #</label><input type="text" id="meTgtCampaign" placeholder="CMP-...">
-          </div>
-        </div>
-        <label class="check-row"><input type="checkbox" id="meAutoFix" checked> Auto-fix issues</label>
-        <button class="btn btn-primary btn-full" onclick="migrateEnvFetch()">Connect & Fetch Both</button>
-      </div>
-    </div>
-
-    <!-- Mode D: Migrate Schema -->
-    <div class="mode-panel" id="panel-migrate-schema">
-      <div class="sidebar-section" style="padding-bottom:6px">
-        <div class="sidebar-title">Source</div>
-        <div class="cred-group">
-          <div class="form-group"><label>URL</label><input type="text" id="msSrcUrl" placeholder="https://unified-uat.digit.org"></div>
-          <div class="form-group"><label>Username</label><input type="text" id="msSrcUser"></div>
-          <div class="form-group"><label>Password</label><input type="password" id="msSrcPass"></div>
-          <div class="form-group"><label>Tenant</label><input type="text" id="msSrcTenant" placeholder="mz"></div>
-          <div class="form-group"><label>Project</label><input type="text" id="msSrcProject" placeholder="MR-DN"></div>
-          <div class="form-group"><label>Source Schema</label>
-            <select id="msSrcSchema">
-              <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
-              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
-            </select>
-          </div>
-          <div class="form-group" id="msSrcCampaignGroup" style="display:none">
-            <label>Campaign #</label><input type="text" id="msSrcCampaign" placeholder="CMP-...">
           </div>
         </div>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-title">Target</div>
+        <label class="check-row" style="margin-bottom:10px"><input type="checkbox" id="mgDiffEnv" onchange="toggleDiffEnv()"> Different target environment</label>
         <div class="cred-group">
-          <div class="form-group"><label>URL (defaults to source)</label><input type="text" id="msTgtUrl" placeholder="Same as source"></div>
-          <div class="form-group"><label>Username (defaults to source)</label><input type="text" id="msTgtUser" placeholder="Same"></div>
-          <div class="form-group"><label>Password (defaults to source)</label><input type="password" id="msTgtPass" placeholder="Same"></div>
-          <div class="form-group"><label>Tenant (defaults to source)</label><input type="text" id="msTgtTenant" placeholder="Same"></div>
-          <div class="form-group"><label>Project (defaults to source)</label><input type="text" id="msTgtProject" placeholder="Same"></div>
+          <div id="mgTgtCredentials" style="display:none">
+            <div class="form-group"><label>URL</label><input type="text" id="mgTgtUrl" placeholder="https://unified-dev.digit.org"></div>
+            <div class="form-group"><label>Username</label><input type="text" id="mgTgtUser" placeholder="SATYA"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="mgTgtPass"></div>
+            <div class="form-group"><label>Tenant</label><input type="text" id="mgTgtTenant" placeholder="mz"></div>
+            <div class="form-group"><label>MDMS Context Path</label>
+              <select id="mgTgtContextPath">
+                <option value="egov-mdms-service" selected>egov-mdms-service</option>
+                <option value="mdms-v2">mdms-v2</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Project (defaults to source)</label><input type="text" id="mgTgtProject" placeholder="Same as source"></div>
           <div class="form-group"><label>Target Schema</label>
-            <select id="msTgtSchema">
+            <select id="mgTgtSchema">
               <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
               <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
             </select>
           </div>
-          <div class="form-group" id="msTgtCampaignGroup" style="display:none">
-            <label>Campaign #</label><input type="text" id="msTgtCampaign" placeholder="CMP-...">
+          <div class="form-group" id="mgTgtCampaignGroup" style="display:none">
+            <label>Campaign #</label><input type="text" id="mgTgtCampaign" placeholder="CMP-...">
           </div>
         </div>
-        <label class="check-row"><input type="checkbox" id="msAutoFix" checked> Auto-fix issues</label>
-        <button class="btn btn-primary btn-full" onclick="migrateSchemaFetch()">Connect & Fetch</button>
+        <label class="check-row"><input type="checkbox" id="mgAutoFix" checked> Auto-fix issues</label>
+        <button class="btn btn-primary btn-full" onclick="migrateFetch()">Connect & Fetch</button>
       </div>
     </div>
 
@@ -428,6 +435,12 @@ input[type="file"] { display: none; }
     </div>
   </div>
 </div>
+
+<!-- AI Enhancement Progress Panel -->
+<div class="trans-panel hidden" id="aiPanel" style="top: 57px; right: 24px;"></div>
+
+<!-- Translation Progress Panel -->
+<div class="trans-panel hidden" id="transPanel"></div>
 
 <!-- Loader -->
 <div class="loader-overlay hidden" id="loader">
@@ -545,6 +558,7 @@ let onlineProject = null;
 let onlineSchema = null;
 let onlineCampaign = null;
 let onlineLocale = null;
+let onlineContextPath = '';
 let onlineRecords = []; // raw MDMS records
 
 // Migration state
@@ -552,6 +566,40 @@ let migrateCtx = null; // { src: {...}, tgt: {...}, srcRecords, tgtRecords, srcT
 
 // LFPC state
 let lfpcState = null; // { updatedRecords, newRecords, report }
+
+// StateInfo / locale detection
+let detectedEnLocale = null;
+let availableLanguages = [];     // [{label, value}] from StateInfo
+let tgtAvailableLanguages = [];  // for migrate target
+let stateInfoCache = new Map();  // key: url|tenant|ctx -> {enLocale, languages}
+
+// Translation state
+let translationInProgress = false;
+let translationCancelled = false;
+let translationState = {
+  active: false, minimized: false,
+  language: '', languageLabel: '',
+  batch: 0, totalBatches: 0,
+  translated: 0, total: 0,
+  currentLangIdx: 0, totalLangs: 0,
+  logs: [], errors: [],
+};
+let fileTranslateEnv = null; // cached credentials for file mode
+
+// File push state
+let filePushEnv = null; // cached { url, user, pass, tenant, project, schema, campaign, contextPath, token, locale }
+
+// AI Enhancement state
+let aiEnhanceInProgress = false;
+let aiEnhanceCancelled = false;
+let aiEnhanceState = {
+  active: false, minimized: false,
+  moduleName: '', batch: 0, totalBatches: 0,
+  processed: 0, total: 0,
+  currentModIdx: 0, totalMods: 0,
+  logs: [],
+};
+let activeModuleIdx = 0; // tracks which module the user is viewing
 
 // Confirmation dialog state
 let confirmResolveFn = null;
@@ -952,30 +1000,30 @@ async function apiAuth(envUrl, username, password, tenantId) {
   return data.access_token;
 }
 
-async function apiMdmsSearch(envUrl, tenantId, schemaCode, filters, token, locale) {
+async function apiMdmsSearch(envUrl, tenantId, schemaCode, filters, token, locale, contextPath) {
   const resp = await fetch('/api/mdms/search', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, tenantId, schemaCode, filters: filters || {}, token, locale }),
+    body: JSON.stringify({ envUrl, tenantId, schemaCode, filters: filters || {}, token, locale, contextPath: contextPath || undefined }),
   });
   const data = await resp.json();
   if (data.error) throw new Error(data.error);
   return data.mdms || [];
 }
 
-async function apiMdmsUpdate(envUrl, schemaCode, record, token, locale) {
+async function apiMdmsUpdate(envUrl, schemaCode, record, token, locale, contextPath) {
   const resp = await fetch('/api/mdms/update', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, schemaCode, record, token, locale }),
+    body: JSON.stringify({ envUrl, schemaCode, record, token, locale, contextPath: contextPath || undefined }),
   });
   const data = await resp.json();
   if (data.error) throw new Error(data.error);
   return data;
 }
 
-async function apiMdmsCreate(envUrl, schemaCode, record, token, locale) {
+async function apiMdmsCreate(envUrl, schemaCode, record, token, locale, contextPath) {
   const resp = await fetch('/api/mdms/create', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ envUrl, schemaCode, record, token, locale }),
+    body: JSON.stringify({ envUrl, schemaCode, record, token, locale, contextPath: contextPath || undefined }),
   });
   const data = await resp.json();
   if (data.error) throw new Error(data.error);
@@ -1014,6 +1062,36 @@ function getLocModule(schemaCode, moduleName, project, campaign) {
 
 function buildRequestInfo(token, locale, action) {
   return { apiId: 'Rainmaker', ver: '.01', action, did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } };
+}
+
+// ════════════════════════════════════════════════════════════════
+// STATE INFO / LOCALE DETECTION
+// ════════════════════════════════════════════════════════════════
+
+async function fetchStateInfo(envUrl, tenantId, contextPath) {
+  const cacheKey = `${envUrl}|${tenantId}|${contextPath}`;
+  if (stateInfoCache.has(cacheKey)) return stateInfoCache.get(cacheKey);
+
+  const fallback = { enLocale: `en_${tenantId.toUpperCase()}`, languages: [] };
+  try {
+    const records = await apiMdmsSearch(envUrl, tenantId, 'common-masters.StateInfo', {}, null, 'en_IN', contextPath);
+    if (!records || records.length === 0) { stateInfoCache.set(cacheKey, fallback); return fallback; }
+
+    const stateData = records[0].data || records[0];
+    const languages = Array.isArray(stateData.languages) ? stateData.languages : [];
+
+    // Find English locale
+    const enLang = languages.find(l => (l.label || '').toUpperCase() === 'ENGLISH');
+    const enLocale = enLang ? enLang.value : `en_${tenantId.toUpperCase()}`;
+
+    const result = { enLocale, languages };
+    stateInfoCache.set(cacheKey, result);
+    return result;
+  } catch (e) {
+    console.warn('StateInfo fetch failed, using fallback locale:', e.message);
+    stateInfoCache.set(cacheKey, fallback);
+    return fallback;
+  }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1177,7 +1255,7 @@ function reconcileLfpc(allResults, lfpcRecords, tenant) {
 }
 
 // Push LFPC changes to an environment
-async function pushLfpcChanges(envUrl, token, locale, tenant) {
+async function pushLfpcChanges(envUrl, token, locale, tenant, contextPath) {
   if (!lfpcState || (lfpcState.updatedRecords.length === 0 && lfpcState.newRecords.length === 0)) return { pushed: 0, errors: 0 };
   let pushed = 0, errors = 0;
   const total = lfpcState.updatedRecords.length + lfpcState.newRecords.length;
@@ -1192,7 +1270,7 @@ async function pushLfpcChanges(envUrl, token, locale, tenant) {
         uniqueIdentifier: rec.uniqueIdentifier, data: rec.data, isActive: true,
         auditDetails: rec.auditDetails || null,
       };
-      await apiMdmsUpdate(envUrl, LFPC_SCHEMA, updateRec, token, locale);
+      await apiMdmsUpdate(envUrl, LFPC_SCHEMA, updateRec, token, locale, contextPath);
       pushed++;
     } catch (e) { errors++; console.warn('LFPC update failed:', e); }
   }
@@ -1207,7 +1285,7 @@ async function pushLfpcChanges(envUrl, token, locale, tenant) {
         tenantId: tenant || rec.tenantId, schemaCode: LFPC_SCHEMA,
         uniqueIdentifier: rec.uniqueIdentifier, data: rec.data, isActive: true,
       };
-      await apiMdmsCreate(envUrl, LFPC_SCHEMA, createRec, token, locale);
+      await apiMdmsCreate(envUrl, LFPC_SCHEMA, createRec, token, locale, contextPath);
       pushed++;
     } catch (e) { errors++; console.warn('LFPC create failed:', e); }
   }
@@ -1222,45 +1300,84 @@ async function aiEnhance(resultsList) {
   if (!claudeAvailable) return;
   const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.length, 0);
   if (totalMessages === 0) return;
+  const modsWithLocs = resultsList.filter(r => r.newLocalizations.length > 0).length;
+
+  aiEnhanceInProgress = true;
+  aiEnhanceCancelled = false;
+  aiEnhanceState = {
+    active: true, minimized: false,
+    moduleName: '', batch: 0, totalBatches: 0,
+    processed: 0, total: totalMessages,
+    currentModIdx: 0, totalMods: modsWithLocs,
+    logs: [],
+  };
+  renderAiPanel();
+  // Disable action buttons while AI runs
+  updateButtonStates();
+
   let processedMessages = 0;
+  let modIdx = 0;
   const BATCH = 30;
 
-  for (let i = 0; i < resultsList.length; i++) {
-    const r = resultsList[i];
-    if (r.newLocalizations.length === 0) continue;
-    const totalBatches = Math.ceil(r.newLocalizations.length / BATCH);
+  try {
+    for (let i = 0; i < resultsList.length; i++) {
+      if (aiEnhanceCancelled) { addAiLog('info', 'AI enhancement cancelled.'); break; }
+      const r = resultsList[i];
+      if (r.newLocalizations.length === 0) continue;
+      modIdx++;
+      const totalBatches = Math.ceil(r.newLocalizations.length / BATCH);
 
-    try {
-      for (let b = 0, batchNum = 1; b < r.newLocalizations.length; b += BATCH, batchNum++) {
-        const batch = r.newLocalizations.slice(b, b + BATCH);
-        const sampleCodes = batch.slice(0, 3).map(l => {
-          const parts = l.code.split('_');
-          return parts.slice(-2).join('_').toLowerCase();
-        }).join(', ');
-        const pct = Math.round((processedMessages / totalMessages) * 100);
-        showProgress(
-          `AI-enhancing ${r.report.moduleName}`,
-          `Batch ${batchNum}/${totalBatches} \u2022 ${processedMessages}/${totalMessages} messages \u2022 ${sampleCodes}`,
-          pct
-        );
-        await tick();
+      aiEnhanceState.moduleName = r.report.moduleName;
+      aiEnhanceState.currentModIdx = modIdx;
+      aiEnhanceState.totalBatches = totalBatches;
+      addAiLog('info', `Starting ${r.report.moduleName} (${r.newLocalizations.length} messages)...`);
 
-        const resp = await fetch('/api/enhance', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
-        });
-        const data = await resp.json();
-        if (data.improved) {
-          for (const loc of batch) {
-            if (data.improved[loc.code]) loc.message = data.improved[loc.code];
+      try {
+        for (let b = 0, batchNum = 1; b < r.newLocalizations.length; b += BATCH, batchNum++) {
+          if (aiEnhanceCancelled) break;
+          const batch = r.newLocalizations.slice(b, b + BATCH);
+          aiEnhanceState.batch = batchNum;
+          aiEnhanceState.processed = processedMessages;
+          renderAiPanel();
+          await tick();
+
+          const resp = await fetch('/api/enhance', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
+          });
+          const data = await resp.json();
+          let improved = 0;
+          if (data.improved) {
+            for (const loc of batch) {
+              if (data.improved[loc.code]) { loc.message = data.improved[loc.code]; improved++; }
+            }
           }
+          processedMessages += batch.length;
+          aiEnhanceState.processed = processedMessages;
+          addAiLog('info', `Batch ${batchNum}/${totalBatches}: ${improved} improved`);
+
+          // Live-update loc inputs if user is viewing this module's locs tab
+          refreshLocInputs(i);
         }
-        processedMessages += batch.length;
+      } catch (e) {
+        console.warn('AI enhancement failed:', e);
+        addAiLog('error', `Error on ${r.report.moduleName}: ${e.message}`);
       }
-    } catch (e) { console.warn('AI enhancement failed:', e); }
+    }
+
+    if (aiEnhanceCancelled) {
+      addAiLog('info', `Stopped. ${processedMessages}/${totalMessages} messages processed.`);
+    } else {
+      addAiLog('success', `Complete! ${totalMessages} messages enhanced.`);
+    }
+  } catch (e) {
+    addAiLog('error', `Fatal error: ${e.message}`);
+  } finally {
+    aiEnhanceInProgress = false;
+    aiEnhanceCancelled = false;
+    renderAiPanel();
+    updateButtonStates();
   }
-  showProgress('AI enhancement complete', `${totalMessages} messages processed`, 100);
-  await tick();
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1279,17 +1396,11 @@ document.addEventListener('change', e => {
   if (e.target.id === 'olSchema') {
     $('#olCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
   }
-  if (e.target.id === 'meSrcSchema') {
-    $('#meSrcCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  if (e.target.id === 'mgSrcSchema') {
+    $('#mgSrcCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
   }
-  if (e.target.id === 'meTgtSchema') {
-    $('#meTgtCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
-  }
-  if (e.target.id === 'msSrcSchema') {
-    $('#msSrcCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
-  }
-  if (e.target.id === 'msTgtSchema') {
-    $('#msTgtCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+  if (e.target.id === 'mgTgtSchema') {
+    $('#mgTgtCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
   }
 });
 
@@ -1342,6 +1453,7 @@ function loadFile(file) {
 
 $('#btnAnalyze').onclick = async () => {
   if (!rawInput) return;
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
   clearError();
   showLoader('Parsing JSON...');
   await tick();
@@ -1363,14 +1475,14 @@ $('#btnAnalyze').onclick = async () => {
   const autoFix = $('#chkAutoFix').checked;
   results = configs.map(c => analyzeAndFix(c, { autoFix }));
 
-  // Always AI-enhance
-  await aiEnhance(results);
-
   hideLoader();
   onlineRecords = [];
   migrateCtx = null;
   lfpcState = null;
   renderResults();
+
+  // AI-enhance in background (non-blocking)
+  aiEnhance(results);
 };
 
 // ════════════════════════════════════════════════════════════════
@@ -1378,6 +1490,7 @@ $('#btnAnalyze').onclick = async () => {
 // ════════════════════════════════════════════════════════════════
 
 async function onlineFetch() {
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
   clearError();
   const envUrl = $('#olUrl').value.trim().replace(/\/+$/, '');
   const user = $('#olUser').value.trim();
@@ -1386,11 +1499,18 @@ async function onlineFetch() {
   const project = $('#olProject').value.trim();
   const schema = $('#olSchema').value;
   const campaign = $('#olCampaign').value.trim();
+  const contextPath = $('#olContextPath').value;
 
   if (!envUrl || !user || !pass || !tenant) { showError('Fill in URL, Username, Password, and Tenant'); return; }
   if (schema.includes('FormConfig') && !schema.includes('Template') && !campaign) { showError('Campaign Number is required for FormConfig schema'); return; }
+  if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
 
   try {
+    // Detect locale from StateInfo (public API, no auth needed)
+    showLoader('Detecting locale...');
+    await tick();
+    const stateInfo = await fetchStateInfo(envUrl, tenant, contextPath);
+
     showLoader('Authenticating...');
     await tick();
     onlineToken = await apiAuth(envUrl, user, pass, tenant);
@@ -1399,12 +1519,15 @@ async function onlineFetch() {
     onlineProject = project;
     onlineSchema = schema;
     onlineCampaign = campaign;
-    onlineLocale = `en_${tenant.toUpperCase()}`;
+    onlineLocale = stateInfo.enLocale;
+    detectedEnLocale = stateInfo.enLocale;
+    availableLanguages = stateInfo.languages.filter(l => (l.label || '').toUpperCase() !== 'ENGLISH');
+    onlineContextPath = contextPath;
 
     showLoader('Fetching configs...');
     await tick();
     const filters = project ? { project } : {};
-    onlineRecords = await apiMdmsSearch(envUrl, tenant, schema, filters, onlineToken, onlineLocale);
+    onlineRecords = await apiMdmsSearch(envUrl, tenant, schema, filters, onlineToken, onlineLocale, contextPath);
 
     if (onlineRecords.length === 0) { hideLoader(); showError('No records found for the given filters'); return; }
 
@@ -1412,7 +1535,7 @@ async function onlineFetch() {
     showLoader('Fetching LabelFieldPairConfig...');
     await tick();
     let lfpcRecs = [];
-    try { lfpcRecs = await apiMdmsSearch(envUrl, tenant, LFPC_SCHEMA, {}, onlineToken, onlineLocale); } catch (e) { /* no LFPC */ }
+    try { lfpcRecs = await apiMdmsSearch(envUrl, tenant, LFPC_SCHEMA, {}, onlineToken, onlineLocale, contextPath); } catch (e) { /* no LFPC */ }
 
     // Module selection
     hideLoader();
@@ -1448,12 +1571,12 @@ async function onlineFetch() {
     // Reconcile LFPC
     lfpcState = reconcileLfpc(results, lfpcRecs, tenant);
 
-    // AI enhance
-    await aiEnhance(results);
-
     hideLoader();
     migrateCtx = null;
     renderResults();
+
+    // AI enhance in background (non-blocking)
+    aiEnhance(results);
 
   } catch (e) {
     hideLoader();
@@ -1462,153 +1585,61 @@ async function onlineFetch() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// MODE C: MIGRATE ENV
+// MODE C: MIGRATE
 // ════════════════════════════════════════════════════════════════
 
-async function migrateEnvFetch() {
-  clearError();
-  const src = {
-    url: $('#meSrcUrl').value.trim().replace(/\/+$/, ''),
-    user: $('#meSrcUser').value.trim(),
-    pass: $('#meSrcPass').value.trim(),
-    tenant: $('#meSrcTenant').value.trim(),
-    project: $('#meSrcProject').value.trim(),
-    schema: $('#meSrcSchema').value,
-    campaign: $('#meSrcCampaign').value.trim(),
-  };
-  const tgt = {
-    url: $('#meTgtUrl').value.trim().replace(/\/+$/, ''),
-    user: $('#meTgtUser').value.trim(),
-    pass: $('#meTgtPass').value.trim(),
-    tenant: $('#meTgtTenant').value.trim(),
-    project: $('#meTgtProject').value.trim(),
-    schema: $('#meTgtSchema').value,
-    campaign: $('#meTgtCampaign').value.trim(),
-  };
-
-  if (!src.url || !src.user || !src.pass || !src.tenant) { showError('Fill in Source credentials'); return; }
-  if (!tgt.url || !tgt.user || !tgt.pass || !tgt.tenant) { showError('Fill in Target credentials'); return; }
-
-  try {
-    showLoader('Authenticating to Source...');
-    await tick();
-    const srcToken = await apiAuth(src.url, src.user, src.pass, src.tenant);
-
-    showLoader('Authenticating to Target...');
-    await tick();
-    const tgtToken = await apiAuth(tgt.url, tgt.user, tgt.pass, tgt.tenant);
-
-    showLoader('Fetching Source configs...');
-    await tick();
-    const srcFilters = src.project ? { project: src.project } : {};
-    const srcRecords = await apiMdmsSearch(src.url, src.tenant, src.schema, srcFilters, srcToken, `en_${src.tenant.toUpperCase()}`);
-
-    showLoader('Fetching Target configs...');
-    await tick();
-    const tgtFilters = tgt.project ? { project: tgt.project } : {};
-    const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
-
-    // Fetch LFPC from source
-    showLoader('Fetching LabelFieldPairConfig...');
-    await tick();
-    let lfpcRecs = [];
-    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, `en_${src.tenant.toUpperCase()}`); } catch (e) { /* no LFPC */ }
-
-    // Build target name->record map for create vs update
-    const tgtMap = new Map();
-    for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
-
-    // Module selection
-    hideLoader();
-    const selectedRecords = await showModuleSelector(srcRecords);
-    if (!selectedRecords) return; // user cancelled
-
-    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords: selectedRecords, tgtRecords, tgtMap };
-
-    const autoFix = $('#meAutoFix').checked;
-    results = [];
-    for (let i = 0; i < selectedRecords.length; i++) {
-      const rec = selectedRecords[i];
-      if (!rec.data?.flows) continue;
-
-      showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${selectedRecords.length}`, ((i+1)/selectedRecords.length)*70);
-      await tick();
-
-      // Transform tenant/project references
-      const dataCopy = JSON.parse(JSON.stringify(rec.data));
-      if (src.project && tgt.project && src.project !== tgt.project) {
-        const json = JSON.stringify(dataCopy);
-        const transformed = json.replace(new RegExp(escRegex(src.project), 'g'), tgt.project);
-        Object.assign(dataCopy, JSON.parse(transformed));
-      }
-
-      // Fetch source locs
-      const srcLocModule = getLocModule(src.schema, rec.data.name, src.project, src.campaign);
-      let existingLocCodes = new Map();
-      try {
-        const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, `en_${src.tenant.toUpperCase()}`, srcToken);
-        existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
-      } catch (e) { /* no existing locs */ }
-
-      const result = analyzeAndFix(dataCopy, { autoFix, existingLocCodes });
-      result._record = rec;
-      result._srcLocModule = srcLocModule;
-      const tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
-      result._tgtLocModule = tgtLocModule;
-      result._existingLocs = existingLocCodes;
-      result._isUpdate = tgtMap.has(rec.data.name);
-      result._tgtRecord = tgtMap.get(rec.data.name) || null;
-      // Stamp module/locale on each localization entry
-      const tgtLocale = `en_${tgt.tenant.toUpperCase()}`;
-      for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
-      results.push(result);
-    }
-
-    // Reconcile LFPC
-    lfpcState = reconcileLfpc(results, lfpcRecs, tgt.tenant);
-
-    await aiEnhance(results);
-
-    hideLoader();
-    onlineRecords = [];
-    renderResults();
-
-  } catch (e) {
-    hideLoader();
-    showError('Migration error: ' + e.message);
-  }
+function toggleDiffEnv() {
+  $('#mgTgtCredentials').style.display = $('#mgDiffEnv').checked ? '' : 'none';
 }
 
-function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-
-// ════════════════════════════════════════════════════════════════
-// MODE D: MIGRATE SCHEMA
-// ════════════════════════════════════════════════════════════════
-
-async function migrateSchemaFetch() {
+async function migrateFetch() {
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
   clearError();
+  const srcContextPath = $('#mgSrcContextPath').value;
   const src = {
-    url: $('#msSrcUrl').value.trim().replace(/\/+$/, ''),
-    user: $('#msSrcUser').value.trim(),
-    pass: $('#msSrcPass').value.trim(),
-    tenant: $('#msSrcTenant').value.trim(),
-    project: $('#msSrcProject').value.trim(),
-    schema: $('#msSrcSchema').value,
-    campaign: $('#msSrcCampaign').value.trim(),
+    url: $('#mgSrcUrl').value.trim().replace(/\/+$/, ''),
+    user: $('#mgSrcUser').value.trim(),
+    pass: $('#mgSrcPass').value.trim(),
+    tenant: $('#mgSrcTenant').value.trim(),
+    project: $('#mgSrcProject').value.trim(),
+    schema: $('#mgSrcSchema').value,
+    campaign: $('#mgSrcCampaign').value.trim(),
+    contextPath: srcContextPath,
   };
+
+  const diffEnv = $('#mgDiffEnv').checked;
   const tgt = {
-    url: $('#msTgtUrl').value.trim().replace(/\/+$/, '') || src.url,
-    user: $('#msTgtUser').value.trim() || src.user,
-    pass: $('#msTgtPass').value.trim() || src.pass,
-    tenant: $('#msTgtTenant').value.trim() || src.tenant,
-    project: $('#msTgtProject').value.trim() || src.project,
-    schema: $('#msTgtSchema').value,
-    campaign: $('#msTgtCampaign').value.trim(),
+    url: diffEnv ? $('#mgTgtUrl').value.trim().replace(/\/+$/, '') : src.url,
+    user: diffEnv ? $('#mgTgtUser').value.trim() : src.user,
+    pass: diffEnv ? $('#mgTgtPass').value.trim() : src.pass,
+    tenant: diffEnv ? $('#mgTgtTenant').value.trim() : src.tenant,
+    project: $('#mgTgtProject').value.trim() || src.project,
+    schema: $('#mgTgtSchema').value,
+    campaign: $('#mgTgtCampaign').value.trim(),
+    contextPath: diffEnv ? $('#mgTgtContextPath').value : srcContextPath,
   };
 
   if (!src.url || !src.user || !src.pass || !src.tenant) { showError('Fill in Source credentials'); return; }
+  if (diffEnv && (!tgt.url || !tgt.user || !tgt.pass || !tgt.tenant)) { showError('Fill in Target credentials'); return; }
+  if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
 
   try {
+    // Detect locale from StateInfo (public API, no auth needed)
+    showLoader('Detecting source locale...');
+    await tick();
+    const srcStateInfo = await fetchStateInfo(src.url, src.tenant, src.contextPath);
+    const srcLocale = srcStateInfo.enLocale;
+    availableLanguages = srcStateInfo.languages.filter(l => (l.label || '').toUpperCase() !== 'ENGLISH');
+
+    let tgtStateInfo = srcStateInfo;
+    if (diffEnv) {
+      showLoader('Detecting target locale...');
+      await tick();
+      tgtStateInfo = await fetchStateInfo(tgt.url, tgt.tenant, tgt.contextPath);
+    }
+    const tgtLocale = tgtStateInfo.enLocale;
+    tgtAvailableLanguages = tgtStateInfo.languages.filter(l => (l.label || '').toUpperCase() !== 'ENGLISH');
+
     showLoader('Authenticating to Source...');
     await tick();
     const srcToken = await apiAuth(src.url, src.user, src.pass, src.tenant);
@@ -1623,18 +1654,18 @@ async function migrateSchemaFetch() {
     showLoader('Fetching Source configs...');
     await tick();
     const srcFilters = src.project ? { project: src.project } : {};
-    const srcRecords = await apiMdmsSearch(src.url, src.tenant, src.schema, srcFilters, srcToken, `en_${src.tenant.toUpperCase()}`);
+    const srcRecords = await apiMdmsSearch(src.url, src.tenant, src.schema, srcFilters, srcToken, srcLocale, src.contextPath);
 
     showLoader('Fetching Target configs...');
     await tick();
     const tgtFilters = tgt.project ? { project: tgt.project } : {};
-    const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+    const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, tgtLocale, tgt.contextPath);
 
     // Fetch LFPC from source
     showLoader('Fetching LabelFieldPairConfig...');
     await tick();
     let lfpcRecs = [];
-    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, `en_${src.tenant.toUpperCase()}`); } catch (e) { /* no LFPC */ }
+    try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, srcLocale, src.contextPath); } catch (e) { /* no LFPC */ }
 
     const tgtMap = new Map();
     for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
@@ -1642,11 +1673,11 @@ async function migrateSchemaFetch() {
     // Module selection
     hideLoader();
     const selectedRecords = await showModuleSelector(srcRecords);
-    if (!selectedRecords) return; // user cancelled
+    if (!selectedRecords) return;
 
-    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords: selectedRecords, tgtRecords, tgtMap };
+    migrateCtx = { src, tgt, srcToken, tgtToken, srcRecords: selectedRecords, tgtRecords, tgtMap, srcLocale, tgtLocale };
 
-    const autoFix = $('#msAutoFix').checked;
+    const autoFix = $('#mgAutoFix').checked;
     results = [];
     for (let i = 0; i < selectedRecords.length; i++) {
       const rec = selectedRecords[i];
@@ -1655,14 +1686,22 @@ async function migrateSchemaFetch() {
       showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${selectedRecords.length}`, ((i+1)/selectedRecords.length)*70);
       await tick();
 
+      // Transform project references when projects differ
+      const dataCopy = JSON.parse(JSON.stringify(rec.data));
+      if (src.project && tgt.project && src.project !== tgt.project) {
+        const json = JSON.stringify(dataCopy);
+        const transformed = json.replace(new RegExp(escRegex(src.project), 'g'), tgt.project);
+        Object.assign(dataCopy, JSON.parse(transformed));
+      }
+
       const srcLocModule = getLocModule(src.schema, rec.data.name, src.project, src.campaign);
       let existingLocCodes = new Map();
       try {
-        const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, `en_${src.tenant.toUpperCase()}`, srcToken);
+        const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, srcLocale, srcToken);
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
       } catch (e) {}
 
-      const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
+      const result = analyzeAndFix(dataCopy, { autoFix, existingLocCodes });
       result._record = rec;
       result._srcLocModule = srcLocModule;
       const tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
@@ -1670,32 +1709,33 @@ async function migrateSchemaFetch() {
       result._existingLocs = existingLocCodes;
       result._isUpdate = tgtMap.has(rec.data.name);
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
-      // Stamp module/locale on each localization entry
-      const tgtLocale = `en_${tgt.tenant.toUpperCase()}`;
       for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
       results.push(result);
     }
 
-    // Reconcile LFPC
     lfpcState = reconcileLfpc(results, lfpcRecs, tgt.tenant);
-
-    await aiEnhance(results);
 
     hideLoader();
     onlineRecords = [];
     renderResults();
 
+    // AI enhance in background (non-blocking)
+    aiEnhance(results);
+
   } catch (e) {
     hideLoader();
-    showError('Schema migration error: ' + e.message);
+    showError('Migration error: ' + e.message);
   }
 }
+
+function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
 // ════════════════════════════════════════════════════════════════
 // PUSH / UPSERT ACTIONS
 // ════════════════════════════════════════════════════════════════
 
 async function pushConfigFixes() {
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
   const fixCount = results.reduce((s,r) => s + r.report.fixes.length, 0);
   if (fixCount === 0) { showError('No fixes to push'); return; }
 
@@ -1718,7 +1758,7 @@ async function pushConfigFixes() {
         uniqueIdentifier: rec.uniqueIdentifier, data: r.correctedData, isActive: true,
         auditDetails: rec.auditDetails || null,
       };
-      await apiMdmsUpdate(onlineEnvUrl, onlineSchema, updateRec, onlineToken, onlineLocale);
+      await apiMdmsUpdate(onlineEnvUrl, onlineSchema, updateRec, onlineToken, onlineLocale, onlineContextPath);
       pushed++;
     } catch (e) {
       errors++;
@@ -1727,7 +1767,7 @@ async function pushConfigFixes() {
   }
 
   // Push LFPC changes
-  const lfpcResult = await pushLfpcChanges(onlineEnvUrl, onlineToken, onlineLocale, onlineTenant);
+  const lfpcResult = await pushLfpcChanges(onlineEnvUrl, onlineToken, onlineLocale, onlineTenant, onlineContextPath);
 
   hideLoader();
   const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
@@ -1736,6 +1776,7 @@ async function pushConfigFixes() {
 }
 
 async function upsertLocalizations() {
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Messages are still being improved.'); return; }
   const locCount = results.reduce((s,r) => s + r.newLocalizations.length, 0);
   if (locCount === 0) { showError('No localizations to upsert'); return; }
 
@@ -1777,8 +1818,9 @@ async function upsertLocalizations() {
 }
 
 async function pushAllToTarget() {
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Messages are still being improved.'); return; }
   if (!migrateCtx) return;
-  const { tgt, tgtToken, tgtMap } = migrateCtx;
+  const { tgt, tgtToken, tgtMap, tgtLocale } = migrateCtx;
   const total = results.length;
   const createCount = results.filter(r => !r._isUpdate).length;
   const updateCount = results.filter(r => r._isUpdate).length;
@@ -1806,14 +1848,14 @@ async function pushAllToTarget() {
           uniqueIdentifier: r._tgtRecord.uniqueIdentifier, data: r.correctedData, isActive: true,
           auditDetails: r._tgtRecord.auditDetails || null,
         };
-        await apiMdmsUpdate(tgt.url, tgt.schema, updateRec, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+        await apiMdmsUpdate(tgt.url, tgt.schema, updateRec, tgtToken, tgtLocale, tgt.contextPath);
       } else {
         const createRec = {
           tenantId: tgt.tenant, schemaCode: tgt.schema,
           uniqueIdentifier: r._record.uniqueIdentifier || `${tgt.tenant}-${r.correctedData.name}`,
           data: r.correctedData, isActive: true,
         };
-        await apiMdmsCreate(tgt.url, tgt.schema, createRec, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+        await apiMdmsCreate(tgt.url, tgt.schema, createRec, tgtToken, tgtLocale, tgt.contextPath);
       }
       pushed++;
     } catch (e) {
@@ -1828,38 +1870,338 @@ async function pushAllToTarget() {
     // Include existing source locs
     if (r._existingLocs) {
       for (const [code, message] of r._existingLocs) {
-        allLocs.push({ code, message, module: tgtLocModule, locale: `en_${tgt.tenant.toUpperCase()}` });
+        allLocs.push({ code, message, module: tgtLocModule, locale: tgtLocale });
       }
     }
     // Include new locs
     for (const loc of r.newLocalizations) {
-      allLocs.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: `en_${tgt.tenant.toUpperCase()}` });
+      allLocs.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale });
     }
 
     for (let b = 0; b < allLocs.length; b += 50) {
       const batch = allLocs.slice(b, b + 50);
       try {
-        await apiLocUpsert(tgt.url, tgt.tenant, batch, tgtToken, `en_${tgt.tenant.toUpperCase()}`);
+        await apiLocUpsert(tgt.url, tgt.tenant, batch, tgtToken, tgtLocale);
         locUpserted += batch.length;
       } catch (e) { /* continue */ }
     }
 
     // Also upsert _appConfig-tagged entries to hcm-appconfiguration on target
     const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => ({
-      code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: `en_${tgt.tenant.toUpperCase()}`
+      code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: tgtLocale
     }));
     for (let b = 0; b < appConfigOnly.length; b += 50) {
-      try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, `en_${tgt.tenant.toUpperCase()}`); } catch (e) { /* continue */ }
+      try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, tgtLocale); } catch (e) { /* continue */ }
     }
   }
 
   // Push LFPC changes to target
-  const lfpcResult = await pushLfpcChanges(tgt.url, tgtToken, `en_${tgt.tenant.toUpperCase()}`, tgt.tenant);
+  const lfpcResult = await pushLfpcChanges(tgt.url, tgtToken, tgtLocale, tgt.tenant, tgt.contextPath);
 
   hideLoader();
   const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
   showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg} ${errors ? errors + ' errors.' : ''}`);
   if (!errors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+}
+
+// ════════════════════════════════════════════════════════════════
+// FILE MODE: PUSH TO ENVIRONMENT
+// ════════════════════════════════════════════════════════════════
+
+function showFilePushDialog() {
+  return new Promise(resolve => {
+    const box = document.querySelector('.confirm-box');
+    const overlay = $('#confirmOverlay');
+    const cached = filePushEnv || {};
+
+    box.innerHTML = `
+      <h3 style="color:var(--green)">Push to Environment</h3>
+      <p>Enter target environment credentials to push corrected configs and localizations.</p>
+      <div style="max-height:420px;overflow-y:auto;margin-bottom:12px">
+        <div class="form-group"><label>Environment URL</label><input type="text" id="fpUrl" placeholder="https://unified-uat.digit.org" value="${esc(cached.url || '')}"></div>
+        <div class="form-group"><label>Username</label><input type="text" id="fpUser" placeholder="SATYA" value="${esc(cached.user || '')}"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="fpPass" value="${esc(cached.pass || '')}"></div>
+        <div class="form-group"><label>Tenant ID</label><input type="text" id="fpTenant" placeholder="mz" value="${esc(cached.tenant || '')}"></div>
+        <div class="form-group"><label>Project</label><input type="text" id="fpProject" placeholder="MR-DN" value="${esc(cached.project || '')}"></div>
+        <div class="form-group"><label>Schema</label>
+          <select id="fpSchema">
+            <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate" ${cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig' ? '' : 'selected'}>FormConfigTemplate</option>
+            <option value="HCM-ADMIN-CONSOLE.FormConfig" ${cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig' ? 'selected' : ''}>FormConfig</option>
+          </select>
+        </div>
+        <div class="form-group" id="fpCampaignGroup" style="display:${cached.schema === 'HCM-ADMIN-CONSOLE.FormConfig' ? '' : 'none'}">
+          <label>Campaign Number</label><input type="text" id="fpCampaign" placeholder="CMP-2026-06-15-006194" value="${esc(cached.campaign || '')}">
+        </div>
+        <div class="form-group"><label>MDMS Context Path</label>
+          <select id="fpContextPath">
+            <option value="egov-mdms-service" ${(!cached.contextPath || cached.contextPath === 'egov-mdms-service') ? 'selected' : ''}>egov-mdms-service</option>
+            <option value="mdms-v2" ${cached.contextPath === 'mdms-v2' ? 'selected' : ''}>mdms-v2</option>
+          </select>
+        </div>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn" id="fpBtnCancel">Cancel</button>
+        <button class="btn btn-green" id="fpBtnConnect">Connect & Push</button>
+      </div>`;
+    overlay.classList.remove('hidden');
+
+    // Toggle campaign visibility on schema change
+    const schemaEl = box.querySelector('#fpSchema');
+    schemaEl.onchange = () => {
+      box.querySelector('#fpCampaignGroup').style.display =
+        schemaEl.value.includes('FormConfig') && !schemaEl.value.includes('Template') ? '' : 'none';
+    };
+
+    const restoreBox = () => {
+      overlay.classList.add('hidden');
+      box.innerHTML = '<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>';
+    };
+
+    box.querySelector('#fpBtnCancel').onclick = () => { restoreBox(); resolve(null); };
+    box.querySelector('#fpBtnConnect').onclick = async () => {
+      const url = box.querySelector('#fpUrl').value.trim().replace(/\/+$/, '');
+      const user = box.querySelector('#fpUser').value.trim();
+      const pass = box.querySelector('#fpPass').value.trim();
+      const tenant = box.querySelector('#fpTenant').value.trim();
+      const project = box.querySelector('#fpProject').value.trim();
+      const schema = box.querySelector('#fpSchema').value;
+      const campaign = box.querySelector('#fpCampaign').value.trim();
+      const contextPath = box.querySelector('#fpContextPath').value;
+
+      if (!url || !user || !pass || !tenant) { showError('Fill in URL, Username, Password, and Tenant'); return; }
+      if (!project) { showError('Project is required'); return; }
+      if (schema.includes('FormConfig') && !schema.includes('Template') && !campaign) { showError('Campaign Number is required for FormConfig schema'); return; }
+
+      restoreBox();
+
+      try {
+        showLoader('Detecting locale...');
+        await tick();
+        const stateInfo = await fetchStateInfo(url, tenant, contextPath);
+        const locale = stateInfo.enLocale;
+
+        showLoader('Authenticating...');
+        await tick();
+        const token = await apiAuth(url, user, pass, tenant);
+
+        filePushEnv = { url, user, pass, tenant, project, schema, campaign, contextPath, token, locale };
+        resolve(filePushEnv);
+      } catch (e) {
+        hideLoader();
+        showError('Connection failed: ' + e.message);
+        resolve(null);
+      }
+    };
+  });
+}
+
+function showFilePushModuleSelector(moduleList) {
+  return new Promise(resolve => {
+    if (moduleList.length === 0) { resolve([]); return; }
+
+    const box = document.querySelector('.confirm-box');
+    const overlay = $('#confirmOverlay');
+
+    box.innerHTML = `
+      <h3>Select Modules to Push</h3>
+      <p>Found <b>${moduleList.length}</b> corrected modules. Select which to push:</p>
+      <div class="select-actions">
+        <button id="fpmSelAll">Select All</button>
+        <button id="fpmSelNone">Select None</button>
+      </div>
+      <div class="module-select-list" id="fpmModList">
+        ${moduleList.map((m, i) => `
+          <label class="module-select-item">
+            <input type="checkbox" checked data-fpm-idx="${i}">
+            <span class="mod-name">${esc(m.name)}</span>
+            <span class="mod-flows">${m.isUpdate ? 'Update' : 'Create'}</span>
+          </label>`).join('')}
+      </div>
+      <div class="confirm-actions">
+        <button class="btn" id="fpmBtnCancel">Cancel</button>
+        <button class="btn btn-green" id="fpmBtnPush">Push Selected (${moduleList.length})</button>
+      </div>`;
+    overlay.classList.remove('hidden');
+
+    const checkboxes = () => box.querySelectorAll('input[data-fpm-idx]');
+    const updateCount = () => {
+      const cnt = [...checkboxes()].filter(c => c.checked).length;
+      const btn = box.querySelector('#fpmBtnPush');
+      btn.textContent = `Push Selected (${cnt})`;
+      btn.disabled = cnt === 0;
+    };
+
+    box.querySelector('#fpmSelAll').onclick = () => { checkboxes().forEach(c => c.checked = true); updateCount(); };
+    box.querySelector('#fpmSelNone').onclick = () => { checkboxes().forEach(c => c.checked = false); updateCount(); };
+    box.addEventListener('change', updateCount);
+
+    const restoreBox = () => {
+      overlay.classList.add('hidden');
+      box.innerHTML = '<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>';
+    };
+
+    box.querySelector('#fpmBtnCancel').onclick = () => { restoreBox(); resolve([]); };
+    box.querySelector('#fpmBtnPush').onclick = () => {
+      const selected = [...checkboxes()].filter(c => c.checked).map(c => +c.dataset.fpmIdx);
+      restoreBox();
+      resolve(selected);
+    };
+  });
+}
+
+async function pushFileToEnv() {
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
+  if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
+  clearError();
+
+  // Show credential dialog (or reuse cached)
+  const env = await showFilePushDialog();
+  if (!env) return;
+
+  const { url, tenant, project, schema, campaign, contextPath, token, locale } = env;
+
+  try {
+    // Search target for existing configs
+    showLoader('Searching target configs...');
+    await tick();
+    const tgtRecords = await apiMdmsSearch(url, tenant, schema, { project }, token, locale, contextPath);
+    const tgtMap = new Map();
+    for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
+
+    // Build module list with update/create status
+    const moduleList = results.map((r, i) => ({
+      idx: i,
+      name: r.report.moduleName,
+      isUpdate: tgtMap.has(r.report.moduleName),
+    }));
+
+    hideLoader();
+
+    // Module selection dialog
+    const selectedIndices = await showFilePushModuleSelector(moduleList);
+    if (selectedIndices.length === 0) return;
+
+    const selectedModules = selectedIndices.map(i => moduleList[i]);
+    const createCount = selectedModules.filter(m => !m.isUpdate).length;
+    const updateCount = selectedModules.filter(m => m.isUpdate).length;
+
+    // Determine original project from results data (for replacement)
+    const srcProject = results[0]?.correctedData?.project || '';
+
+    showLoader('Pushing to target...');
+    let pushed = 0, locUpserted = 0, errors = 0;
+    const total = selectedModules.length;
+
+    for (let si = 0; si < selectedModules.length; si++) {
+      const mod = selectedModules[si];
+      const r = results[mod.idx];
+      showProgress(`${mod.isUpdate ? 'Updating' : 'Creating'} ${mod.name}...`, `${si+1}/${total}`, ((si+1)/total)*80);
+      await tick();
+
+      try {
+        // Deep-copy corrected data and apply project replacement
+        let dataCopy = JSON.parse(JSON.stringify(r.correctedData));
+        if (srcProject && project && srcProject !== project) {
+          const json = JSON.stringify(dataCopy);
+          const transformed = json.replace(new RegExp(escRegex(srcProject), 'g'), project);
+          dataCopy = JSON.parse(transformed);
+        }
+        if (dataCopy.project) dataCopy.project = project;
+
+        if (mod.isUpdate) {
+          // Pick the full target MDMS record, only replace data
+          const tgtRec = tgtMap.get(mod.name);
+          const updateRec = {
+            id: tgtRec.id,
+            tenantId: tgtRec.tenantId,
+            schemaCode: tgtRec.schemaCode || schema,
+            uniqueIdentifier: tgtRec.uniqueIdentifier,
+            data: dataCopy,
+            isActive: true,
+            auditDetails: tgtRec.auditDetails || null,
+          };
+          await apiMdmsUpdate(url, schema, updateRec, token, locale, contextPath);
+        } else {
+          const createRec = {
+            tenantId: tenant,
+            schemaCode: schema,
+            uniqueIdentifier: `${tenant}-${mod.name}`,
+            data: dataCopy,
+            isActive: true,
+          };
+          await apiMdmsCreate(url, schema, createRec, token, locale, contextPath);
+        }
+        pushed++;
+      } catch (e) {
+        errors++;
+        showError(`${mod.isUpdate ? 'Update' : 'Create'} failed for ${mod.name}: ${e.message}`);
+      }
+
+      // Upsert localizations for this module
+      const locModule = getLocModule(schema, mod.name, project, campaign);
+      const allLocs = [];
+
+      // Existing locs (if available from analysis)
+      if (r._existingLocs) {
+        for (const [code, message] of r._existingLocs) {
+          let locCode = code, locMsg = message;
+          if (srcProject && project && srcProject !== project) {
+            locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
+            locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
+          }
+          allLocs.push({ code: locCode, message: locMsg, module: locModule, locale });
+        }
+      }
+      // New locs from corrector
+      for (const loc of r.newLocalizations) {
+        let locCode = loc.code, locMsg = loc.message;
+        if (srcProject && project && srcProject !== project) {
+          locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
+          locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
+        }
+        const mod2 = loc._appConfig ? 'hcm-appconfiguration' : locModule;
+        allLocs.push({ code: locCode, message: locMsg, module: mod2, locale });
+      }
+
+      for (let b = 0; b < allLocs.length; b += 50) {
+        const batch = allLocs.slice(b, b + 50);
+        try {
+          await apiLocUpsert(url, tenant, batch, token, locale);
+          locUpserted += batch.length;
+        } catch (e) { /* continue */ }
+      }
+
+      // Also upsert _appConfig entries to hcm-appconfiguration
+      const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => {
+        let locCode = m.code, locMsg = m.message;
+        if (srcProject && project && srcProject !== project) {
+          locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
+          locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
+        }
+        return { code: locCode, message: locMsg, module: 'hcm-appconfiguration', locale };
+      });
+      for (let b = 0; b < appConfigOnly.length; b += 50) {
+        try { await apiLocUpsert(url, tenant, appConfigOnly.slice(b, b + 50), token, locale); } catch (e) { /* continue */ }
+      }
+    }
+
+    // Push LFPC changes to target
+    const lfpcResult = await pushLfpcChanges(url, token, locale, tenant, contextPath);
+
+    hideLoader();
+    const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
+    showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg} ${errors ? errors + ' errors.' : 'All successful.'}`);
+    if (!errors && !lfpcResult.errors) {
+      const el = $('#errorBanner');
+      el.className = 'error-banner';
+      el.style.borderColor = 'var(--green)';
+      el.style.color = 'var(--green)';
+      el.style.background = 'rgba(166,227,161,.1)';
+    }
+  } catch (e) {
+    hideLoader();
+    showError('Push failed: ' + e.message);
+  }
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1948,6 +2290,483 @@ function downloadLocSheet() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// TRANSLATION FEATURE
+// ════════════════════════════════════════════════════════════════
+
+async function apiTranslate(messages, targetLanguage, targetLocale) {
+  const resp = await fetch('/api/translate', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, targetLanguage, targetLocale }),
+  });
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error);
+  return data.translated || {};
+}
+
+// ── Translation Panel Rendering ──
+
+function renderTranslationPanel() {
+  const panel = $('#transPanel');
+  if (!translationState.active) { panel.classList.add('hidden'); return; }
+  panel.classList.remove('hidden');
+
+  const pct = translationState.total > 0 ? Math.round((translationState.translated / translationState.total) * 100) : 0;
+
+  if (translationState.minimized) {
+    const langInfo = translationState.totalLangs > 1
+      ? `${translationState.languageLabel} (${translationState.currentLangIdx}/${translationState.totalLangs})`
+      : translationState.languageLabel;
+    panel.innerHTML = `
+      <div class="trans-pill" onclick="toggleTranslationMinimize()">
+        <span>Translating ${esc(langInfo)}... ${pct}%</span>
+        <div class="trans-pill-bar"><div class="trans-pill-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    return;
+  }
+
+  const langInfo = translationState.totalLangs > 1
+    ? `${translationState.languageLabel} (${translationState.currentLangIdx}/${translationState.totalLangs})`
+    : translationState.languageLabel;
+
+  let logsHtml = '';
+  for (const log of translationState.logs) {
+    logsHtml += `<div class="trans-log-entry ${log.type}">${esc(log.text)}</div>`;
+  }
+
+  panel.innerHTML = `
+    <div class="trans-expanded">
+      <div class="trans-header">
+        <span>Translation Progress</span>
+        <div class="trans-header-btns">
+          <button onclick="toggleTranslationMinimize()" title="Minimize">_</button>
+          <button onclick="dismissTranslationPanel()" title="Close">&times;</button>
+        </div>
+      </div>
+      <div class="trans-body">
+        <div class="trans-stat-row"><span>Language</span><span class="val">${esc(langInfo)}</span></div>
+        <div class="trans-stat-row"><span>Batch</span><span class="val">${translationState.batch}/${translationState.totalBatches}</span></div>
+        <div class="trans-stat-row"><span>Messages</span><span class="val">${translationState.translated}/${translationState.total}</span></div>
+        <div class="trans-progress-bar"><div class="trans-progress-fill" style="width:${pct}%"></div></div>
+        <div class="trans-log" id="transLog">${logsHtml}</div>
+      </div>
+      <div class="trans-footer">
+        ${translationInProgress ? '<button class="btn btn-red btn-sm" onclick="cancelTranslation()">Cancel</button>' : '<button class="btn btn-sm" onclick="dismissTranslationPanel()">Close</button>'}
+      </div>
+    </div>`;
+
+  // Auto-scroll log
+  const logEl = document.getElementById('transLog');
+  if (logEl) logEl.scrollTop = logEl.scrollHeight;
+}
+
+function toggleTranslationMinimize() {
+  translationState.minimized = !translationState.minimized;
+  renderTranslationPanel();
+}
+
+function dismissTranslationPanel() {
+  if (translationInProgress) { cancelTranslation(); return; }
+  translationState.active = false;
+  $('#transPanel').classList.add('hidden');
+}
+
+function cancelTranslation() {
+  translationCancelled = true;
+  addTranslationLog('info', 'Cancellation requested...');
+}
+
+function addTranslationLog(type, text) {
+  const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+  translationState.logs.push({ type, text: `${time} ${text}` });
+  if (translationState.logs.length > 200) translationState.logs.shift();
+  renderTranslationPanel();
+}
+
+// ── AI Enhancement Panel Rendering ──
+
+function renderAiPanel() {
+  const panel = $('#aiPanel');
+  if (!aiEnhanceState.active) { panel.classList.add('hidden'); return; }
+  panel.classList.remove('hidden');
+
+  const pct = aiEnhanceState.total > 0 ? Math.round((aiEnhanceState.processed / aiEnhanceState.total) * 100) : 0;
+
+  if (aiEnhanceState.minimized) {
+    panel.innerHTML = `
+      <div class="trans-pill" onclick="toggleAiMinimize()" style="border-color:var(--mauve)">
+        <span>AI Enhancing ${esc(aiEnhanceState.moduleName)}... ${pct}%</span>
+        <div class="trans-pill-bar"><div class="trans-pill-fill" style="width:${pct}%;background:var(--mauve)"></div></div>
+      </div>`;
+    return;
+  }
+
+  let logsHtml = '';
+  for (const log of aiEnhanceState.logs) {
+    logsHtml += `<div class="trans-log-entry ${log.type}">${esc(log.text)}</div>`;
+  }
+
+  panel.innerHTML = `
+    <div class="trans-expanded">
+      <div class="trans-header">
+        <span style="color:var(--mauve)">AI Enhancement</span>
+        <div class="trans-header-btns">
+          <button onclick="toggleAiMinimize()" title="Minimize">_</button>
+          <button onclick="dismissAiPanel()" title="Close">&times;</button>
+        </div>
+      </div>
+      <div class="trans-body">
+        <div class="trans-stat-row"><span>Module</span><span class="val">${esc(aiEnhanceState.moduleName)} (${aiEnhanceState.currentModIdx}/${aiEnhanceState.totalMods})</span></div>
+        <div class="trans-stat-row"><span>Batch</span><span class="val">${aiEnhanceState.batch}/${aiEnhanceState.totalBatches}</span></div>
+        <div class="trans-stat-row"><span>Messages</span><span class="val">${aiEnhanceState.processed}/${aiEnhanceState.total}</span></div>
+        <div class="trans-progress-bar"><div class="trans-progress-fill" style="width:${pct}%;background:var(--mauve)"></div></div>
+        <div class="trans-log" id="aiLog">${logsHtml}</div>
+      </div>
+      <div class="trans-footer">
+        ${aiEnhanceInProgress ? '<button class="btn btn-red btn-sm" onclick="cancelAiEnhance()">Cancel</button>' : '<button class="btn btn-sm" onclick="dismissAiPanel()">Close</button>'}
+      </div>
+    </div>`;
+
+  const logEl = document.getElementById('aiLog');
+  if (logEl) logEl.scrollTop = logEl.scrollHeight;
+}
+
+function toggleAiMinimize() {
+  aiEnhanceState.minimized = !aiEnhanceState.minimized;
+  renderAiPanel();
+}
+
+function dismissAiPanel() {
+  if (aiEnhanceInProgress) { cancelAiEnhance(); return; }
+  aiEnhanceState.active = false;
+  $('#aiPanel').classList.add('hidden');
+}
+
+function cancelAiEnhance() {
+  aiEnhanceCancelled = true;
+  addAiLog('info', 'Cancellation requested...');
+}
+
+function addAiLog(type, text) {
+  const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+  aiEnhanceState.logs.push({ type, text: `${time} ${text}` });
+  if (aiEnhanceState.logs.length > 200) aiEnhanceState.logs.shift();
+  renderAiPanel();
+}
+
+function refreshLocInputs(moduleIdx) {
+  if (activeModuleIdx !== moduleIdx) return;
+  const activeTab = document.querySelector('#modTabs .tab.active');
+  if (!activeTab || activeTab.dataset.t !== 'locs') return;
+  const locs = results[moduleIdx].newLocalizations;
+  const inputs = document.querySelectorAll('#tp-locs .loc-msg input');
+  inputs.forEach((inp, i) => {
+    if (i < locs.length && inp.value !== locs[i].message) {
+      inp.value = locs[i].message;
+      inp.style.transition = 'background .3s';
+      inp.style.background = 'rgba(203,166,247,.15)';
+      setTimeout(() => { inp.style.background = ''; }, 600);
+    }
+  });
+}
+
+function updateButtonStates() {
+  // Toggle disabled state on action buttons that depend on AI completion
+  const ab = $('#actionButtons');
+  if (!ab) return;
+  const selectors = [
+    'button[onclick*="pushConfigFixes"]',
+    'button[onclick*="upsertLocalizations"]',
+    'button[onclick*="pushAllToTarget"]',
+    'button[onclick*="translateToLanguage"]',
+    'button[onclick*="translateAllLanguages"]',
+    'button[onclick*="startFileTranslateFlow"]',
+  ];
+  for (const sel of selectors) {
+    ab.querySelectorAll(sel).forEach(btn => { btn.disabled = aiEnhanceInProgress || translationInProgress; });
+  }
+}
+
+// ── File Mode Target Env Dialog ──
+
+function showFileTranslateDialog() {
+  return new Promise(resolve => {
+    const box = document.querySelector('.confirm-box');
+    const overlay = $('#confirmOverlay');
+    box.innerHTML = `
+      <h3>Target Environment for Translation</h3>
+      <p>Provide credentials for the environment where translations will be upserted.</p>
+      <div class="trans-env-dialog">
+        <div class="form-group"><label>Environment URL</label><input type="text" id="ftUrl" placeholder="https://campaigns.afro.who.int" value="${fileTranslateEnv?.url || ''}"></div>
+        <div class="form-group"><label>Username</label><input type="text" id="ftUser" placeholder="SATYA" value="${fileTranslateEnv?.user || ''}"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="ftPass" value="${fileTranslateEnv?.pass || ''}"></div>
+        <div class="form-group"><label>Tenant ID</label><input type="text" id="ftTenant" placeholder="chad" value="${fileTranslateEnv?.tenant || ''}"></div>
+        <div class="form-group"><label>MDMS Context Path</label>
+          <select id="ftContextPath">
+            <option value="egov-mdms-service" ${(!fileTranslateEnv || fileTranslateEnv.contextPath === 'egov-mdms-service') ? 'selected' : ''}>egov-mdms-service</option>
+            <option value="mdms-v2" ${fileTranslateEnv?.contextPath === 'mdms-v2' ? 'selected' : ''}>mdms-v2</option>
+          </select>
+        </div>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn" id="ftCancel">Cancel</button>
+        <button class="btn btn-primary" id="ftConnect">Connect</button>
+      </div>`;
+    overlay.classList.remove('hidden');
+
+    const restoreBox = () => {
+      overlay.classList.add('hidden');
+      box.innerHTML = '<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>';
+    };
+
+    box.querySelector('#ftCancel').onclick = () => { restoreBox(); resolve(null); };
+    box.querySelector('#ftConnect').onclick = async () => {
+      const url = box.querySelector('#ftUrl').value.trim().replace(/\/+$/, '');
+      const user = box.querySelector('#ftUser').value.trim();
+      const pass = box.querySelector('#ftPass').value.trim();
+      const tenant = box.querySelector('#ftTenant').value.trim();
+      const contextPath = box.querySelector('#ftContextPath').value;
+
+      if (!url || !user || !pass || !tenant) { showError('Fill in all fields'); return; }
+
+      try {
+        restoreBox();
+        showLoader('Connecting to target...');
+        await tick();
+
+        const stateInfo = await fetchStateInfo(url, tenant, contextPath);
+        const token = await apiAuth(url, user, pass, tenant);
+
+        fileTranslateEnv = { url, user, pass, tenant, contextPath, token, stateInfo };
+        availableLanguages = stateInfo.languages.filter(l => (l.label || '').toUpperCase() !== 'ENGLISH');
+        detectedEnLocale = stateInfo.enLocale;
+
+        hideLoader();
+        resolve(fileTranslateEnv);
+      } catch (e) {
+        hideLoader();
+        showError('Connection failed: ' + e.message);
+        resolve(null);
+      }
+    };
+  });
+}
+
+// ── Translation Orchestrator ──
+
+function collectEnglishMessages() {
+  const deduped = new Map();
+  for (const r of results) {
+    // Include existing locs if available
+    if (r._existingLocs) {
+      for (const [code, message] of r._existingLocs) {
+        if (!deduped.has(code)) deduped.set(code, { code, message, _appConfig: false });
+      }
+    }
+    // Include new localizations
+    for (const loc of r.newLocalizations) {
+      if (!deduped.has(loc.code)) deduped.set(loc.code, { code: loc.code, message: loc.message, _appConfig: !!loc._appConfig });
+    }
+  }
+  return Array.from(deduped.values());
+}
+
+function getTranslationLocModules() {
+  const modules = new Set();
+  for (const r of results) {
+    const locModule = r._locModule || r._tgtLocModule;
+    if (locModule) modules.add(locModule);
+  }
+  return Array.from(modules);
+}
+
+async function startTranslation(selectedLanguages, envUrl, token, tenant, contextPath) {
+  if (translationInProgress) { showError('Translation already in progress'); return; }
+  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait for it to finish before translating.'); return; }
+
+  const allMessages = collectEnglishMessages();
+  if (allMessages.length === 0) { showError('No English messages to translate'); return; }
+
+  translationInProgress = true;
+  translationCancelled = false;
+  translationState = {
+    active: true, minimized: false,
+    language: '', languageLabel: '',
+    batch: 0, totalBatches: 0,
+    translated: 0, total: allMessages.length * selectedLanguages.length,
+    currentLangIdx: 0, totalLangs: selectedLanguages.length,
+    logs: [], errors: [],
+  };
+  renderTranslationPanel();
+
+  const BATCH_SIZE = 25;
+  let totalTranslated = 0;
+
+  try {
+    for (let langIdx = 0; langIdx < selectedLanguages.length; langIdx++) {
+      if (translationCancelled) { addTranslationLog('info', 'Translation cancelled.'); break; }
+
+      const lang = selectedLanguages[langIdx];
+      const langLabel = lang.label || 'Unknown';
+      const langLocale = lang.value;
+      translationState.currentLangIdx = langIdx + 1;
+      translationState.language = langLocale;
+      translationState.languageLabel = langLabel;
+      addTranslationLog('info', `Starting ${langLabel} (${langLocale})...`);
+
+      const totalBatches = Math.ceil(allMessages.length / BATCH_SIZE);
+      translationState.totalBatches = totalBatches;
+
+      let langTranslated = 0;
+
+      for (let b = 0; b < allMessages.length; b += BATCH_SIZE) {
+        if (translationCancelled) break;
+
+        const batch = allMessages.slice(b, b + BATCH_SIZE);
+        const batchNum = Math.floor(b / BATCH_SIZE) + 1;
+        translationState.batch = batchNum;
+        renderTranslationPanel();
+        await tick();
+
+        try {
+          // Translate batch
+          const translated = await apiTranslate(batch, langLabel, langLocale);
+          const translatedCount = Object.keys(translated).length;
+
+          // Build upsert messages grouped by module
+          const locModules = getTranslationLocModules();
+          const defaultModule = locModules[0] || 'hcm-unknown';
+
+          // Regular loc messages
+          const regularMsgs = [];
+          const appConfigMsgs = [];
+
+          for (const msg of batch) {
+            const translatedMsg = translated[msg.code];
+            if (!translatedMsg) continue;
+
+            // Determine which module this code belongs to
+            let codeModule = defaultModule;
+            for (const r of results) {
+              const rm = r._locModule || r._tgtLocModule;
+              if (rm) {
+                const hasCode = r.newLocalizations.some(l => l.code === msg.code) ||
+                                (r._existingLocs && r._existingLocs.has(msg.code));
+                if (hasCode) { codeModule = rm; break; }
+              }
+            }
+
+            regularMsgs.push({ code: msg.code, message: translatedMsg, module: codeModule, locale: langLocale });
+
+            if (msg._appConfig) {
+              appConfigMsgs.push({ code: msg.code, message: translatedMsg, module: 'hcm-appconfiguration', locale: langLocale });
+            }
+          }
+
+          // Upsert regular messages
+          if (regularMsgs.length > 0) {
+            try {
+              await apiLocUpsert(envUrl, tenant, regularMsgs, token, langLocale);
+            } catch (e) {
+              translationState.errors.push(e.message);
+              addTranslationLog('error', `Upsert failed batch ${batchNum}: ${e.message}`);
+            }
+          }
+
+          // Upsert app-config messages
+          if (appConfigMsgs.length > 0) {
+            try {
+              await apiLocUpsert(envUrl, tenant, appConfigMsgs, token, langLocale);
+            } catch (e) { /* continue */ }
+          }
+
+          langTranslated += translatedCount;
+          totalTranslated += batch.length;
+          translationState.translated = totalTranslated;
+          addTranslationLog('info', `Batch ${batchNum}/${totalBatches}: ${translatedCount} translated`);
+
+        } catch (e) {
+          translationState.errors.push(e.message);
+          addTranslationLog('error', `Batch ${batchNum} error: ${e.message}`);
+          totalTranslated += batch.length;
+          translationState.translated = totalTranslated;
+        }
+
+        renderTranslationPanel();
+        await tick();
+      }
+
+      addTranslationLog('success', `${langLabel}: ${langTranslated} messages upserted`);
+    }
+
+    if (translationCancelled) {
+      addTranslationLog('info', `Translation stopped. ${totalTranslated} messages processed.`);
+    } else {
+      addTranslationLog('success', `All translations complete! ${totalTranslated} messages processed.`);
+    }
+
+  } catch (e) {
+    addTranslationLog('error', `Fatal error: ${e.message}`);
+  } finally {
+    translationInProgress = false;
+    translationCancelled = false;
+    renderTranslationPanel();
+  }
+}
+
+// ── Translation UI Entry Points ──
+
+async function translateToLanguage(langValue, langLabel) {
+  let envUrl, token, tenant, contextPath;
+
+  if (activeMode === 'online' && onlineToken) {
+    envUrl = onlineEnvUrl; token = onlineToken; tenant = onlineTenant; contextPath = onlineContextPath;
+  } else if (activeMode === 'migrate' && migrateCtx) {
+    envUrl = migrateCtx.tgt.url; token = migrateCtx.tgtToken; tenant = migrateCtx.tgt.tenant; contextPath = migrateCtx.tgt.contextPath;
+  } else {
+    // File mode - need target env
+    if (!fileTranslateEnv) {
+      const env = await showFileTranslateDialog();
+      if (!env) return;
+      // Re-render results to show language buttons now that we have languages
+      renderResults();
+    }
+    envUrl = fileTranslateEnv.url; token = fileTranslateEnv.token; tenant = fileTranslateEnv.tenant; contextPath = fileTranslateEnv.contextPath;
+  }
+
+  const selectedLang = [{ label: langLabel, value: langValue }];
+  await startTranslation(selectedLang, envUrl, token, tenant, contextPath);
+}
+
+async function startFileTranslateFlow() {
+  const env = await showFileTranslateDialog();
+  if (!env) return;
+  renderResults();
+}
+
+async function translateAllLanguages() {
+  let envUrl, token, tenant, contextPath, langs;
+
+  if (activeMode === 'online' && onlineToken) {
+    envUrl = onlineEnvUrl; token = onlineToken; tenant = onlineTenant; contextPath = onlineContextPath;
+    langs = availableLanguages;
+  } else if (activeMode === 'migrate' && migrateCtx) {
+    envUrl = migrateCtx.tgt.url; token = migrateCtx.tgtToken; tenant = migrateCtx.tgt.tenant; contextPath = migrateCtx.tgt.contextPath;
+    langs = tgtAvailableLanguages.length > 0 ? tgtAvailableLanguages : availableLanguages;
+  } else {
+    if (!fileTranslateEnv) {
+      const env = await showFileTranslateDialog();
+      if (!env) return;
+      renderResults();
+    }
+    envUrl = fileTranslateEnv.url; token = fileTranslateEnv.token; tenant = fileTranslateEnv.tenant; contextPath = fileTranslateEnv.contextPath;
+    langs = availableLanguages;
+  }
+
+  if (!langs || langs.length === 0) { showError('No non-English languages detected'); return; }
+  await startTranslation(langs, envUrl, token, tenant, contextPath);
+}
+
+// ════════════════════════════════════════════════════════════════
 // RENDERING
 // ════════════════════════════════════════════════════════════════
 
@@ -1972,26 +2791,57 @@ function renderResults() {
   ab.innerHTML = '';
   ab.classList.remove('hidden');
 
+  const aiDisabled = aiEnhanceInProgress ? 'disabled' : '';
+
   if (activeMode === 'online' && onlineToken) {
     ab.innerHTML = `
       <div class="btn-group">
-        <button class="btn btn-green" onclick="pushConfigFixes()">Push Config Fixes</button>
-        <button class="btn btn-primary" onclick="upsertLocalizations()">Upsert Localizations</button>
+        <button class="btn btn-green" onclick="pushConfigFixes()" ${aiDisabled}>Push Config Fixes</button>
+        <button class="btn btn-primary" onclick="upsertLocalizations()" ${aiDisabled}>Upsert Localizations</button>
         <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
       </div>`;
-  } else if ((activeMode === 'migrate-env' || activeMode === 'migrate-schema') && migrateCtx) {
+  } else if (activeMode === 'migrate' && migrateCtx) {
     ab.innerHTML = `
       <div class="btn-group">
-        <button class="btn btn-green" onclick="pushAllToTarget()">Push All to Target</button>
+        <button class="btn btn-green" onclick="pushAllToTarget()" ${aiDisabled}>Push All to Target</button>
         <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
       </div>`;
   } else {
     // File mode
     ab.innerHTML = `
       <div class="btn-group">
+        <button class="btn btn-green" onclick="pushFileToEnv()" ${aiDisabled}>Push to Environment</button>
         <button class="btn" onclick="downloadAllJson()">Download All Corrected JSON</button>
         <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
       </div>`;
+  }
+
+  // Translation section
+  const langs = (activeMode === 'migrate' && tgtAvailableLanguages.length > 0)
+    ? tgtAvailableLanguages
+    : availableLanguages;
+
+  if (claudeAvailable && tLocs > 0) {
+    let transHtml = '<div class="trans-section-title">Translations</div>';
+    if (langs.length > 0) {
+      transHtml += `<div style="font-size:12px;color:var(--subtext);margin-bottom:8px">Available languages: ${langs.map(l => `${esc(l.label)} (${esc(l.value)})`).join(', ')}</div>`;
+      transHtml += '<div class="btn-group">';
+      for (const l of langs) {
+        const safeVal = esc(l.value).replace(/'/g, '&#39;');
+        const safeLbl = esc(l.label).replace(/'/g, '&#39;');
+        transHtml += `<button class="btn btn-sm" onclick="translateToLanguage('${safeVal}','${safeLbl}')" ${translationInProgress || aiEnhanceInProgress ? 'disabled' : ''}>Translate All to ${esc(l.label)}</button>`;
+      }
+      if (langs.length > 1) {
+        transHtml += `<button class="btn btn-primary btn-sm" onclick="translateAllLanguages()" ${translationInProgress || aiEnhanceInProgress ? 'disabled' : ''}>Translate All Languages</button>`;
+      }
+      transHtml += '</div>';
+    } else if (activeMode === 'file') {
+      transHtml += `<div style="font-size:12px;color:var(--subtext);margin-bottom:8px">Connect to an environment to detect available languages and translate.</div>`;
+      transHtml += `<div class="btn-group"><button class="btn btn-sm" onclick="startFileTranslateFlow()" ${translationInProgress || aiEnhanceInProgress ? 'disabled' : ''}>Set Up Translation Target</button></div>`;
+    } else {
+      transHtml += `<div style="font-size:12px;color:var(--subtext)">No non-English languages detected from StateInfo.</div>`;
+    }
+    ab.innerHTML += transHtml;
   }
 
   // Module list
@@ -2008,14 +2858,15 @@ function renderResults() {
     else if (l > 0) badge = `<span class="badge badge-loc">${l} locs</span>`;
     else badge = `<span class="badge badge-clean">Clean</span>`;
     li.innerHTML = `<span>${esc(r.report.moduleName)}</span>${badge}`;
-    li.onclick = () => { $$('.module-item').forEach(x=>x.classList.remove('active')); li.classList.add('active'); renderModule(i); };
+    li.onclick = () => { $$('.module-item').forEach(x=>x.classList.remove('active')); li.classList.add('active'); activeModuleIdx = i; renderModule(i); };
     list.appendChild(li);
   });
 
-  if (results.length > 0) renderModule(0);
+  if (results.length > 0) { activeModuleIdx = 0; renderModule(0); }
 }
 
 function renderModule(idx) {
+  activeModuleIdx = idx;
   const r = results[idx];
   const { report, newLocalizations, correctedData, originalData } = r;
   const { moduleName, fixes } = report;
