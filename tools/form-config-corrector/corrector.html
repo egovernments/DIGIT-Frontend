@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FormConfig Corrector</title>
+<style>
+:root {
+  --bg: #1e1e2e; --surface: #181825; --surface2: #313244;
+  --overlay: #45475a; --text: #cdd6f4; --subtext: #a6adc8;
+  --blue: #89b4fa; --green: #a6e3a1; --red: #f38ba8;
+  --yellow: #f9e2af; --mauve: #cba6f7; --teal: #94e2d5;
+  --peach: #fab387; --sky: #89dceb; --flamingo: #f2cdcd;
+  --border: #313244; --gutter: #585b70;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ─── Header ─── */
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.header-left { display: flex; align-items: center; gap: 12px; }
+.header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+.header .version { background: var(--surface2); color: var(--subtext); font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+.status-bar { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--subtext); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-dot.ok { background: var(--green); }
+.status-dot.off { background: var(--overlay); }
+
+/* ─── Layout ─── */
+.app { display: flex; height: calc(100vh - 45px); }
+.sidebar { width: 280px; min-width: 280px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+.main { flex: 1; overflow-y: auto; padding: 24px; }
+
+/* ─── Sidebar ─── */
+.sidebar-section { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--subtext); margin-bottom: 8px; font-weight: 600; }
+.sidebar-section .btn-full { width: 100%; margin-bottom: 6px; }
+
+.drop-area { border: 2px dashed var(--overlay); border-radius: 8px; padding: 24px 16px; text-align: center; cursor: pointer; transition: all .15s; }
+.drop-area:hover, .drop-area.over { border-color: var(--blue); background: rgba(137,180,250,.05); }
+.drop-area p { font-size: 13px; color: var(--subtext); }
+.drop-area .icon { font-size: 28px; margin-bottom: 6px; opacity: .5; }
+input[type="file"] { display: none; }
+
+.module-list { list-style: none; flex: 1; overflow-y: auto; }
+.module-item { padding: 8px 16px; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; transition: all .1s; }
+.module-item:hover { background: var(--surface2); }
+.module-item.active { background: rgba(137,180,250,.08); border-left-color: var(--blue); color: var(--blue); }
+.module-item .badge { font-size: 10px; padding: 1px 6px; border-radius: 8px; font-weight: 600; }
+.badge-fix { background: rgba(166,227,161,.15); color: var(--green); }
+.badge-warn { background: rgba(249,226,175,.15); color: var(--yellow); }
+.badge-loc { background: rgba(137,180,250,.15); color: var(--blue); }
+.badge-clean { background: rgba(148,226,213,.1); color: var(--teal); }
+
+/* ─── Buttons ─── */
+.btn { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; font-size: 13px; font-weight: 500; background: var(--surface2); color: var(--text); transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { background: var(--overlay); }
+.btn-primary { background: var(--blue); color: var(--surface); border-color: var(--blue); }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-green { background: var(--green); color: var(--surface); border-color: var(--green); }
+.btn-green:hover { filter: brightness(1.1); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ─── Checkbox ─── */
+.check-row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 6px; cursor: pointer; }
+.check-row input { accent-color: var(--blue); }
+
+/* ─── Stats bar ─── */
+.stats { display: flex; gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+.stat { flex: 1; background: var(--surface); padding: 14px 16px; text-align: center; }
+.stat .num { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat .lbl { font-size: 11px; color: var(--subtext); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+.num-fix { color: var(--green); }
+.num-warn { color: var(--yellow); }
+.num-loc { color: var(--blue); }
+.num-mod { color: var(--mauve); }
+
+/* ─── Tabs ─── */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.tab { padding: 8px 16px; font-size: 13px; cursor: pointer; color: var(--subtext); border-bottom: 2px solid transparent; transition: all .15s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ─── Fix list ─── */
+.fix-group { margin-bottom: 16px; }
+.fix-group-header { font-size: 12px; font-weight: 600; color: var(--yellow); padding: 6px 12px; background: rgba(249,226,175,.06); border-radius: 6px 6px 0 0; border: 1px solid var(--border); border-bottom: none; display: flex; justify-content: space-between; }
+.fix-group-body { border: 1px solid var(--border); border-radius: 0 0 6px 6px; }
+.fix-row { padding: 6px 12px; font-size: 12px; font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; border-bottom: 1px solid var(--border); display: flex; gap: 8px; line-height: 1.6; }
+.fix-row:last-child { border-bottom: none; }
+.fix-path { color: var(--subtext); min-width: 0; word-break: break-all; }
+.fix-arrow { color: var(--overlay); flex-shrink: 0; }
+.fix-val { color: var(--green); word-break: break-all; }
+
+/* ─── Loc table ─── */
+.loc-table { width: 100%; border-collapse: collapse; }
+.loc-table th { text-align: left; padding: 8px 12px; font-size: 11px; color: var(--subtext); text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); }
+.loc-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); font-size: 12px; vertical-align: top; }
+.loc-table tr:hover { background: rgba(137,180,250,.03); }
+.loc-code { font-family: 'JetBrains Mono', 'Cascadia Code', monospace; color: var(--peach); word-break: break-all; }
+.loc-msg { color: var(--text); }
+.loc-msg input { width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: inherit; }
+.loc-msg input:focus { outline: none; border-color: var(--blue); }
+.loc-type { color: var(--subtext); font-size: 11px; }
+
+/* ─── Code viewer (diff) ─── */
+.code-viewer { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.code-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.code-header span { font-size: 12px; color: var(--subtext); }
+.code-body { max-height: 500px; overflow: auto; }
+.code-body pre { margin: 0; padding: 12px; font-size: 12px; font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; line-height: 1.6; white-space: pre-wrap; word-break: break-word; tab-size: 2; }
+.diff-view { display: grid; grid-template-columns: 1fr 1fr; }
+.diff-pane { overflow: auto; max-height: 500px; }
+.diff-pane pre { margin: 0; padding: 12px; font-size: 11px; font-family: 'JetBrains Mono', 'Cascadia Code', monospace; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+.diff-label { font-size: 11px; padding: 6px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); font-weight: 600; }
+.diff-label.old { color: var(--red); }
+.diff-label.new { color: var(--green); }
+.diff-sep { width: 1px; background: var(--border); }
+
+/* ─── Loader ─── */
+.loader-overlay { position: fixed; inset: 0; background: rgba(17,17,27,.85); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(4px); }
+.loader-spinner { width: 40px; height: 40px; border: 3px solid var(--surface2); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-text { margin-top: 16px; font-size: 14px; color: var(--subtext); }
+.loader-sub { font-size: 12px; color: var(--overlay); margin-top: 4px; }
+
+/* ─── Empty state ─── */
+.empty { text-align: center; padding: 80px 40px; }
+.empty .icon { font-size: 48px; opacity: .3; margin-bottom: 16px; }
+.empty h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; color: var(--subtext); }
+.empty p { font-size: 13px; color: var(--overlay); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>FormConfig Corrector</h1>
+    <span class="version">v1.0</span>
+  </div>
+  <div class="status-bar">
+    <span id="claudeStatus"><span class="status-dot off"></span> Checking Claude...</span>
+    <span style="color:var(--overlay)">|</span>
+    <span id="platformInfo">--</span>
+  </div>
+</div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Input</div>
+      <div class="drop-area" id="dropArea">
+        <div class="icon">{ }</div>
+        <p>Drop JSON file or click to browse</p>
+      </div>
+      <input type="file" id="fileInput" accept=".json">
+    </div>
+    <div class="sidebar-section">
+      <label class="check-row"><input type="checkbox" id="chkAutoFix" checked> Auto-fix issues</label>
+      <label class="check-row"><input type="checkbox" id="chkAI"> AI-enhance messages</label>
+      <button class="btn btn-primary btn-full" id="btnAnalyze" disabled>Analyze</button>
+      <button class="btn btn-full" id="btnPaste">Paste from Clipboard</button>
+    </div>
+    <div class="sidebar-section" style="flex-shrink:0">
+      <div class="sidebar-title">Modules</div>
+    </div>
+    <ul class="module-list" id="moduleList"></ul>
+  </div>
+
+  <!-- Main content -->
+  <div class="main" id="mainContent">
+    <div class="empty" id="emptyState">
+      <div class="icon">{ }</div>
+      <h2>No config loaded</h2>
+      <p>Drop a FormConfig JSON file in the sidebar, paste from clipboard, or use the file browser. Supports single configs, arrays, and MDMS response format.</p>
+    </div>
+
+    <!-- Results (hidden until analysis) -->
+    <div id="resultsArea" class="hidden">
+      <div class="stats" id="statsBar"></div>
+      <div id="moduleDetail"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Loader -->
+<div class="loader-overlay hidden" id="loader">
+  <div class="loader-spinner"></div>
+  <div class="loader-text" id="loaderText">Analyzing...</div>
+  <div class="loader-sub" id="loaderSub"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// CORRECTOR ENGINE (inline, runs in browser)
+// ════════════════════════════════════════════════════════════════
+
+const MAX_WALK_DEPTH = 50;
+const LOCALIZATION_FIELDS = ['fieldName','label','heading','title','description','message','helpText','infoText','actionLabel','primaryActionLabel','secondaryActionLabel','expandLabel','collapseLabel','innerLabel','tooltip','errorMessage','key'];
+
+const DOMAIN_WORDS = ['ACKNOWLEDGEMENT','RECONCILIATION','REGISTRATION','CONFIGURATION','BENEFICIARY','COMMUNITY','COMPLAINTS','COMPLAINT','CHECKLIST','DASHBOARD','HOUSEHOLD','INVENTORY','INDIVIDUAL','NAVIGATION','PERMISSION','SELECTION','SETTLEMENT','TRANSPORT','WAREHOUSE','ATTENDANCE','CAMPAIGN','CATEGORY','COMMENTS','DELIVERY','DETAILS','DAMAGED','EXPIRY','FACILITY','HANDLER','LOCATION','MULTIPLE','OVERVIEW','PREVIEW','PRODUCTS','PRODUCT','QUANTITY','RECEIVE','REPORTS','REQUIRED','SCANNER','SUCCESS','VEHICLE','ACTIONS','BUTTON','CANCEL','CLOSE','COORD','CREATE','DELETE','ENTER','FIELD','GENDER','MANAGE','MEMBER','NUMBER','RECORD','REPORT','RETURN','SCREEN','SEARCH','SELECT','STOCK','SUBMIT','BATCH','DATE','EDIT','FLOW','FORM','HEAD','HOME','ITEM','LIST','LOST','MARK','NAME','NEXT','OPEN','PAGE','SCAN','SENT','TEAM','TEXT','TYPE','UNABLE','VIEW','AREA','BACK','CARD','CODE','DONE','FROM','HELP','INFO','LATLNG','PANEL','SAVE','WHICH','ADD','AGE','NEW','QR','TO','MONITORING','MONITOR','SURVEYOR','SURVEY','CLUSTER','LOT','CHILDREN','VACCINATED','REFUSAL','ABSENCE','CAREGIVER','AWARENESS','DESIGNATION','COVERED','FINGER','MARKED','DOSES','REASON','SPECIFY','INFORMED','MISSED','ASLEEP','ROUTINE','POORLY','FINAL','COUNT','CASE','VISITED','REVISITED','PRESENT','PHYSICAL','CALCULATED','EXCESS','ISSUED','RETURNED','RECEIVED','WAYBILL','ENTRY','MRN','TOTAL','MEMBERS','LABEL','STATUS','DESCRIPTION','CONTACT','INBOX','COMPLAINANT','REFERRAL','SYMPTOM','ERROR','MOBILE'].sort((a,b)=>b.length-a.length);
+const SMALL_WORDS = new Set(['a','an','the','to','of','in','for','and','or','but','is','at','by','on']);
+const FIELD_MAP = {latLng:'GPS Coordinates',dob:'Date of Birth',dateOfBirth:'Date of Birth',qrCode:'QR Code',scanner:'Scan Code',id:'ID',uuid:'UUID',otp:'OTP',givenName:'Given Name',nameOfIndividual:'Name of Individual',isHeadOfFamily:'Head of Family',memberCount:'Member Count',facilityId:'Facility ID',tenantId:'Tenant ID',projectId:'Project ID',productVariantId:'Product Variant ID',transactionType:'Transaction Type',dateOfEntry:'Date of Entry',wayBillNumber:'Waybill Number',mrnNumber:'MRN Number',batchNumber:'Batch Number',stockExpiry:'Stock Expiry',quantityReceived:'Quantity Received',applicationStatus:'Application Status',mobileNumber:'Mobile Number',dateOfRegistration:'Date of Registration',additionalFields:'Additional Fields',goBack:'Go Back'};
+
+function isCode(s){if(!s||s.length===0)return false;if(s.includes(' ')&&!s.includes('_'))return false;if(/^[A-Z0-9_]+$/.test(s))return true;if(/^[A-Za-z0-9_]+$/.test(s)&&s.includes('_'))return true;return false;}
+function splitCompound(w){let r=w.toUpperCase(),p=[];while(r.length>0){let f=false;for(const d of DOMAIN_WORDS){if(r.startsWith(d)){p.push(d);r=r.substring(d.length);f=true;break;}}if(!f){p.push(r);break;}}return p.map((x,i)=>{const l=x.toLowerCase();return(i>0&&SMALL_WORDS.has(l))?l:x.charAt(0).toUpperCase()+x.slice(1).toLowerCase();}).join(' ');}
+function humanize(s){if(!s)return'';if(/[a-z]/.test(s)&&/[A-Z]/.test(s))return s.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());if(/^[A-Z0-9]+$/.test(s))return splitCompound(s);return s.charAt(0).toUpperCase()+s.slice(1);}
+function humanizeField(f){if(!f)return null;if(FIELD_MAP[f])return FIELD_MAP[f];return f.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());}
+function labelToFieldName(l){if(!l||typeof l!=='string')return null;const p=l.split('_').filter(x=>x.length>0);if(!p.length)return null;const u=p.length>4?p.slice(-3):p;return u.map((x,i)=>{const lo=x.toLowerCase();return i===0?lo:lo.charAt(0).toUpperCase()+lo.slice(1);}).join('');}
+function smartMsg(code,mod){if(!code)return code;let c=code;if(mod){const p=mod.toUpperCase()+'_';if(c.startsWith(p))c=c.substring(p.length);}for(const p of['HCM_','APPONE_','APP_CONFIG_','CLF_']){if(c.startsWith(p)){c=c.substring(p.length);break;}}const S=['_SECONDARY_ACTION_LABEL','_PRIMARY_ACTION_LABEL','_ERROR_MESSAGE','_EXPAND_LABEL','_COLLAPSE_LABEL','_ACTION_LABEL','_INNER_LABEL','_FIELD_NAME','_DESCRIPTION','_HELP_TEXT','_INFO_TEXT','_HEADING','_MESSAGE','_TOOLTIP','_LABEL','_TITLE','_ERROR'];for(const s of S){if(c.endsWith(s)){c=c.substring(0,c.length-s.length);break;}}return c.split('_').filter(Boolean).map(x=>splitCompound(x)).join(' ');}
+function genValMsg(fn,vt,l){const r=smartMsg(l||fn||'Field');switch(vt){case'required':return`${r} is required`;case'min':return`${r} must meet the minimum value`;case'max':return`${r} exceeds the maximum value`;case'minLength':return`${r} is too short`;case'maxLength':return`${r} is too long`;case'pattern':case'regex':return`${r} has an invalid format`;default:return`${r} validation error`;}}
+function smartLocMsg(code,ft,cfn,pn,mod){if(!code)return'';if(code.includes(' '))return code;const fl=cfn?humanizeField(cfn):null,isSuc=pn&&/success/i.test(pn);switch(ft){case'primaryActionLabel':case'actionLabel':return isSuc?'Back to Home':'Submit';case'secondaryActionLabel':return isSuc?'Back to Home':'Back';case'heading':case'title':return isSuc?'Success':smartMsg(code,mod);case'description':return isSuc?'Your action has been completed successfully.':smartMsg(code,mod);case'label':return fl||smartMsg(code,mod);case'helpText':case'infoText':return fl?`Enter the ${fl.toLowerCase()}`:smartMsg(code,mod);case'expandLabel':return'Show More';case'collapseLabel':return'Show Less';case'errorMessage':case'message':if(/REQUIRED/i.test(code))return`${fl||smartMsg(code,mod)} is required`;return smartMsg(code,mod);default:return smartMsg(code,mod);}}
+
+function analyzeAndFix(configData, opts = {}) {
+  const { autoFix = true, existingLocCodes = new Map() } = opts;
+  const data = autoFix ? JSON.parse(JSON.stringify(configData)) : JSON.parse(JSON.stringify(configData));
+  const originalData = JSON.parse(JSON.stringify(configData));
+  const moduleName = data.name || 'UNKNOWN';
+  const report = { moduleName, totalIssues: 0, fixes: [], warnings: [], missingLocalizations: [] };
+  const allNew = new Map();
+
+  // R1&2: type+fieldName
+  const visited1 = new WeakSet();
+  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
+  chkTF(data,'data',null,0);
+
+  // R3: dup fieldNames
+  const visited3 = new WeakSet();
+  function cfn(o,p,e,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return e;if(Array.isArray(o)){o.forEach((x,i)=>cfn(x,`${p}[${i}]`,e,d+1));return e;}if(visited3.has(o))return e;visited3.add(o);if(o.fieldName&&typeof o.fieldName==='string'&&o.fieldName.trim())e.push({obj:o,fieldName:o.fieldName,path:p});for(const[k,v]of Object.entries(o)){if(k==='fieldName')continue;if(typeof v==='object'&&v!==null)cfn(v,p?`${p}.${k}`:k,e,d+1);}return e;}
+  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){let x=2,nn=`${e.fieldName}${x}`;const all=new Set(entries.map(z=>z.obj.fieldName));while(all.has(nn)){x++;nn=`${e.fieldName}${x}`;}e.obj.fieldName=nn;report.fixes.push({rule:'duplicate-fieldName',screen:n,old:e.fieldName.replace(/\d+$/,''),new:nn,path:e.path,fixed:`"${e.fieldName.replace(/\d+$/,'')}" \u2192 "${nn}"`});}else seen.set(e.fieldName,true);}}}}
+
+  // R4: flow categories
+  if(data.flows){for(const fl of data.flows){if((fl.screenType||fl.body)&&(!fl.category||!fl.category.trim())){fl.category=fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:fl.name,fixed:`category \u2192 "${fl.category}"`});}if(fl.pages){for(const pg of fl.pages){if((pg.screenType||pg.body)&&(!pg.category||!pg.category.trim())){pg.category=pg.name||pg.page||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:`${fl.name}/${pg.page||pg.name}`,fixed:`category \u2192 "${pg.category}"`});}}}}}
+
+  // R5: actions
+  const visited5 = new WeakSet();
+  function wAct(o,fn,loc,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>wAct(x,fn,`${loc}[${i}]`,d+1));return;}if(visited5.has(o))return;visited5.add(o);for(const ak of['primaryAction','secondaryAction']){if(o[ak]&&typeof o[ak]==='object'){const a=o[ak],pt=ak==='primaryAction'?'primary':'secondary',bn=fn||o.name||o.page||'unknown',efn=`${bn.toLowerCase()}_${ak}`;let fx=false;const dd=[];if(!a.type){a.type='template';fx=true;dd.push('type');}if(!a.format){a.format='button';fx=true;dd.push('format');}if(!a.fieldName){a.fieldName=efn;fx=true;dd.push('fieldName');}if(!a.properties)a.properties={};if(!a.properties.type){a.properties.type=pt;fx=true;dd.push('properties.type');}if(fx)report.fixes.push({rule:`${ak}-props`,flow:fn,path:`${loc}.${ak}`,fixed:`Added: ${dd.join(', ')}`});}}for(const[k,v]of Object.entries(o)){if(k!=='primaryAction'&&k!=='secondaryAction'&&typeof v==='object'&&v!==null)wAct(v,fn,`${loc}.${k}`,d+1);}}
+  if(data.flows)for(const fl of data.flows)wAct(fl,fl.name,fl.name||'flow',0);
+
+  // R6&7: validations
+  function pComp(c,fn,loc){const fN=c.fieldName||'unknown',lb=c.label||c.heading||'';if('errorMessage'in c&&(!c.errorMessage||c.errorMessage==='')){if(c.validations&&c.validations.length>0){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_ERROR`;c.errorMessage=cd;report.fixes.push({rule:'empty-errorMessage',flow:fn,path:loc,fixed:`errorMessage \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,`${smartMsg(fN)} validation failed`);}}if(Array.isArray(c.validations)){for(let vi=0;vi<c.validations.length;vi++){const v=c.validations[vi],vt=v.type||'';if(vt==='isGS1'&&!('message'in v))continue;if('message'in v){const msg=v.message||'';if(!msg||msg===''){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;v.message=cd;report.fixes.push({rule:'empty-validation-msg',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`message \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,genValMsg(fN,vt,lb));}else if(!isCode(msg)){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;const orig=msg;v.message=cd;report.fixes.push({rule:'hardcoded-validation',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`"${orig}" \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,orig);}else{if(!allNew.has(msg))allNew.set(msg,genValMsg(fN,vt,lb));}}}}}
+  if(data.flows){for(const fl of data.flows){for(const s of['body','header','footer'])for(let i=0;i<(fl[s]||[]).length;i++)pComp(fl[s][i],fl.name,`${s}[${i}]`);for(let pi=0;pi<(fl.pages||[]).length;pi++){const pg=fl.pages[pi];for(let pri=0;pri<(pg.properties||[]).length;pri++)pComp(pg.properties[pri],fl.name,`pages[${pi}].properties[${pri}]`);}}}
+
+  // R8: table headers
+  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);if(o.format==='table'&&o.data&&Array.isArray(o.data.columns)){for(let ci=0;ci<o.data.columns.length;ci++){const col=o.data.columns[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
+  wTH(data,'data',0);
+
+  // R9: icon in properties
+  const visited9=new WeakSet();function wIc(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wIc(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited9.has(o))return;visited9.add(o);if(o.format&&o.icon&&typeof o.icon==='string'&&o.icon.trim()){if(!o.properties)o.properties={};if(!o.properties.icon){o.properties.icon=o.icon;report.fixes.push({rule:'icon-to-properties',path:p,fixed:`icon \u2192 properties.icon`});}}for(const[k,v]of Object.entries(o)){if(k==='properties')continue;if(typeof v==='object'&&v!==null)wIc(v,`${p}.${k}`,d+1);}}}
+  wIc(data,'data',0);
+
+  // R10: collect loc codes
+  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();if(cd.includes(' ')&&!cd.includes('_'))continue;if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])&&!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)wLoc(v,c,d+1);}}
+  wLoc(data,{},0);
+
+  report.totalIssues=report.fixes.length+report.warnings.length;
+  return { correctedData:data, originalData, report, newLocalizations:Array.from(allNew.entries()).map(([code,message])=>({code,message})) };
+}
+
+// ════════════════════════════════════════════════════════════════
+// UI STATE
+// ════════════════════════════════════════════════════════════════
+
+let rawInput = null;
+let results = [];
+let activeModule = null;
+let claudeAvailable = false;
+
+// ════════════════════════════════════════════════════════════════
+// UI LOGIC
+// ════════════════════════════════════════════════════════════════
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+// Check server status
+async function checkStatus() {
+  try {
+    const r = await fetch('/api/status');
+    const d = await r.json();
+    claudeAvailable = d.claude;
+    $('#claudeStatus').innerHTML = d.claude
+      ? `<span class="status-dot ok"></span> Claude ${d.claudeVersion}`
+      : `<span class="status-dot off"></span> Claude not found`;
+    $('#platformInfo').textContent = d.platform;
+    if (!d.claude) $('#chkAI').disabled = true;
+  } catch {
+    $('#claudeStatus').innerHTML = '<span class="status-dot off"></span> Local server';
+    $('#platformInfo').textContent = 'Standalone mode';
+    $('#chkAI').disabled = true;
+  }
+}
+checkStatus();
+
+// File input
+$('#dropArea').onclick = () => $('#fileInput').click();
+$('#dropArea').ondragover = e => { e.preventDefault(); $('#dropArea').classList.add('over'); };
+$('#dropArea').ondragleave = () => $('#dropArea').classList.remove('over');
+$('#dropArea').ondrop = e => { e.preventDefault(); $('#dropArea').classList.remove('over'); if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); };
+$('#fileInput').onchange = e => { if(e.target.files[0]) loadFile(e.target.files[0]); };
+
+$('#btnPaste').onclick = async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text) { rawInput = text; $('#dropArea').querySelector('p').textContent = 'Pasted from clipboard'; $('#btnAnalyze').disabled = false; }
+  } catch { alert('Clipboard access denied. Paste manually into a .json file and drop it.'); }
+};
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    rawInput = e.target.result;
+    $('#dropArea').querySelector('p').textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+    $('#btnAnalyze').disabled = false;
+  };
+  reader.readAsText(file);
+}
+
+// Analyze
+$('#btnAnalyze').onclick = async () => {
+  if (!rawInput) return;
+  showLoader('Parsing JSON...');
+
+  await tick();
+  let configs;
+  try {
+    const raw = JSON.parse(rawInput);
+    if (Array.isArray(raw)) configs = raw.map(r => r.data || r);
+    else if (raw.data?.flows) configs = [raw.data];
+    else if (raw.flows) configs = [raw];
+    else if (raw.mdms) configs = raw.mdms.map(r => r.data);
+    else throw new Error('Unrecognized format');
+    configs = configs.filter(c => c?.flows);
+  } catch (e) { hideLoader(); alert('Invalid JSON: ' + e.message); return; }
+
+  showLoader(`Analyzing ${configs.length} config(s)...`);
+  await tick();
+
+  const autoFix = $('#chkAutoFix').checked;
+  results = configs.map(c => analyzeAndFix(c, { autoFix }));
+
+  // AI enhancement
+  if ($('#chkAI').checked && claudeAvailable) {
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      if (r.newLocalizations.length === 0) continue;
+      showLoader(`AI-enhancing ${r.report.moduleName}...`, `${r.newLocalizations.length} messages`);
+      await tick();
+      try {
+        const BATCH = 30;
+        for (let b = 0; b < r.newLocalizations.length; b += BATCH) {
+          const batch = r.newLocalizations.slice(b, b + BATCH);
+          const resp = await fetch('/api/enhance', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
+          });
+          const data = await resp.json();
+          if (data.improved) {
+            for (const loc of batch) {
+              if (data.improved[loc.code]) loc.message = data.improved[loc.code];
+            }
+          }
+        }
+      } catch (e) { console.warn('AI enhancement failed:', e); }
+    }
+  }
+
+  hideLoader();
+  renderResults();
+};
+
+function tick() { return new Promise(r => setTimeout(r, 10)); }
+function showLoader(text, sub) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; }
+function hideLoader() { $('#loader').classList.add('hidden'); }
+
+// ════════════════════════════════════════════════════════════════
+// RENDERING
+// ════════════════════════════════════════════════════════════════
+
+function renderResults() {
+  $('#emptyState').classList.add('hidden');
+  $('#resultsArea').classList.remove('hidden');
+
+  const tFixes = results.reduce((s,r) => s + r.report.fixes.length, 0);
+  const tWarns = results.reduce((s,r) => s + r.report.warnings.length, 0);
+  const tLocs = results.reduce((s,r) => s + r.newLocalizations.length, 0);
+
+  $('#statsBar').innerHTML = `
+    <div class="stat"><div class="num num-mod">${results.length}</div><div class="lbl">Modules</div></div>
+    <div class="stat"><div class="num num-fix">${tFixes}</div><div class="lbl">Fixes</div></div>
+    <div class="stat"><div class="num num-warn">${tWarns}</div><div class="lbl">Warnings</div></div>
+    <div class="stat"><div class="num num-loc">${tLocs}</div><div class="lbl">Localizations</div></div>`;
+
+  // Module list
+  const list = $('#moduleList');
+  list.innerHTML = '';
+  results.forEach((r, i) => {
+    const li = document.createElement('li');
+    li.className = 'module-item' + (i === 0 ? ' active' : '');
+    li.dataset.idx = i;
+    const n = r.report.fixes.length;
+    const l = r.newLocalizations.length;
+    let badge = '';
+    if (n > 0) badge = `<span class="badge badge-fix">${n} fixes</span>`;
+    else if (l > 0) badge = `<span class="badge badge-loc">${l} locs</span>`;
+    else badge = `<span class="badge badge-clean">Clean</span>`;
+    li.innerHTML = `<span>${r.report.moduleName}</span>${badge}`;
+    li.onclick = () => { $$('.module-item').forEach(x=>x.classList.remove('active')); li.classList.add('active'); renderModule(i); };
+    list.appendChild(li);
+  });
+
+  if (results.length > 0) renderModule(0);
+}
+
+function renderModule(idx) {
+  const r = results[idx];
+  const { report, newLocalizations, correctedData, originalData } = r;
+  const { moduleName, fixes } = report;
+
+  // Group fixes by rule
+  const byRule = {};
+  for (const f of fixes) { if (!byRule[f.rule]) byRule[f.rule] = []; byRule[f.rule].push(f); }
+
+  let html = `
+    <div class="tabs" id="modTabs">
+      <div class="tab active" data-t="summary">Summary</div>
+      <div class="tab" data-t="locs">Localizations (${newLocalizations.length})</div>
+      <div class="tab" data-t="diff">Diff View</div>
+      <div class="tab" data-t="json">Corrected JSON</div>
+    </div>
+
+    <!-- Summary -->
+    <div class="tab-panel active" id="tp-summary">
+      <div style="margin-bottom:16px;display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="copyModJson(${idx})">Copy Corrected JSON</button>
+        <button class="btn btn-sm" onclick="downloadModJson(${idx})">Download JSON</button>
+        <button class="btn btn-sm" onclick="copyModLocs(${idx})">Copy Localizations</button>
+      </div>`;
+
+  if (fixes.length === 0) {
+    html += `<p style="color:var(--teal);padding:20px 0">No structural issues found in ${moduleName}.</p>`;
+  } else {
+    for (const [rule, items] of Object.entries(byRule)) {
+      html += `<div class="fix-group"><div class="fix-group-header"><span>${esc(rule)}</span><span>${items.length}</span></div><div class="fix-group-body">`;
+      for (const f of items) {
+        html += `<div class="fix-row"><span class="fix-path">${esc(f.path || f.flow || '')}</span><span class="fix-arrow">\u2192</span><span class="fix-val">${esc(f.fixed || '')}</span></div>`;
+      }
+      html += `</div></div>`;
+    }
+  }
+  html += `</div>
+
+    <!-- Localizations -->
+    <div class="tab-panel" id="tp-locs">`;
+  if (newLocalizations.length === 0) {
+    html += `<p style="color:var(--teal);padding:20px 0">All localization codes already have messages.</p>`;
+  } else {
+    html += `<table class="loc-table"><thead><tr><th style="width:40%">Code</th><th style="width:45%">Message</th><th style="width:15%">Type</th></tr></thead><tbody>`;
+    newLocalizations.forEach((l, li) => {
+      html += `<tr><td class="loc-code">${esc(l.code)}</td><td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${li},this.value)"></td><td class="loc-type">${l.fieldType || ''}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+  html += `</div>
+
+    <!-- Diff -->
+    <div class="tab-panel" id="tp-diff">
+      <div class="code-viewer">
+        <div class="diff-view">
+          <div>
+            <div class="diff-label old">Original</div>
+            <div class="diff-pane"><pre>${esc(JSON.stringify(originalData, null, 2))}</pre></div>
+          </div>
+          <div style="border-left:1px solid var(--border)">
+            <div class="diff-label new">Corrected</div>
+            <div class="diff-pane"><pre>${esc(JSON.stringify(correctedData, null, 2))}</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON -->
+    <div class="tab-panel" id="tp-json">
+      <div class="code-viewer">
+        <div class="code-header"><span>${moduleName}-corrected.json</span>
+          <div class="btn-group"><button class="btn btn-sm" onclick="copyModJson(${idx})">Copy</button><button class="btn btn-sm" onclick="downloadModJson(${idx})">Download</button></div>
+        </div>
+        <div class="code-body"><pre>${esc(JSON.stringify(correctedData, null, 2))}</pre></div>
+      </div>
+    </div>`;
+
+  $('#moduleDetail').innerHTML = html;
+
+  // Tab switching
+  $$('#modTabs .tab').forEach(tab => {
+    tab.onclick = () => {
+      $$('#modTabs .tab').forEach(t => t.classList.remove('active'));
+      $$('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      $(`#tp-${tab.dataset.t}`).classList.add('active');
+    };
+  });
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function updateLocMsg(idx, locIdx, val) { results[idx].newLocalizations[locIdx].message = val; }
+
+function copyModJson(idx) {
+  navigator.clipboard.writeText(JSON.stringify(results[idx].correctedData, null, 2));
+}
+function downloadModJson(idx) {
+  const r = results[idx];
+  const blob = new Blob([JSON.stringify(r.correctedData, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `${r.report.moduleName}-corrected.json`; a.click(); URL.revokeObjectURL(a.href);
+}
+function copyModLocs(idx) {
+  navigator.clipboard.writeText(JSON.stringify(results[idx].newLocalizations, null, 2));
+}
+</script>
+</body>
+</html>
