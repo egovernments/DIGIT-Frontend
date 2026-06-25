@@ -1423,7 +1423,30 @@
   color: #0b4b66 !important;
 }
 
+.digit-button-primary,
+.digit-button-secondary,
+.digit-button-teritiary,
+.digit-button-default {
+  &.large {
+    border-radius: 0.5rem;
+  }
+
+  &.medium,
+  &.small {
+    border-radius: 0.375rem;
+  }
+}
+
+.digit-submit-bar,
+.digit-selector-button-primary {
+  border-radius: 0.375rem;
+}
+
 .digit-reports-list {
+  &__cards_main {
+    border-radius:0.75rem;
+  }
+
   &__description {
     margin: 0rem;
     color: #505a5f;
@@ -1437,6 +1460,7 @@
 
   &__row-card {
     cursor: pointer;
+    border-radius:0.75rem;
 
     &:hover {
       background-color: theme(digitv2.lightTheme.generic-background);
@@ -1456,7 +1480,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #C7E0F1;
+    background-color: #FBEEE8;
+    border-radius:4px;
   }
 
   &__row-content {
@@ -1470,7 +1495,7 @@
     font-family: theme(digitv2.fontFamily.sans);
     font-weight: theme(digitv2.fontWeight.bold);
     font-size: theme(digitv2.fontSize.body-s.desktop);
-    color: theme(digitv2.lightTheme.text-color-primary);
+    color: theme(digitv2.lightTheme.primary-2);
   }
 
   &__row-desc {
@@ -1505,7 +1530,12 @@
     margin-left: auto;
   }
 
+  &__card{
+    border-radius: 0.75rem;
+  }
+
   &__popup{
+    border-radius:12px !important;
     .digit-popup-heading{
       color: #0b4b66;
     }
@@ -1513,6 +1543,7 @@
 
   &__file-card{
     padding: 0.75rem;
+    border-radius: 0.5rem;
   }
   &__file-row {
     display: flex;
@@ -1545,11 +1576,15 @@
     }
   }
 }
+
+.digit-report-details-accordion{
+  border-radius: 0.75rem;
+}
 .digit-report-detail {
   &__header-wrap {
     display: flex;
     gap: 1rem;
-    align-items: center;
+    align-items: flex-start;
   }
 
   &__header-svg {
@@ -1618,5 +1653,14 @@
         }
       }
     }
+  }
+}
+
+.digit-employeeCard-input,
+.digit-citizenCard-input,
+.digit-employeeCard-inputError,
+.digit-card-inputError{
+  &.custom-date-range{
+      border-radius: 0.375rem;
   }
 }

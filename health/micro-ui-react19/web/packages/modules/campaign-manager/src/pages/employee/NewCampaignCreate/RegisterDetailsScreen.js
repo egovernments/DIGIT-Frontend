@@ -1,46 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card, Button, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
+import { Card, Button, Loader, Toast, PopUp, HeaderComponent, SummaryCardFieldPair } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import TagComponent from "../../../components/TagComponent";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { tableCustomStyle } from "../../../components/tableCustomStyle";
 
 const BLUE = "#0B4B66";
-
-const tableCustomStyle = {
-  rows: {
-    style: {
-      backgroundColor: "#FFFFFF",
-      borderBottom: "1px solid #E0E0E0",
-      "&:hover": {
-        backgroundColor: "#FBEEE8",
-        cursor: "default",
-      },
-    },
-  },
-  headRow: {
-    style: {
-      backgroundColor: "#EEEEEE",
-      borderBottom: "2px solid #D6D5D4",
-    },
-  },
-  headCells: {
-    style: {
-      fontWeight: "700",
-      fontSize: "0.875rem",
-      color: BLUE,
-      padding: "12px 16px",
-    },
-  },
-  cells: {
-    style: {
-      fontSize: "0.875rem",
-      color: "#0b0c0c",
-      padding: "10px 16px",
-    },
-  },
-};
 
 const RegisterDetailsScreen = () => {
   const { t } = useTranslation();
@@ -310,65 +277,40 @@ const RegisterDetailsScreen = () => {
   return (
     <div style={{ paddingBottom: "4.5rem" }}>
       {/* ── Register Details Card ── */}
-      <Card style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+      <Card style={{marginBottom: "1.5rem" }}>
         {campaignName && (
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
           {campaignName && (
             <TagComponent campaignName={campaignName} />
           )}
         </div>
         )}
-
-        <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "1.25rem", lineHeight: "1.2" }}>
+        <HeaderComponent className="attendance-screen-headers">
           {t(I18N_KEYS.PAGES.REGISTER_DETAILS)}
-        </div>
+        </HeaderComponent>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t("HCM_REGISTER_ID")} :</div>
-            <div style={detailValueStyle}>{registerData?.serviceCode || NA}</div>
-          </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN)} :</div>
-            <div style={detailValueStyle}>{registerData?.registerNumber || registerNumber || NA}</div>
-          </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NAME_COLUMN)} :</div>
-            <div style={detailValueStyle}>{registerData?.name || registerName || NA}</div>
-          </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)} :</div>
-            <div style={detailValueStyle}>{getApproverName()}</div>
-          </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN)} :</div>
-            <div style={detailValueStyle}>{attendees.length}</div>
-          </div>
-          {/* <div style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
-            <div style={detailLabelStyle}>{t(I18N_KEYS.COMPONENTS.STATUS)} :</div>
-            <div style={detailValueStyle}>{registerData?.status || NA}</div>
-          </div> */}
-        </div>
+        <SummaryCardFieldPair inline label={t("HCM_REGISTER_ID")} value={registerData?.serviceCode || NA} />
+        <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN)} value={registerData?.registerNumber || registerNumber || NA} />
+        <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NAME_COLUMN)} value={registerData?.name || registerName || NA} />
+        <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)} value={getApproverName()} />
+        <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN)} value={String(attendees.length)} />
       </Card>
 
       {/* ── Attendees Table Card ── */}
-      <Card style={{ padding: "1.25rem", overflow: "hidden" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-          <div style={{ fontWeight: "700", fontSize: "1rem", color: BLUE }}>
+      <Card style={{ overflow: "hidden" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <HeaderComponent className="attendance-screen-headers">
             {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_USERS_TABLE_HEADING)}
-          </div>
-          <div style={{ display: "flex", gap: "0.75rem" }}>
-            <Button
+          </HeaderComponent>
+          <Button
               label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_EXCEL_BUTTON)}
               variation="secondary"
-              size="small"
+              size="large"
               icon="FileUpload"
               onClick={() => navigate(
                 `/${window.contextPath}/employee/campaign/map-attendees-screen?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${registerId}&registerNumber=${registerNumber}&registerName=${encodeURIComponent(registerName || "")}`
               )}
             />
-            
-          </div>
         </div>
         <DataTable
           columns={columns}
@@ -437,22 +379,6 @@ const RegisterDetailsScreen = () => {
       )}
     </div>
   );
-};
-
-const detailLabelStyle = {
-  fontSize: "0.75rem",
-  fontWeight: "600",
-  color: "#505a5f",
-  marginBottom: "4px",
-  textTransform: "uppercase",
-  letterSpacing: "0.04em",
-  minWidth: "180px",
-};
-
-const detailValueStyle = {
-  fontSize: "0.9375rem",
-  fontWeight: "500",
-  color: "#0b0c0c",
 };
 
 export default RegisterDetailsScreen;

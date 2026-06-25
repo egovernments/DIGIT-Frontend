@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, /*LabelFieldPair,*/ HeaderComponent, /*Dropdown,*/ Loader, PopUp, Button, CardText } from "@egovernments/digit-ui-components";
+import {
+  Card,
+  LabelFieldPair,
+  CardLabel,
+  HeaderComponent,
+  Loader,
+  PopUp,
+  Button,
+  TextInput,
+} from "@egovernments/digit-ui-components";
 
 const SESSION_KEYS_TO_CLEAR = [
   "HCM_CAMPAIGN_MANAGER_FORM_DATA",
@@ -10,6 +19,7 @@ const SESSION_KEYS_TO_CLEAR = [
   "HCM_ADMIN_CONSOLE_UPLOAD_DATA",
 ];
 const HIERARCHY_CODE_KEY = "HCM_CAMPAIGN_SELECTED_HIERARCHY_CODE";
+const MAX_VISIBLE_LEVELS = 5;
 
 const hasDependentData = () => {
   const formData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {};
@@ -28,7 +38,9 @@ const sortBoundaryHierarchy = (boundaryHierarchy = []) => {
   let currentParent = null;
   const remaining = [...boundaryHierarchy];
   while (remaining.length > 0) {
-    const idx = remaining.findIndex((b) => b.parentBoundaryType === currentParent);
+    const idx = remaining.findIndex(
+      (b) => b.parentBoundaryType === currentParent,
+    );
     if (idx === -1) break;
     sorted.push(remaining[idx]);
     currentParent = remaining[idx].boundaryType;
@@ -56,10 +68,15 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
   const allHierarchyDefinitions = hierarchyData?.BoundaryHierarchy || [];
 
   const [selected, setSelected] = useState(
-    formData?.SelectHierarchy?.hierarchy || Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY") || null
+    formData?.SelectHierarchy?.hierarchy ||
+      Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY") ||
+      null,
   );
   const [pendingSelection, setPendingSelection] = useState(null);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  // { hierarchyType: string, levels: array } | null
+  const [viewAllPopup, setViewAllPopup] = useState(null);
 
   // If selected was initialized without a code (e.g. from session set by CampaignDetails which only stores name),
   // enrich it with the code from the dedicated code key — runs once on mount
@@ -70,7 +87,10 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     }
   }, []);
 
-  const { data: boundaryData, isLoading: isBoundaryLoading } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({
+  const {
+    data: boundaryData,
+    isLoading: isBoundaryLoading,
+  } = Digit.Hooks.campaign.useBoundaryRelationshipSearch({
     BOUNDARY_HIERARCHY_TYPE: selected?.name,
     tenantId,
   });
@@ -88,6 +108,11 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     if (isSameHierarchy(selected, value)) return;
     const stored = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     const isHierarchyChanged = stored && !isSameHierarchy(stored, value);
+    // const hasData = hasDependentData() || !!formData?.SelectHierarchy?.hierarchy;
+    // if (isHierarchyChanged && hasData) {
+    //   setPendingSelection(value);
+    //   setShowConfirmPopup(true);
+    // }
     if (isHierarchyChanged && hasDependentData()) {
       setPendingSelection(value);
       setShowConfirmPopup(true);
@@ -124,19 +149,66 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     return <Loader />;
   }
 
+  const filteredHierarchies = allHierarchyDefinitions.filter((definition) =>
+    t(definition.hierarchyType)
+      .toLowerCase()
+      .includes(searchQuery.trim().toLowerCase()),
+  );
+
   return (
     <React.Fragment>
-      <Card>
-        <HeaderComponent styles={{}} className="digit-header-content digit-card-section-header titleStyle date-selection">
+      <Card className="select-hierarchy-step-card">
+        {/* // TODO: Once boundary management screens are updated, this can be redirected 
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <HeaderComponent
+            styles={{maxWidth:"80%"}}
+            className="digit-header-content digit-card-section-header titleStyle date-selection"
+          >
+            {t("HCM_SELECT_HIERARCHY_HEADER")}
+          </HeaderComponent>
+          <Button
+            variation="secondary"
+            label={t("CREATE_NEW_HIERARCHY")}
+            size="large"
+            icon="AddCircle"
+            onClick={() => {
+              window.location.href = `/${window.contextPath}/employee/workbench/create-boundary-hierarchy-type`;
+            }}
+          />
+        </div> */}
+        <HeaderComponent
+          styles={{}}
+          className="digit-header-content digit-card-section-header titleStyle date-selection"
+        >
           {t("HCM_SELECT_HIERARCHY_HEADER")}
         </HeaderComponent>
-        <p className="dates-description digit-header-content SubHeadingClass">{t("HCM_SELECT_HIERARCHY_DESC")}</p>
-
+        <p className="dates-description digit-header-content SubHeadingClass" style={{marginBottom:"1rem"}}>
+          {t("HCM_SELECT_HIERARCHY_DESC")}
+        </p>
+        <LabelFieldPair
+          className="select-hierarchy-search-wrap"
+          vertical={true}
+          removeMargin={true}
+        >
+          <CardLabel style={{width:"100%"}} className="select-hierarchy-search-label">
+            {t("HCM_SEARCH_BY_HIERARCHY_NAME")}
+          </CardLabel>
+          <div className="digit-field" style={{ width: "100%" }}>
+            <TextInput
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </LabelFieldPair>
         <div className="select-hierarchy-campaign-selection-cards-wrap">
-          {allHierarchyDefinitions.map((definition) => {
-            const levels = sortBoundaryHierarchy(definition?.boundaryHierarchy || []);
+          {filteredHierarchies.map((definition) => {
+            const levels = sortBoundaryHierarchy(
+              definition?.boundaryHierarchy || [],
+            );
             const hierarchy = { name: definition.hierarchyType };
             const isSelected = isSameHierarchy(selected, hierarchy);
+            const hasMoreLevels = levels.length > MAX_VISIBLE_LEVELS;
 
             return (
               <Card
@@ -144,27 +216,45 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
                 onClick={() => onHierarchySelect(hierarchy)}
                 className={`select-hierarchy-campaign-selection-card ${isSelected ? "selected" : ""}`}
               >
-                <span className={`select-hierarchy-campaign-selection-card-name`}>
+                <span className="select-hierarchy-campaign-selection-card-name">
                   {t(definition.hierarchyType)}
                 </span>
                 {levels.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    {levels.map((level, index) => (
+                    {levels.slice(0, MAX_VISIBLE_LEVELS).map((level, index) => (
                       <div
                         key={level.boundaryType}
-                        className={`select-hierarchy-campaign-selection-card-level-wrap`}
+                        className="select-hierarchy-campaign-selection-card-level-wrap"
                       >
-                        <div className={`select-hierarchy-campaign-selection-card-level-name`}>
+                        <div className="select-hierarchy-campaign-selection-card-level-name">
                           L{index + 1}
                         </div>
                         <div className="select-hierarchy-campaign-selection-card-level-name-value">
-                          {t(`${level.boundaryType}`)}
+                          {t(level.boundaryType)}
                         </div>
                       </div>
                     ))}
+                    {hasMoreLevels && (
+                      <Button
+                        variation="link"
+                        size="medium"
+                        className="select-hierarchy-view-more-btn"
+                        label={t("HCM_VIEW_ALL_LEVELS")}
+                        icon="Visibility"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setViewAllPopup({
+                            hierarchyType: definition.hierarchyType,
+                            levels,
+                          });
+                        }}
+                      />
+                    )}
                   </div>
                 ) : (
-                  <span style={{ fontSize: "16px", color: "#505A5F" }}>{t("HCM_NO_BOUNDARY_LEVELS")}</span>
+                  <span style={{ fontSize: "16px", color: "#505A5F" }}>
+                    {t("HCM_NO_BOUNDARY_LEVELS")}
+                  </span>
                 )}
               </Card>
             );
@@ -172,37 +262,62 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
         </div>
       </Card>
 
+      {viewAllPopup && (
+        <PopUp
+          className="hierarchy-view-all-popup"
+          heading={t(viewAllPopup.hierarchyType)}
+          onOverlayClick={() => setViewAllPopup(null)}
+          onClose={() => setViewAllPopup(null)}
+          children={[
+            <div key="levels-list" className="hierarchy-view-all-levels-list">
+              {viewAllPopup.levels.map((level, index) => (
+                <div
+                  key={level.boundaryType}
+                  className="select-hierarchy-campaign-selection-card-level-wrap"
+                >
+                  <div className="select-hierarchy-campaign-selection-card-level-name">
+                    L{index + 1}
+                  </div>
+                  <div className="select-hierarchy-campaign-selection-card-level-name-value">
+                    {t(level.boundaryType)}
+                  </div>
+                </div>
+              ))}
+            </div>,
+          ]}
+        />
+      )}
+
       {showConfirmPopup && (
         <PopUp
-          className={"hierarchy-change-popup"}
-          type={"warning"}
-          heading={t("HCM_HIERARCHY_CHANGE_WARNING_TITLE")}
-          children={[
-            <CardText style={{ margin: 0 }}>
-              {t("HCM_HIERARCHY_CHANGE_WARNING_DESC")}
-            </CardText>,
-          ]}
+          className="hierarchy-change-popup"
+          type="alert"
+          alertHeading={t("HCM_HIERARCHY_CHANGE_WARNING_TITLE")}
+          alertMessage={t("HCM_HIERARCHY_CHANGE_WARNING_DESC")}
           onOverlayClick={onCancelChange}
           onClose={onCancelChange}
+          footerclassName={"hierarchy-change-popup-footer"}
+          equalWidthButtons={true}
           footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
+              <Button
+              key="cancel"
+              type="button"
+              size="large"
+              variation="secondary"
               label={t("HCM_HIERARCHY_CHANGE_CANCEL")}
               title={t("HCM_HIERARCHY_CHANGE_CANCEL")}
               onClick={onCancelChange}
             />,
             <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
+              key="confirm"
+              type="button"
+              size="large"
+              variation="primary"
               label={t("HCM_HIERARCHY_CHANGE_CONFIRM")}
               title={t("HCM_HIERARCHY_CHANGE_CONFIRM")}
               onClick={onConfirmChange}
             />,
           ]}
-          sortFooterChildren={true}
         />
       )}
     </React.Fragment>

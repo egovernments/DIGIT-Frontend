@@ -1,49 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card, Button, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
+import {
+  Card,
+  Button,
+  Loader,
+  Toast,
+  PopUp,
+  TextInput,
+  CardLabel,
+  HeaderComponent,
+} from "@egovernments/digit-ui-components";
 import TagComponent from "../../../components/TagComponent";
 import DataTable from "react-data-table-component";
 import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
+import { tableCustomStyle } from "../../../components/tableCustomStyle";
 
 const BLUE = "#0B4B66";
 const PRIMARY = "#C84C0E";
-
-// Mirrors the pattern used in attendanceManagementTable — "&:hover" works via
-// react-data-table-component's emotion/styled-components injection.
-const tableCustomStyle = {
-  rows: {
-    style: {
-      backgroundColor: "#FFFFFF",
-      borderBottom: "1px solid #E0E0E0",
-      "&:hover": {
-        backgroundColor: "#FBEEE8",
-        cursor: "default",
-      },
-    },
-  },
-  headRow: {
-    style: {
-      backgroundColor: "#EEEEEE",
-      borderBottom: "2px solid #D6D5D4",
-    },
-  },
-  headCells: {
-    style: {
-      fontWeight: "700",
-      fontSize: "0.875rem",
-      color: BLUE,
-      padding: "12px 16px",
-    },
-  },
-  cells: {
-    style: {
-      fontSize: "0.875rem",
-      color: "#0b0c0c",
-      padding: "10px 16px",
-    },
-  },
-};
 
 const MapUsersToRegistersScreen = () => {
   const { t } = useTranslation();
@@ -52,8 +26,11 @@ const MapUsersToRegistersScreen = () => {
   const searchParams = new URLSearchParams(location.search);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
-  const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
-  const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
+  const tenantId =
+    searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
+  const attendanceContextPath =
+    window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") ||
+    "health-attendance";
 
   // Fetch campaign data to get id and serviceCode
   const reqCriteria = {
@@ -66,10 +43,15 @@ const MapUsersToRegistersScreen = () => {
       cacheTime: 0,
     },
   };
-  const { data: campaignData, isLoading: isCampaignLoading, isFetching: isCampaignFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const {
+    data: campaignData,
+    isLoading: isCampaignLoading,
+    isFetching: isCampaignFetching,
+  } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // Check resource-details status for register creation
-  const resourceSearchCriteria = { //TODO check api call
+  const resourceSearchCriteria = {
+    //TODO check api call
     url: `/project-factory/v1/resource-details/_search`,
     body: {
       ResourceDetailsCriteria: {
@@ -92,14 +74,24 @@ const MapUsersToRegistersScreen = () => {
       cacheTime: 0,
     },
   };
-  const { data: resourceDetails = [], isLoading: isResourceLoading, isFetching: isResourceFetching, refetch: refetchResourceDetails } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
+  const {
+    data: resourceDetails = [],
+    isLoading: isResourceLoading,
+    isFetching: isResourceFetching,
+    refetch: refetchResourceDetails,
+  } = Digit.Hooks.useCustomAPIHook(resourceSearchCriteria);
 
   // Derive register creation status from resource details
-  const registerCreationStatus = resourceDetails.length > 0 ? resourceDetails[0]?.status : null;
+  const registerCreationStatus =
+    resourceDetails.length > 0 ? resourceDetails[0]?.status : null;
 
   // Poll every 5 seconds while register creation is in progress
   useEffect(() => {
-    if (registerCreationStatus !== "creating" && registerCreationStatus !== "toCreate") return;
+    if (
+      registerCreationStatus !== "creating" &&
+      registerCreationStatus !== "toCreate"
+    )
+      return;
     const interval = setInterval(() => {
       refetchResourceDetails();
     }, 10000);
@@ -112,9 +104,16 @@ const MapUsersToRegistersScreen = () => {
 
   // Show toast when resource status is not completed
   useEffect(() => {
-    if (isResourceLoading || isResourceFetching || resourceDetails.length === 0) return;
-    if (registerCreationStatus === "creating" || registerCreationStatus === "toCreate") {
-      setShowToast({ key: "warning", label: t("HCM_REGISTER_CREATION_IN_PROGRESS") });
+    if (isResourceLoading || isResourceFetching || resourceDetails.length === 0)
+      return;
+    if (
+      registerCreationStatus === "creating" ||
+      registerCreationStatus === "toCreate"
+    ) {
+      setShowToast({
+        key: "warning",
+        label: t("HCM_REGISTER_CREATION_IN_PROGRESS"),
+      });
     } else if (registerCreationStatus === "failed") {
       setShowToast({ key: "error", label: t("HCM_REGISTER_CREATION_FAILED") });
     }
@@ -122,12 +121,15 @@ const MapUsersToRegistersScreen = () => {
 
   const [registerIdFilter, setRegisterIdFilter] = useState("");
   const [officerFilter, setOfficerFilter] = useState("");
-  const [appliedFilters, setAppliedFilters] = useState({ registerId: "", officer: "" });
+  const [appliedFilters, setAppliedFilters] = useState({
+    registerId: "",
+    officer: "",
+  });
 
   const isSearchDisabled =
-    (registerIdFilter.length === 0 && officerFilter.length === 0);
-    // (registerIdFilter.length > 0 && registerIdFilter.length < 3) ||
-    // (officerFilter.length > 0 && officerFilter.length < 3);
+    registerIdFilter.length === 0 && officerFilter.length === 0;
+  // (registerIdFilter.length > 0 && registerIdFilter.length < 3) ||
+  // (officerFilter.length > 0 && officerFilter.length < 3);
 
   // Fetch attendance registers only when register creation is completed
   const attendanceParams = {
@@ -140,7 +142,7 @@ const MapUsersToRegistersScreen = () => {
   if (appliedFilters.registerId) {
     attendanceParams.serviceCode = appliedFilters.registerId;
     attendanceParams.isServiceCodeExact = false;
-  } 
+  }
   // else if (campaignData?.serviceCode) {
   //   attendanceParams.serviceCode = campaignData.serviceCode;
   // }
@@ -165,7 +167,12 @@ const MapUsersToRegistersScreen = () => {
     },
     changeQueryName: `registers_${currentPage}_${rowsPerPage}_${appliedFilters.registerId}_${appliedFilters.officer}`,
   };
-  const { data: registerData = { registers: [], totalCount: 0 }, isLoading, isFetching, refetch: refetchRegisters } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
+  const {
+    data: registerData = { registers: [], totalCount: 0 },
+    isLoading,
+    isFetching,
+    refetch: refetchRegisters,
+  } = Digit.Hooks.useCustomAPIHook(attendanceReqCriteria);
   const registers = registerData.registers;
   const totalRegisters = registerData.totalCount;
 
@@ -179,7 +186,9 @@ const MapUsersToRegistersScreen = () => {
     body: {},
     config: { enabled: false },
   };
-  const deleteMutation = Digit.Hooks.useCustomAPIMutationHook(deleteReqCriteria);
+  const deleteMutation = Digit.Hooks.useCustomAPIMutationHook(
+    deleteReqCriteria,
+  );
 
   // Helper to get the approver staff name from a register
   const getApproverName = (reg) => {
@@ -203,7 +212,15 @@ const MapUsersToRegistersScreen = () => {
 
   const handleMapUsers = (register) => {
     navigate(
-      `/${window.contextPath}/employee/campaign/register-details?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${register.id}&registerNumber=${encodeURIComponent(register.registerNumber)}&registerName=${encodeURIComponent(register.name)}&boundaryCode=${encodeURIComponent(register.localityCode || "")}`
+      `/${
+        window.contextPath
+      }/employee/campaign/register-details?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}&registerId=${
+        register.id
+      }&registerNumber=${encodeURIComponent(
+        register.registerNumber,
+      )}&registerName=${encodeURIComponent(
+        register.name,
+      )}&boundaryCode=${encodeURIComponent(register.localityCode || "")}`,
     );
   };
 
@@ -224,24 +241,29 @@ const MapUsersToRegistersScreen = () => {
       },
       {
         onSuccess: () => {
-          setShowToast({ key: "success", label: t("HCM_REGISTER_DELETED_SUCCESSFULLY") });
+          setShowToast({
+            key: "success",
+            label: t("HCM_REGISTER_DELETED_SUCCESSFULLY"),
+          });
           setTimeout(() => setShowToast(null), 3000);
           refetchRegisters();
         },
         onError: (error) => {
           setShowToast({
             key: "error",
-            label: error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_DELETING_REGISTER"),
+            label:
+              error?.response?.data?.Errors?.[0]?.description ||
+              t("HCM_ERROR_DELETING_REGISTER"),
           });
           setTimeout(() => setShowToast(null), 3000);
         },
-      }
+      },
     );
   };
 
   const handleBack = () => {
     navigate(
-      `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
+      `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
     );
   };
 
@@ -253,7 +275,15 @@ const MapUsersToRegistersScreen = () => {
         <span
           title={row.name}
           onClick={() => handleMapUsers(row)}
-          style={{ color: PRIMARY, cursor: "pointer", fontWeight: "500", textDecoration: "underline", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+          style={{
+            color: PRIMARY,
+            cursor: "pointer",
+            fontWeight: "500",
+            textDecoration: "underline",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
         >
           {row.name}
         </span>
@@ -286,15 +316,17 @@ const MapUsersToRegistersScreen = () => {
     {
       name: t(I18N_KEYS.COMPONENTS.STATUS),
       cell: (row) => (
-        <span style={{
-          display: "inline-block",
-          padding: "2px 10px",
-          borderRadius: "12px",
-          fontSize: "0.8rem",
-          fontWeight: "500",
-          background: row.status === "ACTIVE" ? "#e6f4ea" : "#fce8e6",
-          color: row.status === "ACTIVE" ? "#137333" : "#c5221f",
-        }}>
+        <span
+          style={{
+            display: "inline-block",
+            padding: "2px 10px",
+            borderRadius: "12px",
+            fontSize: "0.8rem",
+            fontWeight: "500",
+            background: row.status === "ACTIVE" ? "#e6f4ea" : "#fce8e6",
+            color: row.status === "ACTIVE" ? "#137333" : "#c5221f",
+          }}
+        >
           {row.status}
         </span>
       ),
@@ -325,9 +357,23 @@ const MapUsersToRegistersScreen = () => {
     },
   ];
 
-  if (isCampaignLoading || isCampaignFetching || isResourceLoading || isResourceFetching || isLoading)
+  if (
+    isCampaignLoading ||
+    isCampaignFetching ||
+    isResourceLoading ||
+    isResourceFetching ||
+    isLoading
+  )
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+          width: "100%",
+        }}
+      >
         <Loader page={true} />
       </div>
     );
@@ -335,62 +381,98 @@ const MapUsersToRegistersScreen = () => {
   return (
     <div style={{ paddingBottom: "4.5rem" }}>
       {/* ── Search Card (contains page heading + filters) ── */}
-      <Card style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+      <Card style={{ marginBottom: "1.5rem" }}>
         {/* Campaign chip + users alert */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-          {campaignName && (
-            <TagComponent campaignName={campaignName} />
-          )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {campaignName && <TagComponent campaignName={campaignName} />}
         </div>
 
         {/* Page heading */}
-        <div style={{ fontWeight: "700", fontSize: "1.5rem", color: BLUE, marginBottom: "0.25rem", lineHeight: "1.2" }}>
+        <HeaderComponent className="attendance-screen-headers">
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_HEADING)}
-        </div>
-        <p style={{ fontSize: "0.875rem", color: "#505a5f", margin: "0 0 0.5rem 0" }}>
+        </HeaderComponent>
+        <p className="info-text">
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_DESC)}
         </p>
-
         {/* Search filters */}
-        <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-end", flexWrap: "wrap" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "210px" }}>
-            <label style={labelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)}</label>
-            <input
-              type="text"
-              value={registerIdFilter}
-              onChange={(e) => setRegisterIdFilter(e.target.value)}
-              style={inputStyle}
-            />
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: "210px" }}>
-            <label style={labelStyle}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)}</label>
-            <input
-              type="text"
-              value={officerFilter}
-              onChange={(e) => setOfficerFilter(e.target.value)}
-              style={inputStyle}
-            />
-          </div>
-
-          <div style={{ display: "flex", gap: "0.875rem", alignItems: "center", marginLeft: "auto" }}>
-            <span
-              onClick={handleClearSearch}
-              style={{ color: PRIMARY, fontSize: "0.875rem", cursor: "pointer", fontWeight: "500", userSelect: "none" }}
-            >
-              {t(I18N_KEYS.COMMON.CLEAR_ALL)}
-            </span>
-            {/* <span title={isSearchDisabled ? t("HCM_MIN_3_CHARS_REQUIRED") : undefined} style={{ display: "inline-block" }}> */}
-            <span style={{ display: "inline-block" }}>
-              <Button
-                label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
-                variation="secondary"
-                icon="Search"
-                size="small"
-                onClick={handleSearch}
-                isDisabled={isSearchDisabled}
+        <div
+          style={{
+            display: "flex",
+            gap: "1.5rem",
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+              minWidth: "20rem",
+            }}
+          >
+            <CardLabel style={{ width: "100%" }}>
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_ID_LABEL)}
+            </CardLabel>
+            <div className="digit-field" style={{ width: "100%" }}>
+              <TextInput
+                type="text"
+                value={registerIdFilter}
+                onChange={(e) => setRegisterIdFilter(e.target.value)}
               />
-            </span>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+              minWidth: "20rem",
+            }}
+          >
+            <CardLabel style={{ width: "100%" }}>
+              {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)}
+            </CardLabel>
+            <div className="digit-field" style={{ width: "100%" }}>
+              <TextInput
+                type="text"
+                value={officerFilter}
+                onChange={(e) => setOfficerFilter(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "0.875rem",
+              alignItems: "center",
+              marginLeft: "auto",
+            }}
+          >
+            <Button
+              label={t(I18N_KEYS.COMMON.CLEAR_ALL)}
+              variation="teritiary"
+              onClick={handleClearSearch}
+              type="button"
+              size={"medium"}
+            />
+            <Button
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
+              variation="primary"
+              icon="Search"
+              onClick={handleSearch}
+              isDisabled={isSearchDisabled}
+              type="submit"
+              size={"medium"}
+            />
           </div>
         </div>
       </Card>
@@ -398,6 +480,7 @@ const MapUsersToRegistersScreen = () => {
       {/* ── Registers Table Card ── */}
       <Card style={{ padding: "1.5rem", overflow: "hidden" }}>
         <DataTable
+          className="digit-map-users-to-registers-table"
           columns={columns}
           data={filteredRegisters}
           customStyles={tableCustomStyle}
@@ -419,7 +502,9 @@ const MapUsersToRegistersScreen = () => {
           progressComponent={<Loader />}
           persistTableHead
           noDataComponent={
-            <div style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}>
+            <div
+              style={{ padding: "2rem", color: "#888", fontSize: "0.875rem" }}
+            >
               {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
             </div>
           }
@@ -467,7 +552,13 @@ const MapUsersToRegistersScreen = () => {
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
-          type={showToast.key === "error" ? "error" : showToast.key === "warning" ? "warning" : "success"}
+          type={
+            showToast.key === "error"
+              ? "error"
+              : showToast.key === "warning"
+              ? "warning"
+              : "success"
+          }
           label={showToast.label}
           onClose={() => setShowToast(null)}
         />
@@ -475,23 +566,5 @@ const MapUsersToRegistersScreen = () => {
     </div>
   );
 };
-
-const labelStyle = {
-  fontSize: "0.8125rem",
-  fontWeight: "600",
-  color: "#0b0c0c",
-};
-
-const inputStyle = {
-  padding: "0.5rem 0.75rem",
-  border: "1px solid #adb5bd",
-  borderRadius: "4px",
-  fontSize: "0.875rem",
-  color: "#0b0c0c",
-  background: "#fff",
-  outline: "none",
-  boxSizing: "border-box",
-};
-
 
 export default MapUsersToRegistersScreen;

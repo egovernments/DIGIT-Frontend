@@ -166,6 +166,11 @@ export const CampaignCreateConfig = (totalFormData, editName, fromTemplate) => {
                 fieldPairClassName: "date-selection-field",
                 error: "ES__REQUIRED_HIERARCHY",
                 required: false,
+                customStyle: {
+                  background: "transparent",
+                  border: "none",
+                  boxShadow: "none",
+                },
               },
             },
           ],

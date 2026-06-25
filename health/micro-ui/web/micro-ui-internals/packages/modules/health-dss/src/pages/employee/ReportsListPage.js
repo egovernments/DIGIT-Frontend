@@ -1,7 +1,7 @@
 import React, { useMemo,useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
-import { Card, HeaderComponent, SVG, Loader } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, SVG, Loader,Button } from "@egovernments/digit-ui-components";
 
 const ReportsListPage = () => {
   const { t } = useTranslation();
@@ -74,7 +74,7 @@ const ReportsListPage = () => {
   if (isCampaignLoading || isMdmsLoading) return <Loader />;
 
   return (
-    <Card>
+    <Card className="digit-reports-list__cards_main">
       <HeaderComponent className="digit-reports-list__heading">{t("HCM_REPORTS")}</HeaderComponent>
       <p className="digit-reports-list__description">{t("HCM_REPORTS_SELECT_TYPE_DESC")}</p>
 
@@ -87,16 +87,18 @@ const ReportsListPage = () => {
             onClick={() => handleReportClick(report.code)}
           >
             <div className="digit-reports-list__row">
-              <div className="digit-reports-list__row-icon">
-                <SVG.Description height="24" width="24" fill={"#0B4B66"} />
-              </div>
+              {/* <div className="digit-reports-list__row-icon">
+                <SVG.Description height="24" width="24" fill={"#C84C0E"} />
+              </div> */}
               <div className="digit-reports-list__row-content">
                 <div className="digit-reports-list__row-title">{t(report.label)}</div>
                 <div className="digit-reports-list__row-desc">{t(report.description)}</div>
               </div>
-              <div className="digit-reports-list__row-chevron">
-                <SVG.ChevronRight height="20" width="20" fill={"#0B4B66"} />
-              </div>
+              <Button
+                label={t("HCM_VIEW_REPORTS")}
+                variation="secondary"
+                size="medium"
+              />
             </div>
           </Card>
         ))}
