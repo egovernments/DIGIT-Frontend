@@ -1685,7 +1685,8 @@ async function onlineFetch() {
 
     showLoader('Fetching configs...');
     await tick();
-    const filters = project ? { project } : {};
+    const filterProject = project || campaign; // FormConfig stores campaign in data.project
+    const filters = filterProject ? { project: filterProject } : {};
     onlineRecords = await apiMdmsSearch(envUrl, tenant, schema, filters, onlineToken, onlineLocale, contextPath);
 
     if (onlineRecords.length === 0) { hideLoader(); showError('No records found for the given filters'); return; }
@@ -1812,12 +1813,14 @@ async function migrateFetch() {
 
     showLoader('Fetching Source configs...');
     await tick();
-    const srcFilters = src.project ? { project: src.project } : {};
+    const srcFilterProject = src.project || src.campaign; // FormConfig stores campaign in data.project
+    const srcFilters = srcFilterProject ? { project: srcFilterProject } : {};
     const srcRecords = await apiMdmsSearch(src.url, src.tenant, src.schema, srcFilters, srcToken, srcLocale, src.contextPath);
 
     showLoader('Fetching Target configs...');
     await tick();
-    const tgtFilters = tgt.project ? { project: tgt.project } : {};
+    const tgtFilterProject = tgt.project || tgt.campaign; // FormConfig stores campaign in data.project
+    const tgtFilters = tgtFilterProject ? { project: tgtFilterProject } : {};
     const tgtRecords = await apiMdmsSearch(tgt.url, tgt.tenant, tgt.schema, tgtFilters, tgtToken, tgtLocale, tgt.contextPath);
 
     // Fetch LFPC from source
@@ -1826,10 +1829,11 @@ async function migrateFetch() {
     let lfpcRecs = [];
     try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, srcLocale, src.contextPath); } catch (e) { console.warn('LFPC fetch skipped:', e.message); }
 
-    // Build map only from records whose data.project matches target project
+    // Build map only from records whose data.project matches target project/campaign
+    const tgtMatchProject = tgt.project || tgt.campaign;
     const tgtMap = new Map();
     for (const r of tgtRecords) {
-      if (r.data?.name && (!tgt.project || r.data.project === tgt.project)) tgtMap.set(r.data.name, r);
+      if (r.data?.name && (!tgtMatchProject || r.data.project === tgtMatchProject)) tgtMap.set(r.data.name, r);
     }
 
     // Module selection
@@ -2271,16 +2275,17 @@ async function pushFileToEnv() {
   const { url, tenant, project, schema, campaign, contextPath, token, locale } = env;
 
   try {
-    // Search target for existing configs filtered by project
+    // Search target for existing configs filtered by project/campaign
     showLoader('Searching target configs...');
     await tick();
-    const searchFilters = project ? { project } : {};
+    const matchProject = project || campaign; // FormConfig stores campaign in data.project
+    const searchFilters = matchProject ? { project: matchProject } : {};
     const tgtRecords = await apiMdmsSearch(url, tenant, schema, searchFilters, token, locale, contextPath);
-    // Build map only from records whose data.project matches target project
+    // Build map only from records whose data.project matches
     const tgtMap = new Map();
     for (const r of tgtRecords) {
       if (!r.data?.name) continue;
-      if (project && r.data.project !== project) continue;
+      if (matchProject && r.data.project !== matchProject) continue;
       tgtMap.set(r.data.name, r);
     }
 
