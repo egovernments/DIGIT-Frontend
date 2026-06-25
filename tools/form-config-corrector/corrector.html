@@ -1792,8 +1792,11 @@ async function migrateFetch() {
     let lfpcRecs = [];
     try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, srcLocale, src.contextPath); } catch (e) { /* no LFPC */ }
 
+    // Build map only from records whose data.project matches target project
     const tgtMap = new Map();
-    for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
+    for (const r of tgtRecords) {
+      if (r.data?.name && (!tgt.project || r.data.project === tgt.project)) tgtMap.set(r.data.name, r);
+    }
 
     // Module selection
     hideLoader();
@@ -2234,12 +2237,15 @@ async function pushFileToEnv() {
   const { url, tenant, project, schema, campaign, contextPath, token, locale } = env;
 
   try {
-    // Search target for existing configs
+    // Search target for existing configs filtered by project
     showLoader('Searching target configs...');
     await tick();
     const tgtRecords = await apiMdmsSearch(url, tenant, schema, { project }, token, locale, contextPath);
+    // Build map only from records whose data.project matches target project
     const tgtMap = new Map();
-    for (const r of tgtRecords) { if (r.data?.name) tgtMap.set(r.data.name, r); }
+    for (const r of tgtRecords) {
+      if (r.data?.name && r.data.project === project) tgtMap.set(r.data.name, r);
+    }
 
     // Build module list with update/create status
     const moduleList = results.map((r, i) => ({
@@ -2298,7 +2304,7 @@ async function pushFileToEnv() {
           const createRec = {
             tenantId: tenant,
             schemaCode: schema,
-            uniqueIdentifier: `${tenant}-${mod.name}`,
+            uniqueIdentifier: `${tenant}-${mod.name}-${project}`,
             data: dataCopy,
             isActive: true,
           };
