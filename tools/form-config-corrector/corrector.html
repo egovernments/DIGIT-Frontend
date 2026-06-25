@@ -397,8 +397,8 @@ input[type="file"] { display: none; }
           <div class="form-group"><label>Project (defaults to source)</label><input type="text" id="mgTgtProject" placeholder="Same as source"></div>
           <div class="form-group"><label>Target Schema</label>
             <select id="mgTgtSchema">
-              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
               <option value="HCM-ADMIN-CONSOLE.FormConfigTemplate">FormConfigTemplate</option>
+              <option value="HCM-ADMIN-CONSOLE.FormConfig">FormConfig</option>
             </select>
           </div>
           <div class="form-group" id="mgTgtCampaignGroup" style="display:none">
@@ -1060,6 +1060,77 @@ function getLocModule(schemaCode, moduleName, project, campaign) {
   }
 }
 
+// Project types cache: key "url|tenant|ctx" -> [{code, ...}]
+const projectTypesCache = new Map();
+
+async function fetchProjectTypes(envUrl, tenantId, contextPath) {
+  const cacheKey = `${envUrl}|${tenantId}|${contextPath}`;
+  if (projectTypesCache.has(cacheKey)) return projectTypesCache.get(cacheKey);
+  try {
+    const records = await apiMdmsSearch(envUrl, tenantId, 'HCM-PROJECT-TYPES.projectTypes', {}, null, 'en_IN', contextPath);
+    const codes = records.filter(r => r.data?.code).map(r => r.data.code);
+    projectTypesCache.set(cacheKey, codes);
+    return codes;
+  } catch (e) {
+    console.warn('Failed to fetch project types:', e.message);
+    return [];
+  }
+}
+
+// Populate a project <select> with fetched codes, preserving current value
+function populateProjectSelect(selectEl, codes, currentValue) {
+  const val = currentValue || selectEl.value;
+  selectEl.innerHTML = '<option value="">-- Select Project --</option>' +
+    codes.map(c => `<option value="${esc(c)}" ${c === val ? 'selected' : ''}>${esc(c)}</option>`).join('');
+}
+
+// Auto-fetch project types when URL, tenant, contextPath are available and schema is Template
+async function refreshProjectOptions(prefix) {
+  const urlEl = $(`#${prefix}Url`);
+  const tenantEl = $(`#${prefix}Tenant`);
+  const schemaEl = $(`#${prefix}Schema`);
+  const ctxEl = $(`#${prefix}ContextPath`);
+  const projectEl = $(`#${prefix}Project`);
+  if (!urlEl || !tenantEl || !schemaEl || !projectEl) return;
+
+  const envUrl = urlEl.value.trim().replace(/\/+$/, '');
+  const tenant = tenantEl.value.trim();
+  const schema = schemaEl.value;
+  const contextPath = ctxEl ? ctxEl.value : 'egov-mdms-service';
+
+  if (!envUrl || !tenant) return;
+  if (!schema.includes('FormConfigTemplate')) return; // only for Template
+
+  // Switch to select if still an input
+  if (projectEl.tagName === 'INPUT') {
+    const sel = document.createElement('select');
+    sel.id = projectEl.id;
+    sel.innerHTML = '<option value="">Loading projects...</option>';
+    projectEl.replaceWith(sel);
+  }
+
+  const sel = $(`#${prefix}Project`);
+  sel.innerHTML = '<option value="">Loading projects...</option>';
+  const codes = await fetchProjectTypes(envUrl, tenant, contextPath);
+  if (codes.length > 0) {
+    populateProjectSelect(sel, codes, '');
+  } else {
+    // Revert to text input if no project types found
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.id = sel.id; inp.placeholder = 'MR-DN';
+    sel.replaceWith(inp);
+  }
+}
+
+// Revert project field to text input (for FormConfig schema)
+function revertProjectToInput(prefix) {
+  const el = $(`#${prefix}Project`);
+  if (!el || el.tagName === 'INPUT') return;
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.id = el.id; inp.placeholder = 'MR-DN';
+  el.replaceWith(inp);
+}
+
 function buildRequestInfo(token, locale, action) {
   return { apiId: 'Rainmaker', ver: '.01', action, did: '1', key: '', msgId: `20170310130900|${locale || 'en_IN'}`, authToken: token, userInfo: { id: 0 } };
 }
@@ -1391,17 +1462,71 @@ function switchMode(mode) {
   $(`#panel-${mode}`).classList.add('active');
 }
 
-// Show/hide campaign number field based on schema selection
+// Show/hide campaign number field + refresh project dropdown based on schema selection
 document.addEventListener('change', e => {
   if (e.target.id === 'olSchema') {
-    $('#olCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+    const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
+    $('#olCampaignGroup').style.display = isFormConfig ? '' : 'none';
+    if (!isFormConfig) refreshProjectOptions('ol'); else revertProjectToInput('ol');
   }
   if (e.target.id === 'mgSrcSchema') {
-    $('#mgSrcCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+    const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
+    $('#mgSrcCampaignGroup').style.display = isFormConfig ? '' : 'none';
+    if (!isFormConfig) refreshProjectOptions('mgSrc'); else revertProjectToInput('mgSrc');
   }
   if (e.target.id === 'mgTgtSchema') {
-    $('#mgTgtCampaignGroup').style.display = e.target.value.includes('FormConfig') && !e.target.value.includes('Template') ? '' : 'none';
+    const isFormConfig = e.target.value.includes('FormConfig') && !e.target.value.includes('Template');
+    $('#mgTgtCampaignGroup').style.display = isFormConfig ? '' : 'none';
+    if (!isFormConfig) refreshMgTgtProjectOptions(); else revertProjectToInput('mgTgt');
   }
+});
+
+// Migrate target uses source URL/Tenant/ContextPath when "Different target environment" is unchecked
+async function refreshMgTgtProjectOptions() {
+  const diffEnv = $('#mgDiffEnv')?.checked;
+  const envUrl = (diffEnv ? $('#mgTgtUrl').value : $('#mgSrcUrl').value).trim().replace(/\/+$/, '');
+  const tenant = (diffEnv ? $('#mgTgtTenant').value : $('#mgSrcTenant').value).trim();
+  const contextPath = (diffEnv ? $('#mgTgtContextPath').value : $('#mgSrcContextPath').value) || 'egov-mdms-service';
+  const schema = $('#mgTgtSchema').value;
+  const projectEl = $('#mgTgtProject');
+  if (!envUrl || !tenant || !schema.includes('FormConfigTemplate')) return;
+
+  if (projectEl.tagName === 'INPUT') {
+    const sel = document.createElement('select');
+    sel.id = projectEl.id;
+    sel.innerHTML = '<option value="">Loading projects...</option>';
+    projectEl.replaceWith(sel);
+  }
+  const sel = $('#mgTgtProject');
+  sel.innerHTML = '<option value="">Loading projects...</option>';
+  const codes = await fetchProjectTypes(envUrl, tenant, contextPath);
+  if (codes.length > 0) {
+    populateProjectSelect(sel, codes, '');
+  } else {
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.id = sel.id; inp.placeholder = 'Same as source';
+    sel.replaceWith(inp);
+  }
+}
+
+// Auto-fetch project types when URL/Tenant fields are filled and schema is Template
+['olUrl', 'olTenant'].forEach(id => {
+  const el = $(`#${id}`);
+  if (el) el.addEventListener('blur', () => {
+    if ($('#olSchema').value.includes('FormConfigTemplate')) refreshProjectOptions('ol');
+  });
+});
+['mgSrcUrl', 'mgSrcTenant'].forEach(id => {
+  const el = $(`#${id}`);
+  if (el) el.addEventListener('blur', () => {
+    if ($('#mgSrcSchema').value.includes('FormConfigTemplate')) refreshProjectOptions('mgSrc');
+  });
+});
+['mgTgtUrl', 'mgTgtTenant'].forEach(id => {
+  const el = $(`#${id}`);
+  if (el) el.addEventListener('blur', () => {
+    if ($('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
+  });
 });
 
 // ════════════════════════════════════════════════════════════════
@@ -1945,12 +2070,47 @@ function showFilePushDialog() {
       </div>`;
     overlay.classList.remove('hidden');
 
-    // Toggle campaign visibility on schema change
+    // Toggle campaign visibility + fetch project types on schema change
     const schemaEl = box.querySelector('#fpSchema');
-    schemaEl.onchange = () => {
-      box.querySelector('#fpCampaignGroup').style.display =
-        schemaEl.value.includes('FormConfig') && !schemaEl.value.includes('Template') ? '' : 'none';
+    const fpFetchProjects = async () => {
+      const url = box.querySelector('#fpUrl').value.trim().replace(/\/+$/, '');
+      const tenant = box.querySelector('#fpTenant').value.trim();
+      const ctx = box.querySelector('#fpContextPath').value;
+      const schema = box.querySelector('#fpSchema').value;
+      if (!url || !tenant || !schema.includes('FormConfigTemplate')) return;
+      const projectEl = box.querySelector('#fpProject');
+      if (projectEl.tagName === 'INPUT') {
+        const sel = document.createElement('select');
+        sel.id = 'fpProject';
+        sel.innerHTML = '<option value="">Loading projects...</option>';
+        projectEl.replaceWith(sel);
+      }
+      const sel = box.querySelector('#fpProject');
+      sel.innerHTML = '<option value="">Loading projects...</option>';
+      const codes = await fetchProjectTypes(url, tenant, ctx);
+      if (codes.length > 0) {
+        populateProjectSelect(sel, codes, cached.project || '');
+      } else {
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.id = 'fpProject'; inp.placeholder = 'MR-DN'; inp.value = cached.project || '';
+        sel.replaceWith(inp);
+      }
     };
+    const fpRevertProject = () => {
+      const el = box.querySelector('#fpProject');
+      if (el && el.tagName === 'SELECT') {
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.id = 'fpProject'; inp.placeholder = 'MR-DN';
+        el.replaceWith(inp);
+      }
+    };
+    schemaEl.onchange = () => {
+      const isFormConfig = schemaEl.value.includes('FormConfig') && !schemaEl.value.includes('Template');
+      box.querySelector('#fpCampaignGroup').style.display = isFormConfig ? '' : 'none';
+      if (!isFormConfig) fpFetchProjects(); else fpRevertProject();
+    };
+    // Auto-fetch on dialog open if schema is Template
+    if (schemaEl.value.includes('FormConfigTemplate')) fpFetchProjects();
 
     const restoreBox = () => {
       overlay.classList.add('hidden');
