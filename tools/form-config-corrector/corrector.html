@@ -1856,13 +1856,16 @@ async function migrateFetch() {
       showProgress(`Analyzing ${rec.data.name}...`, `${i+1}/${selectedRecords.length}`, ((i+1)/selectedRecords.length)*70);
       await tick();
 
-      // Transform project references when projects differ
+      // Transform project references when projects differ (handles cross-schema: campaign ↔ project)
       const dataCopy = JSON.parse(JSON.stringify(rec.data));
-      if (src.project && tgt.project && src.project !== tgt.project) {
+      const srcProjectVal = src.project || src.campaign;
+      const tgtProjectVal = tgt.project || tgt.campaign;
+      if (srcProjectVal && tgtProjectVal && srcProjectVal !== tgtProjectVal) {
         const json = JSON.stringify(dataCopy);
-        const transformed = json.replace(new RegExp(escRegex(src.project), 'g'), tgt.project);
+        const transformed = json.replace(new RegExp(escRegex(srcProjectVal), 'g'), tgtProjectVal);
         Object.assign(dataCopy, JSON.parse(transformed));
       }
+      if (tgtProjectVal) dataCopy.project = tgtProjectVal;
 
       const srcLocModule = getLocModule(src.schema, rec.data.name, src.project, src.campaign);
       let existingLocCodes = new Map();
