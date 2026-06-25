@@ -133,12 +133,30 @@ input[type="file"] { display: none; }
 .code-header span { font-size: 12px; color: var(--subtext); }
 .code-body { max-height: 500px; overflow: auto; }
 .code-body pre { margin: 0; padding: 12px; font-size: 12px; font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; line-height: 1.6; white-space: pre-wrap; word-break: break-word; tab-size: 2; }
-.diff-view { display: grid; grid-template-columns: 1fr 1fr; }
-.diff-pane { overflow: auto; max-height: 500px; }
-.diff-pane pre { margin: 0; padding: 12px; font-size: 11px; font-family: 'JetBrains Mono', 'Cascadia Code', monospace; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-.diff-label { font-size: 11px; padding: 6px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); font-weight: 600; }
-.diff-label.old { color: var(--red); }
-.diff-label.new { color: var(--green); }
+.diff-unified { overflow: auto; max-height: 600px; font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 1; }
+.diff-unified table { width: 100%; border-collapse: collapse; }
+.diff-line { border: none; }
+.diff-line td { padding: 0 8px; white-space: pre; vertical-align: top; line-height: 20px; }
+.diff-line .diff-ln { width: 1px; text-align: right; color: var(--gutter); font-size: 11px; padding: 0 6px; user-select: none; -webkit-user-select: none; border-right: 1px solid var(--border); }
+.diff-line .diff-ln.ln-old { border-right: none; }
+.diff-line .diff-marker { width: 1px; padding: 0 4px; user-select: none; -webkit-user-select: none; font-weight: 700; }
+.diff-line .diff-content { white-space: pre-wrap; word-break: break-word; tab-size: 2; }
+.diff-line.diff-del { background: rgba(243,139,168,.12); }
+.diff-line.diff-del .diff-marker { color: var(--red); }
+.diff-line.diff-del .diff-ln { color: var(--red); opacity: .7; }
+.diff-line.diff-add { background: rgba(166,227,161,.12); }
+.diff-line.diff-add .diff-marker { color: var(--green); }
+.diff-line.diff-add .diff-ln { color: var(--green); opacity: .7; }
+.diff-line.diff-ctx { background: transparent; }
+.diff-line.diff-ctx .diff-marker { color: var(--gutter); }
+.diff-hunk { background: rgba(137,180,250,.08); color: var(--blue); font-size: 11px; }
+.diff-hunk td { padding: 4px 8px; font-style: italic; }
+.diff-stats { padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 12px; display: flex; gap: 16px; align-items: center; }
+.diff-stats .stat-add { color: var(--green); font-weight: 600; }
+.diff-stats .stat-del { color: var(--red); font-weight: 600; }
+.diff-stats .stat-ctx { color: var(--subtext); }
+.diff-word-del { background: rgba(243,139,168,.3); border-radius: 2px; padding: 0 1px; }
+.diff-word-add { background: rgba(166,227,161,.3); border-radius: 2px; padding: 0 1px; }
 
 /* ─── Loader / Progress overlay ─── */
 .loader-overlay { position: fixed; inset: 0; background: rgba(17,17,27,.85); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(4px); }
@@ -517,6 +535,172 @@ const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 function tick() { return new Promise(r => setTimeout(r, 10)); }
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// GitHub-style unified diff renderer
+function renderUnifiedDiff(oldText, newText) {
+  const oldLines = oldText.split('\n');
+  const newLines = newText.split('\n');
+
+  // Myers-like LCS diff
+  const n = oldLines.length, m = newLines.length;
+  // For large files, use a simplified approach with context
+  const ops = []; // {type: 'ctx'|'del'|'add', oldIdx, newIdx, line}
+
+  // Build LCS table using Hunt-Szymanski for speed on large inputs
+  const match = new Map();
+  for (let j = 0; j < m; j++) {
+    const line = newLines[j];
+    if (!match.has(line)) match.set(line, []);
+    match.get(line).push(j);
+  }
+
+  // Patience-like: find longest common subsequence via dynamic programming
+  // For very large files, limit to a simpler O(n*m) bounded approach
+  const MAX_DP = 5000;
+  let lcsOps;
+  if (n * m < MAX_DP * MAX_DP) {
+    // Standard LCS
+    const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let i = 1; i <= n; i++) {
+      for (let j = 1; j <= m; j++) {
+        if (oldLines[i - 1] === newLines[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+        else dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+    // Backtrack
+    lcsOps = [];
+    let i = n, j = m;
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && oldLines[i - 1] === newLines[j - 1]) {
+        lcsOps.push({ type: 'ctx', oldIdx: i, newIdx: j, line: oldLines[i - 1] });
+        i--; j--;
+      } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+        lcsOps.push({ type: 'add', newIdx: j, line: newLines[j - 1] });
+        j--;
+      } else {
+        lcsOps.push({ type: 'del', oldIdx: i, line: oldLines[i - 1] });
+        i--;
+      }
+    }
+    lcsOps.reverse();
+  } else {
+    // Fallback for huge files: line-by-line comparison
+    lcsOps = [];
+    let i = 0, j = 0;
+    while (i < n || j < m) {
+      if (i < n && j < m && oldLines[i] === newLines[j]) {
+        lcsOps.push({ type: 'ctx', oldIdx: i + 1, newIdx: j + 1, line: oldLines[i] });
+        i++; j++;
+      } else if (i < n && j < m) {
+        lcsOps.push({ type: 'del', oldIdx: i + 1, line: oldLines[i] });
+        lcsOps.push({ type: 'add', newIdx: j + 1, line: newLines[j] });
+        i++; j++;
+      } else if (i < n) {
+        lcsOps.push({ type: 'del', oldIdx: i + 1, line: oldLines[i] });
+        i++;
+      } else {
+        lcsOps.push({ type: 'add', newIdx: j + 1, line: newLines[j] });
+        j++;
+      }
+    }
+  }
+
+  // Word-level highlighting for changed lines
+  function wordDiff(oldLine, newLine) {
+    const oldWords = oldLine.split(/(\s+)/);
+    const newWords = newLine.split(/(\s+)/);
+    const wn = oldWords.length, wm = newWords.length;
+    if (wn * wm > 10000) return { oldHtml: esc(oldLine), newHtml: esc(newLine) };
+    const dp = Array.from({ length: wn + 1 }, () => new Uint16Array(wm + 1));
+    for (let i = 1; i <= wn; i++) for (let j = 1; j <= wm; j++) {
+      dp[i][j] = oldWords[i-1] === newWords[j-1] ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j], dp[i][j-1]);
+    }
+    const wOps = [];
+    let wi = wn, wj = wm;
+    while (wi > 0 || wj > 0) {
+      if (wi > 0 && wj > 0 && oldWords[wi-1] === newWords[wj-1]) { wOps.push({t:'eq',o:wi-1,n:wj-1}); wi--; wj--; }
+      else if (wj > 0 && (wi === 0 || dp[wi][wj-1] >= dp[wi-1][wj])) { wOps.push({t:'add',n:wj-1}); wj--; }
+      else { wOps.push({t:'del',o:wi-1}); wi--; }
+    }
+    wOps.reverse();
+    let oldHtml = '', newHtml = '';
+    for (const op of wOps) {
+      if (op.t === 'eq') { oldHtml += esc(oldWords[op.o]); newHtml += esc(newWords[op.n]); }
+      else if (op.t === 'del') { oldHtml += `<span class="diff-word-del">${esc(oldWords[op.o])}</span>`; }
+      else { newHtml += `<span class="diff-word-add">${esc(newWords[op.n])}</span>`; }
+    }
+    return { oldHtml, newHtml };
+  }
+
+  // Group into hunks with 3 lines of context
+  const CTX = 3;
+  const changedIndices = new Set();
+  lcsOps.forEach((op, i) => { if (op.type !== 'ctx') changedIndices.add(i); });
+
+  // Expand context around changes
+  const visible = new Set();
+  for (const ci of changedIndices) {
+    for (let k = Math.max(0, ci - CTX); k <= Math.min(lcsOps.length - 1, ci + CTX); k++) visible.add(k);
+  }
+
+  // If no changes, show a message
+  if (changedIndices.size === 0) {
+    return '<div style="padding:24px;text-align:center;color:var(--subtext)">No differences found</div>';
+  }
+
+  // Stats
+  let adds = 0, dels = 0;
+  for (const op of lcsOps) { if (op.type === 'add') adds++; else if (op.type === 'del') dels++; }
+
+  // Track line numbers
+  let oln = 0, nln = 0;
+  for (let i = 0; i < lcsOps.length; i++) {
+    if (lcsOps[i].type === 'ctx') { oln++; nln++; lcsOps[i].oln = oln; lcsOps[i].nln = nln; }
+    else if (lcsOps[i].type === 'del') { oln++; lcsOps[i].oln = oln; }
+    else { nln++; lcsOps[i].nln = nln; }
+  }
+
+  // Pair adjacent del+add for word diff
+  const wordDiffs = new Map();
+  for (let i = 0; i < lcsOps.length - 1; i++) {
+    if (lcsOps[i].type === 'del' && lcsOps[i+1].type === 'add') {
+      wordDiffs.set(i, wordDiff(lcsOps[i].line, lcsOps[i+1].line));
+    }
+  }
+
+  // Render
+  let html = `<div class="diff-stats"><span class="stat-ctx">${oldLines.length} lines</span><span class="stat-add">+${adds}</span><span class="stat-del">-${dels}</span></div>`;
+  html += '<div class="diff-unified"><table>';
+
+  let inHunk = false;
+  let lastVisible = -2;
+  for (let i = 0; i < lcsOps.length; i++) {
+    if (!visible.has(i)) { inHunk = false; continue; }
+    if (!inHunk || i > lastVisible + 1) {
+      // Hunk header
+      const hOln = lcsOps[i].oln || (lcsOps[i].type === 'add' ? '...' : lcsOps[i].oln);
+      const hNln = lcsOps[i].nln || (lcsOps[i].type === 'del' ? '...' : lcsOps[i].nln);
+      html += `<tr class="diff-hunk"><td colspan="5">@@ -${lcsOps[i].oln||''} +${lcsOps[i].nln||''} @@</td></tr>`;
+      inHunk = true;
+    }
+    lastVisible = i;
+
+    const op = lcsOps[i];
+    if (op.type === 'ctx') {
+      html += `<tr class="diff-line diff-ctx"><td class="diff-ln ln-old">${op.oln}</td><td class="diff-ln">${op.nln}</td><td class="diff-marker"> </td><td class="diff-content">${esc(op.line)}</td></tr>`;
+    } else if (op.type === 'del') {
+      const wd = wordDiffs.get(i);
+      const content = wd ? wd.oldHtml : esc(op.line);
+      html += `<tr class="diff-line diff-del"><td class="diff-ln ln-old">${op.oln}</td><td class="diff-ln"></td><td class="diff-marker">-</td><td class="diff-content">${content}</td></tr>`;
+    } else {
+      const wd = wordDiffs.get(i - 1);
+      const content = wd ? wd.newHtml : esc(op.line);
+      html += `<tr class="diff-line diff-add"><td class="diff-ln ln-old"></td><td class="diff-ln">${op.nln}</td><td class="diff-marker">+</td><td class="diff-content">${content}</td></tr>`;
+    }
+  }
+  html += '</table></div>';
+  return html;
+}
 
 function showLoader(text, sub) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; $('#progressBarWrap').classList.add('hidden'); }
 function showProgress(text, sub, pct) { $('#loader').classList.remove('hidden'); $('#loaderText').textContent = text; $('#loaderSub').textContent = sub || ''; $('#progressBarWrap').classList.remove('hidden'); $('#progressBarFill').style.width = `${pct}%`; }
@@ -1698,16 +1882,7 @@ function renderModule(idx) {
     <!-- Diff -->
     <div class="tab-panel" id="tp-diff">
       <div class="code-viewer">
-        <div class="diff-view">
-          <div>
-            <div class="diff-label old">Original</div>
-            <div class="diff-pane"><pre>${esc(JSON.stringify(originalData, null, 2))}</pre></div>
-          </div>
-          <div style="border-left:1px solid var(--border)">
-            <div class="diff-label new">Corrected</div>
-            <div class="diff-pane"><pre>${esc(JSON.stringify(correctedData, null, 2))}</pre></div>
-          </div>
-        </div>
+        ${renderUnifiedDiff(JSON.stringify(originalData, null, 2), JSON.stringify(correctedData, null, 2))}
       </div>
     </div>
 
