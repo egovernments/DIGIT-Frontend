@@ -40,7 +40,7 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "payments-ui";
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "workbench-ui";
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
