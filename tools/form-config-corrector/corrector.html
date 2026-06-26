@@ -2152,9 +2152,15 @@ async function upsertLocalizations() {
     if (r.newLocalizations.length === 0) continue;
 
     const locModule = r._locModule || getLocModule(onlineSchema, r.report.moduleName, onlineProject, onlineCampaign);
-    const tagged = dedupByCode(r.newLocalizations.map(m => ({ code: m.code, message: m.message, module: m._appConfig ? 'hcm-appconfiguration' : locModule, locale: onlineLocale })));
+    // All codes go to the regular module; appConfig codes also go to hcm-appconfiguration
+    const allRaw = [];
+    for (const m of r.newLocalizations) {
+      allRaw.push({ code: m.code, message: m.message, module: locModule, locale: onlineLocale });
+      if (m._appConfig) allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale });
+    }
+    const tagged = dedupByCode(allRaw);
 
-    // Split by module to avoid mixing modules in one upsert request
+    // Split by module — each upsert request must have only one module
     const byModule = new Map();
     for (const loc of tagged) { const m = loc.module; if (!byModule.has(m)) byModule.set(m, []); byModule.get(m).push(loc); }
     for (const [mod2, modLocs] of byModule) {
@@ -2232,9 +2238,10 @@ async function pushAllToTarget() {
         }
       }
       // Include new locs (new locs win over existing if same code)
+      // appConfig codes go to both the regular module and hcm-appconfiguration
       for (const loc of r.newLocalizations) {
-        const mod2 = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule;
-        allLocsRaw.push({ code: loc.code, message: loc.message, module: mod2, locale: tgtLocale });
+        allLocsRaw.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale });
+        if (loc._appConfig) allLocsRaw.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: tgtLocale });
       }
       const allLocs = dedupByCode(allLocsRaw);
 
@@ -2587,14 +2594,15 @@ async function pushFileToEnv() {
           }
         }
         // New locs from corrector (new locs win over existing if same code)
+        // appConfig codes go to both the regular module and hcm-appconfiguration
         for (const loc of r.newLocalizations) {
           let locCode = loc.code, locMsg = loc.message;
           if (srcProject && project && srcProject !== project) {
             locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
             locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
           }
-          const mod2 = loc._appConfig ? 'hcm-appconfiguration' : locModule;
-          allLocsRaw.push({ code: locCode, message: locMsg, module: mod2, locale });
+          allLocsRaw.push({ code: locCode, message: locMsg, module: locModule, locale });
+          if (loc._appConfig) allLocsRaw.push({ code: locCode, message: locMsg, module: 'hcm-appconfiguration', locale });
         }
         const allLocs = dedupByCode(allLocsRaw);
 
@@ -2901,7 +2909,13 @@ async function pushTranslations() {
     const msgs = translatedLocales.get(locale);
     if (!msgs || msgs.length === 0) continue;
 
-    const allMsgs = dedupByCode(msgs.map(m => ({ code: m.code, message: m.message, module: m._appConfig ? 'hcm-appconfiguration' : m.module, locale })));
+    // appConfig codes go to both the regular module and hcm-appconfiguration
+    const allRaw = [];
+    for (const m of msgs) {
+      allRaw.push({ code: m.code, message: m.message, module: m.module, locale });
+      if (m._appConfig) allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale });
+    }
+    const allMsgs = dedupByCode(allRaw);
     const byModule = new Map();
     for (const loc of allMsgs) { const m = loc.module; if (!byModule.has(m)) byModule.set(m, []); byModule.get(m).push(loc); }
     for (const [mod2, modLocs] of byModule) {
@@ -2939,7 +2953,13 @@ async function pushTranslationsForLocale(locale) {
   showLoader(`Pushing ${locale} translations...`);
   let upserted = 0, errors = 0;
 
-  const allMsgs = dedupByCode(msgs.map(m => ({ code: m.code, message: m.message, module: m._appConfig ? 'hcm-appconfiguration' : m.module, locale })));
+  // appConfig codes go to both the regular module and hcm-appconfiguration
+  const allRaw = [];
+  for (const m of msgs) {
+    allRaw.push({ code: m.code, message: m.message, module: m.module, locale });
+    if (m._appConfig) allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale });
+  }
+  const allMsgs = dedupByCode(allRaw);
   const byModule = new Map();
   for (const loc of allMsgs) { const m = loc.module; if (!byModule.has(m)) byModule.set(m, []); byModule.get(m).push(loc); }
   for (const [mod2, modLocs] of byModule) {
