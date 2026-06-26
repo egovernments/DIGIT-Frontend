@@ -11,7 +11,7 @@ import {
   AccordionList,
   Loader,
   PopUp,
-  TextInput,
+  FieldV1,
   Toast,
   NoResultsFound,
 } from "@egovernments/digit-ui-components";
@@ -322,11 +322,23 @@ const ReportDetailPage = () => {
         >
           <div className="digit-report-detail__custom-popup-field">
             <label>{t("HCM_CUSTOM_START_DATE")}</label>
-            <TextInput customClass="custom-date-range" type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} />
+            <FieldV1
+              withoutLabel={true}
+              type="date"
+              value={customStartDate}
+              populators={{ newDateFormat: true, customClass: "custom-date-range" }}
+              onChange={(d) => setCustomStartDate(d)}
+            />
           </div>
           <div className="digit-report-detail__custom-popup-field">
             <label>{t("HCM_CUSTOM_END_DATE")}</label>
-            <TextInput customClass="custom-date-range" type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} min={customStartDate} />
+            <FieldV1
+              withoutLabel={true}
+              type="date"
+              value={customEndDate}
+              populators={{ newDateFormat: true, min: customStartDate, customClass: "custom-date-range" }}
+              onChange={(d) => setCustomEndDate(d)}
+            />
           </div>
         </PopUp>
       )}

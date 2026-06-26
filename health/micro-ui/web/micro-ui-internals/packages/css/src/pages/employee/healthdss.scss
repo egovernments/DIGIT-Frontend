@@ -1536,8 +1536,12 @@
 
   &__popup{
     border-radius:12px !important;
+    max-width: 48% !important;
     .digit-popup-heading{
       color: #0b4b66;
+    }
+    .digit-popup-children-wrap {
+      overflow: visible !important;
     }
   }
 
@@ -1662,5 +1666,15 @@
 .digit-card-inputError{
   &.custom-date-range{
       border-radius: 0.375rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .digit-popup-overlay {
+    .digit-popup-wrapper {
+      &.digit-report-detail__popup {
+        max-width: 48%;
+      }
+    }
   }
 }
