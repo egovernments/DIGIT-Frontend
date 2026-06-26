@@ -102,7 +102,7 @@ const DropdownTemplate = ({ field, t, fieldTypeMasterData, isFieldSelected, prop
     return (
         <FieldV1
         description={shouldHideLabels ? "" : (field ? t : props?.t)(selectedField?.helpText)}
-                error={(field ? t : props?.t)(selectedField?.errorMessage)}
+                // error={(field ? t : props?.t)(selectedField?.errorMessage)}
                 infoMessage={(field ? t : props?.t)(selectedField?.tooltip)}
                 label={dropdownLabel}
                 onChange={function noRefCheck() {}}
