@@ -11,7 +11,7 @@ const TextInputTemplate = ({ field, t, isFieldSelected, props }) => {
   return (
     <FieldV1
       description={(field ? t : props?.t)(selectedField?.helpText)}
-      error={(field ? t : props?.t)(selectedField?.errorMessage)}
+      // error={(field ? t : props?.t)(selectedField?.errorMessage)}
       infoMessage={(field ? t : props?.t)(selectedField?.tooltip)}
       label={inputLabel}
       onChange={function noRefCheck() {}}
