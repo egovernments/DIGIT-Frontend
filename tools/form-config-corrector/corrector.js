@@ -208,6 +208,81 @@ Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
       return;
     }
 
+    // API: Review existing localizations for poor quality
+    if (url.pathname === '/api/review-locs' && req.method === 'POST') {
+      const body = await readBody(req);
+      try {
+        const { existingCodes, moduleName, configSummary } = JSON.parse(body);
+        if (!existingCodes || !Array.isArray(existingCodes) || existingCodes.length === 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'No codes provided' }));
+          return;
+        }
+
+        const codeList = existingCodes.map(c => `  ${c.code}: "${c.message}"`).join('\n');
+
+        let configSection = '';
+        if (configSummary) {
+          try {
+            const flows = (configSummary.flows || []).map(f => {
+              const pages = (f.pages || []).map(p => {
+                const fields = (p.fields || []).map(fd => `      - ${fd.fieldName} (${fd.format})${fd.label ? ' label=' + fd.label : ''}`).join('\n');
+                return `    Page: ${p.page} [${p.screenType}]\n${fields}`;
+              }).join('\n');
+              return `  Flow: ${f.name} [${f.screenType}] category=${f.category}\n${pages}`;
+            }).join('\n');
+            configSection = `\nForm Config Structure:\n${flows}\n`;
+          } catch (e) { /* ignore malformed summary */ }
+        }
+
+        const prompt = `You are a localization expert for a Health Campaign Management (HCM) mobile app used by health workers in the field.
+
+Module: ${moduleName || 'UNKNOWN'}
+${configSection}
+The following localization messages ALREADY EXIST in the system. Review each one and identify ONLY those with POOR QUALITY messages that need improvement.
+
+Poor quality means:
+- Auto-generated messages like "Xyz validation failed", "Abc validation error" where the prefix is a raw/mangled field name
+- Single concatenated words with no spaces (e.g. "Gpsfirsthousehold" instead of "GPS First Household")
+- Messages that don't match what the field actually represents in the form config above
+- Generic/unhelpful messages that don't describe the field's purpose
+- Error messages that don't tell the user what to do (e.g. "validation failed" instead of "Location is required")
+
+Existing messages to review:
+${codeList}
+
+Rules for improvements:
+- Labels: short (1-4 words), Title Case (e.g. "Survey Date", "Lot Number")
+- Error messages: clear, actionable, Sentence case (e.g. "Location is required", "Please enter a valid date")
+- Cross-reference codes against the form config fields above; if a code maps to a specific fieldName (like gpsFirstHousehold = GPS/Location field), use that context
+- If the config shows a field is a date picker, GPS, scanner, etc., tailor the message accordingly
+- Keep domain acronyms as-is: OPV, AFP, LQA, IHM, MRN, QR, GPS, HCM
+- APP_CONFIG codes should be clean human-readable names
+
+IMPORTANT: Only return codes that NEED improvement. Skip codes with already clear, descriptive messages.
+If all messages are fine, return an empty object: {}
+
+Return ONLY valid JSON mapping code to improved message. No markdown, no explanation, no wrapping.
+Example: {"POOR_CODE_1": "Better Message", "POOR_CODE_2": "Another"}`;
+
+        const result = callClaude(prompt);
+        const jsonMatch = result.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ improved: {}, count: 0 }));
+          return;
+        }
+
+        const improved = JSON.parse(jsonMatch[0]);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ improved, count: Object.keys(improved).length }));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+      return;
+    }
+
     // API: Call Claude CLI for translation
     if (url.pathname === '/api/translate' && req.method === 'POST') {
       const body = await readBody(req);

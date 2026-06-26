@@ -562,7 +562,7 @@ function analyzeAndFix(configData, opts = {}) {
   const newLocalizations = Array.from(allNew.entries()).map(([code,message])=>({code,message}));
   // Tag codes that belong to hcm-appconfiguration
   for(const loc of newLocalizations){if(appConfigCodes.has(loc.code))loc._appConfig=true;}
-  return { correctedData:data, originalData, report, newLocalizations };
+  return { correctedData:data, originalData, report, newLocalizations, _appConfigCodes: new Set(appConfigCodes) };
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1619,10 +1619,59 @@ async function aiEnhance(resultsList) {
       }
     }
 
+    // === Pass 2: Review existing localizations for poor quality ===
+    let existingImproved = 0;
+    if (!aiEnhanceCancelled) {
+      const modsWithExisting = resultsList.filter(r => r._existingLocs && r._existingLocs.size > 0);
+      if (modsWithExisting.length > 0) {
+        addAiLog('info', `Reviewing existing localizations for quality...`);
+        const REVIEW_BATCH = 50;
+        for (let i = 0; i < resultsList.length; i++) {
+          if (aiEnhanceCancelled) break;
+          const r = resultsList[i];
+          if (!r._existingLocs || r._existingLocs.size === 0) continue;
+          const existingArr = [...r._existingLocs.entries()].map(([code, message]) => ({ code, message }));
+          aiEnhanceState.moduleName = r.report.moduleName + ' (review)';
+          renderAiPanel();
+          for (let b = 0; b < existingArr.length; b += REVIEW_BATCH) {
+            if (aiEnhanceCancelled) break;
+            const batch = existingArr.slice(b, b + REVIEW_BATCH);
+            try {
+              const resp = await fetch('/api/review-locs', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  existingCodes: batch,
+                  moduleName: r.report.moduleName,
+                  configSummary: buildConfigSummary(r),
+                }),
+              });
+              const data = await resp.json();
+              if (data.improved && Object.keys(data.improved).length > 0) {
+                for (const [code, message] of Object.entries(data.improved)) {
+                  const already = r.newLocalizations.find(l => l.code === code);
+                  if (already) { already.message = message; }
+                  else {
+                    const loc = { code, message };
+                    if (r._appConfigCodes && r._appConfigCodes.has(code)) loc._appConfig = true;
+                    r.newLocalizations.push(loc);
+                  }
+                  existingImproved++;
+                }
+                refreshLocInputs(i);
+              }
+            } catch (e) {
+              addAiLog('error', `Review failed for ${r.report.moduleName}: ${e.message}`);
+            }
+          }
+        }
+        if (existingImproved > 0) addAiLog('info', `${existingImproved} existing localizations improved.`);
+      }
+    }
+
     if (aiEnhanceCancelled) {
       addAiLog('info', `Stopped. ${processedMessages}/${totalMessages} messages processed.`);
     } else {
-      addAiLog('success', `Complete! ${totalMessages} messages enhanced.`);
+      addAiLog('success', `Complete! ${totalMessages} new + ${existingImproved} existing messages enhanced.`);
     }
   } catch (e) {
     addAiLog('error', `Fatal error: ${e.message}`);
