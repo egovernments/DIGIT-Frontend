@@ -529,6 +529,9 @@ function analyzeAndFix(configData, opts = {}) {
   // R4b: FORM screenType should not have body (body is only for TEMPLATE pages)
   if(autoFix&&data.flows){for(const fl of data.flows){if(fl.screenType==='FORM'&&fl.body){delete fl.body;report.fixes.push({rule:'form-has-body',flow:fl.name,path:fl.name,fixed:'Removed body from FORM flow'});}if(fl.pages){for(const pg of fl.pages){if(pg.screenType==='FORM'&&pg.body){delete pg.body;report.fixes.push({rule:'form-has-body',flow:fl.name,path:`${fl.name}/${pg.page||pg.name}`,fixed:'Removed body from FORM page'});}}}}}
 
+  // R4c: ensure every flow has an order field
+  if(autoFix&&data.flows){for(let fi=0;fi<data.flows.length;fi++){const fl=data.flows[fi];if(fl.order==null){fl.order=fi+1;report.fixes.push({rule:'missing-order',flow:fl.name,path:fl.name||`flow[${fi}]`,fixed:`order → ${fi+1}`});}}}
+
   // R5: actions
   const visited5 = new WeakSet();
   function wAct(o,fn,loc,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>wAct(x,fn,`${loc}[${i}]`,d+1));return;}if(visited5.has(o))return;visited5.add(o);for(const ak of['primaryAction','secondaryAction']){if(o[ak]&&typeof o[ak]==='object'){const a=o[ak],pt=ak==='primaryAction'?'primary':'secondary',bn=fn||o.name||o.page||'unknown',efn=`${bn.toLowerCase()}_${ak}`;let fx=false;const dd=[];if(!a.type){a.type='template';fx=true;dd.push('type');}if(!a.format){a.format='button';fx=true;dd.push('format');}if(!a.fieldName){a.fieldName=efn;fx=true;dd.push('fieldName');}if(!a.properties)a.properties={};if(!a.properties.type){a.properties.type=pt;fx=true;dd.push('properties.type');}if(fx)report.fixes.push({rule:`${ak}-props`,flow:fn,path:`${loc}.${ak}`,fixed:`Added: ${dd.join(', ')}`});}}for(const[k,v]of Object.entries(o)){if(k!=='primaryAction'&&k!=='secondaryAction'&&typeof v==='object'&&v!==null)wAct(v,fn,`${loc}.${k}`,d+1);}}
