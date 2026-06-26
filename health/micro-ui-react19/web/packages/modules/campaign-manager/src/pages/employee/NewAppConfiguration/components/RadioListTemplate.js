@@ -61,11 +61,11 @@ const RadioListTemplate = ({ field, t, isFieldSelected, props }) => {
           {(field ? t : props?.t)(selectedField?.helpText)}
         </div>
       )}
-      {selectedField?.errorMessage && (
+      {/* {selectedField?.errorMessage && (
         <div style={{ marginTop: "4px", fontSize: "12px", color: "#d32f2f" }}>
           {(field ? t : props?.t)(selectedField?.errorMessage)}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

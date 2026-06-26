@@ -111,7 +111,7 @@ const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => 
           },
         }}
         description={shouldCustomTranslate ? field?.helpText : customT(field?.helpText) || ""}
-        error={shouldCustomTranslate ? field?.errorMessage : customT(field?.errorMessage) || null}
+        // error={shouldCustomTranslate ? field?.errorMessage : customT(field?.errorMessage) || null}
         infoMessage={shouldCustomTranslate ? field?.tooltip : customT(field?.tooltip) || null}
         label={
           field?.showLabel === false || fieldType === "checkbox" || field.format === "scanner"
