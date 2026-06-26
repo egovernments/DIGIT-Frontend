@@ -8,6 +8,7 @@ import {
   Footer,
   CheckBox,
   MultiSelectDropdown,
+  Dropdown,
   // FieldV1, // TODO: Uncomment when CUSTOM frequency is re-enabled
   Loader,
   Toast,
@@ -242,8 +243,10 @@ const ReportsConfiguration = () => {
       const updatedConfig = { ...frequencyConfig };
       Object.keys(selectedReports).forEach((code) => {
         if (selectedReports[code] && !updatedConfig[code]) {
+          const opts = getFrequencyOptionsForReport(code);
           updatedConfig[code] = {
-            frequencies: [],
+            // Auto-select when only one frequency is available
+            frequencies: opts.length === 1 ? [opts[0].code] : [],
             // TODO: Uncomment when CUSTOM frequency is re-enabled
             // customStartDate: "",
             // customEndDate: "",
@@ -548,25 +551,42 @@ const ReportsConfiguration = () => {
                         <div className={`label-container`}>
                           <label className={`label-styles`}>
                             {t("HCM_SELECT_FREQUENCIES")}
+                            {frequencyOptions.length > 1 && (
+                              <span style={{ color: "#B91900", marginLeft: "2px" }}>*</span>
+                            )}
                           </label>
                         </div>
                       </HeaderComponent>
                       <div className="digit-field">
-                        <MultiSelectDropdown
-                          props={{ className: "reports-frequency-dropdown" }}
-                          t={t}
-                          options={frequencyOptions}
-                          optionsKey="label"
-                          selected={frequencyOptions.filter((o) =>
-                            selectedFrequencies.includes(o.code),
+                        <div style={{ width: "25rem" }}>
+                          {frequencyOptions.length === 1 ? (
+                            <Dropdown
+                              t={t}
+                              option={frequencyOptions}
+                              optionKey="label"
+                              selected={frequencyOptions[0]}
+                              select={() => {}}
+                              disabled={true}
+                              style={{ width: "100%" }}
+                            />
+                          ) : (
+                            <MultiSelectDropdown
+                              props={{ className: "reports-frequency-dropdown" }}
+                              t={t}
+                              options={frequencyOptions}
+                              optionsKey="label"
+                              selected={frequencyOptions.filter((o) =>
+                                selectedFrequencies.includes(o.code),
+                              )}
+                              onSelect={(value) =>
+                                handleFrequencyChange(report.code, value)
+                              }
+                              style={{ width: "100%" }}
+                              disablePortal={true}
+                              config={{ isDropdownWithChip: false }}
+                            />
                           )}
-                          onSelect={(value) =>
-                            handleFrequencyChange(report.code, value)
-                          }
-                          style={{ minWidth: "25rem" }}
-                          disablePortal={true}
-                          config={{ isDropdownWithChip: false }}
-                        />
+                        </div>
                       </div>
                     </LabelFieldPair>
 

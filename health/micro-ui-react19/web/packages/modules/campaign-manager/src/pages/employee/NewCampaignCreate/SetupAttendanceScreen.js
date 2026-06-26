@@ -55,7 +55,7 @@ const SetupAttendanceScreen = () => {
       <HeaderComponent className={"campaign-header-style"}>
         {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_PAGE_HEADING)}
       </HeaderComponent>
-      <p className="name-description">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_PAGE_DESC)}</p>
+      <p className="name-description" style={{ marginTop: "1rem" }}>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SETUP_ATTENDANCE_PAGE_DESC)}</p>
       <div className="containerStyle" style={{ marginTop: "1.5rem" }}>
         {cards.map((card) => (
           <Card

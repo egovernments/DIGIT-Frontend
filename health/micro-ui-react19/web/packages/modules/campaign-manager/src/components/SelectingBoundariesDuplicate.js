@@ -4,9 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 // Removed TextBlock and Switch imports - unified campaign toggle card is commented out (controlled by DEFAULT_IS_UNIFIED_CAMPAIGN)
 // import {  TextBlock, Switch } from "@egovernments/digit-ui-components";
-import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, CardText, Tag } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
-import TagComponent from "./TagComponent";
 import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 // Default value for unified campaign mode. Change this to `false` to revert to normal campaign mode.
@@ -273,11 +272,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           <Card>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <TagComponent campaignName={campaignName} />
+                <Tag label={campaignName} type="monochrome" stroke={true} />
                 {hierarchyType && (
-                  <TagComponent
-                    campaignName={`${t("HCM_HIERARCHY_TYPE")} : ${hierarchyType}`}
-                    type="success"
+                  <Tag
+                    label={`${t("HCM_HIERARCHY_TYPE")} : ${hierarchyType}`}
+                    type="warning"
+                    stroke={true}
                   />
                 )}
               </div>

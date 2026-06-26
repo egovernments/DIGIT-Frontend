@@ -1,0 +1,13 @@
+.attendance-screen-headers{
+  color: var(--digitv2-lightTheme-primary-2);
+  font-size: var(--digitv2-fontSize-heading-xl-desktop);
+  white-space: nowrap;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.digit-map-users-to-registers-table{
+    .rdt_TableBody{
+        border:none !important;
+    }
+}

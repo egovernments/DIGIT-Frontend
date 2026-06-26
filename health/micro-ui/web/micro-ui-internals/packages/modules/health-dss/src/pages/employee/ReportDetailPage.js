@@ -13,6 +13,7 @@ import {
   PopUp,
   TextInput,
   Toast,
+  NoResultsFound,
 } from "@egovernments/digit-ui-components";
 import axios from "axios";
 
@@ -258,9 +259,8 @@ const ReportDetailPage = () => {
 
   return (
     <React.Fragment>
-      <Card>
+      <Card className="digit-report-detail__card">
         <div className="digit-report-detail__header-wrap">
-          <SVG.Description height="28" width="28" className="digit-report-detail__header-svg" />
           <div className="digit-report-detail__header">
             <div className="digit-report-detail__header-with-tag">
               <HeaderComponent className="digit-report-detail__header-with-tag-header">{t(reportLabel)}</HeaderComponent>
@@ -280,18 +280,19 @@ const ReportDetailPage = () => {
         </div>
 
         {totalReports === 0 ? (
-          <p>{t("HCM_NO_REPORTS_GENERATED")}</p>
+          <NoResultsFound text={t("HCM_NO_REPORTS_GENERATED")} />
         ) : (
           <AccordionList allowMultipleOpen={true}>
             {Object.entries(reportsByFrequency).map(([frequency, reports]) => (
               <Accordion
                 key={frequency}
                 title={`${t(`HCM_REPORT_FREQUENCY_${frequency}`)} : ${reports.length} ${t("HCM_REPORTS_COUNT")}`}
-                icon="CalendarMonth"
+                icon="Calender"
                 isOpenInitially={false}
                 hideCardBorder={false}
                 hideCardBg={true}
                 hideBorderRadius={true}
+                customClassName={"digit-report-details-accordion"}
               >
                 <FrequencyContent reports={reports} t={t} reportType={reportType} />
               </Accordion>
@@ -304,7 +305,8 @@ const ReportDetailPage = () => {
         <PopUp
           onClose={() => setShowCustomPopup(false)}
           onOverlayClick={() => setShowCustomPopup(false)}
-          heading={t("HCM_DOWNLOAD_CUSTOM_RANGE")}
+          heading={t("HCM_DOWNLOAD_CUSTOM_RANGE_POPUP")}
+          description={t("HCM_DOWNLOAD_CUSTOM_RANGE_DESC")}
           className={"digit-report-detail__popup"}
           footerChildren={[
             <Button key="cancel" label={t("HCM_CANCEL")} onClick={() => setShowCustomPopup(false)} variation="secondary" />,
@@ -320,11 +322,11 @@ const ReportDetailPage = () => {
         >
           <div className="digit-report-detail__custom-popup-field">
             <label>{t("HCM_CUSTOM_START_DATE")}</label>
-            <TextInput type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} />
+            <TextInput customClass="custom-date-range" type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} />
           </div>
           <div className="digit-report-detail__custom-popup-field">
             <label>{t("HCM_CUSTOM_END_DATE")}</label>
-            <TextInput type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} min={customStartDate} />
+            <TextInput customClass="custom-date-range" type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} min={customStartDate} />
           </div>
         </PopUp>
       )}

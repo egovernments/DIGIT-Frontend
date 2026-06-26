@@ -458,6 +458,7 @@ const PaymentSetUpPage = () => {
                 message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
                 back: t("GO_BACK_TO_HOME"),
                 backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
               },
             });
           },
@@ -513,6 +514,7 @@ const PaymentSetUpPage = () => {
                 message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
                 back: t("GO_BACK_TO_HOME"),
                 backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
               },
             });
           },
