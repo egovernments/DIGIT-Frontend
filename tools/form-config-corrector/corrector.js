@@ -44,6 +44,18 @@ function callClaude(prompt) {
   return text;
 }
 
+function safeParseJSON(text) {
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) return null;
+  try { return JSON.parse(m[0]); } catch (_) {}
+  // Trailing garbage — try trimming from the end
+  let s = m[0];
+  for (let i = s.length; i > 0; i--) {
+    try { return JSON.parse(s.substring(0, i)); } catch (_) {}
+  }
+  return null;
+}
+
 // ─── Proxy helper (stateless) ─────────────────────────────────
 
 async function proxyRequest(url, method, headers, body) {
@@ -186,19 +198,18 @@ Rules:
 - If the config shows a field is a date picker, GPS, scanner, etc., tailor the message accordingly
 - Match the style and quality of existing localizations when available
 - APP_CONFIG_CATEGORY/FLOW/PAGE codes should be clean human-readable names for the category/flow/page they represent
+- If a code has an empty or whitespace-only message, keep it as a single space " " — it was intentionally left empty
 
 Return ONLY valid JSON mapping code to improved message. No markdown, no explanation, no wrapping.
 Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
 
         const result = callClaude(prompt);
-        const jsonMatch = result.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
+        const improved = safeParseJSON(result);
+        if (!improved) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'No JSON in Claude response', raw: result.substring(0, 500) }));
+          res.end(JSON.stringify({ error: 'No valid JSON in Claude response', raw: result.substring(0, 500) }));
           return;
         }
-
-        const improved = JSON.parse(jsonMatch[0]);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ improved, count: Object.keys(improved).length }));
       } catch (e) {
@@ -258,6 +269,7 @@ Rules for improvements:
 - If the config shows a field is a date picker, GPS, scanner, etc., tailor the message accordingly
 - Keep domain acronyms as-is: OPV, AFP, LQA, IHM, MRN, QR, GPS, HCM
 - APP_CONFIG codes should be clean human-readable names
+- If a code has an empty or whitespace-only message, SKIP it — it was intentionally left empty
 
 IMPORTANT: Only return codes that NEED improvement. Skip codes with already clear, descriptive messages.
 If all messages are fine, return an empty object: {}
@@ -266,14 +278,7 @@ Return ONLY valid JSON mapping code to improved message. No markdown, no explana
 Example: {"POOR_CODE_1": "Better Message", "POOR_CODE_2": "Another"}`;
 
         const result = callClaude(prompt);
-        const jsonMatch = result.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ improved: {}, count: 0 }));
-          return;
-        }
-
-        const improved = JSON.parse(jsonMatch[0]);
+        const improved = safeParseJSON(result) || {};
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ improved, count: Object.keys(improved).length }));
       } catch (e) {
@@ -320,14 +325,12 @@ Return ONLY valid JSON mapping each code to its translated message. No markdown,
 Example: {"CODE_1": "Translated message", "CODE_2": "Another translation"}`;
 
         const result = callClaude(prompt);
-        const jsonMatch = result.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
+        const translated = safeParseJSON(result);
+        if (!translated) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'No JSON in Claude response', raw: result.substring(0, 500) }));
+          res.end(JSON.stringify({ error: 'No valid JSON in Claude response', raw: result.substring(0, 500) }));
           return;
         }
-
-        const translated = JSON.parse(jsonMatch[0]);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ translated, count: Object.keys(translated).length }));
       } catch (e) {

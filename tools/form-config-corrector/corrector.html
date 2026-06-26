@@ -1604,12 +1604,19 @@ async function aiEnhance(resultsList) {
       try {
         for (let b = 0, batchNum = 1; b < r.newLocalizations.length; b += BATCH, batchNum++) {
           if (aiEnhanceCancelled) break;
-          const batch = r.newLocalizations.slice(b, b + BATCH);
+          const rawBatch = r.newLocalizations.slice(b, b + BATCH);
+          // Preserve intentionally empty messages as " " and skip them from AI
+          const batch = [];
+          for (const loc of rawBatch) {
+            if (!loc.message || !loc.message.trim()) { loc.message = ' '; }
+            else { batch.push(loc); }
+          }
           aiEnhanceState.batch = batchNum;
           aiEnhanceState.processed = processedMessages;
           renderAiPanel();
           await tick();
 
+          if (batch.length === 0) { processedMessages += rawBatch.length; continue; }
           const enhanceBody = {
             codes: batch,
             moduleName: r.report.moduleName,
@@ -1626,7 +1633,7 @@ async function aiEnhance(resultsList) {
               if (data.improved[loc.code]) { loc.message = data.improved[loc.code]; improved++; }
             }
           }
-          processedMessages += batch.length;
+          processedMessages += rawBatch.length;
           aiEnhanceState.processed = processedMessages;
           addAiLog('info', `Batch ${batchNum}/${totalBatches}: ${improved} improved`);
 
@@ -1662,7 +1669,7 @@ async function aiEnhance(resultsList) {
           const r = resultsList[i];
           if (!r._existingLocs || r._existingLocs.size === 0) continue;
           reviewModIdx++;
-          const existingArr = [...r._existingLocs.entries()].map(([code, message]) => ({ code, message }));
+          const existingArr = [...r._existingLocs.entries()].filter(([, m]) => m && m.trim()).map(([code, message]) => ({ code, message }));
           const totalBatches = Math.ceil(existingArr.length / REVIEW_BATCH);
           aiEnhanceState.moduleName = r.report.moduleName;
           aiEnhanceState.currentModIdx = reviewModIdx;
