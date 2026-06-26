@@ -70,6 +70,8 @@ input[type="file"] { display: none; }
 .badge-warn { background: rgba(249,226,175,.15); color: var(--yellow); }
 .badge-loc { background: rgba(137,180,250,.15); color: var(--blue); }
 .badge-clean { background: rgba(148,226,213,.1); color: var(--teal); }
+.loc-source-badge { display:inline-block; font-size:9px; padding:1px 5px; border-radius:4px;
+  background:rgba(203,166,247,.15); color:var(--mauve); font-weight:600; letter-spacing:.3px; }
 
 /* ─── Buttons ─── */
 .btn { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; font-size: 13px; font-weight: 500; background: var(--surface2); color: var(--text); transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
@@ -1746,7 +1748,7 @@ async function fetchWithRetry(url, opts, maxRetries = 2) {
 
 async function aiEnhance(resultsList) {
   if (!claudeAvailable) return;
-  const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.length, 0);
+  const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.filter(l => !l._fromSource).length, 0);
   if (totalMessages === 0) return;
   const modsWithLocs = resultsList.filter(r => r.newLocalizations.length > 0).length;
 
@@ -1788,6 +1790,7 @@ async function aiEnhance(resultsList) {
           // Preserve intentionally empty messages as " " and skip them from AI
           const batch = [];
           for (const loc of rawBatch) {
+            if (loc._fromSource) continue;
             if (!loc.message || !loc.message.trim()) { loc.message = ' '; }
             else { batch.push(loc); }
           }
@@ -1829,9 +1832,13 @@ async function aiEnhance(resultsList) {
     // === Pass 2: Review existing localizations for poor quality ===
     let existingImproved = 0;
     if (!aiEnhanceCancelled) {
-      const modsWithExisting = resultsList.filter(r => r._existingLocs && r._existingLocs.size > 0);
+      const modsWithExisting = resultsList.filter(r =>
+        r.newLocalizations.some(l => l._fromSource) || (r._existingLocs && r._existingLocs.size > 0));
       if (modsWithExisting.length > 0) {
-        const totalExisting = modsWithExisting.reduce((s, r) => s + r._existingLocs.size, 0);
+        const totalExisting = modsWithExisting.reduce((s, r) => {
+          const fromSrc = r.newLocalizations.filter(l => l._fromSource).length;
+          return s + (fromSrc > 0 ? fromSrc : (r._existingLocs?.size || 0));
+        }, 0);
         addAiLog('info', `Reviewing ${totalExisting} existing localizations for quality...`);
         aiEnhanceState.phase = 'Reviewing';
         aiEnhanceState.processed = 0;
@@ -1847,9 +1854,14 @@ async function aiEnhance(resultsList) {
         for (let i = 0; i < resultsList.length; i++) {
           if (aiEnhanceCancelled) break;
           const r = resultsList[i];
-          if (!r._existingLocs || r._existingLocs.size === 0) continue;
+          const fromSourceLocs = r.newLocalizations.filter(l => l._fromSource && l.message && l.message.trim());
+          const existingArr = fromSourceLocs.length > 0
+            ? fromSourceLocs.map(l => ({ code: l.code, message: l.message }))
+            : (r._existingLocs && r._existingLocs.size > 0)
+              ? [...r._existingLocs.entries()].filter(([, m]) => m && m.trim()).map(([code, message]) => ({ code, message }))
+              : [];
+          if (existingArr.length === 0) continue;
           reviewModIdx++;
-          const existingArr = [...r._existingLocs.entries()].filter(([, m]) => m && m.trim()).map(([code, message]) => ({ code, message }));
           const totalBatches = Math.ceil(existingArr.length / REVIEW_BATCH);
           aiEnhanceState.moduleName = r.report.moduleName;
           aiEnhanceState.currentModIdx = reviewModIdx;
@@ -2334,6 +2346,9 @@ async function migrateFetch() {
         const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, srcLocale, srcToken);
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
       } catch (e) { console.warn(`Loc search skipped for ${srcLocModule}:`, e.message); }
+      if (existingLocCodes.size === 0) {
+        console.warn(`No source locs found for module "${srcLocModule}" - all codes will get generated messages`);
+      }
 
       // Also fetch hcm-appconfiguration locs to avoid regenerating existing codes
       const appConfigLocs = await fetchAppConfigLocs(src.url, src.tenant, srcLocale, srcToken);
@@ -2350,6 +2365,17 @@ async function migrateFetch() {
       result._isUpdate = tgtMap.has(rec.data.name);
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
       for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
+      // Merge source locs into newLocalizations so they are visible in the UI
+      const newCodes = new Set(result.newLocalizations.map(l => l.code));
+      const sourceLocs = [];
+      for (const [code, message] of existingLocCodes) {
+        if (!newCodes.has(code)) {
+          const loc = { code, message, module: tgtLocModule, locale: tgtLocale, _fromSource: true };
+          if (result._appConfigCodes && result._appConfigCodes.has(code)) loc._appConfig = true;
+          sourceLocs.push(loc);
+        }
+      }
+      result.newLocalizations = [...sourceLocs, ...result.newLocalizations];
       results.push(result);
     }
 
@@ -2467,7 +2493,7 @@ async function pushAllToTarget() {
   const total = results.length;
   const createCount = results.filter(r => !r._isUpdate).length;
   const updateCount = results.filter(r => r._isUpdate).length;
-  const locCount = results.reduce((s,r) => s + r.newLocalizations.length + (r._existingLocs?.size || 0), 0);
+  const locCount = results.reduce((s,r) => s + r.newLocalizations.length, 0);
   const transCount = translatedLocales.size;
 
   const selection = await showPushSelectionDialog({
@@ -2511,16 +2537,10 @@ async function pushAllToTarget() {
       const tgtLocModule = r._tgtLocModule;
       const allLocsRaw = [];
 
-      // Include existing source locs
-      if (r._existingLocs) {
-        for (const [code, message] of r._existingLocs) {
-          allLocsRaw.push({ code, message, module: tgtLocModule, locale: tgtLocale });
-        }
-      }
-      // Include new locs (new locs win over existing if same code)
+      // Include all locs (source + new) from newLocalizations
       // appConfig codes go to both the regular module and hcm-appconfiguration
       for (const loc of r.newLocalizations) {
-        allLocsRaw.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale });
+        allLocsRaw.push({ code: loc.code, message: loc.message, module: loc.module || tgtLocModule, locale: tgtLocale });
         if (loc._appConfig) allLocsRaw.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: tgtLocale });
       }
       const allLocs = dedupByCode(allLocsRaw);
@@ -2956,8 +2976,9 @@ function downloadLocSheet() {
     if (!moduleMap.has(locModule)) moduleMap.set(locModule, []);
     const arr = moduleMap.get(locModule);
 
-    // Existing locs
-    if (r._existingLocs) {
+    // Existing locs (skip if already merged into newLocalizations as _fromSource)
+    const hasSourceInNew = r.newLocalizations.some(l => l._fromSource);
+    if (r._existingLocs && !hasSourceInNew) {
       for (const [code, message] of r._existingLocs) {
         arr.push({ code, message, module: locModule, locale });
       }
@@ -3443,8 +3464,9 @@ function showFileTranslateDialog() {
 function collectEnglishMessages() {
   const deduped = new Map();
   for (const r of results) {
-    // Include existing locs if available
-    if (r._existingLocs) {
+    // Include existing locs if available (skip if already merged into newLocalizations as _fromSource)
+    const hasSourceInNew = r.newLocalizations.some(l => l._fromSource);
+    if (r._existingLocs && !hasSourceInNew) {
       for (const [code, message] of r._existingLocs) {
         if (!deduped.has(code)) deduped.set(code, { code, message, _appConfig: false });
       }
@@ -3875,7 +3897,7 @@ function renderLocTable(idx, filterText) {
       html += `<td class="loc-type">${esc(l.module || '')}</td>`;
       html += `<td class="loc-type">${esc(l.locale || '')}</td>`;
     }
-    html += `<td class="loc-type">${l.fieldType || ''}</td>`;
+    html += `<td class="loc-type">${l._fromSource ? '<span class="loc-source-badge">SOURCE</span>' : (l.fieldType || '')}</td>`;
     html += `<td><button class="loc-del-btn" onclick="deleteLocMsg(${idx},${i})" title="Delete localization">x</button></td>`;
     html += '</tr>';
   }
