@@ -272,6 +272,34 @@ input[type="file"] { display: none; }
 /* ─── Push Options ─── */
 .push-options label { display: block; padding: 6px 0; font-size: 14px; cursor: pointer; }
 .push-options input[type="checkbox"] { margin-right: 8px; }
+
+/* ─── JSON tree delete/add buttons ─── */
+.jt-del { opacity:0; color:var(--red); cursor:pointer; font-size:10px; margin-left:6px; user-select:none; font-weight:bold; }
+.jt-line:hover > .jt-val .jt-del, .jt-line:hover > .jt-del { opacity:.6; }
+.jt-del:hover { opacity:1 !important; }
+.jt-add { opacity:0; color:var(--green); cursor:pointer; font-size:10px; margin-left:6px; user-select:none; font-weight:bold; }
+.jt-line:hover .jt-add, .jt-close-line:hover .jt-add { opacity:.6; }
+.jt-add:hover { opacity:1 !important; }
+.jt-inline-add { display:inline-flex; align-items:center; gap:4px; margin-left:8px; }
+.jt-inline-add input { background:var(--surface2); border:1px solid var(--overlay); color:var(--text); padding:2px 6px; border-radius:3px; font-size:11px; font-family:inherit; width:120px; }
+.jt-inline-add input:focus { outline:none; border-color:var(--blue); }
+.jt-inline-add select { background:var(--surface2); border:1px solid var(--overlay); color:var(--text); padding:2px 4px; border-radius:3px; font-size:11px; cursor:pointer; }
+.jt-inline-add button { background:var(--surface2); border:1px solid var(--overlay); color:var(--text); padding:2px 8px; border-radius:3px; font-size:11px; cursor:pointer; }
+.jt-inline-add button:hover { background:var(--overlay); }
+
+/* ─── Loc table improvements ─── */
+.loc-toolbar { display:flex; gap:8px; align-items:center; margin-bottom:8px; padding:4px 0; flex-wrap:wrap; }
+.loc-search { flex:1; max-width:300px; background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:13px; font-family:inherit; }
+.loc-search:focus { outline:none; border-color:var(--blue); }
+.loc-count { font-size:12px; color:var(--subtext); margin-left:auto; }
+.loc-add-row td { padding:6px 8px; }
+.loc-add-row input { border:1px solid var(--overlay); background:var(--surface0, var(--surface2)); color:var(--text); padding:4px 8px; border-radius:4px; font-size:12px; font-family:inherit; width:100%; }
+.loc-add-row input:focus { outline:none; border-color:var(--blue); }
+.loc-add-row input.error { border-color:var(--red); }
+.loc-add-error { color:var(--red); font-size:11px; padding:2px 8px; }
+.loc-del-btn { background:none; border:none; color:var(--red); cursor:pointer; opacity:.5; font-size:14px; padding:2px 6px; line-height:1; }
+.loc-del-btn:hover { opacity:1; }
+.loc-add-actions { display:flex; gap:4px; }
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -823,13 +851,18 @@ function renderJsonTree(data, editable) {
     const keyHtml = displayKey !== null ? `<span class="jt-k">"${esc(String(displayKey))}"</span>: ` : '';
 
     if (val === null) {
+      if (editable && parentObj) {
+        const did = nodeId++;
+        _jtNodeData.set(did, {_delParent: parentObj, _delKey: dataKey});
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-nl">null</span>${comma}<span class="jt-del" onclick="jtDelete(${did},null,this)" title="Delete">x</span></span></div>`;
+      }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-nl">null</span>${comma}</span></div>`;
     }
     if (typeof val === 'boolean') {
       if (editable && parentObj) {
         const lid = nodeId++;
         _jtLeafData[lid] = {parent: parentObj, key: dataKey, type: 'boolean'};
-        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-b jt-editable jt-toggle" data-jte="${lid}" onclick="jtToggleBool(this)">${val}</span>${comma}</span></div>`;
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-b jt-editable jt-toggle" data-jte="${lid}" onclick="jtToggleBool(this)">${val}</span>${comma}<span class="jt-del" onclick="jtDelete(${lid},null,this)" title="Delete">x</span></span></div>`;
       }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-b">${val}</span>${comma}</span></div>`;
     }
@@ -837,7 +870,7 @@ function renderJsonTree(data, editable) {
       if (editable && parentObj) {
         const lid = nodeId++;
         _jtLeafData[lid] = {parent: parentObj, key: dataKey, type: 'number'};
-        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-n"><span contenteditable="true" data-jte="${lid}" class="jt-editable">${val}</span></span>${comma}</span></div>`;
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-n"><span contenteditable="true" data-jte="${lid}" class="jt-editable">${val}</span></span>${comma}<span class="jt-del" onclick="jtDelete(${lid},null,this)" title="Delete">x</span></span></div>`;
       }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-n">${val}</span>${comma}</span></div>`;
     }
@@ -845,7 +878,7 @@ function renderJsonTree(data, editable) {
       if (editable && parentObj) {
         const lid = nodeId++;
         _jtLeafData[lid] = {parent: parentObj, key: dataKey, type: 'string'};
-        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-s">"<span contenteditable="true" data-jte="${lid}" class="jt-editable">${esc(val)}</span>"</span>${comma}</span></div>`;
+        return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-s">"<span contenteditable="true" data-jte="${lid}" class="jt-editable">${esc(val)}</span>"</span>${comma}<span class="jt-del" onclick="jtDelete(${lid},null,this)" title="Delete">x</span></span></div>`;
       }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-s">"${esc(val)}"</span>${comma}</span></div>`;
     }
@@ -856,6 +889,18 @@ function renderJsonTree(data, editable) {
     const entries = isArr ? val : Object.keys(val);
 
     if (entries.length === 0) {
+      if (editable) {
+        const nid = nodeId++;
+        _jtNodeData.set(nid, val);
+        let emptyHtml = `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-br">${open}${close}</span>${comma}`;
+        emptyHtml += `<span class="jt-add" onclick="jtShowAdd(${nid},${isArr},this)" title="Add">+</span>`;
+        if (parentObj) {
+          emptyHtml += `<span class="jt-del" onclick="jtDelete(${nid},null,this)" title="Delete">x</span>`;
+          _jtNodeData.set(nid, {_delParent: parentObj, _delKey: dataKey, _container: val, _isArr: isArr});
+        }
+        emptyHtml += `</span></div>`;
+        return emptyHtml;
+      }
       return `<div class="jt-line">${pad}<span class="jt-tog leaf"></span><span class="jt-val">${keyHtml}<span class="jt-br">${open}${close}</span>${comma}</span></div>`;
     }
 
@@ -878,6 +923,11 @@ function renderJsonTree(data, editable) {
     html += `<span class="jt-val">${keyHtml}<span class="jt-br">${open}</span>`;
     html += `<span class="jt-preview" style="display:none"> ${esc(preview)} ${close}</span>`;
     html += `<span class="jt-cp" onclick="jtCopy(${nid},this)">copy</span>`;
+    if (editable && parentObj) {
+      const delNid = nodeId++;
+      _jtNodeData.set(delNid, {_delParent: parentObj, _delKey: dataKey});
+      html += `<span class="jt-del" onclick="jtDelete(${delNid},null,this)" title="Delete">x</span>`;
+    }
     html += `</span></div>`;
 
     html += `<div class="jt-children">`;
@@ -896,7 +946,11 @@ function renderJsonTree(data, editable) {
     html += `<div class="jt-line jt-close-line">`;
     html += `<span class="jt-indent" style="width:${indent * 16}px;display:inline-block"></span>`;
     html += `<span class="jt-tog leaf"></span>`;
-    html += `<span class="jt-val"><span class="jt-br">${close}</span>${comma}</span>`;
+    html += `<span class="jt-val"><span class="jt-br">${close}</span>${comma}`;
+    if (editable) {
+      html += `<span class="jt-add" onclick="jtShowAdd(${nid},${isArr},this)" title="Add ${isArr ? 'item' : 'property'}">+</span>`;
+    }
+    html += `</span>`;
     html += `</div>`;
 
     html += `</div>`;
@@ -930,6 +984,132 @@ function jtCopy(nid, el) {
 
 function jtToggleBool(el) {
   el.textContent = el.textContent.trim() === 'true' ? 'false' : 'true';
+}
+
+function jtDelete(nid, unused, el) {
+  // Determine parent and key from _jtLeafData or _jtNodeData
+  let parent, key;
+  const leaf = _jtLeafData[nid];
+  if (leaf && leaf.parent) {
+    parent = leaf.parent;
+    key = leaf.key;
+  } else {
+    const nd = _jtNodeData.get(nid);
+    if (nd && nd._delParent) {
+      parent = nd._delParent;
+      key = nd._delKey;
+    } else if (nd && !nd._delParent) {
+      // nid points to the actual container (array/object) — need to find its parent
+      // This case shouldn't happen for delete since we always store _delParent
+      return;
+    } else {
+      return;
+    }
+  }
+  if (Array.isArray(parent)) {
+    parent.splice(typeof key === 'number' ? key : parseInt(key), 1);
+  } else {
+    delete parent[key];
+  }
+  // Re-render the tree in edit mode
+  const wrap = document.getElementById('jsonTreeWrap');
+  if (wrap) {
+    wrap.innerHTML = renderJsonTree(results[activeModuleIdx].correctedData, true);
+  }
+}
+
+function jtShowAdd(nid, isArr, el) {
+  // Remove any existing inline add forms
+  document.querySelectorAll('.jt-inline-add').forEach(e => e.remove());
+
+  const container = _jtNodeData.get(nid);
+  // For empty containers stored with metadata wrapper, extract actual container
+  let target = container;
+  if (container && container._container) {
+    target = container._container;
+  }
+  if (!target) return;
+
+  const span = document.createElement('span');
+  span.className = 'jt-inline-add';
+
+  if (isArr) {
+    span.innerHTML = `
+      <select class="jt-add-type">
+        <option value="string">String</option>
+        <option value="number">Number</option>
+        <option value="boolean">Boolean</option>
+        <option value="object">Object {}</option>
+        <option value="array">Array []</option>
+      </select>
+      <button onclick="jtAddItem(${nid},${isArr},this)">Add</button>
+      <button onclick="this.closest('.jt-inline-add').remove()">Cancel</button>`;
+  } else {
+    span.innerHTML = `
+      <input type="text" placeholder="Property name" class="jt-add-key" onkeydown="if(event.key==='Enter')jtAddProp(${nid},this)">
+      <select class="jt-add-type">
+        <option value="string">String</option>
+        <option value="number">Number</option>
+        <option value="boolean">Boolean</option>
+        <option value="object">Object {}</option>
+        <option value="array">Array []</option>
+      </select>
+      <button onclick="jtAddProp(${nid},this)">Add</button>
+      <button onclick="this.closest('.jt-inline-add').remove()">Cancel</button>`;
+  }
+
+  el.closest('.jt-line').appendChild(span);
+  const input = span.querySelector('input');
+  if (input) input.focus();
+}
+
+function jtAddItem(nid, isArr, btnEl) {
+  const container = _jtNodeData.get(nid);
+  let target = container;
+  if (container && container._container) target = container._container;
+  if (!target || !Array.isArray(target)) return;
+
+  const typeSelect = btnEl.closest('.jt-inline-add').querySelector('.jt-add-type');
+  const type = typeSelect.value;
+  let val;
+  switch (type) {
+    case 'string': val = ''; break;
+    case 'number': val = 0; break;
+    case 'boolean': val = false; break;
+    case 'object': val = {}; break;
+    case 'array': val = []; break;
+    default: val = '';
+  }
+  target.push(val);
+  const wrap = document.getElementById('jsonTreeWrap');
+  if (wrap) wrap.innerHTML = renderJsonTree(results[activeModuleIdx].correctedData, true);
+}
+
+function jtAddProp(nid, el) {
+  const container = _jtNodeData.get(nid);
+  let target = container;
+  if (container && container._container) target = container._container;
+  if (!target || Array.isArray(target)) return;
+
+  const form = el.closest('.jt-inline-add');
+  const keyInput = form.querySelector('.jt-add-key');
+  const typeSelect = form.querySelector('.jt-add-type');
+  const key = keyInput.value.trim();
+  if (!key) { keyInput.style.borderColor = 'var(--red)'; return; }
+
+  const type = typeSelect.value;
+  let val;
+  switch (type) {
+    case 'string': val = ''; break;
+    case 'number': val = 0; break;
+    case 'boolean': val = false; break;
+    case 'object': val = {}; break;
+    case 'array': val = []; break;
+    default: val = '';
+  }
+  target[key] = val;
+  const wrap = document.getElementById('jsonTreeWrap');
+  if (wrap) wrap.innerHTML = renderJsonTree(results[activeModuleIdx].correctedData, true);
 }
 
 function jsonDiffFixes(a, b, path) {
@@ -3611,25 +3791,14 @@ function renderModule(idx) {
   html += `</div>
 
     <!-- Localizations -->
-    <div class="tab-panel" id="tp-locs">`;
-  if (newLocalizations.length === 0) {
-    html += `<p style="color:var(--teal);padding:20px 0">All localization codes already have messages.</p>`;
-  } else {
-    const hasModule = newLocalizations.some(l => l.module);
-    if (hasModule) {
-      html += `<table class="loc-table"><thead><tr><th style="width:25%">Code</th><th style="width:30%">Message</th><th style="width:20%">Module</th><th style="width:15%">Locale</th><th style="width:10%">Type</th></tr></thead><tbody>`;
-      newLocalizations.forEach((l, li) => {
-        html += `<tr><td class="loc-code">${esc(l.code)}</td><td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${li},this.value)"></td><td class="loc-type">${esc(l.module || '')}</td><td class="loc-type">${esc(l.locale || '')}</td><td class="loc-type">${l.fieldType || ''}</td></tr>`;
-      });
-    } else {
-      html += `<table class="loc-table"><thead><tr><th style="width:40%">Code</th><th style="width:45%">Message</th><th style="width:15%">Type</th></tr></thead><tbody>`;
-      newLocalizations.forEach((l, li) => {
-        html += `<tr><td class="loc-code">${esc(l.code)}</td><td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${li},this.value)"></td><td class="loc-type">${l.fieldType || ''}</td></tr>`;
-      });
-    }
-    html += `</tbody></table>`;
-  }
-  html += `</div>
+    <div class="tab-panel" id="tp-locs">
+      <div class="loc-toolbar">
+        <input type="text" class="loc-search" placeholder="Search by code or message..." oninput="filterLocs(${idx}, this.value)">
+        <button class="btn btn-sm btn-green" onclick="addLocRow(${idx})">+ Add Localization</button>
+        <span class="loc-count" id="locCount">${newLocalizations.length} localization${newLocalizations.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div id="locTableWrap">${renderLocTable(idx)}</div>
+    </div>
 
     <!-- Diff -->
     <div class="tab-panel" id="tp-diff">
@@ -3671,6 +3840,220 @@ function renderModule(idx) {
 }
 
 function updateLocMsg(idx, locIdx, val) { results[idx].newLocalizations[locIdx].message = val; }
+
+let _locSearchFilter = '';
+
+function renderLocTable(idx, filterText) {
+  const r = results[idx];
+  const locs = r.newLocalizations;
+  const filter = (filterText || _locSearchFilter || '').toLowerCase();
+  const filtered = filter
+    ? locs.map((l, i) => ({l, i})).filter(({l}) => l.code.toLowerCase().includes(filter) || l.message.toLowerCase().includes(filter))
+    : locs.map((l, i) => ({l, i}));
+
+  if (locs.length === 0 && !filter) {
+    return `<p style="color:var(--teal);padding:20px 0">No localizations. Click "+ Add Localization" to create one.</p>`;
+  }
+  if (filtered.length === 0 && filter) {
+    return `<p style="color:var(--subtext);padding:20px 0">No localizations matching "${esc(filter)}".</p>`;
+  }
+
+  const hasModule = locs.some(l => l.module);
+  let html = '<table class="loc-table"><thead><tr>';
+  if (hasModule) {
+    html += '<th style="width:22%">Code</th><th style="width:28%">Message</th><th style="width:17%">Module</th><th style="width:13%">Locale</th><th style="width:10%">Type</th><th style="width:10%"></th>';
+  } else {
+    html += '<th style="width:35%">Code</th><th style="width:40%">Message</th><th style="width:15%">Type</th><th style="width:10%"></th>';
+  }
+  html += '</tr></thead><tbody id="locTbody">';
+
+  for (const {l, i} of filtered) {
+    html += '<tr>';
+    html += `<td class="loc-code">${esc(l.code)}</td>`;
+    html += `<td class="loc-msg"><input value="${esc(l.message)}" onchange="updateLocMsg(${idx},${i},this.value)"></td>`;
+    if (hasModule) {
+      html += `<td class="loc-type">${esc(l.module || '')}</td>`;
+      html += `<td class="loc-type">${esc(l.locale || '')}</td>`;
+    }
+    html += `<td class="loc-type">${l.fieldType || ''}</td>`;
+    html += `<td><button class="loc-del-btn" onclick="deleteLocMsg(${idx},${i})" title="Delete localization">x</button></td>`;
+    html += '</tr>';
+  }
+
+  html += '</tbody></table>';
+
+  // Update count display
+  const countEl = document.getElementById('locCount');
+  if (countEl) {
+    if (filter) {
+      countEl.textContent = `Showing ${filtered.length} of ${locs.length}`;
+    } else {
+      countEl.textContent = `${locs.length} localization${locs.length !== 1 ? 's' : ''}`;
+    }
+  }
+
+  return html;
+}
+
+function filterLocs(idx, searchText) {
+  _locSearchFilter = searchText;
+  const wrap = document.getElementById('locTableWrap');
+  if (wrap) wrap.innerHTML = renderLocTable(idx, searchText);
+}
+
+function deleteLocMsg(idx, locIdx) {
+  results[idx].newLocalizations.splice(locIdx, 1);
+  // Re-render loc table
+  const wrap = document.getElementById('locTableWrap');
+  if (wrap) wrap.innerHTML = renderLocTable(idx);
+  // Update tab badge
+  updateLocTabBadge(idx);
+}
+
+function updateLocTabBadge(idx) {
+  const count = results[idx].newLocalizations.length;
+  const tab = document.querySelector('#modTabs .tab[data-t="locs"]');
+  if (tab) tab.textContent = `Localizations (${count})`;
+  // Update sidebar badge too
+  const li = document.querySelector(`.module-item[data-idx="${idx}"]`);
+  if (li) {
+    const badge = li.querySelector('.badge');
+    const fixes = results[idx].report.fixes.length;
+    if (badge) {
+      if (fixes > 0) {
+        badge.className = 'badge badge-fix';
+        badge.textContent = `${fixes} fixes`;
+      } else if (count > 0) {
+        badge.className = 'badge badge-loc';
+        badge.textContent = `${count} locs`;
+      } else {
+        badge.className = 'badge badge-clean';
+        badge.textContent = 'Clean';
+      }
+    }
+  }
+}
+
+function addLocRow(idx) {
+  // Remove any existing add row
+  cancelAddLoc();
+  const tbody = document.getElementById('locTbody');
+  if (!tbody) {
+    // Table may not exist if empty — re-render with a placeholder table first
+    const wrap = document.getElementById('locTableWrap');
+    const hasModule = results[idx].newLocalizations.some(l => l.module) || activeMode !== 'file';
+    let html = '<table class="loc-table"><thead><tr>';
+    if (hasModule) {
+      html += '<th style="width:22%">Code</th><th style="width:28%">Message</th><th style="width:17%">Module</th><th style="width:13%">Locale</th><th style="width:10%">Type</th><th style="width:10%"></th>';
+    } else {
+      html += '<th style="width:35%">Code</th><th style="width:40%">Message</th><th style="width:15%">Type</th><th style="width:10%"></th>';
+    }
+    html += '</tr></thead><tbody id="locTbody"></tbody></table>';
+    if (wrap) wrap.innerHTML = html;
+  }
+
+  const tb = document.getElementById('locTbody');
+  if (!tb) return;
+
+  const hasModule = results[idx].newLocalizations.some(l => l.module) || activeMode !== 'file';
+  const defaultModule = (activeMode === 'online' || activeMode === 'migrate') ? (results[idx].newLocalizations[0]?.module || results[idx].report.moduleName || '') : '';
+  const defaultLocale = (activeMode === 'online') ? (onlineLocale || '') : (activeMode === 'migrate') ? (results[idx].newLocalizations[0]?.locale || '') : '';
+
+  const tr = document.createElement('tr');
+  tr.className = 'loc-add-row';
+  tr.id = 'locAddFormRow';
+
+  let cells = `<td><input type="text" id="locAddCode" placeholder="LOC_CODE_HERE"></td>`;
+  cells += `<td><input type="text" id="locAddMsg" placeholder="Localization message"></td>`;
+  if (hasModule) {
+    cells += `<td><input type="text" id="locAddModule" value="${esc(defaultModule)}" placeholder="Module"></td>`;
+    cells += `<td><input type="text" id="locAddLocale" value="${esc(defaultLocale)}" placeholder="Locale"></td>`;
+  }
+  cells += `<td></td>`; // type column (empty for add row)
+  cells += `<td class="loc-add-actions"><button class="btn btn-sm btn-green" onclick="saveNewLoc(${idx})">Save</button><button class="btn btn-sm" onclick="cancelAddLoc()">Cancel</button></td>`;
+  tr.innerHTML = cells;
+
+  tb.insertBefore(tr, tb.firstChild);
+  document.getElementById('locAddCode')?.focus();
+}
+
+function saveNewLoc(idx) {
+  const codeEl = document.getElementById('locAddCode');
+  const msgEl = document.getElementById('locAddMsg');
+  const moduleEl = document.getElementById('locAddModule');
+  const localeEl = document.getElementById('locAddLocale');
+
+  // Clear errors
+  [codeEl, msgEl, moduleEl, localeEl].forEach(el => { if (el) el.classList.remove('error'); });
+  const existingErr = document.querySelector('.loc-add-error');
+  if (existingErr) existingErr.remove();
+
+  let hasError = false;
+  let errorMsg = '';
+
+  const code = codeEl ? codeEl.value.trim() : '';
+  const message = msgEl ? msgEl.value : '';
+
+  // Validate code: required, no spaces, uppercase with underscores
+  if (!code) {
+    codeEl.classList.add('error');
+    hasError = true;
+    errorMsg = 'Code is required.';
+  } else if (/\s/.test(code)) {
+    codeEl.classList.add('error');
+    hasError = true;
+    errorMsg = 'Code must not contain spaces.';
+  }
+
+  // Validate message: required, can be " " but not ""
+  if (!message && message !== ' ') {
+    if (msgEl) msgEl.classList.add('error');
+    hasError = true;
+    errorMsg = errorMsg || 'Message is required.';
+  }
+
+  // Validate module/locale for online/migrate modes
+  if (moduleEl && !moduleEl.value.trim() && activeMode !== 'file') {
+    moduleEl.classList.add('error');
+    hasError = true;
+    errorMsg = errorMsg || 'Module is required.';
+  }
+  if (localeEl && !localeEl.value.trim() && activeMode !== 'file') {
+    localeEl.classList.add('error');
+    hasError = true;
+    errorMsg = errorMsg || 'Locale is required.';
+  }
+
+  if (hasError) {
+    const errDiv = document.createElement('div');
+    errDiv.className = 'loc-add-error';
+    errDiv.textContent = errorMsg;
+    const formRow = document.getElementById('locAddFormRow');
+    if (formRow) formRow.parentNode.insertBefore(errDiv, formRow.nextSibling);
+    return;
+  }
+
+  const entry = {
+    code: code.toUpperCase(),
+    message: message
+  };
+  if (moduleEl) entry.module = moduleEl.value.trim();
+  if (localeEl) entry.locale = localeEl.value.trim();
+
+  results[idx].newLocalizations.push(entry);
+
+  // Re-render
+  const wrap = document.getElementById('locTableWrap');
+  if (wrap) wrap.innerHTML = renderLocTable(idx);
+  updateLocTabBadge(idx);
+}
+
+function cancelAddLoc() {
+  const row = document.getElementById('locAddFormRow');
+  if (row) row.remove();
+  const err = document.querySelector('.loc-add-error');
+  if (err) err.remove();
+}
 
 function copyModJson(idx) {
   navigator.clipboard.writeText(JSON.stringify(results[idx].correctedData, null, 2));
