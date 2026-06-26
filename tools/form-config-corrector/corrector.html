@@ -1544,6 +1544,26 @@ function buildConfigSummary(result) {
   return summary;
 }
 
+async function fetchWithRetry(url, opts, maxRetries = 2) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const resp = await fetch(url, opts);
+      const data = await resp.json();
+      if (!resp.ok && attempt < maxRetries) {
+        addAiLog('warn', `Attempt ${attempt + 1} failed (${resp.status}), retrying...`);
+        await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+        continue;
+      }
+      return data;
+    } catch (e) {
+      if (attempt < maxRetries) {
+        addAiLog('warn', `Attempt ${attempt + 1} failed: ${e.message}, retrying...`);
+        await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+      } else { throw e; }
+    }
+  }
+}
+
 async function aiEnhance(resultsList) {
   if (!claudeAvailable) return;
   const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.length, 0);
@@ -1596,11 +1616,10 @@ async function aiEnhance(resultsList) {
             configSummary: buildConfigSummary(r),
             existingLocs: r._existingLocs ? Object.fromEntries([...r._existingLocs].slice(0, 100)) : null,
           };
-          const resp = await fetch('/api/enhance', {
+          const data = await fetchWithRetry('/api/enhance', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(enhanceBody),
           });
-          const data = await resp.json();
           let improved = 0;
           if (data.improved) {
             for (const loc of batch) {
@@ -1657,7 +1676,7 @@ async function aiEnhance(resultsList) {
             renderAiPanel();
             await tick();
             try {
-              const resp = await fetch('/api/review-locs', {
+              const data = await fetchWithRetry('/api/review-locs', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   existingCodes: batch,
@@ -1665,7 +1684,6 @@ async function aiEnhance(resultsList) {
                   configSummary: buildConfigSummary(r),
                 }),
               });
-              const data = await resp.json();
               let batchImproved = 0;
               if (data.improved && Object.keys(data.improved).length > 0) {
                 for (const [code, message] of Object.entries(data.improved)) {
