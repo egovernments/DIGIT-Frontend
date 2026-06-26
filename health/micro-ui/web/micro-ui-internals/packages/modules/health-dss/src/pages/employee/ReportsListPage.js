@@ -87,9 +87,9 @@ const ReportsListPage = () => {
             onClick={() => handleReportClick(report.code)}
           >
             <div className="digit-reports-list__row">
-              {/* <div className="digit-reports-list__row-icon">
+              <div className="digit-reports-list__row-icon">
                 <SVG.Description height="24" width="24" fill={"#C84C0E"} />
-              </div> */}
+              </div>
               <div className="digit-reports-list__row-content">
                 <div className="digit-reports-list__row-title">{t(report.label)}</div>
                 <div className="digit-reports-list__row-desc">{t(report.description)}</div>

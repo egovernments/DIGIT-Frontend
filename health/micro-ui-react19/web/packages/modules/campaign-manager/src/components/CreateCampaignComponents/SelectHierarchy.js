@@ -108,12 +108,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
     if (isSameHierarchy(selected, value)) return;
     const stored = Digit.SessionStorage.get("HCM_CAMPAIGN_SELECTED_HIERARCHY");
     const isHierarchyChanged = stored && !isSameHierarchy(stored, value);
-    // const hasData = hasDependentData() || !!formData?.SelectHierarchy?.hierarchy;
-    // if (isHierarchyChanged && hasData) {
-    //   setPendingSelection(value);
-    //   setShowConfirmPopup(true);
-    // }
-    if (isHierarchyChanged && hasDependentData()) {
+    const hasData = hasDependentData() || !!(formData?.SelectHierarchy?.hasBoundaryData);
+    if (isHierarchyChanged && hasData) {
       setPendingSelection(value);
       setShowConfirmPopup(true);
     } else {
