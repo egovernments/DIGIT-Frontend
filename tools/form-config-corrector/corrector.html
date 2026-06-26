@@ -1554,6 +1554,7 @@ async function aiEnhance(resultsList) {
   aiEnhanceCancelled = false;
   aiEnhanceState = {
     active: true, minimized: false,
+    phase: 'Enhancing',
     moduleName: '', batch: 0, totalBatches: 0,
     processed: 0, total: totalMessages,
     currentModIdx: 0, totalMods: modsWithLocs,
@@ -1624,18 +1625,37 @@ async function aiEnhance(resultsList) {
     if (!aiEnhanceCancelled) {
       const modsWithExisting = resultsList.filter(r => r._existingLocs && r._existingLocs.size > 0);
       if (modsWithExisting.length > 0) {
-        addAiLog('info', `Reviewing existing localizations for quality...`);
+        const totalExisting = modsWithExisting.reduce((s, r) => s + r._existingLocs.size, 0);
+        addAiLog('info', `Reviewing ${totalExisting} existing localizations for quality...`);
+        aiEnhanceState.phase = 'Reviewing';
+        aiEnhanceState.processed = 0;
+        aiEnhanceState.total = totalExisting;
+        aiEnhanceState.currentModIdx = 0;
+        aiEnhanceState.totalMods = modsWithExisting.length;
+        aiEnhanceState.batch = 0;
+        aiEnhanceState.totalBatches = 0;
+        renderAiPanel();
         const REVIEW_BATCH = 50;
+        let reviewModIdx = 0;
+        let reviewProcessed = 0;
         for (let i = 0; i < resultsList.length; i++) {
           if (aiEnhanceCancelled) break;
           const r = resultsList[i];
           if (!r._existingLocs || r._existingLocs.size === 0) continue;
+          reviewModIdx++;
           const existingArr = [...r._existingLocs.entries()].map(([code, message]) => ({ code, message }));
-          aiEnhanceState.moduleName = r.report.moduleName + ' (review)';
+          const totalBatches = Math.ceil(existingArr.length / REVIEW_BATCH);
+          aiEnhanceState.moduleName = r.report.moduleName;
+          aiEnhanceState.currentModIdx = reviewModIdx;
+          aiEnhanceState.totalBatches = totalBatches;
           renderAiPanel();
-          for (let b = 0; b < existingArr.length; b += REVIEW_BATCH) {
+          for (let b = 0, batchNum = 1; b < existingArr.length; b += REVIEW_BATCH, batchNum++) {
             if (aiEnhanceCancelled) break;
             const batch = existingArr.slice(b, b + REVIEW_BATCH);
+            aiEnhanceState.batch = batchNum;
+            aiEnhanceState.processed = reviewProcessed;
+            renderAiPanel();
+            await tick();
             try {
               const resp = await fetch('/api/review-locs', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1646,6 +1666,7 @@ async function aiEnhance(resultsList) {
                 }),
               });
               const data = await resp.json();
+              let batchImproved = 0;
               if (data.improved && Object.keys(data.improved).length > 0) {
                 for (const [code, message] of Object.entries(data.improved)) {
                   const already = r.newLocalizations.find(l => l.code === code);
@@ -1656,10 +1677,15 @@ async function aiEnhance(resultsList) {
                     r.newLocalizations.push(loc);
                   }
                   existingImproved++;
+                  batchImproved++;
                 }
                 refreshLocInputs(i);
               }
+              reviewProcessed += batch.length;
+              aiEnhanceState.processed = reviewProcessed;
+              addAiLog('info', `Review batch ${batchNum}/${totalBatches}: ${batchImproved} improved`);
             } catch (e) {
+              reviewProcessed += batch.length;
               addAiLog('error', `Review failed for ${r.report.moduleName}: ${e.message}`);
             }
           }
@@ -3050,7 +3076,7 @@ function renderAiPanel() {
   if (aiEnhanceState.minimized) {
     panel.innerHTML = `
       <div class="trans-pill" onclick="toggleAiMinimize()" style="border-color:var(--mauve)">
-        <span>AI Enhancing ${esc(aiEnhanceState.moduleName)}... ${pct}%</span>
+        <span>AI ${aiEnhanceState.phase || 'Enhancing'} ${esc(aiEnhanceState.moduleName)}... ${pct}%</span>
         <div class="trans-pill-bar"><div class="trans-pill-fill" style="width:${pct}%;background:var(--mauve)"></div></div>
       </div>`;
     return;
@@ -3064,7 +3090,7 @@ function renderAiPanel() {
   panel.innerHTML = `
     <div class="trans-expanded">
       <div class="trans-header">
-        <span style="color:var(--mauve)">AI Enhancement</span>
+        <span style="color:var(--mauve)">AI ${aiEnhanceState.phase || 'Enhancement'}</span>
         <div class="trans-header-btns">
           <button onclick="toggleAiMinimize()" title="Minimize">_</button>
           <button onclick="dismissAiPanel()" title="Close">&times;</button>
