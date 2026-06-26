@@ -529,8 +529,8 @@ function analyzeAndFix(configData, opts = {}) {
   // R4b: FORM screenType should not have body (body is only for TEMPLATE pages)
   if(autoFix&&data.flows){for(const fl of data.flows){if(fl.screenType==='FORM'&&fl.body){delete fl.body;report.fixes.push({rule:'form-has-body',flow:fl.name,path:fl.name,fixed:'Removed body from FORM flow'});}if(fl.pages){for(const pg of fl.pages){if(pg.screenType==='FORM'&&pg.body){delete pg.body;report.fixes.push({rule:'form-has-body',flow:fl.name,path:`${fl.name}/${pg.page||pg.name}`,fixed:'Removed body from FORM page'});}}}}}
 
-  // R4c: ensure every flow and page has an order field
-  if(autoFix&&data.flows){for(let fi=0;fi<data.flows.length;fi++){const fl=data.flows[fi];if(fl.order==null){fl.order=fi+1;report.fixes.push({rule:'missing-order',flow:fl.name,path:fl.name||`flow[${fi}]`,fixed:`order → ${fi+1}`});}if(fl.pages){for(let pi=0;pi<fl.pages.length;pi++){const pg=fl.pages[pi];if(pg.order==null){pg.order=pi+1;report.fixes.push({rule:'missing-order',flow:fl.name,path:`${fl.name}/${pg.page||pg.name||'page['+pi+']'}`,fixed:`order → ${pi+1}`});}}}}}
+  // R4c: ensure data, every flow and page has an order field
+  if(autoFix){if(data.order==null){data.order=1;report.fixes.push({rule:'missing-order',flow:'',path:'data',fixed:'order → 1'});}if(data.flows){for(let fi=0;fi<data.flows.length;fi++){const fl=data.flows[fi];if(fl.order==null){fl.order=fi+1;report.fixes.push({rule:'missing-order',flow:fl.name,path:fl.name||`flow[${fi}]`,fixed:`order → ${fi+1}`});}if(fl.pages){for(let pi=0;pi<fl.pages.length;pi++){const pg=fl.pages[pi];if(pg.order==null){pg.order=pi+1;report.fixes.push({rule:'missing-order',flow:fl.name,path:`${fl.name}/${pg.page||pg.name||'page['+pi+']'}`,fixed:`order → ${pi+1}`});}}}}}}
 
   // R5: actions
   const visited5 = new WeakSet();
