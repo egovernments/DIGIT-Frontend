@@ -261,6 +261,17 @@ input[type="file"] { display: none; }
 /* ─── File mode target env dialog ─── */
 .trans-env-dialog { padding: 16px; }
 .trans-env-dialog .form-group { margin-bottom: 8px; }
+
+/* ─── Translation Review ─── */
+.trans-review { margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.trans-review .tabs { margin-bottom: 12px; }
+.trans-review .loc-table th:nth-child(1) { width: 35%; }
+.trans-review .loc-table th:nth-child(2) { width: 30%; }
+.trans-review .loc-table th:nth-child(3) { width: 35%; }
+
+/* ─── Push Options ─── */
+.push-options label { display: block; padding: 6px 0; font-size: 14px; cursor: pointer; }
+.push-options input[type="checkbox"] { margin-right: 8px; }
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
@@ -595,6 +606,9 @@ let translationState = {
   logs: [], errors: [],
 };
 let fileTranslateEnv = null; // cached credentials for file mode
+let translatedLocales = new Map(); // locale -> [{code, message, module, _appConfig, _englishMsg}]
+let activeTransLocale = null; // currently viewed locale tab in translation review
+let translationEnvCtx = null; // {envUrl, token, tenant} — saved when translation starts, used for pushing
 
 // File push state
 let filePushEnv = null; // cached { url, user, pass, tenant, project, schema, campaign, contextPath, token, locale }
@@ -1050,6 +1064,45 @@ function showModuleSelector(records, tgtMap) {
       // Restore confirm box to default structure
       box.innerHTML = `<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>`;
       resolve(selected);
+    };
+  });
+}
+
+function showPushSelectionDialog({ targetUrl, configCount, createCount, updateCount, locCount, transCount, schema }) {
+  return new Promise(resolve => {
+    const box = document.querySelector('.confirm-box');
+    const overlay = $('#confirmOverlay');
+    const restoreBox = () => {
+      overlay.classList.add('hidden');
+      box.innerHTML = '<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>';
+    };
+
+    const hasConfigs = configCount > 0;
+    const hasLocs = locCount > 0;
+    const hasTrans = transCount > 0;
+
+    box.innerHTML = `
+      <h3 style="color:var(--yellow)">Push to Target</h3>
+      <p>Push to <code>${esc(targetUrl)}</code>${schema ? ` &middot; Schema: <code>${esc(schema)}</code>` : ''}</p>
+      <div class="push-options">
+        ${hasConfigs ? `<label><input type="checkbox" id="pushChkConfigs" checked> Form Configs (${configCount} modules${createCount !== undefined ? ` &mdash; ${createCount} create, ${updateCount} update` : ''})</label>` : ''}
+        ${hasLocs ? `<label><input type="checkbox" id="pushChkLocs" checked> English Localizations (~${locCount} messages)</label>` : ''}
+        ${hasTrans ? `<label><input type="checkbox" id="pushChkTrans" checked> Translations (${transCount} locale${transCount > 1 ? 's' : ''}, ${Array.from(translatedLocales.values()).reduce((s,m) => s + m.length, 0)} messages)</label>` : ''}
+      </div>
+      <div class="confirm-actions">
+        <button class="btn" id="psBtnCancel">Cancel</button>
+        <button class="btn btn-green" id="psBtnPush">Push Selected</button>
+      </div>`;
+    overlay.classList.remove('hidden');
+
+    box.querySelector('#psBtnCancel').onclick = () => { restoreBox(); resolve(null); };
+    box.querySelector('#psBtnPush').onclick = () => {
+      const configs = hasConfigs ? box.querySelector('#pushChkConfigs').checked : false;
+      const locs = hasLocs ? box.querySelector('#pushChkLocs').checked : false;
+      const translations = hasTrans ? box.querySelector('#pushChkTrans').checked : false;
+      if (!configs && !locs && !translations) { restoreBox(); resolve(null); return; }
+      restoreBox();
+      resolve({ configs, locs, translations });
     };
   });
 }
@@ -2059,13 +2112,12 @@ async function pushAllToTarget() {
   const createCount = results.filter(r => !r._isUpdate).length;
   const updateCount = results.filter(r => r._isUpdate).length;
   const locCount = results.reduce((s,r) => s + r.newLocalizations.length + (r._existingLocs?.size || 0), 0);
+  const transCount = translatedLocales.size;
 
-  const ok = await showConfirm('Push All to Target',
-    `Push <b>${total} modules</b> to <code>${esc(tgt.url)}</code><br>
-     Create: ${createCount}, Update: ${updateCount}<br>
-     Localizations: ~${locCount} messages<br><br>
-     Target schema: <code>${esc(tgt.schema)}</code>`);
-  if (!ok) return;
+  const selection = await showPushSelectionDialog({
+    targetUrl: tgt.url, configCount: total, createCount, updateCount, locCount, transCount, schema: tgt.schema
+  });
+  if (!selection) return;
 
   showLoader('Pushing to target...');
   let pushed = 0, locUpserted = 0, locErrors = 0, errors = 0;
@@ -2075,66 +2127,80 @@ async function pushAllToTarget() {
     showProgress(`${r._isUpdate ? 'Updating' : 'Creating'} ${r.report.moduleName}...`, `${i+1}/${total}`, ((i+1)/total)*80);
     await tick();
 
-    try {
-      if (r._isUpdate && r._tgtRecord) {
-        const updateRec = {
-          id: r._tgtRecord.id, tenantId: r._tgtRecord.tenantId, schemaCode: tgt.schema,
-          uniqueIdentifier: r._tgtRecord.uniqueIdentifier, data: r.correctedData, isActive: true,
-          auditDetails: r._tgtRecord.auditDetails || null,
-        };
-        await apiMdmsUpdate(tgt.url, tgt.schema, updateRec, tgtToken, tgtLocale, tgt.contextPath);
-      } else {
-        const createRec = {
-          tenantId: tgt.tenant, schemaCode: tgt.schema,
-          data: r.correctedData, isActive: true,
-        };
-        await apiMdmsCreate(tgt.url, tgt.schema, createRec, tgtToken, tgtLocale, tgt.contextPath);
-      }
-      pushed++;
-    } catch (e) {
-      errors++;
-      showError(`${r._isUpdate ? 'Update' : 'Create'} failed for ${r.report.moduleName}: ${e.message}`);
-    }
-
-    // Upsert locs to target
-    const tgtLocModule = r._tgtLocModule;
-    const allLocs = [];
-
-    // Include existing source locs
-    if (r._existingLocs) {
-      for (const [code, message] of r._existingLocs) {
-        allLocs.push({ code, message, module: tgtLocModule, locale: tgtLocale });
-      }
-    }
-    // Include new locs
-    for (const loc of r.newLocalizations) {
-      allLocs.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale });
-    }
-
-    for (let b = 0; b < allLocs.length; b += 50) {
-      const batch = allLocs.slice(b, b + 50);
+    if (selection.configs) {
       try {
-        await apiLocUpsert(tgt.url, tgt.tenant, batch, tgtToken, tgtLocale);
-        locUpserted += batch.length;
-      } catch (e) { locErrors++; console.warn(`Loc upsert failed for ${tgtLocModule}:`, e.message); }
+        if (r._isUpdate && r._tgtRecord) {
+          const updateRec = {
+            id: r._tgtRecord.id, tenantId: r._tgtRecord.tenantId, schemaCode: tgt.schema,
+            uniqueIdentifier: r._tgtRecord.uniqueIdentifier, data: r.correctedData, isActive: true,
+            auditDetails: r._tgtRecord.auditDetails || null,
+          };
+          await apiMdmsUpdate(tgt.url, tgt.schema, updateRec, tgtToken, tgtLocale, tgt.contextPath);
+        } else {
+          const createRec = {
+            tenantId: tgt.tenant, schemaCode: tgt.schema,
+            data: r.correctedData, isActive: true,
+          };
+          await apiMdmsCreate(tgt.url, tgt.schema, createRec, tgtToken, tgtLocale, tgt.contextPath);
+        }
+        pushed++;
+      } catch (e) {
+        errors++;
+        showError(`${r._isUpdate ? 'Update' : 'Create'} failed for ${r.report.moduleName}: ${e.message}`);
+      }
     }
 
-    // Also upsert _appConfig-tagged entries to hcm-appconfiguration on target
-    const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => ({
-      code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: tgtLocale
-    }));
-    for (let b = 0; b < appConfigOnly.length; b += 50) {
-      try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, tgtLocale); } catch (e) { locErrors++; console.warn('AppConfig loc upsert failed:', e.message); }
+    if (selection.locs) {
+      // Upsert locs to target
+      const tgtLocModule = r._tgtLocModule;
+      const allLocs = [];
+
+      // Include existing source locs
+      if (r._existingLocs) {
+        for (const [code, message] of r._existingLocs) {
+          allLocs.push({ code, message, module: tgtLocModule, locale: tgtLocale });
+        }
+      }
+      // Include new locs
+      for (const loc of r.newLocalizations) {
+        allLocs.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale });
+      }
+
+      for (let b = 0; b < allLocs.length; b += 50) {
+        const batch = allLocs.slice(b, b + 50);
+        try {
+          await apiLocUpsert(tgt.url, tgt.tenant, batch, tgtToken, tgtLocale);
+          locUpserted += batch.length;
+        } catch (e) { locErrors++; console.warn(`Loc upsert failed for ${tgtLocModule}:`, e.message); }
+      }
+
+      // Also upsert _appConfig-tagged entries to hcm-appconfiguration on target
+      const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => ({
+        code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: tgtLocale
+      }));
+      for (let b = 0; b < appConfigOnly.length; b += 50) {
+        try { await apiLocUpsert(tgt.url, tgt.tenant, appConfigOnly.slice(b, b + 50), tgtToken, tgtLocale); } catch (e) { locErrors++; console.warn('AppConfig loc upsert failed:', e.message); }
+      }
     }
+  }
+
+  // Push translations if selected
+  if (selection.translations && translatedLocales.size > 0) {
+    // Set env context for translation push to target
+    translationEnvCtx = { envUrl: tgt.url, token: tgtToken, tenant: tgt.tenant };
+    await pushTranslations();
   }
 
   // Push LFPC changes to target
   const lfpcResult = await pushLfpcChanges(tgt.url, tgtToken, tgtLocale, tgt.tenant, tgt.contextPath);
 
   hideLoader();
+  const parts = [];
+  if (selection.configs) parts.push(`Pushed ${pushed}/${total} modules`);
+  if (selection.locs) parts.push(`upserted ${locUpserted} localizations`);
   const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
   const locErrMsg = locErrors ? ` ${locErrors} localization batch(es) failed.` : '';
-  showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : ''}`);
+  showError(`${parts.join(', ')}.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : ''}`);
   if (!errors && !locErrors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
@@ -2369,6 +2435,17 @@ async function pushFileToEnv() {
     const selectedModules = selectedIndices.map(i => moduleList[i]);
     const createCount = selectedModules.filter(m => !m.isUpdate).length;
     const updateCount = selectedModules.filter(m => m.isUpdate).length;
+    const locCount = selectedModules.reduce((s, m) => {
+      const r = results[m.idx];
+      return s + r.newLocalizations.length + (r._existingLocs?.size || 0);
+    }, 0);
+    const transCount = translatedLocales.size;
+
+    // Push selection dialog (configs / locs / translations)
+    const selection = await showPushSelectionDialog({
+      targetUrl: url, configCount: selectedModules.length, createCount, updateCount, locCount, transCount, schema
+    });
+    if (!selection) return;
 
     // Determine original project from results data (for replacement)
     const srcProject = results[0]?.correctedData?.project || '';
@@ -2383,99 +2460,112 @@ async function pushFileToEnv() {
       showProgress(`${mod.isUpdate ? 'Updating' : 'Creating'} ${mod.name}...`, `${si+1}/${total}`, ((si+1)/total)*80);
       await tick();
 
-      try {
-        // Deep-copy corrected data and apply project replacement
-        let dataCopy = JSON.parse(JSON.stringify(r.correctedData));
-        if (srcProject && project && srcProject !== project) {
-          const json = JSON.stringify(dataCopy);
-          const transformed = json.replace(new RegExp(escRegex(srcProject), 'g'), project);
-          dataCopy = JSON.parse(transformed);
-        }
-        if (dataCopy.project) dataCopy.project = project;
+      if (selection.configs) {
+        try {
+          // Deep-copy corrected data and apply project replacement
+          let dataCopy = JSON.parse(JSON.stringify(r.correctedData));
+          if (srcProject && project && srcProject !== project) {
+            const json = JSON.stringify(dataCopy);
+            const transformed = json.replace(new RegExp(escRegex(srcProject), 'g'), project);
+            dataCopy = JSON.parse(transformed);
+          }
+          if (dataCopy.project) dataCopy.project = project;
 
-        if (mod.isUpdate) {
-          // Pick the full target MDMS record, only replace data
-          const tgtRec = tgtMap.get(mod.name);
-          const updateRec = {
-            id: tgtRec.id,
-            tenantId: tgtRec.tenantId,
-            schemaCode: tgtRec.schemaCode || schema,
-            uniqueIdentifier: tgtRec.uniqueIdentifier,
-            data: dataCopy,
-            isActive: true,
-            auditDetails: tgtRec.auditDetails || null,
-          };
-          await apiMdmsUpdate(url, schema, updateRec, token, locale, contextPath);
-        } else {
-          const createRec = {
-            tenantId: tenant,
-            schemaCode: schema,
-            data: dataCopy,
-            isActive: true,
-          };
-          await apiMdmsCreate(url, schema, createRec, token, locale, contextPath);
+          if (mod.isUpdate) {
+            // Pick the full target MDMS record, only replace data
+            const tgtRec = tgtMap.get(mod.name);
+            const updateRec = {
+              id: tgtRec.id,
+              tenantId: tgtRec.tenantId,
+              schemaCode: tgtRec.schemaCode || schema,
+              uniqueIdentifier: tgtRec.uniqueIdentifier,
+              data: dataCopy,
+              isActive: true,
+              auditDetails: tgtRec.auditDetails || null,
+            };
+            await apiMdmsUpdate(url, schema, updateRec, token, locale, contextPath);
+          } else {
+            const createRec = {
+              tenantId: tenant,
+              schemaCode: schema,
+              data: dataCopy,
+              isActive: true,
+            };
+            await apiMdmsCreate(url, schema, createRec, token, locale, contextPath);
+          }
+          pushed++;
+        } catch (e) {
+          errors++;
+          showError(`${mod.isUpdate ? 'Update' : 'Create'} failed for ${mod.name}: ${e.message}`);
         }
-        pushed++;
-      } catch (e) {
-        errors++;
-        showError(`${mod.isUpdate ? 'Update' : 'Create'} failed for ${mod.name}: ${e.message}`);
       }
 
-      // Upsert localizations for this module
-      const locModule = getLocModule(schema, mod.name, project, campaign);
-      const allLocs = [];
+      if (selection.locs) {
+        // Upsert localizations for this module
+        const locModule = getLocModule(schema, mod.name, project, campaign);
+        const allLocs = [];
 
-      // Existing locs (if available from analysis)
-      if (r._existingLocs) {
-        for (const [code, message] of r._existingLocs) {
-          let locCode = code, locMsg = message;
+        // Existing locs (if available from analysis)
+        if (r._existingLocs) {
+          for (const [code, message] of r._existingLocs) {
+            let locCode = code, locMsg = message;
+            if (srcProject && project && srcProject !== project) {
+              locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
+              locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
+            }
+            allLocs.push({ code: locCode, message: locMsg, module: locModule, locale });
+          }
+        }
+        // New locs from corrector
+        for (const loc of r.newLocalizations) {
+          let locCode = loc.code, locMsg = loc.message;
           if (srcProject && project && srcProject !== project) {
             locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
             locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
           }
-          allLocs.push({ code: locCode, message: locMsg, module: locModule, locale });
+          const mod2 = loc._appConfig ? 'hcm-appconfiguration' : locModule;
+          allLocs.push({ code: locCode, message: locMsg, module: mod2, locale });
         }
-      }
-      // New locs from corrector
-      for (const loc of r.newLocalizations) {
-        let locCode = loc.code, locMsg = loc.message;
-        if (srcProject && project && srcProject !== project) {
-          locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
-          locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
-        }
-        const mod2 = loc._appConfig ? 'hcm-appconfiguration' : locModule;
-        allLocs.push({ code: locCode, message: locMsg, module: mod2, locale });
-      }
 
-      for (let b = 0; b < allLocs.length; b += 50) {
-        const batch = allLocs.slice(b, b + 50);
-        try {
-          await apiLocUpsert(url, tenant, batch, token, locale);
-          locUpserted += batch.length;
-        } catch (e) { locErrors++; console.warn(`Loc upsert failed for ${locModule}:`, e.message); }
-      }
-
-      // Also upsert _appConfig entries to hcm-appconfiguration
-      const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => {
-        let locCode = m.code, locMsg = m.message;
-        if (srcProject && project && srcProject !== project) {
-          locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
-          locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
+        for (let b = 0; b < allLocs.length; b += 50) {
+          const batch = allLocs.slice(b, b + 50);
+          try {
+            await apiLocUpsert(url, tenant, batch, token, locale);
+            locUpserted += batch.length;
+          } catch (e) { locErrors++; console.warn(`Loc upsert failed for ${locModule}:`, e.message); }
         }
-        return { code: locCode, message: locMsg, module: 'hcm-appconfiguration', locale };
-      });
-      for (let b = 0; b < appConfigOnly.length; b += 50) {
-        try { await apiLocUpsert(url, tenant, appConfigOnly.slice(b, b + 50), token, locale); } catch (e) { locErrors++; console.warn('AppConfig loc upsert failed:', e.message); }
+
+        // Also upsert _appConfig entries to hcm-appconfiguration
+        const appConfigOnly = r.newLocalizations.filter(m => m._appConfig).map(m => {
+          let locCode = m.code, locMsg = m.message;
+          if (srcProject && project && srcProject !== project) {
+            locCode = locCode.replace(new RegExp(escRegex(srcProject), 'g'), project);
+            locMsg = locMsg.replace(new RegExp(escRegex(srcProject), 'g'), project);
+          }
+          return { code: locCode, message: locMsg, module: 'hcm-appconfiguration', locale };
+        });
+        for (let b = 0; b < appConfigOnly.length; b += 50) {
+          try { await apiLocUpsert(url, tenant, appConfigOnly.slice(b, b + 50), token, locale); } catch (e) { locErrors++; console.warn('AppConfig loc upsert failed:', e.message); }
+        }
       }
+    }
+
+    // Push translations if selected
+    if (selection.translations && translatedLocales.size > 0) {
+      translationEnvCtx = { envUrl: url, token, tenant };
+      await pushTranslations();
     }
 
     // Push LFPC changes to target
     const lfpcResult = await pushLfpcChanges(url, token, locale, tenant, contextPath);
 
     hideLoader();
+    const parts = [];
+    if (selection.configs) parts.push(`Pushed ${pushed}/${total} modules`);
+    if (selection.locs) parts.push(`upserted ${locUpserted} localizations`);
     const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
     const locErrMsg = locErrors ? ` ${locErrors} localization batch(es) failed.` : '';
-    showError(`Pushed ${pushed}/${total} modules, upserted ${locUpserted} localizations.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : 'All successful.'}`);
+    showError(`${parts.join(', ')}.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : 'All successful.'}`);
     if (!errors && !locErrors && !lfpcResult.errors) {
       const el = $('#errorBanner');
       el.className = 'error-banner';
@@ -2665,6 +2755,157 @@ function addTranslationLog(type, text) {
   translationState.logs.push({ type, text: `${time} ${text}` });
   if (translationState.logs.length > 200) translationState.logs.shift();
   renderTranslationPanel();
+}
+
+// ── Translation Review Panel ──
+
+function renderTranslationReview() {
+  const container = document.getElementById('transReviewContainer');
+  if (!container) return;
+  if (translatedLocales.size === 0) { container.innerHTML = ''; return; }
+
+  // Set active locale if not set or stale
+  if (!activeTransLocale || !translatedLocales.has(activeTransLocale)) {
+    activeTransLocale = translatedLocales.keys().next().value;
+  }
+
+  // Build tabs
+  let tabsHtml = '<div class="tabs" id="transReviewTabs">';
+  for (const [locale, msgs] of translatedLocales) {
+    const active = locale === activeTransLocale ? ' active' : '';
+    tabsHtml += `<div class="tab${active}" data-tl="${esc(locale)}" onclick="switchTransReviewTab('${esc(locale)}')">${esc(locale)} (${msgs.length})</div>`;
+  }
+  tabsHtml += '</div>';
+
+  // Build table for active locale
+  const msgs = translatedLocales.get(activeTransLocale) || [];
+  let tableHtml = `<div id="transReviewBody">
+    <table class="loc-table">
+      <thead><tr><th>Code</th><th>English</th><th>Translation</th></tr></thead>
+      <tbody>`;
+  msgs.forEach((m, i) => {
+    tableHtml += `<tr>
+      <td class="loc-code">${esc(m.code)}</td>
+      <td class="loc-type">${esc(m._englishMsg || '')}</td>
+      <td class="loc-msg"><input value="${esc(m.message)}" onchange="updateTransMsg('${esc(activeTransLocale)}',${i},this.value)"></td>
+    </tr>`;
+  });
+  tableHtml += '</tbody></table></div>';
+
+  // Build buttons
+  let btnHtml = '<div class="btn-group" style="margin-top:8px">';
+  btnHtml += `<button class="btn btn-green btn-sm" onclick="pushTranslations()">Push All Translations (${translatedLocales.size} locale${translatedLocales.size > 1 ? 's' : ''})</button>`;
+  if (translatedLocales.size > 1) {
+    btnHtml += `<button class="btn btn-sm" onclick="pushTranslationsForLocale('${esc(activeTransLocale)}')">Push ${esc(activeTransLocale)} Only</button>`;
+  }
+  btnHtml += '</div>';
+
+  container.innerHTML = `
+    <div class="trans-review">
+      <div class="trans-section-title">Translation Review</div>
+      ${tabsHtml}
+      ${tableHtml}
+      ${btnHtml}
+    </div>`;
+}
+
+function updateTransMsg(locale, idx, val) {
+  const msgs = translatedLocales.get(locale);
+  if (msgs && msgs[idx]) msgs[idx].message = val;
+}
+
+function switchTransReviewTab(locale) {
+  activeTransLocale = locale;
+  renderTranslationReview();
+}
+
+async function pushTranslations() {
+  if (!translationEnvCtx) { showError('No translation environment context. Please translate first.'); return; }
+  const { envUrl, token, tenant } = translationEnvCtx;
+
+  const locales = Array.from(translatedLocales.keys());
+  if (locales.length === 0) { showError('No translations to push.'); return; }
+
+  showLoader('Pushing translations...');
+  let totalUpserted = 0, totalErrors = 0;
+
+  for (let li = 0; li < locales.length; li++) {
+    const locale = locales[li];
+    const msgs = translatedLocales.get(locale);
+    if (!msgs || msgs.length === 0) continue;
+
+    // Regular messages
+    const regularMsgs = msgs.map(m => ({ code: m.code, message: m.message, module: m.module, locale }));
+    for (let b = 0; b < regularMsgs.length; b += 50) {
+      const batch = regularMsgs.slice(b, b + 50);
+      showProgress(`Pushing ${locale}...`, `${b + batch.length}/${regularMsgs.length} messages`, ((li + (b + batch.length) / regularMsgs.length) / locales.length) * 100);
+      await tick();
+      try {
+        await apiLocUpsert(envUrl, tenant, batch, token, locale);
+        totalUpserted += batch.length;
+      } catch (e) { totalErrors++; showError(`Upsert failed for ${locale}: ${e.message}`); }
+    }
+
+    // AppConfig messages
+    const appConfigMsgs = msgs.filter(m => m._appConfig).map(m => ({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale }));
+    for (let b = 0; b < appConfigMsgs.length; b += 50) {
+      const batch = appConfigMsgs.slice(b, b + 50);
+      try { await apiLocUpsert(envUrl, tenant, batch, token, locale); } catch (e) { totalErrors++; }
+    }
+
+    // Remove from map after successful push
+    translatedLocales.delete(locale);
+  }
+
+  hideLoader();
+  showError(`Pushed ${totalUpserted} translation messages.${totalErrors ? ' ' + totalErrors + ' batch errors.' : ' All successful.'}`);
+  if (!totalErrors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+
+  // Update UI
+  activeTransLocale = null;
+  renderResults();
+  renderTranslationReview();
+}
+
+async function pushTranslationsForLocale(locale) {
+  if (!translationEnvCtx) { showError('No translation environment context. Please translate first.'); return; }
+  const { envUrl, token, tenant } = translationEnvCtx;
+  const msgs = translatedLocales.get(locale);
+  if (!msgs || msgs.length === 0) { showError(`No translations for ${locale}.`); return; }
+
+  showLoader(`Pushing ${locale} translations...`);
+  let upserted = 0, errors = 0;
+
+  const regularMsgs = msgs.map(m => ({ code: m.code, message: m.message, module: m.module, locale }));
+  for (let b = 0; b < regularMsgs.length; b += 50) {
+    const batch = regularMsgs.slice(b, b + 50);
+    showProgress(`Pushing ${locale}...`, `${b + batch.length}/${regularMsgs.length}`, ((b + batch.length) / regularMsgs.length) * 100);
+    await tick();
+    try {
+      await apiLocUpsert(envUrl, tenant, batch, token, locale);
+      upserted += batch.length;
+    } catch (e) { errors++; showError(`Upsert failed: ${e.message}`); }
+  }
+
+  const appConfigMsgs = msgs.filter(m => m._appConfig).map(m => ({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale }));
+  for (let b = 0; b < appConfigMsgs.length; b += 50) {
+    const batch = appConfigMsgs.slice(b, b + 50);
+    try { await apiLocUpsert(envUrl, tenant, batch, token, locale); } catch (e) { errors++; }
+  }
+
+  hideLoader();
+  translatedLocales.delete(locale);
+
+  showError(`Pushed ${upserted} messages for ${locale}.${errors ? ' ' + errors + ' batch errors.' : ' All successful.'}`);
+  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+
+  if (translatedLocales.size > 0) {
+    activeTransLocale = translatedLocales.keys().next().value;
+  } else {
+    activeTransLocale = null;
+  }
+  renderResults();
+  renderTranslationReview();
 }
 
 // ── AI Enhancement Panel Rendering ──
@@ -2873,6 +3114,7 @@ async function startTranslation(selectedLanguages, envUrl, token, tenant, contex
 
   translationInProgress = true;
   translationCancelled = false;
+  translationEnvCtx = { envUrl, token, tenant };
   translationState = {
     active: true, minimized: false,
     language: '', languageLabel: '',
@@ -2917,13 +3159,12 @@ async function startTranslation(selectedLanguages, envUrl, token, tenant, contex
           const translated = await apiTranslate(batch, langLabel, langLocale);
           const translatedCount = Object.keys(translated).length;
 
-          // Build upsert messages grouped by module
+          // Store translations for review instead of immediate upsert
           const locModules = getTranslationLocModules();
           const defaultModule = locModules[0] || 'hcm-unknown';
 
-          // Regular loc messages
-          const regularMsgs = [];
-          const appConfigMsgs = [];
+          if (!translatedLocales.has(langLocale)) translatedLocales.set(langLocale, []);
+          const stored = translatedLocales.get(langLocale);
 
           for (const msg of batch) {
             const translatedMsg = translated[msg.code];
@@ -2940,28 +3181,10 @@ async function startTranslation(selectedLanguages, envUrl, token, tenant, contex
               }
             }
 
-            regularMsgs.push({ code: msg.code, message: translatedMsg, module: codeModule, locale: langLocale });
-
-            if (msg._appConfig) {
-              appConfigMsgs.push({ code: msg.code, message: translatedMsg, module: 'hcm-appconfiguration', locale: langLocale });
-            }
-          }
-
-          // Upsert regular messages
-          if (regularMsgs.length > 0) {
-            try {
-              await apiLocUpsert(envUrl, tenant, regularMsgs, token, langLocale);
-            } catch (e) {
-              translationState.errors.push(e.message);
-              addTranslationLog('error', `Upsert failed batch ${batchNum}: ${e.message}`);
-            }
-          }
-
-          // Upsert app-config messages
-          if (appConfigMsgs.length > 0) {
-            try {
-              await apiLocUpsert(envUrl, tenant, appConfigMsgs, token, langLocale);
-            } catch (e) { translationState.errors.push('AppConfig upsert: ' + e.message); }
+            // Avoid duplicates (re-translation of same code)
+            const existingIdx = stored.findIndex(s => s.code === msg.code);
+            const entry = { code: msg.code, message: translatedMsg, module: codeModule, _appConfig: !!msg._appConfig, _englishMsg: msg.message };
+            if (existingIdx >= 0) { stored[existingIdx] = entry; } else { stored.push(entry); }
           }
 
           langTranslated += translatedCount;
@@ -2980,13 +3203,13 @@ async function startTranslation(selectedLanguages, envUrl, token, tenant, contex
         await tick();
       }
 
-      addTranslationLog('success', `${langLabel}: ${langTranslated} messages upserted`);
+      addTranslationLog('success', `${langLabel}: ${langTranslated} messages translated`);
     }
 
     if (translationCancelled) {
       addTranslationLog('info', `Translation stopped. ${totalTranslated} messages processed.`);
     } else {
-      addTranslationLog('success', `All translations complete! ${totalTranslated} messages processed.`);
+      addTranslationLog('success', `All translations complete! ${totalTranslated} messages translated. Review and push from the panel below.`);
     }
 
   } catch (e) {
@@ -2995,6 +3218,11 @@ async function startTranslation(selectedLanguages, envUrl, token, tenant, contex
     translationInProgress = false;
     translationCancelled = false;
     renderTranslationPanel();
+    // Show translation review panel and update action buttons
+    if (translatedLocales.size > 0) {
+      renderResults();
+      renderTranslationReview();
+    }
   }
 }
 
@@ -3127,6 +3355,13 @@ function renderResults() {
       transHtml += `<div style="font-size:12px;color:var(--subtext)">No non-English languages detected from StateInfo.</div>`;
     }
     ab.innerHTML += transHtml;
+  }
+
+  // Translation review container (populated by renderTranslationReview)
+  if (translatedLocales.size > 0) {
+    ab.innerHTML += '<div id="transReviewContainer"></div>';
+    // Defer rendering so the container is in the DOM
+    setTimeout(() => renderTranslationReview(), 0);
   }
 
   // Module list
