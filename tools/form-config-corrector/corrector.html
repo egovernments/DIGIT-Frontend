@@ -613,6 +613,9 @@ let translationEnvCtx = null; // {envUrl, token, tenant} — saved when translat
 // File push state
 let filePushEnv = null; // cached { url, user, pass, tenant, project, schema, campaign, contextPath, token, locale }
 
+// AppConfig localization cache: "url|tenant|locale" -> Map<code, message>
+let appConfigLocCache = new Map();
+
 // AI Enhancement state
 let aiEnhanceInProgress = false;
 let aiEnhanceCancelled = false;
@@ -1177,6 +1180,21 @@ async function apiLocSearch(envUrl, moduleName, tenantId, locale, token) {
   return data.messages || [];
 }
 
+async function fetchAppConfigLocs(envUrl, tenant, locale, token) {
+  const cacheKey = `${envUrl}|${tenant}|${locale}`;
+  if (appConfigLocCache.has(cacheKey)) return appConfigLocCache.get(cacheKey);
+  try {
+    const msgs = await apiLocSearch(envUrl, 'hcm-appconfiguration', tenant, locale, token);
+    const map = new Map(msgs.map(m => [m.code, m.message]));
+    appConfigLocCache.set(cacheKey, map);
+    return map;
+  } catch (e) {
+    console.warn('AppConfig loc search failed:', e.message);
+    appConfigLocCache.set(cacheKey, new Map());
+    return new Map();
+  }
+}
+
 async function apiLocUpsert(envUrl, tenantId, messages, token, locale) {
   return apiFetch('/api/loc/upsert',
     { envUrl, tenantId, messages, token, locale },
@@ -1491,6 +1509,38 @@ async function pushLfpcChanges(envUrl, token, locale, tenant, contextPath) {
 // AI ENHANCEMENT (always runs when Claude available)
 // ════════════════════════════════════════════════════════════════
 
+function buildConfigSummary(result) {
+  const data = result.correctedData || result.originalData;
+  if (!data || !data.flows) return null;
+  const summary = { moduleName: data.name || 'UNKNOWN', flows: [] };
+  for (const fl of data.flows) {
+    const flowInfo = { name: fl.name || '', category: fl.category || '', screenType: fl.screenType || '', pages: [] };
+    const extractFields = (obj, fields) => {
+      if (!obj || typeof obj !== 'object') return;
+      if (Array.isArray(obj)) { obj.forEach(x => extractFields(x, fields)); return; }
+      if (obj.format && obj.fieldName) {
+        fields.push({ fieldName: obj.fieldName, format: obj.format, label: obj.label || '', heading: obj.heading || '' });
+      }
+      for (const [k, v] of Object.entries(obj)) {
+        if (typeof v === 'object' && v !== null && k !== 'validations') extractFields(v, fields);
+      }
+    };
+    if (fl.pages) {
+      for (const pg of fl.pages) {
+        const fields = [];
+        extractFields(pg.body || pg.header || pg, fields);
+        flowInfo.pages.push({ page: pg.page || pg.name || '', screenType: pg.screenType || fl.screenType || '', fields: fields.slice(0, 20) });
+      }
+    } else {
+      const fields = [];
+      extractFields(fl, fields);
+      flowInfo.pages.push({ page: fl.name || '', screenType: fl.screenType || '', fields: fields.slice(0, 20) });
+    }
+    summary.flows.push(flowInfo);
+  }
+  return summary;
+}
+
 async function aiEnhance(resultsList) {
   if (!claudeAvailable) return;
   const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.length, 0);
@@ -1536,9 +1586,15 @@ async function aiEnhance(resultsList) {
           renderAiPanel();
           await tick();
 
+          const enhanceBody = {
+            codes: batch,
+            moduleName: r.report.moduleName,
+            configSummary: buildConfigSummary(r),
+            existingLocs: r._existingLocs ? Object.fromEntries([...r._existingLocs].slice(0, 100)) : null,
+          };
           const resp = await fetch('/api/enhance', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codes: batch, moduleName: r.report.moduleName }),
+            body: JSON.stringify(enhanceBody),
           });
           const data = await resp.json();
           let improved = 0;
@@ -1835,9 +1891,16 @@ async function onlineFetch() {
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
       } catch (e) { console.warn(`Loc search skipped for ${locModule}:`, e.message); }
 
+      // Also fetch hcm-appconfiguration locs to avoid regenerating existing codes
+      const appConfigLocs = await fetchAppConfigLocs(envUrl, tenant, onlineLocale, onlineToken);
+      for (const [code, msg] of appConfigLocs) {
+        if (!existingLocCodes.has(code)) existingLocCodes.set(code, msg);
+      }
+
       const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
       result._record = rec; // keep reference to original record for updates
       result._locModule = locModule;
+      result._existingLocs = existingLocCodes;
       // Stamp module/locale on each localization entry
       for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : locModule; loc.locale = onlineLocale; }
       results.push(result);
@@ -1988,6 +2051,12 @@ async function migrateFetch() {
         const msgs = await apiLocSearch(src.url, srcLocModule, src.tenant, srcLocale, srcToken);
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
       } catch (e) { console.warn(`Loc search skipped for ${srcLocModule}:`, e.message); }
+
+      // Also fetch hcm-appconfiguration locs to avoid regenerating existing codes
+      const appConfigLocs = await fetchAppConfigLocs(src.url, src.tenant, srcLocale, srcToken);
+      for (const [code, msg] of appConfigLocs) {
+        if (!existingLocCodes.has(code)) existingLocCodes.set(code, msg);
+      }
 
       const result = analyzeAndFix(dataCopy, { autoFix, existingLocCodes });
       result._record = rec;
@@ -2471,7 +2540,8 @@ async function pushFileToEnv() {
             const transformed = json.replace(new RegExp(escRegex(srcProject), 'g'), project);
             dataCopy = JSON.parse(transformed);
           }
-          if (dataCopy.project) dataCopy.project = project;
+          const targetProject = project || campaign;
+          if (targetProject) dataCopy.project = targetProject;
 
           if (mod.isUpdate) {
             // Pick the full target MDMS record, only replace data

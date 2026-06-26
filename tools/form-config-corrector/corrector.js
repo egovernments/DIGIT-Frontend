@@ -135,7 +135,7 @@ function createServer() {
     if (url.pathname === '/api/enhance' && req.method === 'POST') {
       const body = await readBody(req);
       try {
-        const { codes, moduleName } = JSON.parse(body);
+        const { codes, moduleName, configSummary, existingLocs } = JSON.parse(body);
         if (!codes || !Array.isArray(codes) || codes.length === 0) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: 'No codes provided' }));
@@ -143,10 +143,31 @@ function createServer() {
         }
 
         const codeList = codes.map(c => `  ${c.code}: "${c.message}"`).join('\n');
+
+        let configSection = '';
+        if (configSummary) {
+          try {
+            const flows = (configSummary.flows || []).map(f => {
+              const pages = (f.pages || []).map(p => {
+                const fields = (p.fields || []).map(fd => `      - ${fd.fieldName} (${fd.format})${fd.label ? ' label=' + fd.label : ''}`).join('\n');
+                return `    Page: ${p.page} [${p.screenType}]\n${fields}`;
+              }).join('\n');
+              return `  Flow: ${f.name} [${f.screenType}] category=${f.category}\n${pages}`;
+            }).join('\n');
+            configSection = `\nForm Config Structure:\n${flows}\n`;
+          } catch (e) { /* ignore malformed summary */ }
+        }
+
+        let existingLocsSection = '';
+        if (existingLocs && Object.keys(existingLocs).length > 0) {
+          const entries = Object.entries(existingLocs).slice(0, 50).map(([k, v]) => `  ${k}: "${v}"`).join('\n');
+          existingLocsSection = `\nExisting localizations already in the system (for reference style/quality):\n${entries}\n`;
+        }
+
         const prompt = `You are a localization expert for a Health Campaign Management (HCM) mobile app used by health workers in the field.
 
 Module: ${moduleName || 'UNKNOWN'}
-
+${configSection}${existingLocsSection}
 These localization codes need proper human-readable messages. The current messages are auto-generated and may be poor quality.
 
 Codes to improve:
@@ -161,6 +182,10 @@ Rules:
 - Keep domain acronyms as-is: OPV, AFP, LQA, IHM, MRN, QR, GPS, HCM
 - "fieldName" type codes (camelCase): convert to readable (e.g. dateOfBirth -> "Date of Birth")
 - TABLE_HEADER codes: short column headers (e.g. "Date of Entry", "Quantity")
+- Cross-reference codes against the form config fields above; if a code maps to a specific fieldName, label, or heading, use that context to generate an accurate message
+- If the config shows a field is a date picker, GPS, scanner, etc., tailor the message accordingly
+- Match the style and quality of existing localizations when available
+- APP_CONFIG_CATEGORY/FLOW/PAGE codes should be clean human-readable names for the category/flow/page they represent
 
 Return ONLY valid JSON mapping code to improved message. No markdown, no explanation, no wrapping.
 Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
