@@ -73,6 +73,7 @@ const CommodityDashboard = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
+  const projectIdFromUrl = searchParams.get("projectId");
 
   // Backward compat: still check URL for campaignId first
   const campaignIdFromUrl = searchParams.get("campaignId");
@@ -83,9 +84,15 @@ const CommodityDashboard = () => {
   // Read userBoundary, userBoundaries, and isTopLevel from context
   const { userBoundary, userBoundaries, isTopLevel, projects: contextProjects } = useCommodityProject();
 
-  // Use projectId from navigation state; on page reload (state lost), fall back to
-  // the user's assigned project from context by matching referenceId to campaignNumber
-  const projectId = projectIdFromState || contextProjects?.find((p) => p.referenceId === campaignNumber)?.id;
+  // Resolve projectId: URL param > navigation state > sessionStorage > context fallback
+  const SESSION_PROJECT_KEY = "HCM_COMMODITY_SELECTED_PROJECT_ID";
+  const projectId = useMemo(() => {
+    const resolved = projectIdFromUrl || projectIdFromState || sessionStorage.getItem(SESSION_PROJECT_KEY) || contextProjects?.find((p) => p.referenceId === campaignNumber)?.id;
+    if (resolved) {
+      sessionStorage.setItem(SESSION_PROJECT_KEY, resolved);
+    }
+    return resolved;
+  }, [projectIdFromUrl, projectIdFromState, contextProjects, campaignNumber]);
 
   // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
   const campaignReqCriteria = useMemo(() => ({

@@ -121,7 +121,7 @@ const HCMCommodityRowCard = ({ key, rowData, tabData }) => {
                   navigate(
                     `/${window?.contextPath}/employee/campaign/commodity-dashboard?campaignNumber=${
                       rowData?.referenceID
-                    }&tenantId=${Digit.ULBService.getCurrentTenantId()}`,
+                    }&tenantId=${Digit.ULBService.getCurrentTenantId()}&projectId=${rowData?.id}`,
                     {
                       state: {
                         projectId: rowData?.id,
