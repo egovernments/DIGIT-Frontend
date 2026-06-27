@@ -169,18 +169,52 @@ function smartMessageFromCode(code, moduleName) {
   return c.split('_').filter(Boolean).map((s) => splitCompound(s)).join(' ');
 }
 
-function generateValidationMessage(fieldName, validationType, label) {
+function generateValidationMessage(fieldName, validationType, label, validationValue, allValidations) {
   const fieldLabel = label || fieldName || 'Field';
   const readable = smartMessageFromCode(fieldLabel);
+  const val = validationValue != null && validationValue !== '' && validationValue !== true ? String(validationValue) : null;
+  // Find companion validation value (e.g. max for min, maxLength for minLength)
+  const companion = (pairType) => {
+    if (!allValidations) return null;
+    const pair = allValidations.find(v => v.type === pairType);
+    return pair && pair.value != null && pair.value !== '' && pair.value !== true ? String(pair.value) : null;
+  };
   switch (validationType) {
     case 'required': return `${readable} is required`;
-    case 'min': return `${readable} must meet the minimum value`;
-    case 'max': return `${readable} exceeds the maximum value`;
-    case 'minLength': return `${readable} is too short`;
-    case 'maxLength': return `${readable} is too long`;
+    case 'min': {
+      const maxVal = companion('max');
+      if (val && maxVal) return `${readable} must be between ${val} and ${maxVal}`;
+      if (val) return `${readable} must be at least ${val}`;
+      return `${readable} must meet the minimum value`;
+    }
+    case 'max': {
+      const minVal = companion('min');
+      if (val && minVal) return `${readable} must be between ${minVal} and ${val}`;
+      if (val) return `${readable} must not exceed ${val}`;
+      return `${readable} exceeds the maximum value`;
+    }
+    case 'minLength': {
+      const maxLenVal = companion('maxLength');
+      if (val && maxLenVal) return `${readable} must be between ${val} and ${maxLenVal} characters`;
+      if (val) return `${readable} must be at least ${val} characters`;
+      return `${readable} is too short`;
+    }
+    case 'maxLength': {
+      const minLenVal = companion('minLength');
+      if (val && minLenVal) return `${readable} must be between ${minLenVal} and ${val} characters`;
+      if (val) return `${readable} must not exceed ${val} characters`;
+      return `${readable} is too long`;
+    }
     case 'pattern': case 'regex': return `${readable} has an invalid format`;
-    case 'minAge': case 'maxAge': return `Age must be within the valid range`;
-    case 'scanLimit': return `Scan limit reached`;
+    case 'minAge': {
+      if (val) return `Age must be at least ${val}`;
+      return `Age must be within the valid range`;
+    }
+    case 'maxAge': {
+      if (val) return `Age must not exceed ${val}`;
+      return `Age must be within the valid range`;
+    }
+    case 'scanLimit': return val ? `Scan limit of ${val} reached` : `Scan limit reached`;
     case 'facilityHierarchy': return `Invalid facility selection`;
     case 'notEqualTo': return `Facility from and to must be different`;
     case 'isGS1': return `Invalid barcode format`;
@@ -458,7 +492,7 @@ function checkAndFixValidations(data, moduleName) {
             v.message = code;
             fixes.push({ rule: 'empty-validation-message', flow: flowName, location: `${location}.validations[${vi}]`, fieldName, vType, fixed: `message -> "${code}"` });
             if (!newLocCodes.has(code)) {
-              newLocCodes.set(code, generateValidationMessage(fieldName, vType, label));
+              newLocCodes.set(code, generateValidationMessage(fieldName, vType, label, v.value, comp.validations));
             }
           } else if (!isCode(msg)) {
             // Hardcoded English text
@@ -472,7 +506,7 @@ function checkAndFixValidations(data, moduleName) {
           } else {
             // Already a code - ensure localization exists
             if (!newLocCodes.has(msg)) {
-              newLocCodes.set(msg, generateValidationMessage(fieldName, vType, label));
+              newLocCodes.set(msg, generateValidationMessage(fieldName, vType, label, v.value, comp.validations));
             }
           }
         }

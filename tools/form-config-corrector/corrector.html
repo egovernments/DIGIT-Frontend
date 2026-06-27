@@ -57,6 +57,9 @@ input[type="file"] { display: none; }
 .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--blue); }
 .form-group select { cursor: pointer; }
 .form-group .hint { font-size: 10px; color: var(--overlay); margin-top: 2px; }
+.combo-select-row { display: flex; flex-direction: column; gap: 4px; }
+.combo-select-row input.combo-custom { display: none; }
+.combo-select-row input.combo-custom.active { display: block; }
 
 .cred-group { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
 .cred-group-title { font-size: 11px; font-weight: 600; color: var(--peach); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -357,7 +360,15 @@ input[type="file"] { display: none; }
         <div class="sidebar-title">Connection</div>
         <div class="form-group">
           <label>Environment URL</label>
-          <input type="text" id="olUrl" placeholder="https://unified-uat.digit.org">
+          <div class="combo-select-row">
+            <select id="olUrlSel">
+              <option value="https://unified-uat.digit.org">unified-uat.digit.org</option>
+              <option value="https://unified-qa.digit.org">unified-qa.digit.org</option>
+              <option value="https://unified-dev.digit.org">unified-dev.digit.org</option>
+              <option value="__other__">Other...</option>
+            </select>
+            <input type="text" id="olUrl" class="combo-custom" placeholder="https://custom-env.example.org">
+          </div>
         </div>
         <div class="form-group">
           <label>Username</label>
@@ -369,7 +380,17 @@ input[type="file"] { display: none; }
         </div>
         <div class="form-group">
           <label>Tenant ID</label>
-          <input type="text" id="olTenant" placeholder="mz">
+          <div class="combo-select-row">
+            <select id="olTenantSel">
+              <option value="mz">mz</option>
+              <option value="dev">dev</option>
+              <option value="chad">chad</option>
+              <option value="demo">demo</option>
+              <option value="ng">ng</option>
+              <option value="__other__">Other...</option>
+            </select>
+            <input type="text" id="olTenant" class="combo-custom" placeholder="custom-tenant">
+          </div>
         </div>
         <div class="form-group">
           <label>MDMS Context Path</label>
@@ -403,10 +424,32 @@ input[type="file"] { display: none; }
       <div class="sidebar-section" style="padding-bottom:6px">
         <div class="sidebar-title">Source Environment</div>
         <div class="cred-group">
-          <div class="form-group"><label>URL</label><input type="text" id="mgSrcUrl" placeholder="https://unified-uat.digit.org"></div>
+          <div class="form-group"><label>URL</label>
+            <div class="combo-select-row">
+              <select id="mgSrcUrlSel">
+                <option value="https://unified-uat.digit.org">unified-uat.digit.org</option>
+                <option value="https://unified-qa.digit.org">unified-qa.digit.org</option>
+                <option value="https://unified-dev.digit.org">unified-dev.digit.org</option>
+                <option value="__other__">Other...</option>
+              </select>
+              <input type="text" id="mgSrcUrl" class="combo-custom" placeholder="https://custom-env.example.org">
+            </div>
+          </div>
           <div class="form-group"><label>Username</label><input type="text" id="mgSrcUser" placeholder="SATYA"></div>
           <div class="form-group"><label>Password</label><input type="password" id="mgSrcPass"></div>
-          <div class="form-group"><label>Tenant</label><input type="text" id="mgSrcTenant" placeholder="mz"></div>
+          <div class="form-group"><label>Tenant</label>
+            <div class="combo-select-row">
+              <select id="mgSrcTenantSel">
+                <option value="mz">mz</option>
+                <option value="dev">dev</option>
+                <option value="chad">chad</option>
+                <option value="demo">demo</option>
+                <option value="ng">ng</option>
+                <option value="__other__">Other...</option>
+              </select>
+              <input type="text" id="mgSrcTenant" class="combo-custom" placeholder="custom-tenant">
+            </div>
+          </div>
           <div class="form-group"><label>MDMS Context Path</label>
             <select id="mgSrcContextPath">
               <option value="egov-mdms-service" selected>egov-mdms-service</option>
@@ -432,10 +475,32 @@ input[type="file"] { display: none; }
         <label class="check-row" style="margin-bottom:10px"><input type="checkbox" id="mgDiffEnv" onchange="toggleDiffEnv()"> Different target environment</label>
         <div class="cred-group">
           <div id="mgTgtCredentials" style="display:none">
-            <div class="form-group"><label>URL</label><input type="text" id="mgTgtUrl" placeholder="https://unified-dev.digit.org"></div>
+            <div class="form-group"><label>URL</label>
+              <div class="combo-select-row">
+                <select id="mgTgtUrlSel">
+                  <option value="https://unified-uat.digit.org">unified-uat.digit.org</option>
+                  <option value="https://unified-qa.digit.org">unified-qa.digit.org</option>
+                  <option value="https://unified-dev.digit.org">unified-dev.digit.org</option>
+                  <option value="__other__">Other...</option>
+                </select>
+                <input type="text" id="mgTgtUrl" class="combo-custom" placeholder="https://custom-env.example.org">
+              </div>
+            </div>
             <div class="form-group"><label>Username</label><input type="text" id="mgTgtUser" placeholder="SATYA"></div>
             <div class="form-group"><label>Password</label><input type="password" id="mgTgtPass"></div>
-            <div class="form-group"><label>Tenant</label><input type="text" id="mgTgtTenant" placeholder="mz"></div>
+            <div class="form-group"><label>Tenant</label>
+              <div class="combo-select-row">
+                <select id="mgTgtTenantSel">
+                  <option value="mz">mz</option>
+                  <option value="dev">dev</option>
+                  <option value="chad">chad</option>
+                  <option value="demo">demo</option>
+                  <option value="ng">ng</option>
+                  <option value="__other__">Other...</option>
+                </select>
+                <input type="text" id="mgTgtTenant" class="combo-custom" placeholder="custom-tenant">
+              </div>
+            </div>
             <div class="form-group"><label>MDMS Context Path</label>
               <select id="mgTgtContextPath">
                 <option value="egov-mdms-service" selected>egov-mdms-service</option>
@@ -532,7 +597,7 @@ function humanize(s){if(!s)return'';if(/[a-z]/.test(s)&&/[A-Z]/.test(s))return s
 function humanizeField(f){if(!f)return null;if(FIELD_MAP[f])return FIELD_MAP[f];return f.replace(/([a-z])([A-Z])/g,'$1 $2').replace(/^./,c=>c.toUpperCase());}
 function labelToFieldName(l){if(!l||typeof l!=='string')return null;const p=l.split('_').filter(x=>x.length>0);if(!p.length)return null;const u=p.length>4?p.slice(-3):p;return u.map((x,i)=>{const lo=x.toLowerCase();return i===0?lo:lo.charAt(0).toUpperCase()+lo.slice(1);}).join('');}
 function smartMsg(code,mod){if(!code)return code;let c=code;if(mod){const p=mod.toUpperCase()+'_';if(c.startsWith(p))c=c.substring(p.length);}for(const p of['HCM_','APPONE_','APP_CONFIG_','CLF_']){if(c.startsWith(p)){c=c.substring(p.length);break;}}const S=['_SECONDARY_ACTION_LABEL','_PRIMARY_ACTION_LABEL','_ERROR_MESSAGE','_EXPAND_LABEL','_COLLAPSE_LABEL','_ACTION_LABEL','_INNER_LABEL','_FIELD_NAME','_DESCRIPTION','_HELP_TEXT','_INFO_TEXT','_HEADING','_MESSAGE','_TOOLTIP','_LABEL','_TITLE','_ERROR'];for(const s of S){if(c.endsWith(s)){c=c.substring(0,c.length-s.length);break;}}return c.split('_').filter(Boolean).map(x=>splitCompound(x)).join(' ');}
-function genValMsg(fn,vt,l){const r=smartMsg(l||fn||'Field');switch(vt){case'required':return`${r} is required`;case'min':return`${r} must meet the minimum value`;case'max':return`${r} exceeds the maximum value`;case'minLength':return`${r} is too short`;case'maxLength':return`${r} is too long`;case'pattern':case'regex':return`${r} has an invalid format`;default:return`${r} validation error`;}}
+function genValMsg(fn,vt,l,vv,allV){const r=smartMsg(l||fn||'Field');const val=vv!=null&&vv!==''&&vv!==true?String(vv):null;const comp=(pt)=>{if(!allV)return null;const p=allV.find(x=>x.type===pt);return p&&p.value!=null&&p.value!==''&&p.value!==true?String(p.value):null;};switch(vt){case'required':return`${r} is required`;case'min':{const mx=comp('max');if(val&&mx)return`${r} must be between ${val} and ${mx}`;if(val)return`${r} must be at least ${val}`;return`${r} must meet the minimum value`;}case'max':{const mn=comp('min');if(val&&mn)return`${r} must be between ${mn} and ${val}`;if(val)return`${r} must not exceed ${val}`;return`${r} exceeds the maximum value`;}case'minLength':{const mxl=comp('maxLength');if(val&&mxl)return`${r} must be between ${val} and ${mxl} characters`;if(val)return`${r} must be at least ${val} characters`;return`${r} is too short`;}case'maxLength':{const mnl=comp('minLength');if(val&&mnl)return`${r} must be between ${mnl} and ${val} characters`;if(val)return`${r} must not exceed ${val} characters`;return`${r} is too long`;}case'pattern':case'regex':return`${r} has an invalid format`;default:return`${r} validation error`;}}
 function smartLocMsg(code,ft,cfn,pn,mod){if(!code)return'';if(code.includes(' '))return code;const fl=cfn?humanizeField(cfn):null,isSuc=pn&&/success/i.test(pn);switch(ft){case'primaryActionLabel':case'actionLabel':return isSuc?'Back to Home':'Submit';case'secondaryActionLabel':return isSuc?'Back to Home':'Back';case'heading':case'title':return isSuc?'Success':smartMsg(code,mod);case'description':return isSuc?'Your action has been completed successfully.':smartMsg(code,mod);case'label':return fl||smartMsg(code,mod);case'helpText':case'infoText':return fl?`Enter the ${fl.toLowerCase()}`:smartMsg(code,mod);case'expandLabel':return'Show More';case'collapseLabel':return'Show Less';case'errorMessage':case'message':if(/REQUIRED/i.test(code))return`${fl||smartMsg(code,mod)} is required`;return smartMsg(code,mod);default:return smartMsg(code,mod);}}
 
 function analyzeAndFix(configData, opts = {}) {
@@ -568,7 +633,7 @@ function analyzeAndFix(configData, opts = {}) {
   if(data.flows)for(const fl of data.flows)wAct(fl,fl.name,fl.name||'flow',0);
 
   // R6&7: validations
-  function pComp(c,fn,loc){const fN=c.fieldName||'unknown',lb=c.label||c.heading||'';if('errorMessage'in c&&(!c.errorMessage||c.errorMessage==='')){if(c.validations&&c.validations.length>0){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_ERROR`;c.errorMessage=cd;report.fixes.push({rule:'empty-errorMessage',flow:fn,path:loc,fixed:`errorMessage \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,`${smartMsg(fN)} validation failed`);}}if(Array.isArray(c.validations)){for(let vi=0;vi<c.validations.length;vi++){const v=c.validations[vi],vt=v.type||'';if(vt==='isGS1'&&!('message'in v))continue;if('message'in v){const msg=v.message||'';if(!msg||msg===''){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;v.message=cd;report.fixes.push({rule:'empty-validation-msg',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`message \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,genValMsg(fN,vt,lb));}else if(!isCode(msg)){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;const orig=msg;v.message=cd;report.fixes.push({rule:'hardcoded-validation',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`"${orig}" \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,orig);}else{if(!allNew.has(msg))allNew.set(msg,genValMsg(fN,vt,lb));}}}}}
+  function pComp(c,fn,loc){const fN=c.fieldName||'unknown',lb=c.label||c.heading||'';if('errorMessage'in c&&(!c.errorMessage||c.errorMessage==='')){if(c.validations&&c.validations.length>0){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_ERROR`;c.errorMessage=cd;report.fixes.push({rule:'empty-errorMessage',flow:fn,path:loc,fixed:`errorMessage \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,`${smartMsg(fN)} validation failed`);}}if(Array.isArray(c.validations)){for(let vi=0;vi<c.validations.length;vi++){const v=c.validations[vi],vt=v.type||'';if(vt==='isGS1'&&!('message'in v))continue;if('message'in v){const msg=v.message||'';if(!msg||msg===''){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;v.message=cd;report.fixes.push({rule:'empty-validation-msg',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`message \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,genValMsg(fN,vt,lb,v.value,c.validations));}else if(!isCode(msg)){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;const orig=msg;v.message=cd;report.fixes.push({rule:'hardcoded-validation',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`"${orig}" \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,orig);}else{if(!allNew.has(msg))allNew.set(msg,genValMsg(fN,vt,lb,v.value,c.validations));}}}}}
   if(data.flows){for(const fl of data.flows){for(const s of['body','header','footer'])for(let i=0;i<(fl[s]||[]).length;i++)pComp(fl[s][i],fl.name,`${s}[${i}]`);for(let pi=0;pi<(fl.pages||[]).length;pi++){const pg=fl.pages[pi];for(let pri=0;pri<(pg.properties||[]).length;pri++)pComp(pg.properties[pri],fl.name,`pages[${pi}].properties[${pri}]`);}}}
 
   // R8: table headers
@@ -653,6 +718,8 @@ let appConfigLocCache = new Map();
 // AI Enhancement state
 let aiEnhanceInProgress = false;
 let aiEnhanceCancelled = false;
+let aiAbortController = null;
+let aiResumeState = null; // { resultsList, phase, processedCodes: Set }
 let aiEnhanceState = {
   active: false, minimized: false,
   moduleName: '', batch: 0, totalBatches: 0,
@@ -665,9 +732,50 @@ let activeModuleIdx = 0; // tracks which module the user is viewing
 // Confirmation dialog state
 let confirmResolveFn = null;
 
+// Token credential store: token -> { envUrl, username, password, tenantId }
+const tokenCredentials = new Map();
+
+function cleanupMemory() {
+  for (const r of results) {
+    if (r._existingLocs) { r._existingLocs.clear(); r._existingLocs = null; }
+    if (r._appConfigCodes) { r._appConfigCodes.clear(); r._appConfigCodes = null; }
+    if (r.originalData) r.originalData = null;
+  }
+  results = [];
+  onlineRecords = [];
+  lfpcState = null;
+  appConfigLocCache.clear();
+  stateInfoCache.clear();
+  tokenCredentials.clear();
+  if (aiEnhanceState) aiEnhanceState.logs = [];
+  aiResumeState = null;
+}
+
 // ════════════════════════════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════════════════════════════
+
+function initComboSelect(selId, inputId) {
+  const sel = document.getElementById(selId);
+  const inp = document.getElementById(inputId);
+  if (!sel || !inp) return;
+  sel.addEventListener('change', () => {
+    if (sel.value === '__other__') {
+      inp.classList.add('active');
+      inp.focus();
+    } else {
+      inp.classList.remove('active');
+      inp.value = '';
+    }
+  });
+}
+
+function comboVal(selId, inputId) {
+  const sel = document.getElementById(selId);
+  if (sel && sel.value !== '__other__') return sel.value;
+  const inp = document.getElementById(inputId);
+  return inp ? inp.value.trim() : '';
+}
 
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
@@ -1301,8 +1409,8 @@ function showPushSelectionDialog({ targetUrl, configCount, createCount, updateCo
 // API HELPERS
 // ════════════════════════════════════════════════════════════════
 
-// Common fetch wrapper with proper error handling
-async function apiFetch(endpoint, body, label) {
+// Common fetch wrapper with proper error handling and auto token refresh
+async function apiFetch(endpoint, body, label, _noRetry) {
   let resp;
   try {
     resp = await fetch(endpoint, {
@@ -1320,6 +1428,20 @@ async function apiFetch(endpoint, body, label) {
     throw new Error(`${label}: Invalid response from server (HTTP ${resp.status})`);
   }
   if (!resp.ok || data.error) {
+    // On failure, try refreshing auth token and retrying once
+    if (!_noRetry && body && body.token && tokenCredentials.has(body.token)) {
+      try {
+        const creds = tokenCredentials.get(body.token);
+        const oldToken = body.token;
+        console.log(`${label}: Refreshing auth token and retrying...`);
+        const freshToken = await apiAuth(creds.envUrl, creds.username, creds.password, creds.tenantId);
+        body.token = freshToken;
+        updateGlobalToken(oldToken, freshToken);
+        return apiFetch(endpoint, body, label, true);
+      } catch (authErr) {
+        console.warn('Token refresh failed:', authErr.message);
+      }
+    }
     const msg = data.error
       || data.Errors?.[0]?.message
       || data.Errors?.[0]?.description
@@ -1331,9 +1453,21 @@ async function apiFetch(endpoint, body, label) {
   return data;
 }
 
+function updateGlobalToken(oldToken, newToken) {
+  if (onlineToken === oldToken) onlineToken = newToken;
+  if (migrateCtx) {
+    if (migrateCtx.srcToken === oldToken) migrateCtx.srcToken = newToken;
+    if (migrateCtx.tgtToken === oldToken) migrateCtx.tgtToken = newToken;
+  }
+  if (translationEnvCtx && translationEnvCtx.token === oldToken) translationEnvCtx.token = newToken;
+  if (filePushEnv && filePushEnv.token === oldToken) filePushEnv.token = newToken;
+  if (fileTranslateEnv && fileTranslateEnv.token === oldToken) fileTranslateEnv.token = newToken;
+}
+
 async function apiAuth(envUrl, username, password, tenantId) {
   const data = await apiFetch('/api/auth', { envUrl, username, password, tenantId }, 'Authentication');
   if (!data.access_token) throw new Error('Authentication: No access token received - check credentials');
+  tokenCredentials.set(data.access_token, { envUrl, username, password, tenantId });
   return data.access_token;
 }
 
@@ -1428,10 +1562,10 @@ async function refreshProjectOptions(prefix) {
   const schemaEl = $(`#${prefix}Schema`);
   const ctxEl = $(`#${prefix}ContextPath`);
   const projectEl = $(`#${prefix}Project`);
-  if (!urlEl || !tenantEl || !schemaEl || !projectEl) return;
+  if (!schemaEl || !projectEl) return;
 
-  const envUrl = urlEl.value.trim().replace(/\/+$/, '');
-  const tenant = tenantEl.value.trim();
+  const envUrl = comboVal(`${prefix}UrlSel`, `${prefix}Url`).replace(/\/+$/, '');
+  const tenant = comboVal(`${prefix}TenantSel`, `${prefix}Tenant`);
   const schema = schemaEl.value;
   const contextPath = ctxEl ? ctxEl.value : 'egov-mdms-service';
 
@@ -1730,7 +1864,7 @@ function buildConfigSummary(result) {
 async function fetchWithRetry(url, opts, maxRetries = 2) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const resp = await fetch(url, opts);
+      const resp = await fetch(url, { ...opts, signal: aiAbortController?.signal });
       const data = await resp.json();
       if (!resp.ok && attempt < maxRetries) {
         addAiLog('warn', `Attempt ${attempt + 1} failed (${resp.status}), retrying...`);
@@ -1739,6 +1873,7 @@ async function fetchWithRetry(url, opts, maxRetries = 2) {
       }
       return data;
     } catch (e) {
+      if (e.name === 'AbortError') throw e;
       if (attempt < maxRetries) {
         addAiLog('warn', `Attempt ${attempt + 1} failed: ${e.message}, retrying...`);
         await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
@@ -1747,21 +1882,29 @@ async function fetchWithRetry(url, opts, maxRetries = 2) {
   }
 }
 
-async function aiEnhance(resultsList) {
+async function aiEnhance(resultsList, resume = false) {
   if (!claudeAvailable) return;
   const totalMessages = resultsList.reduce((s, r) => s + r.newLocalizations.filter(l => !l._fromSource).length, 0);
   if (totalMessages === 0) return;
-  const modsWithLocs = resultsList.filter(r => r.newLocalizations.length > 0).length;
+  const modsWithLocs = resultsList.filter(r => r.newLocalizations.some(l => !l._fromSource)).length;
+
+  // Initialize or reuse resume state
+  if (resume && aiResumeState && aiResumeState.resultsList === resultsList) {
+    addAiLog('info', `Resuming AI enhancement (${aiResumeState.processedCodes.size} already processed)...`);
+  } else {
+    aiResumeState = { resultsList, phase: 'Enhancing', processedCodes: new Set() };
+  }
 
   aiEnhanceInProgress = true;
   aiEnhanceCancelled = false;
+  aiAbortController = new AbortController();
   aiEnhanceState = {
     active: true, minimized: false,
-    phase: 'Enhancing',
+    phase: aiResumeState.phase,
     moduleName: '', batch: 0, totalBatches: 0,
     processed: 0, total: totalMessages,
     currentModIdx: 0, totalMods: modsWithLocs,
-    logs: [],
+    logs: resume ? aiEnhanceState.logs || [] : [],
   };
   renderAiPanel();
   // Disable action buttons while AI runs
@@ -1770,73 +1913,81 @@ async function aiEnhance(resultsList) {
   let processedMessages = 0;
   let modIdx = 0;
   const BATCH = 30;
+  const skipEnhance = resume && aiResumeState.phase === 'Reviewing';
 
   try {
-    for (let i = 0; i < resultsList.length; i++) {
-      if (aiEnhanceCancelled) { addAiLog('info', 'AI enhancement cancelled.'); break; }
-      const r = resultsList[i];
-      if (r.newLocalizations.length === 0) continue;
-      modIdx++;
-      const totalBatches = Math.ceil(r.newLocalizations.length / BATCH);
+    if (!skipEnhance) {
+      for (let i = 0; i < resultsList.length; i++) {
+        if (aiEnhanceCancelled) { addAiLog('info', 'AI enhancement cancelled.'); break; }
+        const r = resultsList[i];
+        const enhanceable = r.newLocalizations.filter(l => !l._fromSource);
+        if (enhanceable.length === 0) continue;
+        modIdx++;
+        const totalBatches = Math.ceil(enhanceable.length / BATCH);
 
-      aiEnhanceState.moduleName = r.report.moduleName;
-      aiEnhanceState.currentModIdx = modIdx;
-      aiEnhanceState.totalBatches = totalBatches;
-      addAiLog('info', `Starting ${r.report.moduleName} (${r.newLocalizations.length} messages)...`);
+        aiEnhanceState.moduleName = r.report.moduleName;
+        aiEnhanceState.currentModIdx = modIdx;
+        aiEnhanceState.totalBatches = totalBatches;
+        addAiLog('info', `Starting ${r.report.moduleName} (${enhanceable.length} messages)...`);
 
-      try {
-        for (let b = 0, batchNum = 1; b < r.newLocalizations.length; b += BATCH, batchNum++) {
-          if (aiEnhanceCancelled) break;
-          const rawBatch = r.newLocalizations.slice(b, b + BATCH);
-          // Preserve intentionally empty messages as " " only for heading/description/title/label
-          const BLANK_ALLOWED = new Set(['heading','description','title','label']);
-          const batch = [];
-          for (const loc of rawBatch) {
-            if (loc._fromSource) continue;
-            if (!loc.message || !loc.message.trim()) {
-              if (BLANK_ALLOWED.has(loc.fieldType)) { loc.message = ' '; }
-              else { loc.message = smartMsg(loc.code, null) || loc.code; batch.push(loc); }
+        try {
+          for (let b = 0, batchNum = 1; b < enhanceable.length; b += BATCH, batchNum++) {
+            if (aiEnhanceCancelled) break;
+            const rawBatch = enhanceable.slice(b, b + BATCH);
+            // Preserve intentionally empty messages as " " only for heading/description/title/label
+            const BLANK_ALLOWED = new Set(['heading','description','title','label']);
+            const batch = [];
+            for (const loc of rawBatch) {
+              if (resume && aiResumeState.processedCodes.has(loc.code)) continue;
+              if (!loc.message || !loc.message.trim()) {
+                if (BLANK_ALLOWED.has(loc.fieldType)) { loc.message = ' '; }
+                else { loc.message = smartMsg(loc.code, null) || loc.code; batch.push(loc); }
+              }
+              else { batch.push(loc); }
             }
-            else { batch.push(loc); }
-          }
-          aiEnhanceState.batch = batchNum;
-          aiEnhanceState.processed = processedMessages;
-          renderAiPanel();
-          await tick();
+            aiEnhanceState.batch = batchNum;
+            aiEnhanceState.processed = processedMessages;
+            renderAiPanel();
+            await tick();
 
-          if (batch.length === 0) { processedMessages += rawBatch.length; continue; }
-          const enhanceBody = {
-            codes: batch,
-            moduleName: r.report.moduleName,
-            configSummary: buildConfigSummary(r),
-            existingLocs: r._existingLocs ? Object.fromEntries([...r._existingLocs].slice(0, 100)) : null,
-          };
-          const data = await fetchWithRetry('/api/enhance', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(enhanceBody),
-          });
-          let improved = 0;
-          if (data.improved) {
-            for (const loc of batch) {
-              if (data.improved[loc.code]) { loc.message = data.improved[loc.code]; improved++; }
+            if (batch.length === 0) { processedMessages += rawBatch.length; continue; }
+            const enhanceBody = {
+              codes: batch,
+              moduleName: r.report.moduleName,
+              configSummary: buildConfigSummary(r),
+              existingLocs: r._existingLocs ? Object.fromEntries([...r._existingLocs].slice(0, 100)) : null,
+            };
+            const data = await fetchWithRetry('/api/enhance', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(enhanceBody),
+            });
+            let improved = 0;
+            if (data.improved) {
+              for (const loc of batch) {
+                if (data.improved[loc.code]) { loc.message = data.improved[loc.code]; improved++; }
+              }
             }
-          }
-          processedMessages += rawBatch.length;
-          aiEnhanceState.processed = processedMessages;
-          addAiLog('info', `Batch ${batchNum}/${totalBatches}: ${improved} improved`);
+            // Track processed codes for resume
+            for (const loc of batch) aiResumeState.processedCodes.add(loc.code);
+            processedMessages += rawBatch.length;
+            aiEnhanceState.processed = processedMessages;
+            addAiLog('info', `Batch ${batchNum}/${totalBatches}: ${improved} improved`);
 
-          // Live-update loc inputs if user is viewing this module's locs tab
-          refreshLocInputs(i);
+            // Live-update loc inputs if user is viewing this module's locs tab
+            refreshLocInputs(i);
+          }
+        } catch (e) {
+          if (e.name === 'AbortError') break;
+          console.warn('AI enhancement failed:', e);
+          addAiLog('error', `Error on ${r.report.moduleName}: ${e.message}`);
         }
-      } catch (e) {
-        console.warn('AI enhancement failed:', e);
-        addAiLog('error', `Error on ${r.report.moduleName}: ${e.message}`);
       }
     }
 
     // === Pass 2: Review existing localizations for poor quality ===
     let existingImproved = 0;
     if (!aiEnhanceCancelled) {
+      aiResumeState.phase = 'Reviewing';
       const modsWithExisting = resultsList.filter(r =>
         r.newLocalizations.some(l => l._fromSource) || (r._existingLocs && r._existingLocs.size > 0));
       if (modsWithExisting.length > 0) {
@@ -1875,15 +2026,18 @@ async function aiEnhance(resultsList) {
           for (let b = 0, batchNum = 1; b < existingArr.length; b += REVIEW_BATCH, batchNum++) {
             if (aiEnhanceCancelled) break;
             const batch = existingArr.slice(b, b + REVIEW_BATCH);
+            // Skip already-reviewed codes on resume
+            const filteredBatch = resume ? batch.filter(loc => !aiResumeState.processedCodes.has(loc.code)) : batch;
             aiEnhanceState.batch = batchNum;
             aiEnhanceState.processed = reviewProcessed;
             renderAiPanel();
             await tick();
+            if (filteredBatch.length === 0) { reviewProcessed += batch.length; continue; }
             try {
               const data = await fetchWithRetry('/api/review-locs', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  existingCodes: batch,
+                  existingCodes: filteredBatch,
                   moduleName: r.report.moduleName,
                   configSummary: buildConfigSummary(r),
                 }),
@@ -1894,8 +2048,12 @@ async function aiEnhance(resultsList) {
                   const already = r.newLocalizations.find(l => l.code === code);
                   if (already) { already.message = message; }
                   else {
-                    const loc = { code, message };
-                    if (r._appConfigCodes && r._appConfigCodes.has(code)) loc._appConfig = true;
+                    // Derive module from result's stored locModule, and locale from existing entries
+                    const existingLoc = r.newLocalizations[0];
+                    const isAppCfg = r._appConfigCodes && r._appConfigCodes.has(code);
+                    const baseModule = existingLoc?.module || r._locModule || r._tgtLocModule;
+                    const loc = { code, message, module: isAppCfg ? 'hcm-appconfiguration' : baseModule, locale: existingLoc?.locale };
+                    if (isAppCfg) loc._appConfig = true;
                     r.newLocalizations.push(loc);
                   }
                   existingImproved++;
@@ -1903,10 +2061,13 @@ async function aiEnhance(resultsList) {
                 }
                 refreshLocInputs(i);
               }
+              // Track reviewed codes for resume
+              for (const loc of filteredBatch) aiResumeState.processedCodes.add(loc.code);
               reviewProcessed += batch.length;
               aiEnhanceState.processed = reviewProcessed;
               addAiLog('info', `Review batch ${batchNum}/${totalBatches}: ${batchImproved} improved`);
             } catch (e) {
+              if (e.name === 'AbortError') break;
               reviewProcessed += batch.length;
               addAiLog('error', `Review failed for ${r.report.moduleName}: ${e.message}`);
             }
@@ -1920,6 +2081,7 @@ async function aiEnhance(resultsList) {
       addAiLog('info', `Stopped. ${processedMessages}/${totalMessages} messages processed.`);
     } else {
       addAiLog('success', `Complete! ${totalMessages} new + ${existingImproved} existing messages enhanced.`);
+      aiResumeState = null; // Clear resume state on successful completion
     }
   } catch (e) {
     addAiLog('error', `Fatal error: ${e.message}`);
@@ -1982,8 +2144,8 @@ document.addEventListener('change', e => {
 // Migrate target uses source URL/Tenant/ContextPath when "Different target environment" is unchecked
 async function refreshMgTgtProjectOptions() {
   const diffEnv = $('#mgDiffEnv')?.checked;
-  const envUrl = (diffEnv ? $('#mgTgtUrl').value : $('#mgSrcUrl').value).trim().replace(/\/+$/, '');
-  const tenant = (diffEnv ? $('#mgTgtTenant').value : $('#mgSrcTenant').value).trim();
+  const envUrl = (diffEnv ? comboVal('mgTgtUrlSel', 'mgTgtUrl') : comboVal('mgSrcUrlSel', 'mgSrcUrl')).replace(/\/+$/, '');
+  const tenant = diffEnv ? comboVal('mgTgtTenantSel', 'mgTgtTenant') : comboVal('mgSrcTenantSel', 'mgSrcTenant');
   const contextPath = (diffEnv ? $('#mgTgtContextPath').value : $('#mgSrcContextPath').value) || 'egov-mdms-service';
   const schema = $('#mgTgtSchema').value;
   const projectEl = $('#mgTgtProject');
@@ -2008,23 +2170,23 @@ async function refreshMgTgtProjectOptions() {
 }
 
 // Auto-fetch project types when URL/Tenant fields are filled and schema is Template
-['olUrl', 'olTenant'].forEach(id => {
+['olUrlSel', 'olUrl', 'olTenantSel', 'olTenant'].forEach(id => {
   const el = $(`#${id}`);
-  if (el) el.addEventListener('blur', () => {
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'blur', () => {
     if ($('#olSchema').value.includes('FormConfigTemplate')) refreshProjectOptions('ol');
   });
 });
-['mgSrcUrl', 'mgSrcTenant'].forEach(id => {
+['mgSrcUrlSel', 'mgSrcUrl', 'mgSrcTenantSel', 'mgSrcTenant'].forEach(id => {
   const el = $(`#${id}`);
-  if (el) el.addEventListener('blur', () => {
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'blur', () => {
     if ($('#mgSrcSchema').value.includes('FormConfigTemplate')) refreshProjectOptions('mgSrc');
     // Also refresh target project when target uses source env
     if (!$('#mgDiffEnv')?.checked && $('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
   });
 });
-['mgTgtUrl', 'mgTgtTenant'].forEach(id => {
+['mgTgtUrlSel', 'mgTgtUrl', 'mgTgtTenantSel', 'mgTgtTenant'].forEach(id => {
   const el = $(`#${id}`);
-  if (el) el.addEventListener('blur', () => {
+  if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'blur', () => {
     if ($('#mgTgtSchema').value.includes('FormConfigTemplate')) refreshMgTgtProjectOptions();
   });
 });
@@ -2053,6 +2215,19 @@ async function checkStatus() {
   }
 }
 checkStatus();
+
+// Init combo-select dropdowns for static panels
+initComboSelect('olUrlSel', 'olUrl');
+initComboSelect('olTenantSel', 'olTenant');
+initComboSelect('mgSrcUrlSel', 'mgSrcUrl');
+initComboSelect('mgSrcTenantSel', 'mgSrcTenant');
+initComboSelect('mgTgtUrlSel', 'mgTgtUrl');
+initComboSelect('mgTgtTenantSel', 'mgTgtTenant');
+
+// Auto-fetch project types on load since URL/Tenant dropdowns have defaults
+refreshProjectOptions('ol');
+refreshProjectOptions('mgSrc');
+refreshMgTgtProjectOptions();
 
 // ════════════════════════════════════════════════════════════════
 // MODE A: FILE
@@ -2099,6 +2274,8 @@ $('#btnAnalyze').onclick = async () => {
     configs = configs.filter(c => c?.flows);
   } catch (e) { hideLoader(); showError('Invalid JSON: ' + e.message); return; }
 
+  cleanupMemory();
+
   showLoader(`Analyzing ${configs.length} config(s)...`);
   await tick();
 
@@ -2122,10 +2299,10 @@ $('#btnAnalyze').onclick = async () => {
 async function onlineFetch() {
   if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
   clearError();
-  const envUrl = $('#olUrl').value.trim().replace(/\/+$/, '');
+  const envUrl = comboVal('olUrlSel', 'olUrl').replace(/\/+$/, '');
   const user = $('#olUser').value.trim();
   const pass = $('#olPass').value.trim();
-  const tenant = $('#olTenant').value.trim();
+  const tenant = comboVal('olTenantSel', 'olTenant');
   const project = $('#olProject').value.trim();
   const schema = $('#olSchema').value;
   const campaign = $('#olCampaign').value.trim();
@@ -2134,6 +2311,8 @@ async function onlineFetch() {
   if (!envUrl || !user || !pass || !tenant) { showError('Fill in URL, Username, Password, and Tenant'); return; }
   if (schema.includes('FormConfig') && !schema.includes('Template') && !campaign) { showError('Campaign Number is required for FormConfig schema'); return; }
   if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
+
+  cleanupMemory();
 
   try {
     // Detect locale from StateInfo (public API, no auth needed)
@@ -2191,6 +2370,9 @@ async function onlineFetch() {
         existingLocCodes = new Map(msgs.map(m => [m.code, m.message]));
       } catch (e) { console.warn(`Loc search skipped for ${locModule}:`, e.message); }
 
+      // Save module-specific locs before merging appConfig (for AI context & display)
+      const moduleExistingLocs = new Map(existingLocCodes);
+
       // Also fetch hcm-appconfiguration locs to avoid regenerating existing codes
       const appConfigLocs = await fetchAppConfigLocs(envUrl, tenant, onlineLocale, onlineToken);
       for (const [code, msg] of appConfigLocs) {
@@ -2200,9 +2382,18 @@ async function onlineFetch() {
       const result = analyzeAndFix(rec.data, { autoFix, existingLocCodes });
       result._record = rec; // keep reference to original record for updates
       result._locModule = locModule;
-      result._existingLocs = existingLocCodes;
+      result._existingLocs = moduleExistingLocs;
       // Stamp module/locale on each localization entry
       for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : locModule; loc.locale = onlineLocale; }
+      // Merge module-specific existing locs into newLocalizations so they are visible in the UI
+      const newCodes = new Set(result.newLocalizations.map(l => l.code));
+      for (const [code, message] of moduleExistingLocs) {
+        if (!newCodes.has(code)) {
+          const loc = { code, message, module: locModule, locale: onlineLocale, _fromSource: true };
+          if (result._appConfigCodes && result._appConfigCodes.has(code)) loc._appConfig = true;
+          result.newLocalizations.unshift(loc);
+        }
+      }
       results.push(result);
     }
 
@@ -2235,10 +2426,10 @@ async function migrateFetch() {
   clearError();
   const srcContextPath = $('#mgSrcContextPath').value;
   const src = {
-    url: $('#mgSrcUrl').value.trim().replace(/\/+$/, ''),
+    url: comboVal('mgSrcUrlSel', 'mgSrcUrl').replace(/\/+$/, ''),
     user: $('#mgSrcUser').value.trim(),
     pass: $('#mgSrcPass').value.trim(),
-    tenant: $('#mgSrcTenant').value.trim(),
+    tenant: comboVal('mgSrcTenantSel', 'mgSrcTenant'),
     project: $('#mgSrcSchema').value.includes('Template') ? $('#mgSrcProject').value.trim() : '',
     schema: $('#mgSrcSchema').value,
     campaign: $('#mgSrcCampaign').value.trim(),
@@ -2247,10 +2438,10 @@ async function migrateFetch() {
 
   const diffEnv = $('#mgDiffEnv').checked;
   const tgt = {
-    url: diffEnv ? $('#mgTgtUrl').value.trim().replace(/\/+$/, '') : src.url,
+    url: diffEnv ? comboVal('mgTgtUrlSel', 'mgTgtUrl').replace(/\/+$/, '') : src.url,
     user: diffEnv ? $('#mgTgtUser').value.trim() : src.user,
     pass: diffEnv ? $('#mgTgtPass').value.trim() : src.pass,
-    tenant: diffEnv ? $('#mgTgtTenant').value.trim() : src.tenant,
+    tenant: diffEnv ? comboVal('mgTgtTenantSel', 'mgTgtTenant') : src.tenant,
     project: $('#mgTgtSchema').value.includes('Template') ? ($('#mgTgtProject').value.trim() || src.project) : '',
     schema: $('#mgTgtSchema').value,
     campaign: $('#mgTgtCampaign').value.trim(),
@@ -2260,6 +2451,8 @@ async function migrateFetch() {
   if (!src.url || !src.user || !src.pass || !src.tenant) { showError('Fill in Source credentials'); return; }
   if (diffEnv && (!tgt.url || !tgt.user || !tgt.pass || !tgt.tenant)) { showError('Fill in Target credentials'); return; }
   if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
+
+  cleanupMemory();
 
   try {
     // Detect locale from StateInfo (public API, no auth needed)
@@ -2355,6 +2548,9 @@ async function migrateFetch() {
         console.warn(`No source locs found for module "${srcLocModule}" - all codes will get generated messages`);
       }
 
+      // Save module-specific locs before merging appConfig (for AI context & display)
+      const moduleExistingLocs = new Map(existingLocCodes);
+
       // Also fetch hcm-appconfiguration locs to avoid regenerating existing codes
       const appConfigLocs = await fetchAppConfigLocs(src.url, src.tenant, srcLocale, srcToken);
       for (const [code, msg] of appConfigLocs) {
@@ -2366,14 +2562,14 @@ async function migrateFetch() {
       result._srcLocModule = srcLocModule;
       const tgtLocModule = getLocModule(tgt.schema, rec.data.name, tgt.project, tgt.campaign);
       result._tgtLocModule = tgtLocModule;
-      result._existingLocs = existingLocCodes;
+      result._existingLocs = moduleExistingLocs;
       result._isUpdate = tgtMap.has(rec.data.name);
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
       for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
-      // Merge source locs into newLocalizations so they are visible in the UI
+      // Merge module-specific source locs into newLocalizations so they are visible in the UI
       const newCodes = new Set(result.newLocalizations.map(l => l.code));
       const sourceLocs = [];
-      for (const [code, message] of existingLocCodes) {
+      for (const [code, message] of moduleExistingLocs) {
         if (!newCodes.has(code)) {
           const loc = { code, message, module: tgtLocModule, locale: tgtLocale, _fromSource: true };
           if (result._appConfigCodes && result._appConfigCodes.has(code)) loc._appConfig = true;
@@ -2600,10 +2796,28 @@ function showFilePushDialog() {
       <h3 style="color:var(--green)">Push to Environment</h3>
       <p>Enter target environment credentials to push corrected configs and localizations.</p>
       <div style="max-height:420px;overflow-y:auto;margin-bottom:12px">
-        <div class="form-group"><label>Environment URL</label><input type="text" id="fpUrl" placeholder="https://unified-uat.digit.org" value="${esc(cached.url || '')}"></div>
+        <div class="form-group"><label>Environment URL</label>
+          <div class="combo-select-row">
+            <select id="fpUrlSel">
+              ${['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].map(u =>
+                `<option value="${u}" ${cached.url === u ? 'selected' : ''}>${u.replace('https://','')}</option>`).join('')}
+              <option value="__other__" ${cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(cached.url) ? 'selected' : ''}>Other...</option>
+            </select>
+            <input type="text" id="fpUrl" class="combo-custom ${cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(cached.url) ? 'active' : ''}" placeholder="https://custom-env.example.org" value="${esc(cached.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(cached.url) ? cached.url : '')}">
+          </div>
+        </div>
         <div class="form-group"><label>Username</label><input type="text" id="fpUser" placeholder="SATYA" value="${esc(cached.user || '')}"></div>
         <div class="form-group"><label>Password</label><input type="password" id="fpPass" value="${esc(cached.pass || '')}"></div>
-        <div class="form-group"><label>Tenant ID</label><input type="text" id="fpTenant" placeholder="mz" value="${esc(cached.tenant || '')}"></div>
+        <div class="form-group"><label>Tenant ID</label>
+          <div class="combo-select-row">
+            <select id="fpTenantSel">
+              ${['mz','dev','chad','demo','ng'].map(t =>
+                `<option value="${t}" ${cached.tenant === t ? 'selected' : ''}>${t}</option>`).join('')}
+              <option value="__other__" ${cached.tenant && !['mz','dev','chad','demo','ng'].includes(cached.tenant) ? 'selected' : ''}>Other...</option>
+            </select>
+            <input type="text" id="fpTenant" class="combo-custom ${cached.tenant && !['mz','dev','chad','demo','ng'].includes(cached.tenant) ? 'active' : ''}" placeholder="custom-tenant" value="${esc(cached.tenant && !['mz','dev','chad','demo','ng'].includes(cached.tenant) ? cached.tenant : '')}">
+          </div>
+        </div>
         <div class="form-group"><label>MDMS Context Path</label>
           <select id="fpContextPath">
             <option value="egov-mdms-service" ${(!cached.contextPath || cached.contextPath === 'egov-mdms-service') ? 'selected' : ''}>egov-mdms-service</option>
@@ -2628,12 +2842,14 @@ function showFilePushDialog() {
         <button class="btn btn-green" id="fpBtnConnect">Connect & Push</button>
       </div>`;
     overlay.classList.remove('hidden');
+    initComboSelect('fpUrlSel', 'fpUrl');
+    initComboSelect('fpTenantSel', 'fpTenant');
 
     // Toggle Project vs Campaign based on schema + fetch project types
     const schemaEl = box.querySelector('#fpSchema');
     const fpFetchProjects = async () => {
-      const url = box.querySelector('#fpUrl').value.trim().replace(/\/+$/, '');
-      const tenant = box.querySelector('#fpTenant').value.trim();
+      const url = comboVal('fpUrlSel', 'fpUrl').replace(/\/+$/, '');
+      const tenant = comboVal('fpTenantSel', 'fpTenant');
       const ctx = box.querySelector('#fpContextPath').value;
       if (!url || !tenant) return;
       const projectEl = box.querySelector('#fpProject');
@@ -2664,7 +2880,7 @@ function showFilePushDialog() {
     if (schemaEl.value.includes('FormConfigTemplate')) fpFetchProjects();
 
     // Re-fetch project types when URL, tenant, or context path changes
-    ['#fpUrl', '#fpTenant', '#fpContextPath'].forEach(sel => {
+    ['#fpUrlSel', '#fpUrl', '#fpTenantSel', '#fpTenant', '#fpContextPath'].forEach(sel => {
       const el = box.querySelector(sel);
       if (el) {
         el.addEventListener('blur', () => {
@@ -2683,10 +2899,10 @@ function showFilePushDialog() {
 
     box.querySelector('#fpBtnCancel').onclick = () => { restoreBox(); resolve(null); };
     box.querySelector('#fpBtnConnect').onclick = async () => {
-      const url = box.querySelector('#fpUrl').value.trim().replace(/\/+$/, '');
+      const url = comboVal('fpUrlSel', 'fpUrl').replace(/\/+$/, '');
       const user = box.querySelector('#fpUser').value.trim();
       const pass = box.querySelector('#fpPass').value.trim();
-      const tenant = box.querySelector('#fpTenant').value.trim();
+      const tenant = comboVal('fpTenantSel', 'fpTenant');
       const project = box.querySelector('#fpProject').value.trim();
       const schema = box.querySelector('#fpSchema').value;
       const campaign = box.querySelector('#fpCampaign').value.trim();
@@ -3335,7 +3551,12 @@ function renderAiPanel() {
         <div class="trans-log" id="aiLog">${logsHtml}</div>
       </div>
       <div class="trans-footer">
-        ${aiEnhanceInProgress ? '<button class="btn btn-red btn-sm" onclick="cancelAiEnhance()">Cancel</button>' : '<button class="btn btn-sm" onclick="dismissAiPanel()">Close</button>'}
+        ${aiEnhanceInProgress
+          ? '<button class="btn btn-red btn-sm" onclick="cancelAiEnhance()">Cancel</button>'
+          : `${aiResumeState && aiResumeState.processedCodes.size > 0 && results.length > 0
+              ? '<button class="btn btn-sm" style="color:var(--mauve);border-color:var(--mauve)" onclick="aiEnhance(results, true)">Resume</button>' : ''}
+             <button class="btn btn-sm" onclick="dismissAiPanel()">Close</button>`
+        }
       </div>
     </div>`;
 
@@ -3356,7 +3577,8 @@ function dismissAiPanel() {
 
 function cancelAiEnhance() {
   aiEnhanceCancelled = true;
-  addAiLog('info', 'Cancellation requested...');
+  if (aiAbortController) aiAbortController.abort();
+  addAiLog('info', 'Cancelling...');
 }
 
 function addAiLog(type, text) {
@@ -3409,10 +3631,28 @@ function showFileTranslateDialog() {
       <h3>Target Environment for Translation</h3>
       <p>Provide credentials for the environment where translations will be upserted.</p>
       <div class="trans-env-dialog">
-        <div class="form-group"><label>Environment URL</label><input type="text" id="ftUrl" placeholder="https://campaigns.afro.who.int" value="${fileTranslateEnv?.url || ''}"></div>
+        <div class="form-group"><label>Environment URL</label>
+          <div class="combo-select-row">
+            <select id="ftUrlSel">
+              ${['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].map(u =>
+                `<option value="${u}" ${fileTranslateEnv?.url === u ? 'selected' : ''}>${u.replace('https://','')}</option>`).join('')}
+              <option value="__other__" ${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(fileTranslateEnv.url) ? 'selected' : ''}>Other...</option>
+            </select>
+            <input type="text" id="ftUrl" class="combo-custom ${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(fileTranslateEnv.url) ? 'active' : ''}" placeholder="https://custom-env.example.org" value="${fileTranslateEnv?.url && !['https://unified-uat.digit.org','https://unified-qa.digit.org','https://unified-dev.digit.org'].includes(fileTranslateEnv.url) ? esc(fileTranslateEnv.url) : ''}">
+          </div>
+        </div>
         <div class="form-group"><label>Username</label><input type="text" id="ftUser" placeholder="SATYA" value="${fileTranslateEnv?.user || ''}"></div>
         <div class="form-group"><label>Password</label><input type="password" id="ftPass" value="${fileTranslateEnv?.pass || ''}"></div>
-        <div class="form-group"><label>Tenant ID</label><input type="text" id="ftTenant" placeholder="chad" value="${fileTranslateEnv?.tenant || ''}"></div>
+        <div class="form-group"><label>Tenant ID</label>
+          <div class="combo-select-row">
+            <select id="ftTenantSel">
+              ${['mz','dev','chad','demo','ng'].map(t =>
+                `<option value="${t}" ${fileTranslateEnv?.tenant === t ? 'selected' : ''}>${t}</option>`).join('')}
+              <option value="__other__" ${fileTranslateEnv?.tenant && !['mz','dev','chad','demo','ng'].includes(fileTranslateEnv.tenant) ? 'selected' : ''}>Other...</option>
+            </select>
+            <input type="text" id="ftTenant" class="combo-custom ${fileTranslateEnv?.tenant && !['mz','dev','chad','demo','ng'].includes(fileTranslateEnv.tenant) ? 'active' : ''}" placeholder="custom-tenant" value="${fileTranslateEnv?.tenant && !['mz','dev','chad','demo','ng'].includes(fileTranslateEnv.tenant) ? esc(fileTranslateEnv.tenant) : ''}">
+          </div>
+        </div>
         <div class="form-group"><label>MDMS Context Path</label>
           <select id="ftContextPath">
             <option value="egov-mdms-service" ${(!fileTranslateEnv || fileTranslateEnv.contextPath === 'egov-mdms-service') ? 'selected' : ''}>egov-mdms-service</option>
@@ -3425,6 +3665,8 @@ function showFileTranslateDialog() {
         <button class="btn btn-primary" id="ftConnect">Connect</button>
       </div>`;
     overlay.classList.remove('hidden');
+    initComboSelect('ftUrlSel', 'ftUrl');
+    initComboSelect('ftTenantSel', 'ftTenant');
 
     const restoreBox = () => {
       overlay.classList.add('hidden');
@@ -3433,10 +3675,10 @@ function showFileTranslateDialog() {
 
     box.querySelector('#ftCancel').onclick = () => { restoreBox(); resolve(null); };
     box.querySelector('#ftConnect').onclick = async () => {
-      const url = box.querySelector('#ftUrl').value.trim().replace(/\/+$/, '');
+      const url = comboVal('ftUrlSel', 'ftUrl').replace(/\/+$/, '');
       const user = box.querySelector('#ftUser').value.trim();
       const pass = box.querySelector('#ftPass').value.trim();
-      const tenant = box.querySelector('#ftTenant').value.trim();
+      const tenant = comboVal('ftTenantSel', 'ftTenant');
       const contextPath = box.querySelector('#ftContextPath').value;
 
       if (!url || !user || !pass || !tenant) { showError('Fill in all fields'); return; }
