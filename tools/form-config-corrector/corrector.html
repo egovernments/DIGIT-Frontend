@@ -349,6 +349,7 @@ input[type="file"] { display: none; }
       </div>
       <div class="sidebar-section">
         <label class="check-row"><input type="checkbox" id="chkAutoFix" checked> Auto-fix issues</label>
+        <label class="check-row"><input type="checkbox" id="chkAiEnhance" checked> AI-enhance localizations</label>
         <button class="btn btn-primary btn-full" id="btnAnalyze" disabled>Analyze</button>
         <button class="btn btn-full" id="btnPaste">Paste from Clipboard</button>
       </div>
@@ -415,6 +416,7 @@ input[type="file"] { display: none; }
           <input type="text" id="olCampaign" placeholder="CMP-...">
         </div>
         <label class="check-row"><input type="checkbox" id="olAutoFix" checked> Auto-fix issues</label>
+        <label class="check-row"><input type="checkbox" id="olAiEnhance" checked> AI-enhance localizations</label>
         <button class="btn btn-primary btn-full" id="btnFetch" onclick="onlineFetch()">Connect & Fetch</button>
       </div>
     </div>
@@ -522,6 +524,7 @@ input[type="file"] { display: none; }
           </div>
         </div>
         <label class="check-row"><input type="checkbox" id="mgAutoFix" checked> Auto-fix issues</label>
+        <label class="check-row"><input type="checkbox" id="mgAiEnhance" checked> AI-enhance localizations</label>
         <button class="btn btn-primary btn-full" onclick="migrateFetch()">Connect & Fetch</button>
       </div>
     </div>
@@ -587,6 +590,12 @@ const MAX_WALK_DEPTH = 50;
 const LFPC_SCHEMA = 'HCM-ADMIN-CONSOLE.LabelFieldPairConfig';
 const LOCALIZATION_FIELDS = ['fieldName','label','heading','title','description','message','helpText','infoText','actionLabel','primaryActionLabel','secondaryActionLabel','expandLabel','collapseLabel','innerLabel','tooltip','errorMessage','key'];
 
+// Fields that should be auto-converted from hardcoded text to loc codes (excludes fieldName, key — those are identifiers)
+const HARDCODED_FIX_FIELDS = new Set(['label','heading','title','description','message','helpText','infoText','actionLabel','primaryActionLabel','secondaryActionLabel','expandLabel','collapseLabel','innerLabel','tooltip','errorMessage']);
+
+// Suffix appended to generated codes per field type (mirrors smartMsg strip patterns)
+const HARDCODED_SUFFIX = {label:'_LABEL',helpText:'_HELP_TEXT',infoText:'_INFO_TEXT',tooltip:'_TOOLTIP',heading:'_HEADING',title:'_TITLE',description:'_DESCRIPTION',errorMessage:'_ERROR_MESSAGE',message:'_MESSAGE',primaryActionLabel:'_PRIMARY_ACTION_LABEL',secondaryActionLabel:'_SECONDARY_ACTION_LABEL',actionLabel:'_ACTION_LABEL',innerLabel:'_INNER_LABEL',expandLabel:'_EXPAND_LABEL',collapseLabel:'_COLLAPSE_LABEL'};
+
 const DOMAIN_WORDS = ['ACKNOWLEDGEMENT','RECONCILIATION','REGISTRATION','CONFIGURATION','BENEFICIARY','COMMUNITY','COMPLAINTS','COMPLAINT','CHECKLIST','DASHBOARD','HOUSEHOLD','INVENTORY','INDIVIDUAL','NAVIGATION','PERMISSION','SELECTION','SETTLEMENT','TRANSPORT','WAREHOUSE','ATTENDANCE','CAMPAIGN','CATEGORY','COMMENTS','DELIVERY','DETAILS','DAMAGED','EXPIRY','FACILITY','HANDLER','LOCATION','MULTIPLE','OVERVIEW','PREVIEW','PRODUCTS','PRODUCT','QUANTITY','RECEIVE','REPORTS','REQUIRED','SCANNER','SUCCESS','VEHICLE','ACTIONS','BUTTON','CANCEL','CLOSE','COORD','CREATE','DELETE','ENTER','FIELD','GENDER','MANAGE','MEMBER','NUMBER','RECORD','REPORT','RETURN','SCREEN','SEARCH','SELECT','STOCK','SUBMIT','BATCH','DATE','EDIT','FLOW','FORM','HEAD','HOME','ITEM','LIST','LOST','MARK','NAME','NEXT','OPEN','PAGE','SCAN','SENT','TEAM','TEXT','TYPE','UNABLE','VIEW','AREA','BACK','CARD','CODE','DONE','FROM','HELP','INFO','LATLNG','PANEL','SAVE','WHICH','ADD','AGE','NEW','QR','TO','MONITORING','MONITOR','SURVEYOR','SURVEY','CLUSTER','LOT','CHILDREN','VACCINATED','REFUSAL','ABSENCE','CAREGIVER','AWARENESS','DESIGNATION','COVERED','FINGER','MARKED','DOSES','REASON','SPECIFY','INFORMED','MISSED','ASLEEP','ROUTINE','POORLY','FINAL','COUNT','CASE','VISITED','REVISITED','PRESENT','PHYSICAL','CALCULATED','EXCESS','ISSUED','RETURNED','RECEIVED','WAYBILL','ENTRY','MRN','TOTAL','MEMBERS','LABEL','STATUS','DESCRIPTION','CONTACT','INBOX','COMPLAINANT','REFERRAL','SYMPTOM','ERROR','MOBILE'].sort((a,b)=>b.length-a.length);
 const SMALL_WORDS = new Set(['a','an','the','to','of','in','for','and','or','but','is','at','by','on']);
 const FIELD_MAP = {latLng:'GPS Coordinates',dob:'Date of Birth',dateOfBirth:'Date of Birth',qrCode:'QR Code',scanner:'Scan Code',id:'ID',uuid:'UUID',otp:'OTP',givenName:'Given Name',nameOfIndividual:'Name of Individual',isHeadOfFamily:'Head of Family',memberCount:'Member Count',facilityId:'Facility ID',tenantId:'Tenant ID',projectId:'Project ID',productVariantId:'Product Variant ID',transactionType:'Transaction Type',dateOfEntry:'Date of Entry',wayBillNumber:'Waybill Number',mrnNumber:'MRN Number',batchNumber:'Batch Number',stockExpiry:'Stock Expiry',quantityReceived:'Quantity Received',applicationStatus:'Application Status',mobileNumber:'Mobile Number',dateOfRegistration:'Date of Registration',additionalFields:'Additional Fields',goBack:'Go Back'};
@@ -610,13 +619,13 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R1&2: type+fieldName
   const visited1 = new WeakSet();
-  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
+  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}if(autoFix&&o.format&&o.fieldName&&o.fieldName===o.format){const valSrc=o.value||o.cellValue||'';const vm=valSrc.match(/item\.(?:items\[\d+\]\.)?(?:additionalFields\.fields\.)?(\w+)/);if(vm){const derived=vm[1];o.fieldName=derived;report.fixes.push({rule:'generic-fieldName',path:p,format:o.format,fixed:`fieldName "${o.format}" → "${derived}" (from value expression)`});}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
   chkTF(data,'data',null,0);
 
   // R3: dup fieldNames (per-page scope — same fieldName on different pages is valid)
   // Skip page-level 'properties' array (summary/review fields that intentionally share fieldNames with body)
   function cfn(o,p,e,d,vis,isPage){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return e;if(Array.isArray(o)){o.forEach((x,i)=>cfn(x,`${p}[${i}]`,e,d+1,vis,false));return e;}if(vis.has(o))return e;vis.add(o);if(o.fieldName&&typeof o.fieldName==='string'&&o.fieldName.trim())e.push({obj:o,fieldName:o.fieldName,path:p});for(const[k,v]of Object.entries(o)){if(k==='fieldName')continue;if(isPage&&k==='properties'&&Array.isArray(v))continue;if(typeof v==='object'&&v!==null)cfn(v,p?`${p}.${k}`:k,e,d+1,vis,false);}return e;}
-  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0,new WeakSet(),true);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){let x=2,nn=`${e.fieldName}${x}`;const all=new Set(entries.map(z=>z.obj.fieldName));while(all.has(nn)){x++;nn=`${e.fieldName}${x}`;}e.obj.fieldName=nn;report.fixes.push({rule:'duplicate-fieldName',screen:n,old:e.fieldName.replace(/\d+$/,''),new:nn,path:e.path,fixed:`"${e.fieldName.replace(/\d+$/,'')}" \u2192 "${nn}"`});}else seen.set(e.fieldName,true);}}}}
+  if(data.flows){for(const fl of data.flows){const screens=[];if(fl.body||fl.header||fl.footer)screens.push({s:fl,n:fl.name||''});if(fl.pages)fl.pages.forEach(pg=>screens.push({s:pg,n:pg.page||pg.name||''}));for(const{s,n}of screens){const entries=cfn(s,'',[],0,new WeakSet(),true);const seen=new Map();for(const e of entries){if(seen.has(e.fieldName)){const rec=seen.get(e.fieldName);if(!rec.keyed){rec.obj.key=1;rec.keyed=true;}rec.count++;e.obj.key=rec.count;report.fixes.push({rule:'duplicate-fieldName',screen:n,path:e.path,fixed:`"${e.fieldName}" duplicate #${rec.count} \u2192 added key: ${rec.count}`});}else seen.set(e.fieldName,{obj:e.obj,keyed:false,count:1});}}}}
 
   // R4: flow categories (inherit from previous flow, then moduleName)
   if(data.flows){let lastCategory='';for(const fl of data.flows){if(fl.category&&fl.category.trim()){lastCategory=fl.category;}else if((fl.screenType||fl.body)&&(!fl.category||!fl.category.trim())){fl.category=lastCategory||moduleName||fl.name||'UNKNOWN';report.fixes.push({rule:'missing-category',flow:fl.name,path:fl.name,fixed:`category \u2192 "${fl.category}"`});}}}
@@ -647,12 +656,12 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R10: collect loc codes
   const APP_CONFIG_FIELDS = new Set(['fieldName','labelPairList']);
-  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();if(cd.includes(' ')&&!cd.includes('_'))continue;if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(c.inFooter&&o.fieldName&&typeof o.fieldName==='string'){const fn=o.fieldName.trim();if(fn){const faCode='FOOTER_ACTION_'+fn+'_LABEL';appConfigCodes.add(faCode);if(!existingLocCodes.has(faCode)&&!allNew.has(faCode)){const faMsg=smartMsg(fn,null);allNew.set(faCode,faMsg);report.missingLocalizations.push({code:faCode,fieldType:'footer',message:faMsg});}}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])){appConfigCodes.add(pr[kf]);if(!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}if(pr&&pr.key&&typeof pr.key==='string'&&isCode(pr.key)){const lpCode='LABEL_PAIR_'+pr.key;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){const lpMsg=smartMsg(pr.key,null);allNew.set(lpCode,lpMsg);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:lpMsg});}}}}for(const ea of['enums','dropDownOptions']){if(Array.isArray(o[ea])){for(const en of o[ea]){if(en&&en.name&&typeof en.name==='string'&&en.name.trim()){let nc=en.name.trim();if(nc.startsWith('{{'))continue;if(nc.includes(' ')&&!nc.includes('_')&&autoFix){const origName=nc;nc=moduleName.toUpperCase()+'_ENUM_'+nc.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+$/,'');en.name=nc;report.fixes.push({rule:'hardcoded-enum-name',path:'enum',fixed:`"${origName}" → "${nc}"`});allNew.set(nc,origName);appConfigCodes.add(nc);continue;}appConfigCodes.add(nc);if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const msg=smartLocMsg(nc,'enum',o.fieldName||null,c.pN,moduleName);allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:'enum',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null){const nc=k==='footer'?{...c,inFooter:true}:c;wLoc(v,nc,d+1);}}}
+  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();const tplM=cd.match(/\{\{[^}]*\}\}/g);if(tplM){const withoutTpl=cd.replace(/\{\{[^}]*\}\}/g,'').trim();if(withoutTpl.length>0&&autoFix&&HARDCODED_FIX_FIELDS.has(f)){let msg=cd,args=[];let idx=1;msg=msg.replace(/\{\{[^}]*\}\}/g,(m)=>{args.push(m);return'{'+idx+++'}';});let nc;if(isCode(withoutTpl)){nc=withoutTpl;const readable=smartLocMsg(nc,f,o.format?o.fieldName:null,c.pN,moduleName);msg=msg.replace(nc,readable);}else{const textPart=withoutTpl.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();nc=(moduleName.toUpperCase()+'_'+textPart+sfx).replace(/_+/g,'_');}o[f]=nc;o[f+'Args']=args;report.fixes.push({rule:'template-'+f,path:'wLoc',fixed:`"${cd}" → "${nc}" + ${f}Args`});if(!allNew.has(nc)){allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}continue;}if(cd.includes(' ')&&!cd.includes('_')){if(autoFix&&HARDCODED_FIX_FIELDS.has(f)){const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();const fnPart=o.fieldName&&typeof o.fieldName==='string'?o.fieldName.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase():(c.pN||'').toUpperCase();const nc=(moduleName.toUpperCase()+(fnPart?'_'+fnPart:'')+sfx).replace(/[^A-Z0-9_]/g,'_').replace(/_+/g,'_');if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const orig=cd;o[f]=nc;allNew.set(nc,orig);report.fixes.push({rule:'hardcoded-'+f,path:'wLoc',fixed:`"${orig}" → "${nc}"`});report.missingLocalizations.push({code:nc,fieldType:f,message:orig});if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}}continue;}if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(c.inFooter&&o.fieldName&&typeof o.fieldName==='string'){const fn=o.fieldName.trim();if(fn){const faCode='FOOTER_ACTION_'+fn+'_LABEL';appConfigCodes.add(faCode);if(!existingLocCodes.has(faCode)&&!allNew.has(faCode)){const faMsg=smartMsg(fn,null);allNew.set(faCode,faMsg);report.missingLocalizations.push({code:faCode,fieldType:'footer',message:faMsg});}}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])){appConfigCodes.add(pr[kf]);if(!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}if(pr&&pr.key&&typeof pr.key==='string'&&isCode(pr.key)){const lpCode='LABEL_PAIR_'+pr.key;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){const lpMsg=smartMsg(pr.key,null);allNew.set(lpCode,lpMsg);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:lpMsg});}}}}for(const ea of['enums','dropDownOptions']){if(Array.isArray(o[ea])){for(const en of o[ea]){if(en&&en.name&&typeof en.name==='string'&&en.name.trim()){let nc=en.name.trim();if(nc.startsWith('{{'))continue;if(nc.includes(' ')&&!nc.includes('_')&&autoFix){const origName=nc;nc=moduleName.toUpperCase()+'_ENUM_'+nc.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+$/,'');en.name=nc;report.fixes.push({rule:'hardcoded-enum-name',path:'enum',fixed:`"${origName}" → "${nc}"`});allNew.set(nc,origName);appConfigCodes.add(nc);continue;}appConfigCodes.add(nc);if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const msg=smartLocMsg(nc,'enum',o.fieldName||null,c.pN,moduleName);allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:'enum',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null){const nc=k==='footer'?{...c,inFooter:true}:c;wLoc(v,nc,d+1);}}}
 
   wLoc(data,{},0);
 
   // R12: APP_CONFIG category, flow, and page localization codes (for hcm-appconfiguration)
-  if(data.flows){const categories=new Set(),flowNames=new Set(),pageNames=new Set();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){if(pg.page||pg.name)pageNames.add(pg.page||pg.name);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(fn));}}for(const pn of pageNames){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(pn));}}}
+  if(data.flows){const categories=new Set(),flowNames=new Set(),pageEntries=new Map();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){const pn=pg.page||pg.name;if(pn&&!pageEntries.has(pn))pageEntries.set(pn,pg.label||pg.heading||null);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(fn));}}for(const[pn,labelCode]of pageEntries){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){let msg=null;if(labelCode){msg=allNew.get(labelCode)||existingLocCodes.get(labelCode)||null;if(!msg)msg=smartMsg(labelCode,moduleName);}if(!msg)msg=humanize(pn);allNew.set(cd,msg);}}}
 
   report.totalIssues=report.fixes.length+report.warnings.length;
   const newLocalizations = Array.from(allNew.entries()).map(([code,message])=>({code,message}));
@@ -1849,7 +1858,7 @@ function buildConfigSummary(result) {
       for (const pg of fl.pages) {
         const fields = [];
         extractFields(pg.body || pg.header || pg, fields);
-        flowInfo.pages.push({ page: pg.page || pg.name || '', screenType: pg.screenType || fl.screenType || '', fields: fields.slice(0, 20) });
+        flowInfo.pages.push({ page: pg.page || pg.name || '', screenType: pg.screenType || fl.screenType || '', label: pg.label || '', heading: pg.heading || '', description: pg.description || '', actionLabel: pg.actionLabel || '', fields: fields.slice(0, 20) });
       }
     } else {
       const fields = [];
@@ -2289,7 +2298,7 @@ $('#btnAnalyze').onclick = async () => {
   renderResults();
 
   // AI-enhance in background (non-blocking)
-  aiEnhance(results);
+  if ($('#chkAiEnhance').checked) aiEnhance(results);
 };
 
 // ════════════════════════════════════════════════════════════════
@@ -2405,7 +2414,7 @@ async function onlineFetch() {
     renderResults();
 
     // AI enhance in background (non-blocking)
-    aiEnhance(results);
+    if ($('#olAiEnhance').checked) aiEnhance(results);
 
   } catch (e) {
     hideLoader();
@@ -2587,7 +2596,7 @@ async function migrateFetch() {
     renderResults();
 
     // AI enhance in background (non-blocking)
-    aiEnhance(results);
+    if ($('#mgAiEnhance').checked) aiEnhance(results);
 
   } catch (e) {
     hideLoader();
@@ -2601,113 +2610,141 @@ function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 // PUSH / UPSERT ACTIONS
 // ════════════════════════════════════════════════════════════════
 
-async function pushConfigFixes() {
+async function pushOnlineToEnv() {
   if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Please wait or cancel it first.'); return; }
-  const fixCount = results.reduce((s,r) => s + r.report.fixes.length, 0);
-  if (fixCount === 0) { showError('No fixes to push'); return; }
+  if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
+  clearError();
 
-  const env = onlineEnvUrl || '';
-  const ok = await showConfirm('Push Config Fixes',
-    `Push <b>${fixCount} fixes</b> across <b>${results.length} modules</b> to<br><code>${esc(env)}</code>?`);
-  if (!ok) return;
+  // Build module list with update/create status using onlineRecords
+  const onlineMap = new Map();
+  for (const rec of onlineRecords) { if (rec.data?.name) onlineMap.set(rec.data.name, rec); }
+  const moduleList = results.map((r, i) => ({
+    idx: i,
+    name: r.report.moduleName,
+    isUpdate: onlineMap.has(r.report.moduleName),
+  }));
 
-  showLoader('Pushing config fixes...');
-  let pushed = 0, errors = 0;
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
-    if (r.report.fixes.length === 0) continue;
-    showProgress(`Updating ${r.report.moduleName}...`, `${i+1}/${results.length}`, ((i+1)/results.length)*90);
+  // Module selection dialog
+  const selectedIndices = await showFilePushModuleSelector(moduleList);
+  if (selectedIndices.length === 0) return;
+
+  const selectedModules = selectedIndices.map(i => moduleList[i]);
+  const createCount = selectedModules.filter(m => !m.isUpdate).length;
+  const updateCount = selectedModules.filter(m => m.isUpdate).length;
+  const locCount = selectedModules.reduce((s, m) => s + results[m.idx].newLocalizations.length, 0);
+  const transCount = translatedLocales.size;
+
+  // Push selection dialog (configs / locs / translations)
+  const selection = await showPushSelectionDialog({
+    targetUrl: onlineEnvUrl, configCount: selectedModules.length, createCount, updateCount, locCount, transCount, schema: onlineSchema
+  });
+  if (!selection) return;
+
+  showLoader('Pushing to environment...');
+  let pushed = 0, locUpserted = 0, locErrors = 0, errors = 0;
+  const total = selectedModules.length;
+
+  for (let si = 0; si < selectedModules.length; si++) {
+    const mod = selectedModules[si];
+    const r = results[mod.idx];
+    showProgress(`Updating ${mod.name}...`, `${si+1}/${total}`, ((si+1)/total)*80);
     await tick();
-    try {
-      const rec = r._record;
-      const updateRec = {
-        id: rec.id, tenantId: rec.tenantId, schemaCode: onlineSchema,
-        uniqueIdentifier: rec.uniqueIdentifier, data: r.correctedData, isActive: true,
-        auditDetails: rec.auditDetails || null,
-      };
-      await apiMdmsUpdate(onlineEnvUrl, onlineSchema, updateRec, onlineToken, onlineLocale, onlineContextPath);
-      pushed++;
-    } catch (e) {
-      errors++;
-      showError(`Failed to update ${r.report.moduleName}: ${e.message}`);
+
+    if (selection.configs) {
+      try {
+        const rec = r._record;
+        const updateRec = {
+          id: rec.id, tenantId: rec.tenantId, schemaCode: onlineSchema,
+          uniqueIdentifier: rec.uniqueIdentifier, data: r.correctedData, isActive: true,
+          auditDetails: rec.auditDetails || null,
+        };
+        await apiMdmsUpdate(onlineEnvUrl, onlineSchema, updateRec, onlineToken, onlineLocale, onlineContextPath);
+        pushed++;
+      } catch (e) {
+        errors++;
+        showError(`Failed to update ${mod.name}: ${e.message}`);
+      }
     }
+
+    if (selection.locs) {
+      const locModule = r._locModule || getLocModule(onlineSchema, r.report.moduleName, onlineProject, onlineCampaign);
+      const allRaw = [];
+      for (const m of r.newLocalizations) {
+        allRaw.push({ code: m.code, message: m.message, module: locModule, locale: onlineLocale });
+        if (m._appConfig) allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale });
+      }
+      const tagged = dedupByCode(allRaw);
+
+      const byModule = new Map();
+      for (const loc of tagged) { const m = loc.module; if (!byModule.has(m)) byModule.set(m, []); byModule.get(m).push(loc); }
+      for (const [mod2, modLocs] of byModule) {
+        for (let b = 0; b < modLocs.length; b += 50) {
+          const batch = modLocs.slice(b, b + 50);
+          try {
+            await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale);
+            locUpserted += batch.length;
+          } catch (e) { locErrors++; showError(`Upsert failed for ${mod2}: ${e.message}`); }
+        }
+      }
+    }
+  }
+
+  // Push translations if selected
+  if (selection.translations && translatedLocales.size > 0) {
+    translationEnvCtx = { envUrl: onlineEnvUrl, token: onlineToken, tenant: onlineTenant };
+    await pushTranslations();
   }
 
   // Push LFPC changes
   const lfpcResult = await pushLfpcChanges(onlineEnvUrl, onlineToken, onlineLocale, onlineTenant, onlineContextPath);
 
   hideLoader();
+  const parts = [];
+  if (selection.configs) parts.push(`Pushed ${pushed}/${total} modules`);
+  if (selection.locs) parts.push(`upserted ${locUpserted} localizations`);
   const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
-  showError(`Pushed ${pushed} modules.${lfpcMsg} ${errors || lfpcResult.errors ? (errors + lfpcResult.errors) + ' errors.' : 'All successful.'}`);
-  if (!errors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
-}
-
-async function upsertLocalizations() {
-  if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Messages are still being improved.'); return; }
-  const locCount = results.reduce((s,r) => s + r.newLocalizations.length, 0);
-  if (locCount === 0) { showError('No localizations to upsert'); return; }
-
-  const env = onlineEnvUrl || '';
-  const ok = await showConfirm('Upsert Localizations',
-    `Upsert <b>${locCount} localization messages</b> across <b>${results.length} modules</b> to<br><code>${esc(env)}</code>?<br><br>Batch size: 50 messages per request.`);
-  if (!ok) return;
-
-  showLoader('Upserting localizations...');
-  let upserted = 0, errors = 0;
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
-    if (r.newLocalizations.length === 0) continue;
-
-    const locModule = r._locModule || getLocModule(onlineSchema, r.report.moduleName, onlineProject, onlineCampaign);
-    // All codes go to the regular module; appConfig codes also go to hcm-appconfiguration
-    const allRaw = [];
-    for (const m of r.newLocalizations) {
-      allRaw.push({ code: m.code, message: m.message, module: locModule, locale: onlineLocale });
-      if (m._appConfig) allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale });
-    }
-    const tagged = dedupByCode(allRaw);
-
-    // Split by module — each upsert request must have only one module
-    const byModule = new Map();
-    for (const loc of tagged) { const m = loc.module; if (!byModule.has(m)) byModule.set(m, []); byModule.get(m).push(loc); }
-    for (const [mod2, modLocs] of byModule) {
-      for (let b = 0; b < modLocs.length; b += 50) {
-        const batch = modLocs.slice(b, b + 50);
-        showProgress(`Upserting ${mod2}...`, `${b+batch.length}/${modLocs.length} messages`, ((i + (b+batch.length)/tagged.length) / results.length) * 100);
-        await tick();
-        try {
-          await apiLocUpsert(onlineEnvUrl, onlineTenant, batch, onlineToken, onlineLocale);
-          upserted += batch.length;
-        } catch (e) { errors++; showError(`Upsert failed for ${mod2}: ${e.message}`); }
-      }
-    }
-  }
-  hideLoader();
-  showError(`Upserted ${upserted} messages. ${errors ? errors + ' batch errors (some localizations may not have been saved).' : 'All successful.'}`);
-  if (!errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
+  const locErrMsg = locErrors ? ` ${locErrors} localization batch(es) failed.` : '';
+  showError(`${parts.join(', ')}.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : 'All successful.'}`);
+  if (!errors && !locErrors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
 async function pushAllToTarget() {
   if (aiEnhanceInProgress) { showError('AI enhancement is in progress. Messages are still being improved.'); return; }
+  if (translationInProgress) { showError('Translation is in progress. Please wait or cancel it first.'); return; }
   if (!migrateCtx) return;
+  clearError();
   const { tgt, tgtToken, tgtMap, tgtLocale } = migrateCtx;
-  const total = results.length;
-  const createCount = results.filter(r => !r._isUpdate).length;
-  const updateCount = results.filter(r => r._isUpdate).length;
-  const locCount = results.reduce((s,r) => s + r.newLocalizations.length, 0);
+
+  // Build module list with update/create status
+  const moduleList = results.map((r, i) => ({
+    idx: i,
+    name: r.report.moduleName,
+    isUpdate: !!r._isUpdate,
+  }));
+
+  // Module selection dialog
+  const selectedIndices = await showFilePushModuleSelector(moduleList);
+  if (selectedIndices.length === 0) return;
+
+  const selectedModules = selectedIndices.map(i => moduleList[i]);
+  const createCount = selectedModules.filter(m => !m.isUpdate).length;
+  const updateCount = selectedModules.filter(m => m.isUpdate).length;
+  const locCount = selectedModules.reduce((s, m) => s + results[m.idx].newLocalizations.length, 0);
   const transCount = translatedLocales.size;
 
   const selection = await showPushSelectionDialog({
-    targetUrl: tgt.url, configCount: total, createCount, updateCount, locCount, transCount, schema: tgt.schema
+    targetUrl: tgt.url, configCount: selectedModules.length, createCount, updateCount, locCount, transCount, schema: tgt.schema
   });
   if (!selection) return;
 
   showLoader('Pushing to target...');
   let pushed = 0, locUpserted = 0, locErrors = 0, errors = 0;
+  const total = selectedModules.length;
 
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
-    showProgress(`${r._isUpdate ? 'Updating' : 'Creating'} ${r.report.moduleName}...`, `${i+1}/${total}`, ((i+1)/total)*80);
+  for (let si = 0; si < selectedModules.length; si++) {
+    const mod = selectedModules[si];
+    const r = results[mod.idx];
+    showProgress(`${r._isUpdate ? 'Updating' : 'Creating'} ${mod.name}...`, `${si+1}/${total}`, ((si+1)/total)*80);
     await tick();
 
     if (selection.configs) {
@@ -2729,24 +2766,19 @@ async function pushAllToTarget() {
         pushed++;
       } catch (e) {
         errors++;
-        showError(`${r._isUpdate ? 'Update' : 'Create'} failed for ${r.report.moduleName}: ${e.message}`);
+        showError(`${r._isUpdate ? 'Update' : 'Create'} failed for ${mod.name}: ${e.message}`);
       }
     }
 
     if (selection.locs) {
-      // Upsert locs to target
       const tgtLocModule = r._tgtLocModule;
       const allLocsRaw = [];
-
-      // Include all locs (source + new) from newLocalizations
-      // appConfig codes go to both the regular module and hcm-appconfiguration
       for (const loc of r.newLocalizations) {
         allLocsRaw.push({ code: loc.code, message: loc.message, module: loc.module || tgtLocModule, locale: tgtLocale });
         if (loc._appConfig) allLocsRaw.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: tgtLocale });
       }
       const allLocs = dedupByCode(allLocsRaw);
 
-      // Split by module to avoid mixing modules in one upsert request
       const byModule = new Map();
       for (const loc of allLocs) { const m = loc.module; if (!byModule.has(m)) byModule.set(m, []); byModule.get(m).push(loc); }
       for (const [mod2, modLocs] of byModule) {
@@ -2763,7 +2795,6 @@ async function pushAllToTarget() {
 
   // Push translations if selected
   if (selection.translations && translatedLocales.size > 0) {
-    // Set env context for translation push to target
     translationEnvCtx = { envUrl: tgt.url, token: tgtToken, tenant: tgt.tenant };
     await pushTranslations();
   }
@@ -2777,7 +2808,7 @@ async function pushAllToTarget() {
   if (selection.locs) parts.push(`upserted ${locUpserted} localizations`);
   const lfpcMsg = lfpcResult.pushed > 0 ? ` LFPC: ${lfpcResult.pushed} updated.` : '';
   const locErrMsg = locErrors ? ` ${locErrors} localization batch(es) failed.` : '';
-  showError(`${parts.join(', ')}.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : ''}`);
+  showError(`${parts.join(', ')}.${lfpcMsg}${locErrMsg} ${errors ? errors + ' config errors.' : 'All successful.'}`);
   if (!errors && !locErrors && !lfpcResult.errors) { const el = $('#errorBanner'); el.className = 'error-banner'; el.style.borderColor = 'var(--green)'; el.style.color = 'var(--green)'; el.style.background = 'rgba(166,227,161,.1)'; }
 }
 
@@ -2977,6 +3008,7 @@ function showFilePushModuleSelector(moduleList) {
     box.addEventListener('change', updateCount);
 
     const restoreBox = () => {
+      box.removeEventListener('change', updateCount);
       overlay.classList.add('hidden');
       box.innerHTML = '<h3 id="confirmTitle">Confirm</h3><p id="confirmMsg"></p><div class="confirm-actions"><button class="btn" onclick="confirmResolve(false)">Cancel</button><button class="btn btn-primary" onclick="confirmResolve(true)">Confirm</button></div>';
     };
@@ -3609,9 +3641,9 @@ function updateButtonStates() {
   const ab = $('#actionButtons');
   if (!ab) return;
   const selectors = [
-    'button[onclick*="pushConfigFixes"]',
-    'button[onclick*="upsertLocalizations"]',
+    'button[onclick*="pushOnlineToEnv"]',
     'button[onclick*="pushAllToTarget"]',
+    'button[onclick*="pushFileToEnv"]',
     'button[onclick*="translateToLanguage"]',
     'button[onclick*="translateAllLanguages"]',
     'button[onclick*="startFileTranslateFlow"]',
@@ -3939,8 +3971,7 @@ function renderResults() {
   if (activeMode === 'online' && onlineToken) {
     ab.innerHTML = `
       <div class="btn-group">
-        <button class="btn btn-green" onclick="pushConfigFixes()" ${aiDisabled}>Push Config Fixes</button>
-        <button class="btn btn-primary" onclick="upsertLocalizations()" ${aiDisabled}>Upsert Localizations</button>
+        <button class="btn btn-green" onclick="pushOnlineToEnv()" ${aiDisabled}>Push to Environment</button>
         <button class="btn" onclick="downloadLocSheet()">Download Localization Sheet</button>
       </div>`;
   } else if (activeMode === 'migrate' && migrateCtx) {

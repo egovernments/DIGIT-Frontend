@@ -199,6 +199,7 @@ Rules:
 - Match the style and quality of existing localizations when available
 - APP_CONFIG_CATEGORY/FLOW/PAGE codes should be clean human-readable names for the category/flow/page they represent
 - If a code has an empty or whitespace-only message, keep it as a single space " " — it was intentionally left empty
+- Messages containing {1}, {2}, etc. are parameterized — these placeholders represent dynamic runtime values (e.g. field names, IDs, counts). Preserve ALL placeholders exactly as-is and improve ONLY the surrounding text. Example: "MRN {1}" is correct; do NOT remove or renumber placeholders
 
 Return ONLY valid JSON mapping code to improved message. No markdown, no explanation, no wrapping.
 Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
@@ -270,6 +271,7 @@ Rules for improvements:
 - Keep domain acronyms as-is: OPV, AFP, LQA, IHM, MRN, QR, GPS, HCM
 - APP_CONFIG codes should be clean human-readable names
 - If a code has an empty or whitespace-only message, SKIP it — it was intentionally left empty
+- Messages containing {1}, {2}, etc. are parameterized — these placeholders represent dynamic runtime values. Preserve ALL placeholders exactly as-is. Only improve the surrounding text if it's poor quality
 
 IMPORTANT: Only return codes that NEED improvement. Skip codes with already clear, descriptive messages.
 If all messages are fine, return an empty object: {}
