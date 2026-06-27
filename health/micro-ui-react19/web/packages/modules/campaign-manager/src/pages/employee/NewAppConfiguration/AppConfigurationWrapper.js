@@ -114,6 +114,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     const errors = [];
     const fieldTypeMasterData = fieldTypeMaster?.fieldTypeMappingConfig || [];
 
+    // Helper: translate field label with fallback to raw fieldName if translation is missing
+    const translateFieldLabel = (field) => {
+      const code = field?.label || field?.fieldName;
+      const translated = customTranslate(code || "");
+      return translated || field?.fieldName || code || "Unknown Field";
+    };
+
     // Helper function to recursively collect all fields from nested template structures
     const collectAllFields = (node, collectedFields = []) => {
       if (!node) return collectedFields;
@@ -219,7 +226,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   panelLabel: panelItem.label,
                   message: `VALIDATION_MANDATORY_FIELD_LOCALIZED_EMPTY`,
                   messageParams: {
-                    fieldName: customTranslate(field?.label || field?.fieldName || "Unknown Field"),
+                    fieldName: translateFieldLabel(field),
                     propertyName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))
                   },
                   tab: tabKey,
@@ -460,7 +467,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                         panelLabel: panelItem.label,
                         message: panelItem.validationMessage,
                         messageParams: {
-                          fieldName: customTranslate(field?.label || field?.fieldName || "Unknown Field"),
+                          fieldName: translateFieldLabel(field),
                           propertyName: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))
                         },
                         tab: tabKey,
@@ -484,7 +491,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     panelLabel: panelItem.label,
                     message: "VALIDATION_SCHEMA_CODE_REQUIRED",
                     messageParams: {
-                      fieldName: customTranslate(field?.label || field?.fieldName)
+                      fieldName: translateFieldLabel(field)
                     },
                     tab: tabKey,
                   });
@@ -500,7 +507,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                     panelLabel: panelItem.label,
                     message: "VALIDATION_DROPDOWN_OPTIONS_REQUIRED",
                     messageParams: {
-                      fieldName: customTranslate(field?.label || field?.fieldName)
+                      fieldName: translateFieldLabel(field)
                     },
                     tab: tabKey,
                   });
@@ -516,7 +523,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                       panelLabel: panelItem.label,
                       message: "VALIDATION_DROPDOWN_OPTION_NAME_REQUIRED",
                       messageParams: {
-                        fieldName: customTranslate(field?.label || field?.fieldName)
+                        fieldName: translateFieldLabel(field)
                       },
                       tab: tabKey,
                     });
@@ -532,7 +539,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                         panelLabel: panelItem.label,
                         message: "VALIDATION_DROPDOWN_OPTION_LABEL_EMPTY",
                         messageParams: {
-                          fieldName: customTranslate(field?.label || field?.fieldName)
+                          fieldName: translateFieldLabel(field)
                         },
                         tab: tabKey,
                       });
@@ -551,7 +558,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   panelLabel: panelItem.label,
                   message: "VALIDATION_PREFIX_TEXT_MAX_LENGTH",
                   messageParams: {
-                    fieldName: customTranslate(field?.label || field?.fieldName),
+                    fieldName: translateFieldLabel(field),
                     maxLength: maxPrefixLength
                   },
                   tab: tabKey,
@@ -568,7 +575,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   panelLabel: panelItem.label,
                   message: "VALIDATION_SUFFIX_TEXT_MAX_LENGTH",
                   messageParams: {
-                    fieldName: customTranslate(field?.label || field?.fieldName),
+                    fieldName: translateFieldLabel(field),
                     maxLength: maxSuffixLength
                   },
                   tab: tabKey,
@@ -582,7 +589,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       // Validation for popup config fields
       const popupConfig = field?.properties?.popupConfig;
       if (popupConfig) {
-        const fieldLabel = customTranslate(field?.label || field?.fieldName);
+        const fieldLabel = translateFieldLabel(field);
 
         // Validate popup title - check if localized value is empty
         if (popupConfig.title) {
