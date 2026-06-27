@@ -147,23 +147,16 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     return map;
   }, [productVariants, products]);
 
-  // Get user's staff project from context (the project the user is directly assigned to)
-  const { projects: contextProjects, sortedHierarchy } = useCommodityProject();
-  const userStaffProjectId = useMemo(() => {
-    if (!contextProjects?.length) return null;
-    // First project is the user's directly assigned staff project
-    // (context searches staffProjectIds with includeDescendants, staff project comes first)
-    const match = contextProjects.find(p => p.address?.boundary === userBoundary?.boundary);
-    return match?.id || contextProjects[0]?.id || null;
-  }, [contextProjects, userBoundary]);
+  // Use the selected projectId (passed from CommodityDashboard) for facility lookup
+  const { sortedHierarchy } = useCommodityProject();
 
-  // Fetch project facilities using user's staff project (not campaign's top-level projectId)
+  // Fetch project facilities using the selected project (not derived from context)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
     params: { tenantId, limit: 100, offset: 0 },
-    body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+    body: { ProjectFacility: { projectId: [projectId] } },
     config: {
-      enabled: !!userStaffProjectId && !!tenantId,
+      enabled: !!projectId && !!tenantId,
       select: (data) => {
         const ids = new Set();
         (data?.ProjectFacilities || []).forEach(pf => {
@@ -172,7 +165,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         return ids;
       },
     },
-  }), [tenantId, userStaffProjectId]);
+  }), [tenantId, projectId]);
   const { data: userFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
   // User's own facility: first project facility (primary facility for shipment actions)

@@ -488,6 +488,29 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
   const { data: deliveryTargetPerUserPerDay } = Digit.Hooks.useCustomAPIHook(deliveryTargetMdmsCriteria);
 
+  // MDMS v2 search for attendance config (enableMapView toggle)
+  const attendanceConfigCriteria = {
+    url: `/${mdms_context_path}/v2/_search`,
+    params: {
+      tenantId: tenantId,
+    },
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: "HCM.ATTENDANCE_CONFIG",
+        limit: 10,
+        isActive: true,
+      },
+    },
+    config: {
+      select: (data) => {
+        return data?.mdms?.[0]?.data?.enableMapView ?? false;
+      },
+    },
+    changeQueryName: `attendanceConfig_${tenantId}`,
+  };
+  const { data: enableMapView = false } = Digit.Hooks.useCustomAPIHook(attendanceConfigCriteria);
+
   const attendeeUsernames = AllIndividualsData?.Individual?.map((ind) => ind?.userDetails?.username).filter(Boolean) || [];
 
   const kibanaMapConfig = Digit.SessionStorage.get("kibanaMapConfig");
@@ -718,17 +741,21 @@ const ViewAttendance = ({ editAttendance = false }) => {
             <span style={{ fontSize: "24px", fontWeight: 700, color: "#0B4B66", lineHeight: "1.5rem" }}>{t("HCM_AM_REGISTER_DETAILS")}</span>
             {hasMusterRoll && (
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Button
-                  label={t("HCM_AM_VIEW_MAPS")}
-                  title={t("HCM_AM_VIEW_MAPS")}
-                  variation="link"
-                  icon="Map"
-                  isSuffix={false}
-                  size="medium"
-                  style={{ minHeight: "2.5rem", marginRight: "0.25rem" }}
-                  onClick={() => setShowMapPopup(true)}
-                />
-                <div style={{ width: "1px", height: "1.5rem", backgroundColor: "#D6D5D4", margin: "0 0.25rem" }} />
+                {enableMapView && (
+                  <>
+                    <Button
+                      label={t("HCM_AM_VIEW_MAPS")}
+                      title={t("HCM_AM_VIEW_MAPS")}
+                      variation="link"
+                      icon="Map"
+                      isSuffix={false}
+                      size="medium"
+                      style={{ minHeight: "2.5rem", marginRight: "0.25rem" }}
+                      onClick={() => setShowMapPopup(true)}
+                    />
+                    <div style={{ width: "1px", height: "1.5rem", backgroundColor: "#D6D5D4", margin: "0 0.25rem" }} />
+                  </>
+                )}
                 <Button
                   label={t("HCM_AM_DOWNLOAD_REPORT")}
                   title={t("HCM_AM_DOWNLOAD_REPORT")}
@@ -857,7 +884,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <CommentPopUp onClose={onCommentLogClose} businessId={data?.[0]?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
         )}
 
-        {showMapPopup && (
+        {enableMapView && showMapPopup && (
           <PopUp
             onClose={() => setShowMapPopup(false)}
             onOverlayClick={() => setShowMapPopup(false)}

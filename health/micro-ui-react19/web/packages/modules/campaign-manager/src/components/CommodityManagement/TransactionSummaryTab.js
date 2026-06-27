@@ -7,7 +7,6 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
 import { applyGenericFilters } from "../../utils/genericFilterUtils";
 import GenericChart from "./GenericChart";
-import { useCommodityProject } from "./CommodityProjectContext";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
@@ -90,21 +89,13 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   const [showToast, setShowToast] = useState(null);
   const fullPageRef = useRef();
 
-  // Get user's staff project from context
-  const { projects: contextProjects } = useCommodityProject();
-  const userStaffProjectId = useMemo(() => {
-    if (!contextProjects?.length) return null;
-    const match = contextProjects.find(p => p.address?.boundary === userBoundary?.boundary);
-    return match?.id || contextProjects[0]?.id || null;
-  }, [contextProjects, userBoundary]);
-
-  // Fetch project facilities using user's staff project
+  // Fetch project facilities using the selected project (passed from CommodityDashboard)
   const projectFacilityCriteria = useMemo(() => ({
     url: `${getProjectServiceUrl()}/facility/v1/_search`,
     params: { tenantId, limit: 100, offset: 0 },
-    body: { ProjectFacility: { projectId: [userStaffProjectId] } },
+    body: { ProjectFacility: { projectId: [projectId] } },
     config: {
-      enabled: !!userStaffProjectId && !!tenantId,
+      enabled: !!projectId && !!tenantId,
       select: (data) => {
         const ids = new Set();
         (data?.ProjectFacilities || []).forEach(pf => {
@@ -113,7 +104,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
         return ids;
       },
     },
-  }), [tenantId, userStaffProjectId]);
+  }), [tenantId, projectId]);
   const { data: projectFacilityIds = new Set(), isLoading: projectFacilitiesLoading } = Digit.Hooks.useCustomAPIHook(projectFacilityCriteria);
 
   // Extract unique facility IDs and product variant IDs from stock data
