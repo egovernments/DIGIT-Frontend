@@ -85,14 +85,16 @@ const CommodityDashboard = () => {
   const { userBoundary, userBoundaries, isTopLevel, projects: contextProjects } = useCommodityProject();
 
   // Resolve projectId: URL param > navigation state > sessionStorage > context fallback
-  const SESSION_PROJECT_KEY = "HCM_COMMODITY_SELECTED_PROJECT_ID";
+  // Key is scoped per campaign so switching campaigns never reuses a stale projectId
+  const sessionProjectKey = campaignNumber ? `HCM_COMMODITY_SELECTED_PROJECT_ID_${campaignNumber}` : null;
   const projectId = useMemo(() => {
-    const resolved = projectIdFromUrl || projectIdFromState || sessionStorage.getItem(SESSION_PROJECT_KEY) || contextProjects?.find((p) => p.referenceId === campaignNumber)?.id;
-    if (resolved) {
-      sessionStorage.setItem(SESSION_PROJECT_KEY, resolved);
+    const fromSession = sessionProjectKey ? sessionStorage.getItem(sessionProjectKey) : null;
+    const resolved = projectIdFromUrl || projectIdFromState || fromSession || contextProjects?.find((p) => p.referenceId === campaignNumber)?.id;
+    if (resolved && sessionProjectKey) {
+      sessionStorage.setItem(sessionProjectKey, resolved);
     }
     return resolved;
-  }, [projectIdFromUrl, projectIdFromState, contextProjects, campaignNumber]);
+  }, [projectIdFromUrl, projectIdFromState, contextProjects, campaignNumber, sessionProjectKey]);
 
   // Fetch campaign details (for campaignId fallback + auditDetails.createdTime)
   const campaignReqCriteria = useMemo(() => ({
