@@ -17,6 +17,13 @@ const CommodityCampaigns = () => {
   const [isConfigReady, setIsConfigReady] = useState(false);
 
   useEffect(() => {
+    // Clear any stored projectId keys from previous dashboard visits
+    Object.keys(sessionStorage).forEach((key) => {
+      if (key.startsWith("HCM_COMMODITY_SELECTED_PROJECT_ID_")) {
+        sessionStorage.removeItem(key);
+      }
+    });
+
     const savedIndex = parseInt(sessionStorage.getItem("HCM_COMMODITY_TAB_INDEX")) || 0;
 
     const configList = commodityCampaignConfig?.commodityCampaignConfig || [];
