@@ -54,13 +54,13 @@ export const useCustomTranslate = () => {
         // Add the missing key to Redux store with empty message for current locale
         dispatch(addMissingKey({ code }));
 
-        return ""; // Return empty string when entry not found
+        return code; // Return the code itself as fallback when translation not found
       }
 
       // Get current locale from Redux state or session storage as fallback
       const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
-      return entry[locale] || ""; // Return the message or empty string
+      return entry[locale] || code; // Return the message or the code as fallback
     },
     [dispatch, locState, currentLocale]
   );
