@@ -137,17 +137,16 @@ const remoteConfigSlice = createSlice({
 
         // Handle objects
         if (typeof node === "object") {
-          // Check if this node matches by fieldName + key (or fieldName + role)
+          // Check if this node matches by fieldName + key + role
           if (node.fieldName === targetFieldName) {
-            // If targetKey is provided, require key match for disambiguation
-            if (targetKey !== undefined && node.key !== undefined) {
-              if (node.key !== targetKey) {
-                // Key doesn't match - continue searching
-              } else if (targetRole === undefined || node.role === targetRole) {
+            // If targetKey is provided, require strict key match
+            if (targetKey !== undefined) {
+              if (node.key === targetKey && (targetRole === undefined || node.role === targetRole)) {
                 return node;
               }
+              // Key mismatch or missing on node - continue searching
             }
-            // If targetRole is provided, also require role match (for dropdownTemplate disambiguation)
+            // No targetKey requested - match by role only
             else if (targetRole === undefined || node.role === targetRole) {
               return node;
             }
@@ -156,27 +155,27 @@ const remoteConfigSlice = createSlice({
 
           // Check primaryAction and secondaryAction
           if (node.primaryAction) {
-            const found = findFieldByName(node.primaryAction, targetFieldName, targetRole);
+            const found = findFieldByName(node.primaryAction, targetFieldName, targetRole, targetKey);
             if (found) return found;
           }
           if (node.secondaryAction) {
-            const found = findFieldByName(node.secondaryAction, targetFieldName, targetRole);
+            const found = findFieldByName(node.secondaryAction, targetFieldName, targetRole, targetKey);
             if (found) return found;
           }
 
           // Recursively search in child and children
           if (node.child) {
-            const found = findFieldByName(node.child, targetFieldName, targetRole);
+            const found = findFieldByName(node.child, targetFieldName, targetRole, targetKey);
             if (found) return found;
           }
           if (node.children) {
-            const found = findFieldByName(node.children, targetFieldName, targetRole);
+            const found = findFieldByName(node.children, targetFieldName, targetRole, targetKey);
             if (found) return found;
           }
 
           // Also search in data object for table columns etc.
           if (node.data && typeof node.data === "object") {
-            const found = findFieldByName(node.data, targetFieldName, targetRole);
+            const found = findFieldByName(node.data, targetFieldName, targetRole, targetKey);
             if (found) return found;
           }
         }
