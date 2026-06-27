@@ -573,7 +573,7 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R8: table headers
   const appConfigCodes = new Set(); // Track codes that belong to hcm-appconfiguration only
-  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);if(o.format==='table'&&o.data&&Array.isArray(o.data.columns)){for(let ci=0;ci<o.data.columns.length;ci++){const col=o.data.columns[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);appConfigCodes.add(nc);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);appConfigCodes.add(nc);}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
+  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);if(o.format==='table'&&o.data&&Array.isArray(o.data.columns)){for(let ci=0;ci<o.data.columns.length;ci++){const col=o.data.columns[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);appConfigCodes.add(nc);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);appConfigCodes.add(nc);}}else if(col.header&&isCode(col.header)){appConfigCodes.add(col.header);if(!existingLocCodes.has(col.header)&&!allNew.has(col.header)){const thMsg=smartMsg(col.header,moduleName)||humanize(col.header);allNew.set(col.header,thMsg);report.missingLocalizations.push({code:col.header,fieldType:'tableHeader',message:thMsg});}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
   wTH(data,'data',0);
 
   // R9: icon in properties
@@ -1788,11 +1788,15 @@ async function aiEnhance(resultsList) {
         for (let b = 0, batchNum = 1; b < r.newLocalizations.length; b += BATCH, batchNum++) {
           if (aiEnhanceCancelled) break;
           const rawBatch = r.newLocalizations.slice(b, b + BATCH);
-          // Preserve intentionally empty messages as " " and skip them from AI
+          // Preserve intentionally empty messages as " " only for heading/description/title/label
+          const BLANK_ALLOWED = new Set(['heading','description','title','label']);
           const batch = [];
           for (const loc of rawBatch) {
             if (loc._fromSource) continue;
-            if (!loc.message || !loc.message.trim()) { loc.message = ' '; }
+            if (!loc.message || !loc.message.trim()) {
+              if (BLANK_ALLOWED.has(loc.fieldType)) { loc.message = ' '; }
+              else { loc.message = smartMsg(loc.code, null) || loc.code; batch.push(loc); }
+            }
             else { batch.push(loc); }
           }
           aiEnhanceState.batch = batchNum;
