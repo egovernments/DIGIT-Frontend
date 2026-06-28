@@ -119,8 +119,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
   );
 
   const handleHideField = useCallback(
-    (fieldName, cardIndex, role) => {
-      dispatch(hideField({ fieldName, cardIndex, role }));
+    (fieldName, cardIndex, role, key) => {
+      dispatch(hideField({ fieldName, cardIndex, role, key }));
     },
     [dispatch]
   );
@@ -276,7 +276,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
                   required={required}
                   isDelete={deleteFlag === true ? true : false}
                   onDelete={viewMode ? null : () => handleDeleteField(actualFieldIndex, actualCardIndex)}
-                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex, rest?.role)}                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
+                  onHide={viewMode ? null : () => handleHideField(fieldName, actualCardIndex, rest?.role, rest?.key)}                  onSelectField={rest?.hidden ? null : () => handleSelectField(c[i], currentCard, card[index], actualCardIndex, actualFieldIndex)}
                   config={c[i]}
                   Mandatory={Mandatory}
                   rest={{...rest, fieldName}}
