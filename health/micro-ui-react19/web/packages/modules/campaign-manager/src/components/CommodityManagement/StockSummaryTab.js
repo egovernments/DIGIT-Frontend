@@ -188,7 +188,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         stock?.additionalFields?.fields?.find((f) => f.key === "productName")?.value ||
         "Unknown";
       if (!commodityMap[productName]) {
-        commodityMap[productName] = { name: productName, totalReceived: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
+        commodityMap[productName] = { name: productName, totalReceived: 0, totalAccepted: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
       }
       if (stockEntryType === "RECEIPT") {
         // I confirmed receipt → totalReceived
@@ -215,6 +215,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           // Only ACCEPTED counts as received for receiver (confirmation required)
           if (status === "ACCEPTED" && userFacilityIds.has(stock.receiverId)) {
             commodityMap[productName].totalReceived += qty;
+            commodityMap[productName].totalAccepted += qty;
           }
         } else if (status === "REJECTED") {
           // Rejected dispatch → sender's stock came back
@@ -243,7 +244,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     });
     return Object.values(commodityMap).map((c) => ({
       ...c,
-      balance: c.totalReceived - c.totalIssued - c.totalReturned,
+      balance: c.totalAccepted - c.totalIssued - c.totalReturned,
     }));
   }, [finalStockData, userFacilityIds, isTopLevel, productNameMap]);
 
@@ -393,7 +394,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     const statsMap = {};
     const getOrInit = (fId, pvId, productName) => {
       if (!statsMap[fId]) statsMap[fId] = {};
-      if (!statsMap[fId][pvId]) statsMap[fId][pvId] = { productName, totalReceived: 0, totalIssued: 0, totalRejected: 0, totalReturned: 0 };
+      if (!statsMap[fId][pvId]) statsMap[fId][pvId] = { productName, totalReceived: 0, totalAccepted: 0, totalIssued: 0, totalRejected: 0, totalReturned: 0 };
       return statsMap[fId][pvId];
     };
 
@@ -418,8 +419,10 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
           if (stock.senderId && descendantIds.has(stock.senderId))
             getOrInit(stock.senderId, pvId, productName).totalIssued += qty;
-          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId))
+          if (status === "ACCEPTED" && stock.receiverId && descendantIds.has(stock.receiverId)) {
             getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
+            getOrInit(stock.receiverId, pvId, productName).totalAccepted += qty;
+          }
         } else if (status === "REJECTED") {
           if (stock.senderId && descendantIds.has(stock.senderId))
             getOrInit(stock.senderId, pvId, productName).totalRejected += qty;
@@ -456,10 +459,11 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           productVariantId: pvId,
           commodity: stats.productName,
           totalReceived: stats.totalReceived,
+          totalAccepted: stats.totalAccepted,
           totalIssued: stats.totalIssued,
           totalRejected: stats.totalRejected,
           totalReturned: stats.totalReturned,
-          balance: stats.totalReceived - stats.totalIssued - stats.totalReturned,
+          balance: stats.totalAccepted - stats.totalIssued - stats.totalReturned,
         });
       });
     });
@@ -601,6 +605,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
     { label: t("HCM_BOUNDARY_HIERARCHY"),  key: "boundaryHierarchy", grow: 2.5, minWidth: "280px", sortable: false },
     { label: t("HCM_COMMODITY"),           key: "commodity",         grow: 0.8, minWidth: "120px", sortable: true },
     { label: t("HCM_TOTAL_RECEIVED"), key: "totalReceived", grow: 0.7, minWidth: "110px", sortable: true },
+    { label: t("HCM_TOTAL_ACCEPTED"), key: "totalAccepted", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t("HCM_TOTAL_ISSUED"),   key: "totalIssued",   grow: 0.7, minWidth: "110px", sortable: true },
     { label: t("HCM_TOTAL_REJECTED"), key: "totalRejected", grow: 0.7, minWidth: "110px", sortable: true },
     { label: t("HCM_TOTAL_RETURNED"), key: "totalReturned", grow: 0.7, minWidth: "110px", sortable: true },
@@ -620,6 +625,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       );
     },
     totalReceived: (row) => <span className="cm-cell-stock">{row.totalReceived?.toLocaleString()}</span>,
+    totalAccepted: (row) => <span className="cm-cell-stock">{row.totalAccepted?.toLocaleString()}</span>,
     totalIssued:   (row) => <span className="cm-cell-stock">{row.totalIssued?.toLocaleString()}</span>,
     totalRejected: (row) => <span className="cm-cell-stock">{row.totalRejected?.toLocaleString()}</span>,
     totalReturned: (row) => <span className="cm-cell-stock">{row.totalReturned?.toLocaleString()}</span>,
@@ -857,6 +863,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           subtitle={commodity.name}
           items={[
             { label: "HCM_TOTAL_RECEIVED", value: commodity.totalReceived },
+            { label: "HCM_TOTAL_ACCEPTED", value: commodity.totalAccepted },
             { label: "HCM_TOTAL_ISSUED", value: commodity.totalIssued },
             { label: "HCM_TOTAL_REJECTED", value: commodity.totalRejected },
             { label: "HCM_TOTAL_RETURNED", value: commodity.totalReturned },
@@ -1019,6 +1026,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           tenantId={tenantId}
           campaignId={campaignId}
           campaignNumber={campaignNumber}
+          projectId={projectId}
           fromFacility={shipmentFacility}
           selectedCommodity={shipmentFacility.productVariantId}
           productVariants={productVariantList}
