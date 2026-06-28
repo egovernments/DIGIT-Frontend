@@ -2065,7 +2065,13 @@ async function aiEnhance(resultsList, resume = false) {
         for (let i = 0; i < resultsList.length; i++) {
           if (aiEnhanceCancelled) break;
           const r = resultsList[i];
-          const fromSourceLocs = r.newLocalizations.filter(l => l._fromSource && l.message && l.message.trim());
+          // Only review codes that belong to THIS module's own localizations (not re-surfaced hcm-appconfiguration, ref data, or LFPC codes)
+          const moduleOwnCodes = r._existingLocs ? new Set([...r._existingLocs.keys()]) : new Set();
+          const fromSourceLocs = r.newLocalizations.filter(l =>
+            l._fromSource && l.message && l.message.trim() &&
+            !l._refData && !l._fromLfpc &&
+            (!l._appConfig || moduleOwnCodes.has(l.code))
+          );
           const existingArr = fromSourceLocs.length > 0
             ? fromSourceLocs.map(l => ({ code: l.code, message: l.message }))
             : (r._existingLocs && r._existingLocs.size > 0)
@@ -2501,16 +2507,17 @@ async function onlineFetch() {
     }
     console.log('[Corrector] LFPC records:', allLfpcRecs.length, '| entity categories:', [...lfpcLocCodes].filter(c => c.startsWith('LABEL_PAIR_CATEGORY_')), '| total LFPC codes:', lfpcLocCodes.size);
 
-    // Add ref data codes + LFPC codes to every result's localizations
-    for (const result of results) {
-      const existingCodes = new Set(result.newLocalizations.map(l => l.code));
-      const locModule = result._locModule;
+    // Add ref data codes + LFPC codes to the FIRST result only (shared codes — not per-module)
+    if (results.length > 0) {
+      const firstResult = results[0];
+      const existingCodes = new Set(firstResult.newLocalizations.map(l => l.code));
+      const locModule = firstResult._locModule;
       // Reference data codes (both module and appConfig)
       for (const [code, schema] of refDataCodes) {
         if (!existingCodes.has(code)) {
           const msg = smartMsg(code, null) || humanize(code);
-          result.newLocalizations.push({ code, message: msg, module: locModule, locale: onlineLocale, _refData: true });
-          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _refData: true });
+          firstResult.newLocalizations.push({ code, message: msg, module: locModule, locale: onlineLocale, _refData: true });
+          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _refData: true });
           existingCodes.add(code);
         }
       }
@@ -2518,7 +2525,7 @@ async function onlineFetch() {
       for (const code of lfpcLocCodes) {
         if (!existingCodes.has(code)) {
           const msg = smartMsg(code, null) || humanize(code);
-          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _fromLfpc: true });
+          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _fromLfpc: true });
           existingCodes.add(code);
         }
       }
@@ -2752,16 +2759,17 @@ async function migrateFetch() {
     }
     console.log('[Corrector] LFPC records:', allLfpcRecs.length, '| entity categories:', [...lfpcLocCodes].filter(c => c.startsWith('LABEL_PAIR_CATEGORY_')), '| total LFPC codes:', lfpcLocCodes.size);
 
-    // Add ref data codes + LFPC codes to every result's localizations
-    for (const result of results) {
-      const existingCodes = new Set(result.newLocalizations.map(l => l.code));
-      const tgtLocModule = result._tgtLocModule;
+    // Add ref data codes + LFPC codes to the FIRST result only (shared codes — not per-module)
+    if (results.length > 0) {
+      const firstResult = results[0];
+      const existingCodes = new Set(firstResult.newLocalizations.map(l => l.code));
+      const tgtLocModule = firstResult._tgtLocModule;
       // Reference data codes (both module and appConfig)
       for (const [code, schema] of refDataCodes) {
         if (!existingCodes.has(code)) {
           const msg = smartMsg(code, null) || humanize(code);
-          result.newLocalizations.push({ code, message: msg, module: tgtLocModule, locale: tgtLocale, _refData: true });
-          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _refData: true });
+          firstResult.newLocalizations.push({ code, message: msg, module: tgtLocModule, locale: tgtLocale, _refData: true });
+          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _refData: true });
           existingCodes.add(code);
         }
       }
@@ -2769,7 +2777,7 @@ async function migrateFetch() {
       for (const code of lfpcLocCodes) {
         if (!existingCodes.has(code)) {
           const msg = smartMsg(code, null) || humanize(code);
-          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _fromLfpc: true });
+          firstResult.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _fromLfpc: true });
           existingCodes.add(code);
         }
       }
