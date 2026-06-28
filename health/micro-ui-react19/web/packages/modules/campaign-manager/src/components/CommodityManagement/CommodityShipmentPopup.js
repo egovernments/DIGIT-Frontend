@@ -33,6 +33,7 @@ const CommodityShipmentPopup = ({
   tenantId,
   campaignId,
   campaignNumber,
+  projectId: projectIdProp,
   fromFacility,
   productVariants = [],
   selectedCommodity: defaultCommodityId,
@@ -74,8 +75,14 @@ const CommodityShipmentPopup = ({
   // Get user's projects from context (projectStaff → project search, already at correct level)
   const { projects: contextProjects } = useCommodityProject();
 
-  // User's project and its direct child project IDs (one level below)
-  const userProject = (contextProjects || [])[0];
+  // Use the selected project (passed via prop) instead of always picking the first project
+  const userProject = useMemo(() => {
+    if (!contextProjects?.length) return null;
+    if (projectIdProp) {
+      return contextProjects.find((p) => p.id === projectIdProp) || contextProjects[0];
+    }
+    return contextProjects[0];
+  }, [contextProjects, projectIdProp]);
   const userProjectId = userProject?.id;
 
   const toProjectIds = useMemo(() => {

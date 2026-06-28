@@ -38,6 +38,8 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     if (rawStatus === "ACCEPTED") status = "Returned";
     else if (rawStatus === "REJECTED") status = "Return Rejected";
     else status = "Return Initiated"; // IN_TRANSIT or unset
+  } else if (stockEntryType === "RECEIPT" || stockEntryType === "EXCESS" || stockEntryType === "LESS") {
+    status = "Received";
   }
 
   // Transaction type: RETURNED → "Reverse - Logistics", everything else → "Logistics"
@@ -212,7 +214,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
     if (!tableData?.length) return stats;
     tableData.forEach((row) => {
       stats.total++;
-      if (row.status === "Completed") stats.completed++;
+      if (row.status === "Completed" || row.status === "Received") stats.completed++;
       else if (row.status === "In-Transit" || row.status === "Return Initiated") stats.pending++;
       else if (row.status === "Rejected" || row.status === "Return Rejected") stats.rejected++;
       else if (row.status === "Returned") stats.returned++;
@@ -383,6 +385,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   const getStatusClass = (status) => {
     const classMap = {
       Completed: "cm-status-badge--completed",
+      Received: "cm-status-badge--completed",
       "In-Transit": "cm-status-badge--in-transit",
       Rejected: "cm-status-badge--rejected",
       Returned: "cm-status-badge--completed",
