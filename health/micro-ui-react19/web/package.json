@@ -12,7 +12,8 @@
     "packages/modules/campaign-manager",
     "packages/modules/pgr",
     "packages/modules/health-hrms",
-    "packages/modules/health-payments"
+    "packages/modules/health-payments",
+    "packages/modules/health-dss"
   ],
   "homepage": "/workbench-ui/",
   "husky": {},
@@ -92,10 +93,11 @@
     "dev:pgr": "cd packages/modules/pgr && npm run build:dev -- --watch",
     "dev:hrms": "cd packages/modules/health-hrms && npm run build:dev -- --watch",
     "dev:payments": "cd packages/modules/health-payments && npm run build:dev -- --watch",
+    "dev:dss": "cd packages/modules/health-dss && npm run build:dev -- --watch",
     "build": "npm run build:packages && webpack --config webpack.prod.js",
     "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
     "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
-    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build && cd ../pgr && npm run build && cd ../health-hrms && npm run build && cd ../health-payments && npm run build",
+    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build && cd ../pgr && npm run build && cd ../health-hrms && npm run build && cd ../health-payments && npm run build && cd ../health-dss && npm run build",
     "clean": "rm -rf node_modules build dist && find packages -name node_modules -type d -exec rm -rf {} + 2>/dev/null || true",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },

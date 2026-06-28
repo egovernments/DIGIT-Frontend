@@ -26,6 +26,7 @@ function checkDistFiles() {
     'packages/modules/pgr/dist/main.js',
     'packages/modules/health-hrms/dist/main.js',
     'packages/modules/health-payments/dist/main.js',
+    'packages/modules/health-dss/dist/main.js',
   ];
   return required.every((p) => fs.existsSync(path.join(__dirname, p)));
 }
@@ -65,13 +66,14 @@ async function startDevelopment() {
     // Start the concurrent processes
     const devProcess = spawn('npx', [
       'concurrently',
-      '--names', 'CSS,Campaign,HRMS,PGR,Payments,Webpack',
-      '--prefix-colors', 'yellow,magenta,green,blue,red,cyan',
+      '--names', 'CSS,Campaign,HRMS,PGR,Payments,DSS,Webpack',
+      '--prefix-colors', 'yellow,magenta,green,blue,red,white,cyan',
       '"cd packages/css && npm run start"',
       '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
       '"cd packages/modules/health-hrms && npm run build:dev -- --watch"',
       '"cd packages/modules/pgr && npm run build:dev -- --watch"',
       '"cd packages/modules/health-payments && npm run build:dev -- --watch"',
+      '"cd packages/modules/health-dss && npm run build:dev -- --watch"',
       '"webpack serve --config webpack.dev.js --port 3000"'
     ], {
       stdio: 'inherit',

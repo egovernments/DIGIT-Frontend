@@ -83,6 +83,7 @@ module.exports = {
       "@egovernments/digit-ui-module-health-pgr": path.resolve(__dirname, "packages/modules/pgr/dist/main.js"),
       "@egovernments/digit-ui-module-health-hrms": path.resolve(__dirname, "packages/modules/health-hrms/dist/main.js"),
       "@egovernments/digit-ui-module-health-payments": path.resolve(__dirname, "packages/modules/health-payments/dist/main.js"),
+      "@egovernments/digit-ui-module-health-dss": path.resolve(__dirname, "packages/modules/health-dss/dist/main.js"),
       "@egovernments/digit-ui-health-css": path.resolve(__dirname, "packages/css/dist/index.css"),
       // Dedup aliases: force all @egovernments packages to resolve from the top-level node_modules
       "@egovernments/digit-ui-libraries": path.resolve(__dirname, "node_modules/@egovernments/digit-ui-libraries"),

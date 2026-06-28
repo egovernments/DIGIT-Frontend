@@ -75,9 +75,11 @@ config:
     
   - name: builds/Digit-Frontend/health/dashboard-ui
     build:
-    - work-dir: health/micro-ui/
-      dockerfile: health/micro-ui/web/health-dss/Dockerfile
-      image-name: dashboard-ui   
+      - work-dir: health/micro-ui-react19/
+        dockerfile: health/micro-ui-react19/web/docker/Dockerfile
+        image-name: dashboard-ui
+        build-args:
+          BUILD_VARIANT: dashboard-ui
 
  # Others       
   - name: builds/Digit-Frontend/storybook-svg

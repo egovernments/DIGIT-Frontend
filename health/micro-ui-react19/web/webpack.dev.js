@@ -114,7 +114,8 @@ module.exports = merge(common, {
           "/boundary-management",
           "/stock/v1",
           "/attendance",
-          "/census-service"
+          "/census-service",
+          "/airflow-trigger-api"
         ],
         target: process.env.REACT_APP_PROXY_URL || "https://unified-uat.digit.org",
         changeOrigin: true,
