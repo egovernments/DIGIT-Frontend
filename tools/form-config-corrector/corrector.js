@@ -161,8 +161,17 @@ function createServer() {
           try {
             const flows = (configSummary.flows || []).map(f => {
               const pages = (f.pages || []).map(p => {
-                const fields = (p.fields || []).map(fd => `      - ${fd.fieldName} (${fd.format})${fd.label ? ' label=' + fd.label : ''}`).join('\n');
-                return `    Page: ${p.page} [${p.screenType}]\n${fields}`;
+                const fields = (p.fields || []).map(fd => {
+                  let info = `      - ${fd.fieldName} (${fd.format})`;
+                  if (fd.label) { info += ` label=${fd.label}`; if (fd.labelMsg) info += ` ("${fd.labelMsg}")`; }
+                  if (fd.heading && !fd.label) { info += ` heading=${fd.heading}`; if (fd.headingMsg) info += ` ("${fd.headingMsg}")`; }
+                  return info;
+                }).join('\n');
+                let pageHeader = `    Page: ${p.page} [${p.screenType}]`;
+                if (p.label) { pageHeader += ` label=${p.label}`; if (p.labelMsg) pageHeader += ` ("${p.labelMsg}")`; }
+                if (p.heading) { pageHeader += ` heading=${p.heading}`; if (p.headingMsg) pageHeader += ` ("${p.headingMsg}")`; }
+                if (p.descriptionMsg) pageHeader += ` desc="${p.descriptionMsg}"`;
+                return `${pageHeader}\n${fields}`;
               }).join('\n');
               return `  Flow: ${f.name} [${f.screenType}] category=${f.category}\n${pages}`;
             }).join('\n');
@@ -187,6 +196,7 @@ ${codeList}
 
 Rules:
 - Labels: short (1-4 words), Title Case (e.g. "Survey Date", "Lot Number")
+- Button/action labels (primaryActionLabel, secondaryActionLabel, actionLabel, codes ending in _CLEAR_LABEL, _FILTER_LABEL, _APPLY_LABEL, _SUBMIT_LABEL, _CANCEL_LABEL, _BACK_LABEL, _NEXT_LABEL, _SAVE_LABEL, _DONE_LABEL, _DELETE_LABEL, _CLOSE_LABEL, _RETRY_LABEL, _OK_LABEL, _YES_LABEL, _NO_LABEL, _CONTINUE_LABEL, _SEARCH_LABEL): very short (1-2 words), e.g. "Clear", "Apply", "Submit", "Back", "Next", "Save", "Cancel", "Search", "Delete", "Done", "Retry". These appear on small mobile buttons, so keep them concise
 - Error messages: clear, helpful, Sentence case (e.g. "Age is required")
 - Help text: brief guidance (e.g. "Enter the batch number")
 - Description text: concise 1-sentence descriptions
@@ -194,10 +204,16 @@ Rules:
 - Keep domain acronyms as-is: OPV, AFP, LQA, IHM, MRN, QR, GPS, HCM
 - "fieldName" type codes (camelCase): convert to readable (e.g. dateOfBirth -> "Date of Birth")
 - TABLE_HEADER codes: short column headers (e.g. "Date of Entry", "Quantity")
+- LABEL_PAIR_CATEGORY codes: clean human-readable entity/category name (e.g. LABEL_PAIR_CATEGORY_LQAMODEL -> "LQA Model")
+- LABEL_PAIR_ codes (from LabelFieldPairConfig): readable field label (e.g. LABEL_PAIR_LQA_SURVEY_DATE_LABEL -> "Survey Date")
+- Reference data codes (from MDMS schemas like HCM.HOUSE_STRUCTURE_TYPES, HCM.REFERRAL_REASONS, etc.): keep as clean readable names (e.g. HOUSE_TYPE_PUCCA -> "Pucca", GENDER_MALE -> "Male")
 - Cross-reference codes against the form config fields above; if a code maps to a specific fieldName, label, or heading, use that context to generate an accurate message
 - If the config shows a field is a date picker, GPS, scanner, etc., tailor the message accordingly
-- Match the style and quality of existing localizations when available
-- APP_CONFIG_CATEGORY/FLOW/PAGE codes should be clean human-readable names for the category/flow/page they represent
+- Match the style and quality of existing localizations when available. If an existing message is clearly human-written and domain-specific, use it as-is. Code names are technical identifiers that do NOT always describe the intended message (e.g. CLOSED_HOUSEHOLD means "Missed Children" in health campaigns)
+- APP_CONFIG_PAGE_* codes: derive the message from the corresponding page's label or heading localization message shown in the config structure. If a page has label=SOME_CODE ("Display Name"), then APP_CONFIG_PAGE_* for that page should use "Display Name". Do NOT naively humanize the page name from the code.
+- APP_CONFIG_FLOW_* codes: derive the message from the flow's context and the labels/headings of its pages. Use the resolved messages shown in the config structure.
+- APP_CONFIG_CATEGORY_* codes: clean human-readable category name
+- POPUP_TITLE codes (from popupConfig.title): these are intentionally blank — always keep the message as a single space " ". Never generate a readable title for these
 - If a code has an empty or whitespace-only message, keep it as a single space " " — it was intentionally left empty
 - Messages containing {1}, {2}, etc. are parameterized — these placeholders represent dynamic runtime values (e.g. field names, IDs, counts). Preserve ALL placeholders exactly as-is and improve ONLY the surrounding text. Example: "MRN {1}" is correct; do NOT remove or renumber placeholders
 
@@ -238,8 +254,17 @@ Example: {"CODE_1": "Better Message", "CODE_2": "Another"}`;
           try {
             const flows = (configSummary.flows || []).map(f => {
               const pages = (f.pages || []).map(p => {
-                const fields = (p.fields || []).map(fd => `      - ${fd.fieldName} (${fd.format})${fd.label ? ' label=' + fd.label : ''}`).join('\n');
-                return `    Page: ${p.page} [${p.screenType}]\n${fields}`;
+                const fields = (p.fields || []).map(fd => {
+                  let info = `      - ${fd.fieldName} (${fd.format})`;
+                  if (fd.label) { info += ` label=${fd.label}`; if (fd.labelMsg) info += ` ("${fd.labelMsg}")`; }
+                  if (fd.heading && !fd.label) { info += ` heading=${fd.heading}`; if (fd.headingMsg) info += ` ("${fd.headingMsg}")`; }
+                  return info;
+                }).join('\n');
+                let pageHeader = `    Page: ${p.page} [${p.screenType}]`;
+                if (p.label) { pageHeader += ` label=${p.label}`; if (p.labelMsg) pageHeader += ` ("${p.labelMsg}")`; }
+                if (p.heading) { pageHeader += ` heading=${p.heading}`; if (p.headingMsg) pageHeader += ` ("${p.headingMsg}")`; }
+                if (p.descriptionMsg) pageHeader += ` desc="${p.descriptionMsg}"`;
+                return `${pageHeader}\n${fields}`;
               }).join('\n');
               return `  Flow: ${f.name} [${f.screenType}] category=${f.category}\n${pages}`;
             }).join('\n');
@@ -256,24 +281,34 @@ The following localization messages ALREADY EXIST in the system. Review each one
 Poor quality means:
 - Auto-generated messages like "Xyz validation failed", "Abc validation error" where the prefix is a raw/mangled field name
 - Single concatenated words with no spaces (e.g. "Gpsfirsthousehold" instead of "GPS First Household")
-- Messages that don't match what the field actually represents in the form config above
 - Generic/unhelpful messages that don't describe the field's purpose
 - Error messages that don't tell the user what to do (e.g. "validation failed" instead of "Location is required")
+
+NOT poor quality (DO NOT change these):
+- Messages intentionally set by administrators that carry domain-specific meaning. Code names are technical identifiers — they do NOT always literally describe the message. Example: REGISTRATION_CLOSED_HOUSEHOLD → "Missed Children" is CORRECT because in health campaigns a "closed household" means children were missed. Do NOT change this to "Close Household".
+- Any message that is clearly human-written and contextually meaningful, even if it doesn't match the code name literally
 
 Existing messages to review:
 ${codeList}
 
 Rules for improvements:
 - Labels: short (1-4 words), Title Case (e.g. "Survey Date", "Lot Number")
+- Button/action labels (primaryActionLabel, secondaryActionLabel, actionLabel, codes ending in _CLEAR_LABEL, _FILTER_LABEL, _APPLY_LABEL, _SUBMIT_LABEL, _CANCEL_LABEL, _BACK_LABEL, _NEXT_LABEL, _SAVE_LABEL, _DONE_LABEL, _DELETE_LABEL, _CLOSE_LABEL, _RETRY_LABEL): very short (1-2 words), e.g. "Clear", "Apply", "Submit", "Back". These appear on small mobile buttons
 - Error messages: clear, actionable, Sentence case (e.g. "Location is required", "Please enter a valid date")
+- LABEL_PAIR_CATEGORY codes: clean human-readable entity/category name (e.g. LABEL_PAIR_CATEGORY_LQAMODEL -> "LQA Model")
+- LABEL_PAIR_ codes: readable field label (e.g. LABEL_PAIR_LQA_SURVEY_DATE_LABEL -> "Survey Date")
+- Reference data codes: clean readable names (e.g. HOUSE_TYPE_PUCCA -> "Pucca", GENDER_MALE -> "Male")
 - Cross-reference codes against the form config fields above; if a code maps to a specific fieldName (like gpsFirstHousehold = GPS/Location field), use that context
 - If the config shows a field is a date picker, GPS, scanner, etc., tailor the message accordingly
 - Keep domain acronyms as-is: OPV, AFP, LQA, IHM, MRN, QR, GPS, HCM
-- APP_CONFIG codes should be clean human-readable names
+- APP_CONFIG_PAGE_* codes: derive the message from the corresponding page's label or heading localization message shown in the config structure above. If a page has label=SOME_CODE ("Display Name"), then APP_CONFIG_PAGE_* for that page should use "Display Name". Do NOT naively humanize the page name from the code.
+- APP_CONFIG_FLOW_* codes: derive the message from the flow's context and the labels/headings of its pages. Use the resolved messages shown in the config structure.
+- APP_CONFIG_CATEGORY_* codes: clean human-readable category name
+- POPUP_TITLE codes (from popupConfig.title): these are intentionally blank — SKIP them, never generate a readable title
 - If a code has an empty or whitespace-only message, SKIP it — it was intentionally left empty
 - Messages containing {1}, {2}, etc. are parameterized — these placeholders represent dynamic runtime values. Preserve ALL placeholders exactly as-is. Only improve the surrounding text if it's poor quality
 
-IMPORTANT: Only return codes that NEED improvement. Skip codes with already clear, descriptive messages.
+IMPORTANT: Only return codes that genuinely NEED improvement. Respect existing domain-specific messages — do NOT override them with naive code-name-based messages. If a message is clearly human-written and contextually meaningful, SKIP it.
 If all messages are fine, return an empty object: {}
 
 Return ONLY valid JSON mapping code to improved message. No markdown, no explanation, no wrapping.

@@ -64,7 +64,7 @@ input[type="file"] { display: none; }
 .cred-group { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
 .cred-group-title { font-size: 11px; font-weight: 600; color: var(--peach); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-.module-list { list-style: none; flex: 1; overflow-y: auto; }
+.module-list { list-style: none; flex: 0 0 auto; overflow-y: auto; max-height: 45vh; }
 .module-item { padding: 8px 16px; font-size: 13px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; transition: all .1s; }
 .module-item:hover { background: var(--surface2); }
 .module-item.active { background: rgba(137,180,250,.08); border-left-color: var(--blue); color: var(--blue); }
@@ -588,6 +588,18 @@ input[type="file"] { display: none; }
 
 const MAX_WALK_DEPTH = 50;
 const LFPC_SCHEMA = 'HCM-ADMIN-CONSOLE.LabelFieldPairConfig';
+const MDMS_REF_SCHEMAS = [
+  'RAINMAKER-PGR.ServiceDefs',
+  'HCM.HOUSE_STRUCTURE_TYPES',
+  'HCM.REFERRAL_REASONS',
+  'HCM.REFUSAL_REASONS',
+  'HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR',
+  'common-masters.GenderType',
+  'HCM.ID_TYPE_OPTIONS_POPULATOR',
+  'HCM.SEARCH_HOUSEHOLD_FILTERS',
+  'HCM.SYMPTOM_TYPES',
+  'HCM.TRANSPORT_TYPES',
+];
 const LOCALIZATION_FIELDS = ['fieldName','label','heading','title','description','message','helpText','infoText','actionLabel','primaryActionLabel','secondaryActionLabel','expandLabel','collapseLabel','innerLabel','tooltip','errorMessage','key'];
 
 // Fields that should be auto-converted from hardcoded text to loc codes (excludes fieldName, key — those are identifiers)
@@ -619,7 +631,7 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R1&2: type+fieldName
   const visited1 = new WeakSet();
-  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}if(autoFix&&o.format&&o.fieldName&&o.fieldName===o.format){const valSrc=o.value||o.cellValue||'';const vm=valSrc.match(/item\.(?:items\[\d+\]\.)?(?:additionalFields\.fields\.)?(\w+)/);if(vm){const derived=vm[1];o.fieldName=derived;report.fixes.push({rule:'generic-fieldName',path:p,format:o.format,fixed:`fieldName "${o.format}" → "${derived}" (from value expression)`});}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
+  function chkTF(o,p,st,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>chkTF(x,`${p}[${i}]`,st,d+1));return;}if(visited1.has(o))return;visited1.add(o);const sT=o.screenType||st;if(sT==='FORM'){for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}return;}if(o.format&&typeof o.format==='string'&&o.format!=='backLink'){if(sT==='TEMPLATE'){if(!o.type||o.type!=='template'){if(autoFix){o.type='template';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "template"'});}}if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}}else{if(!o.fieldName||!o.fieldName.trim()){if(autoFix){const c=labelToFieldName(o.label)||labelToFieldName(o.heading)||o.format||'field';o.fieldName=c;report.fixes.push({rule:'missing-fieldName',path:p,format:o.format,fixed:`fieldName \u2192 "${c}"`});}}if(!o.type||!o.type.trim()){if(autoFix){o.type='string';report.fixes.push({rule:'missing-type',path:p,format:o.format,fixed:'type \u2192 "string"'});}}}}if(autoFix&&o.format&&o.fieldName){const _isGenericFN=o.fieldName===o.format||(o.fieldName.startsWith(o.format)&&/^\d+$/.test(o.fieldName.substring(o.format.length)));if(_isGenericFN){const oldFN=o.fieldName;let derived=null,derivedFrom='';const valSrc=o.value||o.cellValue||'';const vm=valSrc.match(/item\.(?:items\[\d+\]\.)?(?:additionalFields\.fields\.)?(\w+)/);if(vm){derived=vm[1];derivedFrom='value expression';}if(!derived){const _lhSrc=o.label||o.heading||'';if(_lhSrc&&typeof _lhSrc==='string'&&_lhSrc.trim()&&isCode(_lhSrc)){const readable=smartMsg(_lhSrc,moduleName);if(readable&&readable.trim()){const words=readable.trim().split(/\s+/).filter(w=>w.length>0);derived=words.map((w,i)=>{const cl=w.replace(/[^a-zA-Z0-9]/g,'');return cl?(i===0?cl.toLowerCase():cl.charAt(0).toUpperCase()+cl.slice(1).toLowerCase()):'';}).filter(w=>w).join('');derivedFrom='label/heading';}}}if(derived&&derived!==oldFN){o.fieldName=derived;report.fixes.push({rule:'generic-fieldName',path:p,format:o.format,fixed:`fieldName "${oldFN}" → "${derived}" (from ${derivedFrom})`});}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)chkTF(v,`${p}.${k}`,sT,d+1);}}
   chkTF(data,'data',null,0);
 
   // R3: dup fieldNames (per-page scope — same fieldName on different pages is valid)
@@ -642,12 +654,12 @@ function analyzeAndFix(configData, opts = {}) {
   if(data.flows)for(const fl of data.flows)wAct(fl,fl.name,fl.name||'flow',0);
 
   // R6&7: validations
-  function pComp(c,fn,loc){const fN=c.fieldName||'unknown',lb=c.label||c.heading||'';if('errorMessage'in c&&(!c.errorMessage||c.errorMessage==='')){if(c.validations&&c.validations.length>0){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_ERROR`;c.errorMessage=cd;report.fixes.push({rule:'empty-errorMessage',flow:fn,path:loc,fixed:`errorMessage \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,`${smartMsg(fN)} validation failed`);}}if(Array.isArray(c.validations)){for(let vi=0;vi<c.validations.length;vi++){const v=c.validations[vi],vt=v.type||'';if(vt==='isGS1'&&!('message'in v))continue;if('message'in v){const msg=v.message||'';if(!msg||msg===''){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;v.message=cd;report.fixes.push({rule:'empty-validation-msg',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`message \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,genValMsg(fN,vt,lb,v.value,c.validations));}else if(!isCode(msg)){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;const orig=msg;v.message=cd;report.fixes.push({rule:'hardcoded-validation',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`"${orig}" \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,orig);}else{if(!allNew.has(msg))allNew.set(msg,genValMsg(fN,vt,lb,v.value,c.validations));}}}}}
+  function pComp(c,fn,loc){const fN=c.fieldName||'unknown',lb=c.label||c.heading||'';if('errorMessage'in c&&(!c.errorMessage||c.errorMessage==='')){if(c.validations&&c.validations.length>0){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_ERROR`;c.errorMessage=cd;report.fixes.push({rule:'empty-errorMessage',flow:fn,path:loc,fixed:`errorMessage \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,`${smartMsg(fN)} validation failed`);}}if(Array.isArray(c.validations)){for(let vi=0;vi<c.validations.length;vi++){const v=c.validations[vi],vt=v.type||'';if(vt==='isGS1'&&!('message'in v))continue;if('message'in v){const msg=v.message||'';if(!msg||msg===''){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;v.message=cd;report.fixes.push({rule:'empty-validation-msg',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`message \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,genValMsg(fN,vt,lb,v.value,c.validations));}else if(!isCode(msg)){const cd=`${moduleName.toUpperCase()}_${fn.toUpperCase()}_${fN}_${vt.replace(/([A-Z])/g,'_$1').toUpperCase()}_ERROR`;const orig=msg;v.message=cd;report.fixes.push({rule:'hardcoded-validation',flow:fn,path:`${loc}.validations[${vi}]`,fixed:`"${orig}" \u2192 "${cd}"`});if(!allNew.has(cd))allNew.set(cd,orig);}else{if(!existingLocCodes.has(msg)&&!allNew.has(msg))allNew.set(msg,genValMsg(fN,vt,lb,v.value,c.validations));}}}}}
   if(data.flows){for(const fl of data.flows){for(const s of['body','header','footer'])for(let i=0;i<(fl[s]||[]).length;i++)pComp(fl[s][i],fl.name,`${s}[${i}]`);for(let pi=0;pi<(fl.pages||[]).length;pi++){const pg=fl.pages[pi];for(let pri=0;pri<(pg.properties||[]).length;pri++)pComp(pg.properties[pri],fl.name,`pages[${pi}].properties[${pri}]`);}}}
 
   // R8: table headers
   const appConfigCodes = new Set(); // Track codes that belong to hcm-appconfiguration only
-  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);if(o.format==='table'&&o.data&&Array.isArray(o.data.columns)){for(let ci=0;ci<o.data.columns.length;ci++){const col=o.data.columns[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);appConfigCodes.add(nc);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);appConfigCodes.add(nc);}}else if(col.header&&isCode(col.header)){appConfigCodes.add(col.header);if(!existingLocCodes.has(col.header)&&!allNew.has(col.header)){const thMsg=smartMsg(col.header,moduleName)||humanize(col.header);allNew.set(col.header,thMsg);report.missingLocalizations.push({code:col.header,fieldType:'tableHeader',message:thMsg});}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
+  const visited8=new WeakSet();function wTH(o,p,d){if(d>MAX_WALK_DEPTH)return;if(Array.isArray(o)){o.forEach((x,i)=>wTH(x,`${p}[${i}]`,d+1));}else if(o&&typeof o==='object'){if(visited8.has(o))return;visited8.add(o);const _cols=(o.format==='table')?(o.data&&Array.isArray(o.data.columns)?o.data.columns:Array.isArray(o.columns)?o.columns:null):null;if(_cols){for(let ci=0;ci<_cols.length;ci++){const col=_cols[ci];if(col.header&&!isCode(col.header)&&autoFix){const cp=col.header.toUpperCase().replace(/\s+/g,'_'),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'hardcoded-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,oh);appConfigCodes.add(nc);}else if(col.header&&/HEADER_\d+_LABEL$/.test(col.header)){const fm=col.cellValue?.match(/item\.(?:additionalFields\.fields\.)?(\w+)/);if(fm&&autoFix){const f=fm[1],r=humanizeField(f)||humanize(f),cp=f.replace(/([A-Z])/g,'_$1').toUpperCase(),nc=`${moduleName.toUpperCase()}_TABLE_HEADER_${cp}`,oh=col.header;col.header=nc;report.fixes.push({rule:'generic-table-header',path:`${p}.columns[${ci}]`,fixed:`"${oh}" \u2192 "${nc}"`});allNew.set(nc,r);appConfigCodes.add(nc);}}else if(col.header&&isCode(col.header)){appConfigCodes.add(col.header);if(!existingLocCodes.has(col.header)&&!allNew.has(col.header)){const thMsg=smartMsg(col.header,moduleName)||humanize(col.header);allNew.set(col.header,thMsg);report.missingLocalizations.push({code:col.header,fieldType:'tableHeader',message:thMsg});}}}}for(const[k,v]of Object.entries(o))if(typeof v==='object'&&v!==null)wTH(v,`${p}.${k}`,d+1);}}
   wTH(data,'data',0);
 
   // R9: icon in properties
@@ -656,12 +668,16 @@ function analyzeAndFix(configData, opts = {}) {
 
   // R10: collect loc codes
   const APP_CONFIG_FIELDS = new Set(['fieldName','labelPairList']);
-  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();const tplM=cd.match(/\{\{[^}]*\}\}/g);if(tplM){const withoutTpl=cd.replace(/\{\{[^}]*\}\}/g,'').trim();if(withoutTpl.length>0&&autoFix&&HARDCODED_FIX_FIELDS.has(f)){let msg=cd,args=[];let idx=1;msg=msg.replace(/\{\{[^}]*\}\}/g,(m)=>{args.push(m);return'{'+idx+++'}';});let nc;if(isCode(withoutTpl)){nc=withoutTpl;const readable=smartLocMsg(nc,f,o.format?o.fieldName:null,c.pN,moduleName);msg=msg.replace(nc,readable);}else{const textPart=withoutTpl.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();nc=(moduleName.toUpperCase()+'_'+textPart+sfx).replace(/_+/g,'_');}o[f]=nc;o[f+'Args']=args;report.fixes.push({rule:'template-'+f,path:'wLoc',fixed:`"${cd}" → "${nc}" + ${f}Args`});if(!allNew.has(nc)){allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}continue;}if(cd.includes(' ')&&!cd.includes('_')){if(autoFix&&HARDCODED_FIX_FIELDS.has(f)){const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();const fnPart=o.fieldName&&typeof o.fieldName==='string'?o.fieldName.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase():(c.pN||'').toUpperCase();const nc=(moduleName.toUpperCase()+(fnPart?'_'+fnPart:'')+sfx).replace(/[^A-Z0-9_]/g,'_').replace(/_+/g,'_');if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const orig=cd;o[f]=nc;allNew.set(nc,orig);report.fixes.push({rule:'hardcoded-'+f,path:'wLoc',fixed:`"${orig}" → "${nc}"`});report.missingLocalizations.push({code:nc,fieldType:f,message:orig});if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}}continue;}if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(c.inFooter&&o.fieldName&&typeof o.fieldName==='string'){const fn=o.fieldName.trim();if(fn){const faCode='FOOTER_ACTION_'+fn+'_LABEL';appConfigCodes.add(faCode);if(!existingLocCodes.has(faCode)&&!allNew.has(faCode)){const faMsg=smartMsg(fn,null);allNew.set(faCode,faMsg);report.missingLocalizations.push({code:faCode,fieldType:'footer',message:faMsg});}}}if(Array.isArray(o.labelPairList)){for(const pr of o.labelPairList){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&isCode(pr[kf])){appConfigCodes.add(pr[kf]);if(!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}if(pr&&pr.key&&typeof pr.key==='string'&&isCode(pr.key)){const lpCode='LABEL_PAIR_'+pr.key;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){const lpMsg=smartMsg(pr.key,null);allNew.set(lpCode,lpMsg);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:lpMsg});}}}}for(const ea of['enums','dropDownOptions']){if(Array.isArray(o[ea])){for(const en of o[ea]){if(en&&en.name&&typeof en.name==='string'&&en.name.trim()){let nc=en.name.trim();if(nc.startsWith('{{'))continue;if(nc.includes(' ')&&!nc.includes('_')&&autoFix){const origName=nc;nc=moduleName.toUpperCase()+'_ENUM_'+nc.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+$/,'');en.name=nc;report.fixes.push({rule:'hardcoded-enum-name',path:'enum',fixed:`"${origName}" → "${nc}"`});allNew.set(nc,origName);appConfigCodes.add(nc);continue;}appConfigCodes.add(nc);if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const msg=smartLocMsg(nc,'enum',o.fieldName||null,c.pN,moduleName);allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:'enum',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null){const nc=k==='footer'?{...c,inFooter:true}:c;wLoc(v,nc,d+1);}}}
+  const visited10=new WeakSet();function wLoc(o,ctx,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach(x=>wLoc(x,ctx,d+1));return;}if(visited10.has(o))return;visited10.add(o);const c={...ctx};if(o.screenType)c.sT=o.screenType;if(o.name&&!o.format)c.pN=o.name;if(o.page)c.pN=o.page;for(const f of LOCALIZATION_FIELDS){const v=o[f];if(v&&typeof v==='string'&&v.trim()){const cd=v.trim();const tplM=cd.match(/\{\{[^}]*\}\}/g);if(tplM){const withoutTpl=cd.replace(/\{\{[^}]*\}\}/g,'').trim();if(withoutTpl.length>0&&autoFix&&HARDCODED_FIX_FIELDS.has(f)){let msg=cd,args=[];let idx=1;msg=msg.replace(/\{\{[^}]*\}\}/g,(m)=>{args.push(m);return'{'+idx+++'}';});let nc;if(isCode(withoutTpl)){nc=withoutTpl;const readable=smartLocMsg(nc,f,o.format?o.fieldName:null,c.pN,moduleName);msg=msg.replace(nc,readable);}else{const textPart=withoutTpl.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();nc=(moduleName.toUpperCase()+'_'+textPart+sfx).replace(/_+/g,'_');}o[f]=nc;o[f+'Args']=args;report.fixes.push({rule:'template-'+f,path:'wLoc',fixed:`"${cd}" → "${nc}" + ${f}Args`});if(!allNew.has(nc)){allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}continue;}if(cd.includes(' ')&&!cd.includes('_')){if(autoFix&&HARDCODED_FIX_FIELDS.has(f)){const sfx=HARDCODED_SUFFIX[f]||'_'+f.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase();const fnPart=o.fieldName&&typeof o.fieldName==='string'?o.fieldName.replace(/([a-z])([A-Z])/g,'$1_$2').toUpperCase():(c.pN||'').toUpperCase();const nc=(moduleName.toUpperCase()+(fnPart?'_'+fnPart:'')+sfx).replace(/[^A-Z0-9_]/g,'_').replace(/_+/g,'_');if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const orig=cd;o[f]=nc;allNew.set(nc,orig);report.fixes.push({rule:'hardcoded-'+f,path:'wLoc',fixed:`"${orig}" → "${nc}"`});report.missingLocalizations.push({code:nc,fieldType:f,message:orig});if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(nc);}}continue;}if(cd.startsWith('{{'))continue;if(cd.includes('(')||cd.includes('.'))continue;if(!existingLocCodes.has(cd)&&!allNew.has(cd)){const msg=smartLocMsg(cd,f,o.format?o.fieldName:null,c.pN,moduleName);allNew.set(cd,msg);report.missingLocalizations.push({code:cd,fieldType:f,message:msg});}if(APP_CONFIG_FIELDS.has(f))appConfigCodes.add(cd);}}if(c.inFooter&&o.fieldName&&typeof o.fieldName==='string'){const fn=o.fieldName.trim();if(fn){const faCode='FOOTER_ACTION_'+fn+'_LABEL';appConfigCodes.add(faCode);if(!existingLocCodes.has(faCode)&&!allNew.has(faCode)){const faMsg=smartMsg(fn,null);allNew.set(faCode,faMsg);report.missingLocalizations.push({code:faCode,fieldType:'footer',message:faMsg});}}}const _lpArr=Array.isArray(o.labelPairList)?o.labelPairList:(o.format==='labelPairList'&&Array.isArray(o.data)?o.data:null);if(_lpArr){for(const pr of _lpArr){for(const kf of['key','label']){if(pr&&pr[kf]&&typeof pr[kf]==='string'&&/^[A-Za-z0-9_]+$/.test(pr[kf])){appConfigCodes.add(pr[kf]);if(!existingLocCodes.has(pr[kf])&&!allNew.has(pr[kf])){const msg=smartMsg(pr[kf],null);allNew.set(pr[kf],msg);report.missingLocalizations.push({code:pr[kf],fieldType:'labelPairList',message:msg});}}}if(pr&&pr.key&&typeof pr.key==='string'&&/^[A-Za-z0-9_]+$/.test(pr.key)){const lpCode='LABEL_PAIR_'+pr.key;appConfigCodes.add(lpCode);if(!existingLocCodes.has(lpCode)&&!allNew.has(lpCode)){const lpMsg=smartMsg(pr.key,null);allNew.set(lpCode,lpMsg);report.missingLocalizations.push({code:lpCode,fieldType:'labelPairList',message:lpMsg});}}}}for(const ea of['enums','dropDownOptions']){if(Array.isArray(o[ea])){for(const en of o[ea]){if(en&&en.name&&typeof en.name==='string'&&en.name.trim()){let nc=en.name.trim();if(nc.startsWith('{{'))continue;if(nc.includes(' ')&&!nc.includes('_')&&autoFix){const origName=nc;nc=moduleName.toUpperCase()+'_ENUM_'+nc.toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/_+$/,'');en.name=nc;report.fixes.push({rule:'hardcoded-enum-name',path:'enum',fixed:`"${origName}" → "${nc}"`});allNew.set(nc,origName);appConfigCodes.add(nc);continue;}appConfigCodes.add(nc);if(!existingLocCodes.has(nc)&&!allNew.has(nc)){const msg=smartLocMsg(nc,'enum',o.fieldName||null,c.pN,moduleName);allNew.set(nc,msg);report.missingLocalizations.push({code:nc,fieldType:'enum',message:msg});}}}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null){const nc=k==='footer'?{...c,inFooter:true}:c;wLoc(v,nc,d+1);}}}
 
   wLoc(data,{},0);
 
+  // R13: popupConfig empty title — generate code with intentionally blank message
+  const visited13=new WeakSet();function wPcT(o,fn,loc,d){if(d>MAX_WALK_DEPTH||!o||typeof o!=='object')return;if(Array.isArray(o)){o.forEach((x,i)=>wPcT(x,fn,`${loc}[${i}]`,d+1));return;}if(visited13.has(o))return;visited13.add(o);if(o.popupConfig&&typeof o.popupConfig==='object'){const pc=o.popupConfig;if(!pc.title||!pc.title.trim()){const fnPart=(fn||'POPUP').toUpperCase().replace(/[^A-Z0-9]+/g,'_');const cd=`${moduleName.toUpperCase()}_${fnPart}_POPUP_TITLE`;if(autoFix){pc.title=cd;report.fixes.push({rule:'empty-popupConfig-title',flow:fn,path:`${loc}.popupConfig.title`,fixed:`title \u2192 "${cd}"`});}if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,' ');report.missingLocalizations.push({code:cd,fieldType:'title',message:' '});}}}for(const[k,v]of Object.entries(o)){if(typeof v==='object'&&v!==null)wPcT(v,fn,`${loc}.${k}`,d+1);}}
+  if(data.flows)for(const fl of data.flows)wPcT(fl,fl.name,fl.name||'flow',0);
+
   // R12: APP_CONFIG category, flow, and page localization codes (for hcm-appconfiguration)
-  if(data.flows){const categories=new Set(),flowNames=new Set(),pageEntries=new Map();for(const fl of data.flows){if(fl.name)flowNames.add(fl.name);if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){const pn=pg.page||pg.name;if(pn&&!pageEntries.has(pn))pageEntries.set(pn,pg.label||pg.heading||null);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const fn of flowNames){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(fn));}}for(const[pn,labelCode]of pageEntries){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){let msg=null;if(labelCode){msg=allNew.get(labelCode)||existingLocCodes.get(labelCode)||null;if(!msg)msg=smartMsg(labelCode,moduleName);}if(!msg)msg=humanize(pn);allNew.set(cd,msg);}}}
+  if(data.flows){const categories=new Set(),flowEntries=new Map(),pageEntries=new Map();for(const fl of data.flows){if(fl.name)flowEntries.set(fl.name,fl.label||fl.heading||(fl.pages&&fl.pages[0]?(fl.pages[0].label||fl.pages[0].heading||null):null));if(fl.category)categories.add(fl.category);if(fl.pages){for(const pg of fl.pages){const pn=pg.page||pg.name;if(pn&&!pageEntries.has(pn))pageEntries.set(pn,pg.label||pg.heading||null);}}}for(const cat of categories){const cd=`APP_CONFIG_CATEGORY_${cat.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){allNew.set(cd,humanize(cat));}}for(const[fn,flLabelCode]of flowEntries){const cd=`APP_CONFIG_FLOW_${fn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){let msg=null;if(flLabelCode){msg=allNew.get(flLabelCode)||existingLocCodes.get(flLabelCode)||null;if(!msg)msg=smartMsg(flLabelCode,moduleName);}if(!msg)msg=humanize(fn);allNew.set(cd,msg);}}for(const[pn,labelCode]of pageEntries){const cd=`APP_CONFIG_PAGE_${pn.toUpperCase()}`;appConfigCodes.add(cd);if(!existingLocCodes.has(cd)&&!allNew.has(cd)){let msg=null;if(labelCode){msg=allNew.get(labelCode)||existingLocCodes.get(labelCode)||null;if(!msg)msg=smartMsg(labelCode,moduleName);}if(!msg)msg=humanize(pn);allNew.set(cd,msg);}}}
 
   report.totalIssues=report.fixes.length+report.warnings.length;
   const newLocalizations = Array.from(allNew.entries()).map(([code,message])=>({code,message}));
@@ -1524,6 +1540,26 @@ async function fetchAppConfigLocs(envUrl, tenant, locale, token) {
   }
 }
 
+const refDataCache = new Map();
+async function fetchRefDataCodes(envUrl, tenantId, token, locale, contextPath) {
+  const cacheKey = `${envUrl}|${tenantId}|${locale}`;
+  if (refDataCache.has(cacheKey)) return refDataCache.get(cacheKey);
+  const codes = new Map(); // code -> schemaCode (for tracking source)
+  for (const schema of MDMS_REF_SCHEMAS) {
+    try {
+      const records = await apiMdmsSearch(envUrl, tenantId, schema, {}, token, locale, contextPath);
+      for (const rec of records) {
+        const code = rec.data?.code;
+        if (code && typeof code === 'string' && code.trim()) {
+          codes.set(code.trim(), schema);
+        }
+      }
+    } catch (e) { console.warn(`Ref data fetch skipped for ${schema}:`, e.message); }
+  }
+  refDataCache.set(cacheKey, codes);
+  return codes;
+}
+
 async function apiLocUpsert(envUrl, tenantId, messages, token, locale) {
   return apiFetch('/api/loc/upsert',
     { envUrl, tenantId, messages, token, locale },
@@ -1841,6 +1877,11 @@ async function pushLfpcChanges(envUrl, token, locale, tenant, contextPath) {
 function buildConfigSummary(result) {
   const data = result.correctedData || result.originalData;
   if (!data || !data.flows) return null;
+  // Build lookup of code → message from all available localizations
+  const _locLookup = new Map();
+  if (result._existingLocs) { for (const [code, msg] of result._existingLocs) _locLookup.set(code, msg); }
+  if (result.newLocalizations) { for (const loc of result.newLocalizations) { if (loc.code && loc.message && !_locLookup.has(loc.code)) _locLookup.set(loc.code, loc.message); } }
+  const _resolveMsg = (code) => (code && typeof code === 'string' && _locLookup.has(code)) ? _locLookup.get(code) : '';
   const summary = { moduleName: data.name || 'UNKNOWN', flows: [] };
   for (const fl of data.flows) {
     const flowInfo = { name: fl.name || '', category: fl.category || '', screenType: fl.screenType || '', pages: [] };
@@ -1848,7 +1889,7 @@ function buildConfigSummary(result) {
       if (!obj || typeof obj !== 'object') return;
       if (Array.isArray(obj)) { obj.forEach(x => extractFields(x, fields)); return; }
       if (obj.format && obj.fieldName) {
-        fields.push({ fieldName: obj.fieldName, format: obj.format, label: obj.label || '', heading: obj.heading || '' });
+        fields.push({ fieldName: obj.fieldName, format: obj.format, label: obj.label || '', labelMsg: _resolveMsg(obj.label), heading: obj.heading || '', headingMsg: _resolveMsg(obj.heading) });
       }
       for (const [k, v] of Object.entries(obj)) {
         if (typeof v === 'object' && v !== null && k !== 'validations') extractFields(v, fields);
@@ -1858,7 +1899,7 @@ function buildConfigSummary(result) {
       for (const pg of fl.pages) {
         const fields = [];
         extractFields(pg.body || pg.header || pg, fields);
-        flowInfo.pages.push({ page: pg.page || pg.name || '', screenType: pg.screenType || fl.screenType || '', label: pg.label || '', heading: pg.heading || '', description: pg.description || '', actionLabel: pg.actionLabel || '', fields: fields.slice(0, 20) });
+        flowInfo.pages.push({ page: pg.page || pg.name || '', screenType: pg.screenType || fl.screenType || '', label: pg.label || '', labelMsg: _resolveMsg(pg.label), heading: pg.heading || '', headingMsg: _resolveMsg(pg.heading), description: pg.description || '', descriptionMsg: _resolveMsg(pg.description), actionLabel: pg.actionLabel || '', fields: fields.slice(0, 20) });
       }
     } else {
       const fields = [];
@@ -2061,9 +2102,10 @@ async function aiEnhance(resultsList, resume = false) {
                     const existingLoc = r.newLocalizations[0];
                     const isAppCfg = r._appConfigCodes && r._appConfigCodes.has(code);
                     const baseModule = existingLoc?.module || r._locModule || r._tgtLocModule;
-                    const loc = { code, message, module: isAppCfg ? 'hcm-appconfiguration' : baseModule, locale: existingLoc?.locale };
+                    const loc = { code, message, module: baseModule, locale: existingLoc?.locale };
                     if (isAppCfg) loc._appConfig = true;
                     r.newLocalizations.push(loc);
+                    if (isAppCfg) r.newLocalizations.push({ code, message, module: 'hcm-appconfiguration', locale: existingLoc?.locale, _appConfig: true });
                   }
                   existingImproved++;
                   batchImproved++;
@@ -2356,6 +2398,10 @@ async function onlineFetch() {
     let lfpcRecs = [];
     try { lfpcRecs = await apiMdmsSearch(envUrl, tenant, LFPC_SCHEMA, {}, onlineToken, onlineLocale, contextPath); } catch (e) { console.warn('LFPC fetch skipped:', e.message); }
 
+    showLoader('Fetching reference data codes...');
+    await tick();
+    const refDataCodes = await fetchRefDataCodes(envUrl, tenant, onlineToken, onlineLocale, contextPath);
+
     // Module selection
     hideLoader();
     const selectedRecords = await showModuleSelector(onlineRecords);
@@ -2392,8 +2438,8 @@ async function onlineFetch() {
       result._record = rec; // keep reference to original record for updates
       result._locModule = locModule;
       result._existingLocs = moduleExistingLocs;
-      // Stamp module/locale on each localization entry
-      for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : locModule; loc.locale = onlineLocale; }
+      // Stamp module/locale on each localization entry (appConfig codes go to module loc; push function handles dual-push to hcm-appconfiguration)
+      for (const loc of result.newLocalizations) { loc.module = locModule; loc.locale = onlineLocale; }
       // Merge module-specific existing locs into newLocalizations so they are visible in the UI
       const newCodes = new Set(result.newLocalizations.map(l => l.code));
       for (const [code, message] of moduleExistingLocs) {
@@ -2410,16 +2456,68 @@ async function onlineFetch() {
         for (const code of result._appConfigCodes) {
           if (!newCodes.has(code) && appConfigLocs.has(code)) {
             const message = appConfigLocs.get(code);
-            result.newLocalizations.push({ code, message, module: 'hcm-appconfiguration', locale: onlineLocale, _fromSource: true, _appConfig: true });
+            result.newLocalizations.push({ code, message, module: locModule, locale: onlineLocale, _fromSource: true, _appConfig: true });
             newCodes.add(code);
           }
         }
       }
+      // Ensure every _appConfig code has entries for BOTH locModule and hcm-appconfiguration
+      const seenModuleCode = new Set(result.newLocalizations.map(l => l.module + '|' + l.code));
+      const dualEntries = [];
+      for (const loc of result.newLocalizations) {
+        if (loc._appConfig) {
+          const modKey = locModule + '|' + loc.code;
+          const appKey = 'hcm-appconfiguration|' + loc.code;
+          if (!seenModuleCode.has(modKey)) { dualEntries.push({ code: loc.code, message: loc.message, module: locModule, locale: onlineLocale, _appConfig: true }); seenModuleCode.add(modKey); }
+          if (!seenModuleCode.has(appKey)) { dualEntries.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true }); seenModuleCode.add(appKey); }
+        }
+      }
+      if (dualEntries.length) result.newLocalizations.push(...dualEntries);
       results.push(result);
     }
 
     // Reconcile LFPC
     lfpcState = reconcileLfpc(results, lfpcRecs, tenant);
+
+    // Build shared code sets (ref data + LFPC) once, then add to every result
+    const allLfpcRecs = [...lfpcRecs, ...(lfpcState.newRecords || [])];
+    const lfpcLocCodes = new Set();
+    for (const rec of allLfpcRecs) {
+      if (rec.data?.entity && typeof rec.data.entity === 'string') {
+        lfpcLocCodes.add('LABEL_PAIR_CATEGORY_' + rec.data.entity.toUpperCase());
+      }
+      if (rec.data?.labelFields) {
+        for (const lf of rec.data.labelFields) {
+          if (lf.name && typeof lf.name === 'string') {
+            lfpcLocCodes.add('LABEL_PAIR_' + lf.name);
+          }
+        }
+      }
+    }
+    console.log('[Corrector] LFPC records:', allLfpcRecs.length, '| entity categories:', [...lfpcLocCodes].filter(c => c.startsWith('LABEL_PAIR_CATEGORY_')), '| total LFPC codes:', lfpcLocCodes.size);
+
+    // Add ref data codes + LFPC codes to every result's localizations
+    for (const result of results) {
+      const existingCodes = new Set(result.newLocalizations.map(l => l.code));
+      const locModule = result._locModule;
+      // Reference data codes (both module and appConfig)
+      for (const [code, schema] of refDataCodes) {
+        if (!existingCodes.has(code)) {
+          const msg = smartMsg(code, null) || humanize(code);
+          result.newLocalizations.push({ code, message: msg, module: locModule, locale: onlineLocale, _refData: true });
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _refData: true });
+          existingCodes.add(code);
+        }
+      }
+      // LFPC entity category + labelField codes (appConfig only)
+      for (const code of lfpcLocCodes) {
+        if (!existingCodes.has(code)) {
+          const msg = smartMsg(code, null) || humanize(code);
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: onlineLocale, _appConfig: true, _fromLfpc: true });
+          existingCodes.add(code);
+        }
+      }
+    }
 
     hideLoader();
     migrateCtx = null;
@@ -2521,6 +2619,10 @@ async function migrateFetch() {
     let lfpcRecs = [];
     try { lfpcRecs = await apiMdmsSearch(src.url, src.tenant, LFPC_SCHEMA, {}, srcToken, srcLocale, src.contextPath); } catch (e) { console.warn('LFPC fetch skipped:', e.message); }
 
+    showLoader('Fetching reference data codes...');
+    await tick();
+    const refDataCodes = await fetchRefDataCodes(src.url, src.tenant, srcToken, srcLocale, src.contextPath);
+
     // Build map only from records whose data.project matches target project/campaign
     const tgtMatchProject = tgt.project || tgt.campaign;
     const tgtMap = new Map();
@@ -2586,7 +2688,8 @@ async function migrateFetch() {
       result._existingLocs = moduleExistingLocs;
       result._isUpdate = tgtMap.has(rec.data.name);
       result._tgtRecord = tgtMap.get(rec.data.name) || null;
-      for (const loc of result.newLocalizations) { loc.module = loc._appConfig ? 'hcm-appconfiguration' : tgtLocModule; loc.locale = tgtLocale; }
+      // Stamp module/locale (appConfig codes go to target module loc; push function handles dual-push to hcm-appconfiguration)
+      for (const loc of result.newLocalizations) { loc.module = tgtLocModule; loc.locale = tgtLocale; }
       // Merge module-specific source locs into newLocalizations so they are visible in the UI
       const newCodes = new Set(result.newLocalizations.map(l => l.code));
       const sourceLocs = [];
@@ -2604,16 +2707,68 @@ async function migrateFetch() {
         for (const code of result._appConfigCodes) {
           if (!newCodes.has(code) && appConfigLocs.has(code)) {
             const message = appConfigLocs.get(code);
-            sourceLocs.push({ code, message, module: 'hcm-appconfiguration', locale: tgtLocale, _fromSource: true, _appConfig: true });
+            sourceLocs.push({ code, message, module: tgtLocModule, locale: tgtLocale, _fromSource: true, _appConfig: true });
             newCodes.add(code);
           }
         }
       }
       result.newLocalizations = [...sourceLocs, ...result.newLocalizations];
+      // Ensure every _appConfig code has entries for BOTH tgtLocModule and hcm-appconfiguration
+      const seenModuleCode = new Set(result.newLocalizations.map(l => l.module + '|' + l.code));
+      const dualEntries = [];
+      for (const loc of result.newLocalizations) {
+        if (loc._appConfig) {
+          const modKey = tgtLocModule + '|' + loc.code;
+          const appKey = 'hcm-appconfiguration|' + loc.code;
+          if (!seenModuleCode.has(modKey)) { dualEntries.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale, _appConfig: true }); seenModuleCode.add(modKey); }
+          if (!seenModuleCode.has(appKey)) { dualEntries.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true }); seenModuleCode.add(appKey); }
+        }
+      }
+      if (dualEntries.length) result.newLocalizations.push(...dualEntries);
       results.push(result);
     }
 
     lfpcState = reconcileLfpc(results, lfpcRecs, tgt.tenant);
+
+    // Build shared code sets (ref data + LFPC) once, then add to every result
+    const allLfpcRecs = [...lfpcRecs, ...(lfpcState.newRecords || [])];
+    const lfpcLocCodes = new Set();
+    for (const rec of allLfpcRecs) {
+      if (rec.data?.entity && typeof rec.data.entity === 'string') {
+        lfpcLocCodes.add('LABEL_PAIR_CATEGORY_' + rec.data.entity.toUpperCase());
+      }
+      if (rec.data?.labelFields) {
+        for (const lf of rec.data.labelFields) {
+          if (lf.name && typeof lf.name === 'string') {
+            lfpcLocCodes.add('LABEL_PAIR_' + lf.name);
+          }
+        }
+      }
+    }
+    console.log('[Corrector] LFPC records:', allLfpcRecs.length, '| entity categories:', [...lfpcLocCodes].filter(c => c.startsWith('LABEL_PAIR_CATEGORY_')), '| total LFPC codes:', lfpcLocCodes.size);
+
+    // Add ref data codes + LFPC codes to every result's localizations
+    for (const result of results) {
+      const existingCodes = new Set(result.newLocalizations.map(l => l.code));
+      const tgtLocModule = result._tgtLocModule;
+      // Reference data codes (both module and appConfig)
+      for (const [code, schema] of refDataCodes) {
+        if (!existingCodes.has(code)) {
+          const msg = smartMsg(code, null) || humanize(code);
+          result.newLocalizations.push({ code, message: msg, module: tgtLocModule, locale: tgtLocale, _refData: true });
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _refData: true });
+          existingCodes.add(code);
+        }
+      }
+      // LFPC entity category + labelField codes (appConfig only)
+      for (const code of lfpcLocCodes) {
+        if (!existingCodes.has(code)) {
+          const msg = smartMsg(code, null) || humanize(code);
+          result.newLocalizations.push({ code, message: msg, module: 'hcm-appconfiguration', locale: tgtLocale, _appConfig: true, _fromLfpc: true });
+          existingCodes.add(code);
+        }
+      }
+    }
 
     hideLoader();
     onlineRecords = [];
@@ -2694,8 +2849,11 @@ async function pushOnlineToEnv() {
       const locModule = r._locModule || getLocModule(onlineSchema, r.report.moduleName, onlineProject, onlineCampaign);
       const allRaw = [];
       for (const m of r.newLocalizations) {
-        allRaw.push({ code: m.code, message: m.message, module: locModule, locale: onlineLocale });
-        if (m._appConfig) allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale });
+        allRaw.push({ code: m.code, message: m.message, module: m.module || locModule, locale: onlineLocale });
+        if (m._appConfig) {
+          allRaw.push({ code: m.code, message: m.message, module: 'hcm-appconfiguration', locale: onlineLocale });
+          allRaw.push({ code: m.code, message: m.message, module: locModule, locale: onlineLocale });
+        }
       }
       const tagged = dedupByCode(allRaw);
 
@@ -2799,7 +2957,10 @@ async function pushAllToTarget() {
       const allLocsRaw = [];
       for (const loc of r.newLocalizations) {
         allLocsRaw.push({ code: loc.code, message: loc.message, module: loc.module || tgtLocModule, locale: tgtLocale });
-        if (loc._appConfig) allLocsRaw.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: tgtLocale });
+        if (loc._appConfig) {
+          allLocsRaw.push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale: tgtLocale });
+          allLocsRaw.push({ code: loc.code, message: loc.message, module: tgtLocModule, locale: tgtLocale });
+        }
       }
       const allLocs = dedupByCode(allLocsRaw);
 
@@ -3260,12 +3421,13 @@ function downloadLocSheet() {
         arr.push({ code, message, module: locModule, locale });
       }
     }
-    // New locs
+    // New locs (appConfig codes go to both module sheet and hcm-appconfiguration sheet)
     for (const loc of r.newLocalizations) {
-      const mod = loc._appConfig ? 'hcm-appconfiguration' : locModule;
-      const key = loc._appConfig ? 'hcm-appconfiguration' : locModule;
-      if (!moduleMap.has(key)) moduleMap.set(key, []);
-      moduleMap.get(key).push({ code: loc.code, message: loc.message, module: mod, locale });
+      arr.push({ code: loc.code, message: loc.message, module: locModule, locale });
+      if (loc._appConfig) {
+        if (!moduleMap.has('hcm-appconfiguration')) moduleMap.set('hcm-appconfiguration', []);
+        moduleMap.get('hcm-appconfiguration').push({ code: loc.code, message: loc.message, module: 'hcm-appconfiguration', locale });
+      }
     }
   }
 
