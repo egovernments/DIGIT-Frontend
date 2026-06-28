@@ -2401,6 +2401,18 @@ async function onlineFetch() {
           const loc = { code, message, module: locModule, locale: onlineLocale, _fromSource: true };
           if (result._appConfigCodes && result._appConfigCodes.has(code)) loc._appConfig = true;
           result.newLocalizations.unshift(loc);
+          newCodes.add(code);
+        }
+      }
+      // Re-surface appConfig codes that were suppressed because they already exist in hcm-appconfiguration
+      // but not in the module-specific locs — these still need to appear for dual-module management
+      if (result._appConfigCodes) {
+        for (const code of result._appConfigCodes) {
+          if (!newCodes.has(code) && appConfigLocs.has(code)) {
+            const message = appConfigLocs.get(code);
+            result.newLocalizations.push({ code, message, module: 'hcm-appconfiguration', locale: onlineLocale, _fromSource: true, _appConfig: true });
+            newCodes.add(code);
+          }
         }
       }
       results.push(result);
@@ -2583,6 +2595,18 @@ async function migrateFetch() {
           const loc = { code, message, module: tgtLocModule, locale: tgtLocale, _fromSource: true };
           if (result._appConfigCodes && result._appConfigCodes.has(code)) loc._appConfig = true;
           sourceLocs.push(loc);
+          newCodes.add(code);
+        }
+      }
+      // Re-surface appConfig codes that were suppressed because they already exist in hcm-appconfiguration
+      // but not in the module-specific locs — these still need to appear for dual-module management
+      if (result._appConfigCodes) {
+        for (const code of result._appConfigCodes) {
+          if (!newCodes.has(code) && appConfigLocs.has(code)) {
+            const message = appConfigLocs.get(code);
+            sourceLocs.push({ code, message, module: 'hcm-appconfiguration', locale: tgtLocale, _fromSource: true, _appConfig: true });
+            newCodes.add(code);
+          }
         }
       }
       result.newLocalizations = [...sourceLocs, ...result.newLocalizations];
