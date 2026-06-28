@@ -2014,7 +2014,12 @@ async function aiEnhance(resultsList, resume = false) {
             let improved = 0;
             if (data.improved) {
               for (const loc of batch) {
-                if (data.improved[loc.code]) { loc.message = data.improved[loc.code]; improved++; }
+                if (data.improved[loc.code]) {
+                  const msg = data.improved[loc.code];
+                  // Update ALL entries with this code (module + hcm-appconfiguration dual entries)
+                  for (const entry of r.newLocalizations) { if (entry.code === loc.code) entry.message = msg; }
+                  improved++;
+                }
               }
             }
             // Track processed codes for resume
@@ -2095,9 +2100,9 @@ async function aiEnhance(resultsList, resume = false) {
               let batchImproved = 0;
               if (data.improved && Object.keys(data.improved).length > 0) {
                 for (const [code, message] of Object.entries(data.improved)) {
-                  const already = r.newLocalizations.find(l => l.code === code);
-                  if (already) { already.message = message; }
-                  else {
+                  let found = false;
+                  for (const loc of r.newLocalizations) { if (loc.code === code) { loc.message = message; found = true; } }
+                  if (!found) {
                     // Derive module from result's stored locModule, and locale from existing entries
                     const existingLoc = r.newLocalizations[0];
                     const isAppCfg = r._appConfigCodes && r._appConfigCodes.has(code);
