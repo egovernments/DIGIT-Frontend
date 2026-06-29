@@ -131,6 +131,12 @@ const Home = ({
 
   const hideSidebar = sidebarHiddenFor.some((e) => window.location.href.includes(e));
 
+  // DIGIT Studio configurable citizen pages — rendered inside the citizen Home
+  // shell so they inherit the real DIGIT top bar + footer (routes added below).
+  const CitizenLandingPage = Digit.ComponentRegistryService?.getComponent("CitizenLandingPage");
+  const ServiceLandingPage = Digit.ComponentRegistryService?.getComponent("ServiceLandingPage");
+  const ServiceActionsPage = Digit.ComponentRegistryService?.getComponent("ServiceActionsPage");
+
   // Create app routes with dynamic module loading and loading states for citizen modules
   const appRoutes = modules.map(({ code, tenants }, index) => {
     return (
@@ -250,6 +256,11 @@ const Home = ({
               isLoading={islinkDataLoading}
             />
           } />
+
+          {/* DIGIT Studio configurable citizen pages */}
+          {CitizenLandingPage && <Route path="user/citizen-landing" element={<CitizenLandingPage />} />}
+          {ServiceLandingPage && <Route path="user/service-landing" element={<ServiceLandingPage />} />}
+          {ServiceActionsPage && <Route path="user/service-actions" element={<ServiceActionsPage />} />}
 
           <Route path="login/*" element={<Login stateCode={stateCode} />} />
 
