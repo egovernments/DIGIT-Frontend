@@ -250,7 +250,10 @@ const BoundaryComponent = ({
  */
 const BoundaryDropdown = ({ label, data, onChange, selected, setSelected, isRequired, disabled }) => {
   const { t } = useTranslation();
-  Digit.SessionStorage.set("paymentInbox", selected);
+  // Digit.SessionStorage.set("paymentInbox", selected); TODO: CHECK
+  // console.log("selected", selected);
+  const { children: _children, ...selectedWithoutChildren } = selected || {};
+  Digit.SessionStorage.set("paymentInbox", selectedWithoutChildren);
   return (
     <div style={{ width: "100%", marginTop: "1.5rem" }}>
       <div className="comment-label">
