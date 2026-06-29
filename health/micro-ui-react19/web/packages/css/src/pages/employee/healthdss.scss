@@ -7,7 +7,7 @@
 
 .customTable {
   .rdt_TableRow:hover {
-    background-color: #fbeee8 !important;
+    background-color: #FBEEE8 !important;
   }
 
   .rdt_TableRow > .rdt_TableCell:first-of-type {
@@ -21,7 +21,7 @@
     position: sticky;
     z-index: 10;
     left: 0rem;
-    background-color: #fbeee8;
+    background-color: #FBEEE8;
   }
 
   .rdt_TableHeadRow > .rdt_TableCol:first-of-type {
@@ -43,7 +43,7 @@
     position: sticky;
     z-index: 10;
     left: 6.25rem;
-    background-color: #fbeee8;
+    background-color: #FBEEE8;
   }
 
   .rdt_TableHeadRow > .rdt_TableCol:nth-of-type(2) {
@@ -659,7 +659,7 @@
   justify-content: center;
 
   &.increase {
-    color: #00703c;
+    color: #00703C;
   }
 
   &.decrease {
@@ -766,7 +766,7 @@
 }
 
 .digit-dss-options-header-text {
-  color: var(--digitv2-lightTheme-text-color-primary);
+  color: #0b4b66 !important;
   font-family: var(--digitv2-fontFamily-rc);
   font-style: var(--digitv2-fontStyle-normal);
   font-weight: var(--digitv2-fontWeight-bold);
@@ -937,6 +937,11 @@
     overflow: visible;
     width: unset;
     max-width: unset;
+
+    .rdrDateRangePickerWrapper {
+      position: absolute !important;
+      z-index: 100;
+    }
   }
 }
 
@@ -974,6 +979,21 @@
   margin-bottom: 1.5rem;
   display: flex;
   gap: 2rem;
+
+  width: 80%;
+
+  &.progressBar {
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+}
+
+.digit-dss-switch-tabs-progressbar-wrapper {
+  display: flex;
+  max-width: 100%;
+  gap: 2rem;
+  width: 100%;
+  overflow: hidden;
 }
 
 .digit-dss-switch-tab-wrapper::-webkit-scrollbar {
@@ -1002,7 +1022,7 @@
   flex-direction: row;
   height: 4.5rem;
   align-items: center;
-  max-width: 80%;
+  max-width: 100%;
   overflow: auto;
 }
 
@@ -1055,15 +1075,15 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  justify-content: flex-end;
-  width: 20%;
-  margin-right: 2rem;
+  justify-content: flex-start;
+  width: 100%;
+  margin-right: 0rem;
 }
 
 .digit-containerDiv-progress {
   background-color: var(--digitv2-lightTheme-divider);
   border-radius: 1.5rem;
-  width: 80rem;
+  flex: 1;
   height: 0.5rem;
 }
 
@@ -1203,6 +1223,7 @@
   padding: 2rem;
   gap: 1rem;
   max-width: 30%;
+  border-radius: 0.75rem;
 }
 
 .digit-banner-cell {
@@ -1397,6 +1418,102 @@
   }
 }
 
+.digit-reports-list__heading {
+  font-family: "Roboto Condensed";
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #0b4b66 !important;
+}
+
+.digit-button-primary,
+.digit-button-secondary,
+.digit-button-teritiary,
+.digit-button-default {
+  &.large {
+    border-radius: 0.5rem;
+  }
+
+  &.medium,
+  &.small {
+    border-radius: 0.375rem;
+  }
+}
+
+.digit-submit-bar,
+.digit-selector-button-primary {
+  border-radius: 0.375rem;
+}
+
+.digit-reports-list {
+  &__cards_main {
+    border-radius: 0.75rem;
+  }
+
+  &__description {
+    margin: 0rem;
+    color: #505a5f;
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__row-card {
+    cursor: pointer;
+    border-radius: 0.75rem;
+
+    &:hover {
+      background-color: #fbeee8;
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__row-icon {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fbeee8;
+    border-radius: 4px;
+  }
+
+  &__row-content {
+    flex: 1;
+    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__row-title {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-weight: var(--digitv2-fontWeight-bold);
+    font-size: var(--digitv2-fontSize-body-s-desktop);
+    color: var(--digitv2-lightTheme-primary-2);
+  }
+
+  &__row-desc {
+    font-family: var(--digitv2-fontFamily-sans);
+    font-size: var(--digitv2-fontSize-caption-desktop);
+    color: var(--digitv2-lightTheme-text-color-secondary);
+    margin-top: 0.125rem;
+  }
+
+  &__row-chevron {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+}
+
 .app-iframe-wrapper.digit-dss-kibana-iframe-wrapper {
   left: unset !important;
   top: unset !important;
@@ -1408,4 +1525,245 @@
   position: unset !important;
   height: 37.5rem !important;
   width: 100% !important;
+}
+
+.digit-report-detail {
+  &__files-list {
+    display: flex;
+    flex-direction: column;
+
+    .digit-report-detail__file-card {
+      border-bottom: none;
+
+      &:last-child {
+        border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider);
+      }
+    }
+  }
+
+  &__custom-btn {
+    margin-left: auto;
+  }
+
+  &__card {
+    border-radius: 0.75rem;
+  }
+
+  &__popup {
+    border-radius: 12px !important;
+    max-width: 48% !important;
+    .digit-popup-heading {
+      color: #0b4b66;
+    }
+    .digit-popup-children-wrap {
+      overflow: visible !important;
+    }
+  }
+
+  &__file-card {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+
+  &__file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0rem;
+  }
+
+  &__file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__file-date {
+    font-weight: 500;
+    color: var(--digitv2-lightTheme-text-color-primary);
+  }
+
+  &__file-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .digit-checkbox-container {
+      margin: 0rem;
+    }
+  }
+
+  &__custom-popup-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: 500;
+    }
+  }
+}
+
+.digit-report-details-accordion {
+  border-radius: 0.75rem;
+}
+
+.digit-report-detail {
+  &__header-wrap {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  &__header-svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  &__header {
+    margin: 0rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  &__header-with-tag {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    .digit-tag-wrapper {
+      height: fit-content;
+    }
+  }
+
+  &__header-with-tag-header {
+    font-family: "Roboto Condensed";
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #0b4b66 !important;
+  }
+
+  &__subtitle {
+    margin: 0rem;
+  }
+}
+
+.digit-dss-options-header-boundary{
+  line-height: normal;
+  color: #0b4b66 !important;
+}
+
+.view-more-popup-user-activity {
+  .digit-popup-heading {
+    color: #0b4b66;
+  }
+}
+
+.digit-user-tracking-boundary-filter {
+  .digit-tag-container {
+    .digit-button-link {
+      h2 {
+        @media (max-aspect-ratio: 9/16) {
+          font-size: 0.875rem;
+        }
+
+        @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+          font-size: 1rem;
+        }
+
+        @media (min-aspect-ratio: 3/4) {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+.digit-employeeCard-input,
+.digit-citizenCard-input,
+.digit-employeeCard-inputError,
+.digit-card-inputError {
+  &.custom-date-range {
+    border-radius: 0.375rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .digit-popup-overlay {
+    .digit-popup-wrapper {
+      &.digit-report-detail__popup {
+        max-width: 48%;
+      }
+    }
+  }
+}
+
+/* User Activity Tracking */
+.user-tracking-inbox-table-wrapper {
+  .user-tracking-inbox-table {
+    .rdt_TableBody {
+      border: none !important;
+      border-bottom: 0.063rem solid var(--digitv2-lightTheme-divider) !important;
+    }
+
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .rdt_Pagination {
+    margin-top: 0rem;
+    width: 100%;
+  }
+
+  .rdt_TableRow {
+    .rdt_TableCell {
+      align-items: flex-start;
+
+      .digit-tag-wrapper {
+        word-break: normal;
+        overflow-wrap: anywhere;
+
+        .digit-tag-text {
+          word-break: normal;
+          overflow-wrap: anywhere;
+        }
+      }
+    }
+  }
+}
+
+.digit-dss-user-tracking-header-text {
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem !important;
+  color: #0b4b66;
+}
+
+.user-profile-popup-tag {
+  border-radius: 0.75rem;
+}
+
+.user-profile-popup {
+  .digit-popup-heading {
+    color: #0b4b66;
+  }
+}
+
+.digit-user-tracking-boundary-filter{
+  .digit-multiselectdropdown-wrap{
+    margin: 0rem;
+  }
+
+  .digit-tag-container{
+    margin-bottom: 0rem;
+  }
+}
+
+.digit-date-range-label-field{
+  svg{
+    outline: none !important;
+  }
 }

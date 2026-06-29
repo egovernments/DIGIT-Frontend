@@ -10,7 +10,7 @@ const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );
 
-const enabledModules = ["Utilities", "Workbench", "Campaign", "Payments", "PGR", "HRMS"];
+const enabledModules = ["Utilities", "Workbench", "Campaign", "Payments", "PGR", "HRMS", "DSS"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -60,9 +60,10 @@ const MainApp = ({ stateCode, enabledModules }) => {
         import(/* webpackChunkName: "pgr" */ "@egovernments/digit-ui-module-health-pgr"),
         import(/* webpackChunkName: "health-hrms" */ "@egovernments/digit-ui-module-health-hrms"),
         import(/* webpackChunkName: "health-payments" */ "@egovernments/digit-ui-module-health-payments"),
+        import(/* webpackChunkName: "health-dss" */ "@egovernments/digit-ui-module-health-dss"),
       ]);
 
-      const [campaignResult, workbenchResult, pgrResult, hrmsResult, paymentsResult] = results;
+      const [campaignResult, workbenchResult, pgrResult, hrmsResult, paymentsResult, dssResult] = results;
 
       if (campaignResult.status === "fulfilled" && campaignResult.value?.initCampaignComponents) {
         campaignResult.value.initCampaignComponents();
@@ -92,6 +93,12 @@ const MainApp = ({ stateCode, enabledModules }) => {
         paymentsResult.value.initPaymentComponents();
       } else if (paymentsResult.status === "rejected") {
         console.log("health-payments failed to load:", paymentsResult.reason);
+      }
+
+      if (dssResult.status === "fulfilled" && dssResult.value?.initDSSComponents) {
+        dssResult.value.initDSSComponents();
+      } else if (dssResult.status === "rejected") {
+        console.log("health-dss failed to load:", dssResult.reason);
       }
 
       window.Digit.Customizations = {
