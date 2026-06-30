@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { Loader, Card, TooltipWrapper, Button } from "@egovernments/digit-ui-components";
@@ -20,6 +20,7 @@ import CustomHorizontalBarChart from "../../components/CustomHorizontalBarChart"
 import VennDiagramChart from "../../components/VennDiagramChart";
 import { getDuration } from "../../utils/getDuration";
 import { PDFDownload } from "../../utils/PDFDownload";
+import Filters from "../../components/Filters";
 
 const key = "DSS_FILTERS";
 const getInitialRange = () => {
@@ -77,6 +78,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   const { id, chartType } = data;
   const { startDate, endDate, interval } = getInitialRange();
   const { campaignNumber } = Digit.Hooks.useQueryParams();
+  const { value: contextFilters } = useContext(FilterContext);
   const requestDate = {
     startDate: startDate.getTime(),
     endDate: endDate.getTime(),
@@ -88,7 +90,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
       visualizationType: chartType,
       queryType: "",
       requestDate: requestDate,
-      filters: {campaignNumber:campaignNumber},
+      filters: { campaignNumber: campaignNumber, ...(contextFilters?.filters?.cycle ? { cycle: contextFilters.filters.cycle } : {}) },
       moduleLevel:moduleLevel,
       aggregationFactors: null,
     };
@@ -148,6 +150,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
   filters = { ...filters };
   const { startDate, endDate, interval } = getInitialRange();
   const { campaignNumber } = Digit.Hooks.useQueryParams();
+  const { value: contextFilters } = useContext(FilterContext);
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -161,7 +164,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
       visualizationType: chartType,
       queryType: "",
       requestDate:requestDate,
-      filters:{...filters,campaignNumber:campaignNumber},
+      filters: { ...filters, campaignNumber: campaignNumber, ...(contextFilters?.filters?.cycle ? { cycle: contextFilters.filters.cycle } : {}) },
       aggregationFactors: null,
     };
     const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
@@ -261,7 +264,8 @@ const L1Main = () => {
   const dashboardLink = location.state?.dashboardLink;
   const dashboardId = dashboardLink?.dashboardId;
   const stateCode = Digit?.ULBService?.getStateId();
-  const [filters, setFilters] = useState(() => {});
+  const projectData = Digit.SessionStorage.get("projectSelected");
+  const [filters, setFilters] = useState(() => ({ filters: { tenantId: [] } }));
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [selectedState, setselectedState] = useState("");
@@ -466,6 +470,24 @@ const L1Main = () => {
           )}
         </div>
 
+        <div style={{ position: "relative", minHeight: "3rem", marginBottom: "0.25rem" }}>
+          <Filters
+            t={t}
+            ulbTenants={{ ulb: [], ddr: [] }}
+            isOpen={false}
+            closeFilters={() => {}}
+            showDateRange={false}
+            showDDR={false}
+            showUlb={false}
+            showDenomination={false}
+            showModuleFilter={false}
+            showFilterByCycle={
+              projectData &&
+              projectData?.project?.additionalDetails?.projectType?.cycles?.length > 1 &&
+              projectData?.project?.additionalDetails?.projectType?.beneficiaryType === "INDIVIDUAL"
+            }
+          />
+        </div>
         {mobileView ? (
           <div className="options-m">
             <div>
