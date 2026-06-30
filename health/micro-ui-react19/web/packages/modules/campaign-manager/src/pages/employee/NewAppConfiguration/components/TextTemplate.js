@@ -7,13 +7,10 @@ const TextTemplate = ({ field, t, props }) => {
   const label = selectedField?.fieldName !== undefined && selectedField?.fieldName !== null ? selectedField?.fieldName : "";
   const translatedLabel = label ? (field ? t : props?.t)(label) : "";
 
+  const styleVariant = selectedField?.properties?.style;
+
   return (
-    <div
-      style={{
-        fontSize: "0.875rem",
-        color: "#333",
-      }}
-    >
+    <div className={`text-template${styleVariant ? ` text-template--${styleVariant}` : ""}`}>
       {translatedLabel ? `${translatedLabel} : ********` : "********"}
     </div>
   );

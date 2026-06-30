@@ -1527,6 +1527,23 @@
   }
 }
 
+.text-template {
+  font-size: 0.875rem;
+  color: #333;
+
+  &--title {
+    color: #0B4B66;
+    font-size: 1rem;
+    font-weight: var(--digitv2-fontWeight-bold);
+  }
+
+  &--description {
+    font-size: var(--digitv2-fontSize-body-xs-desktop);
+    color: #505A5F;
+    font-weight: var(--digitv2-fontWeight-bold);
+  }
+}
+
 .digit-popup-icon-header-container{
   display: flex;
   align-items: center;

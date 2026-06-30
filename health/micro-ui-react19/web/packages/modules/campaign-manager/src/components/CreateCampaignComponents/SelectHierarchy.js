@@ -189,11 +189,12 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
           <CardLabel style={{width:"100%"}} className="select-hierarchy-search-label">
             {t("HCM_SEARCH_BY_HIERARCHY_NAME")}
           </CardLabel>
-          <div className="digit-field" style={{ width: "100%" }}>
+          <div className="digit-field select-hierarchy-search-bar-field" style={{ width: "100%" }}>
             <TextInput
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className={"select-hierarchy-search-bar"}
             />
           </div>
         </LabelFieldPair>
