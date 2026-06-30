@@ -67,7 +67,7 @@ export const renderTemplateComponent = (
     Component = Digit.ComponentRegistryService.getComponent(componentName);
   }
 
-  const wrapperClassName = `template-field-wrapper${isSelected ? " selected" : ""}`;
+  const wrapperClassName = `template-field-wrapper${isSelected ? " selected" : ""}${field?.templateWrapperclassName ? ` ${field?.templateWrapperclassName}` : ""}`;
 
   const handleClick = (e) => {
     e.stopPropagation();

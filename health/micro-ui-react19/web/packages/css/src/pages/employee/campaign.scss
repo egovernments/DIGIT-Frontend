@@ -362,6 +362,10 @@
     background-color: #C84C0E08;
   }
 
+  &.menuCardIconTemplate{
+    width: fit-content;
+  }
+
   .app-config-summary-card-fieldpair{
     .digit-viewcard-label{
       width: 100% !important;
@@ -1265,7 +1269,7 @@
 .select-hierarchy-campaign-selection-cards-wrap {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
 
   .select-hierarchy-campaign-selection-card {
     border-radius: 16px;
@@ -1548,5 +1552,19 @@
   .digit-popup-children-wrap{
     padding: 0px !important;
     display: none;
+  }
+}
+
+.setup-campaign {
+  .digit-field {
+    &.select-hierarchy-search-bar-field {
+      margin-bottom: 1rem !important;
+    }
+  }
+}
+
+.select-hierarchy-search-bar {
+  .digit-cursor-pointer {
+    right: 8px !important;
   }
 }
