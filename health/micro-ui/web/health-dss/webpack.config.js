@@ -22,9 +22,12 @@ module.exports = {
           options: {
             configFile: false,
             babelrc: false,
-            plugins: [
-              "@babel/plugin-proposal-optional-chaining",
-              "@babel/plugin-proposal-nullish-coalescing-operator",
+            presets: [
+              ["@babel/preset-env", {
+                targets: { chrome: "67" },
+                shippedProposals: true,
+                modules: false,
+              }],
             ],
           },
         },
