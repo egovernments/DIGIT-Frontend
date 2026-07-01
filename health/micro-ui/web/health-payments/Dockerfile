@@ -8,6 +8,7 @@ RUN apk add --no-cache python3 make g++ \
 ARG WORK_DIR
 WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=4792"
+ENV YARN_DEBUG=true
 
 COPY ${WORK_DIR} .
 RUN ls -lah
