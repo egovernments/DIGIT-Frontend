@@ -81,6 +81,22 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     }
   }, [drillDownStack]);
 
+  useEffect(() => {
+    setFilterStack(prev => {
+      const prevFilters = prev?.value?.filters || {};
+      const newFilters = { ...prevFilters };
+      if (value?.filters?.cycle) {
+        newFilters.cycle = value.filters.cycle;
+      } else {
+        delete newFilters.cycle;
+      }
+      return {
+        ...prev,
+        value: { ...(prev.value || {}), filters: newFilters },
+      };
+    });
+  }, [value?.filters?.cycle]);
+
   //TODO: Replace this with the values from the campaign interval
   const getInitialRange = () => {
     if (initialRange) {

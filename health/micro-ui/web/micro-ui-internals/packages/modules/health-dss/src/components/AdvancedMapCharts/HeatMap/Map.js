@@ -187,12 +187,14 @@ const Map = ({
     if (level === 2) {
       const boundaryLevel = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
       let dummy = { ...filterStack };
-      if (dummy.value == undefined || Object.keys(dummy.value).length == 0) {
-        dummy.value = { filters: { 
-          "boundaryType" : boundaryLevel,
-          [boundaryLevel]: name 
-        } };
-      }
+      dummy.value = {
+        ...(dummy.value || {}),
+        filters: {
+          ...(dummy.value?.filters || {}),
+          "boundaryType": boundaryLevel,
+          [boundaryLevel]: name,
+        },
+      };
       setFilterStack(dummy);
       setBoundaryLevel(toFilterCase(boundaryLevel));
     }
