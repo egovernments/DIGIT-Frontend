@@ -15,6 +15,21 @@ module.exports = {
         use: ["babel-loader"],
       },
       {
+        test: /\.mjs$/,
+        include: /pdfjs-dist/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            configFile: false,
+            babelrc: false,
+            plugins: [
+              "@babel/plugin-proposal-optional-chaining",
+              "@babel/plugin-proposal-nullish-coalescing-operator",
+            ],
+          },
+        },
+      },
+      {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
       },
