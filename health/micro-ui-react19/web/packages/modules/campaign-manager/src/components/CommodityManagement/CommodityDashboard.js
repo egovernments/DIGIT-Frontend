@@ -8,6 +8,7 @@ import DateRangePicker from "./DateRangePicker";
 import { useLocation } from "react-router-dom";
 import useStockData from "../../hooks/useStockData";
 import { computeStockSummary } from "../../utils/stockDataProcessor";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import useWarehouseManagerSync from "../../hooks/useWarehouseManagerSync";
 import { useCommodityProject } from "./CommodityProjectContext";
 import NewShipmentPopup from "./NewShipmentPopup";
@@ -52,15 +53,15 @@ const resolveStatusText = (t, statusKey, statusParams = {}) => {
   const { current, total, attempt, maxAttempts, failedCount } = statusParams;
   switch (statusKey) {
     case "HCM_BATCH_STARTING":
-      return t("HCM_BATCH_STARTING");
+      return t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_STARTING);
     case "HCM_BATCH_CREATING":
-      return t("HCM_BATCH_CREATING", { current, total });
+      return t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_CREATING, { current, total });
     case "HCM_BATCH_VERIFYING":
-      return t("HCM_BATCH_VERIFYING", { current, total, attempt, maxAttempts });
+      return t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_VERIFYING, { current, total, attempt, maxAttempts });
     case "HCM_BATCH_ALL_SUCCESS":
-      return t("HCM_BATCH_ALL_SUCCESS");
+      return t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ALL_SUCCESS);
     case "HCM_BATCH_PROCESSING_COMPLETE":
-      return t("HCM_BATCH_PROCESSING_COMPLETE", { failedCount });
+      return t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROCESSING_COMPLETE, { failedCount });
     default:
       return statusKey ? t(statusKey) : "";
   }
@@ -192,7 +193,7 @@ const CommodityDashboard = () => {
     window.history.pushState(null, "", window.location.href);
 
     const handler = () => {
-      const confirmed = window.confirm(t("HCM_BATCH_LEAVE_WARNING"));
+      const confirmed = window.confirm(t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_LEAVE_WARNING));
       if (!confirmed) {
         // User chose to stay — re-push so back button can be caught again
         window.history.pushState(null, "", window.location.href);
@@ -218,12 +219,12 @@ const CommodityDashboard = () => {
     if (isRecovered) return;
 
     if (batchResult === "success") {
-      setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
+      setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_UPLOAD_SUCCESS) });
       refetchStockData?.();
     } else if (batchResult === "partial_failure") {
       setShowToast({
         key: "warning",
-        label: t("HCM_BATCH_PARTIAL_FAILURE_TOAST", {
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PARTIAL_FAILURE_TOAST, {
           succeeded: batchStatus.totalRecords - batchStatus.failedRecords,
           total: batchStatus.totalRecords,
           failed: batchStatus.failedRecords,
@@ -231,7 +232,7 @@ const CommodityDashboard = () => {
       });
       refetchStockData?.();
     } else if (batchResult === "all_failed") {
-      setShowToast({ key: "error", label: t("HCM_BATCH_ALL_FAILED_TOAST") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ALL_FAILED_TOAST) });
     }
   }, [isComplete, batchResult]);
 
@@ -261,7 +262,7 @@ const CommodityDashboard = () => {
     const sheetData = originalSheetDataRef.current;
     const clientRefToRowIndex = clientRefToRowIndexRef.current;
     if (!sheetData) {
-      setShowToast({ key: "error", label: t("HCM_NO_SHIPMENT_DATA") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_NO_SHIPMENT_DATA) });
       return;
     }
 
@@ -366,9 +367,9 @@ const CommodityDashboard = () => {
   };
 
   const datePresetOptions = [
-    { code: "custom", name: t("HCM_CUSTOM_DATE_RANGE") },
-    { code: "today", name: t("HCM_TODAY") },
-    { code: "cumulative", name: t("HCM_CUMULATIVE") },
+    { code: "custom", name: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CUSTOM_DATE_RANGE) },
+    { code: "today", name: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TODAY) },
+    { code: "cumulative", name: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CUMULATIVE) },
   ];
 
   const handlePresetSelect = (code) => {
@@ -394,9 +395,9 @@ const CommodityDashboard = () => {
   };
 
   const tabs = [
-    { key: "transaction", label: t("HCM_TRANSACTION_SUMMARY") },
-    { key: "stock", label: t("HCM_STOCK_SUMMARY") },
-    { key: "pending", label: t("HCM_PENDING_TRANSACTIONS") },
+    { key: "transaction", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TRANSACTION_SUMMARY) },
+    { key: "stock", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUMMARY) },
+    { key: "pending", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_PENDING_TRANSACTIONS) },
   ];
 
   if (campaignIdLoading) {
@@ -409,14 +410,14 @@ const CommodityDashboard = () => {
     <div className="cm-dashboard">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <HeaderComponent className="cm-header">
-          {t("HCM_COMMODITY_MANAGEMENT_MODULE")}{" "}
+          {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_COMMODITY_MANAGEMENT_MODULE)}{" "}
           <span className="cm-header-tenant">({tenantName})</span>
         </HeaderComponent>
         {!isCompleted && (
           <Button
             type="button"
             variation="secondary"
-            label={t("HCM_NEW_SHIPMENT")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_NEW_SHIPMENT)}
             icon="AddIcon"
             onClick={() => setShowNewShipmentPopup(true)}
             isDisabled={isProcessing}
@@ -432,7 +433,7 @@ const CommodityDashboard = () => {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
                 <span style={{ fontWeight: "600", fontSize: "1rem" }}>{statusText}</span>
                 <span style={{ fontSize: "0.875rem", color: "#505A5F" }}>
-                  {t("HCM_BATCH_PROGRESS_LABEL", { current: batchStatus.currentBatch, total: batchStatus.total })}
+                  {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROGRESS_LABEL, { current: batchStatus.currentBatch, total: batchStatus.total })}
                 </span>
               </div>
               <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
@@ -447,7 +448,7 @@ const CommodityDashboard = () => {
                 />
               </div>
               <p style={{ fontSize: "0.875rem", color: "#505A5F" }}>
-                {t("HCM_BATCH_RECORDS_STATUS", {
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_RECORDS_STATUS, {
                   processed: batchStatus.processedRecords,
                   total: batchStatus.totalRecords,
                   failed: batchStatus.failedRecords,
@@ -458,19 +459,19 @@ const CommodityDashboard = () => {
           {isComplete && batchResult === "success" && (
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <p style={{ color: "#00703C", fontWeight: "600" }}>
-                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t("HCM_BATCH_RECOVERED_LABEL")}</span>}
-                {t("HCM_BATCH_SUCCESS_MSG", { total: batchStatus.totalRecords })}
+                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_RECOVERED_LABEL)}</span>}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_SUCCESS_MSG, { total: batchStatus.totalRecords })}
               </p>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
-                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_RESULT_SHEET)}
                   variation="secondary"
                   type="button"
                   icon="FileDownload"
                   onClick={downloadResultSheet}
                 />
                 <Button
-                  label={t("HCM_CLOSE")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CLOSE)}
                   variation="secondary"
                   type="button"
                   onClick={handleReset}
@@ -481,19 +482,19 @@ const CommodityDashboard = () => {
           {isComplete && batchResult === "partial_failure" && (
             <div>
               <p style={{ color: "#B4762B", fontWeight: "600", marginBottom: "0.75rem" }}>
-                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t("HCM_BATCH_RECOVERED_LABEL")}</span>}
-                {t("HCM_BATCH_PARTIAL_FAILURE_MSG", { failed: batchStatus.failedRecords, total: batchStatus.totalRecords })}
+                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_RECOVERED_LABEL)}</span>}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PARTIAL_FAILURE_MSG, { failed: batchStatus.failedRecords, total: batchStatus.totalRecords })}
               </p>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
-                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_RESULT_SHEET)}
                   variation="primary"
                   type="button"
                   icon="FileDownload"
                   onClick={downloadResultSheet}
                 />
                 <Button
-                  label={t("HCM_CLOSE")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CLOSE)}
                   variation="secondary"
                   type="button"
                   onClick={handleReset}
@@ -504,19 +505,19 @@ const CommodityDashboard = () => {
           {isComplete && batchResult === "all_failed" && (
             <div>
               <p style={{ color: "#D4351C", fontWeight: "600", marginBottom: "0.75rem" }}>
-                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t("HCM_BATCH_RECOVERED_LABEL")}</span>}
-                {t("HCM_BATCH_ALL_FAILED_MSG", { total: batchStatus.totalRecords })}
+                {isRecovered && <span style={{ marginRight: "0.5rem", color: "#505A5F", fontWeight: "400" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_RECOVERED_LABEL)}</span>}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ALL_FAILED_MSG, { total: batchStatus.totalRecords })}
               </p>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button
-                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_RESULT_SHEET)}
                   variation="primary"
                   type="button"
                   icon="FileDownload"
                   onClick={downloadResultSheet}
                 />
                 <Button
-                  label={t("HCM_CLOSE")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CLOSE)}
                   variation="secondary"
                   type="button"
                   onClick={handleReset}
@@ -528,10 +529,10 @@ const CommodityDashboard = () => {
           {isRecovered && !isComplete && !isProcessing && batchStatus.completed > 0 && (
             <div>
               <p style={{ color: "#B4762B", fontWeight: "600", marginBottom: "0.5rem" }}>
-                {t("HCM_BATCH_INTERRUPTED_MSG")}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_INTERRUPTED_MSG)}
               </p>
               <p style={{ fontSize: "0.875rem", color: "#505A5F", marginBottom: "0.75rem" }}>
-                {t("HCM_BATCH_INTERRUPTED_DETAIL", {
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_INTERRUPTED_DETAIL, {
                   completed: batchStatus.completed,
                   total: batchStatus.total,
                   processed: batchStatus.processedRecords,
@@ -541,7 +542,7 @@ const CommodityDashboard = () => {
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 {originalSheetDataRef.current && (
                   <Button
-                    label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                    label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_RESULT_SHEET)}
                     variation="primary"
                     type="button"
                     icon="FileDownload"
@@ -549,7 +550,7 @@ const CommodityDashboard = () => {
                   />
                 )}
                 <Button
-                  label={t("HCM_DISMISS")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DISMISS)}
                   variation="secondary"
                   type="button"
                   onClick={handleReset}
@@ -562,7 +563,7 @@ const CommodityDashboard = () => {
 
       <div className="cm-date-section">
         <LabelFieldPair vertical={true} removeMargin={true}>
-          <label className="label-styles cm-date-label">{t("HCM_DATE_RANGE")}</label>
+          <label className="label-styles cm-date-label">{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DATE_RANGE)}</label>
           <DateRangePicker
             t={t}
             formData={{
@@ -586,7 +587,7 @@ const CommodityDashboard = () => {
         />
       </div>
 
-      <div className="digit-dss-switch-tabs">
+      <div className="digit-dss-switch-tabs" style={{width:"100%"}}>
         <div className="digit-dss-switch-tab-wrapper">
           {tabs.map((tab) => (
             <div
@@ -660,7 +661,7 @@ const CommodityDashboard = () => {
           onClose={() => setShowNewShipmentPopup(false)}
           onSuccess={() => {
             setShowNewShipmentPopup(false);
-            setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
+            setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_UPLOAD_SUCCESS) });
             refetchStockData?.();
           }}
           onBatchStart={handleBatchStart}

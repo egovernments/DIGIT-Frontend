@@ -58,17 +58,17 @@ const AddProductField = ({ onSelect }) => {
 
   return (
     <React.Fragment>
-      <HeaderComponent className={"add-new-resource"} styles={{ marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
+      <HeaderComponent className={"add-new-resource"} styles={{ marginBottom: "1rem" }}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER)}</HeaderComponent>
       <p className="name-description">
-        {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT`)} <b> {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT`)} </b>
-        {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT`)}
+        {t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT)} <b> {t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT)} </b>
+        {t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT)}
       </p>
       <div style={{ height: "1.5rem" }}></div>
       {productFieldData?.map((field, index) => {
         return (
           <Card className="add-new-product-container">
             <div className="heading-bar">
-              <CardText>{t(`ES_ADD_PRODUCT_TITLE`)} {field?.key}</CardText>
+              <CardText>{t(I18N_KEYS.COMPONENTS.ES_ADD_PRODUCT_TITLE)} {field?.key}</CardText>
               {productFieldData?.length > 1 && (
                 <div
                   onClick={() => deleteProductField(field.key)}
@@ -84,7 +84,7 @@ const AddProductField = ({ onSelect }) => {
                   }}
                 >
                   <DustbinIcon />
-                  {t(`CAMPAIGN_DELETE_ROW_TEXT`)}
+                  {t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELETE_ROW_TEXT)}
                 </div>
               )}
             </div>
@@ -164,8 +164,8 @@ const AddProductField = ({ onSelect }) => {
       })}
       <Button
         variation="secondary"
-        label={t(`CAMPAIGN_ADD_MORE_PRODUCT_BUTTON`)}
-        title={t(`CAMPAIGN_ADD_MORE_PRODUCT_BUTTON`)}
+        label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_ADD_MORE_PRODUCT_BUTTON)}
+        title={t(I18N_KEYS.COMPONENTS.CAMPAIGN_ADD_MORE_PRODUCT_BUTTON)}
         size={"large"}
         // className={"hover"}
         icon={"AddIcon"}

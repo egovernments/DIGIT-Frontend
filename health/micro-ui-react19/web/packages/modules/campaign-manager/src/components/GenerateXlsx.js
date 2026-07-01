@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * GenerateXlsx Component
@@ -328,7 +329,7 @@ const GenerateXlsx = ({
   return (
     <div style={{ display: "none" }}>
       <button ref={inputRef} onClick={handleExport}>
-        {t("WBH_DOWNLOAD_XLS")}
+        {t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_XLS)}
       </button>
     </div>
   );

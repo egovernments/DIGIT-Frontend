@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 /**
  * GenerateExcelJs Component
@@ -165,7 +166,7 @@ const GenerateExcelJs = ({
 
     // Display headers for Excel columns (using translated labels) - module column hidden
     // Use localization codes for headers to support all languages
-    const displayHeaders = [t("DIGIT_LOC_CODE_HEADER"), ...allLocales.map((loc) => {
+    const displayHeaders = [t(I18N_KEYS.COMMON.DIGIT_LOC_CODE_HEADER), ...allLocales.map((loc) => {
       const label = localeLabelsMap[loc] || loc;
       return t(`DIGIT_LOC_MESSAGE_HEADER_${label}`);
     })];
@@ -363,7 +364,7 @@ const GenerateExcelJs = ({
   return (
     <div style={{ display: "none" }}>
       <button ref={inputRef} onClick={handleExport}>
-        {t("WBH_DOWNLOAD_XLS")}
+        {t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_XLS)}
       </button>
     </div>
   );

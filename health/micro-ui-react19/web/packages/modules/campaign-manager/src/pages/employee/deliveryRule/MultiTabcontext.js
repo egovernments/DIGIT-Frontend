@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { Card, HeaderComponent, Paragraph, CardText, Tab, Toggle } from "@egovernments/digit-ui-components";
 import { useDeliveryRules } from "./useDeliveryRules";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
@@ -12,7 +13,7 @@ const Tabs = React.memo(() => {
 
   const tabItems = campaignData.map((cycle, index) => ({
     code: String(index),
-    name: `${t("CAMPAIGN_CYCLE")} ${index + 1}`,
+    name: `${t(I18N_KEYS.PAGES.CAMPAIGN_CYCLE)} ${index + 1}`,
   }));
 
   return (
@@ -40,7 +41,7 @@ const SubTabs = React.memo(() => {
 
   const toggleOptions = activeCycle.deliveries.map((delivery, index) => ({
     code: String(index),
-    name: `${t("CAMPAIGN_DELIVERY")} ${index + 1}`,
+    name: `${t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELIVERY)} ${index + 1}`,
   }));
 
   return (

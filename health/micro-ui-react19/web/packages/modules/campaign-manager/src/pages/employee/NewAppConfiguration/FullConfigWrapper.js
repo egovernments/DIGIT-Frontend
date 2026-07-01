@@ -440,7 +440,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                     <SVG.Search fill="#787878" />
                     <input
                       className="full-config-wrapper__flow-search-input"
-                      placeholder={t("SEARCH_FLOW")}
+                      placeholder={t(I18N_KEYS.COMPONENTS.SEARCH_FLOW)}
                       value={flowSearchQuery}
                       onChange={(e) => setFlowSearchQuery(e.target.value)}
                     />
@@ -598,7 +598,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                   if (groups.length === 0) {
                     return (
                       <div className="form-elements__no-results">
-                        {t("NO_RESULTS_FOUND")}
+                        {t(I18N_KEYS.COMPONENTS.NO_RESULTS_FOUND)}
                       </div>
                     );
                   }
@@ -687,7 +687,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                 <Tag
                   label={
                     <span style={{ display: "flex", gap: "4px" }}>
-                      <span>{currentPageType === "template" ? t("TEMPLATE_SCREEN") : t("FORM_SCREEN")}</span>
+                      <span>{currentPageType === "template" ? t(I18N_KEYS.APP_CONFIGURATION.TEMPLATE_SCREEN) : t(I18N_KEYS.APP_CONFIGURATION.FORM_SCREEN)}</span>
                       <span
                         style={
                           currentPageType === "template"
@@ -699,7 +699,7 @@ const FullConfigWrapper = ({ path, location: propsLocation }) => {
                               }
                         }
                       >
-                        {currentPageType === "template" ? t("PARTIALLY_CONFIGURABLE_PARENTHESES") : t("FULLY_CONFIGURABLE_PARENTHESES")}
+                        {currentPageType === "template" ? t(I18N_KEYS.APP_CONFIGURATION.PARTIALLY_CONFIGURABLE_PARENTHESES) : t(I18N_KEYS.APP_CONFIGURATION.FULLY_CONFIGURABLE_PARENTHESES)}
                       </span>
                     </span>
                   }

@@ -112,10 +112,10 @@ const MapUsersToRegistersScreen = () => {
     ) {
       setShowToast({
         key: "warning",
-        label: t("HCM_REGISTER_CREATION_IN_PROGRESS"),
+        label: t(I18N_KEYS.PAGES.HCM_REGISTER_CREATION_IN_PROGRESS),
       });
     } else if (registerCreationStatus === "failed") {
-      setShowToast({ key: "error", label: t("HCM_REGISTER_CREATION_FAILED") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_REGISTER_CREATION_FAILED) });
     }
   }, [registerCreationStatus, isResourceLoading, isResourceFetching]);
 
@@ -243,7 +243,7 @@ const MapUsersToRegistersScreen = () => {
         onSuccess: () => {
           setShowToast({
             key: "success",
-            label: t("HCM_REGISTER_DELETED_SUCCESSFULLY"),
+            label: t(I18N_KEYS.PAGES.HCM_REGISTER_DELETED_SUCCESSFULLY),
           });
           setTimeout(() => setShowToast(null), 3000);
           refetchRegisters();
@@ -253,7 +253,7 @@ const MapUsersToRegistersScreen = () => {
             key: "error",
             label:
               error?.response?.data?.Errors?.[0]?.description ||
-              t("HCM_ERROR_DELETING_REGISTER"),
+              t(I18N_KEYS.PAGES.HCM_ERROR_DELETING_REGISTER),
           });
           setTimeout(() => setShowToast(null), 3000);
         },
@@ -312,6 +312,11 @@ const MapUsersToRegistersScreen = () => {
     {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_OF_USERS_COLUMN),
       selector: (row) => row.attendees?.length || 0,
+      cell: (row) => (
+        <span style={{ display: "block", width: "100%", textAlign: "right" }}>
+          {row.attendees?.length || 0}
+        </span>
+      ),
     },
     {
       name: t(I18N_KEYS.COMPONENTS.STATUS),
@@ -327,7 +332,7 @@ const MapUsersToRegistersScreen = () => {
             color: row.status === "ACTIVE" ? "#137333" : "#c5221f",
           }}
         >
-          {row.status}
+          {t(row.status)}
         </span>
       ),
     },
@@ -338,7 +343,7 @@ const MapUsersToRegistersScreen = () => {
           label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_BUTTON)}
           variation="secondary"
           size="small"
-          icon="Person"
+          icon="PersonAdd"
           onClick={() => handleMapUsers(row)}
         />
       ),
@@ -393,6 +398,7 @@ const MapUsersToRegistersScreen = () => {
           {campaignName && <TagComponent campaignName={campaignName} />}
         </div>
 
+      <div className="map-users-heading">
         {/* Page heading */}
         <HeaderComponent className="attendance-screen-headers">
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_HEADING)}
@@ -400,6 +406,7 @@ const MapUsersToRegistersScreen = () => {
         <p className="info-text">
           {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_MAP_USERS_TO_REGISTERS_PAGE_DESC)}
         </p>
+      </div>
         {/* Search filters */}
         <div
           style={{
@@ -407,6 +414,7 @@ const MapUsersToRegistersScreen = () => {
             gap: "1.5rem",
             alignItems: "flex-end",
             flexWrap: "wrap",
+            marginTop:"1rem"
           }}
         >
           <div
@@ -462,7 +470,7 @@ const MapUsersToRegistersScreen = () => {
               variation="teritiary"
               onClick={handleClearSearch}
               type="button"
-              size={"medium"}
+              size={"large"}
             />
             <Button
               label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH)}
@@ -471,7 +479,7 @@ const MapUsersToRegistersScreen = () => {
               onClick={handleSearch}
               isDisabled={isSearchDisabled}
               type="submit"
-              size={"medium"}
+              size={"large"}
             />
           </div>
         </div>
@@ -496,7 +504,7 @@ const MapUsersToRegistersScreen = () => {
             setCurrentPage(1);
           }}
           paginationComponentOptions={{
-            rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE"),
+            rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
           }}
           progressPending={isFetching}
           progressComponent={<Loader />}
@@ -525,8 +533,8 @@ const MapUsersToRegistersScreen = () => {
         <PopUp
           className="custom-popup"
           type="alert"
-          alertHeading={t("HCM_CONFIRM_DELETE_REGISTER")}
-          alertMessage={t("HCM_DELETE_REGISTER_CONFIRM_MSG")}
+          alertHeading={t(I18N_KEYS.PAGES.HCM_CONFIRM_DELETE_REGISTER)}
+          alertMessage={t(I18N_KEYS.PAGES.HCM_DELETE_REGISTER_CONFIRM_MSG)}
           onClose={() => setDeletePopup(null)}
           onOverlayClick={() => setDeletePopup(null)}
           footerChildren={[
@@ -534,7 +542,7 @@ const MapUsersToRegistersScreen = () => {
               type="button"
               size="large"
               variation="secondary"
-              label={t("CANCEL")}
+              label={t(I18N_KEYS.COMMON.CANCEL)}
               onClick={() => setDeletePopup(null)}
             />,
             <Button

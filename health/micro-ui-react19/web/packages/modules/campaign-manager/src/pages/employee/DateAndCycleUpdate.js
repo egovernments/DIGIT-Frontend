@@ -187,10 +187,10 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
   };
   return (
     <Card className={"boundary-with-container"}>
-      <Header className="header">{t(`UPDATE_DATE_AND_CYCLE_HEADER`)}</Header>
+      <Header className="header">{t(I18N_KEYS.PAGES.UPDATE_DATE_AND_CYCLE_HEADER)}</Header>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start", gap: "1rem" }}>
         <div className="campaign-dates">
-          <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+          <p>{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CAMPAIGN_DATES)}</p>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">
@@ -244,7 +244,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
           {cycleDates?.map((item, index) => (
             <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
               <div className="campaign-dates">
-                <p>{`${t(`CYCLE`)} ${item?.cycleIndex}`}</p>
+                <p>{`${t(I18N_KEYS.COMPONENTS.CYCLE)} ${item?.cycleIndex}`}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="date-field-container">

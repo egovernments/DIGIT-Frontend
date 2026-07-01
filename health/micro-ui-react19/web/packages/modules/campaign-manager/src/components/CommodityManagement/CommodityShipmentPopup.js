@@ -504,7 +504,7 @@ const CommodityShipmentPopup = ({
         </Card>
 
         <Card type={"secondary"}>
-          <div className="cm-shipment-commodity-row-heading">{t("COMMODITY_SPECIFICATIONS")}</div>
+          <div className="cm-shipment-commodity-row-heading">{t(I18N_KEYS.COMMODITY_MANAGEMENT.COMMODITY_SPECIFICATIONS)}</div>
           <div className="cm-shipment-commodity-row">
             <div className="cm-shipment-field cm-shipment-commodity-field">
               <label className="cm-shipment-label">

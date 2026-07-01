@@ -5,6 +5,7 @@ import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components"
 import { Button, Card, Dropdown, MultiSelectDropdown, Toast,HeaderComponent } from "@egovernments/digit-ui-components";
 import BoundaryWithDate from "./BoundaryWithDate";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 
 const initialState = (projectData) => {
   return projectData;
@@ -283,15 +284,15 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   return (
     <>
       <Card className={"campaign-update-container"} style={{ marginTop: "1rem" }}>
-        <HeaderComponent className="select-boundary-screen-heading">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</HeaderComponent>
+        <HeaderComponent className="select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER)}</HeaderComponent>
         <div className={"search-field-container"}>
           <p className="field-description" style={{ marginTop: "0rem", marginBottom: "1rem" }}>
-            {t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}
+            {t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT)}
           </p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">
-                <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY_LEVEL`)}</p>
+                <p>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY_LEVEL)}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="update-field">
@@ -311,7 +312,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
             </LabelFieldPair>
             <LabelFieldPair className="update-date-labelField" style={{ display: "grid", gridTemplateColumns: "1fr", alignItems: "start" }}>
               <div className="update-label">
-                <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_DATA_LABEL`)}</p>
+                <p>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_SELECT_BOUNDARY_DATA_LABEL)}</p>
                 <span className="mandatory-date">*</span>
               </div>
               <div className="update-field">
@@ -326,7 +327,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
                 />
               </div>
             </LabelFieldPair>
-            <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} title={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
+            <Button variation="primary" label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_SELECT_BOUNDARY_BUTTON)} title={t(I18N_KEYS.COMPONENTS.CAMPAIGN_SELECT_BOUNDARY_BUTTON)} onClick={() => selectBoundary()} />
           </div>
         </div>
       </Card>

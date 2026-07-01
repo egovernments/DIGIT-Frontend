@@ -453,7 +453,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                   <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                     <div className="question-label" style={{ height: "3.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
                       <div style={{ display: "flex", gap: "1rem" , alignItems: "center"}}>
-                        {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span> */}
+                        {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t(I18N_KEYS.COMPONENTS.QUESTION)} ${index + 1}`}</span> */}
                         <span style={{ fontWeight: "700", fontSize: "1.5rem", display: "flex", justifyContent: "center", alignItems: "center" }}>{`${t(I18N_KEYS.COMPONENTS.HCM_CHECKLIST_QUESTION)} ${questionNumber}`}</span>
                         <div style={{ alignItems: "center" }}>
                           <CheckBox
@@ -479,10 +479,10 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                           <Button
                             icon="Delete"
                             iconFill=""
-                            label={`${t(`CAMPAIGN_DELETE_QUESTION`)} ${questionNumber}`}
+                            label={`${t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELETE_QUESTION)} ${questionNumber}`}
                             onClick={() => deleteField(field.key, initialQuestionData, field.id, field)}
                             size="medium"
-                            title={`${t(`CAMPAIGN_DELETE_QUESTION`)} ${questionNumber}`}
+                            title={`${t(I18N_KEYS.COMPONENTS.CAMPAIGN_DELETE_QUESTION)} ${questionNumber}`}
                             variation="link"
                           />
                         </div>

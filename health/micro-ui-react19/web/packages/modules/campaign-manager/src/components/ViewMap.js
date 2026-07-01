@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef, useState, Fragment } from "react";
 import "leaflet/dist/leaflet.css";
 import { Card, Button ,Dropdown ,Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import BoundaryFilter from "./BoundaryFilter";
 import MapFilterIndex from "./MapFilterIndex";
@@ -190,10 +191,10 @@ useEffect(() => {
           }
         } catch (e) {
           console.error("Failed to add GeoJSON layer", e);
-          setShowToast({ label: t("INVALID_GEOJSON_FILE"), isError: "error" });
+          setShowToast({ label: t(I18N_KEYS.COMPONENTS.INVALID_GEOJSON_FILE), isError: "error" });
         }
       } else {
-        setShowToast({ label: t("INVALID_GEOJSON_FILE"), isError: "error" });
+        setShowToast({ label: t(I18N_KEYS.COMPONENTS.INVALID_GEOJSON_FILE), isError: "error" });
       }
   }, [libsLoaded, map, geoJsonData, selectedBaseMap]);
 

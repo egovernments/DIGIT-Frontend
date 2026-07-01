@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from "react"
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, HeaderComponent, Card, Loader, Toast, PopUp } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import StockComponent from "./StockComponent";
 import BulkUpload from "../BulkUpload";
 import XLSX from "xlsx";
@@ -63,21 +64,21 @@ const BulkStockUpload = () => {
     if (!isComplete || !batchResult) return;
 
     if (batchResult === "success") {
-      setShowToast({ key: "success", label: t("HCM_STOCK_UPLOAD_SUCCESS") });
+      setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_UPLOAD_SUCCESS) });
       setTimeout(() => {
         navigate(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
       }, 2000);
     } else if (batchResult === "partial_failure") {
       setShowToast({
         key: "warning",
-        label: t("HCM_BATCH_PARTIAL_FAILURE_TOAST", {
+        label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PARTIAL_FAILURE_TOAST, {
           succeeded: batchStatus.totalRecords - batchStatus.failedRecords,
           total: batchStatus.totalRecords,
           failed: batchStatus.failedRecords,
         }),
       });
     } else if (batchResult === "all_failed") {
-      setShowToast({ key: "error", label: t("HCM_BATCH_ALL_FAILED_TOAST") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ALL_FAILED_TOAST) });
     }
   }, [isComplete, batchResult]);
 
@@ -122,7 +123,7 @@ const BulkStockUpload = () => {
     XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
 
     XLSX.writeFile(wb, `Stock_Error_Report_${campaignName || "campaign"}.xlsx`);
-    setShowToast({ key: "warning", label: t("HCM_BATCH_ERROR_SHEET_DOWNLOADED", { failed: batchFailedRecords.length }) });
+    setShowToast({ key: "warning", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ERROR_SHEET_DOWNLOADED, { failed: batchFailedRecords.length }) });
   }, [batchFailedRecords, campaignName, t]);
 
   // Fetch project types from MDMS to get resources for the current project type
@@ -800,10 +801,10 @@ const BulkStockUpload = () => {
       XLSX.utils.book_append_sheet(wb, readmeWs, "ReadMe");
 
       XLSX.writeFile(wb, `Stock_Template_${campaignName || "campaign"}.xlsx`);
-      setShowToast({ key: "success", label: t("HCM_DOWNLOAD_STOCK_TEMPLATE") });
+      setShowToast({ key: "success", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_STOCK_TEMPLATE) });
     } catch (error) {
       console.error("Error downloading template:", error);
-      setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_VALIDATION_ERROR) });
     } finally {
       setIsDownloading(false);
     }
@@ -847,7 +848,7 @@ const BulkStockUpload = () => {
   // Parse uploaded Excel and create stock transactions
   const handleSubmit = useCallback(async () => {
     if (!uploadedFileData?.length) {
-      setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE) });
       return;
     }
 
@@ -856,7 +857,7 @@ const BulkStockUpload = () => {
     try {
       const file = uploadedFileData[0]?.file;
       if (!file) {
-        setShowToast({ key: "error", label: t("PLEASE_UPLOAD_FILE") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE) });
         setIsSubmitting(false);
         return;
       }
@@ -868,7 +869,7 @@ const BulkStockUpload = () => {
       const allRows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
       if (!allRows || allRows.length < 3) {
-        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_EMPTY_SHEET) });
         setIsSubmitting(false);
         return;
       }
@@ -903,7 +904,7 @@ const BulkStockUpload = () => {
       });
 
       if (!dataRows.length || !productColumns.length) {
-        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_EMPTY_SHEET) });
         setIsSubmitting(false);
         return;
       }
@@ -1002,7 +1003,7 @@ const BulkStockUpload = () => {
       });
 
       if (!stockPayload.length) {
-        setShowToast({ key: "error", label: t("HCM_EMPTY_SHEET") });
+        setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_EMPTY_SHEET) });
         setIsSubmitting(false);
         return;
       }
@@ -1020,7 +1021,7 @@ const BulkStockUpload = () => {
       processBatches(stockPayload);
     } catch (error) {
       console.error("Stock upload error:", error);
-      setShowToast({ key: "error", label: t("HCM_STOCK_VALIDATION_ERROR") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_VALIDATION_ERROR) });
       setIsSubmitting(false);
     }
   }, [uploadedFileData, productVariants, tenantId, campaignData, campaignId, campaignNumber, navigate, t, processBatches, fromFacility, sortedHierarchy, projectBoundaryMap]);
@@ -1035,11 +1036,11 @@ const BulkStockUpload = () => {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
         <HeaderComponent className="cm-header">
-            {t("HCM_BULK_STOCK_UPLOAD_HEADING")}
+            {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BULK_STOCK_UPLOAD_HEADING)}
         </HeaderComponent>
         <div style={{ display: "flex", gap: "1rem" }}>
           <Button
-            label={t("HCM_UPLOAD_STOCK")}
+            label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_UPLOAD_STOCK)}
             variation="primary"
             type="button"
             icon="FileUpload"
@@ -1047,7 +1048,7 @@ const BulkStockUpload = () => {
             isDisabled={isProcessing}
           />
           <Button
-            label={t("HCM_BACK")}
+            label={t(I18N_KEYS.COMMON.HCM_BACK)}
             variation="secondary"
             type="button"
             onClick={() => navigate(-1)}
@@ -1061,11 +1062,11 @@ const BulkStockUpload = () => {
         const sp = statusParams || {};
         let statusText = "";
         switch (statusKey) {
-          case "HCM_BATCH_STARTING": statusText = t("HCM_BATCH_STARTING"); break;
-          case "HCM_BATCH_CREATING": statusText = t("HCM_BATCH_CREATING", { current: sp.current, total: sp.total }); break;
-          case "HCM_BATCH_VERIFYING": statusText = t("HCM_BATCH_VERIFYING", { current: sp.current, total: sp.total, attempt: sp.attempt, maxAttempts: sp.maxAttempts }); break;
-          case "HCM_BATCH_ALL_SUCCESS": statusText = t("HCM_BATCH_ALL_SUCCESS"); break;
-          case "HCM_BATCH_PROCESSING_COMPLETE": statusText = t("HCM_BATCH_PROCESSING_COMPLETE", { failedCount: sp.failedCount }); break;
+          case "HCM_BATCH_STARTING": statusText = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_STARTING); break;
+          case "HCM_BATCH_CREATING": statusText = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_CREATING, { current: sp.current, total: sp.total }); break;
+          case "HCM_BATCH_VERIFYING": statusText = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_VERIFYING, { current: sp.current, total: sp.total, attempt: sp.attempt, maxAttempts: sp.maxAttempts }); break;
+          case "HCM_BATCH_ALL_SUCCESS": statusText = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ALL_SUCCESS); break;
+          case "HCM_BATCH_PROCESSING_COMPLETE": statusText = t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROCESSING_COMPLETE, { failedCount: sp.failedCount }); break;
           default: statusText = statusKey ? t(statusKey) : "";
         }
         return (
@@ -1075,7 +1076,7 @@ const BulkStockUpload = () => {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
                 <span style={{ fontWeight: "600", fontSize: "1rem" }}>{statusText}</span>
                 <span style={{ fontSize: "0.875rem", color: "#505A5F" }}>
-                  {t("HCM_BATCH_PROGRESS_LABEL", { current: batchStatus.currentBatch, total: batchStatus.total })}
+                  {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PROGRESS_LABEL, { current: batchStatus.currentBatch, total: batchStatus.total })}
                 </span>
               </div>
               <div style={{ width: "100%", backgroundColor: "#E0E0E0", borderRadius: "4px", height: "8px", marginBottom: "0.75rem" }}>
@@ -1090,7 +1091,7 @@ const BulkStockUpload = () => {
                 />
               </div>
               <p style={{ fontSize: "0.875rem", color: "#505A5F" }}>
-                {t("HCM_BATCH_RECORDS_STATUS", {
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_RECORDS_STATUS, {
                   processed: batchStatus.processedRecords,
                   total: batchStatus.totalRecords,
                   failed: batchStatus.failedRecords,
@@ -1101,10 +1102,10 @@ const BulkStockUpload = () => {
           {isComplete && batchResult === "success" && (
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <p style={{ color: "#00703C", fontWeight: "600" }}>
-                {t("HCM_BATCH_SUCCESS_MSG", { total: batchStatus.totalRecords })}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_SUCCESS_MSG, { total: batchStatus.totalRecords })}
               </p>
               <Button
-                label={t("HCM_CLOSE")}
+                label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CLOSE)}
                 variation="secondary"
                 type="button"
                 onClick={resetBatchState}
@@ -1115,18 +1116,18 @@ const BulkStockUpload = () => {
           {isComplete && batchResult === "partial_failure" && (
             <div>
               <p style={{ color: "#B4762B", fontWeight: "600", marginBottom: "0.75rem" }}>
-                {t("HCM_BATCH_PARTIAL_FAILURE_MSG", { failed: batchStatus.failedRecords, total: batchStatus.totalRecords })}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_PARTIAL_FAILURE_MSG, { failed: batchStatus.failedRecords, total: batchStatus.totalRecords })}
               </p>
               <div style={{ display: "flex", gap: "1rem" }}>
                 <Button
-                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_RESULT_SHEET)}
                   variation="primary"
                   type="button"
                   icon="FileDownload"
                   onClick={downloadErrorSheet}
                 />
                 <Button
-                  label={t("HCM_CLOSE")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CLOSE)}
                   variation="secondary"
                   type="button"
                   onClick={resetBatchState}
@@ -1137,18 +1138,18 @@ const BulkStockUpload = () => {
           {isComplete && batchResult === "all_failed" && (
             <div>
               <p style={{ color: "#D4351C", fontWeight: "600", marginBottom: "0.75rem" }}>
-                {t("HCM_BATCH_ALL_FAILED_MSG", { total: batchStatus.totalRecords })}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BATCH_ALL_FAILED_MSG, { total: batchStatus.totalRecords })}
               </p>
               <div style={{ display: "flex", gap: "1rem" }}>
                 <Button
-                  label={t("HCM_DOWNLOAD_RESULT_SHEET")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_RESULT_SHEET)}
                   variation="primary"
                   type="button"
                   icon="FileDownload"
                   onClick={downloadErrorSheet}
                 />
                 <Button
-                  label={t("HCM_CLOSE")}
+                  label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_CLOSE)}
                   variation="secondary"
                   type="button"
                   onClick={resetBatchState}
@@ -1168,7 +1169,7 @@ const BulkStockUpload = () => {
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
-          heading={t("HCM_BULK_STOCK_UPLOAD_HEADING")}
+          heading={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BULK_STOCK_UPLOAD_HEADING)}
           children={[]}
           onOverlayClick={() => setShowUploadPopup(false)}
           onClose={() => setShowUploadPopup(false)}
@@ -1177,16 +1178,16 @@ const BulkStockUpload = () => {
               type={"button"}
               size={"large"}
               variation={"secondary"}
-              label={t("HCM_BACK")}
-              title={t("HCM_BACK")}
+              label={t(I18N_KEYS.COMMON.HCM_BACK)}
+              title={t(I18N_KEYS.COMMON.HCM_BACK)}
               onClick={() => setShowUploadPopup(false)}
             />,
             <Button
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={isSubmitting ? t("HCM_STOCK_PROCESSING") : t("HCM_STOCK_SUBMIT")}
-              title={t("HCM_STOCK_SUBMIT")}
+              label={isSubmitting ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_PROCESSING) : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUBMIT)}
+              title={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_STOCK_SUBMIT)}
               onClick={handleSubmit}
               isDisabled={!uploadedFileData?.length || isSubmitting}
             />,
@@ -1196,14 +1197,14 @@ const BulkStockUpload = () => {
         >
           <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
             <p style={{ marginBottom: "1.5rem", color: "#505A5F" }}>
-              {t("HCM_BULK_STOCK_UPLOAD_DESC")}
+              {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_BULK_STOCK_UPLOAD_DESC)}
             </p>
 
             <Card>
               <h2 style={{ fontSize: "1.2rem", fontWeight: "700", marginBottom: "0.75rem" }}>
-                {t("HCM_SELECT_FROM_FACILITY")}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_FROM_FACILITY)}
               </h2>
-              <p style={{ color: "#505A5F", marginBottom: "0.75rem" }}>{t("HCM_FROM_FACILITY_DESC")}</p>
+              <p style={{ color: "#505A5F", marginBottom: "0.75rem" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FROM_FACILITY_DESC)}</p>
 
               {Object.keys(hierarchyFilterOptions).length > 0 && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
@@ -1221,7 +1222,7 @@ const BulkStockUpload = () => {
                           onChange={(e) => handleFromHierarchyChange(h.boundaryType, e.target.value)}
                           style={{ width: "100%", padding: "0.5rem", border: "1px solid #D6D5D4", borderRadius: "0.25rem", fontSize: "1rem", backgroundColor: "#fff" }}
                         >
-                          <option value="">{t("ES_COMMON_ALL")}</option>
+                          <option value="">{t(I18N_KEYS.PAGES.ES_COMMON_ALL)}</option>
                           {availableOptions.map((code) => (
                             <option key={code} value={code}>{t(code)}</option>
                           ))}
@@ -1238,7 +1239,7 @@ const BulkStockUpload = () => {
                 <div style={{ marginBottom: "1.5rem" }}>
                   <input
                     type="text"
-                    placeholder={t("ES_COMMON_SEARCH")}
+                    placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
                     value={fromSearchQuery}
                     onChange={(e) => setFromSearchQuery(e.target.value)}
                     style={{ width: "100%", padding: "0.5rem 0.75rem", border: "1px solid #D6D5D4", borderRadius: "0.25rem", marginBottom: "0.5rem", fontSize: "1rem", outline: "none" }}
@@ -1264,22 +1265,22 @@ const BulkStockUpload = () => {
                   </div>
                   {fromFacility && (
                     <p style={{ marginTop: "0.5rem", color: "#0B4B66", fontWeight: "600" }}>
-                      {t("HCM_SELECTED")}: {fromFacility.name || fromFacility.id}
+                      {t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}: {fromFacility.name || fromFacility.id}
                     </p>
                   )}
                 </div>
               ) : fromFilteredProjectIds?.length > 0 ? (
-                <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t("HCM_FACILITY_API_FAILED_DESC")}</p>
+                <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FACILITY_API_FAILED_DESC)}</p>
               ) : (
-                <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t("HCM_SELECT_HIERARCHY_FIRST")}</p>
+                <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_HIERARCHY_FIRST)}</p>
               )}
 
               {fromSelectedLevel >= 0 && (
                 <div>
                   <h2 style={{ fontSize: "1.2rem", fontWeight: "700", marginBottom: "0.75rem", marginTop: "1rem" }}>
-                    {t("HCM_SELECT_TO_FACILITIES")}
+                    {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_TO_FACILITIES)}
                   </h2>
-                  <p style={{ color: "#505A5F", marginBottom: "0.75rem" }}>{t("HCM_TO_FACILITIES_DESC")}</p>
+                  <p style={{ color: "#505A5F", marginBottom: "0.75rem" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_TO_FACILITIES_DESC)}</p>
 
                   {toHierarchyLevels.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
@@ -1297,7 +1298,7 @@ const BulkStockUpload = () => {
                               onChange={(e) => handleToHierarchyChange(h.boundaryType, e.target.value)}
                               style={{ width: "100%", padding: "0.5rem", border: "1px solid #D6D5D4", borderRadius: "0.25rem", fontSize: "1rem", backgroundColor: "#fff" }}
                             >
-                              <option value="">{t("ES_COMMON_ALL")}</option>
+                              <option value="">{t(I18N_KEYS.PAGES.ES_COMMON_ALL)}</option>
                               {availableOptions.map((code) => (
                                 <option key={code} value={code}>{t(code)}</option>
                               ))}
@@ -1314,7 +1315,7 @@ const BulkStockUpload = () => {
                     <div style={{ marginBottom: "1rem" }}>
                       <input
                         type="text"
-                        placeholder={t("ES_COMMON_SEARCH")}
+                        placeholder={t(I18N_KEYS.PAGES.ES_COMMON_SEARCH)}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         style={{ width: "100%", padding: "0.5rem 0.75rem", border: "1px solid #D6D5D4", borderRadius: "0.25rem", marginBottom: "0.5rem", fontSize: "1rem", outline: "none" }}
@@ -1325,7 +1326,7 @@ const BulkStockUpload = () => {
                       >
                         <input type="checkbox" checked={allVisibleSelected} readOnly style={{ cursor: "pointer", width: "1rem", height: "1rem" }} />
                         <span style={{ fontWeight: "600" }}>
-                          {allVisibleSelected ? t("HCM_DESELECT_ALL") : t("HCM_SELECT_ALL")} ({filteredFacilities.length})
+                          {allVisibleSelected ? t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DESELECT_ALL) : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_ALL)} ({filteredFacilities.length})
                         </span>
                       </div>
                       <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid #D6D5D4", borderRadius: "0.25rem", padding: "0.25rem 0" }}>
@@ -1349,20 +1350,20 @@ const BulkStockUpload = () => {
                       </div>
                       {selectedFacilityIds.size > 0 && (
                         <p style={{ marginTop: "0.5rem", color: "#505A5F" }}>
-                          {selectedFacilityIds.size} {t("HCM_SELECTED")}
+                          {selectedFacilityIds.size} {t(I18N_KEYS.COMPONENTS.HCM_SELECTED)}
                         </p>
                       )}
                     </div>
                   ) : toFilteredProjectIds?.length > 0 ? (
-                    <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t("HCM_FACILITY_API_FAILED_DESC")}</p>
+                    <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_FACILITY_API_FAILED_DESC)}</p>
                   ) : (
-                    <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t("HCM_SELECT_HIERARCHY_FIRST")}</p>
+                    <p style={{ color: "#505A5F", marginBottom: "1rem" }}>{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_SELECT_HIERARCHY_FIRST)}</p>
                   )}
                 </div>
               )}
 
               <Button
-                label={isDownloading ? t("LOADING") : t("HCM_DOWNLOAD_STOCK_TEMPLATE")}
+                label={isDownloading ? t(I18N_KEYS.CAMPAIGN_CREATE.LOADING) : t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DOWNLOAD_STOCK_TEMPLATE)}
                 variation="secondary"
                 type="button"
                 icon="DownloadIcon"
@@ -1374,7 +1375,7 @@ const BulkStockUpload = () => {
 
             <Card style={{ marginTop: "1.5rem" }}>
               <h2 style={{ fontSize: "1.2rem", fontWeight: "700", marginBottom: "1rem" }}>
-                {t("HCM_UPLOAD_STOCK_TEMPLATE")}
+                {t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_UPLOAD_STOCK_TEMPLATE)}
               </h2>
 
               <BulkUpload

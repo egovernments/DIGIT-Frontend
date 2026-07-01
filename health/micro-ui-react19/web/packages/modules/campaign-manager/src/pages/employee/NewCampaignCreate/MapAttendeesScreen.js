@@ -1,5 +1,6 @@
 import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { mapAttendeesConfig } from "../../../configs/mapAttendeesConfig";
@@ -80,17 +81,17 @@ const MapAttendeesScreen = () => {
       formData?.uploadAttendanceRegisterAttendee;
 
     if (!uploadedData?.uploadedFile?.length) {
-      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
 
     if (uploadedData?.isError || uploadedData?.apiError) {
-      return showErrorToast(t("ENTER_VALID_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
     }
 
     const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;
 
     if (!filestoreId) {
-      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
 
     const resourceDetails = {
@@ -117,8 +118,8 @@ const MapAttendeesScreen = () => {
             `/${window.contextPath}/employee/campaign/response?isSuccess=true`,
             {
               state: {
-                message: t("HCM_ATTENDEE_MAPPING_SUCCESS"),
-                text: t("HCM_ATTENDEE_MAPPING_SUCCESS_TEXT"),
+                message: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_SUCCESS),
+                text: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_SUCCESS_TEXT),
                 actionLabel: "HCM_BACK_TO_SETUP_ATTENDANCE",
                 actionLink: `/${window.contextPath}/employee/campaign/setup-attendance?campaignName=${campaignName}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
               },
@@ -126,7 +127,7 @@ const MapAttendeesScreen = () => {
           );
         },
         onError: (error) => {
-          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_IN_CAMPAIGN_CREATION"));
+          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION));
           setLoader(false);
         },
       }
@@ -142,7 +143,7 @@ const MapAttendeesScreen = () => {
   if (loader)
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", width: "100%" }}>
-        <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />
+        <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />
       </div>
     );
 
@@ -155,11 +156,11 @@ const MapAttendeesScreen = () => {
         onSubmit={onSubmit}
         defaultValues={params || {}}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={t("HCM_SUBMIT")}
+        label={t(I18N_KEYS.COMMON.HCM_SUBMIT)}
         secondaryActionIcon={"ArrowBack"}
       />
       {showToast && (

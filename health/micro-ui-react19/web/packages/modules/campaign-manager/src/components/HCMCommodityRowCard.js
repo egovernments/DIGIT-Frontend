@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { useNavigate } from "react-router-dom";
@@ -73,23 +74,23 @@ const HCMCommodityRowCard = ({ key, rowData, tabData }) => {
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("START_DATE")}
+              label={t(I18N_KEYS.COMPONENTS.START_DATE)}
               value={convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("END_DATE")}
+              label={t(I18N_KEYS.COMPONENTS.END_DATE)}
               value={convertEpochToNewDateFormat(rowData?.endDate) || "NA"}
             />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("DURATION")} value={duration} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t(I18N_KEYS.COMPONENTS.DURATION)} value={duration} />
           </div>
           <Divider />
           <div className="right-column">
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={t("STATUS")}
+              label={t(I18N_KEYS.COMPONENTS.STATUS)}
               type="custom"
               value={{}}
               renderCustomContent={() => (
@@ -116,7 +117,7 @@ const HCMCommodityRowCard = ({ key, rowData, tabData }) => {
               <Button
                 className="width-auto"
                 icon="Visibility"
-                label={t("HCM_VIEW_STOCK_DASHBOARD")}
+                label={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_VIEW_STOCK_DASHBOARD)}
                 onClick={() =>
                   navigate(
                     `/${window?.contextPath}/employee/campaign/commodity-dashboard?campaignNumber=${
@@ -135,7 +136,7 @@ const HCMCommodityRowCard = ({ key, rowData, tabData }) => {
                 }
                 variation="primary"
                 size="medium"
-                title={t("HCM_VIEW_STOCK_DASHBOARD")}
+                title={t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_VIEW_STOCK_DASHBOARD)}
                 id={`commodity-row-card-view-stock-dashboard-button-${rowData?.id}`}
               />
             </div>

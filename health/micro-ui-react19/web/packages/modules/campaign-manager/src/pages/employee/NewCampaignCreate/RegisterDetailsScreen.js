@@ -86,9 +86,9 @@ const RegisterDetailsScreen = () => {
   useEffect(() => {
     if (isAttendeeResourceLoading || isAttendeeResourceFetching || attendeeResourceDetails.length === 0) return;
     if (attendeeMappingStatus === "creating" || attendeeMappingStatus === "toCreate") {
-      setShowToast({ key: "warning", label: t("HCM_ATTENDEE_MAPPING_IN_PROGRESS") });
+      setShowToast({ key: "warning", label: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_IN_PROGRESS) });
     } else if (attendeeMappingStatus === "failed") {
-      setShowToast({ key: "error", label: t("HCM_ATTENDEE_MAPPING_FAILED") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_ATTENDEE_MAPPING_FAILED) });
     } 
     // else if (attendeeMappingStatus === "completed") {
     //   setShowToast({ key: "success", label: t("HCM_ATTENDEE_MAPPING_COMPLETED") });
@@ -182,14 +182,14 @@ const RegisterDetailsScreen = () => {
       },
       {
         onSuccess: () => {
-          setShowToast({ key: "success", label: t("HCM_ATTENDEE_DE_ENROLL_SUCCESS") });
+          setShowToast({ key: "success", label: t(I18N_KEYS.PAGES.HCM_ATTENDEE_DE_ENROLL_SUCCESS) });
           setTimeout(() => setShowToast(null), 3000);
           refetchRegister();
         },
         onError: (error) => {
           setShowToast({
             key: "error",
-            label: error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_DE_ENROLLING_ATTENDEE"),
+            label: error?.response?.data?.Errors?.[0]?.description || t(I18N_KEYS.PAGES.HCM_ERROR_DE_ENROLLING_ATTENDEE),
           });
           setTimeout(() => setShowToast(null), 3000);
         },
@@ -209,7 +209,7 @@ const RegisterDetailsScreen = () => {
       selector: (row) => row.workerName,
     },
     {
-      name: t("HCM_USERNAME"),
+      name: t(I18N_KEYS.PAGES.HCM_USERNAME),
       selector: (row) => row.username,
     },
     {
@@ -251,9 +251,9 @@ const RegisterDetailsScreen = () => {
       name: t(I18N_KEYS.CAMPAIGN_CREATE.HCM_DELETE_USER_COLUMN),
       cell: (row) =>
         row.status === "Inactive" ? (
-          <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t("HCM_ALREADY_REMOVED")}</span>
+          <span style={{ color: "#888", fontSize: "0.8rem", fontStyle: "italic" }}>{t(I18N_KEYS.PAGES.HCM_ALREADY_REMOVED)}</span>
         ) : (
-          <span title={!isCampaignStarted ? t("HCM_DELETE_DISABLED_CAMPAIGN_NOT_STARTED") : ""}>
+          <span title={!isCampaignStarted ? t(I18N_KEYS.PAGES.HCM_DELETE_DISABLED_CAMPAIGN_NOT_STARTED) : ""}>
             <Button
               label={t(I18N_KEYS.COMPONENTS.WBH_DELETE)}
               variation="secondary"
@@ -289,7 +289,7 @@ const RegisterDetailsScreen = () => {
           {t(I18N_KEYS.PAGES.REGISTER_DETAILS)}
         </HeaderComponent>
 
-        <SummaryCardFieldPair inline label={t("HCM_REGISTER_ID")} value={registerData?.serviceCode || NA} />
+        <SummaryCardFieldPair inline label={t(I18N_KEYS.PAGES.HCM_REGISTER_ID)} value={registerData?.serviceCode || NA} />
         <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NUMBER_COLUMN)} value={registerData?.registerNumber || registerNumber || NA} />
         <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_REGISTER_NAME_COLUMN)} value={registerData?.name || registerName || NA} />
         <SummaryCardFieldPair inline label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_ATTENDANCE_OFFICER_COLUMN)} value={getApproverName()} />
@@ -320,7 +320,7 @@ const RegisterDetailsScreen = () => {
           paginationPerPage={10}
           paginationRowsPerPageOptions={[10, 20, 50, 100]}
           paginationComponentOptions={{
-            rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE"),
+            rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
           }}
           persistTableHead
           noDataComponent={
@@ -345,8 +345,8 @@ const RegisterDetailsScreen = () => {
         <PopUp
           className="custom-popup"
           type="alert"
-          alertHeading={t("HCM_CONFIRM_DELETE_ATTENDEE")}
-          alertMessage={t("HCM_DELETE_ATTENDEE_CONFIRM_MSG")}
+          alertHeading={t(I18N_KEYS.PAGES.HCM_CONFIRM_DELETE_ATTENDEE)}
+          alertMessage={t(I18N_KEYS.PAGES.HCM_DELETE_ATTENDEE_CONFIRM_MSG)}
           onClose={() => setDeletePopup(null)}
           onOverlayClick={() => setDeletePopup(null)}
           footerChildren={[
@@ -354,7 +354,7 @@ const RegisterDetailsScreen = () => {
               type="button"
               size="large"
               variation="secondary"
-              label={t("CANCEL")}
+              label={t(I18N_KEYS.COMMON.CANCEL)}
               onClick={() => setDeletePopup(null)}
             />,
             <Button

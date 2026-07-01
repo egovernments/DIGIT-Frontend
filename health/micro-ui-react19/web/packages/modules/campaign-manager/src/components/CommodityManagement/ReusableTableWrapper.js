@@ -6,6 +6,7 @@ import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "../tableCustomStyle";
 import XLSX from "xlsx";
 import { SVG } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const ReusableTableWrapper = ({
   title,
@@ -232,7 +233,7 @@ const ReusableTableWrapper = ({
             noHeader={false}
             fixedHeader={true}
             paginationComponentOptions={{
-              rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE"),
+              rowsPerPageText: t(I18N_KEYS.APP_CONFIGURATION.CS_COMMON_ROWS_PER_PAGE),
             }}
             sortIcon={
               <SVG.ArrowUpward

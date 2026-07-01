@@ -275,7 +275,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 <Tag label={campaignName} type="monochrome" stroke={true} />
                 {hierarchyType && (
                   <Tag
-                    label={`${t("HCM_HIERARCHY_TYPE")} : ${hierarchyType}`}
+                    label={`${t(I18N_KEYS.COMPONENTS.HCM_HIERARCHY_TYPE)} : ${hierarchyType}`}
                     type="warning"
                     stroke={true}
                   />
@@ -284,12 +284,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               {/* Commenting Cancel Campaign feature */}
               {/* {isDraftCampaign ? (
                 <div className="digit-tag-container" style={{ margin: "0rem" }}>
-                  <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+                  <Chip text={`${t(I18N_KEYS.COMPONENTS.CANCEL_CAMPAIGN)}`} onClick={handleCancelClick} hideClose={false} />
                 </div>
               ) : null} */}
             </div>
-            <HeaderComponent className="select-boundary-screen-heading">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
-            <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
+            <HeaderComponent className="select-boundary-screen-heading">{t(I18N_KEYS.COMPONENTS.CAMPAIGN_SELECT_BOUNDARY)}</HeaderComponent>
+            <p className="dates-description">{t(I18N_KEYS.COMPONENTS.CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION)}</p>
             <Wrapper
               hierarchyType={hierarchyType}
               lowest={lowestHierarchy}
@@ -312,7 +312,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
             style={{ margin: "0rem", maxWidth: "100%", marginTop: "1.5rem", marginBottom: "2rem" }}
             additionalElements={[
               <span style={{ color: "#505A5F" }}>
-                {t("HCM_BOUNDARY_INFO")}
+                {t(I18N_KEYS.COMPONENTS.HCM_BOUNDARY_INFO)}
                 &nbsp;
                 <a href={`mailto:${mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}`} style={{ color: "black" }}>
                   {mailConfig?.[CONSOLE_MDMS_MODULENAME]?.mailConfig?.[0]?.mailId}
@@ -326,13 +326,13 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           {/* <Card style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <TextBlock
-                subHeader={t("HCM_UNIFIED_UPLOAD_OPTION")}
+                subHeader={t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION)}
                 subHeaderClassName={"switch-unified-upload"}
-                body={t("HCM_UNIFIED_UPLOAD_OPTION_DESC")}
+                body={t(I18N_KEYS.COMPONENTS.HCM_UNIFIED_UPLOAD_OPTION_DESC)}
               ></TextBlock>
               <Switch
                 isLabelFirst={true}
-                label={t("HCM_USE_UNIFIED_UPLOAD")}
+                label={t(I18N_KEYS.COMPONENTS.HCM_USE_UNIFIED_UPLOAD)}
                 isCheckedInitially={isUnifiedCampaign}
                 onToggle={(checked) => setIsUnifiedCampaign(checked)}
                 disabled={restrictSelection}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 import {
   Card,
   LabelFieldPair,
@@ -176,10 +177,10 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
           styles={{}}
           className="digit-header-content digit-card-section-header titleStyle date-selection"
         >
-          {t("HCM_SELECT_HIERARCHY_HEADER")}
+          {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_HIERARCHY_HEADER)}
         </HeaderComponent>
         <p className="dates-description digit-header-content SubHeadingClass" style={{marginBottom:"1rem"}}>
-          {t("HCM_SELECT_HIERARCHY_DESC")}
+          {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SELECT_HIERARCHY_DESC)}
         </p>
         <LabelFieldPair
           className="select-hierarchy-search-wrap"
@@ -187,7 +188,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
           removeMargin={true}
         >
           <CardLabel style={{width:"100%"}} className="select-hierarchy-search-label">
-            {t("HCM_SEARCH_BY_HIERARCHY_NAME")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_SEARCH_BY_HIERARCHY_NAME)}
           </CardLabel>
           <div className="digit-field select-hierarchy-search-bar-field" style={{ width: "100%" }}>
             <TextInput
@@ -236,7 +237,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
                         variation="link"
                         size="medium"
                         className="select-hierarchy-view-more-btn"
-                        label={t("HCM_VIEW_ALL_LEVELS")}
+                        label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_VIEW_ALL_LEVELS)}
                         icon="Visibility"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -250,7 +251,7 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
                   </div>
                 ) : (
                   <span style={{ fontSize: "16px", color: "#505A5F" }}>
-                    {t("HCM_NO_BOUNDARY_LEVELS")}
+                    {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_NO_BOUNDARY_LEVELS)}
                   </span>
                 )}
               </Card>
@@ -289,8 +290,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
         <PopUp
           className="hierarchy-change-popup"
           type="alert"
-          alertHeading={t("HCM_HIERARCHY_CHANGE_WARNING_TITLE")}
-          alertMessage={t("HCM_HIERARCHY_CHANGE_WARNING_DESC")}
+          alertHeading={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_CHANGE_WARNING_TITLE)}
+          alertMessage={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_CHANGE_WARNING_DESC)}
           onOverlayClick={onCancelChange}
           onClose={onCancelChange}
           footerclassName={"hierarchy-change-popup-footer"}
@@ -301,8 +302,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               type="button"
               size="large"
               variation="secondary"
-              label={t("HCM_HIERARCHY_CHANGE_CANCEL")}
-              title={t("HCM_HIERARCHY_CHANGE_CANCEL")}
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_CHANGE_CANCEL)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_CHANGE_CANCEL)}
               onClick={onCancelChange}
             />,
             <Button
@@ -310,8 +311,8 @@ const SelectHierarchy = ({ onSelect, formData, ...props }) => {
               type="button"
               size="large"
               variation="primary"
-              label={t("HCM_HIERARCHY_CHANGE_CONFIRM")}
-              title={t("HCM_HIERARCHY_CHANGE_CONFIRM")}
+              label={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_CHANGE_CONFIRM)}
+              title={t(I18N_KEYS.CAMPAIGN_CREATE.HCM_HIERARCHY_CHANGE_CONFIRM)}
               onClick={onConfirmChange}
             />,
           ]}

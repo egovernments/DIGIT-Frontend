@@ -221,7 +221,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink: pathVar.includes("my-campaign-new") ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
-      content: t("MY_CAMPAIGN"),
+      content: t(I18N_KEYS.PAGES.MY_CAMPAIGN),
       show: pathVar.includes("my-campaign-new") ? true : false,
     },
     {
@@ -263,7 +263,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink: "",
-      content: t("HCM_DELIVERY_DETAILS_PREVIEW"),
+      content: t(I18N_KEYS.PAGES.HCM_DELIVERY_DETAILS_PREVIEW),
       show: pathVar.includes("delivery-details-preview") ? true : false,
     },
     {
@@ -368,18 +368,18 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       internalLink: pathVar.includes("commodity-campaigns") ? "" : `/${window?.contextPath}/employee/campaign/commodity-campaigns`,
-      content: t("HCM_COMMODITY_CAMPAIGNS"),
+      content: t(I18N_KEYS.PAGES.HCM_COMMODITY_CAMPAIGNS),
       show: pathVar.includes("commodity-campaigns") || pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
     },
     {
       internalLink: pathVar.includes("commodity-dashboard") ? "" : `/${window?.contextPath}/employee/campaign/commodity-dashboard`,
-      content: t("HCM_COMMODITY_DASHBOARD"),
+      content: t(I18N_KEYS.PAGES.HCM_COMMODITY_DASHBOARD),
       query: `campaignNumber=${campaignNumber}&campaignId=${campaignId}&tenantId=${tenantId}&projectId=${projectId}`,
       show: pathVar.includes("commodity-dashboard") || pathVar.includes("bulk-stock-upload") ? true : false,
     },
     {
       internalLink: "",
-      content: t("HCM_BULK_STOCK_UPLOAD"),
+      content: t(I18N_KEYS.PAGES.HCM_BULK_STOCK_UPLOAD),
       show: pathVar.includes("bulk-stock-upload") ? true : false,
     },
     {

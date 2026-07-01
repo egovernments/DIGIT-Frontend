@@ -367,7 +367,7 @@ const DeliveryDetailsSummary = (props) => {
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(I18N_KEYS.COMPONENTS.HCM_DELIVERY_DETAILS)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper

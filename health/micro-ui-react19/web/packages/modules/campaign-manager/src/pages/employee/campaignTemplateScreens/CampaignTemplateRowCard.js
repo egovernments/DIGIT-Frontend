@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import { useNavigate } from "react-router-dom";
 import { Tag, Button, CardText, Card, Toast } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -51,7 +52,7 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
   // Calculate duration from deliveryCycles
   const deliveryCycles = rowData?.data?.deliveryCycles || [];
   const duration = deliveryCycles.length > 0
-    ? `${deliveryCycles.length} Round${deliveryCycles.length > 1 ? 's' : ''} | ${deliveryCycles[0]?.durationInDays || 0} ${t("DAYS")}`
+    ? `${deliveryCycles.length} Round${deliveryCycles.length > 1 ? 's' : ''} | ${deliveryCycles[0]?.durationInDays || 0} ${t(I18N_KEYS.COMPONENTS.DAYS)}`
     : "NA";
 
   const createdBy = rowData?.data?.partnerName || "NA";
@@ -66,7 +67,7 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
         {imageUrl ? (
           <img src={imageUrl} alt={imageAlt} className="campaign-template-image" />
         ) : (
-          <div className="campaign-template-no-image">{t("NO_IMAGE")}</div>
+          <div className="campaign-template-no-image">{t(I18N_KEYS.COMPONENTS.NO_IMAGE)}</div>
         )}
       </div>
 
@@ -95,8 +96,8 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
           {/* Right side - Button */}
           <div className="campaign-template-action">
             <Button
-              label={t("USE_TEMPLATE")}
-              title={t("USE_TEMPLATE")}
+              label={t(I18N_KEYS.COMPONENTS.USE_TEMPLATE)}
+              title={t(I18N_KEYS.COMPONENTS.USE_TEMPLATE)}
               id={`campaign-use-template-action-${rowData?.data?.id}`}
               variation="secondary"
               size="large"
@@ -104,7 +105,7 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
               onClick={() => {
                 // Check if project type data is loaded
                 if (!projectTypesData) {
-                  setShowToast({ key: "warning", label: t("HCM_PROJECT_TYPE_LOADING") });
+                  setShowToast({ key: "warning", label: t(I18N_KEYS.COMPONENTS.HCM_PROJECT_TYPE_LOADING) });
                   return;
                 }
 
@@ -161,14 +162,14 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
 
         {/* Description */}
         <CardText className="typography body-xs campaign-template-description">
-          {t(description) || t("DEFAULT_DESCRIPTION")}
+          {t(description) || t(I18N_KEYS.COMPONENTS.DEFAULT_DESCRIPTION)}
         </CardText>
 
         {/* Modules */}
         {modules.length > 0 && (
           <div className="campaign-template-modules">
             <span className="typography heading-xs campaign-template-modules-label">
-              {t("MODULES")}:
+              {t(I18N_KEYS.COMPONENTS.MODULES)}:
             </span>
             <span className="typography heading-xs campaign-template-modules-text">
               {modules.map((module) => t(module)).join(" | ")}
@@ -181,15 +182,15 @@ const CampaignTemplateRowCard = ({ key, rowData, tabData }) => {
         {/* Details Row */}
         <div className="campaign-template-details">
           <div className="campaign-template-detail-item">
-            <span className="campaign-template-detail-label">{t("DURATION")}</span>
+            <span className="campaign-template-detail-label">{t(I18N_KEYS.COMPONENTS.DURATION)}</span>
             <CardText className="campaign-template-detail-value">{duration}</CardText>
           </div>
           <div className="campaign-template-detail-item">
-            <span className="campaign-template-detail-label">{t("CREATED_BY")}</span>
+            <span className="campaign-template-detail-label">{t(I18N_KEYS.COMPONENTS.CREATED_BY)}</span>
             <CardText className="campaign-template-detail-value">{t(createdBy)}</CardText>
           </div>
           <div className="campaign-template-detail-item">
-            <span className="campaign-template-detail-label">{t("USED_IN")}</span>
+            <span className="campaign-template-detail-label">{t(I18N_KEYS.COMPONENTS.USED_IN)}</span>
             <CardText className="campaign-template-detail-value">{usedIn}</CardText>
           </div>
         </div>

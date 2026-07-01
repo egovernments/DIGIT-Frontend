@@ -141,10 +141,10 @@ const SearchChecklist = () => {
         <TagComponent campaignName={campaignName} />
         <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1.5rem",color:"#0b4b66" }}>{t(I18N_KEYS.PAGES.CONFIGURE_CHECKLIST)}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
-          {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
+          {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t(I18N_KEYS.COMMON.ACTION_LABEL_CONFIGURE_APP)}</Header> */}
           {/* <Button
             variation="secondary"
-            label={t("ADD_NEW_CHECKLIST")}
+            label={t(I18N_KEYS.PAGES.ADD_NEW_CHECKLIST)}
             className={"hover"}
             style={{ marginTop: "2rem", marginBottom: "2rem" }}
             onClick={makeNewChecklist}
@@ -223,7 +223,7 @@ const SearchChecklist = () => {
         <div className="container-full">
           {/* <div className="card-container">
             <Card className="card-header-timeline">
-              <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+              <TextBlock subHeader={t(I18N_KEYS.COMMON.ACTION_LABEL_CONFIGURE_APP)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
             </Card>
             <Card className="stepper-card">
               <Stepper customSteps={["HCM_MANAGE_CHECKLIST"]} currentStep={1} onStepClick={() => { }} direction={"vertical"} />
@@ -247,8 +247,8 @@ const SearchChecklist = () => {
         <Footer
           actionFields={[
             <Button
-              label={t("GO_BACK")}
-              title={t("GO_BACK")}
+              label={t(I18N_KEYS.COMMON.GO_BACK)}
+              title={t(I18N_KEYS.COMMON.GO_BACK)}
               variation="secondary"
               style={{
                 marginLeft: "2.5rem",

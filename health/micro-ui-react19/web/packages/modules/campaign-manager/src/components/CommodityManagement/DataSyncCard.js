@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SVG } from "@egovernments/digit-ui-components";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 
 const DataSyncCard = ({ items = [] }) => {
@@ -12,7 +13,7 @@ const DataSyncCard = ({ items = [] }) => {
         <div className="cm-data-sync-icon">
           <SVG.Restore width={"48px"} height={"48px"}/>
         </div>
-        <span className="cm-data-sync-title">{t("HCM_DATA_SYNC")}</span>
+        <span className="cm-data-sync-title">{t(I18N_KEYS.COMMODITY_MANAGEMENT.HCM_DATA_SYNC)}</span>
       </div>
 
       <div className="cm-data-sync-metrics">

@@ -1,6 +1,7 @@
 import React from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../utils/i18nKeyConstants";
 import { PRIMARY_COLOR } from "../utils";
 import { Loader } from "@egovernments/digit-ui-components";
 
@@ -32,7 +33,7 @@ function XlsPreviewNew({ file, ...props }) {
     <div>
       {/* <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
         <Button
-          label={t("BACK")}
+          label={t(I18N_KEYS.COMMON.BACK)}
           variation="secondary"
           icon={<ArrowBack styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
           type="button"
@@ -40,7 +41,7 @@ function XlsPreviewNew({ file, ...props }) {
           onButtonClick={() => props?.onBack()}
         />
         <Button
-          label={t("WBH_DOWNLOAD")}
+          label={t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD)}
           variation="secondary"
           icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
           type="button"

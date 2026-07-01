@@ -321,7 +321,7 @@ const DataUploadSummary = (props) => {
       <div className="container-full">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(I18N_KEYS.COMPONENTS.HCM_UPLOAD_DATA)} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
@@ -339,7 +339,7 @@ const DataUploadSummary = (props) => {
             <HeaderComponent className="summary-header">{t(I18N_KEYS.COMPONENTS.HCM_DATA_UPLOAD_SUMMARY)}</HeaderComponent>
             {/* {userCredential && (
           <Button
-            label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+            label={t(I18N_KEYS.COMPONENTS.CAMPAIGN_DOWNLOAD_USER_CRED)}
             variation="secondary"
             icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
             type="button"

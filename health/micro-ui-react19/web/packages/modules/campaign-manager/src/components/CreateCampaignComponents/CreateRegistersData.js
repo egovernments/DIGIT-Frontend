@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import BulkUpload from "../BulkUpload";
 import { Card, HeaderComponent, Button, Toast } from "@egovernments/digit-ui-components";
 import XLSX from "xlsx";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const TEMPLATE_COLUMNS = [
   "Register Name",
@@ -48,7 +49,7 @@ const CreateRegistersData = ({ formData, onSelect, ...props }) => {
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
-      setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_ERROR_MORE_THAN_ONE_FILE) });
       return;
     }
     try {
@@ -82,7 +83,7 @@ const CreateRegistersData = ({ formData, onSelect, ...props }) => {
       };
       reader.readAsArrayBuffer(selectedFile);
     } catch (error) {
-      setShowToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD") });
+      setShowToast({ key: "error", label: t(I18N_KEYS.COMPONENTS.HCM_ERROR_FILE_UPLOAD) });
     }
   };
 
@@ -108,11 +109,11 @@ const CreateRegistersData = ({ formData, onSelect, ...props }) => {
       <Card>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <HeaderComponent className="digit-form-composer-sub-header">
-            {t("HCM_CREATE_REGISTERS_UPLOAD_HEADING")}
+            {t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_REGISTERS_UPLOAD_HEADING)}
           </HeaderComponent>
           <Button
-            label={t("WBH_DOWNLOAD_TEMPLATE")}
-            title={t("WBH_DOWNLOAD_TEMPLATE")}
+            label={t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_TEMPLATE)}
+            title={t(I18N_KEYS.COMPONENTS.WBH_DOWNLOAD_TEMPLATE)}
             variation="secondary"
             icon={"FileDownload"}
             type="button"
@@ -121,7 +122,7 @@ const CreateRegistersData = ({ formData, onSelect, ...props }) => {
           />
         </div>
         {uploadedFile.length === 0 && (
-          <div className="info-text">{t("HCM_CREATE_REGISTERS_UPLOAD_MESSAGE")}</div>
+          <div className="info-text">{t(I18N_KEYS.CAMPAIGN_CREATE.HCM_CREATE_REGISTERS_UPLOAD_MESSAGE)}</div>
         )}
         <BulkUpload
           onSubmit={onBulkUploadSubmit}

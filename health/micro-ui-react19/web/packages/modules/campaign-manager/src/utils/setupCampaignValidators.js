@@ -18,7 +18,7 @@ import { I18N_KEYS } from "./i18nKeyConstants";
         dateError: true,
         // error: `Dates are missing in Cycle {CYCLE_NO}${index + 1}`,
         error: t(`CAMPAIGN_SUMMARY_DATE_MISSING_ERROR`, { CYCLE_NO: index + 1 }),
-        button: t(`CAMPAIGN_SUMMARY_ADD_DATE_ACTION`),
+        button: t(I18N_KEYS.UTILS.CAMPAIGN_SUMMARY_ADD_DATE_ACTION),
       });
     }
   });
@@ -46,7 +46,7 @@ import { I18N_KEYS } from "./i18nKeyConstants";
               DELIVERY_NO: delivery?.deliveryIndex,
               CYCLE_NO: cycle?.cycleIndex,
             }),
-            button: t(`CAMPAIGN_SUMMARY_ADD_DELIVERY_TYPE_ACTION`),
+            button: t(I18N_KEYS.UTILS.CAMPAIGN_SUMMARY_ADD_DELIVERY_TYPE_ACTION),
           });
         }
         if (rule.attributes.length === 0) {
@@ -59,7 +59,7 @@ import { I18N_KEYS } from "./i18nKeyConstants";
               DELIVERY_NO: delivery?.deliveryIndex,
               CYCLE_NO: cycle?.cycleIndex,
             }),
-            button: t(`CAMPAIGN_SUMMARY_ADD_VALUES_ACTION`),
+            button: t(I18N_KEYS.UTILS.CAMPAIGN_SUMMARY_ADD_VALUES_ACTION),
           });
         }
         if (rule.products.length === 0) {
@@ -72,7 +72,7 @@ import { I18N_KEYS } from "./i18nKeyConstants";
               DELIVERY_NO: delivery?.deliveryIndex,
               CYCLE_NO: cycle?.cycleIndex,
             }),
-            button: t(`CAMPAIGN_SUMMARY_ADD_PRODUCT_ACTION`),
+            button: t(I18N_KEYS.UTILS.CAMPAIGN_SUMMARY_ADD_PRODUCT_ACTION),
           });
         }
 
@@ -119,7 +119,7 @@ import { I18N_KEYS } from "./i18nKeyConstants";
                 DELIVERY_NO: delivery?.deliveryIndex,
                 CYCLE_NO: cycle?.cycleIndex,
               }),
-              button: t(`CAMPAIGN_SUMMARY_ADD_ATTRIBUTES_ACTION`),
+              button: t(I18N_KEYS.UTILS.CAMPAIGN_SUMMARY_ADD_ATTRIBUTES_ACTION),
             });
             isValid = false;
           }
@@ -278,7 +278,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         } else if (recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy).length > 0) {
           setShowToast({
             key: "error",
-            label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
+            label: `${t(I18N_KEYS.PAGES.HCM_CAMPAIGN_FOR)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
               `HCM_CAMPAIGN_CHILD_NOT_PRESENT`
             )}`,
           });

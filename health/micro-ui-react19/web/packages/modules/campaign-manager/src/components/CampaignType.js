@@ -123,8 +123,8 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
         <div className="card-container2">
           <Card className="setup-campaign-card">
-            <HeaderComponent styles={{ margin: "0px" }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</HeaderComponent>
-            <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
+            <HeaderComponent styles={{ margin: "0px" }}>{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_TYPE_HEADER)}</HeaderComponent>
+            <p className="description-type">{t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_TYPE_DESCRIPTION)}</p>
             <LabelFieldPair style={{ display: "flex", marginBottom: "-0.8rem" }}>
               <div className="campaign-type">
                 <span>{`${t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_TYPE)}`}</span>

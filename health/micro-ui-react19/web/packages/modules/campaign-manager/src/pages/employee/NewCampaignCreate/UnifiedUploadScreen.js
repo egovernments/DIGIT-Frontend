@@ -1,5 +1,6 @@
 import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { I18N_KEYS } from "../../../utils/i18nKeyConstants";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { unifiedUploadConfig } from "../../../configs/unifiedUploadConfig";
@@ -64,17 +65,17 @@ const UnifiedUploadScreen = () => {
     const uploadedData = formData?.HCM_CAMPAIGN_UPLOAD_UNIFIED_DATA?.uploadUnified || formData?.uploadUnified;
 
     if (!uploadedData?.uploadedFile?.length) {
-      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
 
     if (uploadedData?.isError || uploadedData?.apiError) {
-      return showErrorToast(t("ENTER_VALID_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.ENTER_VALID_FILE));
     }
 
     const filestoreId = uploadedData?.uploadedFile?.[0]?.filestoreId || uploadedData?.uploadedFile?.[0]?.fileStoreId;
 
     if (!filestoreId) {
-      return showErrorToast(t("PLEASE_UPLOAD_FILE"));
+      return showErrorToast(t(I18N_KEYS.CAMPAIGN_CREATE.PLEASE_UPLOAD_FILE));
     }
 
     // Build resource for unified data
@@ -117,7 +118,7 @@ const UnifiedUploadScreen = () => {
           );
         },
         onError: (error) => {
-          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t("HCM_ERROR_IN_CAMPAIGN_CREATION"));
+          showErrorToast(error?.response?.data?.Errors?.[0]?.description || t(I18N_KEYS.COMMON.HCM_ERROR_IN_CAMPAIGN_CREATION));
           setLoader(false);
         },
       }
@@ -130,7 +131,7 @@ const UnifiedUploadScreen = () => {
     );
   };
 
-  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />;
+  if (loader) return <Loader page={true} variant={"OverlayLoader"} loaderText={t(I18N_KEYS.COMMON.PLEASE_WAIT_WHILE_UPDATING)} />;
 
   const closeToast = () => setShowToast(null);
 
@@ -141,11 +142,11 @@ const UnifiedUploadScreen = () => {
         onSubmit={onSubmit}
         defaultValues={params}
         showSecondaryLabel={true}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={t(I18N_KEYS.COMMON.HCM_BACK)}
         actionClassName={"actionBarClass"}
         noCardStyle={true}
         onSecondayActionClick={onSecondayActionClick}
-        label={t("HCM_SUBMIT")}
+        label={t(I18N_KEYS.COMMON.HCM_SUBMIT)}
         secondaryActionIcon={"ArrowBack"}
       />
       {showToast && (

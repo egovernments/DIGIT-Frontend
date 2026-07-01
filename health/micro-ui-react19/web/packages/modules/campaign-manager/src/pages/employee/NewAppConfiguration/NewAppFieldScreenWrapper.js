@@ -204,8 +204,8 @@ function NewAppFieldScreenWrapper({viewMode}) {
   return (
     <React.Fragment>
       {/* <div className="app-config-drawer-subheader">
-        <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
+        <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_HEAD_FIELDS)}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_HEAD_FIELDS)} />
       </div>
       <Divider /> */}
       {/* Heading Field */}
@@ -340,7 +340,7 @@ function NewAppFieldScreenWrapper({viewMode}) {
       <Divider />
       <div className="app-config-drawer-subheader">
         <div>{t(I18N_KEYS.APP_CONFIGURATION.APPCONFIG_PRIVACY_CONTROLS)}</div>
-        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE")} />
+        <ConsoleTooltip iconFill={"#0B4B66"} style={{marginLeft:"0rem",top:"0rem"}} className="app-config-tooltip" toolTipContent={t(I18N_KEYS.APP_CONFIGURATION.TIP_APPCONFIG_PREVENT_SCREEN_CAPTURE)} />
       </div>
       <div className="app-config-privacy-controls-container">
         <div className="app-config-privacy-controls-container-text">{t(I18N_KEYS.APP_CONFIGURATION.PREVENT_SCREEN_CAPTURE)}</div>

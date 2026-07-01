@@ -228,7 +228,7 @@ const CheckBoxOption = ({
                 key={field.key}
                 mainClassName={"checkboxOptionVariant"}
                 disabled={optionDependency ? true : false}
-                label={t("ADD_COMMENT")}
+                label={t(I18N_KEYS.COMPONENTS.ADD_COMMENT)}
                 checked={optionComment}
                 onChange={(event) => handleOptionComment(optionId)}
                 index={field.key}
@@ -240,11 +240,11 @@ const CheckBoxOption = ({
             <Button
               icon="Delete"
               iconFill=""
-              label={t(`DELETE`)}
+              label={t(I18N_KEYS.COMMON.DELETE)}
               onClick={() => removeOption(index)}
               size="medium"
               style={{}}
-              title={t(`DELETE`)}
+              title={t(I18N_KEYS.COMMON.DELETE)}
               variation="link"
             />
           )}

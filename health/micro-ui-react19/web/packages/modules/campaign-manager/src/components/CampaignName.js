@@ -97,7 +97,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
       <div className="container">
         {/* <div className="card-container">
           <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
+            <TextBlock subHeader={t(I18N_KEYS.COMPONENTS.HCM_CAMPAIGN_DETAILS)}  subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper

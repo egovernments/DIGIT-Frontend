@@ -4,6 +4,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { CheckCircle, Close, InfoOutline } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import { validateCampaignName, allRulesMet } from "../../utils/campaignNameValidators";
+import { I18N_KEYS } from "../../utils/i18nKeyConstants";
 
 const CampaignNameInfo = () => {
   const { t } = useTranslation();
@@ -116,7 +117,7 @@ const CampaignNameInfo = () => {
   return (
     <div className="campaign-name-validation-container">
       <div className="validation-header">
-        <span className="validation-title">{t("CONSOLE_NAMING_CONVENTION")}</span>
+        <span className="validation-title">{t(I18N_KEYS.COMPONENTS.CONSOLE_NAMING_CONVENTION)}</span>
       </div>
 
       <div className="validation-rules-list">

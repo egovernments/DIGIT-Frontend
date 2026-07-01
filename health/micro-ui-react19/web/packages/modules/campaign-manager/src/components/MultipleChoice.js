@@ -273,10 +273,10 @@ export const RadioButtonOption = ({
             <Button
               icon="Delete"
               iconFill=""
-              label={t(`DELETE`)}
+              label={t(I18N_KEYS.COMMON.DELETE)}
               onClick={() => removeOption(index)}
               size="medium"
-              title={t(`DELETE`)}
+              title={t(I18N_KEYS.COMMON.DELETE)}
               variation="link"
             />
           )}
