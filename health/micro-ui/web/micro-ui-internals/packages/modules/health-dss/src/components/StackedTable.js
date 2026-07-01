@@ -41,7 +41,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     visualizationType: "table",
     queryType: "",
     requestDate: requestDate,
-    filters: {campaignNumber: campaignNumber },
+    filters: { campaignNumber: campaignNumber, ...(value?.filters?.cycle ? { cycle: value.filters.cycle } : {}) },
     aggregationFactors: null,
   };
   const { isLoading:isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
