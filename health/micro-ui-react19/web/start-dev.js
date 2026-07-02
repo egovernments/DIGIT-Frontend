@@ -19,6 +19,13 @@ function log(message, color = colors.reset) {
   console.log(`${color}${message}${colors.reset}`);
 }
 
+function spawnShellCommand(command, options = {}) {
+  if (process.platform === 'win32') {
+    return spawn('cmd.exe', ['/d', '/s', '/c', command], options);
+  }
+  return spawn('sh', ['-lc', command], options);
+}
+
 function checkDistFiles() {
   const campaignDist = path.join(__dirname, 'packages/modules/campaign-manager/dist/main.js');
   const cssDist = path.join(__dirname, 'packages/css/dist/index.css');
@@ -30,7 +37,7 @@ async function buildPackages() {
   log('🔨 Building local packages...', colors.yellow);
   
   return new Promise((resolve, reject) => {
-    const buildProcess = spawn('npm', ['run', 'build:packages'], {
+    const buildProcess = spawnShellCommand('npm run build:packages', {
       stdio: 'inherit',
       cwd: __dirname
     });
@@ -57,28 +64,47 @@ async function startDevelopment() {
     }
     
     log('🔄 Starting development servers...', colors.blue);
-    
-    // Start the concurrent processes
-    const devProcess = spawn('npx', [
-      'concurrently',
-      '--names', 'CSS,Campaign,Webpack',
-      '--prefix-colors', 'yellow,magenta,cyan',
-      '"cd packages/css && npm run start"',
-      '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
-      '"webpack serve --config webpack.dev.js --port 3000"'
-    ], {
-      stdio: 'inherit',
-      cwd: __dirname
-    });
-    
-    devProcess.on('close', (code) => {
-      log(`Development server stopped with code ${code}`, colors.yellow);
+
+    const childProcesses = [
+      spawnShellCommand('npm --prefix packages/css run start', {
+        stdio: 'inherit',
+        cwd: __dirname
+      }),
+      spawnShellCommand('npm --prefix packages/modules/campaign-manager run build:dev -- --watch', {
+        stdio: 'inherit',
+        cwd: __dirname
+      }),
+      spawnShellCommand('npm run start:webpack-only', {
+        stdio: 'inherit',
+        cwd: __dirname
+      })
+    ];
+
+    let shuttingDown = false;
+    const stopAll = (signal = 'SIGTERM') => {
+      if (shuttingDown) return;
+      shuttingDown = true;
+      childProcesses.forEach((proc) => {
+        if (proc && !proc.killed) {
+          proc.kill(signal);
+        }
+      });
+    };
+
+    childProcesses.forEach((proc) => {
+      proc.on('close', (code) => {
+        if (!shuttingDown && code !== 0) {
+          log(`Development server stopped with code ${code}`, colors.yellow);
+          stopAll('SIGTERM');
+          process.exit(code || 1);
+        }
+      });
     });
     
     // Handle process termination
     process.on('SIGINT', () => {
       log('🛑 Stopping development servers...', colors.red);
-      devProcess.kill('SIGINT');
+      stopAll('SIGINT');
       process.exit(0);
     });
     

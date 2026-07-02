@@ -22,6 +22,14 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
   const quantity = stock?.quantity || 0;
   const quantitySent = getFieldValue("quantitySent");
   const quantityReceived = getFieldValue("quantityReceived");
+  const comments =
+    stock?.comments ||
+    stock?.reason ||
+    getFieldValue("comments") ||
+    getFieldValue("comment") ||
+    getFieldValue("remarks") ||
+    getFieldValue("remark") ||
+    getFieldValue("note");
 
   // Build commodity string
   const commodity =
@@ -82,6 +90,7 @@ const transformStock = (stock, facilityNameMap = {}, productNameMap = {}) => {
     quantitySent: quantitySent !== "N/A" ? parseInt(quantitySent) || 0 : 0,
     quantityReceived:
       quantityReceived !== "N/A" ? parseInt(quantityReceived) || 0 : 0,
+    comments: comments && comments !== "N/A" ? comments : "N/A",
   };
 };
 
@@ -387,6 +396,7 @@ const TransactionSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenan
   { label: t("HCM_COMMODITY"), key: "commodity", grow: 0.8, sortable: false },
   { label: t("HCM_QUANTITY"), key: "quantity", sortType: "numeric", grow: 0.6, minWidth: "100px", sortable: true },
   { label: t("HCM_TRANSACTION_TYPE"), key: "transactionType", grow: 1, sortable: false },
+  { label: t("HCM_COMMENTS"), key: "comments", grow: 1.2, minWidth: "180px", sortable: false },
 ];
 
   // Helper to map status to CSS class
