@@ -437,8 +437,8 @@ const CreateCampaign = () => {
       setIsValidatingName(false);
     }
     // Date validation checks - only on HCM_CAMPAIGN_DATE step
-    if (name === "HCM_CAMPAIGN_DATE" && formData?.DateSelection) {
-      const { startDate, endDate } = formData.DateSelection;
+    if (name === "HCM_CAMPAIGN_DATE") {
+      const { startDate, endDate } = formData?.DateSelection || {};
       if (!startDate || !endDate) {
         setShowToast({ key: "error", label: t(I18N_KEYS.COMMON.HCM_CAMPAIGN_DATE_MISSING) });
         return;
@@ -530,7 +530,12 @@ const CreateCampaign = () => {
         return;
       }
       const hasBoundaryData = formData?.SelectHierarchy?.hasBoundaryData ?? params?.SelectHierarchy?.hasBoundaryData;
-      if (!hasBoundaryData) {
+      const isEditMode = !!(editName || campaignNumber || id);
+      const originalHierarchyName = params?.hierarchyType || params?.SelectHierarchy?.hierarchy?.name;
+      const currentHierarchyName = hierarchySelected?.name;
+      const isSameHierarchyAsOriginal =
+        isEditMode && !!originalHierarchyName && !!currentHierarchyName && originalHierarchyName === currentHierarchyName;
+      if (!hasBoundaryData && !isSameHierarchyAsOriginal) {
         setShowToast({ key: "error", label: t(I18N_KEYS.PAGES.HCM_NO_BOUNDARY_DATA_FOR_HIERARCHY) });
         return;
       }

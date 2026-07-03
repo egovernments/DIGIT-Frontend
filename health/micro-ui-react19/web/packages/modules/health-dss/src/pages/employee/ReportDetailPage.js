@@ -285,7 +285,7 @@ const ReportDetailPage = () => {
                 title={
                 <div className="digit-accordion-titile-dashboard-wrap">
                   <div className="digit-accordion-titile-dashboard">{t(`HCM_REPORT_FREQUENCY_${frequency}`)}</div>
-                  <Tag label={`${reports.length} ${t("HCM_REPORTS_COUNT")}`} stroke={true} type={"monochrome"}/>
+                  <Tag label={`${reports.length} ${reports.length === 1 ? t("HCM_REPORTS_COUNT_SINGLE") : t("HCM_REPORTS_COUNT")}`} stroke={true} type={"monochrome"}/>
                 </div>
                 }
                 isOpenInitially={false}
