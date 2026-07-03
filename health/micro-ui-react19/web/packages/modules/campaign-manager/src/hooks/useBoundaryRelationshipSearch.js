@@ -11,6 +11,7 @@ export const useBoundaryRelationshipSearch = ({BOUNDARY_HIERARCHY_TYPE , tenantI
         config: {
           enabled: BOUNDARY_HIERARCHY_TYPE? true: false,
           cacheTime: 1000000,
+          staleTime: 600000,
         },
       };
     
