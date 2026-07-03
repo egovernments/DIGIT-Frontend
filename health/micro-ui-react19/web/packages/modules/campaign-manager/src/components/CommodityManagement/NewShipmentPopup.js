@@ -707,21 +707,7 @@ const NewShipmentPopup = ({
             init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
           }
         }
-      } else if (entryType === "RECEIPT") {
-        if (receiverId === fromFacilityId) {
-          // I confirmed receipt → +qty
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-        }
-      } else if (entryType === "EXCESS") {
-        // Received more than expected → additional stock for receiver
-        if (receiverId === fromFacilityId) {
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] += qty;
-        }
-      } else if (entryType === "LESS") {
-        // Received less than expected → reduces receiver stock
-        if (receiverId === fromFacilityId) {
-          init(fromFacilityId, pvId); map[fromFacilityId][pvId] -= qty;
-        }
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
       } else if (entryType === "RETURNED") {
         const retStatus = record.status || "";
         if (retStatus === "REJECTED") {

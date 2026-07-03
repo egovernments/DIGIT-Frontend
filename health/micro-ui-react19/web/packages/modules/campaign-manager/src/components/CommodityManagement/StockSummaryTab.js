@@ -191,21 +191,10 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!commodityMap[productName]) {
         commodityMap[productName] = { name: productName, totalReceived: 0, totalAccepted: 0, totalIssued: 0, totalReturned: 0, totalRejected: 0 };
       }
-      if (stockEntryType === "RECEIPT") {
-        // I confirmed receipt → totalReceived
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReceived += qty;
-        }
-      } else if (stockEntryType === "EXCESS") {
-        // Received more than expected → additional stock for receiver
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReceived += qty;
-        }
-      } else if (stockEntryType === "LESS") {
-        // Received less than expected → reduces receiver stock
-        if (userFacilityIds.has(stock.receiverId)) {
-          commodityMap[productName].totalReceived -= qty;
-        }
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
+      if (stockEntryType === "RECEIPT" || stockEntryType === "EXCESS" || stockEntryType === "LESS") {
+        // Ignored: receiver creates RECEIPT when accepting an ISSUED dispatch,
+        // which is already counted via ISSUED/ACCEPTED below
       } else if (stockEntryType === "ISSUED") {
         const status = stock.status || "";
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
@@ -407,15 +396,9 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
       if (!pvId) return;
       const productName = productNameMap[pvId] || stock.productName || "Unknown";
 
-      if (stockEntryType === "RECEIPT") {
-        if (stock.receiverId && descendantIds.has(stock.receiverId))
-          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
-      } else if (stockEntryType === "EXCESS") {
-        if (stock.receiverId && descendantIds.has(stock.receiverId))
-          getOrInit(stock.receiverId, pvId, productName).totalReceived += qty;
-      } else if (stockEntryType === "LESS") {
-        if (stock.receiverId && descendantIds.has(stock.receiverId))
-          getOrInit(stock.receiverId, pvId, productName).totalReceived -= qty;
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
+      if (stockEntryType === "RECEIPT" || stockEntryType === "EXCESS" || stockEntryType === "LESS") {
+        // Ignored
       } else if (stockEntryType === "ISSUED") {
         if (status === "ACCEPTED" || status === "IN_TRANSIT") {
           if (stock.senderId && descendantIds.has(stock.senderId))
@@ -497,15 +480,7 @@ const StockSummaryTab = ({ rawStockData, stockLoading, stockSummary, tenantId, c
           // ACCEPTED: receiver gained stock
           if (status === "ACCEPTED" && stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
         }
-      } else if (stockEntryType === "RECEIPT") {
-        // Receiver confirms receipt → gains stock
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "EXCESS") {
-        // Received more than expected → additional stock for receiver
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] += qty; }
-      } else if (stockEntryType === "LESS") {
-        // Received less than expected → reduces receiver stock
-        if (stock.receiverId) { init(stock.receiverId, pvId); map[stock.receiverId][pvId] -= qty; }
+      // RECEIPT/EXCESS/LESS are duplicate entries of ISSUED/ACCEPTED — skip to avoid double-counting
       } else if (stockEntryType === "RETURNED") {
         const retStatus = stock.status || "";
         if (retStatus === "REJECTED") {
